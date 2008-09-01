@@ -1,0 +1,12 @@
+---
+:development: &defaults
+  :adapter: sqlite3
+  :database: db/dashboard_development.sqlite3
+
+:test:
+  <<: *defaults
+  :database: db/dashboard_test.sqlite3
+
+:production:
+  <<: *defaults
+  :database: db/dashboard_production.sqlite3
