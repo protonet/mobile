@@ -69,9 +69,23 @@
     <p>the use of this this access point is <em>free of charge</em></p>
     <ul id="terms">
       <li>
-        
+        bla
+      </li>
+      <li>
+        blub
       </li>
     </ul>
+    <p>Register a access</p>
+    <form action="<%= url(:controller => 'users', :action => 'create') %>" method="post" accept-charset="utf-8">
+      <label for="name">User:</label><br />
+      <input type="text" name="name" value="" id="name"><br />
+      <label for="password">Password:</label><br />
+      <input type="password" name="password" value="" id="password">
+      
+
+      <p><input type="submit" value="Register &rarr;"></p>
+    </form>
+    
     
   </div>
 </body>
