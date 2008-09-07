@@ -1,0 +1,55 @@
+<div id="content">
+  <img src="/images/logo.gif" alt="Logo">
+  <h1>. ...welcome to protonet... .</h1>
+  <h3>join the internet revolution!</h3>
+  
+  <% if message[:error] %>
+  <div id="errors" style="background-color: white; color: red; margin: 5px; width: auto; padding: 5px;">
+    <%= message[:error] %>
+  </div>
+  <% end %>
+  
+  <div class="teaser">
+    
+    <div id="login">
+      <h3>Login (<a href="#">or register a new account - it's free!</a>)</h3>       
+      <form action="index_submit" method="post" accept-charset="utf-8">
+        <label for="login">User:</label><br />
+        <input type="text" name="login" value="" id="login"><br />
+        <label for="password">Password:</label><br />
+        <input type="password" name="password" value="" id="password">
+        <p><input type="submit" value="login &rarr;"></p>
+      </form>
+    </div>
+    
+    <div id="register" style="display:none;">
+      <h3>Register an access (<a href="#">or login!</a>)</h3>
+      <form action="<%= url(:controller => 'users', :action => 'create') %>" method="post" accept-charset="utf-8">
+        <label for="login">User:</label><br />
+        <input type="text" name="login" value="" id="login"><br />
+        <label for="password">Password:</label><br />
+        <input type="password" name="password" value="" id="password"><br />
+        <label for="password_confirmation">Password Confirmation:</label><br />
+        <input type="password" name="password_confirmation" value="" id="password_confirmation"><br />
+        <p><input type="submit" value="Register &rarr;"></p>
+      </form>      
+    </div>
+    
+  </div>
+  
+  <p>the use of this this access point is <em>free of charge</em></p>
+  <ul id="terms">
+    <li>
+      bla
+    </li>
+    <li>
+      blub
+    </li>
+  </ul>
+  
+</div>
+
+<script type="text/javascript" charset="utf-8">
+  $('#login h3>a').bind('click', function(){$('#login').hide(); $('#register').show()})
+  $('#register h3>a').bind('click', function(){$('#register').hide(); $('#login').show()})
+</script>
