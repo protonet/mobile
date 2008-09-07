@@ -1,13 +1,11 @@
 class Users < Application
 
-  # ...and remember, everything returned from an action
-  # goes to the client...
-  def index
-    render
-  end
+  skip_before :login_required
   
   def create
-    User.create(:name => params[:name], :password => params[:password])
+    if User.create(:login => params[:login], :password => params[:password], :password_confirmation => params[:password_confirmation])
+      
+    end
     redirect url(:controller => 'dashboard', :action => :index)
   end
   

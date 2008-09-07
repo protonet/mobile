@@ -26,12 +26,12 @@ body {
   width:430px;
   padding:0 0 14px 0;
   margin:10px auto;
-  background:url("/images/tsr.gif") bottom left no-repeat;
+  background:url("/images/tsr2.gif") bottom left no-repeat;
 }
 .teaser h3 {
   margin:0;
   padding:7px 10px 3px 10px;
-  background:url("/images/tsr.gif") top left no-repeat;
+  background:url("/images/tsr2.gif") top left no-repeat;
 }
 .teaser p, .teaser a.more {
   margin:0;

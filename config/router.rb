@@ -23,6 +23,11 @@ Merb.logger.info("Compiling routes...")
 Merb::Router.prepare do |r|
   # RESTful routes
   # r.resources :posts
+  
+  r.match("/login").to(:controller => "sessions", :action => "create").name(:login)
+  r.match("/logout").to(:controller => "sessions", :action => "destroy").name(:logout)
+  
+  r.match("/register").to(:controller => "users", :action => "create").name(:register)
 
   # This is the default route for /:controller/:action/:id
   # This is fine for most cases.  If you're heavily using resource-based
@@ -30,6 +35,8 @@ Merb::Router.prepare do |r|
   # clients from calling your create or destroy actions with a GET
   r.default_routes
   
+  
+    
   # Change this for your home page to be available at /
-  r.match('/').to(:controller => 'dashboard', :action =>'index')
+  r.match('/').to(:controller => 'sessions', :action =>'new')
 end
