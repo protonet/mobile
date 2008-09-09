@@ -27,7 +27,9 @@ Merb::Router.prepare do |r|
   r.match("/login").to(:controller => "sessions", :action => "create").name(:login)
   r.match("/logout").to(:controller => "sessions", :action => "destroy").name(:logout)
   
-  r.match("/register").to(:controller => "users", :action => "create").name(:register)
+  r.match("/register").to(:controller => "users", :action => "new").name(:register)
+
+  r.match("/home").to(:controller => 'instruments', :action =>'index').name(:home)
 
   # This is the default route for /:controller/:action/:id
   # This is fine for most cases.  If you're heavily using resource-based
@@ -38,5 +40,5 @@ Merb::Router.prepare do |r|
   
     
   # Change this for your home page to be available at /
-  r.match('/').to(:controller => 'sessions', :action =>'new')
+  r.match('/').to(:controller => 'instruments', :action =>'index')
 end

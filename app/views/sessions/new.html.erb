@@ -13,24 +13,24 @@
     
     <div id="login">
       <h3>Login (<a href="#">or register a new account - it's free!</a>)</h3>       
-      <form action="index_submit" method="post" accept-charset="utf-8">
-        <label for="login">User:</label><br />
-        <input type="text" name="login" value="" id="login"><br />
+      <form action="<%= url(:login) %>" method="post" accept-charset="utf-8">
+        <label for="user_login">User:</label><br />
+        <input type="text" name="user[login]" value="" id="user_login"><br />
         <label for="password">Password:</label><br />
-        <input type="password" name="password" value="" id="password">
+        <input type="password" name="user[password]" value="" id="user_password">
         <p><input type="submit" value="login &rarr;"></p>
       </form>
     </div>
     
     <div id="register" style="display:none;">
       <h3>Register an access (<a href="#">or login!</a>)</h3>
-      <form action="<%= url(:controller => 'users', :action => 'create') %>" method="post" accept-charset="utf-8">
-        <label for="login">User:</label><br />
-        <input type="text" name="login" value="" id="login"><br />
-        <label for="password">Password:</label><br />
-        <input type="password" name="password" value="" id="password"><br />
-        <label for="password_confirmation">Password Confirmation:</label><br />
-        <input type="password" name="password_confirmation" value="" id="password_confirmation"><br />
+      <form action="<%= url(:register) %>" method="post" accept-charset="utf-8">
+        <label for="user_login">User:</label><br />
+        <input type="text" name="user[login]" value="" id="user_login"><br />
+        <label for="user_password">Password:</label><br />
+        <input type="password" name="user[password]" value="" id="user_password"><br />
+        <label for="user_password_confirmation">Password Confirmation:</label><br />
+        <input type="password" name="user[password_confirmation]" value="" id="user_password_confirmation"><br />
         <p><input type="submit" value="Register &rarr;"></p>
       </form>      
     </div>

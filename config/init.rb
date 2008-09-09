@@ -56,6 +56,7 @@ Gem.path.unshift(Merb.root / "gems")
 # dependencies "RedCloth" => "> 3.0", "ruby-aes-cext" => "= 1.0"
   
 dependency "dm-validations"
+dependency "merb_helpers"
 
 
 Merb::BootLoader.after_app_loads do
@@ -122,7 +123,7 @@ Merb::Config.use do |c|
   # There are various options here, by default Merb comes with 'cookie', 
   # 'memory' or 'memcached'.  You can of course use your favorite ORM 
   # instead: 'datamapper', 'sequel' or 'activerecord'.
-  c[:session_store] = 'cookie'
+  c[:session_store] = 'memory'
 end
 
 

@@ -1,0 +1,46 @@
+<div id="content">
+  <img src="/images/logo.gif" alt="Logo">
+  <h1>. ...welcome to protonet... .</h1>
+  <h3>join the internet revolution!</h3>
+  
+  <% if message[:error] %>
+  <div id="errors" style="background-color: white; color: red; margin: 5px; width: auto; padding: 5px;">
+    <%= message[:error] %>
+  </div>
+  <% end %>
+  
+  <% if @user.errors %>
+  <div id="dm-errors" style="background-color: white; color: red; margin: 5px; width: auto; padding: 5px;">
+    <% @user.errors.each do |e| %>
+      <% e.each do |a| %>
+        <%= a %><br />
+      <% end %>
+    <% end %>
+  </div>
+  <% end %>
+  
+  <div class="teaser">
+    
+    <div id="register">
+      <h3>Register an access</h3>
+      <%= form_for @user, :action  => url(:controller => 'users', :action => 'create') do %>
+       <%= text_field :login, :label => "User:<br/>" %><br />
+       <%= password_field :password,  :label => "Password:<br/>" %> <br />
+       <%= password_field :password_confirmation, :label => "Password confirmation:<br/>" %> <br/>
+       <%= submit "Register" %>
+      <% end =%>
+    </div>
+    
+  </div>
+  
+  <p>the use of this this access point is <em>free of charge</em></p>
+  <ul id="terms">
+    <li>
+      bla
+    </li>
+    <li>
+      blub
+    </li>
+  </ul>
+  
+</div>

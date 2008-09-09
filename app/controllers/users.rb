@@ -2,11 +2,18 @@ class Users < Application
 
   skip_before :login_required
   
+  def new
+    @user = User.new
+  end
+  
   def create
-    if User.create(:login => params[:login], :password => params[:password], :password_confirmation => params[:password_confirmation])
-      
+    @user = User.new(params[:user])
+    if @user.save
+      current_user = @user
+      redirect(url(:controller => 'instruments', :action => :index))
+    else
+      render :new
     end
-    redirect url(:controller => 'dashboard', :action => :index)
   end
   
 end

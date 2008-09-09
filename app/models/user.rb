@@ -2,11 +2,12 @@ class User
   include DataMapper::Resource
   
   before :save, :encrypt_password
+  before :save, :downcase_login
   
   attr_accessor :password, :password_confirmation
   
   property :id,                         Integer,  :serial => true
-  property :name,                       String,   :nullable => false, :length => 3..40, :unique => true
+  property :name,                       String,   :nullable => true
   property :login,                      String,   :nullable => false, :unique => true
   property :crypted_password,           String
   property :salt,                       String
@@ -21,29 +22,30 @@ class User
   validates_length            :password,                :within => 4..40
   validates_is_confirmed      :password,                :groups => :create
   
-  def self.current
-    User.new
+  def self.authenticate(params)
+    u = first(:login => params[:login])
+    if u
+      u.crypted_password == u.encrypt(params[:password], u.salt) ? u : nil
+    else
+      nil
+    end
   end
   
-  def self.current=(user)
     
+  # Encrypts some data with the salt.
+  def encrypt(password, salt)
+    Digest::SHA1.hexdigest("--#{salt}--#{password}--")
   end
-  
-  def logged_in?
-    false
-  end
-  
   
   private
+    def downcase_login
+      login = login.downcase if login
+    end
+
     def encrypt_password
       return if password.blank?
       salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{login}--") if new_record?
-      crypted_password = encrypt(password, salt)
-    end
-  
-    # Encrypts some data with the salt.
-    def encrypt(password, salt)
-      Digest::SHA1.hexdigest("--#{salt}--#{password}--")
+      crypted_password = encrypt(password, self.salt)
     end
   
   
