@@ -26,6 +26,7 @@ class Sessions < Application
     # reset_session
     # redirect_back_or_default('/')
     session[:user] = nil
+    redirect url(:home)
   end
   
 end

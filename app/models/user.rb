@@ -6,6 +6,8 @@ class User
   
   attr_accessor :password, :password_confirmation
   
+  has n, :rooms
+  
   property :id,                         Integer,  :serial => true
   property :name,                       String,   :nullable => true
   property :login,                      String,   :nullable => false, :unique => true
@@ -14,6 +16,7 @@ class User
   property :remember_token_expires_at,  DateTime
   property :remember_token,             String
   property :realm_id,                   String
+  property :online,                     Boolean
   
   validates_length            :login,                   :within => 3..40
   validates_is_unique         :login

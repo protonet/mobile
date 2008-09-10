@@ -1,12 +1,9 @@
-class Message
+class Member
   include DataMapper::Resource
-
+  
   property :id,                         Integer,  :serial => true
-  property :room_id,                    Integer
   property :user_id,                    Integer
-  property :message,                    String
+  property :room_id,                    Integer
 
-  belongs_to :room
-  belongs_to :user
 
 end
