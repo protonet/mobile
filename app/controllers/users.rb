@@ -8,8 +8,9 @@ class Users < Application
   
   def create
     @user = User.new(params[:user])
+    puts '-------------------->' + @user.inspect
     if @user.save
-      current_user = @user
+      self.current_user = @user
       redirect(url(:controller => 'instruments', :action => :index))
     else
       render :new

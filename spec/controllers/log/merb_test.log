@@ -1,2 +1,28 @@
 Mon, 01 Sep 2008 21:54:59 GMT  ~  info  ~  Logfile created
  ~ Not Using Sessions
+ ~ Not Using Sessions
+ ~ Params: {"action"=>"bar", "controller"=>"foo"}
+ ~ {:action_time=>0.000559, :after_filters_time=>5.1e-05, :before_filters_time=>6.2e-05}
+ ~ Not Using Sessions
+ ~ Params: {"action"=>"bar", "controller"=>"foo"}
+ ~ {:after_filters_time=>5.2e-05, :before_filters_time=>7.3e-05, :action_time=>0.001382}
+ ~ Not Using Sessions
+ ~ Params: {"action"=>"bar", "controller"=>"foo"}
+ ~ {:action_time=>0.000571, :after_filters_time=>5.2e-05, :before_filters_time=>6.2e-05}
+ ~ Not Using Sessions
+ ~ Not Using Sessions
+ ~ Not Using Sessions
+ ~ Params: {"action"=>"bar", "controller"=>"foo"}
+ ~ {:action_time=>0.000594, :after_filters_time=>5.1e-05, :before_filters_time=>6.5e-05}
+ ~ Not Using Sessions
+ ~ Not Using Sessions
+ ~ Not Using Sessions
+ ~ Not Using Sessions
+ ~ Params: {"action"=>"bar", "controller"=>"foo"}
+ ~ {:action_time=>0.000556, :after_filters_time=>5.4e-05, :before_filters_time=>6.0e-05}
+ ~ Not Using Sessions
+ ~ Params: {"action"=>"bar", "controller"=>"foo"}
+ ~ {:action_time=>0.000634, :after_filters_time=>5.2e-05, :before_filters_time=>6.7e-05}
+ ~ Not Using Sessions
+ ~ Not Using Sessions
+ ~ Not Using Sessions

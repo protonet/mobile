@@ -1,7 +1,9 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
-describe Sessions, "index action" do
-  before(:each) do
-    dispatch_to(Sessions, :index)
+describe Sessions, "#bar" do
+
+  it "should respond correctly" do
+      dispatch_to(Sessions, :new).should redirect
   end
+
 end
