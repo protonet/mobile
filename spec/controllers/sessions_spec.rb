@@ -1,9 +1,25 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
-describe Sessions, "#bar" do
-
-  it "should respond correctly" do
-      dispatch_to(Sessions, :new).should redirect
+describe Sessions, "methods" do
+  
+  it "should allow you a get on new, create and delete action without redirection to the login page" do
+    pending
   end
-
+  
+  it "should render the new form" do
+    pending
+  end
+  
+  it "should allow you to create current user" do
+    pending
+  end
+  
+  it "should redirect you to the new form if user creation failed" do
+    pending
+  end
+  
+  it "should automatically log you in when you create a user" do
+    pending
+  end
+  
 end

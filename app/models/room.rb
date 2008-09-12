@@ -11,7 +11,7 @@ class Room
   has n, :messages
   
   def self.lobby
-    get(1)
+    get(1) || new(:id => 1, :user_id => 0, :name => 'Lobby').save && get(1)
   end
 
 end
