@@ -2,24 +2,16 @@ require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
 describe Sessions, "methods" do
   
-  it "should allow you a get on new, create and delete action without redirection to the login page" do
-    pending
+  it "should allow you a get on new, create action without redirection to the login page" do
+    [:new, :create].each {|action| dispatch_to(Sessions, action).should be_successful}
   end
   
-  it "should render the new form" do
-    pending
+  it "should allow you to destroy a session and the redirect you to the login page" do
+    
+    current_user= User.new(:id => 10)
+    session[:user].should == current_user.id
+    dispatch_to(Sessions, :destroy).should redirect_to(url(:home))
+    session[:user].should == nil
   end
-  
-  it "should allow you to create current user" do
-    pending
-  end
-  
-  it "should redirect you to the new form if user creation failed" do
-    pending
-  end
-  
-  it "should automatically log you in when you create a user" do
-    pending
-  end
-  
+    
 end

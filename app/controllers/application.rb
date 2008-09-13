@@ -16,8 +16,8 @@ class Application < Merb::Controller
   end
   
   def current_user=(user)
-    @current_user = user
     session[:user] = user.id
+    @current_user = user
   end
   
   def access_denied
@@ -26,12 +26,14 @@ class Application < Merb::Controller
   
   private
   def try_to_login
-    Merb.logger.info("trying to login #{@current_user}")
+    Merb.logger.info("trying to login #{@current_user} <-- this should be nil btw")
     @current_user ||= (login_from_session || login_from_cookie)
     if @current_user
-      session[:user] = @current_user.id
       Merb.logger.info("User #{@current_user.login} logged in!")
+    else
+      Merb.logger.info("User could not be logged in!")
     end
+    @current_user
   end
   
   def login_from_session
@@ -39,7 +41,10 @@ class Application < Merb::Controller
   end
   
   def login_from_cookie
-    nil #not implemented
+    # @current_user = User.get(:token => cookie[:token]) or something like that
+    # session[:user] = @current_user.id needs to be set
+    # @current_user # needs to be returned
+    nil # since it's not implemented
   end
   
 end
