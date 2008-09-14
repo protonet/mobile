@@ -1,4 +1,4 @@
-class Message
+class ChatMessage
   include DataMapper::Resource
 
   property :id,                         Integer,  :serial => true

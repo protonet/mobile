@@ -1,8 +1,35 @@
-<h1 style="color:white;">yay!</h1>
+<h1 style="color:white; text-align: center;">yay! welcome <%= current_user.login %></h1>
+<div id="content">
+  <h3>You are currently in: <%= @lobby.name %></h3>
+  <div id="chat" style="background-color:grey; width:600px; height:400px; margin: auto;">
 
-<h3>You are currently in: <%= @lobby.name %></h3>
-<div style="background-color:grey; width:500px; height:400px;">
+  </div>
+  INPUT: <input type="text" size="60" name="some_name" value="" id="chat-input">
+
+  <br />
   
+  <a href="<%= url(:logout) %>">logout</a>
 </div>
 
-<a href="<%= url(:logout) %>">logout</a>
+<script type="text/javascript" charset="utf-8">
+  function ChatRoom() {
+    var self = this;
+    this.me = "<%= current_user.login %>";
+    this.div = $("#chat");
+    this.input = $("#chat-input")
+    this.input.bind('keypress', function(e){ 
+      if(e.which == 13) {
+        console.log(self.input.val());
+        self.appendMessage(self.input.val());
+        self.input.val('');
+      }
+     });
+  }
+  ChatRoom.prototype = {
+    "appendMessage": function(message) {
+      this.div.append('<div style="padding-left: 5px; text-align: left; border: 1px dotted white;" class="message"><span class="who" style="color: red;">' + this.me + '</span>:&nbsp;<span>' + message + '</span></div>')
+    }
+  }
+  
+  c = new ChatRoom();
+</script>

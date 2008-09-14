@@ -2455,3 +2455,62 @@ Mon, 01 Sep 2008 21:55:47 GMT  ~  info  ~  Logfile created
  ~ Cookie set: _session_id => d2fbd467de65f71630cc2891bed2aa8f -- {"expires"=>"Sun, 28-Sep-2008 14:45:19 GMT", "path"=>"/"}
  ~ Redirecting to: /instruments/index (302)
  ~ {:after_filters_time=>3.2e-05, :action_time=>0.001669, :before_filters_time=>3.4e-05}
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Using in-memory sessions; sessions will be lost whenever the server stops.
+ ~ Params: {"format"=>"", "action"=>"bar", "id"=>"", "controller"=>"any_controller"}
+ ~ Cookie set: _session_id => d955e8d3c9702b14eaee4761262f27aa -- {"expires"=>"Sun, 28-Sep-2008 14:49:37 GMT", "path"=>"/"}
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Redirecting to: /login?_message=BAh7BjoKZXJyb3IiV0JpdHRlIGVpbmxvZ2dlbiBvZGVyIGVpbmVuIG5ldWVu%0AIFVzZXIgYW5sZWdlbiAoa29zdGVubG9zLCBrZWluZSBEYXRlbiBub3R3ZW5k%0AaWchKS4%3D%0A (302)
+ ~ {:after_filters_time=>0.000133, :action_time=>0.063112}
+ ~ trying to login  <-- this should be nil btw
+ ~ User foo logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User bar logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ Cookie set: _session_id => 49b52d2bc58dac6ff5f752f23413743d -- {"expires"=>"Sun, 28-Sep-2008 14:49:37 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>5.8e-05, :action_time=>0.485808, :before_filters_time=>0.000215}
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ Cookie set: _session_id => f74469b402dae035303da88e009a2334 -- {"expires"=>"Sun, 28-Sep-2008 14:49:38 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>3.3e-05, :action_time=>0.011868, :before_filters_time=>0.000169}
+ ~ Params: {"action"=>"new", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => bc60459dcdbc7941092d8371e9ff6e9d -- {"expires"=>"Sun, 28-Sep-2008 14:49:38 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>6.9e-05, :action_time=>0.010752, :before_filters_time=>5.0e-05}
+ ~ Params: {"action"=>"create", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => 58dca63ac2715623872f98f7252f75c2 -- {"expires"=>"Sun, 28-Sep-2008 14:49:38 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>3.3e-05, :action_time=>0.005648, :before_filters_time=>4.2e-05}
+ ~ Redirecting to: /home (302)
+ ~ Params: {"user"=>{"password"=>"blub", "login"=>"foo"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => c4865fc330a12c5792363488e1e1c8cd -- {"expires"=>"Sun, 28-Sep-2008 14:49:38 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>0.000131, :action_time=>0.043838, :before_filters_time=>4.6e-05}
+ ~ Params: {"user"=>{"password"=>"blub", "login"=>"foo"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => 931778d8ab3fe764ce6595db89c7c8d6 -- {"expires"=>"Sun, 28-Sep-2008 14:49:38 GMT", "path"=>"/"}
+ ~ Redirecting to: /home (302)
+ ~ {:after_filters_time=>3.9e-05, :action_time=>0.007777, :before_filters_time=>3.0e-05}
+ ~ Params: {"format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => 4266f82b435346d25b24bde3f1200214 -- {"expires"=>"Sun, 28-Sep-2008 14:49:38 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>2.7e-05, :action_time=>0.001118, :before_filters_time=>3.3e-05}
+ ~ Params: {"action"=>"new", "controller"=>"users"}
+ ~ Cookie set: _session_id => 2176983c4aa8ec15b72d50ffb6cbe2bc -- {"expires"=>"Sun, 28-Sep-2008 14:49:38 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>5.8e-05, :action_time=>0.014883, :before_filters_time=>5.8e-05}
+ ~ Params: {"action"=>"create", "controller"=>"users"}
+ ~ Cookie set: _session_id => d000c24b56ec816b191dddcfafe66437 -- {"expires"=>"Sun, 28-Sep-2008 14:49:38 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>3.4e-05, :action_time=>0.11668, :before_filters_time=>2.9e-05}
+ ~ Params: {"user"=>{"password_confirmation"=>"bars", "password"=>"bars", "login"=>"foo"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Cookie set: _session_id => 9a561e5d40065397b25a5eb5ed9ce294 -- {"expires"=>"Sun, 28-Sep-2008 14:49:38 GMT", "path"=>"/"}
+ ~ Redirecting to: /instruments/index (302)
+ ~ {:after_filters_time=>4.7e-05, :action_time=>0.043028, :before_filters_time=>5.0e-05}
+ ~ Params: {""=>nil, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Cookie set: _session_id => f75ff78983b1584111569e03057c2719 -- {"expires"=>"Sun, 28-Sep-2008 14:49:38 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>4.7e-05, :action_time=>0.027544, :before_filters_time=>3.2e-05}
+ ~ Params: {"user"=>"mocked", "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Cookie set: _session_id => e008a9551d57e39a48395cafc34ef16a -- {"expires"=>"Sun, 28-Sep-2008 14:49:39 GMT", "path"=>"/"}
+ ~ Redirecting to: /instruments/index (302)
+ ~ {:after_filters_time=>3.0e-05, :action_time=>0.002932, :before_filters_time=>3.6e-05}

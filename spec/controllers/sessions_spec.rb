@@ -38,7 +38,7 @@ describe Sessions, "methods" do
   end
   
   it "should display an error message if login failed" do
-    
+    pending
   end
     
   # frak

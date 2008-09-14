@@ -24,7 +24,7 @@
     
     <div id="register" style="display:none;">
       <h3>Register an access (<a href="#">or login!</a>)</h3>
-      <form action="<%= url(:register) %>" method="post" accept-charset="utf-8">
+      <form action="<%= url(:controller => 'users', :action => 'create') %>" method="post" accept-charset="utf-8">
         <label for="user_login">User:</label><br />
         <input type="text" name="user[login]" value="" id="user_login"><br />
         <label for="user_password">Password:</label><br />
