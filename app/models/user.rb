@@ -10,7 +10,7 @@ class User
   
   property :id,                         Integer,  :serial => true
   property :name,                       String,   :nullable => true
-  property :login,                      String,   :nullable => false, :unique => true
+  property :login,                      String,   :nullable => false, :unique => true # validates automatically on uniqueness
   property :crypted_password,           String
   property :salt,                       String
   property :remember_token_expires_at,  DateTime
@@ -19,7 +19,6 @@ class User
   property :online,                     Boolean
   
   validates_length            :login,                   :within => 3..40
-  validates_is_unique         :login
   validates_present           :password
   validates_present           :password_confirmation
   validates_length            :password,                :within => 4..40
@@ -47,9 +46,8 @@ class User
 
     def encrypt_password
       return if password.blank?
-      salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{login}--") if new_record?
-      crypted_password = encrypt(password, self.salt)
+      self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{login}--") if new_record?
+      self.crypted_password = encrypt(password, salt)
     end
-  
   
 end

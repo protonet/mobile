@@ -70,5 +70,13 @@ describe Application, "authentication methods" do
     pending
   end
   
+  it "should log out the user" do
+    user = User.new(:id => 1)
+    @app.current_user = user
+    @app.log_out!
+    @app.send(:try_to_login)
+    @app.logged_in?.should == false
+  end
+  
 end
 

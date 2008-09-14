@@ -26,16 +26,24 @@ end
 
 describe User, "authentication" do
   
-  it "should allow basic authentication with a given set of login and password" do
-    pending
+  before(:all) do
+    User.all.destroy!
+    @user = User.new(:login => 'foo', :password => 'blub', :password_confirmation => 'blub')
+    @user.save.should == true
+  end
+  
+  it "should allow basic authentication with the correct login and password" do
+    User.authenticate({:login => 'foo', :password => 'blub'}).should_not == nil
   end
   
   it "should return the authenticated user when successful" do
-    pending
+    User.authenticate({:login => 'foo', :password => 'blub'}).should == @user
   end
   
-  it "should return nil when the authentication failed" do
-    pending
+  it "should fail authentication when login or pass is incorrect by returning nil" do
+    User.authenticate({:login => 'foo', :password => ''}).should == nil
+    User.authenticate({:login => '', :password => 'blub'}).should == nil
+    User.authenticate({:login => 'foo1', :password => 'bla'}).should == nil
   end
   
 end

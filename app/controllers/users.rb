@@ -4,11 +4,11 @@ class Users < Application
   
   def new
     @user = User.new
+    render
   end
   
   def create
-    @user = User.new(params[:user])
-    puts '-------------------->' + @user.inspect
+    @user = User.new(params[:user] || {})
     if @user.save
       self.current_user = @user
       redirect(url(:controller => 'instruments', :action => :index))
