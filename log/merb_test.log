@@ -2514,3 +2514,238 @@ Mon, 01 Sep 2008 21:55:47 GMT  ~  info  ~  Logfile created
  ~ Cookie set: _session_id => e008a9551d57e39a48395cafc34ef16a -- {"expires"=>"Sun, 28-Sep-2008 14:49:39 GMT", "path"=>"/"}
  ~ Redirecting to: /instruments/index (302)
  ~ {:after_filters_time=>3.0e-05, :action_time=>0.002932, :before_filters_time=>3.6e-05}
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Using in-memory sessions; sessions will be lost whenever the server stops.
+ ~ Params: {"format"=>"", "action"=>"bar", "id"=>"", "controller"=>"any_controller"}
+ ~ Cookie set: _session_id => db0fa3d83a4b37c502c63095f825f041 -- {"expires"=>"Sun, 28-Sep-2008 18:00:40 GMT", "path"=>"/"}
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Redirecting to: /login?_message=BAh7BjoKZXJyb3IiV0JpdHRlIGVpbmxvZ2dlbiBvZGVyIGVpbmVuIG5ldWVu%0AIFVzZXIgYW5sZWdlbiAoa29zdGVubG9zLCBrZWluZSBEYXRlbiBub3R3ZW5k%0AaWchKS4%3D%0A (302)
+ ~ {:after_filters_time=>7.8e-05, :action_time=>0.009161}
+ ~ trying to login  <-- this should be nil btw
+ ~ User foo logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User bar logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ Cookie set: _session_id => be1f70d1b34644b0f98ee61543aef2ed -- {"expires"=>"Sun, 28-Sep-2008 18:00:41 GMT", "path"=>"/"}
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ Cookie set: _session_id => df9f5da2f557c0a6d133db41d9c9a448 -- {"expires"=>"Sun, 28-Sep-2008 18:00:41 GMT", "path"=>"/"}
+ ~ Params: {"action"=>"new", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => 699b48ec272e317b4c6309aa78adbebd -- {"expires"=>"Sun, 28-Sep-2008 18:00:41 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>6.0e-05, :action_time=>0.010105, :before_filters_time=>3.3e-05}
+ ~ Params: {"action"=>"create", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => 6d2e9844a8ae376f3aeb4b9f3a504c62 -- {"expires"=>"Sun, 28-Sep-2008 18:00:41 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>2.8e-05, :action_time=>0.005183, :before_filters_time=>3.3e-05}
+ ~ Redirecting to: /home (302)
+ ~ Params: {"user"=>{"password"=>"blub", "login"=>"foo"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => 43cccc541519d554280f45ea7b46f2ad -- {"expires"=>"Sun, 28-Sep-2008 18:00:41 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>3.9e-05, :action_time=>0.14449, :before_filters_time=>3.0e-05}
+ ~ Params: {"user"=>{"password"=>"blub", "login"=>"foo"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => 6865586638c82f951da3ef9e055968d8 -- {"expires"=>"Sun, 28-Sep-2008 18:00:41 GMT", "path"=>"/"}
+ ~ Redirecting to: /home (302)
+ ~ {:after_filters_time=>4.3e-05, :action_time=>0.00592, :before_filters_time=>3.2e-05}
+ ~ Params: {"format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => f173349c7655f0def41506d138f8f4bb -- {"expires"=>"Sun, 28-Sep-2008 18:00:41 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>3.2e-05, :action_time=>0.001166, :before_filters_time=>2.9e-05}
+ ~ Params: {"action"=>"new", "controller"=>"users"}
+ ~ Cookie set: _session_id => 72d4845477e2df550ccf57d92a5dba4d -- {"expires"=>"Sun, 28-Sep-2008 18:00:41 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>5.9e-05, :action_time=>0.025451, :before_filters_time=>3.5e-05}
+ ~ Params: {"action"=>"create", "controller"=>"users"}
+ ~ Cookie set: _session_id => 378acc637c3ec67e8eab38203f0ff367 -- {"expires"=>"Sun, 28-Sep-2008 18:00:41 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>2.8e-05, :action_time=>0.033, :before_filters_time=>3.6e-05}
+ ~ Params: {"user"=>{"password_confirmation"=>"bars", "password"=>"bars", "login"=>"foo"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Cookie set: _session_id => a66a923a08db68ebb3ee963663e19826 -- {"expires"=>"Sun, 28-Sep-2008 18:00:41 GMT", "path"=>"/"}
+ ~ Redirecting to: /instruments/index (302)
+ ~ {:after_filters_time=>3.8e-05, :action_time=>0.025641, :before_filters_time=>3.0e-05}
+ ~ Params: {""=>nil, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Cookie set: _session_id => 22b2f1b63cb0423ee7a728f33db9a5ca -- {"expires"=>"Sun, 28-Sep-2008 18:00:42 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>4.2e-05, :action_time=>0.061569, :before_filters_time=>3.2e-05}
+ ~ Params: {"user"=>"mocked", "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Cookie set: _session_id => b781c3403988770b11d8b7228cbbea4f -- {"expires"=>"Sun, 28-Sep-2008 18:00:42 GMT", "path"=>"/"}
+ ~ Redirecting to: /instruments/index (302)
+ ~ {:after_filters_time=>3.1e-05, :action_time=>0.001547, :before_filters_time=>3.3e-05}
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Using in-memory sessions; sessions will be lost whenever the server stops.
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ Cookie set: _session_id => 27d7c54540945cd63f3e4eca19345c58 -- {"expires"=>"Sun, 28-Sep-2008 18:01:21 GMT", "path"=>"/"}
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ Cookie set: _session_id => db5847f523ac3708227b0d992449c091 -- {"expires"=>"Sun, 28-Sep-2008 18:01:21 GMT", "path"=>"/"}
+ ~ Compiling routes...
+ ~ Using in-memory sessions; sessions will be lost whenever the server stops.
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Using in-memory sessions; sessions will be lost whenever the server stops.
+ ~ Params: {"format"=>"", "action"=>"bar", "id"=>"", "controller"=>"any_controller"}
+ ~ Cookie set: _session_id => 4133f656c84812b768156f47e7a1094a -- {"expires"=>"Sun, 28-Sep-2008 18:05:52 GMT", "path"=>"/"}
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Redirecting to: /login?_message=BAh7BjoKZXJyb3IiV0JpdHRlIGVpbmxvZ2dlbiBvZGVyIGVpbmVuIG5ldWVu%0AIFVzZXIgYW5sZWdlbiAoa29zdGVubG9zLCBrZWluZSBEYXRlbiBub3R3ZW5k%0AaWchKS4%3D%0A (302)
+ ~ {:after_filters_time=>7.9e-05, :action_time=>0.014068}
+ ~ trying to login  <-- this should be nil btw
+ ~ User foo logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User bar logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ Cookie set: _session_id => 87012b64c683964773d19192500ebeca -- {"expires"=>"Sun, 28-Sep-2008 18:05:53 GMT", "path"=>"/"}
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ Cookie set: _session_id => 019b5a0fea2243f2604696fc4d4fd441 -- {"expires"=>"Sun, 28-Sep-2008 18:05:53 GMT", "path"=>"/"}
+ ~ Params: {"action"=>"new", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => fd524b936575e5350904aad816f0ca70 -- {"expires"=>"Sun, 28-Sep-2008 18:05:53 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>5.4e-05, :action_time=>0.005888, :before_filters_time=>3.2e-05}
+ ~ Params: {"action"=>"create", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => 740fe3aad4068454e2a0551716559ba6 -- {"expires"=>"Sun, 28-Sep-2008 18:05:53 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>2.6e-05, :action_time=>0.003331, :before_filters_time=>3.2e-05}
+ ~ Redirecting to: /home (302)
+ ~ Params: {"user"=>{"password"=>"blub", "login"=>"foo"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => 8ebe074ef1afa613f80a489436210e1d -- {"expires"=>"Sun, 28-Sep-2008 18:05:53 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>3.2e-05, :action_time=>0.069624, :before_filters_time=>3.2e-05}
+ ~ Params: {"user"=>{"password"=>"blub", "login"=>"foo"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => 03414f2a774f40d17ec72124eba858e2 -- {"expires"=>"Sun, 28-Sep-2008 18:05:53 GMT", "path"=>"/"}
+ ~ Redirecting to: /home (302)
+ ~ {:after_filters_time=>4.1e-05, :action_time=>0.00981, :before_filters_time=>3.5e-05}
+ ~ Params: {"format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => 96aca369c86468fc23e52c02e2e19921 -- {"expires"=>"Sun, 28-Sep-2008 18:05:53 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>2.7e-05, :action_time=>0.001695, :before_filters_time=>3.6e-05}
+ ~ Params: {"action"=>"new", "controller"=>"users"}
+ ~ Cookie set: _session_id => 1fdae1df12a834423d96a079316d867f -- {"expires"=>"Sun, 28-Sep-2008 18:05:53 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>5.7e-05, :action_time=>0.007406, :before_filters_time=>3.0e-05}
+ ~ Params: {"action"=>"create", "controller"=>"users"}
+ ~ Cookie set: _session_id => 1dd2ab3c91c2a6b77a52410a2ad5400d -- {"expires"=>"Sun, 28-Sep-2008 18:05:53 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>3.0e-05, :action_time=>0.056291, :before_filters_time=>3.8e-05}
+ ~ Params: {"user"=>{"password_confirmation"=>"bars", "password"=>"bars", "login"=>"foo"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Cookie set: _session_id => b9a63e056a14fff352e1b95d4e84cd3c -- {"expires"=>"Sun, 28-Sep-2008 18:05:53 GMT", "path"=>"/"}
+ ~ Redirecting to: /instruments/index (302)
+ ~ {:after_filters_time=>3.9e-05, :action_time=>0.08811, :before_filters_time=>3.6e-05}
+ ~ Params: {""=>nil, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Cookie set: _session_id => 2b0891e758fd23bde1f337b34996eb69 -- {"expires"=>"Sun, 28-Sep-2008 18:05:53 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>3.8e-05, :action_time=>0.06648, :before_filters_time=>3.3e-05}
+ ~ Params: {"user"=>"mocked", "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Cookie set: _session_id => 7052c79b024349d10fd0ce1f1bfb33ea -- {"expires"=>"Sun, 28-Sep-2008 18:05:53 GMT", "path"=>"/"}
+ ~ Redirecting to: /instruments/index (302)
+ ~ {:after_filters_time=>3.3e-05, :action_time=>0.002333, :before_filters_time=>3.3e-05}
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Using in-memory sessions; sessions will be lost whenever the server stops.
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ Cookie set: _session_id => e1b9d848d2e5d128ce4f3160a569b51b -- {"expires"=>"Sun, 28-Sep-2008 18:09:43 GMT", "path"=>"/"}
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Redirecting to: /login?_message=BAh7BjoKZXJyb3IiV0JpdHRlIGVpbmxvZ2dlbiBvZGVyIGVpbmVuIG5ldWVu%0AIFVzZXIgYW5sZWdlbiAoa29zdGVubG9zLCBrZWluZSBEYXRlbiBub3R3ZW5k%0AaWchKS4%3D%0A (302)
+ ~ {:action_time=>0.010185, :after_filters_time=>8.6e-05}
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ Cookie set: _session_id => c40190176559eca44a9150e1e01786df -- {"expires"=>"Sun, 28-Sep-2008 18:09:43 GMT", "path"=>"/"}
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Redirecting to: /login?_message=BAh7BjoKZXJyb3IiV0JpdHRlIGVpbmxvZ2dlbiBvZGVyIGVpbmVuIG5ldWVu%0AIFVzZXIgYW5sZWdlbiAoa29zdGVubG9zLCBrZWluZSBEYXRlbiBub3R3ZW5k%0AaWchKS4%3D%0A (302)
+ ~ {:action_time=>0.00163, :after_filters_time=>3.2e-05}
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Using in-memory sessions; sessions will be lost whenever the server stops.
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ Cookie set: _session_id => 6385b1dfc5b15225f13b531971f1c30e -- {"expires"=>"Sun, 28-Sep-2008 18:11:31 GMT", "path"=>"/"}
+ ~ trying to login #<User:0x1975cb0> <-- this should be nil btw
+ ~ User foobar logged in!
+ ~ {:action_time=>0.123397, :after_filters_time=>7.9e-05, :before_filters_time=>0.011734}
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ Cookie set: _session_id => 9950180be5aae6b6d316655bf14ab953 -- {"expires"=>"Sun, 28-Sep-2008 18:11:31 GMT", "path"=>"/"}
+ ~ trying to login #<User:0x190ee34> <-- this should be nil btw
+ ~ User foobar logged in!
+ ~ {:action_time=>0.017021, :after_filters_time=>3.0e-05, :before_filters_time=>0.000485}
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Using in-memory sessions; sessions will be lost whenever the server stops.
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ Cookie set: _session_id => ba4a46a514e77ffe06e353b4efa41ecd -- {"expires"=>"Sun, 28-Sep-2008 18:12:27 GMT", "path"=>"/"}
+ ~ {:before_filters_time=>0.00023, :action_time=>0.124769, :after_filters_time=>8.4e-05}
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ Cookie set: _session_id => be3e350bbfb2bea1f5a8b6b580226868 -- {"expires"=>"Sun, 28-Sep-2008 18:12:27 GMT", "path"=>"/"}
+ ~ {:before_filters_time=>0.00026, :action_time=>0.02069, :after_filters_time=>3.4e-05}
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Using in-memory sessions; sessions will be lost whenever the server stops.
+ ~ Params: {"format"=>"", "action"=>"bar", "id"=>"", "controller"=>"any_controller"}
+ ~ Cookie set: _session_id => e5b7350db5b10f4a75302162923cc428 -- {"expires"=>"Sun, 28-Sep-2008 19:21:29 GMT", "path"=>"/"}
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Redirecting to: /login?_message=BAh7BjoKZXJyb3IiV0JpdHRlIGVpbmxvZ2dlbiBvZGVyIGVpbmVuIG5ldWVu%0AIFVzZXIgYW5sZWdlbiAoa29zdGVubG9zLCBrZWluZSBEYXRlbiBub3R3ZW5k%0AaWchKS4%3D%0A (302)
+ ~ {:after_filters_time=>7.8e-05, :action_time=>0.015256}
+ ~ trying to login  <-- this should be nil btw
+ ~ User foo logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User bar logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ Cookie set: _session_id => 34d77d048e6c95b9cdbc1026ff80a65b -- {"expires"=>"Sun, 28-Sep-2008 19:21:29 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>6.6e-05, :action_time=>0.12582, :before_filters_time=>0.000362}
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ Cookie set: _session_id => e6fa9c17505a35256e1b26d3aec434aa -- {"expires"=>"Sun, 28-Sep-2008 19:21:29 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>3.2e-05, :action_time=>0.020745, :before_filters_time=>0.000166}
+ ~ Params: {"action"=>"new", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => c37c779a2565bed83508371df6592769 -- {"expires"=>"Sun, 28-Sep-2008 19:21:29 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>6.1e-05, :action_time=>0.005716, :before_filters_time=>3.9e-05}
+ ~ Params: {"action"=>"create", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => a2d31e0ac318aaf4605abb15c3731545 -- {"expires"=>"Sun, 28-Sep-2008 19:21:29 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>2.7e-05, :action_time=>0.003971, :before_filters_time=>3.7e-05}
+ ~ Redirecting to: /home (302)
+ ~ Params: {"user"=>{"password"=>"blub", "login"=>"foo"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => c54b71ad369f84d3544b72b38bfab124 -- {"expires"=>"Sun, 28-Sep-2008 19:21:29 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>3.5e-05, :action_time=>0.012633, :before_filters_time=>3.3e-05}
+ ~ Params: {"user"=>{"password"=>"blub", "login"=>"foo"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => 0775dd3a1b76e8e0ac4df910bd071f6e -- {"expires"=>"Sun, 28-Sep-2008 19:21:30 GMT", "path"=>"/"}
+ ~ Redirecting to: /home (302)
+ ~ {:after_filters_time=>4.5e-05, :action_time=>0.023237, :before_filters_time=>7.3e-05}
+ ~ Params: {"format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Cookie set: _session_id => 9cfe81c3b663d9c28ead4ef1d2532e44 -- {"expires"=>"Sun, 28-Sep-2008 19:21:30 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>2.8e-05, :action_time=>0.001397, :before_filters_time=>3.2e-05}
+ ~ Params: {"action"=>"new", "controller"=>"users"}
+ ~ Cookie set: _session_id => 143ed57a2a59aa9ec5d0793d6fadcccd -- {"expires"=>"Sun, 28-Sep-2008 19:21:30 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>6.1e-05, :action_time=>0.020731, :before_filters_time=>3.2e-05}
+ ~ Params: {"action"=>"create", "controller"=>"users"}
+ ~ Cookie set: _session_id => 5748f8ad5d02463bd0460e0acb4be96b -- {"expires"=>"Sun, 28-Sep-2008 19:21:30 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>3.0e-05, :action_time=>0.051601, :before_filters_time=>3.2e-05}
+ ~ Params: {"user"=>{"password_confirmation"=>"bars", "password"=>"bars", "login"=>"foo"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Cookie set: _session_id => ee4303aac32bae41d6c394ec72c6e21a -- {"expires"=>"Sun, 28-Sep-2008 19:21:30 GMT", "path"=>"/"}
+ ~ Redirecting to: /instruments/index (302)
+ ~ {:after_filters_time=>4.3e-05, :action_time=>0.027162, :before_filters_time=>3.5e-05}
+ ~ Params: {""=>nil, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Cookie set: _session_id => f43329ed9946cfeed8877f4b6b5247ce -- {"expires"=>"Sun, 28-Sep-2008 19:21:30 GMT", "path"=>"/"}
+ ~ {:after_filters_time=>3.8e-05, :action_time=>0.104436, :before_filters_time=>5.8e-05}
+ ~ Params: {"user"=>"mocked", "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Cookie set: _session_id => 9c1aa4b7a6da5d167c7c840373496ce4 -- {"expires"=>"Sun, 28-Sep-2008 19:21:30 GMT", "path"=>"/"}
+ ~ Redirecting to: /instruments/index (302)
+ ~ {:after_filters_time=>3.0e-05, :action_time=>0.00159, :before_filters_time=>3.4e-05}

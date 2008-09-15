@@ -1,8 +1,12 @@
 <h1 style="color:white; text-align: center;">yay! welcome <%= current_user.login %></h1>
 <div id="content">
   <h3>You are currently in: <%= @lobby.name %></h3>
-  <div id="chat" style="background-color:grey; width:600px; height:400px; margin: auto;">
-
+  <div id="chat" style="background-color:grey; width:600px; height:400px; margin: auto; overflow-y: scroll;">
+    <% for message in @lobby.messages %>
+      <div style="padding-left: 5px; text-align: left; border: 1px dotted white;" class="message">
+        <span class="who" style="color: yellow;"><%= message.user.login %></span>:&nbsp;<span><%= message.text %></span>
+      </div>
+    <% end %>
   </div>
   INPUT: <input type="text" size="60" name="some_name" value="" id="chat-input">
 
@@ -12,24 +16,65 @@
 </div>
 
 <script type="text/javascript" charset="utf-8">
+    
   function ChatRoom() {
     var self = this;
+    this.room_id = 1; // currently only the room with the id 1
+    this.current_user_id = <%= current_user.id %>;
     this.me = "<%= current_user.login %>";
+    
+    this.block_get = false;
+    
+    this.received_message_ids = [<%= @lobby.messages.map{|m| m.id }.join(',') %>];
+    
     this.div = $("#chat");
     this.input = $("#chat-input")
     this.input.bind('keypress', function(e){ 
-      if(e.which == 13) {
-        console.log(self.input.val());
-        self.appendMessage(self.input.val());
+      if(e.which == 13) {        
+        self.appendMessage({"text": self.input.val(), "user_id": self.current_user_id, "user_name": self.me, "room_id": self.room_id}, true);
         self.input.val('');
       }
-     });
-  }
+    });
+    this.initialize();
+  };
+
   ChatRoom.prototype = {
-    "appendMessage": function(message) {
-      this.div.append('<div style="padding-left: 5px; text-align: left; border: 1px dotted white;" class="message"><span class="who" style="color: red;">' + this.me + '</span>:&nbsp;<span>' + message + '</span></div>')
+    
+    "initialize": function() {
+      this.getNewMessages(true);
+    },
+    
+    "appendMessage": function(message, send) {
+      if(send) {
+        this.sendMessage(message);
+      } else if(message.id) {
+        this.received_message_ids.push(parseInt(message.id));
+      }      
+      this.div.append('<div style="padding-left: 5px; text-align: left; border: 1px dotted white;" class="message"><span class="who" style="color: yellow;">' + message.user_name + '</span>:&nbsp;<span>' + message.text + '</span></div>')
+    },
+
+    "sendMessage": function(message) {
+      var self = this;
+      self.block_get = true;
+      $.post("/chat_messages", { "room_id": message.room_id, "user_id": message.user_id, "text" : message.text, "received_message_ids": this.received_message_ids }, function(m_id){self.received_message_ids.push(parseInt(m_id)); self.block_get = false;});
+    },
+    
+    "getNewMessages": function(timeout) {
+      var self = this;
+      if(!this.block_get) {
+        $.get("/chat_messages/index", {"room_id": this.room_id, "received_message_ids[]": this.received_message_ids}, function(messages){
+          messages = eval(messages);
+          for(var i in messages) {
+            self.appendMessage(messages[i]);
+          } 
+        });        
+      }
+
+      if(timeout) {
+        setTimeout("c.getNewMessages(true)", 3000);
+      }
     }
-  }
+  };
   
   c = new ChatRoom();
 </script>

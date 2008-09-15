@@ -8,7 +8,7 @@ class Room
   property :open,                       Boolean, :default => true
   property :hidden,                     Boolean, :default => false
 
-  has n, :chat_messages
+  has n, :messages, :class_name => ChatMessage
   
   def self.lobby
     get(1) || new(:id => 1, :user_id => 0, :name => 'Lobby').save && get(1)

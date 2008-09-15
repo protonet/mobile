@@ -5,6 +5,7 @@ describe Instruments, "methods" do
   before(:each) do
     @controller = dispatch_to(Instruments, :index) do |controller|
       controller.should_receive(:login_required).and_return(true)
+      controller.instance_variable_set(:@current_user, User.new(:id => 1, :login => 'foobar'))
     end
   end
   
