@@ -42,6 +42,8 @@
     
     "initialize": function() {
       this.getNewMessages(true);
+      this.scrollToLast();
+      this.input.focus();
     },
     
     "appendMessage": function(message, send) {
@@ -50,7 +52,8 @@
       } else if(message.id) {
         this.received_message_ids.push(parseInt(message.id));
       }      
-      this.div.append('<div style="padding-left: 5px; text-align: left; border: 1px dotted white;" class="message"><span class="who" style="color: yellow;">' + message.user_name + '</span>:&nbsp;<span>' + message.text + '</span></div>')
+      var last = this.div.append('<div style="padding-left: 5px; text-align: left; border: 1px dotted white;" class="message"><span class="who" style="color: yellow;">' + message.user_name + '</span>:&nbsp;<span>' + message.text + '</span></div>')
+      this.scrollToLast();
     },
 
     "sendMessage": function(message) {
@@ -71,8 +74,12 @@
       }
 
       if(timeout) {
-        setTimeout("c.getNewMessages(true)", 1000);
+        setTimeout("c.getNewMessages(true)", 100000);
       }
+    },
+    
+    "scrollToLast": function() {
+      this.div.scrollTo(this.div.children('.message:last'));
     }
   };
   
