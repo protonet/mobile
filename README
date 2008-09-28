@@ -23,8 +23,8 @@ First of all: all of the code and documentation is work in progress, and it's re
 
 I hope that you will contribute to this project and have fun using and writing it as I believe this to be our chance to (each one of us) truly revolutionize the way we communicate, interact and so much more!
 
-Protonet aims to create a new internet (let's call it internet 2.0 ;)), basically it's a giant mesh network. Most of it's nodes will run an merb frontend, this is it - and it's called 'Dashboard'. It goes hand in hand with it's low-level part (also on github, called protonet-base).
-Together they replicate paid access point functionality, e.g. before logging in all you http request are internally redirected to this dashboard, as the idea is to allow free use of node-owner internet functionality a simple no-hassle registration (no email or identification other than an user name and password are needed) leads to full access to the internet.
+Protonet aims to create a new internet (let's call it internet 2.0 ;)), basically it will become a giant (actually lots and lots of connected or not connected small) mesh network(s). Most of it's nodes will run an merb frontend, this is it - and it's called 'Dashboard'. It goes hand in hand with it's low-level part (also on github, called protonet-base).
+Together (in the first phase of the project) they replicate paid access point functionality, e.g. before logging in all you http request are internally redirected to this dashboard, as the idea is to allow free use of node-owner internet functionality a simple no-hassle registration (no email or identification other than an user name and password are needed) leads to full access to the internet.
 
 == TECHNOLOGIES:
 
