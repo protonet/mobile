@@ -1,17 +1,22 @@
 class Backend
   
+  cattr_accessor :backend_connection
+  
+  # this basically defines the backend api interface (of course without signatures...)
+  @@backend_api_methods = [
+    :info,
+    :get_ips_of_currently_connected_clients,
+    :give_internet_rights_to_client,
+    :rewoke_internet_rights_from_client
+    ].freeze
+  
   class << self
-    def get_ips_of_currently_connected_clients
-    
-    end
-  
-    def give_internet_rights_to_client(ip)
-    
-    end
-  
-    def rewoke_internet_rights_from_client(ip)
 
+    def method_missing(method, *args, &block)
+      super unless @@backend_api_methods.include?(method)
+      backend_connection.send(method, *args, &block)
     end
+
   end
   
 end

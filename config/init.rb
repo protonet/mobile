@@ -39,7 +39,7 @@ Gem.path.unshift(Merb.root / "gems")
 # If you want modules and classes from libraries organized like
 # merbapp/lib/magicwand/lib/magicwand.rb to autoload,
 # uncomment this.
-# Merb.push_path(:lib, Merb.root / "lib") # uses **/*.rb as path glob.
+Merb.push_path(:lib, Merb.root / "lib") # uses **/*.rb as path glob.
 
 # ==== Dependencies
 
@@ -61,8 +61,8 @@ dependency "merb_helpers"
 
 Merb::BootLoader.after_app_loads do
   # Add dependencies here that must load after the application loads:
-
   # dependency "magic_admin" # this gem uses the app's model classes
+  
 end
 
 #
