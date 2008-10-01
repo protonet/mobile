@@ -62,7 +62,11 @@ dependency "merb_helpers"
 Merb::BootLoader.after_app_loads do
   # Add dependencies here that must load after the application loads:
   # dependency "magic_admin" # this gem uses the app's model classes
+  # set configured backend adapter
   
+  # take configuration or default backend
+  Backend.backend_connection = (Merb::Config[:backend_adapter] ||= BackendAdapters::DevelopmentMock)
+  Merb.logger.info("Backend '#{Backend.backend_connection.info}' connected successfully!")
 end
 
 #
@@ -124,6 +128,7 @@ Merb::Config.use do |c|
   # 'memory' or 'memcached'.  You can of course use your favorite ORM 
   # instead: 'datamapper', 'sequel' or 'activerecord'.
   c[:session_store] = 'cookie'
+    
 end
 
 

@@ -2,7 +2,7 @@ module BackendAdapters
   module Ubuntu
     
     def self.info
-      puts "ubuntu backend"
+      "ubuntu backend"
     end
     
     def get_ips_of_currently_connected_clients
@@ -13,7 +13,7 @@ module BackendAdapters
     
     end
   
-    def rewoke_internet_rights_from_client(ip)
+    def revoke_internet_rights_from_client(ip)
 
     end
     
