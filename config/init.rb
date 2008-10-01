@@ -65,7 +65,7 @@ Merb::BootLoader.after_app_loads do
   # set configured backend adapter
   
   # take configuration or default backend
-  Backend.backend_connection = (Merb::Config[:backend_adapter] ||= BackendAdapters::DevelopmentMock)
+  Backend.backend_connection = (Merb::Config[:backend_adapter] ||= BackendAdapters::DevelopmentMock.new)
   Merb.logger.info("Backend '#{Backend.backend_connection.info}' connected successfully!")
 end
 

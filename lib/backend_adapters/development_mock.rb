@@ -1,7 +1,7 @@
 module BackendAdapters
   class DevelopmentMock
     
-    def self.info
+    def info
       "development mock"
     end
     

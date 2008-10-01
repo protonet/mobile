@@ -9,5 +9,5 @@ Merb::Config.use { |c|
 
   # app and node configuration
   # configure our backend to be the ubuntu backend
-  c[:backend_adapter] = BackendAdapters::Ubuntu
+  c[:backend_adapter] = BackendAdapters::Ubuntu.new()
 }
