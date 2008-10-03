@@ -46,6 +46,10 @@ module BackendAdapters
       end
       
       def get_ip_for_mac(mac, ifaces = DEFAULT_WLAN_INTERFACES, refresh = false)
+        # todo: I'm not sure if this is beautiful enough, might need to some refactoring
+        # maybe make it two methods (on from one interface and one from several interfaces,
+        # or maybe even just all interfaces, let's see how this goes)...
+        ifaces = ifaces.to_a unless ifaces.is_a? Array
         raise ArgumentError, mac unless mac.match(REGS[:mac]) or (ifaces - DEFAULT_WLAN_INTERFACES).empty?
         # this is a little hackish, will be changed though
         # I do this loop since the mac your searching for might be connected to any given iface
@@ -53,12 +57,12 @@ module BackendAdapters
         # for iface 1 even though you are already connected to iface 2 this an update needs to be done at that point
         # (that's what that refresh parameter is for)
         # to_a makes sure it's an array
-        ip_array = ifaces.to_a.collect do |iface|
+        ip_array = ifaces.collect do |iface|
           match = `arp -a -i #{@config[iface]}`.match(/\((.*)\).*#{mac}/)
           match && match[1]
         end
         ip_array.compact!
-        raise RuntimeError, ip_array if ip_array.size != 1
+        raise RuntimeError, ip_array if ip_array.size != 1 # not implemented yet
         ip_array.first
       end
       
