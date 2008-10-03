@@ -33,7 +33,7 @@ module BackendAdapters
 #    private
       def get_connected_macs_to_wlan(iface)
         raise ArgumentError, iface unless DEFAULT_WLAN_INTERFACES.include?(iface)
-        return `wlanconfig #{@config[iface]} list sta`
+        `wlanconfig #{@config[iface]} list sta`.scan(/..:..:..:..:..:../)
       end  
 
   end
