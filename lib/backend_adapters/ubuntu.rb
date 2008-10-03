@@ -43,8 +43,13 @@ module BackendAdapters
       
       def get_ip_for_mac(mac, ifaces = DEFAULT_WLAN_INTERFACES, refresh = false)
         raise ArgumentError, mac unless mac.match(REGS[:mac]) or (ifaces - DEFAULT_WLAN_INTERFACES).empty?
-        match = `arp -a -i #{@config[iface]}`.match(/\((.*)\).*#{mac}/)
-        match && match[1]
+        # this is a little hackish, will be changed though
+        ip_array = ifaces.collect do |iface|
+          match = `arp -a -i #{@config[iface]}`.match(/\((.*)\).*#{mac}/)
+          match && match[1]
+        end
+        raise RuntimeError, ip_array if ip_array.size != 1
+        ip_array.first
       end      
       
 
