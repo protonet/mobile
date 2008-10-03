@@ -49,7 +49,7 @@ module BackendAdapters
         # todo: I'm not sure if this is beautiful enough, might need to some refactoring
         # maybe make it two methods (on from one interface and one from several interfaces,
         # or maybe even just all interfaces, let's see how this goes)...
-        ifaces = ifaces.to_a unless ifaces.is_a? Array
+        ifaces = Array(ifaces) unless ifaces.is_a? Array
         raise ArgumentError, mac unless mac.match(REGS[:mac]) or (ifaces - DEFAULT_WLAN_INTERFACES).empty?
         # this is a little hackish, will be changed though
         # I do this loop since the mac your searching for might be connected to any given iface
