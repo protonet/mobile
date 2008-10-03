@@ -52,6 +52,7 @@ module BackendAdapters
           match = `arp -a -i #{@config[iface]}`.match(/\((.*)\).*#{mac}/)
           match && match[1]
         end
+        ip_array.compact!
         raise RuntimeError, ip_array if ip_array.size != 1
         ip_array.first
       end      
