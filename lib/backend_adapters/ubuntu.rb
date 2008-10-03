@@ -9,6 +9,11 @@ module BackendAdapters
       :base_connection => 'eth0'
     }
     
+    # maybe move it up a bit
+    REGS = {
+      :mac => /..:..:..:..:..:../
+    }
+    
     
     def initialize(config={})
       @config = config.merge(DEFAULT_UBUNTU_CONFIG)
@@ -33,8 +38,15 @@ module BackendAdapters
 #    private
       def get_connected_macs_to_wlan(iface)
         raise ArgumentError, iface unless DEFAULT_WLAN_INTERFACES.include?(iface)
-        `wlanconfig #{@config[iface]} list sta`.scan(/..:..:..:..:..:../)
-      end  
+        `wlanconfig #{@config[iface]} list sta`.scan(REGS[:mac]).map {|m| m.upcase!}
+      end
+      
+      def get_ip_for_mac(mac, ifaces = DEFAULT_WLAN_INTERFACES, refresh = false)
+        raise ArgumentError, mac unless mac.match(REGS[:mac]) or (ifaces - DEFAULT_WLAN_INTERFACES).empty?
+        match = `arp -a -i #{@config[iface]}`.match(/\((.*)\).*#{mac}/)
+        match && match[1]
+      end      
+      
 
   end
 end
