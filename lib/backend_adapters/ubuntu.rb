@@ -44,6 +44,10 @@ module BackendAdapters
       def get_ip_for_mac(mac, ifaces = DEFAULT_WLAN_INTERFACES, refresh = false)
         raise ArgumentError, mac unless mac.match(REGS[:mac]) or (ifaces - DEFAULT_WLAN_INTERFACES).empty?
         # this is a little hackish, will be changed though
+        # I do this loop since the mac your searching for might be connected to any given iface
+        # the runtime error is raised since, it is possible that your mac address still is in the arp cache
+        # for iface 1 even though you are already connected to iface 2 this an update needs to be done at that point
+        # (that's what that refresh parameter is for)
         ip_array = ifaces.collect do |iface|
           match = `arp -a -i #{@config[iface]}`.match(/\((.*)\).*#{mac}/)
           match && match[1]
