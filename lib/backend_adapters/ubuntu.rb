@@ -24,7 +24,11 @@ module BackendAdapters
     end
     
     def get_ips_of_currently_connected_clients
-    
+      DEFAULT_WLAN_INTERFACES.collect do |iface|
+        get_connected_macs_to_wlan(iface).collect do |mac|
+          get_ip_for_mac(mac, iface)
+        end
+      end.flatten
     end
 
     def give_internet_rights_to_client(ip)
@@ -35,7 +39,7 @@ module BackendAdapters
 
     end
     
-#    private
+   private
       def get_connected_macs_to_wlan(iface)
         raise ArgumentError, iface unless DEFAULT_WLAN_INTERFACES.include?(iface)
         `wlanconfig #{@config[iface]} list sta`.scan(REGS[:mac]).map {|m| m.upcase!}
@@ -55,8 +59,7 @@ module BackendAdapters
         ip_array.compact!
         raise RuntimeError, ip_array if ip_array.size != 1
         ip_array.first
-      end      
+      end
       
-
   end
 end
