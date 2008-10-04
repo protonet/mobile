@@ -38,13 +38,13 @@
   </div>
   
   <p>the use of this this access point is <em>free of charge</em></p>
-  <ul id="terms">
-    <li>
-      bla
-    </li>
-    <li>
-      blub
-    </li>
+  <br />
+  
+  <p>currently connected:</p><br />
+  <ul>
+    <% @connected_users.each do |user| %>
+      <li><%= user.display_name %></li>
+    <% end %>
   </ul>
   
 </div>

@@ -15,14 +15,16 @@ class User
   property :salt,                       String
   property :remember_token_expires_at,  DateTime
   property :remember_token,             String
+  property :current_ip,                 String,   :nullable => true
+  property :last_polled_at,             DateTime
   property :realm_id,                   String
   property :online,                     Boolean
   
   validates_length            :login,                   :within => 3..40
-  validates_present           :password
-  validates_present           :password_confirmation
-  validates_length            :password,                :within => 4..40
-  validates_is_confirmed      :password,                :groups => :create
+  validates_present           :password,                :on => [:create, :password_change]
+  validates_present           :password_confirmation,   :on => [:create, :password_change]
+  validates_length            :password,                :within => 4..40, :on => [:create, :password_change]
+  validates_is_confirmed      :password,                :on => [:create, :password_change]
   
   def self.authenticate(params)
     u = first(:login => params[:login])
@@ -33,7 +35,16 @@ class User
     end
   end
   
-    
+  def self.all_connected_users
+    Backend.get_ips_of_currently_connected_clients.collect do |ip|
+      User.first(:current_ip => ip) || User.new(:name => "not logged in yet ;) #{ip}")
+    end.compact
+  end
+  
+  def display_name
+    name || login
+  end
+  
   # Encrypts some data with the salt.
   def encrypt(password, salt)
     Digest::SHA1.hexdigest("--#{salt}--#{password}--")

@@ -3,11 +3,14 @@ class Sessions < Application
   skip_before :login_required
 
   def new
+    prepare_connected_users
     render
   end
 
   def create
-    self.current_user= User.authenticate(params[:user]) if params[:user]
+    user = User.authenticate(params[:user]) if params[:user]
+    Merb.logger.info(user.inspect)
+    self.current_user = user if user 
     if logged_in?
       if params[:remember_me] == "1"
         current_user.remember_me
@@ -15,8 +18,7 @@ class Sessions < Application
       end
       redirect url(:home)
     else
-      message[:error] = 'Login oder Passwort falsch!'
-      render :new
+      redirect(url(:login), :message => {:error => 'Login oder Passwort falsch!'})
     end
   end
 
@@ -26,8 +28,15 @@ class Sessions < Application
     # cookies.delete :auth_token
     # reset_session
     # redirect_back_or_default('/')
+    # login is required to log you out
+    login_required
     log_out!
     redirect url(:home)
   end
+  
+  private
+    def prepare_connected_users
+      @connected_users = User.all_connected_users
+    end
     
 end

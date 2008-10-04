@@ -2749,3 +2749,409 @@ Mon, 01 Sep 2008 21:55:47 GMT  ~  info  ~  Logfile created
  ~ Cookie set: _session_id => 9c1aa4b7a6da5d167c7c840373496ce4 -- {"expires"=>"Sun, 28-Sep-2008 19:21:30 GMT", "path"=>"/"}
  ~ Redirecting to: /instruments/index (302)
  ~ {:after_filters_time=>3.0e-05, :action_time=>0.00159, :before_filters_time=>3.4e-05}
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Backend 'development mock' connected successfully!
+ ~ Using 'share-nothing' cookie sessions (4kb limit per client)
+ ~ Params: {"format"=>"", "action"=>"bar", "id"=>"", "controller"=>"any_controller"}
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Redirecting to: /login?_message=BAh7BjoKZXJyb3IiV0JpdHRlIGVpbmxvZ2dlbiBvZGVyIGVpbmVuIG5ldWVu%0AIFVzZXIgYW5sZWdlbiAoa29zdGVubG9zLCBrZWluZSBEYXRlbiBub3R3ZW5k%0AaWchKS4%3D%0A (302)
+ ~ {:action_time=>0.007324, :after_filters_time=>9.6e-05}
+ ~ trying to login  <-- this should be nil btw
+ ~ User foo logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User bar logged in!
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ {:action_time=>0.062553, :before_filters_time=>0.00021, :after_filters_time=>5.9e-05}
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ {:action_time=>0.019659, :before_filters_time=>0.000166, :after_filters_time=>3.3e-05}
+ ~ Params: {"action"=>"new", "controller"=>"sessions"}
+ ~ {:action_time=>0.061969, :before_filters_time=>3.2e-05, :after_filters_time=>5.8e-05}
+ ~ Params: {"action"=>"create", "controller"=>"sessions"}
+ ~ nil
+ ~ {:action_time=>0.041713, :before_filters_time=>2.6e-05, :after_filters_time=>3.0e-05}
+ ~ Params: {"user"=>{"login"=>"foo", "password"=>"blub"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Params: {"user"=>{"login"=>"foo", "password"=>"blub"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Params: {"format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ nil
+ ~ {:action_time=>0.087714, :before_filters_time=>3.9e-05, :after_filters_time=>5.7e-05}
+ ~ Params: {"action"=>"new", "controller"=>"users"}
+ ~ {:action_time=>0.013758, :before_filters_time=>3.5e-05, :after_filters_time=>7.8e-05}
+ ~ Params: {"action"=>"create", "controller"=>"users"}
+ ~ {:action_time=>0.286472, :before_filters_time=>2.7e-05, :after_filters_time=>3.9e-05}
+ ~ Params: {"user"=>{"password_confirmation"=>"bars", "login"=>"foo", "password"=>"bars"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Params: {""=>nil, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ {:action_time=>0.023133, :before_filters_time=>3.3e-05, :after_filters_time=>4.0e-05}
+ ~ Params: {"user"=>"mocked", "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Redirecting to: /instruments/index (302)
+ ~ {:action_time=>0.001578, :before_filters_time=>3.6e-05, :after_filters_time=>8.9e-05}
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Backend 'development mock' connected successfully!
+ ~ Using 'share-nothing' cookie sessions (4kb limit per client)
+ ~ Params: {"format"=>"", "action"=>"bar", "id"=>"", "controller"=>"any_controller"}
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Redirecting to: /login?_message=BAh7BjoKZXJyb3IiV0JpdHRlIGVpbmxvZ2dlbiBvZGVyIGVpbmVuIG5ldWVu%0AIFVzZXIgYW5sZWdlbiAoa29zdGVubG9zLCBrZWluZSBEYXRlbiBub3R3ZW5k%0AaWchKS4%3D%0A (302)
+ ~ {:action_time=>0.006443, :after_filters_time=>9.2e-05}
+ ~ trying to login  <-- this should be nil btw
+ ~ User foo logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User bar logged in!
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ {:action_time=>0.017914, :before_filters_time=>0.000277, :after_filters_time=>5.9e-05}
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ {:action_time=>0.015233, :before_filters_time=>0.000167, :after_filters_time=>3.4e-05}
+ ~ Params: {"action"=>"new", "controller"=>"sessions"}
+ ~ {:action_time=>0.0587, :before_filters_time=>3.3e-05, :after_filters_time=>5.9e-05}
+ ~ Params: {"action"=>"create", "controller"=>"sessions"}
+ ~ nil
+ ~ {:action_time=>0.040313, :before_filters_time=>4.2e-05, :after_filters_time=>3.0e-05}
+ ~ Params: {"user"=>{"login"=>"foo", "password"=>"blub"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Params: {"user"=>{"login"=>"foo", "password"=>"blub"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Params: {"format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ nil
+ ~ {:action_time=>0.051374, :before_filters_time=>3.4e-05, :after_filters_time=>6.6e-05}
+ ~ Params: {"action"=>"new", "controller"=>"users"}
+ ~ {:action_time=>0.010494, :before_filters_time=>6.1e-05, :after_filters_time=>5.9e-05}
+ ~ Params: {"action"=>"create", "controller"=>"users"}
+ ~ {:action_time=>0.213722, :before_filters_time=>4.4e-05, :after_filters_time=>3.5e-05}
+ ~ Params: {"user"=>{"password_confirmation"=>"bars", "login"=>"foo", "password"=>"bars"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Params: {""=>nil, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ {:action_time=>0.042314, :before_filters_time=>3.9e-05, :after_filters_time=>4.0e-05}
+ ~ Params: {"user"=>"mocked", "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Redirecting to: /instruments/index (302)
+ ~ {:action_time=>0.001487, :before_filters_time=>3.5e-05, :after_filters_time=>3.3e-05}
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Backend 'development mock' connected successfully!
+ ~ Using 'share-nothing' cookie sessions (4kb limit per client)
+ ~ Params: {"format"=>"", "action"=>"bar", "id"=>"", "controller"=>"any_controller"}
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Redirecting to: /login?_message=BAh7BjoKZXJyb3IiV0JpdHRlIGVpbmxvZ2dlbiBvZGVyIGVpbmVuIG5ldWVu%0AIFVzZXIgYW5sZWdlbiAoa29zdGVubG9zLCBrZWluZSBEYXRlbiBub3R3ZW5k%0AaWchKS4%3D%0A (302)
+ ~ {:action_time=>0.006054, :after_filters_time=>9.2e-05}
+ ~ trying to login  <-- this should be nil btw
+ ~ User foo logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User bar logged in!
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ {:action_time=>0.016276, :before_filters_time=>0.000204, :after_filters_time=>5.7e-05}
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ {:action_time=>0.021963, :before_filters_time=>0.000152, :after_filters_time=>3.6e-05}
+ ~ Params: {"action"=>"new", "controller"=>"sessions"}
+ ~ {:action_time=>0.054985, :before_filters_time=>3.3e-05, :after_filters_time=>5.8e-05}
+ ~ Params: {"action"=>"create", "controller"=>"sessions"}
+ ~ nil
+ ~ {:action_time=>0.046166, :before_filters_time=>2.5e-05, :after_filters_time=>2.8e-05}
+ ~ Params: {"user"=>{"login"=>"foo", "password"=>"blub"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Params: {"user"=>{"login"=>"foo", "password"=>"blub"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ Params: {"format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ nil
+ ~ {:action_time=>0.049313, :before_filters_time=>6.8e-05, :after_filters_time=>5.3e-05}
+ ~ Params: {"action"=>"new", "controller"=>"users"}
+ ~ {:action_time=>0.0108, :before_filters_time=>3.2e-05, :after_filters_time=>6.1e-05}
+ ~ Params: {"action"=>"create", "controller"=>"users"}
+ ~ {:action_time=>0.242086, :before_filters_time=>4.8e-05, :after_filters_time=>3.4e-05}
+ ~ Params: {"user"=>{"password_confirmation"=>"bars", "login"=>"foo", "password"=>"bars"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Params: {""=>nil, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ {:action_time=>0.02986, :before_filters_time=>4.1e-05, :after_filters_time=>7.1e-05}
+ ~ Params: {"user"=>"mocked", "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Redirecting to: /instruments/index (302)
+ ~ {:action_time=>0.001274, :before_filters_time=>3.6e-05, :after_filters_time=>3.0e-05}
+ ~ Compiling routes...
+ ~ Backend 'development mock' connected successfully!
+ ~ Using 'share-nothing' cookie sessions (4kb limit per client)
+ ~ Using Mongrel adapter
+ ~ Compiling routes...
+ ~ Backend 'development mock' connected successfully!
+ ~ Using 'share-nothing' cookie sessions (4kb limit per client)
+ ~ Using Mongrel adapter
+ ~ Compiling routes...
+ ~ Backend 'development mock' connected successfully!
+ ~ Using 'share-nothing' cookie sessions (4kb limit per client)
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Backend 'development mock' connected successfully!
+ ~ Using 'share-nothing' cookie sessions (4kb limit per client)
+ ~ Params: {"format"=>"", "action"=>"bar", "id"=>"", "controller"=>"any_controller"}
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Redirecting to: /login?_message=BAh7BjoKZXJyb3IiV0JpdHRlIGVpbmxvZ2dlbiBvZGVyIGVpbmVuIG5ldWVu%0AIFVzZXIgYW5sZWdlbiAoa29zdGVubG9zLCBrZWluZSBEYXRlbiBub3R3ZW5k%0AaWchKS4%3D%0A (302)
+ ~ {:action_time=>0.006471, :after_filters_time=>7.5e-05}
+ ~ trying to login  <-- this should be nil btw
+ ~ User foo logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User bar logged in!
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ {:action_time=>0.017952, :before_filters_time=>0.000174, :after_filters_time=>5.6e-05}
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ {:action_time=>0.012223, :before_filters_time=>0.000159, :after_filters_time=>3.2e-05}
+ ~ Params: {"action"=>"new", "controller"=>"sessions"}
+ ~ {:action_time=>0.053984, :before_filters_time=>3.3e-05, :after_filters_time=>7.7e-05}
+ ~ Params: {"action"=>"create", "controller"=>"sessions"}
+ ~ nil
+ ~ {:action_time=>0.062135, :before_filters_time=>2.5e-05, :after_filters_time=>2.8e-05}
+ ~ Redirecting to: /home (302)
+ ~ Params: {"user"=>{"login"=>"foo", "password"=>"blub"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ #<User id=16 name=nil login="foo" crypted_password="b66061a2245dde149bac9fab2e3380081d70f42e" salt="efe0dc31eb285fb505f18c797bead41dd761009e" remember_token_expires_at=nil remember_token=nil current_ip="127.0.0.1" last_polled_at=nil realm_id=nil online=nil>
+ ~ {:action_time=>0.063558, :before_filters_time=>4.7e-05, :after_filters_time=>4.5e-05}
+ ~ Params: {"user"=>{"login"=>"foo", "password"=>"blub"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ #<User id=16 name=nil login="foo" crypted_password="b66061a2245dde149bac9fab2e3380081d70f42e" salt="efe0dc31eb285fb505f18c797bead41dd761009e" remember_token_expires_at=nil remember_token=nil current_ip="127.0.0.1" last_polled_at=nil realm_id=nil online=nil>
+ ~ Redirecting to: /home (302)
+ ~ {:action_time=>0.018727, :before_filters_time=>2.8e-05, :after_filters_time=>5.5e-05}
+ ~ Params: {"format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ nil
+ ~ {:action_time=>0.212829, :before_filters_time=>4.5e-05, :after_filters_time=>5.0e-05}
+ ~ Params: {"action"=>"new", "controller"=>"users"}
+ ~ {:action_time=>0.007419, :before_filters_time=>3.6e-05, :after_filters_time=>6.0e-05}
+ ~ Params: {"action"=>"create", "controller"=>"users"}
+ ~ {:action_time=>0.028041, :before_filters_time=>2.7e-05, :after_filters_time=>5.8e-05}
+ ~ Params: {"user"=>{"password_confirmation"=>"bars", "login"=>"foo", "password"=>"bars"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Redirecting to: /instruments/index (302)
+ ~ {:action_time=>0.048717, :before_filters_time=>3.5e-05, :after_filters_time=>4.0e-05}
+ ~ Params: {""=>nil, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ {:action_time=>0.016818, :before_filters_time=>4.4e-05, :after_filters_time=>0.000423}
+ ~ Params: {"user"=>"mocked", "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Redirecting to: /instruments/index (302)
+ ~ {:action_time=>0.01404, :before_filters_time=>3.5e-05, :after_filters_time=>4.4e-05}
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Backend 'development mock' connected successfully!
+ ~ Using 'share-nothing' cookie sessions (4kb limit per client)
+ ~ Params: {"action"=>"new", "controller"=>"sessions"}
+ ~ {:after_filters_time=>0.000127, :before_filters_time=>4.1e-05, :action_time=>0.123505}
+ ~ Params: {"action"=>"create", "controller"=>"sessions"}
+ ~ nil
+ ~ {:after_filters_time=>5.0e-05, :before_filters_time=>3.0e-05, :action_time=>0.04616}
+ ~ Redirecting to: /home (302)
+ ~ Params: {"user"=>{"password"=>"blub", "login"=>"foo"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ #<User id=19 name=nil login="foo" crypted_password="bb9f589bc7a9848d1574c79cc7d7b71858f0597d" salt="9590b2371c26eda688f546013abed80df8e1b8d3" remember_token_expires_at=nil remember_token=nil current_ip="127.0.0.1" last_polled_at=nil realm_id=nil online=nil>
+ ~ {:after_filters_time=>3.9e-05, :before_filters_time=>3.4e-05, :action_time=>0.062742}
+ ~ Params: {"user"=>{"password"=>"blub", "login"=>"foo"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ #<User id=19 name=nil login="foo" crypted_password="bb9f589bc7a9848d1574c79cc7d7b71858f0597d" salt="9590b2371c26eda688f546013abed80df8e1b8d3" remember_token_expires_at=nil remember_token=nil current_ip="127.0.0.1" last_polled_at=nil realm_id=nil online=nil>
+ ~ Redirecting to: /home (302)
+ ~ {:after_filters_time=>4.0e-05, :before_filters_time=>5.3e-05, :action_time=>0.045765}
+ ~ Params: {"format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ nil
+ ~ {:after_filters_time=>5.0e-05, :before_filters_time=>3.3e-05, :action_time=>0.059438}
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Backend 'development mock' connected successfully!
+ ~ Using 'share-nothing' cookie sessions (4kb limit per client)
+ ~ Params: {"action"=>"new", "controller"=>"sessions"}
+ ~ {:after_filters_time=>0.00011, :before_filters_time=>4.7e-05, :action_time=>0.08079}
+ ~ Params: {"action"=>"create", "controller"=>"sessions"}
+ ~ nil
+ ~ {:after_filters_time=>3.1e-05, :before_filters_time=>4.0e-05, :action_time=>0.003025}
+ ~ Redirecting to: /home (302)
+ ~ Params: {"user"=>{"password"=>"blub", "login"=>"foo"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ #<User id=20 name=nil login="foo" crypted_password="b30623e4bee88cbac4a6de4ad3d379f73a732948" salt="6ff6395d23bfb349b27a00f1f3b2a7a47173a6f2" remember_token_expires_at=nil remember_token=nil current_ip="127.0.0.1" last_polled_at=nil realm_id=nil online=nil>
+ ~ {:after_filters_time=>3.1e-05, :before_filters_time=>0.000267, :action_time=>0.010781}
+ ~ Params: {"user"=>{"password"=>"blub", "login"=>"foo"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ #<User id=20 name=nil login="foo" crypted_password="b30623e4bee88cbac4a6de4ad3d379f73a732948" salt="6ff6395d23bfb349b27a00f1f3b2a7a47173a6f2" remember_token_expires_at=nil remember_token=nil current_ip="127.0.0.1" last_polled_at=nil realm_id=nil online=nil>
+ ~ Redirecting to: /home (302)
+ ~ {:after_filters_time=>3.9e-05, :before_filters_time=>5.7e-05, :action_time=>0.030867}
+ ~ Params: {"format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ nil
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Backend 'development mock' connected successfully!
+ ~ Using 'share-nothing' cookie sessions (4kb limit per client)
+ ~ Params: {"format"=>"", "action"=>"bar", "id"=>"", "controller"=>"any_controller"}
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Redirecting to: /login_form?_message=BAh7BjoKZXJyb3IiV0JpdHRlIGVpbmxvZ2dlbiBvZGVyIGVpbmVuIG5ldWVu%0AIFVzZXIgYW5sZWdlbiAoa29zdGVubG9zLCBrZWluZSBEYXRlbiBub3R3ZW5k%0AaWchKS4%3D%0A (302)
+ ~ {:action_time=>0.006735, :after_filters_time=>8.1e-05}
+ ~ trying to login  <-- this should be nil btw
+ ~ User foo logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User bar logged in!
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ {:action_time=>0.016448, :before_filters_time=>0.000188, :after_filters_time=>6.0e-05}
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ {:action_time=>0.022053, :before_filters_time=>0.000165, :after_filters_time=>3.5e-05}
+ ~ Params: {"action"=>"new", "controller"=>"sessions"}
+ ~ {:action_time=>0.060398, :before_filters_time=>3.3e-05, :after_filters_time=>5.9e-05}
+ ~ Params: {"action"=>"create", "controller"=>"sessions"}
+ ~ nil
+ ~ Redirecting to: /login_form?_message=BAh7BjoKZXJyb3IiIExvZ2luIG9kZXIgUGFzc3dvcnQgZmFsc2NoIQ%3D%3D%0A (302)
+ ~ {:action_time=>0.001132, :before_filters_time=>2.6e-05, :after_filters_time=>2.3e-05}
+ ~ Redirecting to: /home (302)
+ ~ Params: {"user"=>{"login"=>"foo", "password"=>"blub"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ #<User id=21 name=nil login="foo" crypted_password="5503e0fa28f319190283cbb65ce84fccb48a2e0e" salt="2a22a89719ad60ec58bb49ac327d5f9ed4fc4364" remember_token_expires_at=nil remember_token=nil current_ip="127.0.0.1" last_polled_at=nil realm_id=nil online=nil>
+ ~ Redirecting to: /login_form?_message=BAh7BjoKZXJyb3IiIExvZ2luIG9kZXIgUGFzc3dvcnQgZmFsc2NoIQ%3D%3D%0A (302)
+ ~ {:action_time=>0.009573, :before_filters_time=>6.3e-05, :after_filters_time=>6.9e-05}
+ ~ Params: {"user"=>{"login"=>"foo", "password"=>"blub"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ #<User id=21 name=nil login="foo" crypted_password="5503e0fa28f319190283cbb65ce84fccb48a2e0e" salt="2a22a89719ad60ec58bb49ac327d5f9ed4fc4364" remember_token_expires_at=nil remember_token=nil current_ip="127.0.0.1" last_polled_at=nil realm_id=nil online=nil>
+ ~ Redirecting to: /home (302)
+ ~ {:action_time=>0.038857, :before_filters_time=>3.1e-05, :after_filters_time=>3.4e-05}
+ ~ Params: {"format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ nil
+ ~ Redirecting to: /login_form?_message=BAh7BjoKZXJyb3IiIExvZ2luIG9kZXIgUGFzc3dvcnQgZmFsc2NoIQ%3D%3D%0A (302)
+ ~ {:action_time=>0.001467, :before_filters_time=>5.7e-05, :after_filters_time=>3.3e-05}
+ ~ Params: {"action"=>"new", "controller"=>"users"}
+ ~ {:action_time=>0.019634, :before_filters_time=>3.7e-05, :after_filters_time=>6.2e-05}
+ ~ Params: {"action"=>"create", "controller"=>"users"}
+ ~ {:action_time=>0.022636, :before_filters_time=>2.9e-05, :after_filters_time=>3.5e-05}
+ ~ Params: {"user"=>{"password_confirmation"=>"bars", "login"=>"foo", "password"=>"bars"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Redirecting to: /instruments/index (302)
+ ~ {:action_time=>0.063744, :before_filters_time=>4.5e-05, :after_filters_time=>3.9e-05}
+ ~ Params: {""=>nil, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ {:action_time=>0.040233, :before_filters_time=>3.6e-05, :after_filters_time=>4.4e-05}
+ ~ Params: {"user"=>"mocked", "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Redirecting to: /instruments/index (302)
+ ~ {:action_time=>0.002592, :before_filters_time=>3.6e-05, :after_filters_time=>3.3e-05}
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Backend 'development mock' connected successfully!
+ ~ Using 'share-nothing' cookie sessions (4kb limit per client)
+ ~ Params: {"format"=>"", "action"=>"bar", "id"=>"", "controller"=>"any_controller"}
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Redirecting to: /login_form?_message=BAh7BjoKZXJyb3IiV0JpdHRlIGVpbmxvZ2dlbiBvZGVyIGVpbmVuIG5ldWVu%0AIFVzZXIgYW5sZWdlbiAoa29zdGVubG9zLCBrZWluZSBEYXRlbiBub3R3ZW5k%0AaWchKS4%3D%0A (302)
+ ~ {:after_filters_time=>8.1e-05, :action_time=>0.005937}
+ ~ trying to login  <-- this should be nil btw
+ ~ User foo logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User bar logged in!
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Backend 'development mock' connected successfully!
+ ~ Using 'share-nothing' cookie sessions (4kb limit per client)
+ ~ Params: {"format"=>"", "action"=>"bar", "id"=>"", "controller"=>"any_controller"}
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Redirecting to: /login_form?_message=BAh7BjoKZXJyb3IiV0JpdHRlIGVpbmxvZ2dlbiBvZGVyIGVpbmVuIG5ldWVu%0AIFVzZXIgYW5sZWdlbiAoa29zdGVubG9zLCBrZWluZSBEYXRlbiBub3R3ZW5k%0AaWchKS4%3D%0A (302)
+ ~ {:after_filters_time=>0.000203, :action_time=>0.005755}
+ ~ trying to login  <-- this should be nil btw
+ ~ User foo logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User bar logged in!
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Backend 'development mock' connected successfully!
+ ~ Using 'share-nothing' cookie sessions (4kb limit per client)
+ ~ Params: {"format"=>"", "action"=>"bar", "id"=>"", "controller"=>"any_controller"}
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Redirecting to: /login_form?_message=BAh7BjoKZXJyb3IiV0JpdHRlIGVpbmxvZ2dlbiBvZGVyIGVpbmVuIG5ldWVu%0AIFVzZXIgYW5sZWdlbiAoa29zdGVubG9zLCBrZWluZSBEYXRlbiBub3R3ZW5k%0AaWchKS4%3D%0A (302)
+ ~ {:action_time=>0.005976, :after_filters_time=>9.1e-05}
+ ~ trying to login  <-- this should be nil btw
+ ~ User foo logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User bar logged in!
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Backend 'development mock' connected successfully!
+ ~ Using 'share-nothing' cookie sessions (4kb limit per client)
+ ~ Params: {"format"=>"", "action"=>"bar", "id"=>"", "controller"=>"any_controller"}
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Redirecting to: /login_form?_message=BAh7BjoKZXJyb3IiV0JpdHRlIGVpbmxvZ2dlbiBvZGVyIGVpbmVuIG5ldWVu%0AIFVzZXIgYW5sZWdlbiAoa29zdGVubG9zLCBrZWluZSBEYXRlbiBub3R3ZW5k%0AaWchKS4%3D%0A (302)
+ ~ {:action_time=>0.005527, :after_filters_time=>8.9e-05}
+ ~ trying to login  <-- this should be nil btw
+ ~ User foo logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User bar logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Loaded TEST Environment...
+ ~ loading gem 'dm-validations' ...
+ ~ loading gem 'merb_helpers' ...
+ ~ Connecting to database...
+ ~ loading gem 'merb_datamapper' ...
+ ~ Compiling routes...
+ ~ Backend 'development mock' connected successfully!
+ ~ Using 'share-nothing' cookie sessions (4kb limit per client)
+ ~ Params: {"format"=>"", "action"=>"bar", "id"=>"", "controller"=>"any_controller"}
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Redirecting to: /login_form?_message=BAh7BjoKZXJyb3IiV0JpdHRlIGVpbmxvZ2dlbiBvZGVyIGVpbmVuIG5ldWVu%0AIFVzZXIgYW5sZWdlbiAoa29zdGVubG9zLCBrZWluZSBEYXRlbiBub3R3ZW5k%0AaWchKS4%3D%0A (302)
+ ~ {:after_filters_time=>7.9e-05, :action_time=>0.006498}
+ ~ trying to login  <-- this should be nil btw
+ ~ User foo logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User bar logged in!
+ ~ trying to login  <-- this should be nil btw
+ ~ User could not be logged in!
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ {:after_filters_time=>6.0e-05, :action_time=>0.01731, :before_filters_time=>0.000184}
+ ~ Params: {"action"=>"index", "controller"=>"instruments"}
+ ~ {:after_filters_time=>9.9e-05, :action_time=>0.020474, :before_filters_time=>0.000155}
+ ~ Params: {"action"=>"new", "controller"=>"sessions"}
+ ~ {:after_filters_time=>5.7e-05, :action_time=>0.078331, :before_filters_time=>3.2e-05}
+ ~ Params: {"action"=>"create", "controller"=>"sessions"}
+ ~ nil
+ ~ Redirecting to: /login_form?_message=BAh7BjoKZXJyb3IiIExvZ2luIG9kZXIgUGFzc3dvcnQgZmFsc2NoIQ%3D%3D%0A (302)
+ ~ {:after_filters_time=>2.9e-05, :action_time=>0.001691, :before_filters_time=>2.9e-05}
+ ~ Redirecting to: /home (302)
+ ~ Params: {"user"=>{"login"=>"foo", "password"=>"blub"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ #<User id=24 name=nil login="foo" crypted_password="bc20013c7fff8bcd2172680cb35aa4632d98dbfe" salt="7511b3cfdaa7b6d52c18633caaf6f7458c7f83f2" remember_token_expires_at=nil remember_token=nil current_ip=nil last_polled_at=nil realm_id=nil online=nil>
+ ~ Redirecting to: /login_form?_message=BAh7BjoKZXJyb3IiIExvZ2luIG9kZXIgUGFzc3dvcnQgZmFsc2NoIQ%3D%3D%0A (302)
+ ~ {:after_filters_time=>3.8e-05, :action_time=>0.023896, :before_filters_time=>3.6e-05}
+ ~ Params: {"user"=>{"login"=>"foo", "password"=>"blub"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ #<User id=24 name=nil login="foo" crypted_password="bc20013c7fff8bcd2172680cb35aa4632d98dbfe" salt="7511b3cfdaa7b6d52c18633caaf6f7458c7f83f2" remember_token_expires_at=nil remember_token=nil current_ip=nil last_polled_at=nil realm_id=nil online=nil>
+ ~ Redirecting to: /home (302)
+ ~ {:after_filters_time=>5.5e-05, :action_time=>0.02618, :before_filters_time=>3.3e-05}
+ ~ Params: {"format"=>"", "action"=>"create", "id"=>"", "controller"=>"sessions"}
+ ~ nil
+ ~ Redirecting to: /login_form?_message=BAh7BjoKZXJyb3IiIExvZ2luIG9kZXIgUGFzc3dvcnQgZmFsc2NoIQ%3D%3D%0A (302)
+ ~ {:after_filters_time=>3.1e-05, :action_time=>0.001466, :before_filters_time=>3.2e-05}
+ ~ Params: {"action"=>"new", "controller"=>"users"}
+ ~ {:after_filters_time=>8.0e-05, :action_time=>0.00977, :before_filters_time=>4.9e-05}
+ ~ Params: {"action"=>"create", "controller"=>"users"}
+ ~ {:after_filters_time=>3.8e-05, :action_time=>0.225126, :before_filters_time=>2.7e-05}
+ ~ Params: {"user"=>{"password_confirmation"=>"bars", "login"=>"foo", "password"=>"bars"}, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Redirecting to: /instruments/index (302)
+ ~ {:after_filters_time=>4.8e-05, :action_time=>0.064984, :before_filters_time=>3.6e-05}
+ ~ Params: {""=>nil, "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ {:after_filters_time=>3.8e-05, :action_time=>0.038279, :before_filters_time=>0.000323}
+ ~ Params: {"user"=>"mocked", "format"=>"", "action"=>"create", "id"=>"", "controller"=>"users"}
+ ~ Redirecting to: /instruments/index (302)
+ ~ {:after_filters_time=>3.2e-05, :action_time=>0.001316, :before_filters_time=>3.6e-05}
