@@ -7,6 +7,26 @@ class Application < Merb::Controller
     logged_in? || throw(:halt, :access_denied)
   end
   
+  
+  
+  def current_user=(user)
+    # log me out properly if setting user with nil
+    log_out! if @current_user && user.nil?
+    # basically logging you in
+    @current_user   = user
+    session[:user]  = @current_user.id
+    @current_user.poll(request.env['REMOTE_ADDR'])
+  end
+  
+  def log_out!
+    Merb.logger.info("trying to log out #{@current_user.login}")
+    @current_user.poll(nil, true)
+    session[:user] = nil
+    @current_user = nil
+  end
+  
+  
+  
   def logged_in?
     @current_user != nil
   end
@@ -15,21 +35,7 @@ class Application < Merb::Controller
     @current_user
   end
   
-  def current_user=(user)
-    session[:user] = user.id
-    user.update_attributes(:current_ip => request.env['REMOTE_ADDR'])
-    # set last polled timestamp :)
-    @current_user = user
-  end
   
-  def log_out!
-    Merb.logger.info('trying to log out ' + @current_user.login)
-    @current_user.update_attributes(:current_ip => nil)
-    Merb.logger.info(@current_user.inspect)
-    session[:user] = nil
-    # cookie something something
-    @current_user = nil
-  end
   
   def access_denied
     redirect(url(:login), :message => { :error => 'Bitte einloggen oder einen neuen User anlegen (kostenlos, keine Daten notwendig!).' })
@@ -52,9 +58,6 @@ class Application < Merb::Controller
     end
   
     def login_from_cookie
-      # @current_user = User.get(:token => cookie[:token]) or something like that
-      # session[:user] = @current_user.id needs to be set
-      # @current_user # needs to be returned
       nil # since it's not implemented
     end
   

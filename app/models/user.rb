@@ -26,19 +26,25 @@ class User
   validates_length            :password,                :within => 4..40, :on => [:create, :password_change]
   validates_is_confirmed      :password,                :on => [:create, :password_change]
   
-  def self.authenticate(params)
-    u = first(:login => params[:login])
-    if u
-      u.crypted_password == u.encrypt(params[:password], u.salt) ? u : nil
-    else
-      nil
+  class << self
+    def authenticate(params)
+      u = first(:login => params[:login])
+      if u
+        u.crypted_password == u.encrypt(params[:password], u.salt) ? u : nil
+      else
+        nil
+      end
+    end
+  
+    def all_connected_users
+      Backend.get_ips_of_currently_connected_clients.collect do |ip|
+        User.first(:current_ip => ip) || User.new(:name => "not logged in yet ;) #{ip}")
+      end.compact
     end
   end
   
-  def self.all_connected_users
-    Backend.get_ips_of_currently_connected_clients.collect do |ip|
-      User.first(:current_ip => ip) || User.new(:name => "not logged in yet ;) #{ip}")
-    end.compact
+  def poll(ip, force_update=false)
+    update_attributes(:current_ip => ip) unless force_update || current_ip.nil? || last_polled_at > Time.now - 5.minutes
   end
   
   def display_name
