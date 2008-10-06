@@ -58,7 +58,8 @@ class User
   
   private
     def downcase_login
-      login = login.downcase if login
+      # attr writer need to be called this way todo: find out why
+      self.login = login.downcase if login
     end
 
     def encrypt_password
