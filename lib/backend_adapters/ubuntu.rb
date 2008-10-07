@@ -10,7 +10,7 @@ module BackendAdapters
     }
     
     # maybe move it up a bit
-    REGS = {
+    REGEXPS = {
       :mac => /..:..:..:..:..:../
     }
     
@@ -42,7 +42,7 @@ module BackendAdapters
    private
       def get_connected_macs_to_wlan(iface)
         raise ArgumentError, iface unless DEFAULT_WLAN_INTERFACES.include?(iface)
-        `wlanconfig #{@config[iface]} list sta`.scan(REGS[:mac]).map {|m| m.upcase!}
+        `wlanconfig #{@config[iface]} list sta`.scan(REGEXPS[:mac]).map {|m| m.upcase!}
       end
       
       def get_ip_for_mac(mac, ifaces = DEFAULT_WLAN_INTERFACES, refresh = false)
@@ -50,7 +50,7 @@ module BackendAdapters
         # maybe make it two methods (on from one interface and one from several interfaces,
         # or maybe even just all interfaces, let's see how this goes)...
         ifaces = Array(ifaces)
-        raise ArgumentError, mac unless mac.match(REGS[:mac]) or (ifaces - DEFAULT_WLAN_INTERFACES).empty?
+        raise ArgumentError, mac unless mac.match(REGEXPS[:mac]) or (ifaces - DEFAULT_WLAN_INTERFACES).empty?
         # this is a little hackish, will be changed though
         # I do this loop since the mac your searching for might be connected to any given iface
         # the runtime error is raised since, it is possible that your mac address still is in the arp cache

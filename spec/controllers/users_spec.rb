@@ -32,6 +32,13 @@ describe Users, "creation method" do
     User.all[0].login == 'foo'
   end
   
+  it "should call save with create scope to call correct validations" do
+    user = User.new
+    User.should_receive(:new).and_return(user)
+    user.should_receive(:save).with(:create)
+    get(url(:controller => 'users', :action => 'create'), :user => {:login => 'foo', :password => 'bars'})
+  end
+  
   it "should render the new form if user creation failed" do
     User.all.should be_empty # with a passion, why easy when it can be complicated
     get(url(:controller => 'users', :action => 'create'), :user => {}) do |controller|
