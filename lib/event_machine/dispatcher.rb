@@ -3,9 +3,10 @@
 require 'rubygems'
 require 'eventmachine'
 
-module EchoServer  
+module EchoServer
+  @@test = 0
   def receive_data(data)
-    send_data(data)
+    send_data(data + ' -> ' + (@@test += 1).to_s + "\n")
   end
 end
 
