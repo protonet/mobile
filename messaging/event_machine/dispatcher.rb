@@ -6,6 +6,7 @@ require 'eventmachine'
 module EchoServer
   @@test = 0
   def receive_data(data)
+    puts(data.to_s)
     send_data(data + ' -> ' + (@@test += 1).to_s + "\n" )
   end
 end
