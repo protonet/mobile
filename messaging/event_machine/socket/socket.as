@@ -24,7 +24,7 @@ class Foo {
     ExternalInterface.addCallback("test", null, test);
     ExternalInterface.addCallback("socket_send", null, sendData);
     
-    ExternalInterface.call("console.log", socket.connect('localhost', 8080));
+    ExternalInterface.call("console.log", socket.connect('localhost', 5000));
     
     socket.send('foobar');
 
