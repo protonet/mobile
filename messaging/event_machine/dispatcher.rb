@@ -7,18 +7,11 @@ require 'eventmachine'
 # policy stuff for example ...
 # aj: maybe some monkeypatching of the the receive data sutff
 # also can include / require the modules class variables?
-# module FlashServer
-#   foo
-# end
-
-module EchoServer
-  @@test = 0
-  @@policy_sent = false
+module FlashServer
+  @policy_sent = false
+  
   def receive_data(data)
-    return send_swf_policy unless @@policy_sent
-    answer = data + ' -> ' + (@@test += 1).to_s + "\n"
-    puts("data: #{data}\nanswer:#{answer.to_s}")
-    send_data(answer)
+    return send_swf_policy unless @policy_sent
   end
   
   # this is a flash security policy thing that needs to be sent on the first request to
@@ -31,8 +24,21 @@ module EchoServer
         <site-control permitted-cross-domain-policies="master-only" />
     </cross-domain-policy>\0
     EOS
-     @@policy_sent && send_data(policy)
+     @policy_sent && send_data(policy)
   end
+  
+end
+
+module EchoServer
+  
+  @@test = 0
+  
+  def receive_data(data)
+    answer = data + ' -> ' + (@@test += 1).to_s + "\n"
+    puts("data: #{data}\nanswer:#{answer.to_s}")
+    send_data(answer)
+  end
+  
   
 end
 
