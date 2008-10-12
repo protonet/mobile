@@ -1,53 +1,15 @@
-function Dispatcher() {
-  
-}
-
-Dispatcher.prototype = {
-
-  // destination_id is your key for eventmachine/js communication
-  // e.g. eventmachine sends an destination_id with each message
-  // and the dispatcher finds the correct destination for this
-  "addRecipient" = function(destination_id, recipient_object) {
-    
-  },
-  
-  // maybe not needed will see
-  "removeRecipient" = function(destination_id) {
-    
-  },
-  
-  "findDestination" = function(destination_id) {
-    
-  },
-  
-  "receiveMessage" = function(data) {
-    parsed_message = this.parseMessage(data);
-    this.dispatch(this.findDestination(parsed_message[0]), parsed_message[1])
-  },
-  
-  "parseMessage" = function(data) {
-    
-  },
-  
-  "dispatch" = function(to, data) {
-    // ;)
-    to(data);
-  }
-  
-}
-
 function ChatDispatcher() {
   
 }
 
 ChatDispatcher.prototype = {
   
-  "receive" = function(data) {
+  "receive": function(data) {
     this.findDestination(data.destination)
     
   },
   
-  "findDestination" = function(destination) {
+  "findDestination": function(destination) {
       
     
   }
@@ -55,29 +17,43 @@ ChatDispatcher.prototype = {
 }
 
 
-// switch type
-// case 'Message'
-
-
-function ChatMessage() {
-  
-}
-
-ChatMessage.prototype = {
-  
-}
-
-function ChatUser() {
-  
-}
-
-ChatUser.prototype = {
-  
-}
-
-function ChatRoom() {
+function ChatWidget(args) {
   var self = this;
-  this.room_id = 1; // currently only the room with the id 1
+  this.user_config = args.user_config;
+}
+
+ChatWidget.prototype = {
+  "initialize": function() {
+    this.subscribeToDispatcher();
+    this.openLobby();
+    this.restoreBookmarkedRooms();
+  },
+  
+  'subscribeToDispatcher': function() {
+    
+  },
+
+  "openLobby": function() {
+    this.openRoom();
+  },
+  
+  "openRoom": function(foobar?) {
+    var room = new ChatRoom({'room_id': 1, 'parent_widget': this}).initialize();
+    // bar bar
+    this.listenToRoom(foobar?);
+  },
+  
+  "listenToRoom": function() {
+    
+  }
+  
+}
+
+
+function ChatRoom(args) {
+  var self = this;
+  this.parent_widget = args.parent_widget;
+  this.room_id = args.room_id; // currently only the room with the id 1
   this.current_user_id = <%= current_user.id %>;
   this.me = "<%= current_user.login %>";
   
@@ -102,6 +78,7 @@ ChatRoom.prototype = {
     this.getNewMessages(true);
     this.scrollToLast();
     this.input.focus();
+    return this;
   },
   
   "appendMessage": function(message, send) {
@@ -140,3 +117,23 @@ ChatRoom.prototype = {
     this.div.scrollTo(this.div.children('.message:last'));
   }
 };
+
+// switch type
+// case 'Message'
+
+
+function ChatMessage() {
+  
+}
+
+ChatMessage.prototype = {
+  
+}
+
+function ChatUser() {
+  
+}
+
+ChatUser.prototype = {
+  
+}
