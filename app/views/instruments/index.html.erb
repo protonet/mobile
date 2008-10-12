@@ -1,21 +1,7 @@
 <h1 style="color:white; text-align: center;">yay! welcome <%= current_user.login %></h1>
 <div id="content">
-  <h3>You are currently in: <%= @lobby.name %></h3>
   
-  <div id="chat" style="background-color:grey; width:600px; height:400px; margin: auto; overflow-y: scroll;">
-    <% for message in @lobby.messages %>
-      <div style="padding-left: 5px; text-align: left; border: 1px dotted white;" class="message">
-        <span class="who" style="color: yellow;"><%= message.user.login %></span>:&nbsp;<span><%= message.text %></span>
-      </div>
-    <% end %>
-  </div>
-  INPUT: <input type="text" size="60" name="some_name" value="" id="chat-input">
-
-  <br />
-  
-  <div id="chat-widget"
-    
-  </div>
+  <div id="chat-widget"></div>
   
   <a href="<%= url(:logout) %>">logout</a>
 </div>

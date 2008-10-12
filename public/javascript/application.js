@@ -19,8 +19,8 @@ ChatDispatcher.prototype = {
 
 function ChatWidget(args) {
   var self = this;
-  var default_style  = {'background-color': 'grey', 'width': '600px', 'height': '400px', 'margin': 'auto', 'overflow-y': 'scroll'};
-  this.widget_styles = args.widget_styles || default_style;
+  var default_style  = {'background-color': '#192839', 'width': '700px', 'height': '500px', 'padding': '5px', 'border': '1px solid white', 'margin-left': '10px'};
+  this.widget_style = args.widget_style || default_style;
   this.current_user  = new ChatUser(args.user_id);
   this.user_config   = args.user_config;
   this.div_container = args.div_container;
@@ -28,6 +28,8 @@ function ChatWidget(args) {
 
 ChatWidget.prototype = {
   "initialize": function() {
+    // set style
+    this.div_container.css(this.widget_style);
     this.openLobby();
     // this.restoreBookmarkedRooms();
     return this;
@@ -52,6 +54,8 @@ ChatWidget.prototype = {
 
 function ChatRoom(args) {
   var self = this;
+  var default_style = {};
+  this.room_style = args.room_style || default_style;
   this.parent_widget = args.parent_widget;
   this.room_id = args.room_id;
   this.current_user = this.parent_widget.current_user;
@@ -86,6 +90,7 @@ ChatRoom.prototype = {
   
   "render": function() {
     var div = $(document.createElement('div'));
+    div.css(this.room_style);
     div.html('foobar');
     this.parent_widget.div_container.append(div);
   },
@@ -132,7 +137,9 @@ ChatRoom.prototype = {
 
 
 function ChatMessage() {
-  
+  var self = this;
+  var default_style = {'padding-left': '5px', 'text-align': 'left', 'border': '1px dotted white'};
+  this.message_style = args.message_style || default_style;
 }
 
 ChatMessage.prototype = {
