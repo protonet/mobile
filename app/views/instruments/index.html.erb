@@ -1,6 +1,7 @@
 <h1 style="color:white; text-align: center;">yay! welcome <%= current_user.login %></h1>
 <div id="content">
   <h3>You are currently in: <%= @lobby.name %></h3>
+  
   <div id="chat" style="background-color:grey; width:600px; height:400px; margin: auto; overflow-y: scroll;">
     <% for message in @lobby.messages %>
       <div style="padding-left: 5px; text-align: left; border: 1px dotted white;" class="message">
@@ -12,9 +13,13 @@
 
   <br />
   
+  <div id="chat-widget"
+    
+  </div>
+  
   <a href="<%= url(:logout) %>">logout</a>
 </div>
 
 <script type="text/javascript" charset="utf-8">
-  c = new ChatRoom();
+  cw = new ChatWidget({'user_id': 1, 'user_config': {}, 'div_container': $('#chat-widget')}).initialize();
 </script>

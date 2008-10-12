@@ -19,28 +19,28 @@ ChatDispatcher.prototype = {
 
 function ChatWidget(args) {
   var self = this;
-  this.user_config = args.user_config;
+  var default_style  = {'background-color': 'grey', 'width': '600px', 'height': '400px', 'margin': 'auto', 'overflow-y': 'scroll'};
+  this.widget_styles = args.widget_styles || default_style;
+  this.current_user  = new ChatUser(args.user_id);
+  this.user_config   = args.user_config;
+  this.div_container = args.div_container;
 }
 
 ChatWidget.prototype = {
   "initialize": function() {
-    this.subscribeToDispatcher();
     this.openLobby();
-    this.restoreBookmarkedRooms();
-  },
-  
-  'subscribeToDispatcher': function() {
-    
+    // this.restoreBookmarkedRooms();
+    return this;
   },
 
   "openLobby": function() {
-    this.openRoom();
+    this.openRoom({'room_id': 1});
   },
   
-  "openRoom": function(foobar?) {
-    var room = new ChatRoom({'room_id': 1, 'parent_widget': this}).initialize();
+  "openRoom": function(args) {
+    var room = new ChatRoom({'room_id': args.room_id, 'parent_widget': this}).initialize();
     // bar bar
-    this.listenToRoom(foobar?);
+    // this.listenToRoom(foobar?);
   },
   
   "listenToRoom": function() {
@@ -53,32 +53,41 @@ ChatWidget.prototype = {
 function ChatRoom(args) {
   var self = this;
   this.parent_widget = args.parent_widget;
-  this.room_id = args.room_id; // currently only the room with the id 1
-  this.current_user_id = <%= current_user.id %>;
-  this.me = "<%= current_user.login %>";
+  this.room_id = args.room_id;
+  this.current_user = this.parent_widget.current_user;
+  // this.me = "<%= current_user.login %>"; // What for?
   
-  this.block_get = false;
   
-  this.received_message_ids = [<%= @lobby.messages.map{|m| m.id }.join(',') %>];
   
-  this.div = $("#chat");
-  this.input = $("#chat-input")
-  this.input.bind('keypress', function(e){ 
-    if(e.which == 13) {        
-      self.appendMessage({"text": self.input.val(), "user_id": self.current_user_id, "user_name": self.me, "room_id": self.room_id}, true);
-      self.input.val('');
-    }
-  });
+  // this.block_get = false;
+  // 
+  // this.received_message_ids = [<%= @lobby.messages.map{|m| m.id }.join(',') %>];
+  // 
+  // this.div = $("#chat");
+  // this.input = $("#chat-input")
+  // this.input.bind('keypress', function(e){ 
+  //   if(e.which == 13) {        
+  //     self.appendMessage({"text": self.input.val(), "user_id": self.current_user_id, "user_name": self.me, "room_id": self.room_id}, true);
+  //     self.input.val('');
+  //   }
+  // });
   this.initialize();
 };
 
 ChatRoom.prototype = {
   
   "initialize": function() {
-    this.getNewMessages(true);
-    this.scrollToLast();
-    this.input.focus();
+    // this.getNewMessages(true);
+    this.render();
+    // this.scrollToLast();
+    // this.input.focus();
     return this;
+  },
+  
+  "render": function() {
+    var div = $(document.createElement('div'));
+    div.html('foobar');
+    this.parent_widget.div_container.append(div);
   },
   
   "appendMessage": function(message, send) {
@@ -109,7 +118,7 @@ ChatRoom.prototype = {
     }
 
     if(timeout) {
-      setTimeout("c.getNewMessages(true)", 800);
+      setTimeout("c.getNewMessages(true)", 2000);
     }
   },
   
@@ -130,8 +139,8 @@ ChatMessage.prototype = {
   
 }
 
-function ChatUser() {
-  
+function ChatUser(args) {
+  this.user_id = args.user_id;
 }
 
 ChatUser.prototype = {
