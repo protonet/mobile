@@ -24,10 +24,12 @@ function ChatWidget(args) {
   this.current_user  = new ChatUser(args.user_id);
   this.user_config   = args.user_config;
   this.div_container = args.div_container;
+  
+  this.user_list = new ChatUserList({'parent_widget': this})
 }
 
 ChatWidget.prototype = {
-  "initialize": function() {
+  "init": function() {
     // set style
     this.div_container.css(this.widget_style);
     this.openLobby();
@@ -36,11 +38,16 @@ ChatWidget.prototype = {
   },
 
   "openLobby": function() {
+    this.openRoomList({'room_id': 1});
     this.openRoom({'room_id': 1});
   },
   
+  "openRoomList": function(args) {
+    var roomList = new ChatRoomList({'room_id': args.room_id, 'parent_widget': this}).init();
+  },
+  
   "openRoom": function(args) {
-    var room = new ChatRoom({'room_id': args.room_id, 'parent_widget': this}).initialize();
+    var room = new ChatRoom({'room_id': args.room_id, 'parent_widget': this}).init();
     // bar bar
     // this.listenToRoom(foobar?);
   },
@@ -62,7 +69,6 @@ function ChatRoom(args) {
   // this.me = "<%= current_user.login %>"; // What for?
   
   
-  
   // this.block_get = false;
   // 
   // this.received_message_ids = [<%= @lobby.messages.map{|m| m.id }.join(',') %>];
@@ -75,12 +81,12 @@ function ChatRoom(args) {
   //     self.input.val('');
   //   }
   // });
-  this.initialize();
+  this.init();
 };
 
 ChatRoom.prototype = {
   
-  "initialize": function() {
+  "init": function() {
     // this.getNewMessages(true);
     this.render();
     // this.scrollToLast();
@@ -151,5 +157,24 @@ function ChatUser(args) {
 }
 
 ChatUser.prototype = {
+  
+}
+
+function ChatRoomList(args) {
+  var self = this;
+  var default_style = {'padding-left': '5px', 'border': '1px dotted white'};
+  this.list_style = args.list_style || default_style;
+}
+
+ChatRoomList.prototype = {
+  "init": function() {
+    this.render();
+  },
+  
+  "render": function() {
+    var list = $(document.createElement('div'));
+    list.css(this.list_style);
+    list.html('foobar');
+  }
   
 }
