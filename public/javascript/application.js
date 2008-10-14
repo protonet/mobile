@@ -24,8 +24,13 @@ function ChatWidget(args) {
   this.current_user  = new ChatUser(args.user_id);
   this.user_config   = args.user_config;
   this.div_container = args.div_container;
+
+  // this.current_room = 
+  this.room_container = this.div_container.append($(document.createElement('div')));
+
+  this.user_list = new ChatUserList({'parent_widget': this}).init();
+  this.user_list_container = this.div_container.append($(document.createElement('div')));
   
-  this.user_list = new ChatUserList({'parent_widget': this})
 }
 
 ChatWidget.prototype = {
@@ -38,18 +43,21 @@ ChatWidget.prototype = {
   },
 
   "openLobby": function() {
-    this.openRoomList({'room_id': 1});
-    this.openRoom({'room_id': 1});
+    var lobby_room_id = 1;
+    this.openRoom({'room_id': lobby_room_id});
   },
-  
-  "openRoomList": function(args) {
-    var roomList = new ChatRoomList({'room_id': args.room_id, 'parent_widget': this}).init();
-  },
-  
+    
   "openRoom": function(args) {
+    this.openUserListForRoom(args.room_id);
     var room = new ChatRoom({'room_id': args.room_id, 'parent_widget': this}).init();
+    this.room_container.html(room.render());
     // bar bar
     // this.listenToRoom(foobar?);
+  },
+  
+  "openUserListForRoom": function(room_id) {
+    this.user_list.room_id = room_id;
+    this.user_list_container.html(this.user_list.render());
   },
   
   "listenToRoom": function() {
@@ -98,7 +106,7 @@ ChatRoom.prototype = {
     var div = $(document.createElement('div'));
     div.css(this.room_style);
     div.html('foobar');
-    this.parent_widget.div_container.append(div);
+    return div
   },
   
   "appendMessage": function(message, send) {
@@ -144,6 +152,7 @@ ChatRoom.prototype = {
 
 function ChatMessage() {
   var self = this;
+  // size must be dependent on parent widget I'd say
   var default_style = {'padding-left': '5px', 'text-align': 'left', 'border': '1px dotted white'};
   this.message_style = args.message_style || default_style;
 }
@@ -160,21 +169,25 @@ ChatUser.prototype = {
   
 }
 
-function ChatRoomList(args) {
+
+function ChatUserList(args) {
+  // quasi singleton ;)
   var self = this;
-  var default_style = {'padding-left': '5px', 'border': '1px dotted white'};
+  var default_style = {'margin': '5px', 'height': '350px', 'width': '130px', 'border': '1px solid grey', 'float': 'left'};
   this.list_style = args.list_style || default_style;
+  this.list_element = $(document.createElement('div'));
+  // set element style
+  this.list_element.css(this.list_style);
 }
 
-ChatRoomList.prototype = {
+ChatUserList.prototype = {
   "init": function() {
-    this.render();
+    return this;
   },
   
   "render": function() {
-    var list = $(document.createElement('div'));
-    list.css(this.list_style);
-    list.html('foobar');
+    this.list_element.html('chat_user_list');
+    return this.list_element.html();
   }
   
 }
