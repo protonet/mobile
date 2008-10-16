@@ -1,11 +1,11 @@
 <h1 style="color:white; text-align: center;">yay! welcome <%= current_user.login %></h1>
 <div id="content">
   
-  <div id="chat-widget"></div>
+  <div id="main-chat-widget" class="chat-widget"></div>
   
   <a href="<%= url(:logout) %>">logout</a>
 </div>
 
 <script type="text/javascript" charset="utf-8">
-  cw = new ChatWidget({'user_id': 1, 'user_config': {}, 'div_container': $('#chat-widget')}).init();
+  cw = new ChatWidget({'user_id': 1, 'user_config': {}, 'div_container': $('#main-chat-widget')});
 </script>

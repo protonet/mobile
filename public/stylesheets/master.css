@@ -38,3 +38,29 @@ body {
   margin:0;
   padding:0 10px 3px;
 }
+
+
+.chat-widget {
+  background-color: #192839;
+  width:  700px;
+  height: 500px;
+  padding:  5px;
+  border:   1px solid white;
+  margin-left: 10px;
+}
+
+.chat-widget .chat-user-list {
+  margin:   5px;
+  height: 450px;
+  width:  130px;
+  border:   1px solid grey;
+  float:  left;
+}
+
+.chat-widget .chat-room-wrapper {
+  margin:   5px;
+  height: 450px;
+  width:  545px;
+  border:   1px solid grey;
+  float:  left;
+}
