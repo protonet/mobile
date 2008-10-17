@@ -57,7 +57,7 @@ body {
   float:  left;
 }
 
-.chat-widget .chat-room-wrapper {
+.chat-widget .chat-room-viewer {
   margin:   5px;
   height: 450px;
   width:  545px;

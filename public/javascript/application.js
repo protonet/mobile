@@ -6,8 +6,10 @@ function ChatWidget(args) {
   this.div_container.addClass('chat-widget');
   
   // add sub views
-  this.user_list    = new ChatUserList({'parent_widget': this});    
-  this.room_display = new ChatRoomDisplay({'parent_widget': this});
+  this.user_list      = new ChatUserList({'parent_widget': this});
+  this.chat_input     = new ChatInput({'parent_widget': this});
+  this.room_viewer    = new ChatRoomViewer({'parent_widget': this});
+  this.room_selector  = new ChatRoomSelector({'parent_widget': this});
   
   // who am I? isn't that what we all want to know? ;)
   this.current_user  = new ChatUser(args.user_id);
@@ -19,66 +21,98 @@ function ChatWidget(args) {
   // this.listenToUserInput();
 }
 
-ChatWidget.prototype = {
-
+ChatWidget.prototype = 
+{
   "openLobby": function() {
     // just for clearness
     var lobby_room_id = 1;
     this.openRoom(lobby_room_id);
-  },
-    
+  },   
   "openRoom": function(room_id) {
     this.refreshUserListForRoom(room_id);
-    this.room_display.renderFor(room_id);
+    this.room_viewer.renderFor(room_id);
     // this.listenToRoom(foobar?);
   },
-  
   "refreshUserListForRoom": function(room_id) {
     this.user_list.render_for(room_id);
   },
-  
   "listenToRoom": function() {
-    
   }
-  
 }
 
-
-function ChatRoomDisplay(args) {
+function ChatInput(args) {
   var self = this;
   this.parent_widget = args.parent_widget;
   if(!this.parent_widget)
     throw 'parent widget not given';
     
-  this.wrapper      = this._createViewElement('chat-room-wrapper');
-  this.room_chooser = this._createViewElement('chat-room-chooser');
-  this.room_viewer  = this._createViewElement('chat-room-viewer');
-  this.input        = this._createInputElement();
+  this.input_element = $(document.createElement('input'));
   
-  this._addWrapperToParent();
-  this._addElementsToWrapper([this.room_chooser, this.room_viewer, this.input]);
+  this._addOwnElementToParent();  
+}
+
+ChatInput.prototype = {
+  "_addOwnElementToParent": function() {
+    this.parent_widget.div_container.append(this.input_element);
+  }
+}
+
+
+function ChatUserList(args) {
+  var self = this;
+  this.parent_widget = args.parent_widget;
+  if(!this.parent_widget)
+    throw 'parent widget not given';
+    
+  this.list_element = $(document.createElement('div'));
+  this.list_element.addClass('chat-user-list');
+  
+  this._addOwnElementToParent();  
+}
+
+ChatUserList.prototype = {
+  "_addOwnElementToParent": function() {
+    this.parent_widget.div_container.append(this.list_element);
+  },
+  "render_for": function(room_id) {
+    // this.list_element.html(room_id);
+  }
+}
+
+
+function ChatRoomSelector(args) {
+  var self = this;
+  this.parent_widget = args.parent_widget;
+  if(!this.parent_widget)
+    throw 'parent widget not given';
+  
+  this.selector_element = $(document.createElement('div'));
+  this.selector_element.addClass('chat-room-selector')
+  
+  this._addOwnElementToParent();
+} 
+
+ChatRoomSelector.prototype = {
+  "_addOwnElementToParent": function() {
+    this.parent_widget.div_container.append(this.selector_element);
+  }
+}
+
+function ChatRoomViewer(args) {
+  var self = this;
+  this.parent_widget = args.parent_widget;
+  if(!this.parent_widget)
+    throw 'parent widget not given';
+  
+  this.view_element = $(document.createElement('div'));
+  this.view_element.addClass('chat-room-viewer')
+  
+  this._addOwnElementToParent();
 };
 
-ChatRoomDisplay.prototype = {
-  
-  "_createViewElement": function(name) {
-    var element = $(document.createElement('div'));
-    element.addClass(name);
-    return element
-  },
-  
-  "_createInputElement": function() {
-    return $(document.createElement('input'));
-  },
-  
-  "_addWrapperToParent": function() {  
-    this.parent_widget.div_container.append(this.wrapper);
-  },
-  
-  "_addElementsToWrapper": function(elements) {
-    for(i in elements) {
-      this.wrapper.append(elements[i]);
-    }
+ChatRoomViewer.prototype = {
+  "_addOwnElementToParent": function() {
+    this.parent_widget.div_container.append(this.view_element);
   },
     
   "renderFor": function(room_id) {
@@ -142,54 +176,5 @@ function ChatUser(args) {
 }
 
 ChatUser.prototype = {
-  
-}
-
-
-function ChatUserList(args) {
-  // quasi singleton ;)
-  var self = this;
-  this.parent_widget = args.parent_widget;
-  if(!this.parent_widget)
-    throw 'parent widget not given';
-    
-  // maybe move this to a function
-  this.list_element = $(document.createElement('div'));
-  this.list_element.addClass('chat-user-list');
-  
-  this._addOwnElementToParent();
-  
-  
-}
-
-ChatUserList.prototype = {
-
-  "_addOwnElementToParent": function() {
-    this.parent_widget.div_container.append(this.list_element);
-  },
-  
-  "render_for": function(room_id) {
-    // this.list_element.html(room_id);
-  }
-  
-}
-
-
-
-function ChatDispatcher() {
-  
-}
-
-ChatDispatcher.prototype = {
-  
-  "receive": function(data) {
-    this.findDestination(data.destination)
-    
-  },
-  
-  "findDestination": function(destination) {
-      
-    
-  }
   
 }
