@@ -117,7 +117,7 @@ function ChatRoomViewer(args) {
   
   this._addOwnElementToParent();
 
-  this.rooms = [];
+  this.rooms = {};
 };
 
 ChatRoomViewer.prototype = {
@@ -128,9 +128,13 @@ ChatRoomViewer.prototype = {
     room = this.createOrReturnRoom(room_id);
     this.active_room_id = room_id;
   },
-  "createOrReturnRoom": funtion(room_id) {
-    
-  }
+  "createOrReturnRoom": function(room_id) {
+    var room_key = 'room_' + room_id;
+    if(!this.rooms[room_key]) {
+      this.rooms[room_key] = new ChatRoom({});
+    }
+    return this.rooms[room_key];
+  },
   "appendMessage": function(message, send) {
     if(send) {
       this.sendMessage(message);
@@ -169,7 +173,7 @@ ChatRoomViewer.prototype = {
 // case 'Message'
 
 
-function ChatRoom() {
+function ChatRoom(args) {
   
 }
 
