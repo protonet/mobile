@@ -116,7 +116,8 @@ function ChatRoomViewer(args) {
   this.view_element.addClass('chat-room-viewer')
   
   this._addOwnElementToParent();
-
+  
+  this.active_room_id = null;
   this.rooms = {};
 };
 
@@ -126,12 +127,14 @@ ChatRoomViewer.prototype = {
   },    
   "renderFor": function(room_id) {
     room = this.createOrReturnRoom(room_id);
+    room.getLastMessages();
     this.active_room_id = room_id;
+    
   },
   "createOrReturnRoom": function(room_id) {
     var room_key = 'room_' + room_id;
     if(!this.rooms[room_key]) {
-      this.rooms[room_key] = new ChatRoom({});
+      this.rooms[room_key] = new ChatRoom(room_id);
     }
     return this.rooms[room_key];
   },
@@ -140,7 +143,7 @@ ChatRoomViewer.prototype = {
       this.sendMessage(message);
     } else if(message.id) {
       this.received_message_ids.push(parseInt(message.id));
-    }      
+    }
     var last = this.div.append('<div style="padding-left: 5px; text-align: left; border: 1px dotted white;" class="message"><span class="who" style="color: yellow;">' + message.user_name + '</span>:&nbsp;<span>' + message.text + '</span></div>');
     this.scrollToLast();
   },
@@ -173,12 +176,33 @@ ChatRoomViewer.prototype = {
 // case 'Message'
 
 
-function ChatRoom(args) {
-  
+function ChatRoom(room_id) {
+  var self = this;
+  this.room_id = room_id;
+  this.messages = [];
+  this.block_get = false;
+  this.view_element = document.createElement("div");
 }
 
 ChatRoom.prototype = {
-  
+  "getLastMessages": function() {
+    if(!this.block_get) {
+      $.get("/chat_messages/index", {"room_id": this.room_id, "received_message_ids[]": this.receivedMessageIds()}, function(messages){
+        messages = eval(messages);
+        for(var i in messages) {
+          self.appendMessage(new ChatMessage(messages[i]));
+        } 
+      });
+    }
+  },
+  "receivedMessageIds": function() {
+    this.messages.each(function(){this.id});
+  },
+  "appendMessage": function(message) {
+    this.messages.push(message);
+    var last = this.div.append('<div style="padding-left: 5px; text-align: left; border: 1px dotted white;" class="message"><span class="who" style="color: yellow;">' + message.user_name + '</span>:&nbsp;<span>' + message.text + '</span></div>');
+    this.scrollToLast();
+  }
   
 }
 
