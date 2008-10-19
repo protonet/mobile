@@ -181,11 +181,12 @@ function ChatRoom(room_id) {
   this.room_id = room_id;
   this.messages = [];
   this.block_get = false;
-  this.view_element = document.createElement("div");
+  this.view_element = $(document.createElement("div"));
 }
 
 ChatRoom.prototype = {
   "getLastMessages": function() {
+    var self = this;
     if(!this.block_get) {
       $.get("/chat_messages/index", {"room_id": this.room_id, "received_message_ids[]": this.receivedMessageIds()}, function(messages){
         messages = eval(messages);
@@ -203,8 +204,7 @@ ChatRoom.prototype = {
   },
   "appendMessage": function(message) {
     this.messages.push(message);
-    var last = this.div.append('<div style="padding-left: 5px; text-align: left; border: 1px dotted white;" class="message"><span class="who" style="color: yellow;">' + message.user_name + '</span>:&nbsp;<span>' + message.text + '</span></div>');
-    this.scrollToLast();
+    this.view_element.append(message.message_element);
   }
   
 }
@@ -215,10 +215,10 @@ function ChatMessage(args) {
   var default_style = {'padding-left': '5px', 'text-align': 'left', 'border': '1px dotted white'};
   this.message_style = args.message_style || default_style;
   console.log(args);
+  this.message_element = $(document.createElement("div"));  
 }
 
 ChatMessage.prototype = {
-  
 }
 
 function ChatUser(args) {
