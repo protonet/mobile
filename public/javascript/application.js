@@ -206,7 +206,7 @@ ChatRoom.prototype = {
   
 }
 
-function ChatMessage() {
+function ChatMessage(args) {
   var self = this;
   // size must be dependent on parent widget I'd say
   var default_style = {'padding-left': '5px', 'text-align': 'left', 'border': '1px dotted white'};

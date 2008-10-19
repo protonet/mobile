@@ -7,6 +7,7 @@ class User
   attr_accessor :password, :password_confirmation
   
   has n, :rooms
+  has 1, :profile, :class_name => 'UserProfile'
   
   property :id,                         Integer,  :serial => true
   property :name,                       String,   :nullable => true
@@ -27,6 +28,7 @@ class User
   validates_is_confirmed      :password,                :on => [:create, :password_change]
   
   class << self
+    
     def authenticate(params)
       u = first(:login => params[:login])
       if u
@@ -41,6 +43,7 @@ class User
         User.first(:current_ip => ip) || User.new(:name => "not logged in yet ;) #{ip}")
       end.compact
     end
+    
   end
   
   def poll(ip, force_update=false)
@@ -49,6 +52,10 @@ class User
   
   def display_name
     name || login
+  end
+  
+  def chat_attributes
+    {:id => id, :name => display_name}.merge(profile && profile.chat_attributes)
   end
   
   # Encrypts some data with the salt.
