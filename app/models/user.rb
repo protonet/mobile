@@ -54,10 +54,15 @@ class User
     name || login
   end
   
-  def chat_attributes
-    {:id => id, :name => display_name}.merge(profile && profile.chat_attributes)
+  def attributes(scenario=nil)
+    case scenario
+    when :chat
+      {:id => id, :name => display_name}.merge(profile && profile.chat_attributes || {})
+    else
+      super
+    end
   end
-  
+    
   # Encrypts some data with the salt.
   def encrypt(password, salt)
     Digest::SHA1.hexdigest("--#{salt}--#{password}--")

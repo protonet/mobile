@@ -196,7 +196,10 @@ ChatRoom.prototype = {
     }
   },
   "receivedMessageIds": function() {
-    this.messages.each(function(){this.id});
+    if(this.messages.length == 0) {
+      return this.messages
+    }
+    return $.map(this.messages, function(m){return m.id});
   },
   "appendMessage": function(message) {
     this.messages.push(message);
@@ -211,6 +214,7 @@ function ChatMessage(args) {
   // size must be dependent on parent widget I'd say
   var default_style = {'padding-left': '5px', 'text-align': 'left', 'border': '1px dotted white'};
   this.message_style = args.message_style || default_style;
+  console.log(args);
 }
 
 ChatMessage.prototype = {
