@@ -141,6 +141,10 @@ ChatRoomViewer.prototype = {
   },
   "setActive": function(room_id) {
     this.view_element.append(this.rooms['room_' + room_id].room_element);
+    this.scrollToLast;
+  },
+  "activeRoom": function() {
+    return this.rooms['room_' + this.active_room_id];
   },
   "sendMessage": function(message) {
     var self = this;
@@ -148,7 +152,7 @@ ChatRoomViewer.prototype = {
     $.post("/chat_messages", { "room_id": message.room_id, "user_id": message.user_id, "text" : message.text, "received_message_ids": this.received_message_ids }, function(m_id){self.received_message_ids.push(parseInt(m_id)); self.block_get = false;});
   },  
   "scrollToLast": function() {
-    this.div.scrollTo(this.div.children('.message:last'));
+    this.view_element.scrollTo(this.activeRoom().room_element.children('div:last'));
   }
 };
 
