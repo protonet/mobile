@@ -128,6 +128,7 @@ ChatRoomViewer.prototype = {
   "renderFor": function(room_id) {
     room = this.createOrReturnRoom(room_id);
     room.getLastMessages();
+    this.setActive(room_id)
     this.active_room_id = room_id;
     
   },
@@ -138,34 +139,13 @@ ChatRoomViewer.prototype = {
     }
     return this.rooms[room_key];
   },
-  "appendMessage": function(message, send) {
-    if(send) {
-      this.sendMessage(message);
-    } else if(message.id) {
-      this.received_message_ids.push(parseInt(message.id));
-    }
-    var last = this.div.append('<div style="padding-left: 5px; text-align: left; border: 1px dotted white;" class="message"><span class="who" style="color: yellow;">' + message.user_name + '</span>:&nbsp;<span>' + message.text + '</span></div>');
-    this.scrollToLast();
+  "setActive": function(room_id) {
+    this.view_element.append(this.rooms['room_' + room_id].room_element);
   },
   "sendMessage": function(message) {
     var self = this;
     self.block_get = true;
     $.post("/chat_messages", { "room_id": message.room_id, "user_id": message.user_id, "text" : message.text, "received_message_ids": this.received_message_ids }, function(m_id){self.received_message_ids.push(parseInt(m_id)); self.block_get = false;});
-  },  
-  "getNewMessages": function(timeout) {
-    var self = this;
-    if(!this.block_get) {
-      $.get("/chat_messages/index", {"room_id": this.room_id, "received_message_ids[]": this.received_message_ids}, function(messages){
-        messages = eval(messages);
-        for(var i in messages) {
-          self.appendMessage(messages[i]);
-        } 
-      });        
-    }
-
-    if(timeout) {
-      setTimeout("c.getNewMessages(true)", 2000);
-    }
   },  
   "scrollToLast": function() {
     this.div.scrollTo(this.div.children('.message:last'));
@@ -181,7 +161,7 @@ function ChatRoom(room_id) {
   this.room_id = room_id;
   this.messages = [];
   this.block_get = false;
-  this.view_element = $(document.createElement("div"));
+  this.room_element = $(document.createElement("div"));
 }
 
 ChatRoom.prototype = {
@@ -204,9 +184,8 @@ ChatRoom.prototype = {
   },
   "appendMessage": function(message) {
     this.messages.push(message);
-    this.view_element.append(message.message_element);
+    this.room_element.append(message.message_element);
   }
-  
 }
 
 function ChatMessage(args) {
@@ -214,8 +193,10 @@ function ChatMessage(args) {
   // size must be dependent on parent widget I'd say
   var default_style = {'padding-left': '5px', 'text-align': 'left', 'border': '1px dotted white'};
   this.message_style = args.message_style || default_style;
-  console.log(args);
-  this.message_element = $(document.createElement("div"));  
+  this.text = args.text;
+  // console.log(args);
+  this.message_element = $(document.createElement("div"));
+  this.message_element.html(this.text) ; 
 }
 
 ChatMessage.prototype = {
