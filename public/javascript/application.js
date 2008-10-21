@@ -146,13 +146,8 @@ ChatRoomViewer.prototype = {
   "activeRoom": function() {
     return this.rooms['room_' + this.active_room_id];
   },
-  "sendMessage": function(message) {
-    var self = this;
-    self.block_get = true;
-    $.post("/chat_messages", { "room_id": message.room_id, "user_id": message.user_id, "text" : message.text, "received_message_ids": this.received_message_ids }, function(m_id){self.received_message_ids.push(parseInt(m_id)); self.block_get = false;});
-  },  
   "scrollToLast": function() {
-    this.view_element.scrollTo(this.activeRoom().room_element.children('div:last'));
+    this.view_element.scrollTo(this.activeRoom().room_element.children('.message:last'));
   }
 };
 
@@ -188,19 +183,24 @@ ChatRoom.prototype = {
   },
   "appendMessage": function(message) {
     this.messages.push(message);
-    this.room_element.append(message.message_element);
+    this.room_element.append(message.wrapper_element);
   }
 }
 
 function ChatMessage(args) {
   var self = this;
   // size must be dependent on parent widget I'd say
-  var default_style = {'padding-left': '5px', 'text-align': 'left', 'border': '1px dotted white'};
-  this.message_style = args.message_style || default_style;
   this.text = args.text;
   // console.log(args);
-  this.message_element = $(document.createElement("div"));
-  this.message_element.html(this.text) ; 
+  this.wrapper_element = $(document.createElement("div"));
+  this.wrapper_element.addClass('message');
+  
+  this.image_element = $(document.createElement("img"));
+  this.text_element  = $(document.createElement("p"));
+  this.text_element.html(this.text);
+  
+  this.wrapper_element.append(this.image_element);
+  this.wrapper_element.append(this.text_element);
 }
 
 ChatMessage.prototype = {
