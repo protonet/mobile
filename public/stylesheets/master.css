@@ -72,6 +72,7 @@ body {
   width:  545px;
   border:   1px solid grey;
   float:  left;
+  overflow-y: scroll;
 }
 
 .chat-widget input {
