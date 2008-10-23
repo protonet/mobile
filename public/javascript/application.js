@@ -38,17 +38,13 @@ ChatWidget.prototype =
     this.openRoom(lobby_room_id);
   },   
   "openRoom": function(room_id) {
-    this.refreshUserListForRoom(room_id);
     this.active_room_id = room_id;
     this.room_viewer.setActive(room_id);
-    this.user_list.setActive(room_id);
+    // this.user_list.setActive(room_id);
     // not yet implemented:
     // this.room_selector.setActive(room_id);
     // this.chat_input.setActive(room_id);
     // this.listenToRoom(foobar?);
-  },
-  "refreshUserListForRoom": function(room_id) {
-    this.user_list.renderFor(room_id);
   },
   "listenToRoom": function() {
   },
@@ -77,7 +73,7 @@ function ChatUserListViewer(args) {
 ChatUserListViewer.prototype = {
   "_addOwnElementToParent": function() {
     this.parent_widget.div_container.append(this.view_element);
-  }
+  },
   "createOrReturnChatUserList": function(room_id) {
     var room_key = 'room_' + room_id;
     if(!this.parent_widget.user_lists[room_key]) {
@@ -119,7 +115,7 @@ function ChatRoomViewer(args) {
 ChatRoomViewer.prototype = {
   "_addOwnElementToParent": function() {
     this.parent_widget.div_container.append(this.view_element);
-  }
+  },
   "createOrReturnRoom": function(room_id) {
     var room_key = 'room_' + room_id;
     if(!this.parent_widget.rooms[room_key]) {
@@ -130,11 +126,14 @@ ChatRoomViewer.prototype = {
   "setActive": function(room_id) {
     room = this.createOrReturnRoom(room_id);
     room.getLastMessages(true);
-    this.view_element.append(this.activeRoom().room_element);
-    this.scrollToLast();
+    this.view_element.append(this.parent_widget.activeRoom().room_element);
   },
   "scrollToLast": function() {
-    this.view_element.scrollTo(this.activeRoom().room_element.children('.message:last'));
+    this.view_element.scrollTo(this.parent_widget.activeRoom().room_element.children('.message:last'));
+  },
+  "messagesLoadedCallback": function(room_id) {
+    this.parent_widget.active_room_id = room_id;
+    this.scrollToLast();
   }
 };
 
@@ -152,7 +151,7 @@ function ChatRoom(room_id, parent_widget) {
 }
 
 ChatRoom.prototype = {
-  "getLastMessages": function(set_active) {
+  "getLastMessages": function(callback_to_viewer) {
     var self = this;
     if(!this.block_get) {
       $.get("/chat_messages/index", {"room_id": this.room_id, "received_message_ids[]": this.receivedMessageIds()}, function(messages){
@@ -160,8 +159,8 @@ ChatRoom.prototype = {
         for(var i in messages) {
           self.appendMessage(new ChatMessage(messages[i], self));
         }
-        if(set_active) {
-          self.parent_widget.setActive(self.room_id);
+        if(callback_to_viewer) {
+          self.parent_widget.messagesLoadedCallback(self.room_id);
         }
       });
     }
