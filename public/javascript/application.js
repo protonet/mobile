@@ -40,7 +40,7 @@ ChatWidget.prototype =
   "openRoom": function(room_id) {
     this.active_room_id = room_id;
     this.room_viewer.setActive(room_id);
-    // this.user_list.setActive(room_id);
+    this.user_list.setActive(room_id);
     // not yet implemented:
     // this.room_selector.setActive(room_id);
     // this.chat_input.setActive(room_id);
@@ -83,8 +83,7 @@ ChatUserListViewer.prototype = {
   },
   "setActive": function(room_id) {
     user_list = this.createOrReturnChatUserList(room_id);
-    this.view_element.append(this.activeUserList().list_element);
-    this.scrollToLast();
+    this.view_element.append(this.parent_widget.activeUserList().list_element);
   }
 };
 
@@ -93,7 +92,7 @@ ChatUserListViewer.prototype = {
 function ChatUserList(room_id, parent_widget) {
   var self = this;
   this.room_id = room_id;
-  this.parent_widget = args.parent_widget;
+  this.parent_widget = parent_widget;
   this.users = [];
   this.list_element = $(document.createElement("div"));
 }
