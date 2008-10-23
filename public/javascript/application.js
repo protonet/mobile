@@ -10,7 +10,7 @@ function ChatWidget(args) {
   
   // add sub views
   this.room_selector  = new ChatRoomSelector({'parent_widget': this});
-  this.user_list      = new ChatUserList({'parent_widget': this});
+  this.user_list      = new ChatUserListViewer({'parent_widget': this});
   this.room_viewer    = new ChatRoomViewer({'parent_widget': this});
   this.chat_input     = new ChatInput({'parent_widget': this});
 
@@ -57,28 +57,28 @@ ChatWidget.prototype =
   },
   "activeRoom": function() {
     return this.rooms['room_' + this.active_room_id];
+  },
+  "activeUserList": function() {
+    return this.user_lists['room_' + this.active_room_id];
   }
 }
 
-function ChatUserList(room_id, parent_widget) {
+function ChatUserListViewer(args) {
   var self = this;
   this.parent_widget = args.parent_widget;
   if(!this.parent_widget)
-    throw 'parent widget not given';  
-  this.list_element = $(document.createElement('div'));
-  this.list_element.addClass('chat-user-list');
+    throw 'parent widget not given';
+  this.view_element = $(document.createElement('div'));
+  this.view_element.addClass('chat-user-list')
   
   this._addOwnElementToParent();
-}
+};
 
-ChatUserList.prototype = {
+ChatUserListViewer.prototype = {
   "_addOwnElementToParent": function() {
-    this.parent_widget.div_container.append(this.list_element);
-  },
-  "renderFor": function(room_id) {
-    this.active_room_id = room_id;
-  },
-  "createOrReturnUserList": function(room_id) {
+    this.parent_widget.div_container.append(this.view_element);
+  }
+  "createOrReturnChatUserList": function(room_id) {
     var room_key = 'room_' + room_id;
     if(!this.parent_widget.user_lists[room_key]) {
       this.parent_widget.user_lists[room_key] = new ChatUserList(room_id, this);
@@ -86,11 +86,23 @@ ChatUserList.prototype = {
     return this.parent_widget.user_lists[room_key];
   },
   "setActive": function(room_id) {
-    room = this.createOrReturnRoom(room_id);
-    room.getLastMessages(true);
-    this.view_element.append(this.activeRoom().room_element);
+    user_list = this.createOrReturnChatUserList(room_id);
+    this.view_element.append(this.activeUserList().list_element);
     this.scrollToLast();
   }
+};
+
+
+
+function ChatUserList(room_id, parent_widget) {
+  var self = this;
+  this.room_id = room_id;
+  this.parent_widget = args.parent_widget;
+  this.users = [];
+  this.list_element = $(document.createElement("div"));
+}
+
+ChatUserList.prototype = {
 }
 
 function ChatRoomViewer(args) {
