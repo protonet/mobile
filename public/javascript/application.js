@@ -127,21 +127,20 @@ ChatRoomViewer.prototype = {
   },    
   "renderFor": function(room_id) {
     room = this.createOrReturnRoom(room_id);
-    room.getLastMessages();
-    this.setActive(room_id)
-    this.active_room_id = room_id;
-    
+    user_list = this;
+    room.getLastMessages(true);
   },
   "createOrReturnRoom": function(room_id) {
     var room_key = 'room_' + room_id;
     if(!this.rooms[room_key]) {
-      this.rooms[room_key] = new ChatRoom(room_id);
+      this.rooms[room_key] = new ChatRoom(room_id, this);
     }
     return this.rooms[room_key];
   },
   "setActive": function(room_id) {
-    this.view_element.append(this.rooms['room_' + room_id].room_element);
-    this.scrollToLast;
+    this.active_room_id = room_id;
+    this.view_element.append(this.activeRoom().room_element);
+    this.scrollToLast();
   },
   "activeRoom": function() {
     return this.rooms['room_' + this.active_room_id];
@@ -155,23 +154,27 @@ ChatRoomViewer.prototype = {
 // case 'Message'
 
 
-function ChatRoom(room_id) {
+function ChatRoom(room_id, parent_widget) {
   var self = this;
   this.room_id = room_id;
+  this.parent_widget = parent_widget;
   this.messages = [];
   this.block_get = false;
   this.room_element = $(document.createElement("div"));
 }
 
 ChatRoom.prototype = {
-  "getLastMessages": function() {
+  "getLastMessages": function(active) {
     var self = this;
     if(!this.block_get) {
       $.get("/chat_messages/index", {"room_id": this.room_id, "received_message_ids[]": this.receivedMessageIds()}, function(messages){
         messages = eval(messages);
         for(var i in messages) {
-          self.appendMessage(new ChatMessage(messages[i]));
-        } 
+          self.appendMessage(new ChatMessage(messages[i], self));
+        }
+        if(active) {
+          self.parent_widget.setActive(self.room_id);
+        }
       });
     }
   },
@@ -187,11 +190,10 @@ ChatRoom.prototype = {
   }
 }
 
-function ChatMessage(args) {
+function ChatMessage(message, parent_widget) {
   var self = this;
-  // size must be dependent on parent widget I'd say
-  this.text = args.text;
-  // console.log(args);
+  this.parent_widget = parent_widget;
+  this.text = message.text;
   this.wrapper_element = $(document.createElement("div"));
   this.wrapper_element.addClass('message');
   
