@@ -98,6 +98,17 @@ function ChatUserList(room_id, parent_widget) {
 }
 
 ChatUserList.prototype = {
+  "updateUsersWith": function(users) {
+    for(var i in users) {
+      if($.index(this.users, users[i])) {
+        this.addUser(new ChatUser(users[i], this));
+      }
+    }
+  },
+  "addUser": function(user) {
+    this.users.push(user);
+    this.list_element.append(user.wrapper_element);
+  }
 }
 
 function ChatRoomViewer(args) {
@@ -138,7 +149,6 @@ ChatRoomViewer.prototype = {
 
 // switch type
 // case 'Message'
-
 
 function ChatRoom(room_id, parent_widget) {
   var self = this;
@@ -194,8 +204,14 @@ function ChatMessage(message, parent_widget) {
 ChatMessage.prototype = {
 }
 
-function ChatUser(args) {
-  this.user_id = args.user_id;
+function ChatUser(user, parent_widget) {
+  var self = this;
+  this.parent_widget = parent_widget;
+  this.user_id = user.user_id;
+  // for use in lists
+  this.list_element;
+  // for use in messages
+  this.message_element;
 }
 
 ChatUser.prototype = {
