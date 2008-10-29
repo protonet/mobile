@@ -107,7 +107,7 @@ ChatUserList.prototype = {
   },
   "addUser": function(user) {
     this.users.push(user);
-    this.list_element.append(user.wrapper_element);
+    this.list_element.append(user.list_element);
   }
 }
 
@@ -209,13 +209,14 @@ function ChatUser(user, parent_widget) {
   this.parent_widget = parent_widget;
   this.user_id = user.user_id;
   // for use in lists
-  this.list_element;
+  this.list_element = $(document.createElement("div"));
+  this.list_element.addClass('user');
   // for use in messages
   this.message_element;
+  // or something like that
 }
 
-ChatUser.prototype = {
-  
+ChatUser.prototype = { 
 }
 
 function ChatInput(args) {
