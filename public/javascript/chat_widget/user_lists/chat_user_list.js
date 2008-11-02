@@ -22,7 +22,7 @@ ChatUserList.prototype = {
   "getUsers": function(callback_to_viewer) {
     var self = this;
     if(!this.block_get) {
-      $.get("/chat_messages/index", {"room_id": this.room_id, "received_message_ids[]": this.receivedMessageIds()}, function(messages){
+      $.get("/chat_users/index", {"room_id": this.room_id}, function(messages){
         messages = eval(messages);
         for(var i in messages) {
           self.appendMessage(new ChatMessage(messages[i], self));
