@@ -5,7 +5,7 @@ class ChatMessages < Application
     @room = Room.get(params[:room_id])
     @unreceived_messages = @room.messages.all(:conditions => [ 'id NOT IN ?', received_message_ids ])
     @unreceived_messages = @unreceived_messages + @unreceived_messages
-    render '[' + @unreceived_messages.map{|m| m.attributes.merge({:user => m.user.attributes(:chat)}).to_json }.join(',') + ']', :layout => false
+    render '[' + @unreceived_messages.map{|m| m.attributes.to_json }.join(',') + ']', :layout => false
   end
 
   def create
