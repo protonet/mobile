@@ -22,13 +22,10 @@ ChatUserList.prototype = {
   "getUsers": function(callback_to_viewer) {
     var self = this;
     if(!this.block_get) {
-      $.get("/chat_users/index", {"room_id": this.room_id}, function(messages){
-        messages = eval(messages);
-        for(var i in messages) {
-          self.appendMessage(new ChatMessage(messages[i], self));
-        }
+      $.get("/chat_users/index", {"room_id": this.room_id}, function(users){
+        users = eval(users);
         if(callback_to_viewer) {
-          self.parent_widget.messagesLoadedCallback(self.room_id);
+          self.parent_widget.usersLoadedCallback(self.room_id);
         }
       });
     }

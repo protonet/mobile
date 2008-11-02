@@ -20,6 +20,9 @@ ChatUserListViewer.prototype = {
     }
     return this.parent_widget.user_lists[room_key];
   },
+  "usersLoadedCallback": function() {
+    
+  },	
   "setActive": function(room_id) {
     user_list = this.createOrReturnChatUserList(room_id);
     user_list.getUsers(true);
