@@ -1,4 +1,4 @@
-class Room
+class ChatRoom
   include DataMapper::Resource
   
   property :id,                         Integer,  :serial => true
@@ -9,6 +9,7 @@ class Room
   property :hidden,                     Boolean, :default => false
 
   has n, :messages, :class_name => ChatMessage
+  
   
   def self.lobby
     get(1) || new(:id => 1, :user_id => 0, :name => 'Lobby').save && get(1)

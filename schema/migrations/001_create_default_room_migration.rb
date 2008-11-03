@@ -1,10 +1,10 @@
 migration 1, :create_default_room  do
   up do
-    Room.new(:id => 1, :user_id => 0, :name => 'Lobby').save
+    ChatRoom.new(:id => 1, :user_id => 0, :name => 'Lobby').save
   end
 
   down do
-    r = Room.get(1)
+    r = ChatRoom.get(1)
     r.destroy if r
   end
 end
