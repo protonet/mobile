@@ -16,7 +16,7 @@ ChatUserList.prototype = {
   },
   "addUser": function(user) {
     this.users.push(user);
-    console.log('foo');
+    console.log('added user ' + user.id);
     this.list_element.append(user.list_element);
   },
   "getUsers": function(callback_to_viewer) {
