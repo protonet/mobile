@@ -8,7 +8,9 @@ class ChatRoom
   property :open,                       Boolean, :default => true
   property :hidden,                     Boolean, :default => false
 
-  has n, :messages, :class_name => ChatMessage
+  has n, :messages,   :class_name => ChatMessage
+  has n, :users,      :through => Resource
+  
   
   
   def self.lobby

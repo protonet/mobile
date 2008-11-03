@@ -15,3 +15,11 @@ describe ChatRoom, 'lobby functionality' do
   end
 
 end
+
+describe ChatRoom, 'users' do
+  
+  it "should allow adding users to a room" do
+    
+  end
+  
+end
