@@ -6,7 +6,7 @@ class User
   
   attr_accessor :password, :password_confirmation
   
-  has n, :rooms
+  has n, :chat_rooms
   has 1, :profile, :class_name => 'UserProfile'
   
   property :id,                         Integer,  :serial => true

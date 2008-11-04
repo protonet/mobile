@@ -19,7 +19,9 @@ end
 describe ChatRoom, 'users' do
   
   it "should allow adding users to a room" do
-    
+    room = ChatRoom.lobby
+    room.users << User.new(:name => 'foo')
+    p room.users
   end
   
 end

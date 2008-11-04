@@ -8,7 +8,7 @@ class ChatMessage
   property :user_id,                    Integer
   property :text,                       String
 
-  belongs_to :room
+  belongs_to :chat_room
   belongs_to :user
   
   def to_json
