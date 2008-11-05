@@ -7,6 +7,7 @@ Merb.push_path(:lib, Merb.root / "dashboard/lib")
 # this loads all plugins required in your init file so don't add them
 # here again, Merb will do it for you
 Merb.start_environment(:testing => true, :adapter => 'runner', :environment => ENV['MERB_ENV'] || 'test')
+
 module Merb
   module Test
     module ControllerHelper
@@ -19,6 +20,11 @@ module Merb
       def calling(&blk) blk; end
     end
   end
+end
+
+# some additional helper methods
+def create_users(number=1)
+  # User.new(:)
 end
 
 Spec::Runner.configure do |config|

@@ -18,10 +18,18 @@ end
 
 describe ChatRoom, 'users' do
   
+  before(:all) do
+    User.all.destroy!
+    @user = User.new(:login => 'foo', :password => 'blub')
+    @user.save
+  end
+  
+  # this tests datamapper functionality but I was eager to see wether it would really work as expected
   it "should allow adding users to a room" do
     room = ChatRoom.lobby
-    room.users << User.new(:name => 'foo')
-    p room.users
+    room.users << @user
+    room.save
+    ChatRoom.lobby.users.should == [@user]
   end
   
 end
