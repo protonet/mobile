@@ -17,10 +17,13 @@ describe ChatRoom, 'lobby functionality' do
 end
 
 describe ChatRoom, 'users' do
+  before(:all) do
+    @user = User.new(:name => 'foo').save
+  end
   
   it "should allow adding users to a room" do
     room = ChatRoom.lobby
-    room.users << User.new(:name => 'foo')
+    room.users << @user
     p room.users
   end
   
