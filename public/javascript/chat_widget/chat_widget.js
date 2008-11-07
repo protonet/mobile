@@ -56,6 +56,15 @@ ChatWidget.prototype =
   "receiveEventFromDispatcher": function() {
     // this.room_viewer.add_message(new ChatMessage());
   },
+  "getRoom": function(room_id) {
+    var room_key = 'room_' + room_id;
+    return this.rooms[room_key];
+  },
+  "addRoom": function(room) {
+    var room_key = 'room_' + room.id;
+    this.rooms[room_key] = room;
+    return this.rooms[room_key];
+  },
   "activateRoomSelector": function() {
     this.room_selector.setActive();
   },

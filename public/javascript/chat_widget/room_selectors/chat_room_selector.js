@@ -8,7 +8,6 @@ function ChatRoomSelector(args) {
   
   this._addOwnElementToParent();
   
-  this.rooms = [];
   this.block_get = false;
 } 
 
@@ -25,7 +24,7 @@ ChatRoomSelector.prototype = {
       $.get("/chat_rooms/index", {}, function(rooms){
         rooms = eval(rooms);
         for(var i in rooms) {
-          self.addRoom(new ChatRoom(messages[i], self));
+          self.parent_widget.addRoom(new ChatRoom(messages[i], self));
         }
         if(callback_to_viewer) {
           self.parent_widget.messagesLoadedCallback(self.room_id);
