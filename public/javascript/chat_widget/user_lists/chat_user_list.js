@@ -24,6 +24,7 @@ ChatUserList.prototype = {
     if(!this.block_get) {
       $.get("/chat_users/index", {"room_id": this.room_id}, function(users){
         users = eval(users);
+		self.updateUsersWith(users);
         if(callback_to_viewer) {
           self.parent_widget.usersLoadedCallback(self.room_id);
         }

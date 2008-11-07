@@ -29,7 +29,6 @@ ChatRoomViewer.prototype = {
     this.view_element.scrollTo(this.parent_widget.activeRoom().room_element.children('.message:last'));
   },
   "messagesLoadedCallback": function(room_id) {
-    this.parent_widget.active_room_id = room_id;
     this.scrollToLast();
   }
 };
