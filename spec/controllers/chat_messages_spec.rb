@@ -4,4 +4,8 @@ describe ChatMessages, "index action" do
   before(:each) do
     dispatch_to(ChatMessages, :index)
   end
+  
+  it 'should foo' do
+    
+  end
 end
