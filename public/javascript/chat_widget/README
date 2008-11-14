@@ -1,7 +1,6 @@
-chat widget:
+CHAT WIDGET:
 
-also das chat widget ist das haupt objekt in dieser applikation, diese verwaltet die shared resources wie users und rooms, messages werde dagegen von dem rooms selbst verwaltet, da sie keine shared resource sind.
-
+Also, jungens das chat widget ist das haupt objekt in dieser applikation, diese verwaltet die shared resources wie users und rooms, messages werde dagegen von dem rooms selbst verwaltet, da sie keine shared resource sind.
 
 beim öffnen der applikation wird ein chatwidget objekt erzeugt, dieses erzeugt und initialisiert seine weiteren sub views:
 - den room selector
