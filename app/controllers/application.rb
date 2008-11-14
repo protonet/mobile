@@ -25,8 +25,6 @@ class Application < Merb::Controller
     @current_user = nil
   end
   
-  
-  
   def logged_in?
     @current_user != nil
   end
@@ -34,8 +32,6 @@ class Application < Merb::Controller
   def current_user
     @current_user
   end
-  
-  
   
   def access_denied
     redirect(url(:login), :message => { :error => 'Bitte einloggen oder einen neuen User anlegen (kostenlos, keine Daten notwendig!).' })
