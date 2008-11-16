@@ -6,12 +6,36 @@ body {
   background-color:   #151C24;
 } 
 
+#header {
+  margin: 5px 10px 5px 10px;
+  padding-bottom: 5px;
+  height: 20px;
+  color:white;
+  border-bottom: 1px solid white;
+}
+
+#header a {
+  color: white;
+}
+
+#header img {
+  float: left;
+}
+
+#header h3 {
+  margin-left: 5px;
+  float: left;
+}
+
+#header .navigation {
+  float: right;
+}
 
 #content {
   font-family: Arial, Helvetica, sans-serif;
   color: white;
   text-align: center;
-  margin-top: 10px;
+  clear: both;
 }
 
 #terms {

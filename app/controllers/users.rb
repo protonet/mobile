@@ -17,4 +17,11 @@ class Users < Application
     end
   end
   
+  def show
+    login_required
+    @user = User.get(params[:id])
+    redirect(url(:home)) unless @user
+    render
+  end
+  
 end
