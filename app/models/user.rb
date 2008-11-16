@@ -46,6 +46,10 @@ class User
     
   end
   
+  def enter(room)
+    room.users << self && room.save unless room.users.include?(self)
+  end
+  
   def poll(ip, force_update=false)
     update_attributes(:current_ip => ip) unless force_update || current_ip.nil? || last_polled_at > Time.now - 5.minutes
   end

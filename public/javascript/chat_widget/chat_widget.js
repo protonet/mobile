@@ -16,6 +16,8 @@ function ChatWidget(args) {
   // who am I? isn't that what we all want to know? ;)
   
   // this.current_user  = new ChatUser(args.user_id);
+  // make it a global user object
+  this.current_user_id = args.user_id;
   this.user_config   = args.user_config;
   
   // active informations
@@ -39,10 +41,10 @@ ChatWidget.prototype =
   "openRoom": function(room_id) {
     this.active_room_id = room_id;
     this.room_viewer.setActive(room_id);
-    this.user_list_viewer.setActive(room_id);
+    // this.user_list_viewer.setActive(room_id);
     // not yet implemented:
     // this.room_selector.setActive(room_id);
-    // this.chat_input.setActive(room_id);
+    this.chat_input.setActive(room_id);
     // this.listenToRoom(foobar?);
   },
   "listenToRoom": function() {

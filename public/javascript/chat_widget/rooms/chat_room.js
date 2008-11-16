@@ -16,7 +16,8 @@ ChatRoom.prototype = {
         for(var i in messages) {
           self.appendMessage(new ChatMessage(messages[i], self));
         }
-        if(callback_to_viewer) {
+        // fixme: the second condition doesn't belong here ... this needs to be changed!
+        if(callback_to_viewer && messages.length > 0) {
           self.parent_widget.messagesLoadedCallback(self.room_id);
         }
       });
