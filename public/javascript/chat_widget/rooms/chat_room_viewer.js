@@ -14,11 +14,10 @@ ChatRoomViewer.prototype = {
     this.parent_widget.div_container.append(this.view_element);
   },
   "createOrReturnRoom": function(room_id) {
-    var room_key = 'room_' + room_id;
-    if(!this.parent_widget.rooms[room_key]) {
-      this.parent_widget.rooms[room_key] = new ChatRoom(room_id, this);
+    if(!this.parent_widget.getRoom(room_id)) {
+      this.parent_widget.addRoom(new ChatRoom(room_id, this));
     }
-    return this.parent_widget.rooms[room_key];
+    return this.parent_widget.getRoom(room_id);
   },
   "setActive": function(room_id) {
     room = this.createOrReturnRoom(room_id);
@@ -29,7 +28,6 @@ ChatRoomViewer.prototype = {
     this.view_element.scrollTo(this.parent_widget.activeRoom().room_element.children('.message:last'));
   },
   "messagesLoadedCallback": function(room_id) {
-    this.parent_widget.active_room_id = room_id;
     this.scrollToLast();
   }
 };

@@ -5,7 +5,10 @@ describe ChatMessages, "index action" do
     @controller = dispatch_to(ChatMessages, :index)
   end
   
-  it "should return the "
+  it 'should foo' do
+    
+  end
+
 end
 
 describe Instruments, "methods" do
@@ -26,4 +29,5 @@ describe Instruments, "methods" do
     @controller.should be_successful
   end
   
+>>>>>>> 349a7f8894f2f46f0bfab32d2721870dd609b397:spec/controllers/chat_messages_spec.rb
 end

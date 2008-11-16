@@ -25,6 +25,12 @@ function ChatWidget(args) {
   this.rooms = {};
   this.user_lists = {};
   
+  // load room chooser
+  // this thing is displayed by default with the currently
+  // available data so it doesn't need to be dependent on the
+  // room activation process
+  this.activateRoomSelector();
+
   // keep it simple, no init for now
   this.openLobby();
   
@@ -51,6 +57,18 @@ ChatWidget.prototype =
   },
   "receiveEventFromDispatcher": function() {
     // this.room_viewer.add_message(new ChatMessage());
+  },
+  "getRoom": function(room_id) {
+    var room_key = 'room_' + room_id;
+    return this.rooms[room_key];
+  },
+  "addRoom": function(room) {
+    var room_key = 'room_' + room.room_id;
+    this.rooms[room_key] = room;
+    return this.rooms[room_key];
+  },
+  "activateRoomSelector": function() {
+    this.room_selector.setActive();
   },
   "activeRoom": function() {
     return this.rooms['room_' + this.active_room_id];

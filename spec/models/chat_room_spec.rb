@@ -17,6 +17,9 @@ describe ChatRoom, 'lobby functionality' do
 end
 
 describe ChatRoom, 'users' do
+  before(:all) do
+    @user = User.new(:name => 'foo').save
+  end
   
   before(:all) do
     User.all.destroy!
@@ -28,6 +31,7 @@ describe ChatRoom, 'users' do
   it "should allow adding users to a room" do
     room = ChatRoom.lobby
     room.users << @user
+    p room.users
     room.save
     ChatRoom.lobby.users.should == [@user]
   end

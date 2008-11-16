@@ -14,7 +14,7 @@ ChatRoom.prototype = {
       $.get("/chat_messages/index", {"room_id": this.room_id}, function(messages){
         messages = eval(messages);
         for(var i in messages) {
-          self.appendMessage(new ChatMessage(messages[i], self));
+          self.addMessage(new ChatMessage(messages[i], self));
         }
         // fixme: the second condition doesn't belong here ... this needs to be changed!
         if(callback_to_viewer && messages.length > 0) {
@@ -29,7 +29,7 @@ ChatRoom.prototype = {
     }
     return $.map(this.messages, function(m){return m.id});
   },
-  "appendMessage": function(message) {
+  "addMessage": function(message) {
     this.messages.push(message);
     this.room_element.append(message.wrapper_element);
   }

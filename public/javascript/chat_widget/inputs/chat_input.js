@@ -20,7 +20,7 @@ ChatInput.prototype = {
         var current_user_id = self.parent_widget.current_user_id;
         var active_room = self.parent_widget.activeRoom();
         var message = new ChatMessage({"text": self.input_element.val(), "room_id": active_room.room_id, "user_id": current_user_id}, active_room);
-        active_room.appendMessage(message);
+        active_room.addMessage(message);
         self.sendMessage(message);
         self.input_element.val('');
       }

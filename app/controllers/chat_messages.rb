@@ -2,8 +2,7 @@ class ChatMessages < Application
 
   def index
     room = ChatRoom.get(params[:room_id])
-    messages = room.messages.all
-    render '[' + messages.map{|m| m.attributes.to_json }.join(',') + ']', :layout => false
+    render room.messages.to_json, :layout => false
   end
 
   def create
