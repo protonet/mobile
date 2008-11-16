@@ -9,7 +9,7 @@ function ChatUserList(room_id, parent_widget) {
 ChatUserList.prototype = {
   "updateUsersWith": function(users) {
     for(var i in users) {
-      if($.index(this.users, users[i])) {
+      if($(this.users).index(users[i])) {
         this.addUser(new ChatUser(users[i], this));
       }
     }
@@ -24,7 +24,7 @@ ChatUserList.prototype = {
     if(!this.block_get) {
       $.get("/chat_users/index", {"room_id": this.room_id}, function(users){
         users = eval(users);
-		self.updateUsersWith(users);
+        self.updateUsersWith(users);
         if(callback_to_viewer) {
           self.parent_widget.usersLoadedCallback(self.room_id);
         }

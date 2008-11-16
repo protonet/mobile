@@ -47,7 +47,7 @@ ChatWidget.prototype =
   "openRoom": function(room_id) {
     this.active_room_id = room_id;
     this.room_viewer.setActive(room_id);
-    // this.user_list_viewer.setActive(room_id);
+    this.user_list_viewer.setActive(room_id);
     // not yet implemented:
     // this.room_selector.setActive(room_id);
     this.chat_input.setActive(room_id);
