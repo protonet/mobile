@@ -25,6 +25,8 @@ Merb::Router.prepare do |r|
   r.resource :chat_messages
   r.resource :users
   
+  r.match("/profile").to(:controller => "users", :action => "show").name(:profile)
+  
   r.match("/login").to(:controller => "sessions", :action => "create").name(:login)
   r.match("/logout").to(:controller => "sessions", :action => "destroy").name(:logout)
   
