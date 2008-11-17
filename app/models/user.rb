@@ -61,7 +61,7 @@ class User
   def attributes(scenario=nil)
     case scenario
     when :chat
-      {:id => id, :name => display_name}.merge(profile && profile.chat_attributes || {})
+      {:id => id, :name => display_name}.merge(profile && profile.attributes(:chat) || {})
     else
       super
     end

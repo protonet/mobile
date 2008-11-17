@@ -7,9 +7,14 @@ class UserProfile
   property :xing_profile,               String
   property :twitter_account,            String
   property :public,                     Boolean,  :default => true
-  
-  def chat_attributes
-    {:profile_pic => profile_pic_url}
+    
+  def attributes(scenario=nil)
+    case scenario
+    when :chat
+      {:profile_pic => profile_pic_url}
+    else
+      super
+    end
   end
 
 end
