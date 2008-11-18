@@ -64,6 +64,17 @@ body {
 }
 
 
+.sharing-widget {
+  background-color: #192839;
+  width:  250px;
+  height: 200px;
+  padding:  5px;
+  border:   1px solid white;
+  margin-left: 10px;
+  float: left;
+}
+
+
 .chat-widget {
   background-color: #192839;
   width:  700px;
@@ -71,6 +82,7 @@ body {
   padding:  5px;
   border:   1px solid white;
   margin-left: 10px;
+  float: left;
 }
 
 .chat-widget .chat-user-list {

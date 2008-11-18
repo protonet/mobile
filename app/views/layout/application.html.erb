@@ -28,6 +28,7 @@
       <h3>yay! welcome <%= current_user.login %></h3>
 
       <div class="navigation">
+        <a href="<%= url(:home) %>">home</a> | 
         <a href="<%= url(:profile, :id => current_user.id) %>">profile</a> | 
         <a href="<%= url(:logout) %>">foo</a> | 
         <a href="<%= url(:logout) %>">bar</a> | 
