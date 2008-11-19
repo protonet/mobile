@@ -1,6 +1,11 @@
 <div id="main-chat-widget" class="chat-widget"></div>
 
-<div id="main-sharing-widget" class="sharing-widget">foo</div>
+<div id="main-sharing-widget" class="sharing-widget">
+<%= form :action => url(:controller => "foo", :action => "bar", :id => 1) do %>
+  <%= file_field :name => "file", :label => "file" %>
+  <%= submit "Upload" %>
+<% end =%>
+</div>
 
 
 <script type="text/javascript" charset="utf-8">
