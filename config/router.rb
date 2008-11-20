@@ -26,7 +26,7 @@
 # See merb/specs/merb/router.rb for a fairly complete usage sample.
 
 Merb.logger.info("Compiling routes...")
-Merb::Router.prepare do  
+Merb::Router.prepare do |r|
 
   # Adds the required routes for merb-auth using the password slice
   # slice(:merb_auth_slice_password, :name_prefix => nil, :path_prefix => "")

@@ -8,10 +8,10 @@ dependency "merb-assets", merb_gems_version
 dependency "merb-cache", merb_gems_version   
 dependency "merb-helpers", merb_gems_version 
 dependency "merb-mailer", merb_gems_version  
-dependency "merb-slices", merb_gems_version  
-dependency "merb-auth-core", merb_gems_version
-dependency "merb-auth-more", merb_gems_version
-dependency "merb-auth-slice-password", merb_gems_version
+# dependency "merb-slices", merb_gems_version  
+# dependency "merb-auth-core", merb_gems_version
+# dependency "merb-auth-more", merb_gems_version
+# dependency "merb-auth-slice-password", merb_gems_version
 dependency "merb-param-protection", merb_gems_version
 dependency "merb-exceptions", merb_gems_version
  
