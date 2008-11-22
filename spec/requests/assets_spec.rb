@@ -5,3 +5,9 @@ describe "/assets" do
     @response = request("/assets")
   end
 end
+
+describe "/assets/create" do
+  
+  
+  
+end
