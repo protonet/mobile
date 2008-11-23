@@ -3,6 +3,7 @@ class Application < Merb::Controller
   before :login_required
   
   def login_required
+    debugger
     try_to_login
     logged_in? || throw(:halt, :access_denied)
   end
