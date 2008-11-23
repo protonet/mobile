@@ -6,6 +6,10 @@ body {
   background-color:   #151C24;
 } 
 
+.clr {
+  clear: both;
+}
+
 #header {
   margin: 5px 10px 5px 10px;
   padding-bottom: 5px;
@@ -63,25 +67,6 @@ body {
   padding:0 10px 3px;
 }
 
-
-.sharing-widget {
-  background-color: #192839;
-  width:  250px;
-  height: 200px;
-  padding:  5px;
-  border:   1px solid white;
-  margin-left: 10px;
-  float: left;
-}
-
-.sharing-widget ul {
-  font-size: 12px;
-  text-align: left;
-  padding: 0;
-  list-style-position: inside;
-}
-
-
 .chat-widget {
   background-color: #192839;
   width:  700px;
@@ -89,6 +74,7 @@ body {
   padding:  5px;
   border:   1px solid white;
   margin-left: 10px;
+  margin-bottom: 10px;
   float: left;
 }
 
@@ -140,4 +126,32 @@ body {
 .chat-widget input {
   margin-right:   5px;
   float: right;
+}
+
+.status-widget {
+  background-color: #192839;
+  width: 280px;
+  height: 15px;
+  padding:  5px;
+  border:   1px solid white;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  float: left;
+}
+
+.sharing-widget {
+  background-color: #192839;
+  width:  280px;
+  padding:  5px;
+  border:   1px solid white;
+  margin-left: 10px;
+  text-align: left;
+  font-size: 14px;
+  float: left;
+}
+
+.sharing-widget ul {
+  font-size: 12px;
+  padding: 0;
+  list-style-position: inside;
 }

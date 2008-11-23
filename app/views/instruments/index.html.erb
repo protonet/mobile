@@ -1,16 +1,39 @@
 <div id="main-chat-widget" class="chat-widget"></div>
 
+<div id="main-status-widget" class="status-widget">status will be displayed here</div>
+
 <div id="main-sharing-widget" class="sharing-widget">
+  
+  Create a new list:
+  <%= form :action => url(:controller => "asset_lists", :action => "create") do %>
+    <%= text_field :name, :size => 22 %>
+    <%= submit "create" %>
+  <% end =%>
+  
+  <ul>
+  <% AssetList.all.each do |a| %>
+    <li><a href=""><%= a.name %></a></li>
+  <% end %>
+  </ul>
+  <br />
+  ... and upload a new file:
   <%= form :action => url(:controller => "assets", :action => "create") do %>
-    <%= file_field :name => "file", :label => "file" %>
+    <%= file_field :name => "file", :size => 14 %>
     <%= submit "Upload" %>
   <% end =%>
+
+  <br />
 
   <ul>
   <% Asset.all.each do |a| %>
     <li><a href="<%= a.file_path %>"><%= a.filename %></a></li>
   <% end %>
   </ul>
+  
+  <br />
+  
+  <div class="clr"></div>
+  
 </div>
 
 
