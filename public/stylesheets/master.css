@@ -74,6 +74,13 @@ body {
   float: left;
 }
 
+.sharing-widget ul {
+  font-size: 12px;
+  text-align: left;
+  padding: 0;
+  list-style-position: inside;
+}
+
 
 .chat-widget {
   background-color: #192839;

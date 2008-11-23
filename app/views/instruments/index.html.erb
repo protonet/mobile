@@ -1,16 +1,17 @@
 <div id="main-chat-widget" class="chat-widget"></div>
 
 <div id="main-sharing-widget" class="sharing-widget">
-<%= form :action => url(:controller => "assets", :action => "create") do %>
-  <%= file_field :name => "file", :label => "file" %>
-  <%= submit "Upload" %>
-<% end =%>
+  <%= form :action => url(:controller => "assets", :action => "create") do %>
+    <%= file_field :name => "file", :label => "file" %>
+    <%= submit "Upload" %>
+  <% end =%>
 
-<ul style="font-size: 12px; text-align: center;padding: 0;">
-<% Asset.all.each do |a| %>
-  <li><a href="<%= a.file_path %>"><%= a.filename %></a></li>
-<% end %>
-</ul>
+  <ul>
+  <% Asset.all.each do |a| %>
+    <li><a href="<%= a.file_path %>"><%= a.filename %></a></li>
+  <% end %>
+  </ul>
+</div>
 
 
 <script type="text/javascript" charset="utf-8">
