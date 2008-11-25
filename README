@@ -38,14 +38,19 @@ Currently you can do the following things on it:
   * Login and -out with that account data
   * Chat in the so-called Lobby
   * enjoy the awesome design ;) (I can haz graphics?) ...
+  * see who else is connected (mocked in dev)
+  * see who has joined the lobby
+  * upload and download files
+  * create filelist with description and all
+  * add files to filelists
 
 == NEXT THINGS PLANNED:
 
   * make it look better
     ** kick ass would be good
 
-  * see other connected users on the startpage
-  * see which other users are spending time in the lobby
+  * see other connected users on the startpage (you can almost do that)
+  * see which other users are spending time in the lobby (kinda works)
     ** replicate basic chat client functionality (e.g. tab completion on names and more)
   * be able to open new chat rooms
     ** make them private(hidden)/public
@@ -55,9 +60,9 @@ Currently you can do the following things on it:
   * allow editing of your profile
     ** adding of a profile pic
     ** adding your twitter account
-  * add possibility to create public/private lists
-  * add possibility to upload files
-  * add possibility to attach uploaded files to a list
+  * add possibility to create public/private lists (also in the works)
+  * add possibility to upload files (works)
+  * add possibility to attach uploaded files to a list (works)
   
   * and ... need to do some more specs ;)
 
@@ -66,6 +71,8 @@ Currently you can do the following things on it:
 To run it you need to do following things (sudo if needed):
 
 # gem install merb --include-dependencies
+
+As of merb 1.0 all of these are unnecessary, it is a good idea to remove all your older merb and datamapper gems to avoid conflicts
 # gem install dm-validations
 # gem install merb_helpers
 # gem install merb_datamapper
