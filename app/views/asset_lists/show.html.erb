@@ -1,1 +1,18 @@
-you have added the <%= @list.name %>
+you have added the <%= @list.name %> <br />
+<% if @list.description.blank? %>
+  how about adding a description??  
+  <%= form_for @list, :action => url(:controller => "asset_lists", :action => "update", :id => @list.id) do %>
+    <%= text_area   :description, :label => "Description: ", :cols => 40, :rows => 5 %><br />
+    <%= submit "update" %>
+  <% end =%>
+<% else %>
+  description: <%= @list.description %>
+<% end %>
+<br /><br />
+Files in this list:<br />
+<% @list.assets.each do |a| %>
+  <%= a.name %>
+<% end %>
+<br />
+Add Files:<br />
+<%= select :bla, :collection => Asset.unbound.collect {|a| [a.id, a.filename]} %>

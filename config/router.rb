@@ -34,6 +34,7 @@ Merb::Router.prepare do |r|
   # RESTful routes
   r.resource :chat_messages
   r.resource :users
+  r.resource :asset_lists
   
   r.match("/profile").to(:controller => "users", :action => "show").name(:profile)
   

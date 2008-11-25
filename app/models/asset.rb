@@ -21,6 +21,15 @@ class Asset
   validates_present           :size
   validates_present           :created_at
   
+  def self.unclaimed
+    all(:user_id => nil)
+  end
+  
+  def self.yours(user_id = nil)
+    user_id ||= current_user.id
+    all(:user_id => user_id)
+  end
+  
   def move_tmp_file
     FileUtils.mv( tempfile.path, file_path(true) )
   end

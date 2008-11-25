@@ -16,13 +16,20 @@ class AssetLists < Application
   end
   
   def update
-    # not implemented
+    @list = AssetList.get(params[:id].to_i)
+    @list.update_attributes(params[:asset_list])
+    @list.save
+    redirect url(:action => :show, :id => @list.id)
   end
   
   def show
     @list = AssetList.get(params[:id].to_i)
     render
   end
-  
+
+  def edit
+    @list = AssetList.get(params[:id].to_i)
+    render
+  end
   
 end
