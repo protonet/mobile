@@ -11,8 +11,11 @@ you have added the <%= @list.name %> <br />
 <br /><br />
 Files in this list:<br />
 <% @list.assets.each do |a| %>
-  <%= a.name %>
+  <%= a.filename %><br />
 <% end %>
 <br />
 Add Files:<br />
-<%= select :bla, :collection => Asset.unbound.collect {|a| [a.id, a.filename]} %>
+<%= form_for @list, :action => url(:controller => "asset_lists", :action => "update", :id => @list.id) do %>
+  <%= select :assets, :collection => Asset.unclaimed.unsorted.collect {|a| [a.id, a.filename]}, :multiple => true, :size => 10 %><br />
+  <%= submit "add file" %>
+<% end =%>

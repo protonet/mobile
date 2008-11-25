@@ -21,6 +21,10 @@ class Asset
   validates_present           :size
   validates_present           :created_at
   
+  def self.unsorted
+    all(:asset_list_id => nil)
+  end
+  
   def self.unclaimed
     all(:user_id => nil)
   end
@@ -31,7 +35,7 @@ class Asset
   end
   
   def move_tmp_file
-    FileUtils.mv( tempfile.path, file_path(true) )
+    FileUtils.mv( tempfile.path, file_path(true) ) if new_record?
   end
   
   def file_path(from_root = false)

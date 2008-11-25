@@ -16,9 +16,12 @@ class AssetLists < Application
   end
   
   def update
-    @list = AssetList.get(params[:id].to_i)
+    @list = AssetList.get(params[:id])
+    if asset_ids = params[:asset_list].delete(:assets)
+      @list.assets += Asset.all(:id => asset_ids)
+      @list.save
+    end
     @list.update_attributes(params[:asset_list])
-    @list.save
     redirect url(:action => :show, :id => @list.id)
   end
   
