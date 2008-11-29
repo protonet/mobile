@@ -78,5 +78,11 @@ As of merb 1.0 all of these are unnecessary, it is a good idea to remove all you
 # gem install merb_datamapper
 # gem install do_sqlite3
 
+create the databases
+# rake db:create
+
+run the migrations
+# rake db:automigrate
+
 Go to your dashboard directory and run merb, you should be able to point your browser to http://localhost:4000 and see the protonet dashboard.
 TODO aj: remove dbfiles from repo and add text for db creation/migration
