@@ -4,29 +4,29 @@ describe ChatMessages, "index action" do
   before(:each) do
     @controller = dispatch_to(ChatMessages, :index)
   end
-  
-  it 'should foo' do
     
+  it 'should return the messages for the requested room given you are allowed to see it' do
+    pending
+  end
+  
+  it 'should render the messages as text' do
+    pending
   end
 
 end
 
-describe Instruments, "methods" do
+describe ChatMessages, "create action" do
 
   before(:each) do
-    @controller = dispatch_to(Instruments, :index) do |controller|
-      controller.should_receive(:login_required).and_return(true)
-      controller.instance_variable_set(:@current_user, User.new(:id => 1, :login => 'foobar'))
-    end
+    @controller = dispatch_to(ChatMessages, :create)
   end
   
-  it "should have the lobby room ready as an instance variable" do
-    @controller.assigns(:lobby).id.should == 1
-    @controller.assigns(:lobby).name.should == 'Lobby'
+  it "should raise an exception if you are sending a message as an user id other than yours (e.g. older window still open)" do
+    pending
   end
-  
-  it "should be successful" do
-    @controller.should be_successful
+
+  it 'should return the created messages id as simple text' do
+    pending
   end
-  
+    
 end
