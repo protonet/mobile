@@ -11,6 +11,10 @@ end
 
 describe "The ubuntu backen adapter in general" do
   
+  before(:all) do
+    @backend = BackendAdapters::Ubuntu.new
+  end
+  
   it "should have a method that return its info data" do
     @backend.info.should == "ubuntu backend" # ;) yeah I know its not much right now
   end

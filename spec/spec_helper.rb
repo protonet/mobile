@@ -27,14 +27,10 @@ module Merb
   end
 end
 
-# some additional helper methods
-def create_users(number=1)
-  # User.new(:)
-end
-
-
 Spec::Runner.configure do |config|
   config.include(Merb::Test::ViewHelper)
   config.include(Merb::Test::RouteHelper)
   config.include(Merb::Test::ControllerHelper)
 end
+
+require(Merb.root + '/spec/factory.rb')

@@ -17,6 +17,8 @@ jgs .'      ```--.....--'''    ' `:_ o       :
 
 = PROTONET
 
+Core contributors: actionJackson (dreewill), dudemeister (dudemeister)
+
 == DESCRIPTION:
 
 First of all: all of the code and documentation is work in progress, and it's redistribution or redistribution of a modified version is currently not allowed without explicit permission of the project owner (dudemeister on github), the code and documentation *will* become open source at one point (basically when it works to some degree). I have still some work to do figuring out a good license for this thing.
@@ -72,17 +74,25 @@ To run it you need to do following things (sudo if needed):
 
 # gem install merb --include-dependencies
 
-As of merb 1.0 all of these are unnecessary, it is a good idea to remove all your older merb and datamapper gems to avoid conflicts
-# gem install dm-validations
-# gem install merb_helpers
-# gem install merb_datamapper
-# gem install do_sqlite3
+As of merb 1.0 adding the single gems is not necessary, it is a good idea to remove all your older merb and datamapper gems to avoid conflicts
 
-create the databases
+Create the databases:
 # rake db:create
 
-run the migrations
+Run the migrations:
 # rake db:automigrate
 
 Go to your dashboard directory and run merb, you should be able to point your browser to http://localhost:4000 and see the protonet dashboard.
-TODO aj: remove dbfiles from repo and add text for db creation/migration
+
+== RUNNIN' THE TEST
+
+Just as with your development environment you need to create and migrate the database:
+
+# MERB_ENV=test rake db:create
+# MERB_ENV=test rake db:automigrate
+
+you can then call rake or rake spec in your project directory:
+
+# rake
+or
+# rake spec

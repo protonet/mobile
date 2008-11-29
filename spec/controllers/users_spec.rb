@@ -10,8 +10,8 @@ describe Users, "basic methods" do
     [:new, :create].each {|action| dispatch_to(Users, action).should_not redirect}
   end
   
-  it "should render the new form" do
-    @app.should_receive(:render).with(:new)
+  it "should render the new form with the logged out form" do
+    @app.should_receive(:render).with(:new, :layout => "logged_out")
     @app.create
     @app.should_receive(:render)
     @app.new
@@ -42,7 +42,7 @@ describe Users, "creation method" do
   it "should render the new form if user creation failed" do
     User.all.should be_empty # with a passion, why easy when it can be complicated
     get(url(:controller => 'users', :action => 'create'), :user => {}) do |controller|
-      controller.should_receive(:render).with(:new)
+      controller.should_receive(:render).with(:new, :layout => "logged_out")
     end
     User.all.should be_empty
   end
