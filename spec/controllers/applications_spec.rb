@@ -24,7 +24,6 @@ describe Application, "authentication methods" do
   before(:each) do
     @app = Application.new(fake_request)
     # also initialize session since we need it in these tests
-    @app.request.session ={}
   end
   
   it "should allow you to set a current user and store it in the session and return it too" do
