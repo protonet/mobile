@@ -4,7 +4,7 @@ class Sessions < Application
 
   def create
     unless request.post?
-      # prepare_connected_users
+      prepare_connected_users
       render :layout => 'logged_out'
     else
       (user = User.authenticate(params[:user])) && self.current_user = user if params[:user]
