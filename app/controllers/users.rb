@@ -4,7 +4,7 @@ class Users < Application
   
   def new
     @user = User.new
-    render
+    render :layout => 'logged_out'
   end
   
   def create
@@ -13,7 +13,7 @@ class Users < Application
       self.current_user = @user
       redirect(url(:controller => 'instruments', :action => :index))
     else
-      render :new
+      render :new, :layout => 'logged_out'
     end
   end
   
