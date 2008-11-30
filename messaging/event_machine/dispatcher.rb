@@ -45,6 +45,7 @@ end
 EventMachine::run do
   host = '0.0.0.0'
   port = 5000
+  EventMachine.epoll if RUBY_PLATFORM =~ /linux/
   EventMachine::start_server(host, port, EchoServer)
   puts "Started EchoServer on #{host}:#{port}..."
 end

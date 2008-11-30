@@ -1,5 +1,4 @@
 require File.join( File.dirname(__FILE__), '..', "spec_helper" )
-require File.join(File.dirname(__FILE__), '../../lib/backend_adapters', 'ubuntu.rb')
 
 describe "The ubuntu backend adapter initialization" do
 
