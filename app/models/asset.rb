@@ -35,7 +35,11 @@ class Asset
   end
   
   def move_tmp_file
-    FileUtils.mv( tempfile.path, file_path(true) ) if new_record?
+    if new_record?
+      FileUtils.mv(tempfile.path, file_path(true))
+      # FIXME added hotfix, this needs to be reviewed :)
+      FileUtils.chmod(0666, file_path(true))
+    end
   end
   
   def file_path(from_root = false)
