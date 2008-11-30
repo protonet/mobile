@@ -12,7 +12,7 @@
   
   <ul>
   <% AssetList.all.each do |a| %>
-    <li><a href=""><%= a.name %></a></li>
+    <li><a href="<%= url(:controller => "asset_lists", :action => "show", :id => a.id) %>"><%= a.name %></a></li>
   <% end %>
   </ul>
   <br />
