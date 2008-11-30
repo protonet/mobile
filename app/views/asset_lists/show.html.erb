@@ -11,7 +11,7 @@ you have added the <%= @list.name %> <br />
 <br /><br />
 Files in this list:<br />
 <% @list.assets.each do |a| %>
-  <%= a.filename %><br />
+  <a href="<%= a.file_path %>"><%= a.filename %></a><br />
 <% end %>
 <br />
 Add Files:<br />
