@@ -1,13 +1,8 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'eventmachine'
-require 'ruby-debug'
-Debugger.start
 
-# should be requireable to include basic flash interaction functionality
-# policy stuff for example ...
-# aj: maybe some monkeypatching of the the receive data sutff
-# also can include / require the modules class variables?
+# this is the module to handle policy talk with flash sockets
 module FlashServer
   
   @policy_sent = false
@@ -42,6 +37,7 @@ module FlashServer
   end
 end
 
+# simple echoserver, returns what you send him
 module EchoServer
   
   @@test = 0
