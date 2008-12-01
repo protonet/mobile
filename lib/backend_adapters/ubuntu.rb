@@ -43,8 +43,8 @@ module BackendAdapters
       def get_connected_macs_to_wlan(iface)
         raise ArgumentError, iface unless DEFAULT_WLAN_INTERFACES.include?(iface)
         foo = `wlanconfig #{@config[iface]} list sta`
-        Merb.logger.error('whoami: ' + `which arp`)
-        Merb.logger.error('macs:' + foo)
+        # Merb.logger.error('whoami: ' + `which arp`)
+        # Merb.logger.error('macs:' + foo)
         foo.scan(REGEXPS[:mac]).map {|m| m.upcase!}
       end
       
@@ -62,7 +62,7 @@ module BackendAdapters
         # to_a makes sure it's an array
         ip_array = ifaces.collect do |iface|
           match = `/usr/sbin/arp -a -i #{@config[iface]}`
-          Merb.logger.error('arp:' + match)
+          # Merb.logger.error('arp:' + match)
           match = match.match(/\((.*)\).*#{mac}/)
           match && match[1]
         end
