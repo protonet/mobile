@@ -42,6 +42,7 @@ class Application < Merb::Controller
       Merb.logger.info("trying to login #{@current_user} <-- this should be nil btw")
       @current_user ||= (login_from_session || login_from_cookie)
       if @current_user
+        @current_user.poll(request.env['REMOTE_ADDR'])
         Merb.logger.info("User #{@current_user.login} logged in!")
       else
         Merb.logger.info("User could not be logged in!")
@@ -50,7 +51,7 @@ class Application < Merb::Controller
     end
   
     def login_from_session
-      @current_user = User.get(session[:user]) if session[:user]
+      current_user = User.get(session[:user]) if session[:user]
     end
   
     def login_from_cookie

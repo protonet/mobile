@@ -51,7 +51,7 @@ class User
   end
   
   def poll(ip, force_update=false)
-    update_attributes(:current_ip => ip) unless force_update || current_ip.nil? || last_polled_at > Time.now - 5.minutes
+    update_attributes(:current_ip => ip, :last_polled_at => DateTime.now) if (force_update || current_ip.nil? || !last_polled_at || last_polled_at < DateTime.now - 5.minutes)
   end
   
   def display_name
