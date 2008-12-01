@@ -42,7 +42,10 @@ module BackendAdapters
    private
       def get_connected_macs_to_wlan(iface)
         raise ArgumentError, iface unless DEFAULT_WLAN_INTERFACES.include?(iface)
-        `wlanconfig #{@config[iface]} list sta`.scan(REGEXPS[:mac]).map {|m| m.upcase!}
+        foo = `wlanconfig #{@config[iface]} list sta`
+        Merb.logger.error('whoami: ' + `which arp`)
+        Merb.logger.error('macs:' + foo)
+        foo.scan(REGEXPS[:mac]).map {|m| m.upcase!}
       end
       
       def get_ip_for_mac(mac, ifaces = DEFAULT_WLAN_INTERFACES, refresh = false)
@@ -58,11 +61,13 @@ module BackendAdapters
         # (that's what that refresh parameter is for)
         # to_a makes sure it's an array
         ip_array = ifaces.collect do |iface|
-          match = `arp -a -i #{@config[iface]}`.match(/\((.*)\).*#{mac}/)
+          match = `/usr/sbin/arp -a -i #{@config[iface]}`
+          Merb.logger.error('arp:' + match)
+          match = match.match(/\((.*)\).*#{mac}/)
           match && match[1]
         end
         ip_array.compact!
-        raise RuntimeError, ip_array if ip_array.size != 1 # not implemented yet
+        # raise RuntimeError, ip_array if ip_array.size != 1 # not implemented yet
         ip_array.first
       end
       
