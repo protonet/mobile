@@ -15,6 +15,9 @@ Merb::Config.use do |c|
   # cookie session store configuration
   c[:session_secret_key]  = '6700df2970af5a8ec47c50cbfba8aa918b796ab2'  # required for cookie session store
   c[:session_id_key] = '_dashboard-new_session_id' # cookie session id key, defaults to "_session_id"
+  
+  # added configuration
+  c[:general_salt] = 'afj3u73oodjsado3uiypowdo3uu3392810676'
 end
  
 Merb::BootLoader.before_app_loads do
