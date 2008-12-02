@@ -61,9 +61,7 @@ class Application < Merb::Controller
     end
     
     def login_from_token
-      if @@token_allowed_actions[request.controller] && @@token_allowed_actions[request.controller].include?(request.action)
-        current_user = User.get(params[:token]) if params[:token]
-      end
+      current_user = User.get(params[:token]) if params[:token]
     end
   
 end
