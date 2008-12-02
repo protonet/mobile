@@ -68,3 +68,6 @@ class Application < Merb::Controller
     end
   
 end
+
+
+# duded
