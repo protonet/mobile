@@ -1,5 +1,7 @@
 class Application < Merb::Controller
 
+  @@token_allowed_actions = {'assets' => ['create']}
+
   before :login_required
   
   def login_required
@@ -40,7 +42,7 @@ class Application < Merb::Controller
   private
     def try_to_login
       Merb.logger.info("trying to login #{@current_user} <-- this should be nil btw")
-      @current_user ||= (login_from_session || login_from_cookie)
+      @current_user ||= (login_from_session || login_from_cookie || login_from_token)
       if @current_user
         @current_user.poll(request.env['REMOTE_ADDR'])
         Merb.logger.info("User #{@current_user.login} logged in!")
@@ -56,6 +58,12 @@ class Application < Merb::Controller
   
     def login_from_cookie
       nil # since it's not implemented
+    end
+    
+    def login_from_token
+      if @@token_allowed_actions[request.controller] && @@token_allowed_actions[request.controller].include?(request.action)
+        current_user = User.get(params[:token]) if params[:token]
+      end
     end
   
 end

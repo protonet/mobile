@@ -23,7 +23,7 @@
   <% end =%>
 
   <br />
-
+  
   <ul>
   <% Asset.all.each do |a| %>
     <li><a href="<%= a.file_path %>"><%= a.filename %></a></li>
@@ -35,6 +35,8 @@
   <div class="clr"></div>
   
 </div>
+
+  <%= @token %>
 
 <!-- TESTING THE MESSAGING SOCKET -->
 
