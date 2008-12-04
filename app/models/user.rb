@@ -20,6 +20,7 @@ class User
   property :last_polled_at,             DateTime
   property :realm_id,                   String
   property :online,                     Boolean
+  # property :token add token here.... also need validating methods
   
   validates_length            :login,                   :within => 3..40
   validates_present           :password,                :on => [:create, :password_change]
