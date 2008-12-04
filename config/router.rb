@@ -32,9 +32,9 @@ Merb::Router.prepare do |r|
   # slice(:merb_auth_slice_password, :name_prefix => nil, :path_prefix => "")
 
   # RESTful routes
-  r.resource :chat_messages
-  r.resource :users
-  r.resource :asset_lists
+  r.resources :chat_messages
+  r.resources :users
+  r.resources :asset_lists
   
   r.match("/profile").to(:controller => "users", :action => "show").name(:profile)
   

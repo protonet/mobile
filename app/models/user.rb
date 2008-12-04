@@ -64,7 +64,7 @@ class User
     when :chat
       {:id => id, :name => display_name}.merge(profile && profile.attributes(:chat) || {})
     else
-      super
+      super()
     end
   end
     
