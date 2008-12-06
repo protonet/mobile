@@ -17,7 +17,8 @@ jgs .'      ```--.....--'''    ' `:_ o       :
 
 = PROTONET
 
-Core contributors: actionJackson (dreewill), comes (ppeszko), dudemeister (dudemeister)
+Core contributors: actionJackson (dreewill), comes (ppeszko), alto(alto), dudemeister (dudemeister)
+Contributors: christopher (tiff)
 
 == DESCRIPTION:
 
@@ -45,13 +46,12 @@ Currently you can do the following things on it:
   * upload and download files
   * create filelist with description and all
   * add files to filelists
+  * see other connected users on the startpage
 
 == NEXT THINGS PLANNED:
 
   * make it look better
     ** kick ass would be good
-
-  * see other connected users on the startpage (you can almost do that)
   * see which other users are spending time in the lobby (kinda works)
     ** replicate basic chat client functionality (e.g. tab completion on names and more)
   * be able to open new chat rooms
@@ -63,8 +63,6 @@ Currently you can do the following things on it:
     ** adding of a profile pic
     ** adding your twitter account
   * add possibility to create public/private lists (also in the works)
-  * add possibility to upload files (works)
-  * add possibility to attach uploaded files to a list (works)
   
   * and ... need to do some more specs ;)
 
@@ -99,3 +97,18 @@ you can then call rake or rake spec in your project directory:
 # rake
 or
 # rake spec
+
+== COMPILING THE SOCKET:
+
+How to compile a new version of the messaging actionscript:
+
+Get the os x version of the compiler from http://www.mtasc.org/ :
+http://www.mtasc.org/zip/mtasc-1.12-osx.zip (is the version we used for the current version)
+
+let it compile the source:
+
+~/Projekte/mtasc-1.12-osx/mtasc -version 8 -header 100:100:100 -main -swf ~/Projekte/merb_data/dashboard/public/flash/foo.swf -v socket.as
+
+
+
+

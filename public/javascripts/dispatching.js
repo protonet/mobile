@@ -1,9 +1,8 @@
 function Dispatcher() {
+  "initSocket": function(socket_object) {
+    this.socket = socket_object;
+  },
   
-}
-
-Dispatcher.prototype = {
-
   // destination_id is your key for eventmachine/js communication
   // e.g. eventmachine sends an destination_id with each message
   // and the dispatcher finds the correct destination for this
@@ -21,17 +20,22 @@ Dispatcher.prototype = {
   },
   
   "receiveMessage": function(data) {
-    parsed_message = this.parseMessage(data);
-    this.dispatch(this.findDestination(parsed_message[0]), parsed_message[1])
+    console.log(data + ' wurde empfangen.')
+    // parsed_message = this.parseMessage(data);
+    // this.dispatch(this.findDestination(parsed_message[0]), parsed_message[1])
   },
   
   "parseMessage": function(data) {
     
   },
   
+  "sendMessage": function(data) {
+    console.log('Versuche ' + data + ' zu senden.')
+    this.socket.socket_send(data);
+  },
+  
   "dispatch": function(to, data) {
     // ;)
     to(data);
   }
-  
 }

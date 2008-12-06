@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'eventmachine'
+require 'ruby-debug'
+Debugger.start
 
 # this is the module to handle policy talk with flash sockets
 module FlashServer
@@ -37,11 +39,15 @@ end
 module EchoServer
   
   @@test = 0
+  @@foo = {}
+  @@foo[self.object_id] = self
   
   def receive_data(data)
     answer = data + ' -> ' + (@@test += 1).to_s + "\n"
     puts("data: #{data}\nanswer:#{answer.to_s}")
-    send_data(answer)
+    @@foo.each do |k, v|
+      v.send_data(answer)
+    end
   end
   
   include FlashServer # move me up if you know how!

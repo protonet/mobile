@@ -3,7 +3,7 @@ class Foo {
   static var socket:XMLSocket;
 
   static function test(data:String) {
-    ExternalInterface.call("console.log", data);
+    ExternalInterface.call("Dispatcher.message_received", data);
   }
 
   static function sendData(data:String) {
