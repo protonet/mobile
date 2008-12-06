@@ -12,7 +12,7 @@ dependency "merb-haml", merb_gems_version
 dependency "merb-param-protection", merb_gems_version
 dependency "merb-exceptions", merb_gems_version
 dependency "merb_test_unit", '0.9.13'
-# dependency "jeremymcanally-context", '0.0.6'
+# dependency "jeremymcanally-context", '0.0.6' # FIXME: please add this dependency [thorsten, 2008-12-06]
  
 dependency "dm-core", dm_gems_version         
 dependency "dm-aggregates", dm_gems_version   

@@ -16,8 +16,7 @@ class ApplicationControllerTest < Test::Unit::TestCase
 
     test "should redirect to login with notice" do
       response = get(url(:controller => 'any_controller', :action => 'bar'))
-      # assert_redirect_to(url(:login, {:message => { :error => 'Bitte einloggen oder einen neuen User anlegen (kostenlos, keine Daten notwendig!).' }}), response)
-      assert_redirect response
+      assert_redirect_to(url(:login), response)
     end
 
   end

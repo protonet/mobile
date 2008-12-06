@@ -13,3 +13,5 @@ class Test::Unit::TestCase
   include Merb::Test::RouteHelper
   # Add more helper methods to be used by all tests here...
 end
+
+require File.dirname(__FILE__) + '/lib/controller_asserts'
