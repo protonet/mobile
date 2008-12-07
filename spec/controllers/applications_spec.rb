@@ -12,7 +12,9 @@ end
 describe AnyController, "inheriting from Application" do
 
   it "should redirect to login with notice" do
-    get(url(:controller => 'any_controller', :action => 'bar')).should redirect_to(url(:login), {:message => { :error => 'Bitte einloggen oder einen neuen User anlegen (kostenlos, keine Daten notwendig!).' }})
+    response = get(url(:controller => 'any_controller', :action => 'bar'))
+    error_message = {:message => { :error => 'Bitte einloggen oder einen neuen User anlegen (kostenlos, keine Daten notwendig!).' }}
+    assert_redirected_to response, url(:login), error_message
   end
 
 end
@@ -28,9 +30,9 @@ describe Application, "authentication methods" do
   
   it "should allow you to set a current user and store it in the session and return it too" do
     user = User.new(:id => 23)
-    running {@app.current_user = user}.should_not raise_error
-    @app.session[:user].should == user.id
-    @app.current_user.should == user
+    assert_nothing_raised { @app.current_user = user }
+    assert_equal user.id, @app.session[:user]
+    assert_equal user, @app.current_user
   end
   
   it "should call the users poll method with the current request ip on setting the current user" do
@@ -41,9 +43,9 @@ describe Application, "authentication methods" do
   end
 
   it "should tell you if the user is logged in" do
-    @app.logged_in?.should == false
+    assert !@app.logged_in?
     @app.instance_variable_set(:@current_user, 'something')
-    @app.logged_in?.should == true
+    assert @app.logged_in?
   end  
   
   it "should log out the user and set or unset needed vars/attributes" do
@@ -51,8 +53,8 @@ describe Application, "authentication methods" do
     @app.current_user = user
     user.should_receive(:poll).with(nil, true)
     @app.log_out!
-    @app.session[:user].should == nil
-    @app.current_user.should == nil
+    assert_nil @app.session[:user]
+    assert_nil @app.current_user
   end
 
   # todo another describe mebbe? yes but not now ;)
@@ -62,17 +64,17 @@ describe Application, "authentication methods" do
     @app.should_receive(:try_to_login).twice
     @app.should_receive(:logged_in?).and_return(true, false)
     # logged_in? returns true
-    @app.login_required.should_not redirect
+    assert_not_redirected @app.login_required
     # logged_in? returns false
-    running {@app.login_required}.should raise_error # todo not completely correclty testes, dude wtfbbq?
+    assert_raises { @app.login_required } # todo not completely correclty testes, dude wtfbbq?
   end
   
   it "should be able to try to log you in from session first" do
     @app.should_receive(:login_from_session).and_return(User.new(:id => 1, :login => 'foo'), nil)
     @app.should_receive(:login_from_cookie).and_return(User.new(:id => 2, :login => 'bar'))
-    @app.send(:try_to_login).id.should == 1
+    assert_equal 1, @app.send(:try_to_login).id
     @app.instance_variable_set(:@current_user, nil) # log out
-    @app.send(:try_to_login).id.should == 2
+    assert_equal 2, @app.send(:try_to_login).id
   end
   
   # todo another describe maybe?
@@ -81,7 +83,7 @@ describe Application, "authentication methods" do
     user = User.new(:id => 1)
     @app.session[:user] = user.id
     User.should_receive(:get).with(1).and_return(user)
-    @app.send(:login_from_session).should == user
+    assert_equal user, @app.send(:login_from_session)
   end
   
   it "should return the user from a cookie" do
