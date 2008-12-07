@@ -1,4 +1,5 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
+require 'ruby-debug'
 
 describe Instruments, "methods" do
 
@@ -13,12 +14,12 @@ describe Instruments, "methods" do
   end
   
   it "should have the lobby room ready as an instance variable" do
-    @controller.assigns(:lobby).id.should == 1
-    @controller.assigns(:lobby).name.should == 'Lobby'
+    assert_equal 1, @controller.assigns(:lobby).id
+    assert_equal 'Lobby', @controller.assigns(:lobby).name
   end
   
   it "should be successful" do
-    @controller.should be_successful
+    assert_response :ok, @controller
   end
   
 end

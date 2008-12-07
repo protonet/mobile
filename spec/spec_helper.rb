@@ -55,8 +55,8 @@ def assert_nil(a)
   a.should == nil
 end
 
-def assert_redirected_to(request, url, message =nil)
-  request.should redirect_to(url, message)
+def assert_redirected_to(response, url, message =nil)
+  response.should redirect_to(url, message)
 end
 
 def assert_not_redirected(foo)
@@ -69,4 +69,11 @@ end
 
 def assert_nothing_raised(&blk)
   blk.should_not raise_error
+end
+
+def assert_response(code, response)
+  case code
+  when :ok
+    response.should be_successful
+  end
 end
