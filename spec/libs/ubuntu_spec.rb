@@ -15,7 +15,7 @@ describe "The ubuntu backen adapter in general" do
   end
   
   it "should have a method that return its info data" do
-    @backend.info.should == "ubuntu backend" # ;) yeah I know its not much right now
+    assert_equal "ubuntu backend", @backend.info # ;) yeah I know its not much right now
   end
   
   it "should be able to get the ip of currently connected clients" do

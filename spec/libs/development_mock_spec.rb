@@ -8,12 +8,12 @@ describe "The development mocks get_ips_of_currently_connected_clients method" d
   end
   
   it "should return its info data" do
-    @backend.info.should == "development mock" # ;) yeah I know its not much right now
+    assert_equal "development mock", @backend.info # ;) yeah I know its not much right now
   end
 
   it "should return a list of 5 ips" do
     ips = @backend.get_ips_of_currently_connected_clients
-    ips.size.should == 5
+    assert_equal 3, ips.size
     ips.each do |ip|
       ip.should match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/)
     end
