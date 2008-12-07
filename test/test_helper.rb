@@ -1,3 +1,4 @@
+puts 'loading helper'
 $TESTING=true
 require 'rubygems'
 require 'merb-core'
@@ -14,4 +15,4 @@ class Test::Unit::TestCase
   # Add more helper methods to be used by all tests here...
 end
 
-require File.dirname(__FILE__) + '/lib/controller_asserts'
+require File.dirname(__FILE__) + '/test_helpers/controller_asserts'

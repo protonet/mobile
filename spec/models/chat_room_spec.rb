@@ -8,10 +8,10 @@ describe ChatRoom, 'lobby functionality' do
   end
 
   it "should return or create the lobby" do
-    ChatRoom.get(1).should == nil
-    ChatRoom.lobby.should == ChatRoom.get(1)
+    assert_nil ChatRoom.get(1)
+    assert_equal ChatRoom.lobby, ChatRoom.get(1)
     ChatRoom.lobby
-    ChatRoom.all.size.should == 1
+    assert_equal 1, ChatRoom.all.size
   end
 
 end
@@ -32,7 +32,7 @@ describe ChatRoom, 'users' do
     room = ChatRoom.lobby
     room.users << @user
     room.save
-    ChatRoom.lobby.users.should == [@user]
+    assert_equal [@user], ChatRoom.lobby.users
   end
   
 end

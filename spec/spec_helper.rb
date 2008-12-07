@@ -34,3 +34,24 @@ Spec::Runner.configure do |config|
 end
 
 require(Merb.root + '/spec/factory.rb')
+
+def assert(foo)
+  !!foo
+end
+
+def assert_equal(a, b)
+  b.should == a
+end
+
+def assert_not_equal(a, b)
+  b.should_not == a
+end
+
+def assert_not_nil(a)
+  a.should_not == nil
+end
+
+def assert_nil(a)
+  a.should == nil
+end
+  

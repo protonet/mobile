@@ -5,7 +5,7 @@ Merb.push_path(:lib, Merb.root / "lib") # uses **/*.rb as path glob.
 require 'config/dependencies.rb'
  
 use_orm :datamapper
-use_test :test_unit
+use_test :rspec
 use_template_engine :erb
  
 Merb::Config.use do |c|

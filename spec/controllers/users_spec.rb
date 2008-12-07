@@ -27,7 +27,7 @@ describe Users, "creation method" do
   
   it "should allow you to create a user with basic data" do
     User.all.should be_empty # I hate rspec
-    get(url(:controller => 'users', :action => 'create'), :user => {:login => 'foo', :password => 'bars', :password_confirmation => 'bars'})
+    post(url(:controller => 'users', :action => 'create'), :user => {:login => 'foo', :password => 'bars', :password_confirmation => 'bars'})
     User.all.size == 1
     User.all[0].login == 'foo'
   end
@@ -36,12 +36,12 @@ describe Users, "creation method" do
     user = User.new
     User.should_receive(:new).and_return(user)
     user.should_receive(:save).with(:create)
-    get(url(:controller => 'users', :action => 'create'), :user => {:login => 'foo', :password => 'bars'})
+    post(url(:controller => 'users', :action => 'create'), :user => {:login => 'foo', :password => 'bars'})
   end
   
   it "should render the new form if user creation failed" do
     User.all.should be_empty # with a passion, why easy when it can be complicated
-    get(url(:controller => 'users', :action => 'create'), :user => {}) do |controller|
+    post(url(:controller => 'users', :action => 'create'), :user => {}) do |controller|
       controller.should_receive(:render).with(:new, :layout => "logged_out")
     end
     User.all.should be_empty
@@ -55,7 +55,7 @@ describe Users, "creation method" do
     user = User.new
     User.should_receive(:new).with('mocked').and_return(user)
     user.should_receive(:save).and_return(true)
-    get(url(:controller => 'users', :action => 'create'), :user => 'mocked') do |controller|
+    post(url(:controller => 'users', :action => 'create'), :user => 'mocked') do |controller|
       controller.should_receive(:current_user=).with(user)
     end
   end
