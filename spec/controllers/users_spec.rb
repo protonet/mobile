@@ -1,4 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
+require 'ruby-debug'
+
 
 describe Users, "basic methods" do
   
@@ -35,6 +37,7 @@ describe Users, "creation method" do
   end
   
   it "should call save with create scope to call correct validations" do
+    p "start"
     user = User.new
     User.should_receive(:new).and_return(user)
     user.should_receive(:save).with(:create)

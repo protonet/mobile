@@ -38,8 +38,13 @@ describe User, "basically" do
     assert_not_equal 'foo', @user.crypted_password
   end
   
+  it "should be able to save the user after having requested a token" do
+    @user.attributes = {:login => 'fooo', :password => 'foo'}
+    @user.token
+    assert @user.save
+  end
+  
 end
-
 
 describe User, "authentication" do
   
@@ -62,4 +67,40 @@ describe User, "authentication" do
     assert_nil User.authenticate({:login => '', :password => 'blub'})
     assert_nil User.authenticate({:login => 'foo1', :password => 'bla'})
   end
+end
+
+describe User, "token generation and validation" do
+  
+  before(:each) do
+    @user = User.new(:login => 'foo', :password => 'blub')
+  end
+  
+  it "should create a login token for the user" do
+    DateTime.should_receive(:now).any_number_of_times.and_return(DateTime.parse("2008-01-01 00:00:00"))
+    @user.token
+    assert_equal "feaa605f8c1e80ff65f05e577b01078fce3069ac", @user.token
+  end
+  
+  it "should set an expiry date for it one day in the future" do
+    DateTime.should_receive(:now).any_number_of_times.and_return(DateTime.parse("2008-01-01 00:00:00"))
+    @user.token
+    assert_equal "2008-01-02T00:00:00+00:00", @user.token_expires_at.to_s
+  end
+  
+  it "should be able to authenticate that token" do
+    DateTime.should_receive(:now).any_number_of_times.and_return(DateTime.parse("2008-01-01 00:00:00"))
+    @user.token
+    assert @user.token_valid?("feaa605f8c1e80ff65f05e577b01078fce3069ac")
+    assert !@user.token_valid?("feaa605f8c1e80f")
+  end
+  
+  it "should say its invalid if its past its expiry date" do
+    now = DateTime.parse("2008-01-01 00:00:00")
+    in_two_days = DateTime.parse("2008-01-03 00:00:00")
+    DateTime.should_receive(:now).exactly(4).times.and_return(now, now, now, in_two_days)
+    @user.token
+    assert !@user.token_valid?("feaa605f8c1e80ff65f05e577b01078fce3069ac")
+  end
+  
+  
 end

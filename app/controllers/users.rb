@@ -3,6 +3,7 @@ class Users < Application
   skip_before :login_required
   
   def new
+    p 'new'
     @user = User.new
     render :layout => 'logged_out'
   end
@@ -13,6 +14,7 @@ class Users < Application
       self.current_user = @user
       redirect(url(:controller => 'instruments', :action => :index))
     else
+      debugger
       render :new, :layout => 'logged_out'
     end
   end

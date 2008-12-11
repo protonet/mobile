@@ -1,6 +1,8 @@
 class User
   include DataMapper::Resource
   
+  class TokenGenerationError < RuntimeError; end
+  
   before :save, :encrypt_password
   before :save, :downcase_login
   
@@ -20,7 +22,8 @@ class User
   property :last_polled_at,             DateTime
   property :realm_id,                   String
   property :online,                     Boolean
-  # property :token add token here.... also need validating methods
+  property :token,                      String,   :nullable => true
+  property :token_expires_at,           DateTime, :nullable => true
   
   validates_length            :login,                   :within => 3..40
   validates_present           :password,                :on => [:create, :password_change]
@@ -53,6 +56,21 @@ class User
   
   def poll(ip, force_update=false)
     update_attributes(:current_ip => ip, :last_polled_at => DateTime.now) if (force_update || current_ip.nil? || !last_polled_at || last_polled_at < DateTime.now - 5.minutes)
+  end
+  
+  def generate_new_token
+    self.token = encrypt(crypted_password, DateTime.now)
+    self.token_expires_at = DateTime.now + 1 # DateTime additions are in days
+    @token
+  end
+  
+  def token
+    generate_new_token unless self.token_expires_at && self.token_expires_at > DateTime.now
+    @token
+  end
+    
+  def token_valid?(token)
+    token == self.token && self.token_expires_at > DateTime.now
   end
   
   def display_name
