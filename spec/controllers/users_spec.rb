@@ -1,6 +1,4 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
-require 'ruby-debug'
-
 
 describe Users, "basic methods" do
   
