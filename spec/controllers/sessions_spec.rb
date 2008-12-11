@@ -17,12 +17,14 @@ describe Sessions, "methods" do
   it "should set the currently connected users as an instance var on new" do
     test_users = [mock(1, :display_name => 1),mock(2, :display_name => 2)]
     User.should_receive(:all_connected_users).once.and_return(test_users)
-    response = get(url(:controller => 'sessions', :action => 'create'))
+    # fixme ali remove the format when merb gets fixed
+    response = get(url(:controller => 'sessions', :action => 'create', :format => 'html'))
     assert_equal test_users, response.assigns(:connected_users)
   end
   
   it "should be successful on a get on create" do
-    assert_response :ok, get(url(:controller => 'sessions', :action => 'create'))
+    # fixme ali remove the format when merb gets fixed
+    assert_response :ok, get(url(:controller => 'sessions', :action => 'create', :format => 'html'))
   end
   
   it "should display the login form on a get on create" do
