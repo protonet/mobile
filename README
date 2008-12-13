@@ -73,7 +73,8 @@ To run it you need to do following things (sudo if needed):
 # gem install merb --include-dependencies
 
 # gem sources -a http://gems.github.com
-# sudo gem install jeremymcanally-context
+
+# gem install ParseTree
 
 As of merb 1.0 adding the single gems is not necessary, it is a good idea to remove all your older merb and datamapper gems to avoid conflicts
 

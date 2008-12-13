@@ -33,5 +33,9 @@ Spec::Runner.configure do |config|
   config.include(Merb::Test::ControllerHelper)
 end
 
+# dm sweatshop
+require 'dm-sweatshop'
 require(Merb.root + '/spec/factory.rb')
+
+# assertion mapper
 require(Merb.root + '/spec/test_runit.rb')
