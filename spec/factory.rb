@@ -20,3 +20,10 @@ ChatRoom.fixture {{
 ChatMessage.fixture {{
   :text                 => (text = /\w+/.gen)
 }}
+
+# assets fixtures
+Asset.fixture {{
+  :filename             => (filename = /\w+/.gen)
+  :content_type         => (content_type = /\w+/.gen)
+  :size                 => (size = /\d+/.gen)
+}}
