@@ -3,8 +3,7 @@ require File.join( File.dirname(__FILE__), '..', "spec_helper" )
 describe ChatRoom, 'lobby functionality' do
   
   before(:all) do
-    # remove the lobby if it exists
-    (r = ChatRoom.get(1)) && r.destroy
+    ChatRoom.all.destroy!
   end
 
   it "should return or create the lobby" do
@@ -17,9 +16,6 @@ describe ChatRoom, 'lobby functionality' do
 end
 
 describe ChatRoom, 'users' do
-  before(:all) do
-    @user = User.new(:name => 'foo').save
-  end
   
   before(:all) do
     User.all.destroy!
@@ -33,6 +29,20 @@ describe ChatRoom, 'users' do
     room.users << @user
     room.save
     assert_equal [@user], ChatRoom.lobby.users
+  end
+  
+end
+
+describe ChatRoom, 'creation' do
+
+  before(:all) do
+    ChatRoom.all.destroy!
+  end
+  
+  it "should be possible" do
+    room = ChatRoom.new
+    assert room.save
+    assert_equal room, ChatRoom.get(room.id)
   end
   
 end

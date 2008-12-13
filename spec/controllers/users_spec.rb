@@ -38,7 +38,8 @@ describe Users, "creation method" do
     user = User.new
     User.should_receive(:new).and_return(user)
     user.should_receive(:save).with(:create)
-    post(url(:controller => 'users', :action => 'create'), :user => {:login => 'foo', :password => 'bars'})
+    # fixme ali remove the format when merb gets fixed
+    post(url(:controller => 'users', :action => 'create', :format => 'html'), :user => {:login => 'foo', :password => 'bars'})
   end
   
   it "should render the new form if user creation failed" do

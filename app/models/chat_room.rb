@@ -8,6 +8,7 @@ class ChatRoom
   property :open,                       Boolean, :default => true
   property :hidden,                     Boolean, :default => false
 
+  belongs_to :user
   has n, :messages,   :class_name => ChatMessage
   has n, :users,      :through => Resource
   
