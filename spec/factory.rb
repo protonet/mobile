@@ -8,7 +8,7 @@ User.fixture(:complete) {{
   
 User.fixture {{
   :login                => (login = /\w+/.gen),
-  :password             => "#{login}@example.com",
+  :password             => "#{login}@example.com"
 }}
 
 # chat room fixtures
@@ -23,7 +23,7 @@ ChatMessage.fixture {{
 
 # assets fixtures
 Asset.fixture {{
-  :filename             => (filename = /\w+/.gen)
-  :content_type         => (content_type = /\w+/.gen)
+  :filename             => (filename = /\w+/.gen),
+  :content_type         => (content_type = /\w+/.gen),
   :size                 => (size = /\d+/.gen)
 }}
