@@ -9,17 +9,14 @@ class Asset
   belongs_to :asset_list
   
   property :id,                         Integer,  :serial => true
-  property :filename,                   String,   :nullable => false
-  property :content_type,               String,   :nullable => true
+  property :filename,                   String,   :length => 255, :nullable => false
+  property :content_type,               String,   :length => 255, :nullable => true
   property :size,                       Integer,  :nullable => false
   property :user_id,                    Integer
   property :asset_list_id,              Integer 
   property :created_at,                 DateTime
   property :download_counter,           Integer
-  
-  validates_present           :filename
-  validates_present           :size
-  
+    
   def self.unsorted
     all(:asset_list_id => nil)
   end
