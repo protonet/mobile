@@ -19,7 +19,6 @@ class Asset
   
   validates_present           :filename
   validates_present           :size
-  validates_present           :created_at
   
   def self.unsorted
     all(:asset_list_id => nil)
