@@ -39,3 +39,7 @@ require(Merb.root + '/spec/factory.rb')
 
 # assertion mapper
 require(Merb.root + '/spec/test_runit.rb')
+
+def set_current_user(controller, user)
+  controller.instance_variable_set(:@current_user, user)
+end

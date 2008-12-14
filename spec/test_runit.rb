@@ -26,8 +26,8 @@ def assert_not_redirected(foo)
   foo.should_not redirect
 end
 
-def assert_raises(&blk)
-  blk.should raise_error
+def assert_raises(*args, &blk)
+  blk.should raise_error(*args)
 end
 
 def assert_nothing_raised(&blk)
@@ -39,4 +39,8 @@ def assert_response(code, response)
   when :ok
     response.should be_successful
   end
+end
+
+def assert_empty(obj)
+  obj.should be_empty
 end

@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'eventmachine'
-require 'ruby-debug'
-Debugger.start
+# require 'ruby-debug'
+# Debugger.start
 
 # this is the module to handle policy talk with flash sockets
 module FlashServer
