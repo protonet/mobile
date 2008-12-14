@@ -156,6 +156,11 @@ body {
   list-style-position: inside;
 }
 
+.sharing-widget a {
+  color: white;
+}
+
+
 .swfupload {
   margin-bottom: -5px;
 }
