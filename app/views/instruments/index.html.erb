@@ -88,7 +88,7 @@
   <br />
 
   <ul id="file-list">
-  <% Asset.all.each do |a| %>
+  <% Asset.unclaimed.unsorted.each do |a| %>
     <li><a href="<%= a.file_path %>"><%= a.filename %></a></li>
   <% end %>
   </ul>
