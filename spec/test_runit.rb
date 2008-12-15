@@ -44,3 +44,7 @@ end
 def assert_empty(obj)
   obj.should be_empty
 end
+
+def assert_kind_of(klass, obj)
+  obj.should be_kind_of(klass)
+end
