@@ -11,6 +11,5 @@ class AssetList
   property :view_counter,               Integer
 
   validates_present           :name
-  validates_present           :created_at
   
 end

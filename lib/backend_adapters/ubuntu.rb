@@ -6,7 +6,8 @@ module BackendAdapters
     DEFAULT_UBUNTU_CONFIG = {
       :private_interface => 'ath0',
       :public_interface => 'ath1',
-      :base_connection => 'eth0'
+      :base_connection => 'eth0',
+      :arp_command => ''
     }
     
     # maybe move it up a bit
