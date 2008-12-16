@@ -110,6 +110,27 @@ let it compile the source:
 
 ~/Projekte/mtasc-1.12-osx/mtasc -version 8 -header 100:100:100 -main -swf ~/Projekte/merb_data/dashboard/public/flash/foo.swf -v socket.as
 
+== EXPERIMENTAL STUFF (not ready yet)
 
+We are looking into using amqp and rabbitmq, for them to work you'll have to do a couple things:
 
+first install a recent version of erlang:
+sudo port install erlang
 
+then get mercurial if you don't have it, either build it from source, use port or just get the binary:
+sudo port install mercurial
+or get the binaries at:
+http://mercurial.berkwood.com/
+
+get the rabbitmq server and codegen:
+hg clone http://hg.rabbitmq.com/rabbitmq-codegen
+hg clone http://hg.rabbitmq.com/rabbitmq-server
+
+now build it:
+cd rabbitmq-server
+make run
+
+this should automatically start the rabbitmq server/broker.
+
+now lets get the amqp gem... :
+sudo gem install tmm1-amqp
