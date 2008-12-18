@@ -126,6 +126,10 @@ get the rabbitmq server and codegen:
 hg clone http://hg.rabbitmq.com/rabbitmq-codegen
 hg clone http://hg.rabbitmq.com/rabbitmq-server
 
+If you don't have phython installed you need to do a:
+sudo port install py25-simplejson
+before being able to build the rabbitmq-server.
+
 now build it:
 cd rabbitmq-server
 make run
