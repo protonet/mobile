@@ -122,19 +122,24 @@ sudo port install mercurial
 or get the binaries at:
 http://mercurial.berkwood.com/
 
+If you don't have python installed:
+sudo port install python26
+
+If you do and have anything lower than python 26 you'll need to install the python simplejson lib:
+http://pypi.python.org/pypi/simplejson
+
 get the rabbitmq server and codegen:
 hg clone http://hg.rabbitmq.com/rabbitmq-codegen
 hg clone http://hg.rabbitmq.com/rabbitmq-server
-
-If you don't have phython installed you need to do a:
-sudo port install py25-simplejson
-before being able to build the rabbitmq-server.
 
 now build it:
 cd rabbitmq-server
 make run
 
 this should automatically start the rabbitmq server/broker.
+
+if you have stopped it you can restart it by using:
+RABBITMQ_NODE_IP_ADDRESS="" RABBITMQ_NODE_PORT="" RABBITMQ_LOG_BASE="/tmp" RABBITMQ_MNESIA_DIR="/tmp/rabbitmq-rabbit-mnesia" RABBITMQ_NODE_ONLY=true RABBITMQ_SERVER_START_ARGS=" -s rabbit" ./scripts/rabbitmq-server
 
 now lets get the amqp gem... :
 sudo gem install tmm1-amqp
