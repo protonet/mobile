@@ -143,3 +143,6 @@ RABBITMQ_NODE_IP_ADDRESS="" RABBITMQ_NODE_PORT="" RABBITMQ_LOG_BASE="/tmp" RABBI
 
 now lets get the amqp gem... :
 sudo gem install tmm1-amqp
+
+now to get an idea of the things we can do now, have a look at this post:
+http://hopper.squarespace.com/blog/2008/7/22/simple-amqp-library-for-ruby.html
