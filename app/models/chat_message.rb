@@ -2,7 +2,7 @@ class ChatMessage
   include DataMapper::Resource
 
   # before :save, :sanitize
-  after :save, :send_to_queue
+  after :create, :send_to_queue
 
   property :id,                         Integer,  :serial => true
   property :chat_room_id,               Integer
