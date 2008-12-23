@@ -17,7 +17,7 @@ end
 
 EventMachine::run do
   host = '0.0.0.0'
-  port = 834
+  port = 843
   EventMachine.epoll if RUBY_PLATFORM =~ /linux/ #sky is the limit
   EventMachine::start_server(host, port, FlashPolicyServer)
   puts "Started FlashPolicyServer on #{host}:#{port}..."

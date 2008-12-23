@@ -24,7 +24,7 @@
     <% end =%>    
   </div>
   <%= js_include_tag('swfupload.js') %>
-  <script type="text/javascript" charset="utf-8">//<![CDATA[
+  <!-- <script type="text/javascript" charset="utf-8">//<![CDATA[
     $(document).ready(function() {
       new SWFUpload({
         upload_url : "<%= url(:controller => 'assets', :action => 'create') %>",
@@ -60,7 +60,7 @@
         file_dialog_complete_handler: function() {
           window.onbeforeunload = function() { return "Upload is still in progress. Are you sure?"; };
           this.backupTitle = document.title;
-        	this.loadedSize = this.loadedSize || 0;
+          this.loadedSize = this.loadedSize || 0;
           this.startUpload(this.fileIds.shift());
         },
         upload_progress_handler: function(file, bytesLoaded, bytesTotal) {
@@ -84,7 +84,7 @@
         }
       });
     });
-  //]]></script>
+  //]]></script> -->
   <br />
 
   <ul id="file-list">

@@ -48,7 +48,7 @@ DispatchingSystem.prototype = {
   },
   
   "socketConnectCallback": function(args) {
-    console.log('connection established');
+    console.log('connection established? ' + args);
   }
 
 }

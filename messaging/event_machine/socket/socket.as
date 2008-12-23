@@ -13,6 +13,10 @@ class Socket {
   static function onReceive(data:String) {
     ExternalInterface.call("Dispatcher.messageReceived", data );
   }
+  
+  static function connectSocket() {
+    ExternalInterface.call("Dispatcher.socketConnectCallback", socket.connect('localhost', 5000));
+  }
 
   static function main() {
     
@@ -21,8 +25,7 @@ class Socket {
     
     ExternalInterface.addCallback("test", null, test);
     ExternalInterface.addCallback("sendData", null, sendData);
+    ExternalInterface.addCallback("connectSocket", null, connectSocket);
     
-    ExternalInterface.call("Dispatcher.socketConnectCallback", socket.connect('localhost', 5000));
-
   }
 }
