@@ -23,7 +23,7 @@ DispatchingSystem.prototype = {
   
   },
 
-  "receiveMessage": function(data) {
+  "messageReceived": function(data) {
     console.log(data + ' wurde empfangen.');
     // parsed_message = this.parseMessage(data);
     // this.dispatch(this.findDestination(parsed_message[0]), parsed_message[1])
@@ -44,7 +44,7 @@ DispatchingSystem.prototype = {
   },
   
   "test": function(args) {
-    console.log('test');
+    console.log('dispatcher called test');
   },
   
   "socketConnectCallback": function(args) {

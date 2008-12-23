@@ -108,7 +108,7 @@ http://www.mtasc.org/zip/mtasc-1.12-osx.zip (is the version we used for the curr
 
 let it compile the source:
 
-~/Projekte/mtasc-1.12-osx/mtasc -version 8 -header 100:100:100 -main -swf ~/Projekte/merb_data/dashboard/public/flash/foo.swf -v socket.as
+~/Projekte/misc/mtasc-1.12-osx/mtasc -version 8 -header 100:100:100 -main -swf ~/Projekte/merb_data/dashboard/public/flash/socket.swf -v socket.as
 
 == EXPERIMENTAL STUFF (not ready yet)
 
