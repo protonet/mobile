@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'eventmachine'
-require File.dirname(__FILE__) + "/modules/flash_server.rb"
 # require 'ruby-debug'
 # Debugger.start
 
@@ -20,8 +19,6 @@ module EchoServer
     end
   end
   
-  include FlashServer # move me up if you know how!
-
 end
 
 EventMachine::run do
