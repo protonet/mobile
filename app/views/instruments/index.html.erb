@@ -103,17 +103,16 @@
 
 <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="1" height="1" align="middle">
      <param name="allowScriptAccess" value="sameDomain">
-     <param name="movie" value="flash/foo.swf">
+     <param name="movie" value="flash/socket.swf">
      <param name="quality" value="high">
      <param name="bgcolor" value="#FFFFFF">
-    <embed id="foo" src="flash/foo.swf" quality="high" bgcolor="#FFFFFF" width="1" height="1" name="foo" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">
-   </object>
-  <script type="text/javascript" charset="utf-8">
-    s = document.getElementById('foo');
-  </script>
+    <embed id="flash_socket" src="flash/foo.swf" quality="high" bgcolor="#FFFFFF" width="1" height="1" name="foo" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">
+</object>
+
 
 <!-- END OF MESSAGING SOCKET TEST -->
 
 <script type="text/javascript" charset="utf-8">
-  cw = new ChatWidget({'user_id': <%= current_user.id %>, 'user_config': {}, 'div_container': $('#main-chat-widget')});
+  var Dispatcher = new DispatchingSystem(document.getElementById('flash_socket'));
+  var cw = new ChatWidget({'user_id': <%= current_user.id %>, 'user_config': {}, 'div_container': $('#main-chat-widget')});
 </script>

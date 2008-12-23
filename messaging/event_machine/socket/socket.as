@@ -1,5 +1,5 @@
 import flash.external.ExternalInterface;
-class Foo {
+class Socket {
   static var socket:XMLSocket;
 
   static function test(data:String) {
@@ -17,12 +17,10 @@ class Foo {
   static function main() {
     
     socket = new XMLSocket();
-
     socket.onData = onReceive;
     
-
     ExternalInterface.addCallback("test", null, test);
-    ExternalInterface.addCallback("socket_send", null, sendData);
+    ExternalInterface.addCallback("sendData", null, sendData);
     
     ExternalInterface.call("Dispatcher.socketConnectCallback", socket.connect('localhost', 5000));
 

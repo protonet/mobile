@@ -1,4 +1,6 @@
-function DispatchingSystem() {}
+function DispatchingSystem(socket) {
+  this.initSocket(socket);
+}
    
 DispatchingSystem.prototype = {
   "initSocket": function(socket_object) {
@@ -33,14 +35,20 @@ DispatchingSystem.prototype = {
 
   "sendMessage": function(data) {
     console.log('Versuche ' + data + ' zu senden.');
-    this.socket.socket_send(data);
+    this.socket.sendData(data);
   },
 
   "dispatch": function(to, data) {
     // ;)
     to(data);
+  },
+  
+  "test": function(args) {
+    console.log('test');
+  },
+  
+  "socketConnectCallback": function(args) {
+    console.log('connection established');
   }
 
 }
-
-var Dispatcher = new DispatchingSystem();
