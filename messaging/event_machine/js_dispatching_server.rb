@@ -18,8 +18,11 @@ module JsDispatchingServer
   
   def post_init
     puts 'post-init'
+    # @key ||= get_sockname # this didn't work as I expected it to
+    @key ||= rand(100000)
+    puts "#{@key.inspect}"
     amq = MQ.new
-    amq.queue('chat-messages').subscribe{ |msg|
+    amq.queue("consumer-#{@key}").bind(amq.topic('chats'), :key => 'chats.r1').subscribe{ |msg|
       send_data('chat-message received' + msg)
     }
   end

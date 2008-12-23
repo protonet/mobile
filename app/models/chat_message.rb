@@ -23,7 +23,7 @@ class ChatMessage
     # this however does ;)
     EM.run{
       amq = MQ.new
-      amq.queue('chat-messages').publish(self.to_json)
+      amq.topic('chats').publish(self.to_json, :key => 'chats.r' + chat_room_id.to_s)
     }
   end
 
