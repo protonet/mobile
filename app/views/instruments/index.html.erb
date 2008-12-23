@@ -24,7 +24,7 @@
     <% end =%>    
   </div>
   <%= js_include_tag('swfupload.js') %>
-  <!-- <script type="text/javascript" charset="utf-8">//<![CDATA[
+  <script type="text/javascript" charset="utf-8">//<![CDATA[
     $(document).ready(function() {
       new SWFUpload({
         upload_url : "<%= url(:controller => 'assets', :action => 'create') %>",
@@ -84,7 +84,7 @@
         }
       });
     });
-  //]]></script> -->
+  //]]></script>
   <br />
 
   <ul id="file-list">
@@ -115,4 +115,5 @@
 <script type="text/javascript" charset="utf-8">
   var Dispatcher = new DispatchingSystem(document.getElementById('flash_socket'));
   var cw = new ChatWidget({'user_id': <%= current_user.id %>, 'user_config': {}, 'div_container': $('#main-chat-widget')});
+  setTimeout(function() {Dispatcher.socket.connectSocket()}, 500);
 </script>

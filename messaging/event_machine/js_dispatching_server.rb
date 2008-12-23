@@ -23,7 +23,7 @@ module JsDispatchingServer
     puts "#{@key.inspect}"
     amq = MQ.new
     amq.queue("consumer-#{@key}").bind(amq.topic('chats'), :key => 'chats.r1').subscribe{ |msg|
-      send_data('chat-message received' + msg + "\0")
+      send_data(msg + "\0\n")
     }
   end
 

@@ -25,6 +25,10 @@ DispatchingSystem.prototype = {
 
   "messageReceived": function(data) {
     console.log(data + ' wurde empfangen.');
+    // this stuff doesn't belong here, will be moved soon
+    eval('var message = ' + data);
+    var room = cw.getRoom(message.chat_room_id);
+    room.addMessage(new ChatMessage(message, room));
     // parsed_message = this.parseMessage(data);
     // this.dispatch(this.findDestination(parsed_message[0]), parsed_message[1])
   },

@@ -5,23 +5,23 @@
   %head
     %title protonet Dashboard
     %meta{ 'http-equiv' => 'Content-Type', :content => 'text/html', :charset => 'utf-8' }
-    %link= css_include_tag('master.css') 
+    = css_include_tag('master.css') 
     = js_include_tag('fauxconsole.js', 'jquery-1.2.6.js', 'jquery.scrollTo.js', 'application.js', 'chat_widget/chat_widget.js', 'chat_widget/inputs/chat_input.js', 'chat_widget/messages/chat_message.js', 'chat_widget/room_selectors/chat_room_selector.js', 'chat_widget/rooms/chat_room.js', 'chat_widget/rooms/chat_room_viewer.js','chat_widget/user_lists/chat_user_list.js', 'chat_widget/user_lists/chat_user_list_viewer.js', 'chat_widget/users/chat_users.js', 'dispatching.js', :bundle => true)
 
-    %body
-      #header
-        %img{:src => "/images/logo_transparent_small.gif", :width => "102", :height => "20", :alt => "logo"}
-        %h3 
-          yay! welcome 
-          = current_user.login
-        .navigation
-          = link_to "home", url(:home)
-          |
-          = link_to "profile", url(:profile, :id => current_user.id)
-          |
-          = link_to "foo", url(:logout)
-          |
-          = link_to "logout", url(:logout)
-        
-      #content
-        = catch_content :for_layout
+  %body
+    #header
+      %img{:src => "/images/logo_transparent_small.gif", :width => "102", :height => "20", :alt => "logo"}
+      %h3 
+        yay! welcome 
+        = current_user.login
+      .navigation
+        = link_to "home", url(:home)
+        |
+        = link_to "profile", url(:profile, :id => current_user.id)
+        |
+        = link_to "foo", url(:logout)
+        |
+        = link_to "logout", url(:logout)
+      
+    #content
+      = catch_content :for_layout
