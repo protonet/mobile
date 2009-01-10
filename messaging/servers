@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+require 'optparse'
+
+local_path = File.dirname(__FILE__)
+
+options = {}
+
+ARGV.options do |opts|
+  script_name = File.basename($0)
+  opts.banner = "Usage: servers [options]"
+
+  opts.separator ""
+
+  opts.on('--start',  'start all messaging servers')    { |v| options[:action] = 'start' }
+  opts.on('--stop',   'stop  all messaging servers')    { |v| options[:action] = 'stop' }
+  opts.on('--status', 'show messaging server statuses') { |v| options[:action] = 'status'}
+
+  opts.separator ""
+
+  opts.on("-h", "--help", "Show this help message.") { puts opts; exit }
+
+  opts.parse!
+end
+
+commands = []
+commands << "sudo -b ruby #{local_path}/event_machine/policy_server.rb"
+commands << "ruby #{local_path}/event_machine/js_dispatching_server.rb &"
+
+puts commands.inspect
+commands.each do |c|
+  system(c)
+end

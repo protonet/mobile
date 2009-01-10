@@ -32,4 +32,5 @@ Merb::BootLoader.after_app_loads do
   Backend.backend_connection = BackendAdapters.const_get((Merb::Config[:backend_adapter] ||= :development_mock).to_s.to_const_string).new
   Merb.logger.info("Backend '#{Backend.backend_connection.info}' connected successfully!")
   
+  Thread.new{ EM.run() }
 end

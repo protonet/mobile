@@ -17,14 +17,8 @@ class ChatMessage
   end
   
   def send_to_queue
-    # this doesn't work
-    # MessagingBus.queue('chat-messages').publish(self.to_json)
-    
-    # this however does ;)
-    EM.run{
-      amq = MQ.new
-      amq.topic('chats').publish(self.to_json, :key => 'chats.r' + chat_room_id.to_s)
-    }
+    amq = MQ.new
+    amq.topic('chats').publish(self.to_json, :key => 'chats.r' + chat_room_id.to_s)
   end
 
 end
