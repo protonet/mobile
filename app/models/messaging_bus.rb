@@ -2,12 +2,12 @@ class MessagingBus
   
   class << self
     
-    def self.queue(name)
+    def queue(name)
       @mq ||= MQ.new
       @mq.queue(name)
     end
 
-    def self.topic(name) 
+    def topic(name) 
       @mq ||= MQ.new
       @mq.topic(name)
     end

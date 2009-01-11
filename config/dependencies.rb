@@ -19,11 +19,4 @@ dependency "dm-timestamps", dm_gems_version
 dependency "dm-types", dm_gems_version        
 dependency "dm-validations", dm_gems_version
 
-# messaging
-Gem.path.each do |path| 
-  begin
-    require path + "/gems/tmm1-amqp-0.5.9/lib/mq"
-  rescue LoadError => e
-    raise e if path == Gem.path.last
-  end
-end
+require "mq"
