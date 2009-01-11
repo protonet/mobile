@@ -117,7 +117,7 @@ We are looking into using amqp and rabbitmq, for them to work you'll have to do 
 first install a recent version of erlang:
 sudo port install erlang
 
-then get mercurial if you don't have it, either build it from source, use port or just get the binary:
+then get mercurial if you don't have it, either get the binaries (recommended), build it from source or just use port:
 sudo port install mercurial
 or get the binaries at:
 http://mercurial.berkwood.com/
