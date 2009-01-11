@@ -2,16 +2,9 @@
 require 'rubygems'
 require 'eventmachine'
 require 'ruby-debug'
+require File.dirname(__FILE__) + "/modules/flash_server.rb"
+require 'mq'
 Debugger.start
-
-Gem.path.each do |path| 
-  begin
-    require path + "/gems/tmm1-amqp-0.5.9/lib/mq"
-  rescue LoadError => e
-    raise e if path == Gem.path.last
-  end
-end
-
 
 # awesome stuff happening here
 module JsDispatchingServer
@@ -25,6 +18,9 @@ module JsDispatchingServer
     amq.queue("consumer-#{@key}").bind(amq.topic('chats'), :key => 'chats.r1').subscribe{ |msg|
       send_data(msg + "\0\n")
     }
+  end
+  
+  def receive_data(data)
   end
   
   def log(text)
