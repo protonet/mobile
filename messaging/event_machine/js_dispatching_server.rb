@@ -15,8 +15,11 @@ module JsDispatchingServer
     @key ||= rand(100000)
     puts "#{@key.inspect}"
     amq = MQ.new
-    amq.queue("consumer-#{@key}").bind(amq.topic('chats'), :key => 'chats.r1').subscribe{ |msg|
-      send_data(msg + "\0\n")
+    amq.queue("consumer-#{@key}-chats").bind(amq.topic('chats'), :key => 'chats.r1').subscribe{ |msg|
+      send_data("chats_" + msg + "\0")
+    }
+    amq.queue("consumer-#{@key}-assets").bind(amq.topic('assets'), :key => 'assets.all').subscribe{ |msg|
+      send_data("assets_" + msg + "\0")
     }
   end
   

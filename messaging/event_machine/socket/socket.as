@@ -1,3 +1,4 @@
+
 import flash.external.ExternalInterface;
 class Socket {
   static var socket:XMLSocket;
@@ -15,7 +16,7 @@ class Socket {
   }
   
   static function connectSocket() {
-    ExternalInterface.call("Dispatcher.socketConnectCallback", socket.connect('localhost', 5000));
+    ExternalInterface.call("Dispatcher.socketConnectCallback", socket.connect('192.168.1.104', 5000));
   }
 
   static function main() {

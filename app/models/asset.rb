@@ -4,6 +4,7 @@ class Asset
   attr_accessor :tempfile
   
   before :save, :move_tmp_file
+  after :create, :publish_notification
   
   belongs_to :user
   belongs_to :asset_list
@@ -40,6 +41,14 @@ class Asset
   
   def file_path(from_root = false)
     (from_root ? Merb.root_path + '/public' : '') + "/uploads/#{filename}"
+  end
+  
+  def publish_notification
+    MessagingBus.topic('assets').publish(self.to_json, :key => 'assets.all')
+  end
+  
+  def to_json
+    self.attributes.to_json
   end
 
 end

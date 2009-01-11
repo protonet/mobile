@@ -66,12 +66,14 @@
         upload_progress_handler: function(file, bytesLoaded, bytesTotal) {
           var percent = Math.round(bytesLoaded/bytesTotal*100);
           var fullPercent = Math.round((this.loadedSize+bytesLoaded)/this.fullSize*100);
-          this.statusElements[file.id].html(" (" + percent + " %)");
+          this.liElements[file.id].attr('id', "last-asset-uploaded");
+          this.statusElements[file.id].html(" (" + percent + " %)");          
           document.title = this.backupTitle + " - Uploading " + fullPercent + " %";
         },
         upload_success_handler: function(file) {
           this.loadedSize += file.size;
           this.liElements[file.id].html('<a href="/uploads/' + file.name + '">' + file.name + '</a>');
+          $('#last-asset-uploaded').remove();
           if (this.fileIds.length > 0) {
             this.startUpload(this.fileIds.shift());
           } else {

@@ -19,22 +19,40 @@ DispatchingSystem.prototype = {
   
   },
 
-  "findDestination": function(destination_id) {
-  
+  "findDestination": function(data) {
+
   },
 
-  "messageReceived": function(data) {
-    console.log(data + ' wurde empfangen.');
-    // this stuff doesn't belong here, will be moved soon
-    eval('var message = ' + data);
-    var room = cw.getRoom(message.chat_room_id);
-    var chat_message = new ChatMessage(message, room);
-    if(cw.current_user_id != chat_message.user_id) {
-      room.addMessage(chat_message);
+  "messageReceived": function(raw_data) {
+    console.log(raw_data + ' wurde empfangen.');
+    
+    var destination = raw_data.match(/^.*?_/)[0];
+    var data = raw_data.replace(/.*?_/, "");
+    console.log(data + " after replacing");
+    
+    switch(destination) {
+    case "chats_": 
+      // this stuff doesn't belong here, will be moved soon
+      eval('var message = ' + data);
+      var room = cw.getRoom(message.chat_room_id);
+      var chat_message = new ChatMessage(message, room);
+      if(cw.current_user_id != chat_message.user_id) {
+        room.addMessage(chat_message);
+      }
       room.parent_widget.messagesLoadedCallback(room.id);      
+      // parsed_message = this.parseMessage(data);
+      // this.dispatch(this.findDestination(parsed_message[0]), parsed_message[1])
+      break;
+    case "assets_":
+      eval('var asset = ' + data);
+      var link = document.createElement("a");
+      var list_element = document.createElement("li");
+      link.innerHTML = asset.filename;
+      list_element.appendChild(link);
+      link.href = "/uploads/" + asset.filename;
+      $("#file-list").append($(list_element));
+      break;
     }
-    // parsed_message = this.parseMessage(data);
-    // this.dispatch(this.findDestination(parsed_message[0]), parsed_message[1])
   },
 
   "parseMessage": function(data) {
