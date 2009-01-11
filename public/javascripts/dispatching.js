@@ -28,7 +28,11 @@ DispatchingSystem.prototype = {
     // this stuff doesn't belong here, will be moved soon
     eval('var message = ' + data);
     var room = cw.getRoom(message.chat_room_id);
-    room.addMessage(new ChatMessage(message, room));
+    var chat_message = new ChatMessage(message, room);
+    if(cw.current_user_id != chat_message.user_id) {
+      room.addMessage(chat_message);
+      room.parent_widget.messagesLoadedCallback(room.id);      
+    }
     // parsed_message = this.parseMessage(data);
     // this.dispatch(this.findDestination(parsed_message[0]), parsed_message[1])
   },
@@ -55,4 +59,4 @@ DispatchingSystem.prototype = {
     console.log('connection established? ' + args);
   }
 
-}
+};

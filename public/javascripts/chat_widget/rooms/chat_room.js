@@ -25,12 +25,12 @@ ChatRoom.prototype = {
   },
   "receivedMessageIds": function() {
     if(this.messages.length == 0) {
-      return this.messages
+      return this.messages;
     }
-    return $.map(this.messages, function(m){return m.id});
+    return $.map(this.messages, function(m){return m.id;});
   },
   "addMessage": function(message) {
     this.messages.push(message);
     this.room_element.append(message.wrapper_element);
   }
-}
+};
