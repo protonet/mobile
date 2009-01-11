@@ -18,7 +18,7 @@ module FlashServer
   # this is a flash security policy thing that needs to be sent on the first request to
   # this server
   def send_swf_policy
-    puts("sending policy")
+    log("sending policy")
     policy = <<-EOS
     <?xml version="1.0" encoding="UTF-8"?> 
     <cross-domain-policy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.adobe.com/xml/schemas/PolicyFileSocket.xsd">
@@ -28,4 +28,9 @@ module FlashServer
     EOS
      (@policy_sent = true) && send_data(policy)
   end    
+
+  def log(text)
+    puts "#{self.class.to_s}: #{text}"
+  end
+
 end

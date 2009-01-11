@@ -1,3 +1,9 @@
+# this is deprecated:
+# we won't be using a flash policy server on this port since
+# ports below 1024 need sudo rights and make the whole starting
+# stopping much too complicated
+# policy handling will be done by the js_dispatching_server
+
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'eventmachine'
@@ -12,7 +18,7 @@ module FlashPolicyServer
   def receive_data(data)
   end
   
-  include FlashServer # move me up if you know how!
+  include FlashServer
 end
 
 EventMachine::run do
@@ -21,5 +27,6 @@ EventMachine::run do
   EventMachine.epoll if RUBY_PLATFORM =~ /linux/ #sky is the limit
   EventMachine::start_server(host, port, FlashPolicyServer)
   puts "Started FlashPolicyServer on #{host}:#{port}..."
+  puts $$
 end
 

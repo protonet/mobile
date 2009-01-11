@@ -1,9 +1,31 @@
 #!/usr/bin/env ruby
 require 'optparse'
 
-local_path = File.dirname(__FILE__)
+local_path  = File.dirname(__FILE__)
+tmp_path    = local_path + "/../tmp/"
+pids_file    = tmp_path + "servers.pids"
 
 options = {}
+
+def exit_all_running_servers(pids_file)
+  if File.exists?(pids_file) && !File.zero?(pids_file)
+    puts "Trying to shutdown services..."
+    processes_running = true
+    File.open(pids_file, 'r+') do |f|
+      f.readlines.each do |pid|
+        Process.kill("TERM", pid.to_i)
+        sleep 0.5
+        processes_running = (Process.kill(0, pid.to_i) rescue false)
+      end
+    end
+    unless processes_running
+      File.rm(pids_file)
+      puts 'All servers have been shut down.'
+    else
+      puts 'Servers could not be shut down.'
+    end
+  end
+end
 
 ARGV.options do |opts|
   script_name = File.basename($0)
@@ -23,10 +45,13 @@ ARGV.options do |opts|
 end
 
 commands = []
-commands << "sudo -b ruby #{local_path}/event_machine/policy_server.rb"
 commands << "ruby #{local_path}/event_machine/js_dispatching_server.rb &"
 
-puts commands.inspect
-commands.each do |c|
-  system(c)
-end
+puts commands.inspect, options[:action]
+
+if options[:action] == 'start'
+# commands.each do |c|
+#   system(c)
+# end
+
+exit_all_running_servers(pids_file)

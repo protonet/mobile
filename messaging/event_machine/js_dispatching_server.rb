@@ -17,7 +17,7 @@ end
 module JsDispatchingServer
   
   def post_init
-    puts 'post-init'
+    log('post-init')
     # @key ||= get_sockname # this didn't work as I expected it to
     @key ||= rand(100000)
     puts "#{@key.inspect}"
@@ -26,6 +26,12 @@ module JsDispatchingServer
       send_data(msg + "\0\n")
     }
   end
+  
+  def log(text)
+    puts "#{self.class.to_s}: #{text}"
+  end
+  
+  include FlashServer
 
 end
 
@@ -35,4 +41,5 @@ EventMachine::run do
   EventMachine.epoll if RUBY_PLATFORM =~ /linux/ #sky is the limit
   EventMachine::start_server(host, port, JsDispatchingServer)
   puts "Started JsDispatchingServer on #{host}:#{port}..."
+  puts $$
 end
