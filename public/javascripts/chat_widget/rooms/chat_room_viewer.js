@@ -4,7 +4,7 @@ function ChatRoomViewer(args) {
   if(!this.parent_widget)
     throw 'parent widget not given';
   this.view_element = $(document.createElement('div'));
-  this.view_element.addClass('chat-room-viewer')
+  this.view_element.addClass('chat-room-viewer');
   
   this._addOwnElementToParent();
 };
