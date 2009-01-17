@@ -5,8 +5,9 @@ function ChatRoomViewer(args) {
     throw 'parent widget not given';
   this.view_element = $(document.createElement('div'));
   this.view_element.addClass('chat-room-viewer');
-  
-  this._addOwnElementToParent();
+  this._addOwnElementToParent();              
+  // not good solution
+  $('.chat-room-viewer').attr('id','chatapp');    
 };
 
 ChatRoomViewer.prototype = {

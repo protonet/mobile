@@ -118,4 +118,11 @@
   var Dispatcher = new DispatchingSystem(document.getElementById('flash_socket'));
   var cw = new ChatWidget({'user_id': <%= current_user.id %>, 'user_config': {}, 'div_container': $('#main-chat-widget')});
   setTimeout(function() {Dispatcher.socket.connectSocket()}, 1000);
+</script>               
+
+<!-- Create ScrollPane for Chatroom -->
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function(){
+		setTimeout(function(){ $('#chatapp').jScrollPane({scrollbarWidth:20,  scrollbarMargin:10,showArrows:true})}, 200);
+	});
 </script>

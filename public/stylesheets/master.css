@@ -98,11 +98,12 @@ body {
 .chat-widget .chat-room-viewer {
   margin:   5px;
   height: 450px;
-  width:  545px;
+  width:  549px;
   border:   1px solid grey;
   float:  left;
-  overflow-y: scroll;
-}
+  overflow:auto;
+} 
+
 
 .chat-widget .chat-room-viewer .message {
   min-height: 35px;
@@ -126,6 +127,10 @@ body {
 .chat-widget input {
   margin-right:   5px;
   float: right;
+}
+
+.chat-widget .jScrollPaneContainer{
+	float:left;
 }
 
 .status-widget {
