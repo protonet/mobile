@@ -12,4 +12,5 @@ Merb::Config.use { |c|
   c[:log_file]   = nil
   # Or redirect logging into a file:
   # c[:log_file]  = Merb.root / "log" / "development.log"
+  c[:dispatching_server] = 'localhost'
 }

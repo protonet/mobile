@@ -15,14 +15,19 @@ class Socket {
     ExternalInterface.call("Dispatcher.messageReceived", data );
   }
   
-  static function connectSocket() {
-    ExternalInterface.call("Dispatcher.socketConnectCallback", socket.connect('192.168.1.104', 5000));
+  static function onConnect(status:Boolean) {
+    ExternalInterface.call("Dispatcher.socketConnectCallback", status );
+  }
+  
+  static function connectSocket(ip:String) {
+    socket.connect(ip, 5000);
   }
 
   static function main() {
     
     socket = new XMLSocket();
     socket.onData = onReceive;
+    socket.onConnect = onConnect;
     
     ExternalInterface.addCallback("test", null, test);
     ExternalInterface.addCallback("sendData", null, sendData);
