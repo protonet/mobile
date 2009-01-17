@@ -24,6 +24,7 @@ module JsDispatchingServer
   end
   
   def receive_data(data)
+    puts "received: #{data}"
   end
   
   def log(text)

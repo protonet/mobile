@@ -1,10 +1,26 @@
-function DispatchingSystem(socket) {
-  this.initSocket(socket);
+function DispatchingSystem(socket, server, user_auth_token) {
+  this.socket = socket;
+  this.server = server;
+  this.user_auth_token = user_auth_token;
 }
    
 DispatchingSystem.prototype = {
-  "initSocket": function(socket_object) {
-    this.socket = socket_object;
+  "socketReadyCallback": function() {
+    console.log('socket ready, trying to establish connection');
+    this.connectSocket();
+  },
+    
+  "connectSocket": function() {
+    this.socket.connectSocket(this.server);
+  },
+  
+  "socketConnectCallback": function(args) {
+    console.log('connection established? ' + args);
+/*    this.authenticateUser();*/
+  },
+
+  "authenticateUser": function() {
+    this.sendMessage('auth_' + this.user_auth_token);
   },
 
   // destination_id is your key for eventmachine/js communication
@@ -71,10 +87,6 @@ DispatchingSystem.prototype = {
   
   "test": function(args) {
     console.log('dispatcher called test');
-  },
-  
-  "socketConnectCallback": function(args) {
-    console.log('connection established? ' + args);
   }
-
+  
 };

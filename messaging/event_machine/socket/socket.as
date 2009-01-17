@@ -33,5 +33,7 @@ class Socket {
     ExternalInterface.addCallback("sendData", null, sendData);
     ExternalInterface.addCallback("connectSocket", null, connectSocket);
     
+    ExternalInterface.call("Dispatcher.socketReadyCallback");
+    
   }
 }

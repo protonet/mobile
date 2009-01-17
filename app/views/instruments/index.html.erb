@@ -115,7 +115,6 @@
 <!-- END OF MESSAGING SOCKET TEST -->
 
 <script type="text/javascript" charset="utf-8">
-  var Dispatcher = new DispatchingSystem(document.getElementById('flash_socket'));
+  var Dispatcher = new DispatchingSystem(document.getElementById('flash_socket'), '<%= Merb::Config[:dispatching_server] %>', '<%= current_user.token %>');
   var cw = new ChatWidget({'user_id': <%= current_user.id %>, 'user_config': {}, 'div_container': $('#main-chat-widget')});
-  setTimeout(function() {Dispatcher.socket.connectSocket('<%= Merb::Config[:dispatching_server] %>')}, 1000);
 </script>
