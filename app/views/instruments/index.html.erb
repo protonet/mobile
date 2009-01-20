@@ -98,7 +98,7 @@
   <br />
   
   <div class="clr"></div>
-  
+    
 </div>
 
 <!-- TESTING THE MESSAGING SOCKET -->
@@ -114,7 +114,27 @@
 
 <!-- END OF MESSAGING SOCKET TEST -->
 
+
+<!-- TESTING SKYHOOK WIRELESS (SEE JS BELOW FOR MORE) -->
+<div class="clr"></div>
+
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAyAdDIbnBr7xjhgzhckJd1RTlFEMQQCBdkXM6DUFaYJlF0UtKOBQBMA6dGwWlkYBHGoXcUiL9OIil6Q"
+  type="text/javascript"></script>
+  
+<div id="map" style="width:500px;height:300px"></div>
+<!-- END OF SKYHOOK WIRELESS TEST (SEE JS BELOW FOR MORE) -->
+
+
 <script type="text/javascript" charset="utf-8">
   var Dispatcher = new DispatchingSystem(document.getElementById('flash_socket'), '<%= Merb::Config[:dispatching_server] %>', '<%= current_user.token %>');
   var cw = new ChatWidget({'user_id': <%= current_user.id %>, 'user_config': {}, 'div_container': $('#main-chat-widget')});
+  
+  if (GBrowserIsCompatible()) {
+    var map = new GMap2(document.getElementById("map"));
+    <% a,b = *Location.retreive_location_by_current_basestation %>
+    point = new GLatLng(<%= a %>, <%= b %>);
+    map.setCenter(point, 15);
+    map.addOverlay(new GMarker(point));
+  }
+  
 </script>

@@ -55,7 +55,7 @@ DispatchingSystem.prototype = {
       if(cw.current_user_id != chat_message.user_id) {
         room.addMessage(chat_message);
       }
-      room.parent_widget.messagesLoadedCallback(room.id);      
+      room.parent_widget.messagesLoadedCallback(room.id);
       // parsed_message = this.parseMessage(data);
       // this.dispatch(this.findDestination(parsed_message[0]), parsed_message[1])
       break;

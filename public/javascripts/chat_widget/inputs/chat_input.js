@@ -1,6 +1,6 @@
 function ChatInput(args) {
   var self = this;
-  this.parent_widget = args.parent_widget;
+  this.parent_widget = args.parent_widget; // chat_widget
   if(!this.parent_widget)
     throw 'parent widget not given';
   this.input_element = $(document.createElement('input'));

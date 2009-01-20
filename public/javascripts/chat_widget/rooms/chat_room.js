@@ -1,7 +1,7 @@
 function ChatRoom(room_id, parent_widget) {
   var self = this;
   this.room_id = room_id;
-  this.parent_widget = parent_widget;
+  this.parent_widget = parent_widget; // chat_room_viewer
   this.messages = [];
   this.block_get = false;
   this.room_element = $(document.createElement("div"));
