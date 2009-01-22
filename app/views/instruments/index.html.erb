@@ -122,7 +122,7 @@
      <param name="movie" value="flash/socket.swf">
      <param name="quality" value="high">
      <param name="bgcolor" value="#FFFFFF">
-    <embed id="flash_socket" src="flash/socket.swf" quality="high" bgcolor="#FFFFFF" width="1" height="1" name="flash_socket" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">
+    <embed id="flash_socket" src="/flash/socket.swf" quality="high" bgcolor="#FFFFFF" width="1" height="1" name="flash_socket" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">
 </object>
 <!-- END OF MESSAGING SOCKET TEST -->
 
@@ -130,14 +130,15 @@
 <script type="text/javascript" charset="utf-8">
   var Dispatcher = new DispatchingSystem(document.getElementById('flash_socket'), '<%= Merb::Config[:dispatching_server] %>', '<%= current_user.token %>');
   var cw = new ChatWidget({'user_id': <%= current_user.id %>, 'user_config': {}, 'div_container': $('#main-chat-widget')});
-  
+
+<% a,b = *Location.retreive_location_by_current_basestation %>
+<% if a && b %>  
   if (GBrowserIsCompatible()) {
     var map = new GMap2(document.getElementById("map"));
-    <% a,b = *Location.retreive_location_by_current_basestation %>
     point = new GLatLng(<%= a %>, <%= b %>);
     map.setCenter(point, 15);
     map.addOverlay(new GMarker(point));
     $(window).unload(GUnload);
   }
-  
+<% end  %>
 </script>
