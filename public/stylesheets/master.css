@@ -131,7 +131,6 @@ body {
 .status-widget {
   background-color: #192839;
   width: 280px;
-  height: 15px;
   padding:  5px;
   border:   1px solid white;
   margin-left: 10px;
@@ -159,7 +158,6 @@ body {
 .sharing-widget a {
   color: white;
 }
-
 
 .swfupload {
   margin-bottom: -5px;
