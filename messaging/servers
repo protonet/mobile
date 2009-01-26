@@ -3,6 +3,7 @@ require 'optparse'
 
 local_path                = File.dirname(__FILE__)
 tmp_path                  = local_path + "/../tmp/"
+merb_root_path            = local_path + "/../"
 rabbitmq_path             = local_path + "/rabbitmq/"
 rabbitmq_server_location  = rabbitmq_path + "scripts/rabbitmq-server"
 pids_file                 = tmp_path + "servers.pids"
@@ -74,7 +75,7 @@ end
 
 if options[:action] == 'start'
   start_commands = []
-  start_commands << "ruby #{local_path}/event_machine/js_dispatching_server.rb"
+  start_commands << "merb -I #{merb_root_path}/mini_merb.rb -r #{local_path}/event_machine/js_dispatching_server.rb"
   start_commands << <<-EOS 
 RABBITMQ_NODE_IP_ADDRESS="" RABBITMQ_NODE_PORT="" RABBITMQ_LOG_BASE="/tmp" RABBITMQ_MNESIA_DIR="/tmp/rabbitmq-rabbit-mnesia" RABBITMQ_NODE_ONLY=true RABBITMQ_SERVER_START_ARGS=" -s rabbit" #{rabbitmq_server_location}
 EOS

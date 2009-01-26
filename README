@@ -151,3 +151,6 @@ http://hopper.squarespace.com/blog/2008/7/22/simple-amqp-library-for-ruby.html
 == FLASH SOCKET COMMUNICATION CAVEATS
 
 Awesome stuff is about to happen... since we are now using rabbitmq we need a way to send the correct policy to the requesting flash socket. this will be done by a very simple eventmachine server listening to the default policy communication port.
+
+Starting the js dispatching server:
+merb -I mini_merb.rb -r messaging/event_machine/js_dispatching_server.rb 
