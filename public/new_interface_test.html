@@ -44,6 +44,17 @@
       padding: 4px;
       border: 1px solid pink;
       margin: 4px 2px;
+      position: relative;
+    }
+    
+    #roomlist li span {
+      background-color: red;
+      color: white;
+      position: absolute;
+      top: -10px;
+      right: -3px;
+      font: 10px "Lucida Grande", "Trebuchet MS", Verdana, sans-serif;
+      padding: 1px;
     }
     
     #roomlist li:hover {
@@ -63,7 +74,7 @@
       margin-bottom: 5px;
       border: 1px dotted pink;
     }
-        
+            
     #content {
       position: relative;
     }
@@ -108,10 +119,20 @@
 <div id="viewport">
   
   <ul id="roomlist">
-    <li onClick="$('#content').animate({'top': -641}, 'slow');">tweets</li>
-    <li onClick="$('#content').animate({'top': 0}, 'slow');$('#chatholder').animate({'left':0}, 'slow')">raum 1</li>
-    <li onClick="$('#content').animate({'top': 0}, 'slow');$('#chatholder').animate({'left':-596}, 'slow')">raum 2</li>
-    <li onClick="$('#content').animate({'top': 0}, 'slow');$('#chatholder').animate({'left':-1192}, 'slow')">raum 3</li>
+    <li onClick="$('#content').animate({'top': -641}, 'slow');">
+      tweets
+      <span>1</span>
+    </li>
+    <li onClick="$('#content').animate({'top': 0}, 'slow');$('#chatholder').animate({'left':0}, 'slow')">
+      raum 1
+    </li>
+    <li onClick="$('#content').animate({'top': 0}, 'slow');$('#chatholder').animate({'left':-596}, 'slow')">
+      raum 2
+      <span>1|2</span>
+    </li>
+    <li onClick="$('#content').animate({'top': 0}, 'slow');$('#chatholder').animate({'left':-1192}, 'slow')">
+      raum 3
+    </li>
   </ul>
   
   <div id="content">
