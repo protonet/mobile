@@ -3,7 +3,7 @@
 # Uncomment for DataMapper ORM
 use_orm :datamapper
 
-dm_gems_version   = "0.9.9"
+dm_gems_version   = "0.9.10"
 
 dependency "dm-core", dm_gems_version         
 dependency "dm-aggregates", dm_gems_version   
