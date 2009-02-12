@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'eventmachine'
+require 'json'
 require 'ruby-debug'
 # the following is needed when you run the dispatcher in an merb env
 # it needs to be reworked, a whole env just for db/model access is overkill`
@@ -20,10 +21,12 @@ module JsDispatchingServer
   
   def receive_data(data)
     log("received: #{data}")
-    if data.match(/auth_response\{.key.:.(.*).\}/)
+    if data.match(/^auth_response_(.*)/)
       # bind_socket_to_queues()
       debugger
-      authenticate_user($1)
+      if authenticate_user($1) && !@subscribed
+        bind_socket_to_queues
+      end
     end
   end
   
@@ -31,8 +34,8 @@ module JsDispatchingServer
     log("connection #{@key} closed")
   end
   
-  def authenticate_user(key)
-    
+  def authenticate_user(auth_data)
+    @user = User.get(auth_data[:id]).token_valid?(auth_data[:token])
   end
   
   def bind_socket_to_queues
@@ -43,7 +46,12 @@ module JsDispatchingServer
     amq.queue("consumer-#{@key}-assets").bind(amq.topic('assets'), :key => 'assets.all').subscribe{ |msg|
       send_data("assets_" + msg + "\0")
     }
+    @subscribed = true
   end 
+  
+  def unbind_socket_from_queues
+    # not implemented yet
+  end
   
   include FlashServer
   

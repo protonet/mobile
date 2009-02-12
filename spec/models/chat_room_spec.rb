@@ -27,6 +27,7 @@ describe ChatRoom, 'users' do
   it "should allow adding users to a room" do
     room = ChatRoom.lobby
     # todo fix when DM bug has been fixed
+    # http://datamapper.lighthouseapp.com/projects/20609-datamapper/tickets/725-bug-with-many-to-many-association
     # room.users << @user
     # room.save
     ChatRoomUser.create(:chat_room_id => room.id, :user_id => @user.id)
