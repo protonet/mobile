@@ -9,6 +9,8 @@ class User
   attr_accessor :password, :password_confirmation
   
   has n, :chat_rooms
+  has n, :chat_room_users
+  has n, :joined_rooms, :through => :chat_room_users, :remote_name => :chat_rooms, :class_name => "ChatRoom", :child_key => "user_id"
   has 1, :profile, :class_name => 'UserProfile'
   
   property :id,                         Integer,  :serial => true
@@ -50,8 +52,16 @@ class User
     
   end
   
-  def enter(room)
-    room.users << self && room.save unless room.users.include?(self)
+  def join_room(room)
+    # room.users << self && room.save unless room.users.include?(self)
+    # TODO as soon as n-m associations and thru things work correclty this is done the old way:
+    # http://datamapper.lighthouseapp.com/projects/20609-datamapper/tickets/725-bug-with-many-to-many-association
+    ChatRoomUser.new(:user_id => self.id, :chat_room_id => room.id).save unless ChatRoomUser.first(:user_id => self.id, :chat_room_id => room.id)
+  end
+  
+  def leave_room(room)
+    room_user = ChatRoomUser.first(:user_id => self.id, :chat_room_id => room.id)
+    room_user.destroy if room_user
   end
   
   def poll(ip, force_update=false)

@@ -104,3 +104,21 @@ describe User, "token generation and validation" do
   
   
 end
+
+describe User, "chat functionality" do
+  
+  before do
+    User.all.destroy!
+    ChatRoom.all.destroy!
+    @user = User.gen
+    @room = ChatRoom.gen
+  end
+  
+  it "should allow you to join and leave a room" do
+    @user.join_room(@room)
+    assert_equal @user.joined_rooms.reload, [@room]
+    @user.leave_room(@room)
+    assert_equal @user.joined_rooms.reload, []
+  end
+  
+end

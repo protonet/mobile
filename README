@@ -51,9 +51,7 @@ Currently you can do the following things on it:
 == NEXT THINGS PLANNED:
 
   * make it look better
-    ** kick ass would be good
-  * see which other users are spending time in the lobby (kinda works)
-    ** replicate basic chat client functionality (e.g. tab completion on names and more)
+    ** working on that
   * be able to open new chat rooms
     ** make them private(hidden)/public
     ** adding/removing members to the private chats
@@ -139,7 +137,7 @@ make run
 this should automatically start the rabbitmq server/broker.
 
 if you have stopped it you can restart it by using:
-RABBITMQ_NODE_IP_ADDRESS="" RABBITMQ_NODE_PORT="" RABBITMQ_LOG_BASE="/tmp" RABBITMQ_MNESIA_DIR="/tmp/rabbitmq-rabbit-mnesia" RABBITMQ_NODE_ONLY=true RABBITMQ_SERVER_START_ARGS=" -s rabbit" ./scripts/rabbitmq-server
+RABBITMQ_NODE_IP_ADDRESS="" RABBITMQ_NODE_PORT="" RABBITMQ_LOG_BASE="/tmp" RABBITMQ_MNESIA_DIR="/tmp/rabbitmq-rabbit-mnesia" RABBITMQ_NODE_ONLY=true RABBITMQ_SERVER_START_ARGS=" -s rabbit" ./messaging/rabbitmq/scripts/rabbitmq-server
 
 now lets get the amqp gem... :
 sudo gem install tmm1-amqp
@@ -153,4 +151,4 @@ http://hopper.squarespace.com/blog/2008/7/22/simple-amqp-library-for-ruby.html
 Awesome stuff is about to happen... since we are now using rabbitmq we need a way to send the correct policy to the requesting flash socket. this will be done by a very simple eventmachine server listening to the default policy communication port.
 
 Starting the js dispatching server:
-merb -I mini_merb.rb -r messaging/event_machine/js_dispatching_server.rb 
+merb -I mini_merb.rb -r messaging/event_machine/js_dispatching_server.rb
