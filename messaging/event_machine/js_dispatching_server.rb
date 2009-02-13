@@ -21,10 +21,10 @@ module JsDispatchingServer
   
   def receive_data(data)
     log("received: #{data}")
-    if data.match(/^auth_response_(.*)/)
+    if data.match(/^auth_response:(.*)/)
       # bind_socket_to_queues()
-      debugger
-      if authenticate_user($1) && !@subscribed
+      auth = JSON.parse($1.chop)
+      if authenticate_user(auth) && !@subscribed
         bind_socket_to_queues
       end
     end
@@ -35,7 +35,8 @@ module JsDispatchingServer
   end
   
   def authenticate_user(auth_data)
-    @user = User.get(auth_data[:id]).token_valid?(auth_data[:token])
+    potential_user = User.get(auth_data[:id])
+    @user = potential_user && potential_user.token_valid?(auth_data[:token])
   end
   
   def bind_socket_to_queues

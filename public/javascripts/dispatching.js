@@ -1,7 +1,8 @@
-function DispatchingSystem(socket, server, user_auth_token) {
+function DispatchingSystem(socket, server, user_auth_token, user_id) {
   this.socket = socket;
   this.server = server;
   this.user_auth_token = user_auth_token;
+  this.user_id = user_id;
 }
    
 DispatchingSystem.prototype = {
@@ -20,7 +21,7 @@ DispatchingSystem.prototype = {
   },
 
   "authenticateUser": function() {
-    this.sendMessage('auth_' + this.user_auth_token);
+    this.sendMessage('auth_response:' + '{"user_id":' + this.user_id + ', "token":"' + this.user_auth_token + '"}');
   },
 
   // destination_id is your key for eventmachine/js communication
