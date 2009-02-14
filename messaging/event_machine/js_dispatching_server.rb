@@ -24,6 +24,7 @@ module JsDispatchingServer
     if data.match(/^auth_response:(.*)/)
       # bind_socket_to_queues()
       auth = JSON.parse($1.chop)
+      log("auth json: #{auth.inspect}")
       if authenticate_user(auth) && !@subscribed
         bind_socket_to_queues
       end
@@ -32,18 +33,30 @@ module JsDispatchingServer
   
   def unbind
     log("connection #{@key} closed")
+    @user && @user.joined_rooms.each do |room|
+      @user.leave_room(room)
+    end
   end
   
   def authenticate_user(auth_data)
-    potential_user = User.get(auth_data[:id])
-    @user = potential_user && potential_user.token_valid?(auth_data[:token])
+    potential_user = User.get(auth_data["user_id"])
+    @user = potential_user if potential_user && potential_user.token_valid?(auth_data["token"])
+    if potential_user
+      log("authenticated #{potential_user.display_name}") 
+    else
+      log("could not authenticate #{auth_data.inspect}")
+      debugger
+    end
   end
   
   def bind_socket_to_queues
     amq = MQ.new
-    amq.queue("consumer-#{@key}-chats").bind(amq.topic('chats'), :key => 'chats.r1').subscribe{ |msg|
-      send_data("chats_" + msg + "\0")
-    }
+    @user.joined_rooms.each do |room|
+      amq.queue("consumer-#{@key}-chats").bind(amq.topic('chats'), :key => "chats.r#{room.id}").subscribe{ |msg|
+        send_data("chats_" + msg + "\0")
+      }
+      log("subscribing to room #{room.id}")
+    end
     amq.queue("consumer-#{@key}-assets").bind(amq.topic('assets'), :key => 'assets.all').subscribe{ |msg|
       send_data("assets_" + msg + "\0")
     }

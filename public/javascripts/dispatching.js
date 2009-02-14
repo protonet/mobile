@@ -17,7 +17,10 @@ DispatchingSystem.prototype = {
   
   "socketConnectCallback": function(args) {
     console.log('connection established? ' + args);
-/*    this.authenticateUser();*/
+    // doing this because a new socket has been opened after the initial opening (flash does that for policy handling) 
+    // and the first response is a policy response by default
+    this.sendMessage('foo');
+    this.authenticateUser();
   },
 
   "authenticateUser": function() {

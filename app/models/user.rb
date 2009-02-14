@@ -56,12 +56,12 @@ class User
     # room.users << self && room.save unless room.users.include?(self)
     # TODO as soon as n-m associations and thru things work correclty this is done the old way:
     # http://datamapper.lighthouseapp.com/projects/20609-datamapper/tickets/725-bug-with-many-to-many-association
-    ChatRoomUser.new(:user_id => self.id, :chat_room_id => room.id).save unless ChatRoomUser.first(:user_id => self.id, :chat_room_id => room.id)
+    ChatRoomUser.new(:user_id => self.id, :chat_room_id => room.id).save && reload unless ChatRoomUser.first(:user_id => self.id, :chat_room_id => room.id)
   end
   
   def leave_room(room)
     room_user = ChatRoomUser.first(:user_id => self.id, :chat_room_id => room.id)
-    room_user.destroy if room_user
+    room_user.destroy && reload if room_user
   end
   
   def poll(ip, force_update=false)
@@ -75,7 +75,7 @@ class User
   end
   
   def token
-    generate_new_token unless self.token_expires_at && self.token_expires_at > DateTime.now
+    generate_new_token && self.save unless self.token_expires_at && self.token_expires_at > DateTime.now
     @token
   end
     

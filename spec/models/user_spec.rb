@@ -75,6 +75,12 @@ describe User, "token generation and validation" do
     @user = User.new(:login => 'foo', :password => 'blub')
   end
   
+  it "should save the token when requesting it" do
+    DateTime.should_receive(:now).any_number_of_times.and_return(DateTime.parse("2008-01-01 00:00:00"))
+    @user.should_receive(:save)
+    @user.token
+  end
+  
   it "should create a login token for the user" do
     DateTime.should_receive(:now).any_number_of_times.and_return(DateTime.parse("2008-01-01 00:00:00"))
     @user.token
@@ -95,14 +101,12 @@ describe User, "token generation and validation" do
   end
   
   it "should say its invalid if its past its expiry date" do
-    now = DateTime.parse("2008-01-01 00:00:00")
-    in_two_days = DateTime.parse("2008-01-03 00:00:00")
-    DateTime.should_receive(:now).exactly(4).times.and_return(now, now, now, in_two_days)
-    @user.token
-    assert !@user.token_valid?("feaa605f8c1e80ff65f05e577b01078fce3069ac")
+    token = @user.token
+    @user.token_expires_at = DateTime.now - 2
+    assert @user.save!
+    assert !@user.token_valid?(token)
   end
-  
-  
+
 end
 
 describe User, "chat functionality" do

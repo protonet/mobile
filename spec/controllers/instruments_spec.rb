@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
-describe Instruments, "methods" do
+describe Instruments, "index method" do
 
   before(:each) do
     User.all.destroy!
@@ -15,6 +15,10 @@ describe Instruments, "methods" do
   it "should have the lobby room ready as an instance variable" do
     assert_equal 1, @controller.assigns(:lobby).id
     assert_equal 'Lobby', @controller.assigns(:lobby).name
+  end
+  
+  it "should have the user join the lobby" do
+    pending
   end
   
   it "should be successful" do

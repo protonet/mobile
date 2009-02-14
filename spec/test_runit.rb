@@ -1,5 +1,5 @@
 def assert(foo)
-  !!foo
+  (!!foo).should == true
 end
 
 def assert_equal(a, b)
