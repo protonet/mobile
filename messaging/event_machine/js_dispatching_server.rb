@@ -23,7 +23,7 @@ module JsDispatchingServer
     log("received: #{data}")
     if data.match(/^auth_response:(.*)/)
       # bind_socket_to_queues()
-      auth = JSON.parse($1.chop)
+      auth = JSON.parse($1.chomp("\000"))
       log("auth json: #{auth.inspect}")
       if authenticate_user(auth) && !@subscribed
         bind_socket_to_queues

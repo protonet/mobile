@@ -19,7 +19,7 @@ DispatchingSystem.prototype = {
     console.log('connection established? ' + args);
     // doing this because a new socket has been opened after the initial opening (flash does that for policy handling) 
     // and the first response is a policy response by default
-    this.sendMessage('foo');
+    this.sendMessage('foo', true);
     this.authenticateUser();
   },
 
@@ -79,8 +79,11 @@ DispatchingSystem.prototype = {
   
   },
 
-  "sendMessage": function(data) {
+  "sendMessage": function(data, delimit) {
     console.log('Versuche ' + data + ' zu senden.');
+    if(delimit) {
+      data = data + "\0"
+    }
     this.socket.sendData(data);
   },
 

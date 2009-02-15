@@ -11,14 +11,18 @@ module FlashServer
   end
   
   def receive_data_with_policy_handler(data)
-    return send_swf_policy unless @policy_sent
+    log("policy server receiving: #{data}")
+    messages = data.split("\0")
+    unless @policy_sent
+      @policy_sent = true 
+      return messages[1] ? receive_data_without_policy_handler(messages[1]) : send_swf_policy
+    end
     receive_data_without_policy_handler(data)
   end
   
   # this is a flash security policy thing that needs to be sent on the first request to
   # this server
   def send_swf_policy
-    @policy_sent = true
     log("sending policy")
     policy = <<-EOS
     <?xml version="1.0" encoding="UTF-8"?> 
