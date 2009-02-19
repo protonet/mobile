@@ -130,7 +130,7 @@
   var Dispatcher = new DispatchingSystem(document.getElementById('flash_socket'), '<%= Merb::Config[:dispatching_server] %>', '<%= current_user.token %>', <%= current_user.id %>);
   var cw = new ChatWidget({'user_id': <%= current_user.id %>, 'user_config': {}, 'div_container': $('#main-chat-widget')});
 
-<%# a,b = *Location.retreive_location_by_current_basestation %>
+<% # a,b = *Location.retreive_location_by_current_basestation %>
 <% if false && a && b %>  
   if (GBrowserIsCompatible()) {
     var map = new GMap2(document.getElementById("map"));

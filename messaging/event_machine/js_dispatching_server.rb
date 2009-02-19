@@ -43,6 +43,7 @@ module JsDispatchingServer
     @user = potential_user if potential_user && potential_user.token_valid?(auth_data["token"])
     if potential_user
       log("authenticated #{potential_user.display_name}") 
+      bind_socket_to_queues
     else
       log("could not authenticate #{auth_data.inspect}")
       debugger
