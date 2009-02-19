@@ -3,7 +3,7 @@
 HOST=protodeploy@deploy.flyingseagull.de
 APPARCHIVE=dashboard_app.tar.bz2
 
-tar --exclude '\.git*' --exclude '\._*' --exclude '*.psd' --exclude 'public/uploads/*' -cjvf $APPARCHIVE $CURRENT_PATH
+tar --exclude '\.git*' --exclude '\._*' --exclude '*.psd' --exclude 'public/uploads/*' -cjvf $APPARCHIVE $PWD
 
 scp $APPARCHIVE $HOST:deploy/assets
 
