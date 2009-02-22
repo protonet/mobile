@@ -7,11 +7,11 @@ class InstrumentsController < ApplicationController
   end
 
   def private_dashboard
-    render :text => 'private'
+    render 'private_dashboard'
   end
   
   def public_dashboard
-    render :text => 'public'
+    render 'public_dashboard'
   end
 
 end
