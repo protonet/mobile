@@ -18,20 +18,32 @@
     div#viewport {
       margin: 10px;
     }
-    ul#untagged-filelist {
+    ul#unordered-filelist {
+      float: left;
       margin: 5px;
       border: 1px solid black;
       width:  400px;
       height: 400px;
       overflow: hidden;
     }
-    #untagged-filelist li {
-      margin: 5px;
+    #unordered-filelist li {
+      list-style: none;
       float: left;
+      width: 130px;
+    }
+    #unordered-filelist li ul li {
+      margin: 5px;
       list-style: none;
       border: 1px solid black;
       width: 120px;
       height: 120px;
+    }
+    #movies {
+      float: left;
+      margin: 5px;
+      border: 1px solid black;
+      height: 200px;
+      width: 200px ;
     }
   </style>
 </head>
@@ -44,28 +56,57 @@
   
   <h3>&nbsp;file tagging interface</h1>
   
-  <ul id="untagged-filelist">
-    <li>file 1</li>
-    <li>file 2</li>
-    <li>file 3</li>
-    <li>file 4</li>
-    <li>file 5</li>
-    <li>file 6</li>
-    <li>file 7</li>
-    <li>file 8</li>
-    <li>file 9</li>
-    <li>file 10</li>
-    <li>file 11</li>
-    <li>file 12</li>
-    <li>file 13</li>
-    <li>file 14</li>
-    <li>file 15</li>
-    <li>file 16</li>
-    <li>file 17</li>
-    <li>file 18</li>
+  <ul id="unordered-filelist">
+    <li>
+      <ul id="col-1">
+        <li>file 1</li>
+        <li>file 2</li>
+        <li>file 3</li>
+        <li>file 4</li>
+        <li>file 5</li>
+        <li>file 6</li>
+        <li>file 7</li>
+        <li>file 8</li>
+        <li>file 9</li>
+        <li>file 10</li>
+        <li>file 11</li>
+      </ul>
+    </li>
+    <li>
+      <ul id="col-2">
+        <li>file 1</li>
+        <li>file 2</li>
+        <li>file 3</li>
+        <li>file 4</li>
+        <li>file 5</li>
+        <li>file 6</li>
+        <li>file 7</li>
+        <li>file 8</li>
+        <li>file 9</li>
+        <li>file 10</li>
+        <li>file 11</li>
+      </ul>
+    </li>
+    <li>
+      <ul id="col-3">
+        <li>file 1</li>
+        <li>file 2</li>
+        <li>file 3</li>
+        <li>file 4</li>
+        <li>file 5</li>
+        <li>file 6</li>
+        <li>file 7</li>
+        <li>file 8</li>
+        <li>file 9</li>
+        <li>file 10</li>
+        <li>file 11</li>
+      </ul>
+    </li>
   </ul>
   
-  <ul ></ul>
+  <ul id="movies">
+    
+  </ul>
 
 </div>
 
