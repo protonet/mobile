@@ -4,7 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <script src="javascripts/jquery-1.2.6.js" type="text/javascript" charset="utf-8"></script>
+  <script src="javascripts/jquery-1.3.1.js" type="text/javascript" charset="utf-8"></script>
+  <script src="javascripts/jquery-ui-personalized-1.6rc6.js" type="text/javascript" charset="utf-8"></script>
+  <script src="javascripts/jquery.scrollTo.js" type="text/javascript" charset="utf-8"></script>
 
   <title>new interface test</title>
   <style type="text/css" media="screen">
@@ -19,6 +21,7 @@
       margin: 10px;
     }
     ul#unordered-filelist {
+      padding: 30px;
       float: left;
       margin: 5px;
       border: 1px solid black;
@@ -38,13 +41,29 @@
       width: 120px;
       height: 120px;
     }
+    #unordered-filelist li ul li.ui-selecting {
+      background: #FECA40;
+    }
+    #unordered-filelist li ul li.ui-selected {
+      background: #F39814;
+      color: white;
+    }
     #movies {
       float: left;
       margin: 5px;
       border: 1px solid black;
       height: 200px;
       width: 200px ;
+      overflow-y: auto;
     }
+    
+    #movies li {
+      margin: 4px;
+      list-style: none;
+      border: 1px solid black;
+      height: 40px;
+    }
+    
   </style>
 </head>
 
@@ -111,10 +130,25 @@
 </div>
 
 <script type="text/javascript" charset="utf-8">
-  console.log($('#input'));
-  function foo() {
-    
-  }
+  $(function() {
+    unordered_files = $("#unordered-filelist li ul li");
+
+    $("#unordered-filelist").selectable({ filter: 'li' });
+
+    unordered_files.draggable({ helper: 'clone' });    
+
+    $("#movies").droppable({
+      drop: function(event, ui) {
+        var droppable = $(this);
+        var children = droppable.children();
+        droppable.append(ui.draggable);
+        if(children.length > 4) {
+          droppable.scrollTo(children.get(children.length -1), 800);
+        }
+      }
+    });
+
+  });
 </script>
 </body>
 </html>
