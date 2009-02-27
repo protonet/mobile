@@ -1,7 +1,9 @@
 ENV["RAILS_ENV"] = "test"
 require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'test_help'
+require 'context'
 require 'mocha'
+require File.expand_path(File.dirname(__FILE__) + "/blueprints")
 # require 'ruby-debug'
 # Debugger.start
 
@@ -39,4 +41,5 @@ class ActiveSupport::TestCase
   # fixtures :all
 
   # Add more helper methods to be used by all tests here...
+  setup { Sham.reset }
 end

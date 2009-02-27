@@ -6,10 +6,12 @@ class UserTest < ActiveSupport::TestCase
   include AuthenticatedTestHelper
   fixtures :users
 
-  def test_should_create_user
-    assert_difference 'User.count' do
-      user = create_user
-      assert !user.new_record?, "#{user.errors.full_messages.to_sentence}"
+  context "creating a user" do
+    should "succeed" do
+      assert_difference 'User.count' do
+        user = create_user
+        assert !user.new_record?, "#{user.errors.full_messages.to_sentence}"
+      end
     end
   end
 
@@ -31,13 +33,6 @@ class UserTest < ActiveSupport::TestCase
     assert_no_difference 'User.count' do
       u = create_user(:password_confirmation => nil)
       assert u.errors.on(:password_confirmation)
-    end
-  end
-
-  def test_should_require_email
-    assert_no_difference 'User.count' do
-      u = create_user(:email => nil)
-      assert u.errors.on(:email)
     end
   end
 
