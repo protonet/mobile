@@ -109,9 +109,20 @@
         var currentTarget   = event.currentTarget;
         var selectionEndsAt = event.currentTarget.selectionEnd;
         var selectionIndex  = selectionEndsAt - 1;
+        
         // retrieve the previous character
-        var lastCharacter   = currentTarget.value.substr((selectionIndex - 1), 1);
-        var preLastCharacter= currentTarget.value.substr((selectionIndex - 2), 1);
+        if(selectionIndex == 0)
+        {
+          var previousCharacter= null;
+          var currentCharacter = currentTarget.value.substr((selectionIndex), 1);
+        }
+        else
+        {
+          var previousCharacter= currentTarget.value.substr((selectionIndex - 1), 1);
+          var currentCharacter = currentTarget.value.substr((selectionIndex), 1);
+        }
+        
+        console.log(event.which, "current", currentCharacter, "pre", previousCharacter);
 
         switch(event.which) {
 
@@ -120,7 +131,7 @@
           case 50:
             // check wether the previous character is a space
             // if yes this is the beginning of a command sequence
-            if(lastCharacter == ' ')
+            if(previousCharacter == ' ' || !previousCharacter)
             {
               console.log('entering console mode');
               console.log('person mode')
@@ -129,7 +140,7 @@
             // check wether the previous character is a @
             // if yes the user is now trying to talk to a channel rather
             // than an end user
-            else if(lastCharacter == '@' && (preLastCharacter == ' ' || !preLastCharacter))
+            else if(currentCharacter == '@' && previousCharacter == '@')
             {
               console.log('audience mode')
               this.console_mode = 'audience';
