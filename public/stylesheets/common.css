@@ -1,0 +1,278 @@
+/* =RESET
+============================================================================= */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p,
+blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em,
+font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var,
+b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td, hr {
+  background: transparent;
+  border: 0;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after, q:before, q:after {
+  content: '';
+}
+
+:focus {
+  outline: 0;
+}
+
+ins {
+  text-decoration: none;
+}
+
+del {
+  text-decoration: line-through;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+
+/* =STYLES
+============================================================================= */
+
+body {
+  background: rgb(255, 255, 255) url(/img/bkg_body.png) scroll repeat left top;
+  border: 0;
+  font-size: 62.5%;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  position: relative;
+}
+
+button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, li, a, a:link, a:visited, a:hover, a:active, a:focus, code, dt, dd {
+  color: rgb(0, 0, 0);
+  font: normal normal normal 1em "lucida sans", tahoma, verdana, sans-serif;
+}
+
+.header {
+  background: transparent url(/img/bkg_header.png) scroll repeat-x 0 0;
+  height: 69px;
+  width:100%;
+}
+.header img {
+  margin: 10px;
+}
+
+#user-list {
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  background: rgb(255, 255, 255);
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  font-size: 1.2em;
+  margin: 0 0 1.5em;
+  padding: 0.1em;
+  width: 400px;
+}
+#user-list ul {
+  padding: 0.5em;
+}
+#user-list li {
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+#user-list li:last-child {
+  margin-bottom: 0;
+}
+#user-list img {
+  margin-right: 0.2em;
+  vertical-align: middle;
+}
+#user-list .status {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 0.8em;
+  font-weight: normal;
+}
+#expand-user-list {
+  background: rgb(151, 151, 151) url(/img/bkg_toggle.png) scroll repeat left top;
+  color: rgb(255, 255, 255);
+  display: block;
+  text-align: center;
+}
+#expand-user-list:hover {
+}
+#expand-user-list span {
+  background: transparent url(/img/arrow_down.png) scroll no-repeat center center;
+  display: block;
+  text-indent: -500em;
+  width: 100%;
+}
+
+#user-messages {
+  clear: both;
+  font-size: 1.4em;
+  line-height: 1.2em;
+  margin-bottom: 1.5em;
+}
+#user-messages li {
+  margin: 0 0 1.5em 90px;
+  position: relative;
+  width: 400px;
+}
+#user-messages li:last-child {
+  margin-bottom: 0;
+}
+#user-messages p {
+  -moz-border-radius: 1em;
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  -webkit-border-radius: 1em;
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  background: rgb(241, 241, 241);
+  border-radius: 1em;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  padding: 0.3em 1.8em;
+}
+#user-messages .message-usericon {
+  background: transparent url(/img/speech_bubble_arrow.png) scroll no-repeat right 5px;
+  bottom: 0.3em;
+  display: block;
+  left: -90px;
+  position: absolute;
+  width: 91px;
+}
+#user-messages .message-usericon img {
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(0, 0, 0);
+  padding: 1px;
+}
+#user-messages .message-info {
+  display: block;
+  padding: 0 0 0.3em
+}
+#user-messages .message-author {
+  font-size: 0.7em;
+  font-weight: bold;
+}
+#user-messages .message-date {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 0.7em;
+}
+
+#login-form {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+#login-form fieldset {
+  float: left;
+}
+#login-form li {
+  float: left;
+  margin-right: 1em;
+}
+#login-form input {
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  background: rgb(255, 255, 255) url(/img/bkg_input.png) scroll no-repeat right bottom;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  font-size: 1.0em;
+  padding: 0.3em 1em 0.3em 0.3em;
+  width: 150px;
+}
+#login-form button {
+  background: transparent;
+  border: 0;
+  float: left;
+  font-size: 1.0em;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+#login-form button span {
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  background: rgb(241, 241, 241);
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  display: block;
+  padding: 0.1em;
+}
+#login-form button span em {
+  background: rgb(151, 151, 151) url(/img/bkg_button.png) scroll repeat right bottom;
+  color: rgb(0, 0, 0);
+  display: block;
+  font-style: normal;
+  line-height: 14px;
+  padding: 0.2em 0.7em;
+}
+#login-form button span em:after {
+  content: '\0020\00BB';
+}
+#login-form label {
+  display: none;
+}
+
+#message-form {
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  background: rgb(255, 255, 255);
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  float: left;
+  height: 100px;
+  margin-bottom: 1em;
+  padding: 0.1em;
+}
+#message-form fieldset {
+  float: left;
+  height: 100%;
+}
+#message-form textarea {
+  background: transparent;
+  border: 0;
+  float: left;
+  font-size: 1.4em;
+  height: 92%;
+  margin: 0;
+  outline: 0;
+  padding: 0.3em;
+  vertical-align: baseline;
+  width: 350px;
+}
+#message-form button {
+  background: rgb(151, 151, 151) url(/img/bkg_return.png) scroll repeat left top;
+  border: 0;
+  float: left;
+  font-size: 1.0em;
+  height: 100px;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  vertical-align: baseline;
+  width: 40px;
+}
+#message-form button span {
+  background: transparent url(/img/return.png) scroll no-repeat center center;
+  display: block;
+  height: 100px;
+}
+#message-form button span em {
+  display: none;
+}
+#message-form label {
+  display: none;
+}

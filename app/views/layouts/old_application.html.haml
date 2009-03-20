@@ -1,11 +1,11 @@
 !!! XML
-!!!
+!!! Strict
 %html
   %head
     %title
       = strip_tags(yield :page_title)
       protonet Dashboard
-    %meta{ 'http-equiv' => 'Content-Type', :content => 'text/html', :charset => 'utf-8' }
+    %meta{ "http-equiv" => "Content-Type", :content => "text/html", :charset => "utf-8" }
     = stylesheet_link_tag :all, :cache => true
     = javascript_include_tag :all, :cache => true
   %body

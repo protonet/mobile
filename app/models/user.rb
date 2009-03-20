@@ -12,14 +12,13 @@ class User < ActiveRecord::Base
 
   validates_format_of       :name,     :with => Authentication.name_regex,  :message => Authentication.bad_name_message, :allow_nil => true
   validates_length_of       :name,     :maximum => 100
-  
 
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :name, :password, :password_confirmation
 
-
+  has_many :tweets
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   #
@@ -32,6 +31,12 @@ class User < ActiveRecord::Base
     u = find_by_login(login.downcase) # need to get the salt
     u && u.authenticated?(password) ? u : nil
   end
+  
+  def self.coward(number)
+    u = new
+    u.name = "coward_number_#{number}"
+    u
+  end
 
   def login=(value)
     write_attribute :login, (value ? value.downcase : nil)
@@ -39,6 +44,10 @@ class User < ActiveRecord::Base
 
   def email=(value)
     write_attribute :email, (value ? value.downcase : nil)
+  end
+  
+  def display_name
+    name.blank? ? login : name
   end
 
   protected
