@@ -11,7 +11,7 @@ class InstrumentsController < ApplicationController
   end
   
   def public_dashboard
-    @tweets = Tweet.find(:all, :order => "id DESC")
+    @tweets = Tweet.recent
     render 'public_dashboard'
   end
 

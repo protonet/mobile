@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :audiences
+
   map.resources :tweets
 
   map.resources :assets
