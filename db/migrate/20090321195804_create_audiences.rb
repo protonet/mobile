@@ -6,7 +6,7 @@ class CreateAudiences < ActiveRecord::Migration
       t.timestamps
     end
     # create the default home audience
-    Audience.new(:id => 0, :name => 'home', :description => 'your homebase - your node :)').save
+    Audience.new(:id => 1, :name => 'home', :description => 'your homebase - your node :)').save
   end
 
   def self.down
