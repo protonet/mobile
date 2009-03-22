@@ -1,5 +1,9 @@
 class Audience < ActiveRecord::Base
 
-  has_and_belongs_to_many :tweets
+  has_many  :tweets, :through => :says
+  
+  def self.home
+    find(0)
+  end
 
 end
