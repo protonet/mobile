@@ -1,3 +1,7 @@
 == INSTALL
 git submodule init
 git submodule update
+
+sudo gem install jeremymcanally-context
+sudo gem install faker
+sudo gem install random_data

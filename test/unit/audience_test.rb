@@ -1,8 +1,9 @@
 require 'test_helper'
 
 class AudienceTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+
+  test "the home method should return the audience with the id 1" do
+    flunk
   end
+
 end
