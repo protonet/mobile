@@ -6,4 +6,6 @@ class Tweet < ActiveRecord::Base
   
   named_scope :recent, :order => "id DESC"
   
+  # validate_existence_of :audience
+  
 end

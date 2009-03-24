@@ -3,6 +3,7 @@
     <%#= f.hidden_field :user_id, "1" %>
     <%= f.label(:message, "enter your message") %>
     <%= f.text_area(:message, :id => "message", :title => "enter your message") %>
+    <%= f.select(:audiences, Audience.all.collect {|a| [a.name, a.id]}, {:selected => 1}, {:multiple => true} ) %>
   </fieldset>
   <button type="submit" name="commit">
     <span>
