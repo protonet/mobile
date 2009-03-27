@@ -40,3 +40,16 @@ Rails::Initializer.run do |config|
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
   # config.i18n.default_locale = :de
 end
+
+
+
+# FIX THE FOLLOWING:
+# take configuration or default backend
+# BackendAdapters::Ubuntu.new
+# Backend.backend_connection = BackendAdapters.const_get((Merb::Config[:backend_adapter] ||= :development_mock).to_s.to_const_string).new
+# Merb.logger.info("Backend '#{Backend.backend_connection.info}' connected successfully!")
+
+# this starts the eventmachine reactor in a new thread
+# since the Em.run block is blocking until stopped this will ensure
+# that amqp communications are not blocking the app at any time
+# Thread.new{ EM.run() }
