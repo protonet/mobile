@@ -11,6 +11,7 @@ class InstrumentsController < ApplicationController
   end
   
   def public_dashboard
+    @audiences = Audience.all
     @tweets = Tweet.recent
     render 'public_dashboard'
   end

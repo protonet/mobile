@@ -1,5 +1,5 @@
 /* =RESET
-============================================================================= */
+=========================================================================== */
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p,
 blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em,
 font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var,
@@ -48,8 +48,7 @@ table {
 
 
 /* =STYLES
-============================================================================= */
-
+=========================================================================== */
 body {
   background: rgb(255, 255, 255) url(/img/bkg_body.png) scroll repeat left top;
   border: 0;
@@ -68,12 +67,76 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 .header {
   background: transparent url(/img/bkg_header.png) scroll repeat-x 0 0;
   height: 69px;
-  width:100%;
+  width: 100%;
 }
 .header img {
   margin: 10px;
 }
 
+/* =AUDIENCE
+--------------------------------------------------------------------------- */
+#audience {
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  background: rgb(213, 213, 213);
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  clear: both;
+  float: left;
+  font-size: 1.2em;
+  margin: 0 0 1.5em 1em;
+  width: 498px;
+}
+#audience ul {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  float: left;
+  padding: 0.3em 0.6em;
+  width: 100%;
+}
+#audience li {
+  -moz-border-radius: 0.3em;
+  -webkit-border-radius: 0.3em;
+  background: rgb(154, 154, 154) url(/img/bkg_lbutton.png) repeat-x scroll left bottom;
+  border-radius: 0.3em;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  float: left;
+  margin-right: 0.5em;
+}
+#audience a {
+  -moz-border-radius: 0.3em;
+  -webkit-border-radius: 0.3em;
+  border-radius: 0.3em;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: rgb(255, 255, 255);
+  float: left;
+  padding: 0.2em 0.6em;
+  text-decoration: none;
+}
+#audience a:hover {
+  background: rgb(173, 173, 173);
+}
+#audience li.active a {
+  background: rgb(173, 173, 173) url(/img/img_marker_down.png) no-repeat scroll center -3px;
+}
+
+#audience .add {
+  background: transparent none;
+  border: 1px solid transparent;
+}
+#audience .add a {
+  background: transparent none;
+  border: 1px solid transparent;
+  color: rgb(0, 0, 0);
+}
+#audience .add a:hover {
+  text-decoration: underline;
+}
+#audience .add a:before {
+  content: "\002B\0020";
+}
+
+/*
+--------------------------------------------------------------------------- */
 #user-list {
   -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
@@ -104,6 +167,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   font-size: 0.8em;
   font-weight: normal;
 }
+
 #expand-user-list {
   background: rgb(151, 151, 151) url(/img/bkg_toggle.png) scroll repeat left top;
   color: rgb(255, 255, 255);
@@ -119,6 +183,8 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   width: 100%;
 }
 
+/* =TWEETS (=MESSAGES)
+--------------------------------------------------------------------------- */
 #user-messages {
   clear: both;
   font-size: 1.4em;
@@ -171,6 +237,8 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   font-size: 0.7em;
 }
 
+/* =LOGIN
+--------------------------------------------------------------------------- */
 #login-form {
   position: absolute;
   right: 10px;
@@ -213,7 +281,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   padding: 0.1em;
 }
 #login-form button span em {
-  background: rgb(151, 151, 151) url(/img/bkg_button.png) scroll repeat right bottom;
+  background: rgb(151, 151, 151) url(/img/bkg_button.png) repeat-x scroll left bottom;
   color: rgb(0, 0, 0);
   display: block;
   font-style: normal;
@@ -227,6 +295,8 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   display: none;
 }
 
+/* =MESSAGE FORM
+--------------------------------------------------------------------------- */
 #message-form {
   -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
@@ -276,4 +346,45 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 }
 #message-form label {
   display: none;
+}
+
+/* =ERROR, =WARNING and =NOTICE messages
+--------------------------------------------------------------------------- */
+.message {
+  font-size: 1.2em;
+  margin: 0 1em 1em;
+}
+.message span {
+  border: 0.1em solid rgba(255, 255, 255, 0.75);
+  display: block;
+  padding: 0.3em 0.3em 0.3em 2.3em;
+}
+.warning {
+  border: 0.1em solid rgba(245, 218, 87, 0.75);
+}
+.warning span {
+  background: rgb(245, 218, 87) url(/img/icn_warning.png) no-repeat scroll 0.3em 0.3em;
+}
+.error {
+  border: 0.1em solid rgba(245, 131, 105, 0.75);
+}
+.error span {
+  background: rgb(245, 131, 105) url(/img/icn_error.png) no-repeat scroll 0.3em 0.3em;
+}
+.notice {
+  border: 0.1em solid rgba(113, 200, 103, 0.75);
+}
+.notice span {
+  background: rgb(113, 200, 103) url(/img/icn_notice.png) no-repeat scroll 0.3em 0.3em;
+}
+
+
+/* =CLEARFIX
+=========================================================================== */
+#message-form:after {
+  clear: both;
+  content: ".";
+  display: block;
+  height: 0;
+  visibility: hidden;
 }

@@ -12,6 +12,19 @@
   </button>
 <%- end -%>
 
+<div id="audience">
+  <ul>
+    <% @audiences.each do |a| %>
+      <li id="audience-<%= a.id %>" class="active">
+        <a href="#" title="<%= a.description %>"><%= a.name.capitalize %></a>
+      </li>
+    <% end %>
+    <li class="add">
+      <a href="#" title="">new room</a>
+    </li>
+  </ul>
+</div>
+
 <ul id="user-messages">
   <% @tweets.each do |t| %>
     <li>
