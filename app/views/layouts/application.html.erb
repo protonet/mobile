@@ -33,9 +33,9 @@
         </span>
       </button>
     <%- end -%>
-    <%= "<p class=\"notice\">#{flash[:notice]}</p>" if flash[:notice] %>
-    <%= "<p class=\"error\">#{flash[:error]}</p>" if flash[:error] %>
-    <%= "<p class=\"warning\">#{flash[:warning]}</p>" if flash[:warning] %>
+    <%= "<p class=\"notice message\"><span>#{flash[:notice]}</span></p>" if flash[:notice] %>
+    <%= "<p class=\"error message\"><span>#{flash[:error]}</span></p>" if flash[:error] %>
+    <%= "<p class=\"warning message\"><span>#{flash[:warning]}</span></p>" if flash[:warning] %>
     <%= yield %>
     <%= javascript_include_tag 'lib/jquery-1.3.2.js', :cache => true %>
     <%= javascript_include_tag 'console/console.js', :cache => true %>
