@@ -1,8 +1,110 @@
+              .---. .---.                                     __                   __ 
+             :     : o   :    I approve of: ____  _________  / /_____  ____  ___  / /_
+         _..-:   o :     :-.._    /        / __ \/ ___/ __ \/ __/ __ \/ __ \/ _ \/ __/
+     .-''  '  `---' `---' "   ``-.        / /_/ / /  / /_/ / /_/ /_/ / / / /  __/ /_  
+   .'   "   '  "  .    "  . '  "  `.     / .___/_/   \____/\__/\____/_/ /_/\___/\__/  
+  :   '.---.,,.,...,.,.,.,..---.  ' ;   /_/
+  `. " `.                     .' " .'  
+   `.  '`.                   .' ' .'   
+    `.    `-._           _.-' "  .'  .----.
+      `. "    '"--...--"'  . ' .'  .'  o   `.
+      .'`-._'    " .     " _.-'`. :       o  :
+jgs .'      ```--.....--'''    ' `:_ o       :
+  .'    "     '         "     "   ; `.;";";";'
+ ;         '       "       '     . ; .' ; ; ;
+;     '         '       '   "    .'      .-'
+'  "     "   '      "           "    _.-' 
+
+= PROTONET
+
+Contributors: actionJackson (dreewill), alto(alto), christopher (tiff), comes (ppeszko), dudemeister (dudemeister), m0rk (m0rk), reza (fishman)
+
+== DESCRIPTION:
+
+First of all: all of the code and documentation is work in progress, and it's redistribution or redistribution of a modified version is currently not allowed without explicit permission of the project owner (dudemeister on github), the code and documentation *will* become open source at one point (basically when it works to some degree). I have still some work to do figuring out a good license for this thing.
+
+I hope that you will contribute to this project and have fun using and writing it as I believe this to be our chance to (each one of us) truly revolutionize the way we communicate, interact and so much more!
+
+Protonet aims to create a new internet (let's call it internet 2.0 ;)), basically it will become a giant (actually lots and lots of connected or not connected small) mesh network(s). Most of it's nodes will run an rails frontend, this is it - and it's called 'Dashboard'. This is also it's first awesome app.
+
+It goes hand in hand with it's low-level part (also on github, called protonet-node-setup).
+ 
+
+== TECHNOLOGIES:
+
+Protonet-Dashboard runs on rails, sqlite3, rabbitmq, eventmachine (+amqp) and uses jQuery as its JS framework.
+
+== FEATURES:
+
+check it out yourself ;) we'll add stuff here later.
+
 == INSTALL
 git submodule init
 git submodule update
 
+install the needed gems:
 sudo gem install jeremymcanally-context
 sudo gem install faker
 sudo gem install random_data
 sudo gem install mocha
+
+
+THE FOLLOWING STUFF NEEDS TO BE UPDATED!!!
+THE FOLLOWING STUFF NEEDS TO BE UPDATED!!!
+THE FOLLOWING STUFF NEEDS TO BE UPDATED!!!
+
+== COMPILING THE SOCKET:
+
+How to compile a new version of the messaging actionscript:
+
+Get the os x version of the compiler from http://www.mtasc.org/ :
+http://www.mtasc.org/zip/mtasc-1.12-osx.zip (is the version we used for the current version)
+
+let it compile the source:
+
+~/Projekte/misc/mtasc-1.12-osx/mtasc -version 8 -header 100:100:100 -main -swf ~/Projekte/merb_data/dashboard/public/flash/socket.swf -v socket.as
+
+== EXPERIMENTAL STUFF (not ready yet)
+
+We are looking into using amqp and rabbitmq, for them to work you'll have to do a couple things:
+
+first install a recent version of erlang:
+sudo port install erlang
+
+then get mercurial if you don't have it, either get the binaries (recommended), build it from source or just use port:
+sudo port install mercurial
+or get the binaries at:
+http://mercurial.berkwood.com/
+
+If you don't have python installed:
+sudo port install python26
+
+If you do and have anything lower than python 26 you'll need to install the python simplejson lib:
+http://pypi.python.org/pypi/simplejson
+
+get the rabbitmq server and codegen:
+hg clone http://hg.rabbitmq.com/rabbitmq-codegen
+hg clone http://hg.rabbitmq.com/rabbitmq-server
+
+now build it:
+cd rabbitmq-server
+make run
+
+this should automatically start the rabbitmq server/broker.
+
+if you have stopped it you can restart it by using:
+RABBITMQ_NODE_IP_ADDRESS="" RABBITMQ_NODE_PORT="" RABBITMQ_LOG_BASE="/tmp" RABBITMQ_MNESIA_DIR="/tmp/rabbitmq-rabbit-mnesia" RABBITMQ_NODE_ONLY=true RABBITMQ_SERVER_START_ARGS=" -s rabbit" ./messaging/rabbitmq/scripts/rabbitmq-server
+
+now lets get the amqp gem... :
+sudo gem install tmm1-amqp
+
+now to get an idea of the things we can do now, have a look at this post:
+http://hopper.squarespace.com/blog/2008/7/22/simple-amqp-library-for-ruby.html
+
+
+== FLASH SOCKET COMMUNICATION CAVEATS
+
+Awesome stuff is about to happen... since we are now using rabbitmq we need a way to send the correct policy to the requesting flash socket. this will be done by a very simple eventmachine server listening to the default policy communication port.
+
+Starting the js dispatching server:
+merb -I mini_merb.rb -r messaging/event_machine/js_dispatching_server.rb
