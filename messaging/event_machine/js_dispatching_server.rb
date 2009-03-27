@@ -1,13 +1,9 @@
 #!/usr/bin/env ruby
-require 'rubygems'
-require 'eventmachine'
-require 'json'
+require File.dirname(__FILE__) + '/../../config/environment'
+
 require 'ruby-debug'
-# the following is needed when you run the dispatcher in an merb env
-# it needs to be reworked, a whole env just for db/model access is overkill`
-module_path = defined?(Merb) ? Merb.root + '/messaging/event_machine' : File.dirname(__FILE__)
-require(module_path + "/modules/flash_server.rb")
-require 'mq'
+require File.dirname(__FILE__) + '/modules/flash_server.rb'
+
 Debugger.start
 
 # awesome stuff happening here
@@ -39,8 +35,8 @@ module JsDispatchingServer
   end
   
   def authenticate_user(auth_data)
-    potential_user = User.get(auth_data["user_id"])
-    @user = potential_user if potential_user && potential_user.token_valid?(auth_data["token"])
+    potential_user = User.first #User.get(auth_data["user_id"])
+    @user = potential_user if potential_user # && potential_user.token_valid?(auth_data["token"])
     if potential_user
       log("authenticated #{potential_user.display_name}") 
       bind_socket_to_queues
