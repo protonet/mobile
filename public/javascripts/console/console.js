@@ -24,9 +24,9 @@ function InputConsole(args) {
   this.last_position = null;
   this.linearity = false;
   
-  // bind keydown handling for tab key catching
+  // bind keydown handling for special key catching
   this.input_console.keydown(function(event) {
-    self.tabHandler(event);
+    self.specialKeyHandler(event);
   });
   
   // bind event handling on the input
@@ -159,22 +159,20 @@ InputConsole.prototype = {
           }
           this.console_mode = false;
           console.log('leaving console mode');
-        }
+        }          
         else
         {
           // do nothing
         }
         break;
-        
-      
-        
+                
       case 'foobar':
         break;
     }
     // output.text(input_console.attr('value'));
   },
   
-  "tabHandler": function(event) {
+  "specialKeyHandler": function(event) {
     switch(event.which) {
       case 9:
         console.log('requesting help');
@@ -183,6 +181,14 @@ InputConsole.prototype = {
         event.preventDefault();
         event.cancelBubble = true
         // debugger;
+        break;
+        
+      case 13:
+        $('#message-form').submit();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        event.preventDefault();
+        event.cancelBubble = true
         break;
     }
     
