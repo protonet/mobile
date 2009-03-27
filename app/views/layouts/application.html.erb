@@ -37,7 +37,8 @@
     <%= "<p class=\"error\">#{flash[:error]}</p>" if flash[:error] %>
     <%= "<p class=\"warning\">#{flash[:warning]}</p>" if flash[:warning] %>
     <%= yield %>
-    <%= javascript_include_tag :all, :cache => true %>
+    <%= javascript_include_tag 'lib/jquery-1.2.6.js', :cache => true %>
+    <%= javascript_include_tag 'console/console.js', :cache => true %>
   </body>
   
 </html>
