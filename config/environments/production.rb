@@ -26,3 +26,7 @@ config.action_view.cache_template_loading            = true
 
 # Enable threaded mode
 # config.threadsafe!
+
+require "configatron"
+configatron.dispatching_server = '127.0.0.1'
+

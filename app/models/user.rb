@@ -35,6 +35,7 @@ class User < ActiveRecord::Base
   def self.coward(number)
     u = new
     u.name = "coward_number_#{number}"
+    u.id = 0
     u
   end
 

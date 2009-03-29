@@ -9,5 +9,10 @@ class ApplicationController < ActionController::Base
 
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
+  
+  helper_method :logged_out_user
+  def logged_out_user
+    @logged_out_user ||= User.coward(session[:session_id][0,10])
+  end
 
 end
