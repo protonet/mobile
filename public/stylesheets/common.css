@@ -116,8 +116,12 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   background: rgb(173, 173, 173);
 }
 #audience li.active a {
+  background: rgb(173, 173, 173) url() no-repeat scroll center -3px;
+}
+#audience li.targeted a {
   background: rgb(173, 173, 173) url(/img/img_marker_down.png) no-repeat scroll center -3px;
 }
+
 
 #audience .add {
   background: transparent none;

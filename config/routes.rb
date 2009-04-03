@@ -1,8 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :audiences
-
   map.resources :tweets
-
+  map.resources :listens
   map.resources :assets
 
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'

@@ -15,8 +15,8 @@
 <div id="audience">
   <ul>
     <% @audiences.each do |a| %>
-      <li id="audience-<%= a.id %>" class="active">
-        <a href="#" title="<%= a.description %>"><%= a.name.capitalize %></a>
+      <li id="audience-<%= a.id %>" class="<%= 'active' if a == @active_audience %>">
+        <a href="<%= link_to  %>" title="<%= a.description %>"><%= a.name.capitalize %></a>
       </li>
     <% end %>
     <li class="add">
