@@ -14,7 +14,7 @@ class TweetsController < ApplicationController
     else
       flash[:error] = "Failveh!"
     end
-    redirect_back_or_default('/')
+    redirect_to :controller => :instruments, :audience_id => audiences.first.id
   end
   
 end
