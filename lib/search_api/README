@@ -1,0 +1,11 @@
+To starting the search web service ruby startup.rb
+
+If you want to add some new routes go in the routes.rb add a new route like this 
+
+some_fix_nr => {
+  :url => 'the_url_path' ,:method => 'Restfull Method get,put,post,delete', :controller => 'the_controller_filename in the folder controller'
+} 
+
+example :
+
+1 => {:url => 'search' , :method => 'get', :controller => 'simple_search' },
