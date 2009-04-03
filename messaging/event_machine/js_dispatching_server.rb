@@ -48,15 +48,12 @@ module JsDispatchingServer
   
   def bind_socket_to_queues
     amq = MQ.new
-    @user.joined_rooms.each do |room|
-      amq.queue("consumer-#{@key}-chats").bind(amq.topic('chats'), :key => "chats.r#{room.id}").subscribe{ |msg|
-        send_data("chats_" + msg + "\0")
+    @user.audiences.each do |audience|
+      amq.queue("consumer-#{@key}-audiences").bind(amq.topic('audiences'), :key => "audiences.a#{audience.id}").subscribe{ |msg|
+        send_data("audience_" + msg + "\0")
       }
-      log("subscribing to room #{room.id}")
+      log("subscribing to audience #{audience.id}")
     end
-    amq.queue("consumer-#{@key}-assets").bind(amq.topic('assets'), :key => 'assets.all').subscribe{ |msg|
-      send_data("assets_" + msg + "\0")
-    }
     @subscribed = true
   end 
   

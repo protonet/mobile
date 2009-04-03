@@ -5,9 +5,10 @@ class TweetsController < ApplicationController
 
   def create
     author = current_user.try(:display_name) || logged_out_user.name
-    audiences = Audience.find(:all, :conditions => ["id in (?)", params[:audiences]])
+    debugger
+    audiences = Audience.find(:all, :conditions => ["id in (?)", params[:audience_ids]])
     # current user is nil when not logged in, that's ok
-    @tweet = Tweet.new(params[:tweet].merge({:author => author, :user => current_user, :audiences => [Audience.home]}))
+    @tweet = Tweet.new(params[:tweet].merge({:author => author, :user => current_user, :audiences => audiences}))
     success = @tweet.save
     if success && @tweet.errors.empty?
       flash[:notice] = "Success!"

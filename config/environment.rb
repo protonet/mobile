@@ -44,8 +44,6 @@ Rails::Initializer.run do |config|
   # config.i18n.default_locale = :de
 end
 
-
-
 # FIX THE FOLLOWING:
 # take configuration or default backend
 # BackendAdapters::Ubuntu.new

@@ -4,7 +4,7 @@ class Tweet < ActiveRecord::Base
   has_many    :says
   has_many    :audiences, :through => :says
   
-  named_scope :recent, :order => "id DESC"
+  named_scope :recent, :order => "tweets.id DESC"
   
   # validate_existence_of :audience
   
