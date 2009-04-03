@@ -4,8 +4,7 @@ require 'sinatra'
 require 'routes'    
                        
 # Dynamic Binds the Controller to the method calls
-
-@routes.each do |k,v| 
+@routes.show.each do |v| 
   send v[:method], "/"+ v[:url]  do         
     require 'controller/'+ v[:controller]
   end                                            
