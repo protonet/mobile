@@ -53,4 +53,4 @@ end
 # this starts the eventmachine reactor in a new thread
 # since the Em.run block is blocking until stopped this will ensure
 # that amqp communications are not blocking the app at any time
-# Thread.new{ EM.run() }
+Thread.new{ EM.run() } unless defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER

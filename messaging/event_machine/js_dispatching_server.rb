@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+RUN_FROM_DISPATCHER = true
 require File.dirname(__FILE__) + '/../../config/environment'
 
 require 'ruby-debug'
@@ -29,9 +30,9 @@ module JsDispatchingServer
   
   def unbind
     log("connection #{@key} closed")
-    @user && @user.joined_rooms.each do |room|
-      @user.leave_room(room)
-    end
+    # @user && @user.joined_rooms.each do |room|
+    #   @user.leave_room(room)
+    # end
   end
   
   def authenticate_user(auth_data)
@@ -49,7 +50,8 @@ module JsDispatchingServer
   def bind_socket_to_queues
     amq = MQ.new
     @user.audiences.each do |audience|
-      amq.queue("consumer-#{@key}-audiences").bind(amq.topic('audiences'), :key => "audiences.a#{audience.id}").subscribe{ |msg|
+      amq.queue("consumer-#{@key}-audience.a#{audience.id}").bind(amq.topic("audiences"), :key => "audiences.a#{audience.id}").subscribe{ |msg|
+        log('sending data out')
         send_data("audience_" + msg + "\0")
       }
       log("subscribing to audience #{audience.id}")
