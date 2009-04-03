@@ -16,7 +16,7 @@
   <ul>
     <% @audiences.each do |a| %>
       <li id="audience-<%= a.id %>" class="<%= 'active' if a == @active_audience %>">
-        <a href="<%= link_to  %>" title="<%= a.description %>"><%= a.name.capitalize %></a>
+        <%= link_to a.name.capitalize, {:audience_id => a.id}, {:title => a.description} %>
       </li>
     <% end %>
     <li class="add">
