@@ -18,7 +18,11 @@ class User < ActiveRecord::Base
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :name, :password, :password_confirmation
 
-  has_many :tweets
+  has_many  :tweets
+  has_many  :listens
+  has_many  :audiences, :through => :listens
+
+  after_create :listen_to_home
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   #
@@ -31,6 +35,21 @@ class User < ActiveRecord::Base
     u = find_by_login(login.downcase) # need to get the salt
     u && u.authenticated?(password) ? u : nil
   end
+  
+  # def generate_new_token
+  #   self.token = encrypt(crypted_password, DateTime.now)
+  #   self.token_expires_at = Time.now + 1.day # DateTime additions are in days
+  #   @token
+  # end
+  # 
+  # def token
+  #   generate_new_token && self.save unless self.token_expires_at && self.token_expires_at > DateTime.now
+  #   @token
+  # end
+  #   
+  # def token_valid?(token)
+  #   token == self.token && self.token_expires_at > DateTime.now
+  # end
   
   def self.coward(number)
     u = new
@@ -49,6 +68,11 @@ class User < ActiveRecord::Base
   
   def display_name
     name.blank? ? login : name
+  end
+  
+  def listen_to_home
+    audiences << Audience.home
+    save
   end
 
   protected
