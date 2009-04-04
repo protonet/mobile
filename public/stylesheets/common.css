@@ -85,7 +85,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   float: left;
   font-size: 1.2em;
   margin: 0 0 1.5em 1em;
-  width: 498px;
+  width: 598px;
 }
 #audience ul {
   border: 1px solid rgba(255, 255, 255, 0.4);
@@ -198,7 +198,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 #user-messages li {
   margin: 0 0 1.5em 90px;
   position: relative;
-  width: 400px;
+  width: 500px;
 }
 #user-messages li:last-child {
   margin-bottom: 0;
@@ -326,7 +326,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   outline: 0;
   padding: 0.3em;
   vertical-align: baseline;
-  width: 450px;
+  width: 550px;
 }
 #message-form button {
   background: rgb(151, 151, 151) url(/img/bkg_return.png) scroll repeat left top;
