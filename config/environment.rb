@@ -19,6 +19,7 @@ Rails::Initializer.run do |config|
   config.gem "eventmachine"
   config.gem "tmm1-amqp", :lib => "mq"
   config.gem "json"
+  config.gem "sprockets"
   # config.gem "bj"
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
