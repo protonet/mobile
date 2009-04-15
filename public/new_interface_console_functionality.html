@@ -57,6 +57,7 @@
     }
     
     CommandBlob.prototype = {
+      "class": null,
       "foobar": function() {
         
       }
@@ -129,8 +130,8 @@
           var currentCharacter = currentTarget.value.substr((selectionIndex), 1);
         }
         
-        // console.log(event);
-        console.log("prev", previousCharacter, 'current', currentCharacter);
+        console.log(event.which);
+        // console.log("prev", previousCharacter, 'current', currentCharacter);
         
         switch(event.which) {
           // case @
@@ -152,15 +153,22 @@
               console.log('audience mode')
               this.console_mode = 'audience';
             }
+            // kinda error handling
             else
             {
               console.log('an error might have occured!');
             }
-            // error handling???
             
             // this.output_console.text(this.input_console);
             break;
           // case 
+          
+          // case dot
+          // trying to call a method on x/y
+          case 190:
+            
+            console.log('trying to call a method on a(n) ' + this.console_mode);
+            break;
           
           // case space
           // end of command sequence
@@ -175,6 +183,8 @@
               // do nothing
             }
             break;
+            
+          
             
           case 'foobar':
             break;
