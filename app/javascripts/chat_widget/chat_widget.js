@@ -1,6 +1,6 @@
 //= require "inputs/chat_input.js"
 //= require "messages/chat_message.js"
-//= require "room_selectors/chat_room_selectors.js"
+//= require "room_selectors/chat_room_selector.js"
 //= require "rooms/chat_room.js"
 //= require "rooms/chat_room_viewer.js"
 //= require "user_lists/chat_user_list.js"

@@ -8,4 +8,4 @@ doc/app
 public/javascripts/sprockets.js
 public/javascripts/all.js
 public/stylesheets/all.css
-public/sprockets.js
+public/sprockets/*

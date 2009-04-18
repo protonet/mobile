@@ -12,7 +12,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resource :session
   
-  SprocketsApplication.routes(map)
+  SprocketsApplication.routes(map, :resources)
 
   # The priority is based upon order of creation: first created -> highest priority.
 
