@@ -31,6 +31,37 @@ Here's a walkthrough of the installation process:
 
 Once `sprockets-rails` is installed, you can check out Sprockets plugins into the `vendor/sprockets/` directory. By default, `sprockets-rails` configures Sprockets' load path to search `vendor/sprockets/*/src/`, as well as `vendor/plugins/*/javascripts/`. This means that the `javascripts/` directories of Rails plugins are automatically installed into your Sprockets load path.
 
+## Using multiple sprockets configurations in a project
+
+1. Edit your `config/sprockets.rb` file to name the configurations:
+
+        :default:
+          :asset_root: public
+          :load_path:
+            - app/javascripts
+            - vendor/sprockets/*/src
+            - vendor/plugins/*/javascripts
+          :source_files:
+            - app/javascripts/application.js
+        :special:
+          :asset_root: public
+          :load_path:
+            - app/javascripts
+            - vendor/sprockets/*/src
+            - vendor/plugins/*/javascripts
+          :source_files:
+            - app/javascripts/special.js
+
+2. Edit your `config/routes.rb` file to use plural resources for `SprocketsController`:
+
+        ActionController::Routing::Routes.draw do |map|
+          # Add the following line:
+          SprocketsApplication.routes(map, :resources)
+          ...
+        end
+
+3. Adjust your HTML templates to call `<%= sprockets_include_tag(:config_name) %>` with the name of the configuration you wish to use.
+
 ## License
 
 Copyright &copy; 2009 Sam Stephenson.

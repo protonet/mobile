@@ -7,7 +7,7 @@
   :source_files:
     - app/javascripts/application.js
     # - app/javascripts/**/*.js
-:dashboard
+:instruments
   :asset_root: public
   :load_path:
     - app/javascripts
@@ -15,4 +15,4 @@
     - vendor/plugins/*/javascripts
   :source_files:
     - app/javascripts/application.js
-    - app/javascripts/chat_widget/chat_widget.js
+    - app/javascripts/instruments.js

@@ -1,3 +1,12 @@
+//= require "inputs/chat_input.js"
+//= require "messages/chat_message.js"
+//= require "room_selectors/chat_room_selectors.js"
+//= require "rooms/chat_room.js"
+//= require "rooms/chat_room_viewer.js"
+//= require "user_lists/chat_user_list.js"
+//= require "user_lists/chat_user_list_viewer.js"
+//= require "users/chat_users.js"
+
 
 function ChatWidget(args) {
   var self = this;

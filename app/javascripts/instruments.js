@@ -1,0 +1,1 @@
+//= require "chat_widget/chat_widget.js"
