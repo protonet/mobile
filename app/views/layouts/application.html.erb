@@ -47,11 +47,11 @@
       config.user_agent = null;
     </script>
     
-    <%= sprockets_include_tag %>
+    <%= sprockets_include_tag(:default) %>
     
-    <%= javascript_include_tag 'console/console.js', :cache => true %>
+    <%= javascript_include_tag 'console/console.js', :cache => false %>
         
-    <%= javascript_include_tag 'dispatching.js', :cache => true %>    
+    <%= javascript_include_tag 'dispatching.js', :cache => false %>
     <!-- order is important, the socket needs the dispatching.js to be loaded previously -->
     <!-- MESSAGING SOCKET -->
     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="1" height="1" align="middle">
@@ -63,7 +63,7 @@
     </object>
     <!-- END OF MESSAGING SOCKET -->
     
-    <%= javascript_include_tag "sections/#{controller_name}.js", :cache => true %>
+    <%= sprockets_include_tag(controller_name.to_sym) %>
     
   </body>
   

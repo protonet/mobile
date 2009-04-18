@@ -1,8 +1,18 @@
-:asset_root: public
-:load_path:
-  - app/javascripts
-  - vendor/sprockets/*/src
-  - vendor/plugins/*/javascripts
-:source_files:
-  - app/javascripts/application.js
-  - app/javascripts/**/*.js
+:default
+  :asset_root: public
+  :load_path:
+    - app/javascripts
+    - vendor/sprockets/*/src
+    - vendor/plugins/*/javascripts
+  :source_files:
+    - app/javascripts/application.js
+    # - app/javascripts/**/*.js
+:dashboard
+  :asset_root: public
+  :load_path:
+    - app/javascripts
+    - vendor/sprockets/*/src
+    - vendor/plugins/*/javascripts
+  :source_files:
+    - app/javascripts/application.js
+    - app/javascripts/chat_widget/chat_widget.js
