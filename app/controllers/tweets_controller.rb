@@ -1,4 +1,10 @@
 class TweetsController < ApplicationController
+  
+  def index
+    # todo can't remember, is this find secure?
+    @tweets = Audience.find(params[:audience_id]).try(:tweets).try(:recent)
+    render :partial => 'tweet_list'
+  end
 
   def new
   end

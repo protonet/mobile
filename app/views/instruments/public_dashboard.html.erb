@@ -23,23 +23,13 @@
     </li>
   </ul>
 </div>
-
-<ul id="user-messages">
-  <% @tweets.each do |t| %>
-    <li>
-      <span class="message-usericon">
-        <img src="/img/userpicture.jpg" width="47" height="47" alt="">
-      </span>
-      <p>
-        <span class="message-info">
-          <span class="message-author"><%= t.author %></span>
-          <span class="message-date">(<%= t.created_at %>)</span>
-        </span>
-        <%= h t.message %>
-      </p>
-    </li>
-  <% end %>
-</ul>
+<div id="feed-viewer">
+  <div id="feed-holder">
+    <ul id="user-messages">
+      <%= render :partial => '/tweets/tweet_list' %>
+    </ul>
+  </div>
+</div>
 
 <div id="user-list">
   <ul>

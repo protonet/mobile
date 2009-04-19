@@ -187,6 +187,20 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   width: 100%;
 }
 
+/* =FEEDVIEWER (OUTER)
+--------------------------------------------------------------------------- */
+#feed-viewer {
+  width: 610px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* =FEEDVIEWER (INNER)
+--------------------------------------------------------------------------- */
+#feed-holder {
+  
+}
+
 /* =TWEETS (=MESSAGES)
 --------------------------------------------------------------------------- */
 #user-messages {

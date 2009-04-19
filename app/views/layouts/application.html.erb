@@ -6,8 +6,8 @@
     <meta http-equiv="pragma" content="no-cache" />
     <meta name="MSSmartTagsPreventParsing" content="true" />
     <meta name="robots" content="noindex, nofollow" />
-    <%= stylesheet_link_tag("common", :cache => true) %>
-    <title><%= strip_tags(yield :page_title) %></title>
+    <%= stylesheet_link_tag("common", :cache => false) %>
+    <title><%= strip_tags(yield(:page_title)) %></title>
   </head>
 
   <body>
@@ -42,7 +42,8 @@
       config = {};
       config.dispatching_server = '<%= configatron.dispatching_server %>';
       config.token = '<%= current_user.try(:login) || logged_out_user.name %>';
-      config.user_id = '<%= current_user.try(:id) || logged_out_user.id%>';
+      config.user_id = '<%= current_user.try(:id) || logged_out_user.id %>';
+      config.user_audience_ids = <%= current_user.try(:audiences) && current_user.audiences.map {|a| a.id}.to_json || logged_out_user.audiences.map {|a| a.id}.to_json %>;
       <%# add user agent %>
       config.user_agent = null;
     </script>

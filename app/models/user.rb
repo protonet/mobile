@@ -55,6 +55,7 @@ class User < ActiveRecord::Base
     u = new
     u.name = "coward_number_#{number}"
     u.id = 0
+    u.audiences << Audience.home
     u
   end
 

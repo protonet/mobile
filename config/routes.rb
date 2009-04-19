@@ -1,5 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :audiences
+  map.resources :audiences do |audiences|
+    audiences.resources :tweets
+  end
   map.resources :tweets
   map.resources :listens
   map.resources :assets
