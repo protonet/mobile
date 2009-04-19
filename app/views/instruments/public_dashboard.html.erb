@@ -25,9 +25,7 @@
 </div>
 <div id="feed-viewer">
   <div id="feed-holder">
-    <ul id="user-messages">
-      <%= render :partial => '/tweets/tweet_list' %>
-    </ul>
+      <%= render :partial => '/tweets/tweet_list', :locals => {:tweets => @tweets} %>
   </div>
 </div>
 

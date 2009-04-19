@@ -203,21 +203,22 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 
 /* =TWEETS (=MESSAGES)
 --------------------------------------------------------------------------- */
-#user-messages {
+.user-messages {
+  float: left;
   clear: both;
   font-size: 1.4em;
   line-height: 1.2em;
   margin: 0 0 2em 1em;
 }
-#user-messages li {
+.user-messages li {
   margin: 0 0 1.5em 90px;
   position: relative;
   width: 500px;
 }
-#user-messages li:last-child {
+.user-messages li:last-child {
   margin-bottom: 0;
 }
-#user-messages p {
+.user-messages p {
   -moz-border-radius: 1em;
   -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   -webkit-border-radius: 1em;
@@ -229,7 +230,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   min-height: 4em;
   padding: 0.3em 1.8em;
 }
-#user-messages .message-usericon {
+.user-messages .message-usericon {
   background: transparent url(/img/speech_bubble_arrow.png) scroll no-repeat right 5px;
   bottom: 0.3em;
   display: block;
@@ -237,20 +238,20 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   position: absolute;
   width: 91px;
 }
-#user-messages .message-usericon img {
+.user-messages .message-usericon img {
   background-color: rgb(255, 255, 255);
   border: 1px solid rgb(0, 0, 0);
   padding: 1px;
 }
-#user-messages .message-info {
+.user-messages .message-info {
   display: block;
   padding: 0 0 0.3em
 }
-#user-messages .message-author {
+.user-messages .message-author {
   font-size: 0.7em;
   font-weight: bold;
 }
-#user-messages .message-date {
+.user-messages .message-date {
   color: rgba(0, 0, 0, 0.5);
   font-size: 0.7em;
 }

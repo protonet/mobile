@@ -28,5 +28,5 @@ function CommunicationConsole(args) {
   // this.listenToUserInput();
   
   // preload feeds
-  // $('#user-messages').load('/audiences/2/tweets')
+  // $('.user-messages').load('/audiences/2/tweets')
 }

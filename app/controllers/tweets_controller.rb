@@ -1,9 +1,8 @@
 class TweetsController < ApplicationController
   
   def index
-    # todo can't remember, is this find secure?
-    @tweets = Audience.find(params[:audience_id]).try(:tweets).try(:recent)
-    render :partial => 'tweet_list'
+    audience = Audience.find(:first, :conditions => {:id => params[:audience_id]})
+    render :partial => 'tweet_list', :locals => {:tweets => (audience ? audience.tweets.recent : [])}
   end
 
   def new
