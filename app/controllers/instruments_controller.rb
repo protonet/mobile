@@ -14,7 +14,6 @@ class InstrumentsController < ApplicationController
     @audiences = (current_user || logged_out_user).audiences
     @active_audience = params[:audience_id] ? Audience.find(params[:audience_id]) : Audience.home
     
-    @tweets = @active_audience.tweets.recent
     render 'public_dashboard'
   end
 

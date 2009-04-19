@@ -24,8 +24,10 @@
   </ul>
 </div>
 <div id="feed-viewer">
-  <div id="feed-holder">
-      <%= render :partial => '/tweets/tweet_list', :locals => {:tweets => @tweets} %>
+  <div id="feed-holder" style="width:<%= @audiences.size * 610 %>px; left: <%= @audiences.index(@active_audience) * -604 %>px;">
+      <% @audiences.each do |a| %>
+        <%= render :partial => '/tweets/tweet_list', :locals => {:tweets => a.tweets.recent} %>
+      <% end %>
   </div>
 </div>
 
