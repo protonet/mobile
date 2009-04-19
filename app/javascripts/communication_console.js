@@ -2,7 +2,7 @@ function CommunicationConsole(args) {
   var self = this;
   
   // add sub views
-  // this.audience_selector  = new AudienceSelector({'console': this});
+  this.audience_selector  = new AudienceSelector({'parent_widget': this});
   // this.room_viewer        = new ChatRoomViewer({'parent_widget': this});
   // this.chat_input         = new ChatInput({'parent_widget': this});
   
@@ -29,4 +29,23 @@ function CommunicationConsole(args) {
   
   // preload feeds
   // $('.user-messages').load('/audiences/2/tweets')
+}
+
+function AudienceSelector(args) {
+  var self = this;
+  
+  // get container
+  this.container = $('#audience');
+  // bind clicks
+  
+  // get feed-holder
+  this.feed_holder =$('#feed-holder');
+  
+  this.container.find('.audience a').click(function(){
+    // get the index of the element
+    var index = parseInt(this.href.match(/index=([0-9]*)/)[1]);
+    self.feed_holder.animate({'left': index * -604}, 'slow');
+    return false;
+    
+  });
 }
