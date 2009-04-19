@@ -36,16 +36,17 @@ function AudienceSelector(args) {
   
   // get container
   this.container = $('#audience');
-  // bind clicks
   
   // get feed-holder
   this.feed_holder =$('#feed-holder');
-  
+    
+  // get all audience links and bind click
   this.container.find('.audience a').click(function(){
     // get the index of the element
     var index = parseInt(this.href.match(/index=([0-9]*)/)[1]);
     self.feed_holder.animate({'left': index * -604}, 'slow');
+    self.container.find('.active').toggleClass('active');
+    $(this).parent('li').toggleClass('active')
     return false;
-    
   });
 }
