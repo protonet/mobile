@@ -75,6 +75,15 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   margin: 10px;
 }
 
+#js-status {
+  position: absolute;
+  height: 80px;
+  width: 200px;
+  border: 1px dotted black;
+  top: 0px;
+  left: 150px;
+}
+
 /* =AUDIENCE
 --------------------------------------------------------------------------- */
 #audience {

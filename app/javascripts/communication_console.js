@@ -29,6 +29,9 @@ function CommunicationConsole(args) {
   
   // preload feeds
   // $('.user-messages').load('/audiences/2/tweets')
+  
+  // set correct status
+  // $('#js-status').
 }
 
 function AudienceSelector(args) {

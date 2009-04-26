@@ -52,9 +52,7 @@
     </script>
     
     <%= sprockets_include_tag(:default) %>
-    
-    <%= javascript_include_tag 'console/console.js', :cache => false %>
-        
+            
     <%= javascript_include_tag 'dispatching.js', :cache => false %>
     <!-- order is important, the socket needs the dispatching.js to be loaded previously -->
     <!-- MESSAGING SOCKET -->
