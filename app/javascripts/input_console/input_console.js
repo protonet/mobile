@@ -184,7 +184,8 @@ InputConsole.prototype = {
         break;
         
       case 13:
-        $('#message-form').submit();
+        console.log('sending via js');
+        $.post($('#message-form').attr('action'), $('#message-form').serialize());
         event.stopPropagation();
         event.stopImmediatePropagation();
         event.preventDefault();

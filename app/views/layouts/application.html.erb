@@ -51,20 +51,7 @@
       config.user_agent = null;
     </script>
     
-    <%= sprockets_include_tag(:default) %>
-            
-    <%= javascript_include_tag 'dispatching.js', :cache => false %>
-    <!-- order is important, the socket needs the dispatching.js to be loaded previously -->
-    <!-- MESSAGING SOCKET -->
-    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="1" height="1" align="middle">
-         <param name="allowScriptAccess" value="sameDomain">
-         <param name="movie" value="flash/socket.swf">
-         <param name="quality" value="high">
-         <param name="bgcolor" value="#FFFFFF">
-        <embed id="flash_socket" src="/flash/socket.swf" quality="high" bgcolor="#FFFFFF" width="1" height="1" name="flash_socket" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">
-    </object>
-    <!-- END OF MESSAGING SOCKET -->
-    
+    <%= sprockets_include_tag(:default) %>    
     <%= sprockets_include_tag(controller_name.to_sym) %>
     
   </body>

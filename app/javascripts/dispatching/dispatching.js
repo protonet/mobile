@@ -1,11 +1,19 @@
-function DispatchingSystem(socket, server, user_auth_token, user_id) {
-  this.socket = socket;
+function DispatchingSystem(server, user_auth_token, user_id) {
+  // this.socket = socket;
+  this.createSocket;
   this.server = server;
   this.user_auth_token = user_auth_token;
   this.user_id = user_id;
 }
    
 DispatchingSystem.prototype = {
+  
+  "createSocket": function() {
+    // var socket = '<!-- MESSAGING SOCKET --><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="1" height="1" align="middle"><param name="allowScriptAccess" value="sameDomain"><param name="movie" value="flash/socket.swf"><param name="quality" value="high"><param name="bgcolor" value="#FFFFFF">        <embed id="flash_socket" src="/flash/socket.swf" quality="high" bgcolor="#FFFFFF" width="1" height="1" name="flash_socket" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">    </object><!-- END OF MESSAGING SOCKET -->';
+    // $('body').append(socket);
+    // this.socket = document.getElementById('flash_socket');
+  },
+  
   "socketReadyCallback": function() {
     console.log('socket ready, trying to establish connection');
     this.connectSocket();
