@@ -68,7 +68,9 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   background: transparent url(/img/bkg_header.png) scroll repeat-x 0 0;
   height: 69px;
   width: 100%;
+  position: relative;
 }
+
 .header img {
   margin: 10px;
 }
