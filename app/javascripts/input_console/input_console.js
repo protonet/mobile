@@ -18,6 +18,7 @@ function InputConsole(args) {
   var self = this;
   this.input_console  = args.input_console;
   // this.output_console = args.output_console;
+  this.parent_widget  = args.parent_widget;
   this.console_mode = false;
   
   this.last_command_blob = null;
@@ -185,7 +186,9 @@ InputConsole.prototype = {
         
       case 13:
         console.log('sending via js');
-        $.post($('#message-form').attr('action'), $('#message-form').serialize());
+        form = $('#message-form');
+        this.parent_widget.addAndSendTweet(form);
+        
         event.stopPropagation();
         event.stopImmediatePropagation();
         event.preventDefault();

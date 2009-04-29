@@ -3,6 +3,5 @@
 //= require "input_console/input_console.js"
 
 var cc = new CommunicationConsole({'config': config});
-var input_console = new InputConsole({"input_console": $("#message")});
 var Dispatcher    = new DispatchingSystem(config.dispatching_server, config.token, config.user_id);
 
