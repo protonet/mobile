@@ -54,7 +54,7 @@ CommunicationConsole.prototype = {
 function Tweet(args) {
   var self = this;
   
-  this.message      = args.message;
+  this.message      = args.message.replace(/</g, '&lt;').replace(/</g, '&rt;');
   this.author       = args.author;
   this.message_date = Date();
   this.audience_id  = args.audience_id;
