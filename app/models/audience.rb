@@ -8,7 +8,11 @@ class Audience < ActiveRecord::Base
 
   
   def self.home
-    find(1)
+    begin
+      find(1)
+    rescue ActiveRecord::RecordNotFound
+      Audience.new(:id => 1, :name => 'home', :description => 'your homebase - your node :)').save && find(1)
+    end
   end
 
 end

@@ -52,7 +52,8 @@ module JsDispatchingServer
     @user.audiences.each do |audience|
       amq.queue("consumer-#{@key}-audience.a#{audience.id}").bind(amq.topic("audiences"), :key => "audiences.a#{audience.id}").subscribe{ |msg|
         log('sending data out')
-        send_data("audience_" + msg + "\0")
+        message = {:target => :communication_console, :message => msg}
+        send_data(JSON(message) + "\0")
       }
       log("subscribing to audience #{audience.id}")
     end

@@ -58,6 +58,10 @@ class User < ActiveRecord::Base
     u.audiences << Audience.home
     u
   end
+  
+  def logged_out?
+    id == 0
+  end
 
   def login=(value)
     write_attribute :login, (value ? value.downcase : nil)
