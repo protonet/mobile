@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   
   helper_method :logged_out_user
   def logged_out_user(set_as_current=true)
-    @logged_out_user ||= User.coward(session[:session_id][0,10])
+    @logged_out_user ||= User.coward(session[:session_id])
     @current_user = @logged_out_user if set_as_current
     @logged_out_user
   end

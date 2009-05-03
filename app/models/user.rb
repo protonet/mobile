@@ -17,6 +17,7 @@ class User < ActiveRecord::Base
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :name, :password, :password_confirmation
+  attr_accessor :session_id
 
   has_many  :tweets
   has_many  :listens
@@ -36,24 +37,31 @@ class User < ActiveRecord::Base
     u && u.authenticated?(password) ? u : nil
   end
   
-  # def generate_new_token
-  #   self.token = encrypt(crypted_password, DateTime.now)
-  #   self.token_expires_at = Time.now + 1.day # DateTime additions are in days
-  #   @token
-  # end
-  # 
-  # def token
-  #   generate_new_token && self.save unless self.token_expires_at && self.token_expires_at > DateTime.now
-  #   @token
-  # end
-  #   
-  # def token_valid?(token)
-  #   token == self.token && self.token_expires_at > DateTime.now
-  # end
+  def generate_new_communication_token
+    self.communication_token = self.class.make_token
+    self.communication_token_expires_at = Time.now + 1.day
+    logged_out? ? Rails.cache.write("coward_#{session_id}_token", read_attribute(:communication_token), {:expires_in => 86400}) : save
+    # todo: propagate
+  end
   
-  def self.coward(number)
+  def communication_token
+    generate_new_communication_token unless communication_token_expires_at && communication_token_expires_at > Time.now
+    read_attribute(:communication_token)
+  end
+    
+  def communication_token_valid?(token)
+    if logged_out?
+      token && Rails.cache.read("coward_#{session_id}_token") == token
+    else
+      token && token == read_attribute(:communication_token) && communication_token_expires_at > DateTime.now
+    end
+  end
+  
+  # create a user with a session id
+  def self.coward(session_id)
     u = new
-    u.name = "coward_number_#{number}"
+    u.session_id = session_id
+    u.name = "coward_number_#{session_id[0,10]}"
     u.id = 0
     u.audiences << Audience.home
     u
