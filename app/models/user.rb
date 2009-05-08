@@ -5,19 +5,18 @@ class User < ActiveRecord::Base
   include Authentication::ByPassword
   include Authentication::ByCookieToken
 
-  validates_presence_of     :login
-  validates_length_of       :login,    :within => 3..40
-  validates_uniqueness_of   :login
-  validates_format_of       :login,    :with => Authentication.login_regex, :message => Authentication.bad_login_message
+  validates_presence_of     :login,    :unless => :skip_validation
+  validates_length_of       :login,    :within => 3..40, :unless => :skip_validation
+  validates_uniqueness_of   :login,    :unless => :skip_validation
+  validates_format_of       :login,    :with => Authentication.login_regex, :message => Authentication.bad_login_message, :unless => :skip_validation
 
-  validates_format_of       :name,     :with => Authentication.name_regex,  :message => Authentication.bad_name_message, :allow_nil => true
-  validates_length_of       :name,     :maximum => 100
+  validates_format_of       :name,     :with => Authentication.name_regex,  :message => Authentication.bad_name_message, :allow_nil => true, :unless => :skip_validation
+  validates_length_of       :name,     :maximum => 100, :unless => :skip_validation
 
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :name, :password, :password_confirmation
-  attr_accessor :temporary_identifier
 
   has_many  :tweets
   has_many  :listens
@@ -59,10 +58,12 @@ class User < ActiveRecord::Base
   
   # create a user with a session id
   def self.coward(session_id)
-    User.find_or_create_by_temporary_identifier(session_id)  do |u|
-      u.audiences << Audience.home
+    u = User.find_or_create_by_temporary_identifier(session_id)  do |u|
       u.name = "coward_number_#{session_id[0,10]}"
+      RAILS_DEFAULT_LOGGER.info("---------------> CREATING a logged_out_user")
+      u.audiences << Audience.home
     end
+    u
   end
   
   def logged_out?
@@ -85,6 +86,16 @@ class User < ActiveRecord::Base
     audiences << Audience.home
     save
   end
+  
+  # skip validation if the user is a logged out user
+  def skip_validation
+    logged_out?
+  end
+  
+  # alias_method_chain
+  # def password_required?
+  #   
+  # end
 
   protected
     

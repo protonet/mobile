@@ -27,5 +27,12 @@ class TestControllerTest < ActionController::TestCase
     get :index, {}, {:session_id => session_id}
     assert_equal 'foo', assigns(:current_user)
   end
+  
+  test "should create a session cookie that is valid for 30 days" do
+    # creating a long living session cookie should ensure that we don't
+    # create endless amount of logged out users, it also makes it much easier
+    # for the logged out user...
+    flunk
+  end
 
 end
