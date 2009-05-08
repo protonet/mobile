@@ -60,8 +60,7 @@ class User < ActiveRecord::Base
   def self.coward(session_id)
     u = User.find_or_create_by_temporary_identifier(session_id)  do |u|
       u.name = "coward_number_#{session_id[0,10]}"
-      RAILS_DEFAULT_LOGGER.info("---------------> CREATING a logged_out_user")
-      u.audiences << Audience.home
+      u.listen_to_home
     end
     u
   end
@@ -83,8 +82,13 @@ class User < ActiveRecord::Base
   end
   
   def listen_to_home
+    return if listening_to_home?
     audiences << Audience.home
     save
+  end
+  
+  def listening_to_home?
+    audiences.try(:include?, Audience.home)
   end
   
   # skip validation if the user is a logged out user
@@ -92,11 +96,12 @@ class User < ActiveRecord::Base
     logged_out?
   end
   
-  # alias_method_chain
-  # def password_required?
-  #   
-  # end
 
+  def password_required_with_logged_out_user?
+    skip_validation ? false : password_required_without_logged_out_user
+  end
+  alias_method_chain :password_required?, :logged_out_user
+  
   protected
     
 

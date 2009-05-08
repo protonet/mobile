@@ -47,6 +47,8 @@ sudo gem install jeremymcanally-context
 sudo gem install faker
 sudo gem install random_data
 sudo gem install mocha
+sudo gem install configatron
+sudo gem install sprockets
 
 
 THE FOLLOWING STUFF NEEDS TO BE UPDATED!!!

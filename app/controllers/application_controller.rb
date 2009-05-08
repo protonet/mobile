@@ -13,9 +13,7 @@ class ApplicationController < ActionController::Base
   
   def set_user
     # calling current_user automatically loads the user
-    current_user ||= User.coward(session[:session_id])
-    debugger
-    puts 'foo'
+    self.current_user ||= User.coward(session[:session_id])
   end
   
 end
