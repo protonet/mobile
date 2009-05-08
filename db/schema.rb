@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090503110736) do
+ActiveRecord::Schema.define(:version => 20090507155402) do
 
   create_table "assets", :force => true do |t|
     t.string   "filename"
@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(:version => 20090503110736) do
     t.datetime "remember_token_expires_at"
     t.string   "communication_token"
     t.datetime "communication_token_expires_at"
+    t.string   "temporary_identifier"
   end
 
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true

@@ -3,7 +3,7 @@ require 'random_data'
 
 Sham.login    { Random.firstname }
 Sham.password { Random.alphanumeric(8) }
-puts 'test'
+
 User.blueprint do
   login
   password

@@ -7,6 +7,14 @@ require File.dirname(__FILE__) + '/modules/flash_server.rb'
 
 Debugger.start
 
+# preload models for cache returns:
+User
+Audience
+Say
+Listen
+Tweet
+# done preloading models
+
 # awesome stuff happening here
 module JsDispatchingServer
   
@@ -36,8 +44,10 @@ module JsDispatchingServer
   end
   
   def authenticate_user(auth_data)
-    potential_user = User.first #User.get(auth_data["user_id"])
-    @user = potential_user if potential_user # && potential_user.token_valid?(auth_data["token"])
+    # id=0 is the anonymous user
+    potential_user = auth_data["user_id"] == 0 ? Rails.cache.read("coward_#{auth_data["token"]}") : User.find(auth_data["user_id"])
+    
+    @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data["token"])
     if potential_user
       log("authenticated #{potential_user.display_name}") 
       bind_socket_to_queues

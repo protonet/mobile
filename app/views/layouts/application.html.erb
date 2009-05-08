@@ -44,10 +44,10 @@
     <script type="text/javascript" charset="utf-8">
       config = {};
       config.dispatching_server = '<%= configatron.dispatching_server %>';
-      config.token = '<%= current_user.try(:login) || logged_out_user.name %>';
-      config.user_name = '<%= current_user.try(:login) || logged_out_user.name %>';
-      config.user_id = '<%= current_user.try(:id) || logged_out_user.id %>';
-      config.user_audience_ids = <%= current_user.try(:audiences) && current_user.audiences.map {|a| a.id}.to_json || logged_out_user.audiences.map {|a| a.id}.to_json %>;
+      config.token = '<%= current_user.communication_token %>';
+      config.user_name = '<%= current_user.display_name %>';
+      config.user_id = '<%= current_user.id %>';
+      config.user_audience_ids = <%= current_user.audiences && current_user.audiences.map {|a| a.id}.to_json %>;
       <%# add user agent %>
       config.user_agent = null;
     </script>

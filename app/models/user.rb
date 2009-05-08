@@ -17,7 +17,7 @@ class User < ActiveRecord::Base
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :name, :password, :password_confirmation
-  attr_accessor :session_id
+  attr_accessor :temporary_identifier
 
   has_many  :tweets
   has_many  :listens
@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
   def generate_new_communication_token
     self.communication_token = self.class.make_token
     self.communication_token_expires_at = Time.now + 1.day
-    logged_out? ? Rails.cache.write("coward_#{session_id}_token", read_attribute(:communication_token), {:expires_in => 86400}) : save
+    logged_out? ? Rails.cache.write("coward_#{self.communication_token}", self, {:expires_in => 86400}) : save
     # todo: propagate
   end
   
@@ -51,7 +51,7 @@ class User < ActiveRecord::Base
     
   def communication_token_valid?(token)
     if logged_out?
-      token && Rails.cache.read("coward_#{session_id}_token") == token
+      token && Rails.cache.read("coward_#{self.communication_token}").try(:communication_token) == token
     else
       token && token == read_attribute(:communication_token) && communication_token_expires_at > DateTime.now
     end
@@ -59,16 +59,14 @@ class User < ActiveRecord::Base
   
   # create a user with a session id
   def self.coward(session_id)
-    u = new
-    u.session_id = session_id
-    u.name = "coward_number_#{session_id[0,10]}"
-    u.id = 0
-    u.audiences << Audience.home
-    u
+    User.find_or_create_by_temporary_identifier(session_id)  do |u|
+      u.audiences << Audience.home
+      u.name = "coward_number_#{session_id[0,10]}"
+    end
   end
   
   def logged_out?
-    id == 0
+    !temporary_identifier.blank?
   end
 
   def login=(value)

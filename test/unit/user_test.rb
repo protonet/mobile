@@ -8,9 +8,9 @@ class UserTest < ActiveSupport::TestCase
       assert_not_nil User.coward('session_id')
     end
     
-    it "should set the given session id as an instance variable" do
+    it "should set the given session id as its temporary identifier" do
       user = User.coward('session_id')
-      assert_equal 'session_id', user.session_id
+      assert_equal 'session_id', user.temporary_identifier
     end
     
     it "should set a name based on the given session id" do
@@ -18,9 +18,9 @@ class UserTest < ActiveSupport::TestCase
       assert_equal 'coward_number_1234567890', user.name      
     end
     
-    it "should set the user to 0" do
+    it "should be recognizable as one" do
       user = User.coward('foobar')
-      assert_equal 0, user.id
+      assert user.logged_out?
     end
     
     it "should add it as a listener of the home audience" do
@@ -67,9 +67,21 @@ class UserTest < ActiveSupport::TestCase
       assert_equal token, user.communication_token
     end
     
-    should "also work for an coward user" do
-      user = User.coward('foobarius')
-      assert_not_nil user.communication_token
+    context "for a coward user" do
+
+      should "also work" do
+        user = User.coward('foobarius')
+        assert_not_nil user.communication_token
+      end
+      
+      should "store the user in memcache using the given session id" do
+        flunk
+      end
+      
+      should "be validatable" do
+        flunk
+      end
+      
     end
 
     

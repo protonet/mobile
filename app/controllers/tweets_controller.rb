@@ -9,7 +9,7 @@ class TweetsController < ApplicationController
   end
 
   def create
-    author = current_user.try(:display_name) || logged_out_user.name
+    author = current_user.display_name
     # audiences = Audience.find(:all, :conditions => ["id in (?)", params[:audience_ids]])
     audiences = Audience.find(:all, :conditions => ["id in (?)", [params[:message_audience_id]] ])
     # current user is nil when not logged in, that's ok
