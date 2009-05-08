@@ -205,6 +205,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   height: 780px;
   position: relative;
   overflow: hidden;
+  clear: both;
 }
 
 /* =FEEDVIEWER (INNER)
