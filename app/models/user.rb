@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
   def generate_new_communication_token
     self.communication_token = self.class.make_token
     self.communication_token_expires_at = Time.now + 1.day
-    logged_out? ? Rails.cache.write("coward_#{self.communication_token}", self, {:expires_in => 86400}) : save
+    save
     # todo: propagate
   end
   
@@ -49,11 +49,7 @@ class User < ActiveRecord::Base
   end
     
   def communication_token_valid?(token)
-    if logged_out?
-      token && Rails.cache.read("coward_#{self.communication_token}").try(:communication_token) == token
-    else
-      token && token == read_attribute(:communication_token) && communication_token_expires_at > DateTime.now
-    end
+    token && token == read_attribute(:communication_token) && communication_token_expires_at > DateTime.now
   end
   
   # create a user with a session id

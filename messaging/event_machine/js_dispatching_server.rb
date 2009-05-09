@@ -33,7 +33,10 @@ module JsDispatchingServer
       if authenticate_user(auth) && !@subscribed
         bind_socket_to_queues
       end
+    else
+      send_data(data)
     end
+    
   end
   
   def unbind
@@ -44,12 +47,12 @@ module JsDispatchingServer
   end
   
   def authenticate_user(auth_data)
-    # id=0 is the anonymous user
-    potential_user = auth_data["user_id"] == 0 ? Rails.cache.read("coward_#{auth_data["token"]}") : User.find(auth_data["user_id"])
+    potential_user = User.find(auth_data["user_id"])
     
     @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data["token"])
     if potential_user
-      log("authenticated #{potential_user.display_name}") 
+      log("authenticated #{potential_user.display_name}")
+      send_data("#{{"x_target" => "connection_id", "connection_id" => "#{@key}"}.to_json}\0")
       bind_socket_to_queues
     else
       log("could not authenticate #{auth_data.inspect}")
@@ -61,9 +64,9 @@ module JsDispatchingServer
     amq = MQ.new
     @user.audiences.each do |audience|
       amq.queue("consumer-#{@key}-audience.a#{audience.id}").bind(amq.topic("audiences"), :key => "audiences.a#{audience.id}").subscribe{ |msg|
-        log('sending data out')
-        message = {:target => :communication_console, :message => msg}
-        send_data(JSON(message) + "\0")
+        message = {"target" => "communication_console", "message" => "#{msg}"}
+        log('sending data out: ' + message.to_json)
+        send_data("#{message.to_json}\0")
       }
       log("subscribing to audience #{audience.id}")
     end

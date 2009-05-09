@@ -17,25 +17,32 @@
         
       </div>
     </div>
-    <%- form_tag session_path, { :id => "login-form" } do -%>
-      <fieldset>
-        <ul>
-          <li>
-            <%= label_tag "login" %>
-            <%= text_field_tag "login", @login %>
-          </li>
-          <li>
-            <%= label_tag "password" %>
-            <%= password_field_tag "password", nil %>
-          </li>
-        </ul>
-      </fieldset>
-      <button type="submit" name="commit">
-        <span>
-          <em>login</em>
-        </span>
-      </button>
-    <%- end -%>
+    <% if current_user.logged_out? %>
+      <%- form_tag session_path, { :id => "login-form" } do -%>
+        <fieldset>
+          <ul>
+            <li>
+              <%= label_tag "login" %>
+              <%= text_field_tag "login", @login %>
+            </li>
+            <li>
+              <%= label_tag "password" %>
+              <%= password_field_tag "password", nil %>
+            </li>
+          </ul>
+        </fieldset>
+        <button type="submit" name="commit">
+          <span>
+            <em>login</em>
+          </span>
+        </button>
+      <%- end -%>
+    <% else %>
+      <div id="mini-menu">
+        <%= link_to 'logout', :controller => :sessions, :action => :destroy %>
+      </div>
+    <% end %>
+    
     <%= "<p class=\"notice message\"><span>#{flash[:notice]}</span></p>" if flash[:notice] %>
     <%= "<p class=\"error message\"><span>#{flash[:error]}</span></p>" if flash[:error] %>
     <%= "<p class=\"warning message\"><span>#{flash[:warning]}</span></p>" if flash[:warning] %>
