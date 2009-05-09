@@ -14,7 +14,7 @@ class Tweet < ActiveRecord::Base
   def send_to_queue
     audiences.each do |audience|
       p "=================================>>>>>>>>>>>>>>>>>>>>>>>>>>> send_to_queues: #{audiences.collect {|a| a.id}.join(' ')}"
-      MessagingBus.topic('audiences').publish(self.attributes.merge({:socket_id => socket_id}).to_json, :key => 'audiences.a' + audience.id.to_s)
+      MessagingBus.topic('audiences').publish(self.attributes.merge({:socket_id => socket_id, :audience_id => audience.id}).to_json, :key => 'audiences.a' + audience.id.to_s)
     end
   end
   

@@ -47,6 +47,11 @@ CommunicationConsole.prototype = {
     var tweet = new Tweet({'message': message.val(), 'author': this.user_config.user_name, 'audience_id': form.find('#message_audience_id').val()})
     $.post(form.attr('action'), form.serialize());
     message.val('');
+  },
+  
+  'receiveMessage': function(message) {
+    console.log('cc is receiving message');
+    var tweet = new Tweet({'message': message.message, 'author': message.author, 'audience_id': message.audience_id})
   }
   
 }

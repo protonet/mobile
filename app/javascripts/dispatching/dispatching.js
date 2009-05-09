@@ -10,7 +10,7 @@ DispatchingSystem.prototype = {
   
   // todo: create socket doesn't look as good as it should/could ;)
   "createSocket": function() {
-    var socket = '<!-- MESSAGING SOCKET --><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="1" height="1" align="middle"><param name="allowScriptAccess" value="sameDomain"><param name="movie" value="flash/socket.swf"><param name="quality" value="high"><param name="bgcolor" value="#FFFFFF">        <embed id="flash_socket" src="/flash/socket.swf" quality="high" bgcolor="#FFFFFF" width="1" height="1" name="flash_socket" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">    </object><!-- END OF MESSAGING SOCKET -->';
+    var socket = '<!-- MESSAGING SOCKET --><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="1" height="1" align="middle"><param name="allowScriptAccess" value="sameDomain"><param name="movie" value="flash/socket.swf"><param name="quality" value="high"><param name="bgcolor" value="#FFFFFF">        <embed id="flash_socket" src="/flash/socket.swf" quality="high" bgcolor="#FFFFFF" width="20" height="20" name="flash_socket" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">    </object><!-- END OF MESSAGING SOCKET -->';
     $('body').append(socket);
     this.socket = document.getElementById('flash_socket');
   },
@@ -55,40 +55,20 @@ DispatchingSystem.prototype = {
   "messageReceived": function(raw_data) {
     console.log(raw_data + ' wurde empfangen.');
     
+    // make it a first class object
     eval("var message = " + raw_data);
-    var destination = raw_data.match(/^.*?_/)[0];
-    // var data = raw_data.replace(/.*?_/, "");
-    // console.log(data + " after replacing");
     
     switch(message.x_target) {
-      case "connection_id":
-        $('#tweet_socket_id').val(message.connection_id);
-      break;
+      // special case: on initial successful connection this sets the socket_id
+      // to the message form
+      // todo: needs to be set globally
+      case "socket_id":
+        $('#tweet_socket_id').val(message.socket_id);
+        break;
+      default:
+        console.log('default handling: ' + message.x_target + '(message)');
+        eval(message.x_target + '(message)');
     }
-    
-    // switch(destination) {
-    // case "chats_": 
-    //   // this stuff doesn't belong here, will be moved soon
-    //   eval('var message = ' + data);
-    //   var room = cw.getRoom(message.chat_room_id);
-    //   var chat_message = new ChatMessage(message, room);
-    //   if(cw.current_user_id != chat_message.user_id) {
-    //     room.addMessage(chat_message);
-    //   }
-    //   room.parent_widget.messagesLoadedCallback(room.id);
-    //   // parsed_message = this.parseMessage(data);
-    //   // this.dispatch(this.findDestination(parsed_message[0]), parsed_message[1])
-    //   break;
-    // case "assets_":
-    //   eval('var asset = ' + data);
-    //   var link = document.createElement("a");
-    //   var list_element = document.createElement("li");
-    //   link.innerHTML = asset.filename;
-    //   list_element.appendChild(link);
-    //   link.href = "/uploads/" + asset.filename;
-    //   $("#file-list").append($(list_element));
-    //   break;
-    // }
   },
 
   "parseMessage": function(data) {

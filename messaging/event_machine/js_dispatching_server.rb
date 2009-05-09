@@ -52,7 +52,7 @@ module JsDispatchingServer
     @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data["token"])
     if potential_user
       log("authenticated #{potential_user.display_name}")
-      send_data("#{{"x_target" => "connection_id", "connection_id" => "#{@key}"}.to_json}\0")
+      send_data("#{{"x_target" => "socket_id", "socket_id" => "#{@key}"}.to_json}\0")
       bind_socket_to_queues
     else
       log("could not authenticate #{auth_data.inspect}")
@@ -64,9 +64,13 @@ module JsDispatchingServer
     amq = MQ.new
     @user.audiences.each do |audience|
       amq.queue("consumer-#{@key}-audience.a#{audience.id}").bind(amq.topic("audiences"), :key => "audiences.a#{audience.id}").subscribe{ |msg|
-        message = {"target" => "communication_console", "message" => "#{msg}"}
-        log('sending data out: ' + message.to_json)
-        send_data("#{message.to_json}\0")
+        message = JSON(msg)
+        sender_socket_id = message['socket_id']
+        message.merge!({:x_target => 'cc.receiveMessage'})
+        if sender_socket_id && sender_socket_id.to_i != @key
+          log('sending data out: ' + message.to_s + ' ' + sender_socket_id)
+          send_data("#{message.to_json}\0")
+        end
       }
       log("subscribing to audience #{audience.id}")
     end
