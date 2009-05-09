@@ -326,6 +326,16 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   display: none;
 }
 
+
+/* =MINI MENU 
+--------------------------------------------------------------------------- */
+#mini-menu {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+
 /* =MESSAGE FORM
 --------------------------------------------------------------------------- */
 #message-form {
