@@ -1,7 +1,7 @@
 <%- form_for :tweet, :url => tweets_path, :html => { :id => "message-form" } do |f| -%>
   <fieldset>
     <%= f.label(:message, "enter your message") %>
-    <%= f.text_area(:message, :id => "message", :title => "enter your message", :value => "@@#{@active_audience.name} ") %>
+    <%= f.text_area(:message, :id => "message", :title => "enter your message") %>
     <%= f.hidden_field('audience_id', :id => "message_audience_id", :name => 'message_audience_id', :value => @active_audience.id) %>
     <%= f.hidden_field(:socket_id) %>
   </fieldset>
