@@ -1,22 +1,27 @@
 function DispatchingSystem(server, user_auth_token, user_id) {
   // this.socket = socket;
-  this.createSocket();
   this.server = server;
   this.user_auth_token = user_auth_token;
   this.user_id = user_id;
+  this.createSocket();
 }
    
 DispatchingSystem.prototype = {
   
   // todo: create socket doesn't look as good as it should/could ;)
   "createSocket": function() {
-    var socket = '<!-- MESSAGING SOCKET --><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="1" height="1" align="middle"><param name="allowScriptAccess" value="sameDomain"><param name="movie" value="flash/socket.swf"><param name="quality" value="high"><param name="bgcolor" value="#FFFFFF">        <embed id="flash_socket" src="/flash/socket.swf" quality="high" bgcolor="#FFFFFF" width="20" height="20" name="flash_socket" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">    </object><!-- END OF MESSAGING SOCKET -->';
+    var socket = $('<!-- MESSAGING SOCKET --><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="1" height="1" align="middle"><param name="allowScriptAccess" value="sameDomain"><param name="movie" value="flash/socket.swf"><param name="quality" value="high"><param name="bgcolor" value="#FFFFFF">        <embed id="flash_socket" src="/flash/socket.swf" quality="high" bgcolor="#FFFFFF" width="20" height="20" name="flash_socket" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">    </object><!-- END OF MESSAGING SOCKET -->');
+    console.log(socket);
     $('body').append(socket);
-    this.socket = document.getElementById('flash_socket');
+    this.socket = document.getElementById('flash_socket');      
   },
   
   "socketReadyCallback": function() {
     console.log('socket ready, trying to establish connection');
+    // todo fix this, it is double done, was needed for safari
+    // for some reasons the this.socket didn't behave as if it
+    // was the flash socket
+    this.socket = document.getElementById('flash_socket')
     this.connectSocket();
   },
     

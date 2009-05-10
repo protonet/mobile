@@ -94,7 +94,7 @@ class User < ActiveRecord::Base
   
 
   def password_required_with_logged_out_user?
-    skip_validation ? false : password_required_without_logged_out_user
+    skip_validation ? false : password_required_without_logged_out_user?
   end
   alias_method_chain :password_required?, :logged_out_user
   
