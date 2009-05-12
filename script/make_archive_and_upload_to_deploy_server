@@ -1,0 +1,13 @@
+#!/bin/sh
+
+HOST=protodeploy@deploy.flyingseagull.de
+APPARCHIVE=dashboard_app.tar.bz2
+
+# for os x tells tar not to include resource forks
+export COPYFILE_DISABLE=true
+tar --exclude '\.git*' --exclude '*.psd' --exclude 'public/uploads/*' -cjvf $APPARCHIVE $PWD/.
+
+# currently off, we're doing it by hand
+# scp $APPARCHIVE $HOST:deploy/assets
+# 
+# rm $APPARCHIVE
