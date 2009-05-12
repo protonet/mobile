@@ -14,6 +14,10 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resource :session
   
+  map.namespace :system do |system|
+    system.connect 'foundations', :controller => 'foundations'
+  end
+  
   SprocketsApplication.routes(map, :resources)
 
   # The priority is based upon order of creation: first created -> highest priority.

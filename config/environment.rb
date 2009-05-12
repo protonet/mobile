@@ -15,7 +15,6 @@ Rails::Initializer.run do |config|
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
 
   # Specify gems that this application depends on and have them installed with rake gems:install
-  config.gem "haml"
   config.gem "eventmachine"
   config.gem "tmm1-amqp", :lib => "mq"
   config.gem "json"

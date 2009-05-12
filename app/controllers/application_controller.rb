@@ -11,6 +11,8 @@ class ApplicationController < ActionController::Base
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password
   
+  
+  private
   def set_user
     # calling current_user automatically loads the user
     self.current_user ||= User.coward(session[:session_id])
