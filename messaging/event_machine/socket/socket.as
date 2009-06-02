@@ -22,6 +22,10 @@ class Socket {
   static function connectSocket(ip:String) {
     socket.connect(ip, 5000);
   }
+  
+  static function close() {
+    socket.close();
+  }
 
   static function main() {
     
@@ -32,6 +36,7 @@ class Socket {
     ExternalInterface.addCallback("test", null, test);
     ExternalInterface.addCallback("sendData", null, sendData);
     ExternalInterface.addCallback("connectSocket", null, connectSocket);
+    ExternalInterface.addCallback("close", null, close);
     
     ExternalInterface.call("Dispatcher.socketReadyCallback");
     

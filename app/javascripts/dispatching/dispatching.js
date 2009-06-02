@@ -23,6 +23,9 @@ DispatchingSystem.prototype = {
     // was the flash socket
     this.socket = document.getElementById('flash_socket')
     this.connectSocket();
+    $(window).bind('beforeunload', function(){
+      this.socket.close()
+    })
   },
     
   "connectSocket": function() {

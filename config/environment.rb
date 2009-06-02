@@ -55,4 +55,16 @@ end
 # this starts the eventmachine reactor in a new thread
 # since the Em.run block is blocking until stopped this will ensure
 # that amqp communications are not blocking the app at any time
-Thread.new{ EM.run() } unless defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER
+Thread.new{ EM.run() } unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(PhusionPassenger)
+
+if defined?(PhusionPassenger)
+    PhusionPassenger.on_event(:starting_worker_process) do |forked|
+        if forked
+            # We're in smart spawning mode.
+            Thread.new{ EM.run() }
+        else
+            # We're in conservative spawning mode. We don't need to do anything.
+        end
+    end
+end
+
