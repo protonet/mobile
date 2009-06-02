@@ -5,7 +5,6 @@ class LdapUser  < ActiveLdap::Base
   def self.create_for_user(user)
     unless LdapUser.exists?(user.name)
       ldap_user = new(user.name)
-      ldap_user.add_class('shadowAccount')
       ldap_user.cn = cn
       ldap_user.uid_number = uid
       ldap_user.gid_number = uid
@@ -32,3 +31,13 @@ class LdapUser  < ActiveLdap::Base
   # end
   
 end
+
+#<ActiveRecord::Errors:0x264e5e0 @errors={"gidNumber"=>["is required attribute by objectClass 'posixAccount'"], 
+# "cn"=>["is required attribute by objectClass 'posixAccount': aliases: commonName"], 
+# "homeDirectory"=>["is required attribute by objectClass 'posixAccount'"], 
+# "uid"=>["is required attribute by objectClass 'account': aliases: userid", "is required attribute by objectClass 'posixAccount': aliases: userid", "is required attribute by objectClass 'shadowAccount': aliases: userid"], 
+# "uidNumber"=>["is required attribute by objectClass 'posixAccount'"], 
+# "dn"=>["isn't set: #<LdapUser objectClass:<top, account, posixAccount, shadowAccount>, must:<cn, gidNumber, homeDirectory, objectClass, uid, uidNumber>, 
+#   
+#   >> u.userPassword = ActiveLdap::UserPassword.crypt('foobar')
+  
