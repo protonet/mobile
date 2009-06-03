@@ -1,10 +1,6 @@
 <h2>Audiences:</h2>
-
-<% @audiences.each do |a| %>
-  <p><%= a.name %>: <%= a.description %></p>
-  <p><%= current_user.audiences.include?(a) ? 
-            link_to('nicht mehr zuhören', current_user.listens.find_by_audience_id(a.id), :method => :delete) : 
-            link_to('zuhören', listens_path(:audience_id => a.id), :method => :post)
-      %>
-  </p>
-<% end %>
+<ul id="audience-options">
+  <% @audiences.each do |a| %>
+    <li><%= "<span class=\"name\">#{a.name}</span>: <span class=\"description\">#{a.description}</span>" %> <span class=\"option\"><%= current_user.audiences.include?(a) ? link_to('nicht mehr zuhören', current_user.listens.find_by_audience_id(a.id), :method => :delete) : link_to('zuhören', listens_path(:audience_id => a.id), :method => :post) %></span></li>
+  <% end %>
+</ul>
