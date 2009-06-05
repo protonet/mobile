@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
   has_many  :listens
   has_many  :audiences, :through => :listens
 
-  after_create :listen_to_home
+  after_create :create_ldap_user, :listen_to_home
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   #
@@ -90,6 +90,10 @@ class User < ActiveRecord::Base
   # skip validation if the user is a logged out user
   def skip_validation
     logged_out?
+  end
+  
+  def create_ldap_user
+    LdapUser.create_for_user(self)
   end
   
 

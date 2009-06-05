@@ -111,3 +111,16 @@ Awesome stuff is about to happen... since we are now using rabbitmq we need a wa
 
 Starting the js dispatching server:
 merb -I mini_merb.rb -r messaging/event_machine/js_dispatching_server.rb
+
+== LDAP (ON LEOPARD)
+
+OpenLDAP is installed by default on Tiger (and earlier versions of OS X). In order to get it into a useful state, however, you will need to make a few changes:
+
+Locate the OpenLDAP configuration files in /etc/openldap/
+
+cp slapd.conf.default slapd.conf
+
+Make sure that /var/db/openldap/openldap-data/ exists, creating it if it does not.
+
+Run slapd: sudo /usr/libexec/slapd
+

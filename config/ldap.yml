@@ -6,8 +6,8 @@ development:
 
 test:
   host: 127.0.0.1
-  base: dc=test,dc=local,dc=net
-  bind_dn: cn=admin,dc=local,dc=net
+  base: dc=my-domain,dc=com
+  bind_dn: cn=Manager,dc=my-domain,dc=com
   password: secret
 
 production:

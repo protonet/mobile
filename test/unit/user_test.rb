@@ -1,8 +1,12 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
-class UserTest < ActiveSupport::TestCase
+class UserTest < Test::Unit::TestCase
   
   context "Creating a coward user" do
+    
+    before do
+      LdapUser.stubs(:create_for_user)
+    end
     
     it "should succeed" do
       assert_not_nil User.coward('session_id')
@@ -31,7 +35,11 @@ class UserTest < ActiveSupport::TestCase
   end
   
   context "Getting a communication authentication token" do
-        
+    
+    before do
+      LdapUser.stubs(:create_for_user)
+    end
+      
     should "be possible" do
       user = User.make
       assert_not_nil user.communication_token
@@ -130,6 +138,12 @@ class UserAuthAndCreationTest < ActiveSupport::TestCase
         assert u.errors.on(:password_confirmation)
       end      
     end
+    
+    should "create the ldap user" do
+      user = User.make_unsaved
+      LdapUser.expects(:create_for_user).with(user)
+      user.save
+    end
 
   end
   
@@ -190,6 +204,7 @@ class UserAuthAndCreationTest < ActiveSupport::TestCase
 
 protected
   def create_user(options = {})
+    LdapUser.stubs(:create_for_user)
     record = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'quire69', :password_confirmation => 'quire69' }.merge(options))
     record.save
     record

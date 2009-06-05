@@ -9,6 +9,8 @@ class LdapUser  < ActiveLdap::Base
       ldap_user.uid_number = uid
       ldap_user.gid_number = uid
       ldap_user.home_directory = "/home/#{user.name}"
+      ldap_user.userPassword = ActiveLdap::UserPassword.crypt('foobar')
+      raise RuntimeError unless ldap_user.save
     end
   end
   
