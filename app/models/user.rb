@@ -93,7 +93,7 @@ class User < ActiveRecord::Base
   end
   
   def create_ldap_user
-    LdapUser.create_for_user(self)
+    LdapUser.create_for_user(self) unless logged_out?
   end
   
 

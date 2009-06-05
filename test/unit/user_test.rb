@@ -4,10 +4,6 @@ class UserTest < Test::Unit::TestCase
   
   context "Creating a coward user" do
     
-    before do
-      LdapUser.stubs(:create_for_user)
-    end
-    
     it "should succeed" do
       assert_not_nil User.coward('session_id')
     end
@@ -30,6 +26,11 @@ class UserTest < Test::Unit::TestCase
     it "should add it as a listener of the home audience" do
       user = User.coward('foobar')
       assert_equal user.audiences, [Audience.home]
+    end
+    
+    it "should not create an ldap user" do
+      LdapUser.expects(:create_for_user).never
+      User.coward('foobar')
     end
     
   end
