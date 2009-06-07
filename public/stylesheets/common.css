@@ -75,15 +75,6 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   margin: 10px;
 }
 
-#js-status {
-  position: absolute;
-  height: 80px;
-  width: 200px;
-  border: 1px dotted black;
-  top: 0px;
-  left: 150px;
-}
-
 /* =AUDIENCE
 --------------------------------------------------------------------------- */
 #audience {
@@ -267,6 +258,16 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   color: rgba(0, 0, 0, 0.5);
   font-size: 0.7em;
 }
+
+/* =REGISTRATION-TEASER
+--------------------------------------------------------------------------- */
+#registration-teaser {
+  float: left;
+  width: 300px;
+  height: 136px;
+  margin-left: 23px;
+}
+
 
 /* =LOGIN
 --------------------------------------------------------------------------- */

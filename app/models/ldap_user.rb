@@ -3,13 +3,13 @@ class LdapUser  < ActiveLdap::Base
   belongs_to :groups, :class => 'Group', :many => 'memberUid', :foreign_key => 'uid'
   
   def self.create_for_user(user)
-    unless LdapUser.exists?(user.name)
-      ldap_user = new(user.name)
-      ldap_user.cn = cn
-      ldap_user.uid_number = uid
-      ldap_user.gid_number = uid
-      ldap_user.home_directory = "/home/#{user.name}"
-      ldap_user.userPassword = ActiveLdap::UserPassword.crypt('foobar')
+    unless LdapUser.exists?(user.login)
+      ldap_user = new(user.login)
+      ldap_user.cn = user.login
+      ldap_user.uid_number = 2000 + user.id
+      ldap_user.gid_number = 2323
+      ldap_user.home_directory = "/home/#{user.login}"
+      ldap_user.userPassword = ActiveLdap::UserPassword.crypt(user.password)
       raise RuntimeError unless ldap_user.save
     end
   end

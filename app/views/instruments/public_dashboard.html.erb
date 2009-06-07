@@ -11,6 +11,31 @@
     </span>
   </button>
 <%- end -%>
+<% if current_user.logged_out? %>
+  <div id="registration-teaser">
+    JOIN the evolution
+    no email, no credit card, pure awesome!
+    <%- form_tag users_path, {} do -%>
+      <fieldset>
+        <ul>
+          <li>
+            <%= label_tag "login" %>
+            <%= text_field_tag "login", @login %>
+          </li>
+          <li>
+            <%= label_tag "password" %>
+            <%= password_field_tag "password", nil %>
+          </li>
+        </ul>
+      </fieldset>
+      <button type="submit" name="join">
+        <span>
+          <em>JOIN</em>
+        </span>
+      </button>
+    <%- end -%>  
+  </div>
+<% end %>
 
 <div id="audience">
   <ul>
