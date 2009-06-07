@@ -1,5 +1,21 @@
 class UsersController < ApplicationController  
 
+
+  def show
+    @user = User.find(params[:id])
+
+    respond_to do |format|
+      format.html do
+        if @user == current_user
+          render 'show_for_owner'
+        else
+          render 'show'
+        end
+      end# show.html.erb
+      format.xml  { render :xml => @user }
+    end
+  end
+
   # render new.rhtml
   def new
     @user = User.new
