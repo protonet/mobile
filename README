@@ -114,7 +114,7 @@ merb -I mini_merb.rb -r messaging/event_machine/js_dispatching_server.rb
 
 == LDAP (ON LEOPARD)
 
-OpenLDAP is installed by default on Tiger (and earlier versions of OS X). In order to get it into a useful state, however, you will need to make a few changes:
+OpenLDAP is installed by default on Leopard (and earlier versions of OS X). In order to get it into a useful state, however, you will need to make a few changes:
 
 Locate the OpenLDAP configuration files in /etc/openldap/
 
