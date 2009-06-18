@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   private
   def set_user
     # calling current_user automatically loads the user
-    self.current_user ||= User.coward(session[:session_id])
+    self.current_user ||= User.stranger(session[:session_id])
   end
   
 end

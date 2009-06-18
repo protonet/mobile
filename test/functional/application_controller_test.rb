@@ -21,9 +21,9 @@ class TestControllerTest < ActionController::TestCase
     assert user.logged_out?
   end
   
-  test "should store a User.coward in the current user instance variable" do
+  test "should store a User.stranger in the current user instance variable" do
     session_id = 'foobariusfoo'
-    User.expects(:coward).with(session_id[0,10]).returns('foo')
+    User.expects(:stranger).with(session_id[0,10]).returns('foo')
     get :index, {}, {:session_id => session_id}
     assert_equal 'foo', assigns(:current_user)
   end

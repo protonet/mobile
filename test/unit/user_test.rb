@@ -2,35 +2,35 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class UserTest < Test::Unit::TestCase
   
-  context "Creating a coward user" do
+  context "Creating a stranger user" do
     
     it "should succeed" do
-      assert_not_nil User.coward('session_id')
+      assert_not_nil User.stranger('session_id')
     end
     
     it "should set the given session id as its temporary identifier" do
-      user = User.coward('session_id')
+      user = User.stranger('session_id')
       assert_equal 'session_id', user.temporary_identifier
     end
     
     it "should set a name based on the given session id" do
-      user = User.coward('1234567890123')
-      assert_equal 'coward_number_1234567890', user.name      
+      user = User.stranger('1234567890123')
+      assert_equal 'stranger_number_1234567890', user.name      
     end
     
     it "should be recognizable as one" do
-      user = User.coward('foobar')
+      user = User.stranger('foobar')
       assert user.logged_out?
     end
     
     it "should add it as a listener of the home audience" do
-      user = User.coward('foobar')
+      user = User.stranger('foobar')
       assert_equal user.audiences, [Audience.home]
     end
     
     it "should not create an ldap user" do
       LdapUser.expects(:create_for_user).never
-      User.coward('foobar')
+      User.stranger('foobar')
     end
     
   end
@@ -76,10 +76,10 @@ class UserTest < Test::Unit::TestCase
       assert_equal token, user.communication_token
     end
     
-    context "for a coward user" do
+    context "for a stranger user" do
 
       should "also work" do
-        user = User.coward('foobarius')
+        user = User.stranger('foobarius')
         assert_not_nil user.communication_token
       end
       

@@ -53,9 +53,9 @@ class User < ActiveRecord::Base
   end
   
   # create a user with a session id
-  def self.coward(session_id)
+  def self.stranger(session_id)
     u = User.find_or_create_by_temporary_identifier(session_id)  do |u|
-      u.name = "coward_number_#{session_id[0,10]}"
+      u.name = "stranger_number_#{session_id[0,10]}"
       u.listen_to_home
     end
     u
