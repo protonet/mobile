@@ -22,7 +22,8 @@ class User < ActiveRecord::Base
   has_many  :listens
   has_many  :audiences, :through => :listens
 
-  after_create :create_ldap_user, :listen_to_home
+  after_create :create_ldap_user if configatron.use_ldap
+  after_create :listen_to_home
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   #

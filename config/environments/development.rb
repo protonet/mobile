@@ -16,8 +16,8 @@ config.action_controller.perform_caching             = false
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
 
-require "configatron"
-configatron.dispatching_server = '127.0.0.1'
+configatron.use_ldap = false
+configatron.dispatching_server = '172.20.7.146'
 
 # app and node configuration
 # configure our backend to be the ubuntu backend
