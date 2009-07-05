@@ -75,8 +75,32 @@ unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(Phusio
   # Checking all Subsystems
   puts "------------------------"
   puts "Checking all subsystems:"
-  puts "RABBIT MQ: #{MessagingBus.active? ? 'ON' : 'OFF'}"
-
+  puts "                        "
+  
+  colored_on  = "\e[1m\e[32m[ ON]\e[0m"
+  colored_off = "\e[1m\e[31m[OFF]\e[0m"
+  # checking the messaging bus
+  configatron.messaging_bus_active = MessagingBus.active?
+  puts "RABBIT MQ:      #{configatron.messaging_bus_active ? colored_on : colored_off}"
+  
+  
+  # checking on the js dispatching server
+  require 'net/telnet'
+  configatron.js_dispatching_active = begin
+    host = Net::Telnet.new({'Host' => '127.0.0.1', 'Port' => '5000'})
+    host.close
+    true
+  rescue Errno::ECONNREFUSED
+    false
+  end
+  puts "JS DISPATCHING: #{configatron.js_dispatching_active ? "#{colored_on}" : colored_off}"
+  
+  # checking ldap
+  configatron.ldap_active = begin
+    false
+  end
+  puts "LDAP:           #{configatron.ldap_active ? colored_on : colored_off}"
+  
   puts "                        "
   puts "------------------------"
 end
