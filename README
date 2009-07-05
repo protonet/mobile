@@ -120,7 +120,15 @@ Locate the OpenLDAP configuration files in /etc/openldap/
 
 cp slapd.conf.default slapd.conf
 
-Make sure that /var/db/openldap/openldap-data/ exists, creating it if it does not.
+Then edit your slapd.conf and change this entry:
+
+rootpw          secret
+
+to
+
+rootpw          {SSHA}KT2sBUCwRfLNE6cEMfAVR3TRXxs/SDhQ
+
+Make sure that /private/var/db/openldap/openldap-data/ exists, creating it if it does not.
 
 Run slapd: sudo /usr/libexec/slapd
 
