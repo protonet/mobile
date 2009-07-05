@@ -5,6 +5,10 @@ module BackendAdapters
       "development mock"
     end
     
+    def server_ips
+      @server_ips ||= `ifconfig`.scan(/inet (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/).collect {|ip| ip[0]}
+    end
+    
     def get_ips_of_currently_connected_clients
       # I'm just mocking some return IP functionality
       ["10.25.1.2", "10.25.1.3", "10.25.1.4"]

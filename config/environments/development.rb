@@ -16,8 +16,7 @@ config.action_controller.perform_caching             = false
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
 
-configatron.dispatching_server = '172.20.7.146'
+Backend.backend_connection = BackendAdapters::DevelopmentMock.new
+puts "Backend '#{Backend.backend_connection.info}' connected successfully!"
 
-# app and node configuration
-# configure our backend to be the ubuntu backend
-# c[:backend_adapter] = :development_mock
+configatron.dispatching_server = Backend.server_ips.last
