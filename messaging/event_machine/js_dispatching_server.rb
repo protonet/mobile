@@ -45,7 +45,6 @@ module JsDispatchingServer
       bind_socket_to_queues
     else
       log("could not authenticate #{auth_data.inspect}")
-      debugger
     end
   end
   
