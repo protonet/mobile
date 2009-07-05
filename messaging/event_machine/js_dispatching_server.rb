@@ -1,19 +1,8 @@
 #!/usr/bin/env ruby
+# this is here to make sure environment.rb doens't recreate the EventMachine Loop
 RUN_FROM_DISPATCHER = true
 require File.dirname(__FILE__) + '/../../config/environment'
-
-require 'ruby-debug'
 require File.dirname(__FILE__) + '/modules/flash_server.rb'
-
-Debugger.start
-
-# preload models for cache returns:
-User
-Audience
-Say
-Listen
-Tweet
-# done preloading models
 
 # awesome stuff happening here
 module JsDispatchingServer

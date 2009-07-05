@@ -70,3 +70,13 @@ if defined?(PhusionPassenger)
         end
     end
 end
+
+unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(PhusionPassenger)
+  # Checking all Subsystems
+  puts "------------------------"
+  puts "Checking all subsystems:"
+  puts "RABBIT MQ: #{MessagingBus.active? ? 'ON' : 'OFF'}"
+
+  puts "                        "
+  puts "------------------------"
+end
