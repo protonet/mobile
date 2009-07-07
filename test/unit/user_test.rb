@@ -2,6 +2,16 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class UserTest < Test::Unit::TestCase
   
+  context "Removing old temporary users also called strangers" do
+    it "should remove all strangers created prior to 2 days ago" do
+      User.stranger('session_id1').update_attributes(:created_at => Time.now - 1.days)
+      User.stranger('session_id2').update_attributes(:created_at => Time.now - 2.days)
+      User.stranger('session_id3').update_attributes(:created_at => Time.now - 3.days)
+      assert User.all_strangers
+      User.delete_old_strangers!
+    end
+  end
+  
   context "Creating a stranger user" do
     
     it "should succeed" do
@@ -20,7 +30,7 @@ class UserTest < Test::Unit::TestCase
     
     it "should be recognizable as one" do
       user = User.stranger('foobar')
-      assert user.logged_out?
+      assert user.stranger?
     end
     
     it "should add it as a listener of the home audience" do

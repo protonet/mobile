@@ -6,7 +6,7 @@ module BackendAdapters
     end
     
     def server_ips
-      @server_ips ||= `ifconfig`.scan(/inet (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/).collect {|ip| ip[0]}
+      @server_ips ||= `ifconfig`.scan(/en[0-9].*\n.*inet (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/).collect {|ip| ip[0]}
     end
     
     def get_ips_of_currently_connected_clients

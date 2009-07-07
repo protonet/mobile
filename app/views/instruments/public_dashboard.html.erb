@@ -11,7 +11,7 @@
     </span>
   </button>
 <%- end -%>
-<% if current_user.logged_out? %>
+<% if current_user.stranger? %>
   <div id="registration-teaser">
     JOIN the evolution
     no email, no credit card, pure awesome!

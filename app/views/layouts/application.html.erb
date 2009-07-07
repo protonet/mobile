@@ -14,7 +14,7 @@
     <div class="header">
       <%= link_to '<img src="/img/protonet_logo.png" width="166" height="52" alt="protonet" />', root_path %>
     </div>
-    <% if current_user.logged_out? %>
+    <% if current_user.stranger? %>
       <%- form_tag session_path, { :id => "login-form" } do -%>
         <fieldset>
           <ul>

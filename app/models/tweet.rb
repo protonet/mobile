@@ -9,7 +9,7 @@ class Tweet < ActiveRecord::Base
   attr_accessor :socket_id
   # validate_existence_of :audience
   
-  after_create :send_to_queue
+  after_create :send_to_queue if configatron.messaging_bus_active
   
   def send_to_queue
     audiences.each do |audience|

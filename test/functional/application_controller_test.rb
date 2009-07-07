@@ -18,7 +18,7 @@ class TestControllerTest < ActionController::TestCase
     get :index, {}, {:session_id => 'foobariusfoo'}
     user = assigns(:user)
     assert user.is_a?(User)
-    assert user.logged_out?
+    assert user.stranger?
   end
   
   test "should store a User.stranger in the current user instance variable" do

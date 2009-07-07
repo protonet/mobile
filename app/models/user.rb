@@ -55,14 +55,22 @@ class User < ActiveRecord::Base
   
   # create a user with a session id
   def self.stranger(session_id)
-    u = User.find_or_create_by_temporary_identifier(session_id)  do |u|
+    u = find_or_create_by_temporary_identifier(session_id)  do |u|
       u.name = "stranger_number_#{session_id[0,10]}"
       u.listen_to_home
     end
     u
   end
   
-  def logged_out?
+  def self.all_strangers(conditions)
+    find(:all, :conditions => {:temporary_identifier => 'IS NOT NULL'})
+  end
+  
+  def self.delete_old_strangers!
+    destroy_all(:temporary_identifier => 'IS NOT NULL')
+  end
+  
+  def stranger?
     !temporary_identifier.blank?
   end
 
