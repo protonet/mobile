@@ -1,22 +1,48 @@
-<%- form_for :tweet, :url => tweets_path, :html => { :id => "message-form" } do |f| -%>
-  <fieldset>
-    <%= f.label(:message, "enter your message") %>
-    <%= f.text_area(:message, :id => "message", :title => "enter your message") %>
-    <%= f.hidden_field('audience_id', :id => "message_audience_id", :name => 'message_audience_id', :value => @active_audience.id) %>
-    <%= f.hidden_field(:socket_id) %>
-  </fieldset>
-  <button type="submit" name="commit">
-    <span>
-      <em>submit</em>
-    </span>
-  </button>
-<%- end -%>
-<% if current_user.stranger? %>
-  <div id="registration-teaser">
-    JOIN the evolution
-    no email, no credit card, pure awesome!
-    <%- form_tag users_path, {} do -%>
+<div class="main">
+  <%- form_for :tweet, :url => tweets_path, :html => { :id => "message-form" } do |f| -%>
+    <fieldset>
+      <%= f.label(:message, "enter your message") %>
+      <%= f.text_area(:message, :id => "message", :title => "enter your message") %>
+      <%= f.hidden_field('audience_id', :id => "message_audience_id", :name => 'message_audience_id', :value => @active_audience.id) %>
+      <%= f.hidden_field(:socket_id) %>
+    </fieldset>
+    <button type="submit" name="commit">
+      <span>
+        <em>submit</em>
+      </span>
+    </button>
+  <%- end -%>
+  
+  <div id="audience">
+    <ul>
+      <% @audiences.each_with_index do |a, index| %>
+        <li id="audience-<%= a.id %>" class="audience <%= 'active' if a == @active_audience %>">
+          <%= link_to a.name.capitalize, {:audience_id => a.id, :index => index}, {:title => a.description} %>
+        </li>
+      <% end %>
+      <li class="add">
+        <a href="#" title="">new room</a>
+      </li>
+    </ul>
+  </div>
+  
+  <div id="feed-viewer">
+    <div id="feed-holder" style="width:<%= @audiences.size * 610 %>px; left: <%= @audiences.index(@active_audience) * -604 %>px;">
+      <% @audiences.each do |a| %>
+        <%= render :partial => '/tweets/tweet_list', :locals => {:tweets => a.tweets.recent, :audience => a} %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="side">
+  <%- if current_user.stranger? -%>
+    <%- form_tag users_path, :id => "registration-form" do -%>
       <fieldset>
+        <legend>
+          <strong>JOIN the (r)evolution</strong>
+          <span>no email, no credit card, just pure awesomeness!</span>
+        </legend>
         <ul>
           <li>
             <%= label_tag "login" %>
@@ -30,49 +56,81 @@
       </fieldset>
       <button type="submit" name="join">
         <span>
-          <em>JOIN</em>
+          <em>Join</em>
         </span>
       </button>
-    <%- end -%>  
-  </div>
-<% end %>
-
-<div id="audience">
-  <ul>
-    <% @audiences.each_with_index do |a, index| %>
-      <li id="audience-<%= a.id %>" class="audience <%= 'active' if a == @active_audience %>">
-        <%= link_to a.name.capitalize, {:audience_id => a.id, :index => index}, {:title => a.description} %>
+    <%- end -%>
+  <%- end -%>
+  
+  <div id="file-list">
+    <form id="file-navigation">
+      <fieldset>
+        <button class="parent"><span>parent</span></button>
+        <input />
+        <button class="search"><span>search</span></button>
+      </fieldset>
+    </form>
+    <ul class="root">
+      <li>The A-Team</li>
+      <li>Spongebob Squarepants</li>
+      <li>Dexter</li>
+      <li>The A-Team</li>
+      <li>Spongebob Squarepants</li>
+      <li>Dexter</li>
+      <li>The A-Team
+        <ul>
+          <li>Season 1
+            <ul>
+              <li class="file">Episode 1</li>
+              <li class="file">Episode 2</li>
+            </ul>
+          </li>
+          <li>Season 2</li>
+          <li>Season 3</li>
+        </ul>
       </li>
-    <% end %>
-    <li class="add">
-      <a href="#" title="">new room</a>
-    </li>
-  </ul>
-</div>
-<div id="feed-viewer">
-  <div id="feed-holder" style="width:<%= @audiences.size * 610 %>px; left: <%= @audiences.index(@active_audience) * -604 %>px;">
-      <% @audiences.each do |a| %>
-        <%= render :partial => '/tweets/tweet_list', :locals => {:tweets => a.tweets.recent, :audience => a} %>
-      <% end %>
+      <li>Spongebob Squarepants</li>
+      <li>Dexter</li>
+      <li>The A-Team</li>
+      <li>Spongebob Squarepants</li>
+      <li>Dexter</li>
+      <li>The A-Team</li>
+      <li>Spongebob Squarepants</li>
+      <li>Dexter</li>
+      <li>The A-Team</li>
+      <li>Spongebob Squarepants</li>
+      <li>Dexter</li>
+      <li>The A-Team</li>
+      <li>Spongebob Squarepants</li>
+      <li>Dexter</li>
+      <li>The A-Team</li>
+      <li>Spongebob Squarepants</li>
+      <li>Dexter</li>
+    </ul>
+    <form id="file-stash">
+      <fieldset>
+        <button class="add"><span>+</span></button> Add files…
+      </fieldset>
+    </form>
   </div>
-</div>
-
-<div id="user-list">
-  <ul>
-    <li>
-      <img src="/img/userpicture.jpg" width="21" height="21" alt="">
-      <span>Kathy <span class="status">(online)</span></span>
-    </li>
-    <li>
-      <img src="/img/userpicture.jpg" width="21" height="21" alt="">
-      <span>Kathy <span class="status">(online)</span></span>
-    </li>
-    <li>
-      <img src="/img/userpicture.jpg" width="21" height="21" alt="">
-      <span>Kathy <span class="status">(online)</span></span>
-    </li>
-  </ul>
-  <a id="expand-user-list" href="#" title="show more">
-    <span>show more</span>
-  </a>
+  
+  <!-- <div id="user-list">
+    <ul>
+      <li>
+        <img src="/img/userpicture.jpg" width="21" height="21" alt="">
+        <span>Kathy <span class="status">(online)</span></span>
+      </li>
+      <li>
+        <img src="/img/userpicture.jpg" width="21" height="21" alt="">
+        <span>Kathy <span class="status">(online)</span></span>
+      </li>
+      <li>
+        <img src="/img/userpicture.jpg" width="21" height="21" alt="">
+        <span>Kathy <span class="status">(online)</span></span>
+      </li>
+    </ul>
+    <a id="expand-user-list" href="#" title="show more">
+      <span>show more</span>
+    </a>
+  </div> -->
 </div>

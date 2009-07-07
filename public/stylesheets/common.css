@@ -75,6 +75,18 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   margin: 10px;
 }
 
+.main {
+  display: inline-block;
+  width: 648px;
+  vertical-align: top;
+  margin-right: 20px;
+}
+.side {
+  display: inline-block;
+  width: 314px;
+  vertical-align: top;
+}
+
 /* =AUDIENCE
 --------------------------------------------------------------------------- */
 #audience {
@@ -205,6 +217,87 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   position: absolute;
 }
 
+/* =FILEBROWSER
+--------------------------------------------------------------------------- */
+#file-list {
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  background: rgb(213, 213, 213);
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  font-size: 1.2em;
+  margin: 0 0 1.5em 0;
+  padding: 0.3em;
+}
+#file-list ul.root {
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  background: rgb(234, 234, 234);
+  height: 150px;
+  overflow-x: auto;
+  overflow-y: scroll;
+  padding: 0.2em;
+}
+#file-list ul.root li:last-child {
+  margin-bottom: 0;
+}
+#file-list li {
+  background: rgb(241, 241, 241) url(/img/icn_directory.png) scroll no-repeat left top;
+  border: 1px solid rgb(241, 241, 241);
+  cursor: pointer;
+  margin-bottom: 0.1em;
+  padding: 0.2em 0.5em 0.2em 25px;
+}
+#file-list li.file {
+  background: rgb(241, 241, 241) none;
+}
+#file-list li > ul {
+  display: none;
+}
+#file-list li:hover {
+  background: rgb(255, 255, 255) url(/img/icn_directory.png) scroll no-repeat left top;
+  border: 1px solid rgb(0, 0, 0);
+}
+#file-list li.file:hover {
+  background: rgb(255, 255, 255) none;
+  border: 1px solid rgb(0, 0, 0);
+}
+#file-list form {
+  margin-bottom: 0.3em;
+}
+#file-list form#file-stash {
+  margin-top: 0.3em;
+  margin-bottom: 0;
+}
+#file-list button {
+  border: 0 none;
+  float: left;
+  height: 20px;
+  margin: 0;
+  padding: 0;
+  width: 20px;
+}
+#file-list button span {
+  display: none;
+}
+#file-list button.parent {
+  background: transparent url(/img/icn_parent.png) scroll no-repeat 0 0;
+}
+#file-list button.search {
+  background: transparent url(/img/icn_search.png) scroll no-repeat 0 0;
+}
+#file-list button.add {
+  background: transparent url(/img/icn_add.png) scroll no-repeat 0 0;
+}
+#file-list input {
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  float: left;
+  font-size: 1em;
+  line-height: 1em;
+  margin: 0;
+  padding: 0.1em 0.2em;
+  width: 255px;
+}
+
 /* =TWEETS (=MESSAGES)
 --------------------------------------------------------------------------- */
 .user-messages {
@@ -226,7 +319,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   -webkit-border-radius: 1em;
   -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-  background: rgb(241, 241, 241);
+  background: rgb(255, 255, 255) url(/img/bkg_message.png) repeat-x scroll left bottom;
   border-radius: 1em;
   border: 1px solid rgba(0, 0, 0, 0.4);
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
@@ -234,7 +327,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   padding: 0.3em 1.8em;
 }
 .user-messages .message-usericon {
-  background: transparent url(/img/speech_bubble_arrow.png) scroll no-repeat right 5px;
+  background: transparent url(/img/icn_message_arrow.png) no-repeat scroll right 19px;
   bottom: 0.3em;
   display: block;
   left: -90px;
@@ -266,6 +359,75 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   width: 300px;
   height: 136px;
   margin-left: 23px;
+}
+
+
+/* =REGISTER
+--------------------------------------------------------------------------- */
+#registration-form {
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  background: rgb(255, 255, 255) url(/img/bkg_register.png) no-repeat scroll top left; 
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  display: block;
+  margin: 0 0 1.5em 0;
+  padding: 5px 10px;
+}
+#registration-form legend {
+  margin-bottom: 10px;
+  text-align: right;
+}
+#registration-form legend strong,
+#registration-form legend span {
+  display: block;
+  width: 290px;
+}
+#registration-form li { 
+  margin-bottom: 0.5em;
+}
+#registration-form input {
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  background: rgb(255, 255, 255) url(/img/bkg_input.png) scroll no-repeat right bottom;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  font-size: 1.0em;
+  padding: 0.3em 1em 0.3em 0.3em;
+  width: 275px;
+}
+#registration-form button {
+  background: transparent;
+  border: 0;
+  font-size: 1.0em;
+  margin: 0;
+  outline: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+#registration-form button span {
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  background: rgb(241, 241, 241);
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  display: block;
+  padding: 0.1em;
+}
+#registration-form button span em {
+  background: rgb(151, 151, 151) url(/img/bkg_button_attention.png) repeat-x scroll left bottom;
+  color: rgb(255, 255, 255);
+  display: block;
+  font-style: normal;
+  font-weight: bold;
+  line-height: 14px;
+  padding: 0.2em 0.7em;
+}
+#registration-form button span em:after {
+  content: '\0020\00BB';
+}
+#registration-form label {
+  display: none;
 }
 
 
