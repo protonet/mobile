@@ -50,6 +50,8 @@ sudo gem install random_data
 sudo gem install mocha
 sudo gem install configatron
 sudo gem install sprockets
+sudo gem install json
+sudo gem install sqlite3-ruby
 
 
 THE FOLLOWING STUFF NEEDS TO BE UPDATED!!!
