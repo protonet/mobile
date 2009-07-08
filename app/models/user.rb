@@ -96,13 +96,13 @@ class User < ActiveRecord::Base
     audiences.try(:include?, Audience.home)
   end
   
-  # skip validation if the user is a logged out user
+  # skip validation if the user is a logged out (stranger) user
   def skip_validation
-    logged_out?
+    stranger?
   end
   
   def create_ldap_user
-    LdapUser.create_for_user(self) unless logged_out?
+    LdapUser.create_for_user(self) unless stranger?
   end
   
 
