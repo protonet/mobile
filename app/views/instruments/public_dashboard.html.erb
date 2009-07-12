@@ -62,57 +62,7 @@
     <%- end -%>
   <%- end -%>
   
-  <div id="file-list">
-    <form id="file-navigation">
-      <fieldset>
-        <button class="parent"><span>parent</span></button>
-        <input />
-        <button class="search"><span>search</span></button>
-      </fieldset>
-    </form>
-    <ul class="root">
-      <li>The A-Team</li>
-      <li>Spongebob Squarepants</li>
-      <li>Dexter</li>
-      <li>The A-Team</li>
-      <li>Spongebob Squarepants</li>
-      <li>Dexter</li>
-      <li>The A-Team
-        <ul>
-          <li>Season 1
-            <ul>
-              <li class="file">Episode 1</li>
-              <li class="file">Episode 2</li>
-            </ul>
-          </li>
-          <li>Season 2</li>
-          <li>Season 3</li>
-        </ul>
-      </li>
-      <li>Spongebob Squarepants</li>
-      <li>Dexter</li>
-      <li>The A-Team</li>
-      <li>Spongebob Squarepants</li>
-      <li>Dexter</li>
-      <li>The A-Team</li>
-      <li>Spongebob Squarepants</li>
-      <li>Dexter</li>
-      <li>The A-Team</li>
-      <li>Spongebob Squarepants</li>
-      <li>Dexter</li>
-      <li>The A-Team</li>
-      <li>Spongebob Squarepants</li>
-      <li>Dexter</li>
-      <li>The A-Team</li>
-      <li>Spongebob Squarepants</li>
-      <li>Dexter</li>
-    </ul>
-    <form id="file-stash">
-      <fieldset>
-        <button class="add"><span>+</span></button> Add files…
-      </fieldset>
-    </form>
-  </div>
+  <%= render :partial => '/file_system/file_list' %>
   
   <!-- <div id="user-list">
     <ul>
