@@ -1,0 +1,19 @@
+<div id="file-list">
+  <form id="file-navigation">
+    <fieldset>
+      <button class="parent"><span>parent</span></button>
+      <input />
+      <button class="search"><span>search</span></button>
+    </fieldset>
+  </form>
+  <ul class="root">
+    <% FileSystem.all.each do |name, type| %>
+    <li class="<%= type %>"><%= name %></li>
+    <% end %>
+  </ul>
+  <form id="file-stash">
+    <fieldset>
+      <button class="add"><span>+</span></button> Add files…
+    </fieldset>
+  </form>
+</div>

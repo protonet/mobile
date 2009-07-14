@@ -1,0 +1,9 @@
+function FileWidget() {
+  
+}
+
+FileWidget.prototype = {
+  
+  ""
+  
+}
