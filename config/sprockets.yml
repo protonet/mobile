@@ -15,3 +15,11 @@
     - vendor/plugins/*/javascripts
   :source_files:
     - app/javascripts/instruments.js
+:assets:
+  :asset_root: public
+  :load_path:
+    - app/javascripts
+    - vendor/sprockets/*/src
+    - vendor/plugins/*/javascripts
+  :source_files:
+    - app/javascripts/assets.js

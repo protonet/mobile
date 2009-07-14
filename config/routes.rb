@@ -6,6 +6,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :listens
   map.resources :assets
 
+  map.files '/files', :controller => 'assets', :action => 'test_for_file_browser'
+
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.register '/register', :controller => 'users', :action => 'create'
