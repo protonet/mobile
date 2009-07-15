@@ -1,3 +1,5 @@
 //= require "file_widget/file_widget.js"
 
-file_widget = new FileWidget();
+$('document').ready(function() {
+  file_widget = new FileWidget();
+});

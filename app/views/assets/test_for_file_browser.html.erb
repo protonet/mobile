@@ -1,5 +1,5 @@
-<%= render :partial => '/file_system/file_list' %>
+<% file_system = FileSystem.all %>
 
-<script type="text/javascript">
-  console.log(file_widget);
-</script>
+<div style="width:311px;margin:0 auto;">
+  <%= render :partial => '/file_system/file_list', :locals => {:file_system => file_system} %>
+</div>

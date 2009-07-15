@@ -1,8 +1,8 @@
 class FileSystem
   
-  def self.all(directory = uploads_path)
+  def self.all(directory = '')
     bar = {}
-    Dir.chdir(uploads_path) do
+    Dir.chdir(cleared_path(directory)) do
       foo = Dir.glob("*")
       foo.each do |entry|
         bar[entry] = File.ftype(entry)
@@ -11,8 +11,11 @@ class FileSystem
     bar
   end
   
-  def self.uploads_path
-    # @uploads_path ||= RAILS_ROOT + "/public/uploads_alpha"
+  def self.cleared_path(path)
+    public_path + '/' + path
+  end
+  
+  def self.public_path
     @uploads_path ||= RAILS_ROOT + "/public"
   end
   

@@ -1,11 +1,17 @@
 function FileWidget() {
-  alert(1);
+  this._object = $("file-list");
+  this.getData();
 }
 
 FileWidget.prototype = {
   
-  "foobar": function() {
-    
+  "getData": function(path) {
+    var path = path || ''
+    var self = this;
+    jQuery.getJSON('files', {"path": path}, function(data) {
+      self.data = data;
+      console.log(self.data);      
+    });
   }
   
 }

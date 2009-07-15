@@ -7,7 +7,7 @@
     </fieldset>
   </form>
   <ul class="root">
-    <% FileSystem.all.each do |name, type| %>
+    <% file_system.each do |name, type| %>
     <li class="<%= type %>"><%= name %></li>
     <% end %>
   </ul>
