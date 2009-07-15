@@ -21,7 +21,6 @@ class User < ActiveRecord::Base
   has_many  :tweets
   has_many  :listens
   has_many  :audiences, :through => :listens
-  has_attached_file :avatar, :styles => { :medium => "300x300>", :thumb => "47x47>" }
 
   after_create :create_ldap_user if configatron.use_ldap
   after_create :listen_to_home
