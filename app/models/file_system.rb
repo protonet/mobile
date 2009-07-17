@@ -11,8 +11,9 @@ class FileSystem
     bar
   end
   
+  # pass path with a leading slash: /foobar not foobar
   def self.cleared_path(path)
-    public_path + '/' + path.to_s
+    public_path + path.to_s
   end
   
   def self.public_path
