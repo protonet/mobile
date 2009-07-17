@@ -1,0 +1,5 @@
+<% file_system = FileSystem.all %>
+
+<div style="width:311px;margin:0 auto;">
+  <%= render :partial => '/files/file_list', :locals => {:file_system => file_system} %>
+</div>

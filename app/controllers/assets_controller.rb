@@ -1,8 +1,5 @@
 class AssetsController < ApplicationController
 
-  def test_for_file_browser
-  end
-
   # GET /assets
   # GET /assets.xml
   def index

@@ -12,7 +12,7 @@ class FileSystem
   end
   
   def self.cleared_path(path)
-    public_path + '/' + path
+    public_path + '/' + path.to_s
   end
   
   def self.public_path
