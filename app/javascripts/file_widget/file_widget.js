@@ -28,8 +28,10 @@ FileWidget.prototype = {
   
   "observeBackButton": function() {
     var self = this;
-    this.wrapper.find("button.parent").click(function(){
-      self.moveUp();  
+    this.wrapper.find("button.parent").click(function(event){
+      self.moveUp();
+      event.stopPropagation();
+      return false;
     });
   },
   
@@ -53,8 +55,8 @@ FileWidget.prototype = {
   },
   
   "moveUp": function() {
-    debugger;
-    this.current_path.replace(/.*(\/[^\/]*)/, '');
+    // debugger;
+    this.current_path = this.current_path.replace(/(\/[^\/]*)$/g,'');
     this.gotoPath(this.current_path);
     this.updateLocationBar();
   },
