@@ -1,6 +1,6 @@
 function FileWidget() {
-  this._object = $("file-list");
-  this.getData();
+  this._object = $("#file-list");
+  this.observeDirectories();
 }
 
 FileWidget.prototype = {
@@ -12,6 +12,17 @@ FileWidget.prototype = {
       self.data = data;
       console.log(self.data);      
     });
-  }
+  },
   
+  "observeDirectories": function() {
+    var self = this;
+    this._object.find('li.directory').click(function(){
+      self.getData($(this).html());
+    });
+  },
+  
+  "renderResponse": function() {
+    
+  }
+   
 }
