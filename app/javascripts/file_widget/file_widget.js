@@ -1,11 +1,13 @@
 function FileWidget() {
   this.wrapper = $("#file-list");
   this.file_list = this.wrapper.find('ul.root');
-  this.location_bar = this.wrapper.find('#file-navigation input');
+  this.hierarchy_bar = this.wrapper.find('#file-navigation .hierarchy');
+  this.search_input  = this.wrapper.find('#file-navigation input');
+  
   this.observeDirectories();
   this.observeBackButton();
   this.current_path = '';
-  this.updateLocationBar();
+  this.addPathBlob('');
 }
 
 FileWidget.prototype = {
@@ -20,10 +22,12 @@ FileWidget.prototype = {
   
   "observeDirectories": function() {
     var self = this;
-    this.wrapper.find('li.directory').click(function(){
-      self.moveDown($(this).html());
-      // self.renderResponse(self.getData($(this).html()));
-    });
+    directories = this.wrapper.find('li.directory')
+    if(directories.length != 0) {
+      directories.click(function(){
+        self.moveDown($(this).html());
+      });      
+    }
   },
   
   "observeBackButton": function() {
@@ -39,7 +43,7 @@ FileWidget.prototype = {
     var self = this;
     var html = '';
     $(objects).each(function(i){html += self.createElementFor(objects[i]);})
-    this.file_list.html($(html));
+    html == '' ? this.file_list.empty() : this.file_list.html($(html));
     // now observe those directories
     this.observeDirectories();
   },
@@ -51,19 +55,41 @@ FileWidget.prototype = {
   "moveDown": function(path) {
     this.current_path += '/' + path;
     this.gotoPath(this.current_path);
-    this.updateLocationBar();
+    this.addPathBlob(path);
   },
   
   "moveUp": function() {
-    // debugger;
-    this.current_path = this.current_path.replace(/(\/[^\/]*)$/g,'');
-    this.gotoPath(this.current_path);
-    this.updateLocationBar();
+    // you can't move higher than root
+    if(this.current_path != '') {
+      this.current_path = this.removeDeepestDirectory(this.current_path);
+      this.gotoPath(this.current_path);
+      this.removePathBlob();
+    }
   },
   
-  "updateLocationBar": function() {
-    // show slash when empty
-    this.location_bar.val(this.current_path == '' ? '/' : this.current_path)
+  "addPathBlob": function(blob) {
+    var self = this;
+    var path = this.current_path;
+    var old_index = this.hierarchy_bar.children().size() + 1; // we'll be adding one a the end of this method
+    object_to_add = $('<a href="#">' + blob + '/</a>');
+    object_to_add.click(function(e){ 
+      self.gotoPath(path);
+      var new_index = self.hierarchy_bar.children().size();
+      while(new_index > old_index) {
+        self.removePathBlob();
+        self.current_path = self.removeDeepestDirectory(self.current_path);
+        new_index--;
+      }
+    });
+    this.hierarchy_bar.append(object_to_add);
+  },
+  
+  "removePathBlob": function() {
+    this.hierarchy_bar.find('a:last').remove();
+  },
+  
+  "removeDeepestDirectory": function(directory_string) {
+    return directory_string.replace(/(\/[^\/]*)$/g,'');
   }
-   
+     
 }

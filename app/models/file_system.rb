@@ -13,6 +13,8 @@ class FileSystem
   
   # pass path with a leading slash: /foobar not foobar
   def self.cleared_path(path)
+    # todo aj: test cleaning of paths
+    path.gsub!(/\.\./, '') if path
     public_path + path.to_s
   end
   

@@ -296,7 +296,26 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   margin: 0;
   padding: 0.1em 0.2em;
   width: 255px;
+  display: none;
 }
+
+#file-list .hierarchy {
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  float: left;
+  font-size: 1em;
+  line-height: 1em;
+  margin: 0;
+  padding: 0.1em 0.2em;
+  width: 255px;
+  background-color: white;
+  height: 16px;
+}
+
+#file-list .hierarchy a {
+  padding: 0 2px;
+}
+
+
 
 /* =TWEETS (=MESSAGES)
 --------------------------------------------------------------------------- */
