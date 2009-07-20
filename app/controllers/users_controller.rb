@@ -1,12 +1,11 @@
 class UsersController < ApplicationController  
-
-
   def index
-    @users = User.find(:all)
+    @users = User.all
   end
 
   def show
     @user = User.find(params[:id])
+    @avatar = Images::Avatar.last
 
     respond_to do |format|
       format.html do
@@ -16,7 +15,7 @@ class UsersController < ApplicationController
           render 'show'
         end
       end# show.html.erb
-      format.xml  { render :xml => @user }
+      format.xml { render :xml => @user }
     end
   end
 

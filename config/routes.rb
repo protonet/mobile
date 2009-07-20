@@ -20,6 +20,10 @@ ActionController::Routing::Routes.draw do |map|
     system.connect 'foundations', :controller => 'foundations'
   end
   
+  map.namespace :images do |images|
+    images.resources :avatars
+  end
+  
   SprocketsApplication.routes(map, :resources)
 
   # The priority is based upon order of creation: first created -> highest priority.
