@@ -44,7 +44,7 @@ CommunicationConsole.prototype = {
   
   'addAndSendTweet': function(form) {
     var message = form.find('#message');
-    var tweet = new Tweet({'message': message.val(), 'author': this.user_config.user_name, 'audience_id': form.find('#message_audience_id').val()})
+    var tweet = new Tweet({'message': message.val(), 'author': this.user_config.user_name, 'audience_id': form.find('#message_audience_id').val(), 'user_icon_url': this.user_config.user_icon_url})
     $.post(form.attr('action'), form.serialize());
     message.val('');
   },
@@ -65,7 +65,8 @@ function Tweet(args) {
   this.audience_id  = args.audience_id;
   
   this.list_element = $('<li></li>');
-  this.user_icon    = $('<span class="message-usericon"><img width="47" height="47" alt="" src="/img/userpicture.jpg"/></span>');
+  
+  this.user_icon    = $('<span class="message-usericon"><img width="47" height="47" alt="" src="' + args.user_icon_url + '"/></span>');
   this.paragraph    = $('<p></p>');
   this.message_info = '<span class="message-info"> <span class="message-author">' + this.author + '</span> <span class="message-date">(' + this.message_date + ')</span></span>'
 

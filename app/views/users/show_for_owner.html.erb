@@ -1,9 +1,11 @@
-<p>
-  <%= image_tag images_avatar_path(@avatar, :jpg) %>
-</p>
-<p>
-  <b>Name:</b>
-  <%=h @avatar.name %>
-</p>
+<% if @avatar %>
+  <p>
+    <%= image_tag images_avatar_path(@avatar, :jpg) %>
+  </p>
+  <p>
+    <b>Name:</b>
+    <%=h @avatar.name %>
+  </p>
+<% end %>
 
 <%= link_to "Upload", new_images_avatar_path %>

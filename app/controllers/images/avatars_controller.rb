@@ -10,9 +10,10 @@ class Images::AvatarsController < ApplicationController
   def new
     @avatar = Images::Avatar.new
   end
-  
+
   def create
     @avatar = Images::Avatar.new(params[:images_avatar])
+    @avatar.user = current_user
     if @avatar.save
       redirect_to user_path(current_user)
     else

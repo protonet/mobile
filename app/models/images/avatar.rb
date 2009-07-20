@@ -1,5 +1,6 @@
 class Images::Avatar < ActiveRecord::Base
-  set_table_name :images_avatars
-  
   acts_as_fleximage :image_directory => 'public/avatars'
+  set_table_name :images_avatars  
+  
+  belongs_to :user
 end

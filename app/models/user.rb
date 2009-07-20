@@ -21,7 +21,7 @@ class User < ActiveRecord::Base
   has_many  :tweets
   has_many  :listens
   has_many  :audiences, :through => :listens
-  has_one   :avatar, :class_name => 'Images::Avatar'
+  has_one   :avatar, :class_name => 'Images::Avatar', :dependent => :destroy
 
   after_create :create_ldap_user if configatron.ldap_active
   after_create :listen_to_home
