@@ -2,11 +2,7 @@
   <% tweets.each do |t| %>
     <li>
       <span class="message-usericon">
-        <% if current_user.avatar %>
-          <img src=<%= images_avatar_path(current_user.avatar, :jpg) %> width="47" height="47" alt="">
-        <% else %>
-           <img src="/img/userpicture.jpg" width="47" height="47" alt="">
-        <% end %>
+        <img src=<%= t.user.active_avatar_url %> width="47" height="47" alt="">
       </span>
       <p>
         <span class="message-info">

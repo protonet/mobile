@@ -5,7 +5,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    @avatar = Images::Avatar.last
+    @avatar = @user.avatar
 
     respond_to do |format|
       format.html do

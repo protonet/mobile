@@ -1,6 +1,10 @@
 class Images::Avatar < ActiveRecord::Base
-  acts_as_fleximage :image_directory => 'public/avatars'
   set_table_name :images_avatars  
+  
+  acts_as_fleximage do 
+    image_directory 'public/avatars'
+    default_image_path 'public/img/userpicture.jpg'
+  end
   
   belongs_to :user
 end

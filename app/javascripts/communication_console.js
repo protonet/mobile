@@ -51,7 +51,7 @@ CommunicationConsole.prototype = {
   
   'receiveMessage': function(message) {
     console.log('cc is receiving message');
-    var tweet = new Tweet({'message': message.message, 'author': message.author, 'audience_id': message.audience_id})
+    var tweet = new Tweet({'message': message.message, 'author': message.author, 'audience_id': message.audience_id, 'user_icon_url': message.user_icon_url})
   }
   
 }
@@ -65,8 +65,8 @@ function Tweet(args) {
   this.audience_id  = args.audience_id;
   
   this.list_element = $('<li></li>');
-  
   this.user_icon    = $('<span class="message-usericon"><img width="47" height="47" alt="" src="' + args.user_icon_url + '"/></span>');
+  console.log(this.user_icon);
   this.paragraph    = $('<p></p>');
   this.message_info = '<span class="message-info"> <span class="message-author">' + this.author + '</span> <span class="message-date">(' + this.message_date + ')</span></span>'
 

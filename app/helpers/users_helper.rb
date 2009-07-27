@@ -89,5 +89,8 @@ module UsersHelper
       link_to_login_with_IP content_text, options
     end
   end
-
+  
+  def avatar_url(user)
+    user.avatar ? images_avatar_path(user.avatar, :jpg) : "/img/userpicture.jpg"
+  end
 end

@@ -1,6 +1,6 @@
 <% if @avatar %>
   <p>
-    <%= image_tag images_avatar_path(@avatar, :jpg) %>
+    <%= image_tag current_user.active_avatar_url %>
   </p>
   <p>
     <b>Name:</b>

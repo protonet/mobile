@@ -53,7 +53,7 @@
       config.user_name = '<%= current_user.display_name %>';
       config.user_id = '<%= current_user.id %>';
       config.user_audience_ids = '<%= current_user.audiences && current_user.audiences.map {|a| a.id}.to_json %>';
-      config.user_icon_url = '<%= current_user.avatar ? images_avatar_path(current_user.avatar, :jpg) : "/img/userpicture.jpg" %>';
+      config.user_icon_url = '<%= current_user.active_avatar_url %>';
       config.user_agent = null;
     </script>
     
