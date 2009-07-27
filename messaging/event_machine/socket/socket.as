@@ -23,7 +23,7 @@ class Socket {
     socket.connect(ip, 5000);
   }
   
-  static function close() {
+  static function closeSocket() {
     socket.close();
   }
 
@@ -36,7 +36,7 @@ class Socket {
     ExternalInterface.addCallback("test", null, test);
     ExternalInterface.addCallback("sendData", null, sendData);
     ExternalInterface.addCallback("connectSocket", null, connectSocket);
-    ExternalInterface.addCallback("close", null, close);
+    ExternalInterface.addCallback("closeSocket", null, closeSocket);
     
     ExternalInterface.call("Dispatcher.socketReadyCallback");
     
