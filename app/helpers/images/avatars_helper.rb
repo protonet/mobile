@@ -1,2 +1,2 @@
-module Images::AvatarsHelper
+module Images::AvatarsHelper  
 end

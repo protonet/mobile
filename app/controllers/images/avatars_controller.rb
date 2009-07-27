@@ -1,6 +1,6 @@
 class Images::AvatarsController < ApplicationController
   def show
-    @avatar = Images::Avatar.last
+    @avatar = Images::Avatar.find_by_id(params[:id])
     
     respond_to do |format|
       format.jpg
