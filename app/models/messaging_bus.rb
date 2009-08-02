@@ -19,7 +19,7 @@ class MessagingBus
         rabbit_mq_running = true
       }
       @mq.queue('testqueue').publish('ping')
-      sleep 1
+      sleep 1.5
       return rabbit_mq_running
     end
     
