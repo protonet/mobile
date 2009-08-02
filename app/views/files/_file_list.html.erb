@@ -9,7 +9,7 @@
   </form>
   <ul class="root">
     <% file_system.each do |name, type| %>
-    <li class="<%= type %>"><%= name %></li>
+    <li class="<%= type %>"><%= name %><%= image_tag 'arrow_download.png' if type == 'file' %></li>
     <% end %>
   </ul>
   <form id="file-stash">
