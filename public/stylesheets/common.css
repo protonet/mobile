@@ -50,7 +50,7 @@ table {
 /* =STYLES
 =========================================================================== */
 body {
-  background: rgb(255, 255, 255) url(/img/bkg_body.png) scroll repeat left top;
+  background: rgb(255, 255, 255) url(/images/bkg_body.png) scroll repeat left top;
   border: 0;
   font-size: 62.5%;
   margin: 0;
@@ -65,7 +65,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 }
 
 .header {
-  background: transparent url(/img/bkg_header.png) scroll repeat-x 0 0;
+  background: transparent url(/images/bkg_header.png) scroll repeat-x 0 0;
   height: 69px;
   width: 100%;
   position: relative;
@@ -110,7 +110,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 #audience li {
   -moz-border-radius: 0.3em;
   -webkit-border-radius: 0.3em;
-  background: rgb(154, 154, 154) url(/img/bkg_lbutton.png) repeat-x scroll left bottom;
+  background: rgb(154, 154, 154) url(/images/bkg_lbutton.png) repeat-x scroll left bottom;
   border-radius: 0.3em;
   border: 1px solid rgba(0, 0, 0, 0.4);
   float: left;
@@ -133,7 +133,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   background: rgb(173, 173, 173) url() no-repeat scroll center -3px;
 }
 #audience li.targeted a {
-  background: rgb(173, 173, 173) url(/img/img_marker_down.png) no-repeat scroll center -3px;
+  background: rgb(173, 173, 173) url(/images/img_marker_down.png) no-repeat scroll center -3px;
 }
 
 
@@ -187,7 +187,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 }
 
 #expand-user-list {
-  background: rgb(151, 151, 151) url(/img/bkg_toggle.png) scroll repeat left top;
+  background: rgb(151, 151, 151) url(/images/bkg_toggle.png) scroll repeat left top;
   color: rgb(255, 255, 255);
   display: block;
   text-align: center;
@@ -195,7 +195,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 #expand-user-list:hover {
 }
 #expand-user-list span {
-  background: transparent url(/img/arrow_down.png) scroll no-repeat center center;
+  background: transparent url(/images/arrow_down.png) scroll no-repeat center center;
   display: block;
   text-indent: -500em;
   width: 100%;
@@ -241,24 +241,27 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   margin-bottom: 0;
 }
 #file-list li {
-  background: rgb(241, 241, 241) url(/img/icn_directory.png) scroll no-repeat left top;
+  background: rgb(241, 241, 241);
   border: 1px solid rgb(241, 241, 241);
   cursor: pointer;
   margin-bottom: 0.1em;
   padding: 0.2em 0.5em 0.2em 25px;
 }
 #file-list li.file {
-  background: rgb(241, 241, 241) none;
+  background: rgb(241, 241, 241) url(/images/icn_file.png) scroll no-repeat left top;
+}
+#file-list li.directory {
+  background: rgb(241, 241, 241) url(/images/icn_directory.png) scroll no-repeat left top;
 }
 #file-list li > ul {
   display: none;
 }
-#file-list li:hover {
-  background: rgb(255, 255, 255) url(/img/icn_directory.png) scroll no-repeat left top;
+#file-list li.directory:hover {
+  background: rgb(255, 255, 255) url(/images/icn_directory.png) scroll no-repeat left top;
   border: 1px solid rgb(0, 0, 0);
 }
 #file-list li.file:hover {
-  background: rgb(255, 255, 255) none;
+  background: rgb(255, 255, 255) url(/images/icn_file.png) scroll no-repeat left top;
   border: 1px solid rgb(0, 0, 0);
 }
 #file-list form {
@@ -280,13 +283,13 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   display: none;
 }
 #file-list button.parent {
-  background: transparent url(/img/icn_parent.png) scroll no-repeat 0 0;
+  background: transparent url(/images/icn_parent.png) scroll no-repeat 0 0;
 }
 #file-list button.search {
-  background: transparent url(/img/icn_search.png) scroll no-repeat 0 0;
+  background: transparent url(/images/icn_search.png) scroll no-repeat 0 0;
 }
 #file-list button.add {
-  background: transparent url(/img/icn_add.png) scroll no-repeat 0 0;
+  background: transparent url(/images/icn_add.png) scroll no-repeat 0 0;
 }
 #file-list input {
   border: 1px solid rgba(0, 0, 0, 0.4);
@@ -338,7 +341,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   -webkit-border-radius: 1em;
   -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-  background: rgb(255, 255, 255) url(/img/bkg_message.png) repeat-x scroll left bottom;
+  background: rgb(255, 255, 255) url(/images/bkg_message.png) repeat-x scroll left bottom;
   border-radius: 1em;
   border: 1px solid rgba(0, 0, 0, 0.4);
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
@@ -346,7 +349,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   padding: 0.3em 1.8em;
 }
 .user-messages .message-usericon {
-  background: transparent url(/img/icn_message_arrow.png) no-repeat scroll right 19px;
+  background: transparent url(/images/icn_message_arrow.png) no-repeat scroll right 19px;
   bottom: 0.3em;
   display: block;
   left: -90px;
@@ -386,7 +389,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 #registration-form {
   -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-  background: rgb(255, 255, 255) url(/img/bkg_register.png) no-repeat scroll top left; 
+  background: rgb(255, 255, 255) url(/images/bkg_register.png) no-repeat scroll top left; 
   border: 1px solid rgba(0, 0, 0, 0.4);
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   display: block;
@@ -408,7 +411,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 #registration-form input {
   -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-  background: rgb(255, 255, 255) url(/img/bkg_input.png) scroll no-repeat right bottom;
+  background: rgb(255, 255, 255) url(/images/bkg_input.png) scroll no-repeat right bottom;
   border: 1px solid rgba(0, 0, 0, 0.4);
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   font-size: 1.0em;
@@ -434,7 +437,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   padding: 0.1em;
 }
 #registration-form button span em {
-  background: rgb(151, 151, 151) url(/img/bkg_button_attention.png) repeat-x scroll left bottom;
+  background: rgb(151, 151, 151) url(/images/bkg_button_attention.png) repeat-x scroll left bottom;
   color: rgb(255, 255, 255);
   display: block;
   font-style: normal;
@@ -467,7 +470,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 #login-form input {
   -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-  background: rgb(255, 255, 255) url(/img/bkg_input.png) scroll no-repeat right bottom;
+  background: rgb(255, 255, 255) url(/images/bkg_input.png) scroll no-repeat right bottom;
   border: 1px solid rgba(0, 0, 0, 0.4);
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   font-size: 1.0em;
@@ -494,7 +497,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   padding: 0.1em;
 }
 #login-form button span em {
-  background: rgb(151, 151, 151) url(/img/bkg_button.png) repeat-x scroll left bottom;
+  background: rgb(151, 151, 151) url(/images/bkg_button.png) repeat-x scroll left bottom;
   color: rgb(0, 0, 0);
   display: block;
   font-style: normal;
@@ -548,7 +551,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   width: 550px;
 }
 #message-form button {
-  background: rgb(151, 151, 151) url(/img/bkg_return.png) scroll repeat left top;
+  background: rgb(151, 151, 151) url(/images/bkg_return.png) scroll repeat left top;
   border: 0;
   float: left;
   font-size: 1.0em;
@@ -560,7 +563,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   width: 40px;
 }
 #message-form button span {
-  background: transparent url(/img/return.png) scroll no-repeat center center;
+  background: transparent url(/images/return.png) scroll no-repeat center center;
   display: block;
   height: 75px;
 }
@@ -586,19 +589,19 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   border: 0.1em solid rgba(245, 218, 87, 0.75);
 }
 .warning span {
-  background: rgb(245, 218, 87) url(/img/icn_warning.png) no-repeat scroll 0.3em 0.3em;
+  background: rgb(245, 218, 87) url(/images/icn_warning.png) no-repeat scroll 0.3em 0.3em;
 }
 .error {
   border: 0.1em solid rgba(245, 131, 105, 0.75);
 }
 .error span {
-  background: rgb(245, 131, 105) url(/img/icn_error.png) no-repeat scroll 0.3em 0.3em;
+  background: rgb(245, 131, 105) url(/images/icn_error.png) no-repeat scroll 0.3em 0.3em;
 }
 .notice {
   border: 0.1em solid rgba(113, 200, 103, 0.75);
 }
 .notice span {
-  background: rgb(113, 200, 103) url(/img/icn_notice.png) no-repeat scroll 0.3em 0.3em;
+  background: rgb(113, 200, 103) url(/images/icn_notice.png) no-repeat scroll 0.3em 0.3em;
 }
 
 /* =AUDIENCE OPTIONS

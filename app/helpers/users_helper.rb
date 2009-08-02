@@ -91,6 +91,6 @@ module UsersHelper
   end
   
   def avatar_url(user)
-    user.avatar ? images_avatar_path(user.avatar, :jpg) : "/img/userpicture.jpg"
+    user.avatar ? images_avatar_path(user.avatar, :jpg) : "/images/userpicture.jpg"
   end
 end
