@@ -246,6 +246,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   cursor: pointer;
   margin-bottom: 0.1em;
   padding: 0.2em 0.5em 0.2em 25px;
+  position: relative;
 }
 #file-list li.file {
   background: rgb(241, 241, 241) url(/images/icn_file.png) scroll no-repeat left top;
