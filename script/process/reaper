@@ -1,0 +1,2 @@
+#!/usr/bin/env ruby
+# does nothing for the time being, it's still being called by cap though
