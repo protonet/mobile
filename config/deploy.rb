@@ -23,7 +23,7 @@ namespace :deploy do
   desc "prepare node for installation"
   task :prepare, :roles => :app do
     # create needed directories
-    run "mkdir -p ~/dashboard/shared/logs"
+    run "mkdir -p ~/dashboard/shared/log"
     run "mkdir -p ~/dashboard/releases"
     run "mkdir -p ~/dashboard/user-files"
   end
