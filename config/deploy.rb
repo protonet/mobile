@@ -20,13 +20,27 @@ role :web, "protonet-7.local"
 role :db,  "protonet-7.local", :primary => true
 
 namespace :deploy do
+  
   desc "prepare node for installation"
   task :prepare, :roles => :app do
     # create needed directories
     run "mkdir -p ~/dashboard/shared/log"
+    run "mkdir -p ~/dashboard/shared/user-files"
+    run "mkdir -p ~/dashboard/shared/pids"
     run "mkdir -p ~/dashboard/releases"
-    run "mkdir -p ~/dashboard/user-files"
   end
+  
+  desc "deploy monit configuration"
+  task :monit, :roles => :app do
+    upload_monit_file
+    # puts shared_path
+  end
+  
 end
 
 after "deploy", "deploy:cleanup"
+
+
+def upload_monit_file
+  upload("config/monit/monitrc", "/home/protonet/dashboard/shared/monit_dashboard")
+end

@@ -131,6 +131,12 @@ set httpd port 2812 and
 ## TIMEOUT statement. The service depends on another service (apache_bin) which
 ## is defined in the monit control file as well.
 #    
+
+check process js-dispatching-server with pidfile /home/protonet/dashboard/shared/pids/js_dispatching_server.rb.pid
+	start program = "ruby /home/protonet/dashboard/messaging/js_dispatching_control.rb start"
+	stop program = "ruby /home/protonet/dashboard/messaging/js_dispatching_control.rb stop"
+	if 3 restarts within 5 cycles then timeout
+
 #  check process apache with pidfile /usr/local/apache/logs/httpd.pid
 #    start program = "/etc/init.d/httpd start"
 #    stop program  = "/etc/init.d/httpd stop"
@@ -214,3 +220,5 @@ set httpd port 2812 and
 #  include /etc/monit.d/*
 #
 #
+
+check process js_dispatching_server.rb with pidfile /var/run/apache2.pid 
