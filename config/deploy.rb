@@ -33,7 +33,10 @@ namespace :deploy do
   desc "deploy monit configuration"
   task :monit, :roles => :app do
     upload_monit_file
-    # puts shared_path
+    # move it to the correct location
+    sudo "mv /home/protonet/dashboard/shared/monit_ptn_node /etc/monit"
+    # and restart monit
+    sudo "/etc/init.d/monit restart"
   end
   
 end
@@ -42,5 +45,5 @@ after "deploy", "deploy:cleanup"
 
 
 def upload_monit_file
-  upload("config/monit/monitrc", "/home/protonet/dashboard/shared/monit_dashboard")
+  upload("config/monit/monit_ptn_node", "/home/protonet/dashboard/shared/monit_ptn_node")
 end

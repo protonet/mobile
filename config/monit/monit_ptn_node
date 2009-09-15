@@ -84,12 +84,6 @@ set logfile syslog facility log_daemon
 ## configuration, actual services parameters or manage the services using the 
 ## web interface.
 #
-set httpd port 2812 and
-#   use address localhost  # only accept connection from localhost
-    allow localhost        # allow localhost to connect to the server and
-    allow admin:monit      # require user 'admin' with password 'monit'
-#
-#
 ###############################################################################
 ## Services
 ###############################################################################
@@ -133,8 +127,8 @@ set httpd port 2812 and
 #    
 
 check process js-dispatching-server with pidfile /home/protonet/dashboard/shared/pids/js_dispatching_server.rb.pid
-	start program = "ruby /home/protonet/dashboard/messaging/js_dispatching_control.rb start"
-	stop program = "ruby /home/protonet/dashboard/messaging/js_dispatching_control.rb stop"
+	start program = "/usr/local/bin/ruby /home/protonet/dashboard/messaging/js_dispatching_control.rb start"
+	stop program = "/usr/local/bin/ruby /home/protonet/dashboard/messaging/js_dispatching_control.rb stop"
 	if 3 restarts within 5 cycles then timeout
 
 #  check process apache with pidfile /usr/local/apache/logs/httpd.pid
@@ -210,15 +204,3 @@ check process js-dispatching-server with pidfile /home/protonet/dashboard/shared
 #       then alert
 #
 #
-###############################################################################
-## Includes
-###############################################################################
-##
-## It is possible to include the configuration or its parts from other files or
-## directories.
-#
-#  include /etc/monit.d/*
-#
-#
-
-check process js_dispatching_server.rb with pidfile /var/run/apache2.pid 
