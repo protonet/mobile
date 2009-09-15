@@ -28,6 +28,7 @@ namespace :deploy do
     run "mkdir -p ~/dashboard/shared/db"
     run "mkdir -p ~/dashboard/shared/user-files"
     run "mkdir -p ~/dashboard/shared/pids"
+    run "ln -s ~/dashboard/current/db/shared ~/dashboard/shared/db"
     run "mkdir -p ~/dashboard/releases"
   end
   
