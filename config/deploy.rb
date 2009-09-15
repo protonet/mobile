@@ -25,6 +25,7 @@ namespace :deploy do
   task :prepare, :roles => :app do
     # create needed directories
     run "mkdir -p ~/dashboard/shared/log"
+    run "mkdir -p ~/dashboard/shared/db"
     run "mkdir -p ~/dashboard/shared/user-files"
     run "mkdir -p ~/dashboard/shared/pids"
     run "mkdir -p ~/dashboard/releases"
