@@ -3,7 +3,9 @@ class LdapUser  < ActiveLdap::Base
   belongs_to :groups, :class => 'Group', :many => 'memberUid', :foreign_key => 'uid'
   
   def self.create_for_user(user)
-    unless LdapUser.exists?(user.login)
+    begin
+      LdapUser.exists?(user.login)
+    rescue ActiveLdap::EntryNotFound
       ldap_user = new(user.login)
       ldap_user.cn = user.login
       ldap_user.uid_number = 2000 + user.id
