@@ -8,6 +8,7 @@ set :deploy_to, "~/dashboard"
 set :deploy_via, :copy
 set :copy_cache, true
 set :copy_exclude, ".git/*"
+set :git_enable_submodules, 1
 
 set :user, "protonet"
 # todo: change this to www-data or something
