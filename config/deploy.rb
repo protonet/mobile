@@ -48,8 +48,17 @@ namespace :deploy do
   
 end
 
+namespace :passenger do
+  desc "Restart Application"
+  task :restart do
+    run "touch #{current_path}/tmp/restart.txt"
+  end
+end
+
+
 after "deploy", "deploy:database"
 after "deploy", "deploy:cleanup"
+after "deploy", "passenger:restart"
 
 
 def upload_monit_file

@@ -45,10 +45,10 @@
     <%= "<p class=\"error message\"><span>#{flash[:error]}</span></p>" if flash[:error] %>
     <%= "<p class=\"warning message\"><span>#{flash[:warning]}</span></p>" if flash[:warning] %>
     <%= yield %>
-    
+
     <script type="text/javascript" charset="utf-8">
       config = {};
-      config.dispatching_server = '<%= configatron.dispatching_server %>';
+      config.dispatching_server = '<%= request.env["SERVER_NAME"] %>';
       config.token = '<%= current_user.communication_token %>';
       config.user_name = '<%= current_user.display_name %>';
       config.user_id = '<%= current_user.id %>';
