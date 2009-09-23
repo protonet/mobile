@@ -19,7 +19,7 @@ class FileSystem
   end
   
   def self.public_path
-    @uploads_path ||= RAILS_ROOT + "/public"
+    @uploads_path ||= RAILS_ROOT + "/../shared/user-files"
   end
   
 end
