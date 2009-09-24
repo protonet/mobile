@@ -37,7 +37,7 @@
 
 <div class="side">
   <%- if current_user.stranger? -%>
-    <%- form_tag users_path, :id => "registration-form" do -%>
+    <% form_for :user, :url => users_path, :html => {:id => "registration-form"} do |f| -%>
       <fieldset>
         <legend>
           <strong>JOIN the (r)evolution</strong>
@@ -46,11 +46,12 @@
         <ul>
           <li>
             <%= label_tag "login" %>
-            <%= text_field_tag "login", @login %>
+            <%= f.text_field "login", {:id => 'new-user-login'} %>
           </li>
           <li>
             <%= label_tag "password" %>
-            <%= password_field_tag "password", nil %>
+            <%= f.password_field "password", {:id => 'new-user-password'} %>
+            <%= f.hidden_field "password_confirmation", {:id => 'new-user-password-confirmation'} %>
           </li>
         </ul>
       </fieldset>
