@@ -19,7 +19,7 @@ class FileSystem
   end
   
   def self.public_path
-    @uploads_path ||= RAILS_ROOT + Rails.env.production? ? "/../../shared/user-files" : "/../shared/user-files"
+    @uploads_path ||= RAILS_ROOT + (Rails.env.production? ? "/../../shared/user-files" : "/../shared/user-files")
   end
   
 end
