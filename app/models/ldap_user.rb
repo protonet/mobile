@@ -2,18 +2,25 @@ class LdapUser  < ActiveLdap::Base
   ldap_mapping :dn_attribute => 'uid', :prefix => 'ou=People', :classes => ['top', 'account', 'posixAccount', 'shadowAccount']
   belongs_to :groups, :class => 'Group', :many => 'memberUid', :foreign_key => 'uid'
   
+  
+  # REFACTORE THIS! ;) I just hacked that - aj
   def self.create_for_user(user)
     begin
-      LdapUser.exists?(user.login)
+      create_ldap_user_for(user) unless LdapUser.exists?(user.login)
     rescue ActiveLdap::EntryNotFound
-      ldap_user = new(user.login)
-      ldap_user.cn = user.login
-      ldap_user.uid_number = 2000 + user.id
-      ldap_user.gid_number = 2323
-      ldap_user.home_directory = "/home/#{user.login}"
-      ldap_user.userPassword = ActiveLdap::UserPassword.crypt(user.password)
-      raise RuntimeError unless ldap_user.save
+      create_ldap_user_for(user)
     end
+  end
+  
+  def self.create_ldap_user_for(user)
+    ldap_user = new(user.login)
+    ldap_user.cn = user.login
+    ldap_user.uid_number = 2000 + user.id
+    ldap_user.gid_number = 2323
+    ldap_user.home_directory = "/home/#{user.login}"
+    ldap_user.userPassword = ActiveLdap::UserPassword.crypt(user.password)
+    raise RuntimeError unless ldap_user.save
+    ldap_user
   end
   
   # if User.exists?(name)
