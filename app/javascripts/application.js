@@ -2,4 +2,6 @@
 //= require "lib/hotkeys.js"
 
 // make sure app works even without firebug
-var console = console || {"log": function(){}};
+if(!window.console) {
+	var console = {"log": function(){}};
+}
