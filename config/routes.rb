@@ -5,6 +5,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :tweets
   map.resources :listens
   map.resources :assets
+  map.resources :navigation
 
   map.files '/filewidget', :controller => 'assets', :action => 'test_for_file_browser'
 

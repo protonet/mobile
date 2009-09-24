@@ -46,9 +46,25 @@ table {
   border-spacing: 0;
 }
 
+/* =FONTS
+=========================================================================== */
+@font-face {
+  font-family: "Univers Light Condensed";
+  src: url("/stylesheets/fonts/Univers Light Condensed.ttf");
+}
+
+@font-face {
+  font-family: "Univers LT 47 CondensedLt";
+  src: url("/stylesheets/fonts/Univers LT 47 Condensed Light.ttf");
+}
+
 
 /* =STYLES
 =========================================================================== */
+html, body {
+  height: 100%;
+}
+
 body {
   background: rgb(255, 255, 255) url(/images/bkg_body.png) scroll repeat left top;
   border: 0;

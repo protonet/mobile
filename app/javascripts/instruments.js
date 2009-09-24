@@ -3,6 +3,7 @@
 //= require "input_console/input_console.js"
 //= require "file_widget/file_widget.js"
 //= require "lib/jQuery.dPassword.js"
+//= require "navigation.js"
 
 var cc = new CommunicationConsole({'config': config});
 var Dispatcher    = new DispatchingSystem(config.dispatching_server, config.token, config.user_id);

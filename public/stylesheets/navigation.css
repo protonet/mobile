@@ -1,0 +1,101 @@
+#navigation {
+  display: none;
+  border: 8px solid #fff;
+  background: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  width: 510px;
+  height: 280px;
+  top: 50%;
+  left: 50%;
+  margin: -140px 0 0 -255px;
+  -moz-box-shadow: 0px 20px 45px #000;
+  -webkit-box-shadow: 0px 20px 45px #000;
+  -khtml-box-shadow: 0px 20px 45px #000;
+}
+
+#navigation,
+#navigation ul {
+  -moz-border-radius: 65px;
+  -webkit-border-radius: 65px;
+  -khtml-border-radius: 65px;
+}
+
+#navigation ul {
+  margin: -9px 0 0 -9px;
+  position: absolute;
+  border: 8px solid #FCB852;
+  overflow: hidden;
+  width: 512px;
+  height: 282px;
+}
+
+#navigation li {
+  font-family: "Univers LT 47 CondensedLt";
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  text-transform: lowercase;
+  color: #fff;
+  margin: 10px 28px;
+  float: left;
+  padding: 75px 0 10px 0;
+  width: 105px;
+  background-image: url(/images/spr_navigation.png);
+  background-repeat: no-repeat;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+#navigation li:hover {
+  -moz-border-radius: 12px;
+  -webkit-border-radius: 12px;
+  -khtml-border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+#navigation li:active {
+  background-color: rgba(255, 255, 255, 0.45);
+}
+
+/* First row */
+#navigation .home,
+#navigation .preferences,
+#navigation .files {
+  margin-top: 20px;
+}
+
+/* Second row */
+#navigation .users,
+#navigation .nodes,
+#navigation .channels {
+}
+
+/* Left column */
+#navigation .home,
+#navigation .users {
+  margin-left: 40px;
+}
+
+#navigation .home {
+  background-position: 20px 12px;
+}
+
+#navigation .preferences {
+  background-position: -131px 12px;
+}
+
+#navigation .files {
+  background-position: -282px 12px;
+}
+
+#navigation .users {
+  background-position: 20px -116px;
+}
+
+#navigation .nodes {
+  background-position: -131px -116px;
+}
+
+#navigation .channels {
+  background-position: -282px -116px;
+}
