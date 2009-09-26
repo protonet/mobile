@@ -330,10 +330,7 @@ function _getFieldSelection(element) {
 		return [cursorPos - length, cursorPos, length];
 	} else {
 		var el = element.get(0);
-		if(el) {
-		  return [el.selectionStart, el.selectionEnd, el.selectionEnd - el.selectionStart];
-		}
-		  return [];
+		return [el.selectionStart, el.selectionEnd, el.selectionEnd - el.selectionStart];
 	}
 }
 
