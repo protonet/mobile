@@ -8,9 +8,13 @@ protonet.controls.FileWidget = function() {
   this.observeBackButton();
   this.current_path = '';
   this.addPathBlob('');
+  this.initUpload();
 };
 
 protonet.controls.FileWidget.prototype = {
+  "initUpload": function() {
+    new this.FileUpload();
+  },
   
   "gotoPath": function(path) {
     var path = path || ''

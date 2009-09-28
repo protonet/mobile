@@ -48,14 +48,17 @@
     <%= yield %>
 
     <script type="text/javascript" charset="utf-8">
-      config = {};
-      config.dispatching_server = '<%= request.env["SERVER_NAME"] %>';
-      config.token = '<%= current_user.communication_token %>';
-      config.user_name = '<%= current_user.display_name %>';
-      config.user_id = '<%= current_user.id %>';
-      config.user_audience_ids = '<%= current_user.audiences && current_user.audiences.map {|a| a.id}.to_json %>';
-      config.user_icon_url = '<%= current_user.active_avatar_url %>';
-      config.user_agent = null;
+      var protonet = protonet || {};
+      protonet.config = {
+        dispatching_server: '<%= request.env["SERVER_NAME"] %>',
+        token: '<%= current_user.communication_token %>',
+        user_name: '<%= current_user.display_name %>',
+        user_id: '<%= current_user.id %>',
+        user_audience_ids: '<%= current_user.audiences && current_user.audiences.map {|a| a.id}.to_json %>',
+        user_icon_url: '<%= current_user.active_avatar_url %>',
+        upload_url: '<%= assets_path %>',
+        swfupload_flash_url: "flash/swfupload.swf"
+      };
     </script>
     
     <%= sprockets_include_tag(:default) %>    
