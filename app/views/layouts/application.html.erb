@@ -55,9 +55,7 @@
         user_name: '<%= current_user.display_name %>',
         user_id: '<%= current_user.id %>',
         user_audience_ids: '<%= current_user.audiences && current_user.audiences.map {|a| a.id}.to_json %>',
-        user_icon_url: '<%= current_user.active_avatar_url %>',
-        upload_url: '<%= assets_path %>',
-        swfupload_flash_url: "flash/swfupload.swf"
+        user_icon_url: '<%= current_user.active_avatar_url %>'
       };
     </script>
     

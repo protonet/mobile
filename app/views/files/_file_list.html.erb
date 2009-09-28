@@ -12,10 +12,10 @@
     <li class="<%= type %>"><%= name %><%= image_tag( 'icn_download.png', {:style => "position:absolute;top: 2px; right: 0;"}) if type == 'file' %></li>
     <% end %>
   </ul>
-  <form id="file-stash">
+  <% form_for @asset, {:html => {:id => "file-stash"}} do |f| %>
     <div id="file-upload-flash"></div>
     <fieldset>
       <button class="add" id="upload-button"><span>+</span></button> <label id="upload-button-label" for="upload-button">add files here …</label>
     </fieldset>
-  </form>
+  <% end %>
 </div>
