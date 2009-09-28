@@ -1,4 +1,4 @@
-function FileWidget() {
+protonet.controls.FileWidget = function() {
   this.wrapper = $("#file-list");
   this.file_list = this.wrapper.find('ul.root');
   this.hierarchy_bar = this.wrapper.find('#file-navigation .hierarchy');
@@ -8,9 +8,9 @@ function FileWidget() {
   this.observeBackButton();
   this.current_path = '';
   this.addPathBlob('');
-}
+};
 
-FileWidget.prototype = {
+protonet.controls.FileWidget.prototype = {
   
   "gotoPath": function(path) {
     var path = path || ''

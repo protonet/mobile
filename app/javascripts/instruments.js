@@ -8,9 +8,9 @@
 
 var cc = new CommunicationConsole({'config': config});
 var Dispatcher    = new DispatchingSystem(config.dispatching_server, config.token, config.user_id);
-$('document').ready(function() {
-  
-  file_widget = new FileWidget();
+
+$(function() {
+  var file_widget = new protonet.controls.FileWidget();
   
   // iphonify password field 
   var registration_password_field = $('#new-user-password');
@@ -22,6 +22,5 @@ $('document').ready(function() {
       registration_password_confirmation_field.val(registration_password_field.val());
     });
   }
-
 });
 

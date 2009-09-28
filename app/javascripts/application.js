@@ -5,3 +5,7 @@
 if(!window.console) {
 	var console = {"log": function(){}};
 }
+// protonet namespace
+var protonet = protonet || {};
+protonet.controls = protonet.controls || {};
+
