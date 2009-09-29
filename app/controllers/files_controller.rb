@@ -9,8 +9,6 @@ class FilesController < ApplicationController
       format.html # new.html.erb
       format.js  { render :json => @files }
     end
-    
   end
-  
   
 end

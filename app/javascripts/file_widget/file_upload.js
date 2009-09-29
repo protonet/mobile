@@ -8,11 +8,13 @@
 // upload error
 
 protonet.controls.FileWidget.prototype.FileUpload = function() {
+  this._fileList = $("#file-list .root");
   this._form = $("#file-stash");
   this._uploadUrl = this._form.attr("action") + "?_rails_dashboard_session=" + protonet.config.session_id;
   this._token = this._form.find("[name='authenticity_token']").val();
   
   this._oldTitle = document.title;
+  this.reset();
   
   var self = this;
   this._swfUpload = new SWFUpload({
@@ -41,47 +43,42 @@ protonet.controls.FileWidget.prototype.FileUpload = function() {
 
 protonet.controls.FileWidget.prototype.FileUpload.prototype = {
   file_queued_handler : function(file) {
-    console.log("file queue");
-    this.fileIds = this.fileIds || [];
-    this.fullSize = this.fullSize || 0;
-    this.fullSize += file.size;
-    this.ul = this.ul || $("#file-list .root");
-    this.liElements = this.liElements || [];
-    this.statusElements = this.statusElements || [];
-    this.fileIds.push(file.id);
-    this.liElements[file.id] = $(document.createElement("li"));
-    this.liElements[file.id].html(file.name + " <span>(0 %)</span>");
-    this.ul.append(this.liElements[file.id]);
-    this.statusElements[file.id] = this.liElements[file.id].find("span");
+    console.log("file queue for: " + file.name);
+    this._fullSize += file.size;
+    this._fileList.append('<li class="file disabled" id="file:' + file.id + '">' + file.name + " <span>(0 %)</span></li>");
   },
 
-  file_dialog_complete_handler: function(numSelectedFiles) {
+  file_dialog_complete_handler: function(numSelectedFiles, numFilesQueued) {
     console.log("file dialog complete");
-    
     if (numSelectedFiles == 0) { return; }
+    this._numSelectedFiles = numSelectedFiles;
     
     window.onbeforeunload = function() { return "Upload is still in progress. Are you sure?"; };
-    // this._swfUpload.startUpload(this.fileIds.shift());
+
     this._swfUpload.startUpload();
     
   },
   
   upload_progress_handler: function(file, bytesLoaded, bytesTotal) {
-    console.log("upload progress");
+    console.log("upload progress for: " + file.name);
     
-    var percent = Math.round(bytesLoaded/bytesTotal*100);
-    var fullPercent = Math.round((this.loadedSize + bytesLoaded) / this.fullSize * 100);
-    this.statusElements[file.id].html(" (" + percent + " %)");
-    document.title = this.backupTitle + " - Uploading " + fullPercent + " %";
+    var percent = Math.round(bytesLoaded/bytesTotal * 100),
+        fullPercent = Math.round((this._loadedSize + bytesLoaded) / this._fullSize * 100),
+        status = this._fileList.find("#file:" + file.id + " span");
+    status.html("(" + percent + " %)");
+    
+    document.title = this._oldTitle + " - Uploading " + fullPercent + " %";
   },
   
   upload_success_handler: function(file) {
-    console.log("upload success");
+    console.log("upload success for: " + file.name);
     
-    this.loadedSize += file.size;
-    this.liElements[file.id].html('<a href="/uploads/' + file.name + '">' + file.name + '</a>');
-    if (this.fileIds.length > 0) {
-      this._swfUpload.startUpload(this.fileIds.shift());
+    this._fileList.find("#file:" + file.id + " span").remove();
+    
+    this._loadedSize += file.size;
+    
+    if (--this._numSelectedFiles > 0) {
+      this._swfUpload.startUpload();
     } else {
       this.reset();
     }
@@ -94,7 +91,9 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
   
   reset: function() {
     window.onbeforeunload = null;
-    this.loadedSize = 0;
+    this._loadedSize = 0;
+    this._fullSize = 0;
+    this._numSelectedFiles = 0;
     document.title = this._oldTitle;
   }
 };
