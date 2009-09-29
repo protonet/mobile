@@ -9,7 +9,7 @@
 
 protonet.controls.FileWidget.prototype.FileUpload = function() {
   this._form = $("#file-stash");
-  this._uploadUrl = this._form.attr("action");
+  this._uploadUrl = this._form.attr("action") + "?_rails_dashboard_session=" + protonet.config.session_id;
   this._token = this._form.find("[name='authenticity_token']").val();
   
   this._oldTitle = document.title;
