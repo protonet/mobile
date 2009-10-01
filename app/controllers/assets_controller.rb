@@ -42,7 +42,13 @@ class AssetsController < ApplicationController
   # POST /assets.xml
   def create
     @asset = Asset.new(params[:asset])
-
+    
+    if params[:file]
+      target_file = "#{RAILS_ROOT}/../shared/user-files/#{params["Filename"]}"
+      FileUtils.mv(params[:file].path, target_file)
+      return head :ok
+    end
+      
     respond_to do |format|
       if @asset.save
         flash[:notice] = 'Asset was successfully created.'

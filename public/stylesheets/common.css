@@ -267,6 +267,12 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 #file-list li.file {
   background: rgb(241, 241, 241) url(/images/icn_file.png) scroll no-repeat left top;
 }
+#file-list li.file.disabled {
+  opacity: 0.5;
+}
+#file-list li.file.error {
+  background-color: red;
+}
 #file-list li.directory {
   background: rgb(241, 241, 241) url(/images/icn_directory.png) scroll no-repeat left top;
 }
@@ -288,6 +294,10 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   margin-top: 0.3em;
   margin-bottom: 0;
 }
+#file-list .swfupload {
+  position: absolute;
+  z-index: 1;
+}
 #file-list button {
   border: 0 none;
   float: left;
@@ -295,6 +305,11 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   margin: 0;
   padding: 0;
   width: 20px;
+}
+#file-list #upload-button-label {
+  line-height: 20px;
+  margin: 0 0 0 4px;
+  color: #555;
 }
 #file-list button span {
   display: none;
