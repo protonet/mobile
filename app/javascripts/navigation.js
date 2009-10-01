@@ -38,18 +38,18 @@ protonet.controls.Navigation = {
   toggle: function() {
     if (this._visible) {
       this.hide();
-    } else {  
+    } else {
       this.show();
     }
   },
   
   show: function() {
-    this._container.fadeIn("fast");
+    this._container.show();
     this._visible = true;
   },
   
   hide: function() {
-    this._container.fadeOut("fast");
+    this._container.fadeOut(200);
     this._visible = false;
   }
 };

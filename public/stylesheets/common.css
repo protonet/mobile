@@ -270,8 +270,9 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 #file-list li.file.disabled {
   opacity: 0.5;
 }
-#file-list li.file.error {
-  background-color: red;
+#file-list li.file.upload-error {
+  background-color: #F47474;
+  cursor: default !important;
 }
 #file-list li.directory {
   background: rgb(241, 241, 241) url(/images/icn_directory.png) scroll no-repeat left top;
@@ -283,7 +284,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   background: rgb(255, 255, 255) url(/images/icn_directory.png) scroll no-repeat left top;
   border: 1px solid rgb(0, 0, 0);
 }
-#file-list li.file:hover {
+#file-list li.file:not(.upload-error):not(.disabled):hover {
   background: rgb(255, 255, 255) url(/images/icn_file.png) scroll no-repeat left top;
   border: 1px solid rgb(0, 0, 0);
 }

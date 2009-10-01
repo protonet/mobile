@@ -8,71 +8,136 @@
 // upload error
 
 protonet.controls.FileWidget.prototype.FileUpload = function() {
-  this._fileList = $("#file-list .root");
-  this._form = $("#file-stash");
-  this._uploadUrl = this._form.attr("action") + "?_rails_dashboard_session=" + protonet.config.session_id;
-  this._token = this._form.find("[name='authenticity_token']").val();
+  this._initElements();
+  this._initForm();
+  this._initTitle();
+  this._reset();
   
-  this._oldTitle = document.title;
-  this.reset();
-  
-  var self = this;
-  this._swfUpload = new SWFUpload({
-    upload_url: this._uploadUrl,
-    flash_url: "flash/swfupload.swf",
-    button_placeholder_id: "file-upload-flash",
-    file_size_limit: "100000 MB",
-    post_params: { "authenticity_token": this._token },
-    button_width: 110,
-    button_height: 22,
-    button_window_mode: SWFUpload.WINDOW_MODE.TRANSPARENT,
-    button_cursor: SWFUpload.CURSOR.HAND,
-    debug: false,
-    file_types: "*.*",
-    file_post_name: "file",
-    file_types_description: "All Files",
-    file_upload_limit: 100,
-    file_queue_limit: 0,
-    file_queued_handler: function() { self.file_queued_handler.apply(self, arguments); },
-    file_dialog_complete_handler: function() { self.file_dialog_complete_handler.apply(self, arguments); },
-    upload_progress_handler: function() { self.upload_progress_handler.apply(self, arguments); },
-    upload_success_handler: function() { self.upload_success_handler.apply(self, arguments); },
-    upload_error_handler: function() { self.upload_error_handler.apply(self, arguments); }
-  });
+  this._initSwfUpload();
 };
 
 protonet.controls.FileWidget.prototype.FileUpload.prototype = {
-  file_queued_handler : function(file) {
+  _initElements: function() {
+    this._fileList = $("#file-list .root");
+    this._form = $("#file-stash");
+  },
+  
+  _initForm: function() {
+    // TODO serialize form
+    this._uploadUrl = this._form.attr("action") + "?_rails_dashboard_session=" + protonet.config.session_id;
+    this._token = this._form.find("[name='authenticity_token']").val();
+  },
+  
+  _initTitle: function() {
+    this._oldTitle = document.title;
+  },
+  
+  _reset: function() {
+    this._loadedSize = 0;
+    this._fullSize = 0;
+    this._numSelectedFiles = 0;
+    window.onbeforeunload = null;
+    document.title = this._oldTitle;
+  },
+  
+  _proceed: function() {
+    if (--this._numSelectedFiles > 0) {
+      this._swfUpload.startUpload();
+    } else {
+      this._reset();
+    }
+  },
+  
+  _getErrorMessage: function(errorCode) {
+    var message, i;
+    for (i in SWFUpload.UPLOAD_ERROR) {
+      if (SWFUpload.UPLOAD_ERROR[i] == errorCode) {
+        message = i;
+        break;
+      }
+    }
+    message = message || "Unknown";
+    
+    return "Error: " + message;
+  },
+  
+  _getProgress: function(bytesLoaded, bytesTotal) {
+    var fileProgress = Math.round(bytesLoaded / bytesTotal * 100),
+        fullProgress = Math.round((this._loadedSize + bytesLoaded) / this._fullSize * 100);
+    
+    return {
+      file: fileProgress,
+      full: fullProgress
+    };
+  },
+  
+  _wrap: function(text) {
+    return "(" + text + ")";
+  },
+  
+  // MAGIC! Makes all the girls lift their skirts...
+  _initSwfUpload: function() {
+    if (!window.SWFUpload) {
+      throw new Error("SWFUpload class not loaded ...");
+    }
+    
+    this._swfUpload = new SWFUpload({
+      // SWFUpload Configuration
+      // Docs: http://demo.swfupload.org/Documentation/
+      upload_url:                   this._uploadUrl,
+      flash_url:                    "flash/swfupload.swf",
+      button_placeholder_id:        "file-upload-flash",
+      file_size_limit:              "100000 MB",
+      post_params:                  { "authenticity_token": this._token },
+      button_width:                 110,
+      button_height:                22,
+      button_window_mode:           SWFUpload.WINDOW_MODE.TRANSPARENT,
+      button_cursor:                SWFUpload.CURSOR.HAND,
+      debug:                        false,
+      file_types:                   "*.*",
+      file_post_name:               "file",
+      file_types_description:       "All Files",
+      file_upload_limit:            100,
+      file_queue_limit:             0,
+      file_queued_handler:          this.__fileQueued.bind(this),
+      file_dialog_complete_handler: this.__fileDialogComplete.bind(this),
+      upload_progress_handler:      this.__uploadProgress.bind(this),
+      upload_success_handler:       this.__uploadSuccess.bind(this),
+      upload_error_handler:         this.__uploadError.bind(this)
+    });
+  },
+  
+  // --------- SWF UPLOAD HANDLER START ---------
+  __fileQueued: function(file) {
     console.log("file queue for: " + file.name);
     
     this._fullSize += file.size;
     this._fileList.append('<li class="file disabled" id="file-' + file.id + '">' + file.name + " <span>(0 %)</span></li>");
   },
-
-  file_dialog_complete_handler: function(numSelectedFiles, numFilesQueued) {
+  
+  __fileDialogComplete: function(numSelectedFiles) {
     console.log("-- file dialog complete --");
     
     if (numSelectedFiles == 0) { return; }
     this._numSelectedFiles = numSelectedFiles;
     
     window.onbeforeunload = function() { return "Upload is still in progress. Are you sure?"; };
-    this._fileList[0].scrollTop = this._fileList[0].offsetTop;
+    this._fileList[0].scrollTop = this._fileList[0].scrollHeight;
     this._swfUpload.startUpload();
     
   },
   
-  upload_progress_handler: function(file, bytesLoaded, bytesTotal) {
+  __uploadProgress: function(file, bytesLoaded, bytesTotal) {
     console.log("upload progress for: " + file.name);
     
-    var percent = Math.round(bytesLoaded/bytesTotal * 100),
-        fullPercent = Math.round((this._loadedSize + bytesLoaded) / this._fullSize * 100),
-        status = this._fileList.find("#file-" + file.id + " span");
-    status.html("(" + percent + " %)");
+    var status = this._fileList.find("#file-" + file.id + " span"),
+        progress = this._getProgress(bytesLoaded, bytesTotal);
+    status.html(this._wrap(progress.file + " %"));
     
-    document.title = this._oldTitle + " - Uploading " + fullPercent + " %";
+    document.title = this._oldTitle + " - Uploading " + progress.full + " %";
   },
   
-  upload_success_handler: function(file) {
+  __uploadSuccess: function(file) {
     console.log("upload success for: " + file.name);
     
     var listElement = this._fileList.find("#file-" + file.id);
@@ -81,29 +146,21 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     
     this._loadedSize += file.size;
     
-    if (--this._numSelectedFiles > 0) {
-      this._swfUpload.startUpload();
-    } else {
-      this.reset();
-    }
+    this._proceed();
   },
   
-  upload_error_handler: function(file) {
+  __uploadError: function(file, errorCode) {
     console.log("upload error for file: " + file.name);
     
-    this._numSelectedFiles--;
+    var listElement = this._fileList.find("#file-" + file.id),
+        errorMessage = this._getErrorMessage(errorCode);
+    listElement.addClass("upload-error");
+    listElement.find("span").html(this._wrap(errorMessage));
     
-    var listElement = this._fileList.find("#file-" + file.id);
-    listElement.addClass("error");
-    listElement.find("span").remove();
-  },
-  
-  reset: function() {
-    window.onbeforeunload = null;
-    this._loadedSize = 0;
-    this._fullSize = 0;
-    this._numSelectedFiles = 0;
-    document.title = this._oldTitle;
+    this._loadedSize += file.size;
+    
+    this._proceed();
   }
+  // --------- SWF UPLOAD HANDLER END ---------
 };
 
