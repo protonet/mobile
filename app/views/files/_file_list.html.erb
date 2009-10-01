@@ -9,7 +9,7 @@
   </form>
   <ul class="root">
     <% file_system.each do |name, type| %>
-    <li class="<%= type %>"><%= name %><%= image_tag( 'icn_download.png', {:style => "position:absolute;top: 2px; right: 0;"}) if type == 'file' %></li>
+    <li class="<%= type %>"><%= name %></li>
     <% end %>
   </ul>
   <% form_for @asset, {:html => {:id => "file-stash"}} do |f| %>
@@ -19,3 +19,5 @@
     </fieldset>
   <% end %>
 </div>
+
+<%= render :partial => '/files/file_list_context_menu' %>

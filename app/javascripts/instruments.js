@@ -3,6 +3,8 @@
 //= require "input_console/input_console.js"
 //= require "file_widget/file_widget.js"
 //= require "file_widget/file_upload.js"
+//= require "/lib/jquery.contextMenu.js"
+//= require "file_widget/file_context_menu.js"
 //= require "lib/jQuery.dPassword.js"
 //= require "navigation.js"
 

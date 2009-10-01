@@ -9,11 +9,16 @@ protonet.controls.FileWidget = function() {
   this.current_path = '';
   this.addPathBlob('');
   this.initUpload();
+  this.initContextMenu();
 };
 
 protonet.controls.FileWidget.prototype = {
   "initUpload": function() {
     new this.FileUpload();
+  },
+  
+  "initContextMenu": function() {
+    new this.FileContextMenu(this);
   },
   
   "gotoPath": function(path) {

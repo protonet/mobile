@@ -11,4 +11,8 @@ class FilesController < ApplicationController
     end
   end
   
+  def delete
+    
+  end
+  
 end
