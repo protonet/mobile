@@ -55,6 +55,7 @@ protonet.controls.FileWidget.prototype = {
     html == '' ? this.file_list.empty() : this.file_list.html($(html));
     // now observe those directories
     this.observeDirectories();
+    this.initContextMenu(this);
   },
   
   "createElementFor": function(object) {

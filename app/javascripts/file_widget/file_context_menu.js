@@ -10,13 +10,16 @@ protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
       menu: "file-list-menu"
     },
       function(action, el, pos) {
-        // debugger;
-        alert(
-          "Action: " + action + "\n\n" +
-          "Element ID: " + $(el).attr("id") + "\n\n" +
-          "X: " + pos.x + "  Y: " + pos.y + " (relative to element)\n\n" +
-          "X: " + pos.docX + "  Y: " + pos.docY+ " (relative to document)"
-          );
+        var current_file_path = self.parent.current_path + '/' + el.html();
+        switch(action)
+        {
+        case 'download':
+          console.log('download: ' + current_file_path);
+          break;
+        case 'delete':
+          console.log('delete: ' + current_file_path);
+          break;
+        }
     });
   }
 }
