@@ -5,7 +5,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources   :tweets
   map.resources   :listens
   map.resources   :assets
-  map.resources   :files
   map.resources   :navigation
 
   map.files '/filewidget', :controller => 'assets', :action => 'test_for_file_browser'
@@ -19,7 +18,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resource :session
   
   map.namespace :system do |system|
-    system.connect 'foundations', :controller => 'foundations'
+    system.connect      'foundations', :controller => 'foundations'
+    system.files  'system/files', :controller => 'system/files'
   end
   
   map.namespace :images do |images|
