@@ -6,5 +6,4 @@ class AudiencesController < ApplicationController
     @audiences = Audience.all
   end
   
-  
 end
