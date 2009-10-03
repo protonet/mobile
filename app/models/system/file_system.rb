@@ -1,5 +1,5 @@
 module System
-  class File
+  class FileSystem
 
     def self.all(directory = '')
       bar = {}
