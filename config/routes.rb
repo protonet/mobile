@@ -19,7 +19,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.namespace :system do |system|
     system.connect      'foundations', :controller => 'foundations'
-    system.files  'system/files', :controller => 'system/files'
+    system.resources    'files'
   end
   
   map.namespace :images do |images|
