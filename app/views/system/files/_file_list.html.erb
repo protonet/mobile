@@ -12,7 +12,7 @@
     <li class="<%= type %>"><%= name %></li>
     <% end %>
   </ul>
-  <% form_tag system_files_path, {:id => "file-stash"} do |f| %>
+  <% form_tag system_files_path, {:id => "file-stash"} do %>
     <div id="file-upload-flash"></div>
     <fieldset>
       <button class="add" id="upload-button"><span>+</span></button> <label id="upload-button-label" for="upload-button">add files here …</label>
