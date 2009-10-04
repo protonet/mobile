@@ -76,7 +76,7 @@ unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(Phusio
   colored_on  = "\e[1m\e[32m[ ON]\e[0m"
   colored_off = "\e[1m\e[31m[OFF]\e[0m"
   # checking the messaging bus
-  configatron.messaging_bus_active = MessagingBus.active?
+  configatron.messaging_bus_active = System::MessagingBus.active?
   puts "RABBIT MQ:      #{configatron.messaging_bus_active ? colored_on : colored_off}"
   
   
