@@ -28,7 +28,7 @@ class AccountController < ApplicationController
   end
 
   def sign_up
-    @user = LdapUser.new(params[:user])
+    @user = Ldap::User.new(params[:user])
     @required_attributes = @user.must.collect(&:name)
     return unless request.post?
 

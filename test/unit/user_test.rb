@@ -39,7 +39,7 @@ class UserTest < Test::Unit::TestCase
     end
     
     it "should not create an ldap user" do
-      LdapUser.expects(:create_for_user).never
+      Ldap::User.expects(:create_for_user).never
       User.stranger('foobar')
     end
     
@@ -48,7 +48,7 @@ class UserTest < Test::Unit::TestCase
   context "Getting a communication authentication token" do
     
     before do
-      LdapUser.stubs(:create_for_user)
+      Ldap::User.stubs(:create_for_user)
     end
       
     should "be possible" do
@@ -152,7 +152,7 @@ class UserAuthAndCreationTest < ActiveSupport::TestCase
     
     should "create the ldap user" do
       user = User.make_unsaved
-      LdapUser.expects(:create_for_user).with(user)
+      Ldap::User.expects(:create_for_user).with(user)
       user.save
     end
 
@@ -215,7 +215,7 @@ class UserAuthAndCreationTest < ActiveSupport::TestCase
 
 protected
   def create_user(options = {})
-    LdapUser.stubs(:create_for_user)
+    Ldap::User.stubs(:create_for_user)
     record = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'quire69', :password_confirmation => 'quire69' }.merge(options))
     record.save
     record
