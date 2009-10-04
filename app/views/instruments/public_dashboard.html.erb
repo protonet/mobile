@@ -3,7 +3,7 @@
     <fieldset>
       <%= f.label(:message, "enter your message") %>
       <%= f.text_area(:message, :id => "message", :title => "enter your message") %>
-      <%= f.hidden_field('audience_id', :id => "message_audience_id", :name => 'message_audience_id', :value => @active_audience.id) %>
+      <%= f.hidden_field('channel_id', :id => "message_channel_id", :name => 'message_channel_id', :value => @active_channel.id) %>
       <%= f.hidden_field(:socket_id) %>
     </fieldset>
     <button type="submit" name="commit">
@@ -13,11 +13,11 @@
     </button>
   <%- end -%>
   
-  <div id="audience">
+  <div id="channel">
     <ul>
-      <% @audiences.each_with_index do |a, index| %>
-        <li id="audience-<%= a.id %>" class="audience <%= 'active' if a == @active_audience %>">
-          <%= link_to a.name.capitalize, {:audience_id => a.id, :index => index}, {:title => a.description} %>
+      <% @channels.each_with_index do |c, index| %>
+        <li id="channel-<%= c.id %>" class="channel <%= 'active' if c == @active_channel %>">
+          <%= link_to c.name.capitalize, {:channel_id => c.id, :index => index}, {:title => c.description} %>
         </li>
       <% end %>
       <li class="add">
@@ -27,9 +27,9 @@
   </div>
   
   <div id="feed-viewer">
-    <div id="feed-holder" style="width:<%= @audiences.size * 610 %>px; left: <%= @audiences.index(@active_audience) * -604 %>px;">
-      <% @audiences.each do |a| %>
-        <%= render :partial => '/tweets/tweet_list', :locals => {:tweets => a.tweets.recent, :audience => a} %>
+    <div id="feed-holder" style="width:<%= @channels.size * 610 %>px; left: <%= @channels.index(@active_channel) * -604 %>px;">
+      <% @channels.each do |c| %>
+        <%= render :partial => '/tweets/tweet_list', :locals => {:tweets => c.tweets.recent, :channel => c} %>
       <% end %>
     </div>
   </div>

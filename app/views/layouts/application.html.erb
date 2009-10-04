@@ -54,7 +54,7 @@
         token: '<%= current_user.communication_token %>',
         user_name: '<%= current_user.display_name %>',
         user_id: '<%= current_user.id %>',
-        user_audience_ids: '<%= current_user.audiences && current_user.audiences.map {|a| a.id}.to_json %>',
+        user_channel_ids: '<%= current_user.channels && current_user.channels.map {|c| c.id}.to_json %>',
         user_icon_url: '<%= current_user.active_avatar_url %>',
         session_id: '<%= cookies["_rails_dashboard_session"] %>'
       };

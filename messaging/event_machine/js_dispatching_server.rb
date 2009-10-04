@@ -50,8 +50,8 @@ module JsDispatchingServer
   
   def bind_socket_to_queues
     amq = MQ.new
-    @user.audiences.each do |audience|
-      amq.queue("consumer-#{@key}-audience.a#{audience.id}").bind(amq.topic("audiences"), :key => "audiences.a#{audience.id}").subscribe{ |msg|
+    @user.channels.each do |channel|
+      amq.queue("consumer-#{@key}-channel.a#{channel.id}").bind(amq.topic("channels"), :key => "channels.a#{channel.id}").subscribe{ |msg|
         message = JSON(msg)
         sender_socket_id = message['socket_id']
         message.merge!({:x_target => 'cc.receiveMessage'})
@@ -60,7 +60,7 @@ module JsDispatchingServer
           send_data("#{message.to_json}\0")
         end
       }
-      log("subscribing to audience #{audience.id}")
+      log("subscribing to channel #{channel.id}")
     end
     @subscribed = true
   end 

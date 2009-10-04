@@ -2,7 +2,7 @@ function CommunicationConsole(args) {
   var self = this;
   
   // add sub views
-  this.audience_selector  = new AudienceSelector({'parent_widget': this});
+  this.channel_selector  = new  ChannelSelector({'parent_widget': this});
   this.input_console      = new InputConsole({"input_console": $("#message"), "parent_widget": this});
   
   // this.room_viewer        = new ChatRoomViewer({'parent_widget': this});
@@ -30,7 +30,7 @@ function CommunicationConsole(args) {
   // this.listenToUserInput();
   
   // preload feeds
-  // $('.user-messages').load('/audiences/2/tweets')
+  // $('.user-messages').load('/channels/2/tweets')
   
   // set correct status
   // $('#js-status').
@@ -44,14 +44,14 @@ CommunicationConsole.prototype = {
   
   'addAndSendTweet': function(form) {
     var message = form.find('#message');
-    var tweet = new Tweet({'message': message.val(), 'author': this.user_config.user_name, 'audience_id': form.find('#message_audience_id').val(), 'user_icon_url': this.user_config.user_icon_url})
+    var tweet = new Tweet({'message': message.val(), 'author': this.user_config.user_name, 'channel_id': form.find('#message_channel_id').val(), 'user_icon_url': this.user_config.user_icon_url})
     $.post(form.attr('action'), form.serialize());
     message.val('');
   },
   
   'receiveMessage': function(message) {
     console.log('cc is receiving message');
-    var tweet = new Tweet({'message': message.message, 'author': message.author, 'audience_id': message.audience_id, 'user_icon_url': message.user_icon_url})
+    var tweet = new Tweet({'message': message.message, 'author': message.author, 'channel_id': message.channel_id, 'user_icon_url': message.user_icon_url})
   }
   
 }
@@ -62,7 +62,7 @@ function Tweet(args) {
   this.message      = args.message.replace(/</g, '&lt;').replace(/</g, '&rt;');
   this.author       = args.author;
   this.message_date = Date();
-  this.audience_id  = args.audience_id;
+  this.channel_id   = args.channel_id;
   
   this.list_element = $('<li></li>');
   this.user_icon    = $('<span class="message-usericon"><img width="47" height="47" alt="" src="' + args.user_icon_url + '"/></span>');
@@ -74,30 +74,30 @@ function Tweet(args) {
   this.list_element.append(this.paragraph);
   this.paragraph.append(this.message_info);
   this.paragraph.append(this.message);
-  this.audience_ul = $('#messages-for-audience-' + this.audience_id);
-  this.audience_ul.prepend(this.list_element)
+  this.channel_ul = $('#messages-for-channel-' + this.channel_id);
+  this.channel_ul.prepend(this.list_element)
 }
 
-function AudienceSelector(args) {
+function ChannelSelector(args) {
   var self = this;
   
   // get container
-  this.container = $('#audience');
+  this.container = $('#channel');
   
   // get feed-holder
   this.feed_holder =$('#feed-holder');
     
-  // get all audience links and bind click
-  this.container.find('.audience a').click(function(){
+  // get all channel links and bind click
+  this.container.find('.channel a').click(function(){
     // get the index of the element
     var index = parseInt(this.href.match(/index=([0-9]*)/)[1]);
-    // get id of audience
-    var audience_id = parseInt(this.href.match(/audience_id=([0-9]*)/)[1]);
+    // get id of channel
+    var channel_id = parseInt(this.href.match(/channel_id=([0-9]*)/)[1]);
     self.feed_holder.animate({'left': index * -604}, 'fast');
     self.container.find('.active').toggleClass('active');
     $(this).parent('li').toggleClass('active');
-    // set form audience_id to correct value
-    $('#message_audience_id').val(audience_id);
+    // set form channel_id to correct value
+    $('#message_channel_id').val(channel_id);
     return false;
   });
 }
