@@ -1,6 +1,6 @@
-<h2>Audiences:</h2>
-<ul id="audience-options">
-  <% @audiences.each do |a| %>
-    <li><%= "<span class=\"name\">#{a.name}</span>: <span class=\"description\">#{a.description}</span>" %> <span class=\"option\"><%= current_user.audiences.include?(a) ? link_to('nicht mehr zuhören', current_user.listens.find_by_audience_id(a.id), :method => :delete) : link_to('zuhören', listens_path(:audience_id => a.id), :method => :post) %></span></li>
+<h2>Channels:</h2>
+<ul id="channel-options">
+  <% @channels.each do |a| %>
+    <li><%= "<span class=\"name\">#{a.name}</span>: <span class=\"description\">#{a.description}</span>" %> <span class=\"option\"><%= current_user.channels.include?(a) ? link_to('nicht mehr zuhören', current_user.listens.find_by_channel_id(a.id), :method => :delete) : link_to('zuhören', listens_path(:channel_id => a.id), :method => :post) %></span></li>
   <% end %>
 </ul>

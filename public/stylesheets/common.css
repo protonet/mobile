@@ -103,9 +103,9 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   vertical-align: top;
 }
 
-/* =AUDIENCE
+/* =CHANNEL
 --------------------------------------------------------------------------- */
-#audience {
+#channel {
   -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   background: rgb(213, 213, 213);
@@ -117,13 +117,13 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   margin: 0 0 1.5em 1em;
   width: 598px;
 }
-#audience ul {
+#channel ul {
   border: 1px solid rgba(255, 255, 255, 0.4);
   float: left;
   padding: 0.3em 0.6em;
   width: 100%;
 }
-#audience li {
+#channel li {
   -moz-border-radius: 0.3em;
   -webkit-border-radius: 0.3em;
   background: rgb(154, 154, 154) url(/images/bkg_lbutton.png) repeat-x scroll left bottom;
@@ -132,7 +132,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   float: left;
   margin-right: 0.5em;
 }
-#audience a {
+#channel a {
   -moz-border-radius: 0.3em;
   -webkit-border-radius: 0.3em;
   border-radius: 0.3em;
@@ -142,30 +142,30 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   padding: 0.2em 0.6em;
   text-decoration: none;
 }
-#audience a:hover {
+#channel a:hover {
   background: rgb(173, 173, 173);
 }
-#audience li.active a {
+#channel li.active a {
   background: rgb(173, 173, 173) url() no-repeat scroll center -3px;
 }
-#audience li.targeted a {
+#channel li.targeted a {
   background: rgb(173, 173, 173) url(/images/img_marker_down.png) no-repeat scroll center -3px;
 }
 
 
-#audience .add {
+#channel .add {
   background: transparent none;
   border: 1px solid transparent;
 }
-#audience .add a {
+#channel .add a {
   background: transparent none;
   border: 1px solid transparent;
   color: rgb(0, 0, 0);
 }
-#audience .add a:hover {
+#channel .add a:hover {
   text-decoration: underline;
 }
-#audience .add a:before {
+#channel .add a:before {
   content: "\002B\0020";
 }
 
@@ -637,9 +637,9 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   background: rgb(113, 200, 103) url(/images/icn_notice.png) no-repeat scroll 0.3em 0.3em;
 }
 
-/* =AUDIENCE OPTIONS
+/* =CHANNEL OPTIONS
 --------------------------------------------------------------------------- */
-#audience-options {
+#channel-options {
   -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   background: rgb(255, 255, 255);
@@ -650,26 +650,26 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   padding: 0.1em;
   width: 400px;
 }
-#audience-options ul {
+#channel-options ul {
   padding: 0.5em;
 }
-#audience-options li {
+#channel-options li {
   border-bottom: 1px solid rgba(0, 0, 0, 0.4);
   padding: 0.5em;
   margin-bottom: 0.5em;
 }
-#audience-options li:last-child {
+#channel-options li:last-child {
   border: 0 none;
   margin-bottom: 0;
 }
-#audience-options .name {
+#channel-options .name {
   font-weight: bold;
   display: inline-block;
 }
-#audience-options .description {
+#channel-options .description {
   display: inline-block;
 }
-#audience-options .option {
+#channel-options .option {
   display: inline-block;
   float: right;
 }

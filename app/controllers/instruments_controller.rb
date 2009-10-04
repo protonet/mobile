@@ -11,9 +11,9 @@ class InstrumentsController < ApplicationController
   end
   
   def public_dashboard
-    @audiences = current_user.audiences
+    @channels = current_user.channels
     @asset = Asset.new
-    @active_audience = params[:audience_id] ? Audience.find(params[:audience_id]) : Audience.home
+    @active_channel = params[:channel_id] ? Channel.find(params[:channel_id]) : Channel.home
     
     render 'public_dashboard'
   end

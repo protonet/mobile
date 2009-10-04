@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
 
   has_many  :tweets
   has_many  :listens
-  has_many  :audiences, :through => :listens
+  has_many  :channels, :through => :listens
   has_one   :avatar, :class_name => 'Images::Avatar', :dependent => :destroy
 
   after_create :create_ldap_user if configatron.ldap_active
@@ -89,12 +89,12 @@ class User < ActiveRecord::Base
   
   def listen_to_home
     return if listening_to_home?
-    audiences << Audience.home
+    channels << Channel.home
     save
   end
   
   def listening_to_home?
-    audiences.try(:include?, Audience.home)
+    channels.try(:include?, Channel.home)
   end
   
   # skip validation if the user is a logged out (stranger) user

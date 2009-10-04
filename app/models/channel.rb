@@ -1,4 +1,4 @@
-class Audience < ActiveRecord::Base
+class Channel < ActiveRecord::Base
 
   has_many  :says
   has_many  :tweets, :through => :says
@@ -11,7 +11,7 @@ class Audience < ActiveRecord::Base
     begin
       find(1)
     rescue ActiveRecord::RecordNotFound
-      Audience.new(:id => 1, :name => 'home', :description => 'your homebase - your node :)').save && find(1)
+      Channel.new(:id => 1, :name => 'home', :description => 'your homebase - your node :)').save && find(1)
     end
   end
 

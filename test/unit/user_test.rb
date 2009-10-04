@@ -33,9 +33,9 @@ class UserTest < Test::Unit::TestCase
       assert user.stranger?
     end
     
-    it "should add it as a listener of the home audience" do
+    it "should add it as a listener of the home channel" do
       user = User.stranger('foobar')
-      assert_equal user.audiences, [Audience.home]
+      assert_equal user.channels, [Channel.home]
     end
     
     it "should not create an ldap user" do

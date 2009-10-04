@@ -14,7 +14,7 @@ class TweetsControllerTest < ActionController::TestCase
     flunk
   end
   
-  test "the tweet should be assigned to the default audience (home)" do
+  test "the tweet should be assigned to the default channel (home)" do
     flunk
   end
   

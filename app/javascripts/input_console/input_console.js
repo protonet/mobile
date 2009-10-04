@@ -47,22 +47,22 @@ InputConsole.prototype = {
       // @person
       // allowed
       
-      // @@audience
+      // @@channel
       // allowed
       
       // @person.command
       // allowed for commands ['direct', 'important', 'send_file', 'secure', 'dis']
       
-      // @@audience.person.command
+      // @@channel.person.command
       // allowed for commands ['direct', 'important', 'send_file', 'secure', 'dis']
       
-      // @@audience.command
+      // @@channel.command
       // allowed for commands ['important']
       
-      // @@audience.subaudience.subaudience...
+      // @@channel.subchannel.subchannel...
       // allowed
       
-      // @@audience.subaudience...person
+      // @@channel.subchannel...person
       // allowed
       
       // @person.command.command.command
@@ -122,8 +122,8 @@ InputConsole.prototype = {
         // than an end user
         else if(currentCharacter == '@' && this.console_mode == 'person')
         {
-          console.log('audience mode');
-          this.console_mode = 'audience';
+          console.log('channel mode');
+          this.console_mode = 'channel';
           this.last_command_blob.command_type = this.console_mode;
         }
         // kinda error handling

@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(:version => 20090715175003) do
     t.datetime "updated_at"
   end
 
-  create_table "audiences", :force => true do |t|
+  create_table "channels", :force => true do |t|
     t.string   "name"
     t.text     "description"
     t.datetime "created_at"
@@ -35,14 +35,14 @@ ActiveRecord::Schema.define(:version => 20090715175003) do
   end
 
   create_table "listens", :force => true do |t|
-    t.integer  "audience_id"
+    t.integer  "channel_id"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "says", :force => true do |t|
-    t.integer  "audience_id"
+    t.integer  "channel_id"
     t.integer  "tweet_id"
     t.datetime "created_at"
     t.datetime "updated_at"

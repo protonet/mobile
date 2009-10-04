@@ -3,15 +3,15 @@ class ListensController < ApplicationController
   before_filter :login_required
   
   def create
-    audience = Audience.find(params[:audience_id])
-    if audience
-      current_user.audiences << audience
+    channel = Channel.find(params[:channel_id])
+    if channel
+      current_user.channels << channel
       current_user.save
-      flash[:notice] = "you started listening to #{audience.name}"
+      flash[:notice] = "you started listening to #{channel.name}"
     else
-      flash[:error] = "could not subscribe to audience with id #{params[:audience_id].to_s}"
+      flash[:error] = "could not subscribe to channel with id #{params[:channel_id].to_s}"
     end
-    redirect_to :controller => 'audiences'
+    redirect_to :controller => 'channels'
   end
   
   def destroy
@@ -19,11 +19,11 @@ class ListensController < ApplicationController
       rescue ActiveRecord::RecordNotFound
         nil
       end
-      audience = listen.audience
+      channel = listen.channel
       listen.destroy
-      flash[:notice] = "you stopped listening to #{audience.name}"
+      flash[:notice] = "you stopped listening to #{channel.name}"
     end
-    redirect_to :controller => 'audiences', :action => 'index'
+    redirect_to :controller => 'channels', :action => 'index'
   end
   
 end
