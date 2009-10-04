@@ -16,8 +16,5 @@ config.action_controller.perform_caching             = false
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
 
-Backend.backend_connection = BackendAdapters::DevelopmentMock.new
-puts "Backend '#{Backend.backend_connection.info}' connected successfully!"
-
-# configatron.dispatching_server = Backend.server_ips.last
-configatron.dispatching_server = "172.20.7.99"
+System::Backend.backend_connection = BackendAdapters::DevelopmentMock.new
+puts "Backend '#{System::Backend.backend_connection.info}' connected successfully!"
