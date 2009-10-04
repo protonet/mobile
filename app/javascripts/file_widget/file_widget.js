@@ -24,7 +24,7 @@ protonet.controls.FileWidget.prototype = {
   "gotoPath": function(path) {
     var path = path || ''
     var self = this;
-    jQuery.getJSON('files', {"path": path}, function(data) {
+    jQuery.getJSON('system/files', {"path": path}, function(data) {
       self.renderResponse(data);
     });
   },
