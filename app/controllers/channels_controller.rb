@@ -3,7 +3,7 @@ class ChannelsController < ApplicationController
   before_filter :login_required
   
   def index
-    @channel = Channel.all
+    @channels = Channel.all
   end
   
 end
