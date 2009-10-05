@@ -28,6 +28,7 @@ namespace :deploy do
     run "mkdir -p ~/dashboard/shared/log"
     run "mkdir -p ~/dashboard/shared/db"
     run "mkdir -p ~/dashboard/shared/user-files"
+    run "mkdir -p ~/dashboard/shared/avatars"
     run "mkdir -p ~/dashboard/shared/pids"
     run "mkdir -p ~/dashboard/shared/system"
     run "mkdir -p ~/dashboard/releases"
@@ -42,8 +43,9 @@ namespace :deploy do
     sudo "/etc/init.d/monit restart"
   end
 
-  desc "prepare user data db"
-  task :database, :roles => :app do
+  desc "set all the necessary symlinks"
+  task :create_protonet_symlinks, :roles => :app do
+    # db symlink
     run "ln -s ~/dashboard/shared/db ~/dashboard/current/db/shared"
   end
   
@@ -57,7 +59,7 @@ namespace :passenger do
 end
 
 
-after "deploy", "deploy:database"
+after "deploy", "deploy:create_protonet_symlinks"
 after "deploy", "deploy:cleanup"
 after "deploy", "passenger:restart"
 
