@@ -14,7 +14,7 @@ module System
     
     def create
       if params[:file]
-        target_file = "#{RAILS_ROOT}/#{RAILS.env == production ? '../' : ''}../shared/user-files/#{params["Filename"]}"
+        target_file = "#{RAILS_ROOT}/#{RAILS.env == 'production' ? '../' : ''}../shared/user-files/#{params["Filename"]}"
         FileUtils.mv(params[:file].path, target_file)
         return head :ok
       else
