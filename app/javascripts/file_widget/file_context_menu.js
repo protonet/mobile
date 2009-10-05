@@ -15,8 +15,10 @@ protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
         {
         case 'download':
           console.log('download: ' + current_file_path);
+          document.location = "system/files/show?file_path=" + encodeURIComponent(current_file_path);
           break;
         case 'delete':
+          $.post('system/files/delete', {"file_path": current_file_path});
           console.log('delete: ' + current_file_path);
           break;
         }

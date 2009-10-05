@@ -22,12 +22,22 @@ module System
       end
     end
     
-    def get
+    def show
+      if params[:file_path]
+        send_file System::FileSystem.cleared_path(params[:file_path])
+      else
+        return head :error
+      end
       
     end
   
     def delete
-    
+      if params[:file_path]
+        FileUtils.rm(System::FileSystem.cleared_path(params[:file_path]))
+        return head :ok
+      else
+        return head :error
+      end
     end
   
   end
