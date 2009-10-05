@@ -3,7 +3,7 @@
     <fieldset>
       <%= f.label(:message, "enter your message") %>
       <%= f.text_area(:message, :id => "message", :title => "enter your message ...") %>
-      <%= f.hidden_field('channel_id', :id => "message_channel_id", :name => 'message_audience_id', :value => @active_channel.id) %>
+      <%= f.hidden_field('channel_id', :id => "message_channel_id", :name => 'message_channel_id', :value => @active_channel.id) %>
       <%= f.hidden_field(:socket_id) %>
     </fieldset>
     <button type="submit" name="commit">
