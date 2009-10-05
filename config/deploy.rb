@@ -46,7 +46,7 @@ namespace :deploy do
   desc "set all the necessary symlinks"
   task :create_protonet_symlinks, :roles => :app do
     # db symlink
-    run "ln -s ~/dashboard/shared/db ~/dashboard/current/db/shared"
+    run "ln -s #{shared_path}/db #{release_path}/db/shared"
   end
   
 end
