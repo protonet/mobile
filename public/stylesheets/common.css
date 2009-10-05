@@ -733,3 +733,9 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 .contextMenu li.delete a {
   background-image: url(/images/file_delete.png);
 }
+
+/* =INLINE HINT
+--------------------------------------------------------------------------- */
+.inline-hint {
+	color: #888;
+}

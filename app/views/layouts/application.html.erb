@@ -4,7 +4,6 @@
   <head>
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
     <meta http-equiv="pragma" content="no-cache" />
-    <meta name="MSSmartTagsPreventParsing" content="true" />
     <meta name="robots" content="noindex, nofollow" />
     <%= stylesheet_link_tag("common", :cache => false) %>
     <%= stylesheet_link_tag("navigation", :cache => false) %>
@@ -21,11 +20,11 @@
           <ul>
             <li>
               <%= label_tag "login" %>
-              <%= text_field_tag "login", @login %>
+              <%= text_field_tag "login", @login, :title => 'user name' %>
             </li>
             <li>
               <%= label_tag "password" %>
-              <%= password_field_tag "password", nil %>
+              <%= password_field_tag "password", nil, :title => 'password' %>
             </li>
           </ul>
         </fieldset>

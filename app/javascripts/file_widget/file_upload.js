@@ -50,12 +50,12 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
   
   _getErrorMessage: function(errorCode) {
     var message, i;
-    for (i in SWFUpload.UPLOAD_ERROR) {
-      if (SWFUpload.UPLOAD_ERROR[i] == errorCode) {
+    $.each(SWFUpload.UPLOAD_ERROR, function(i, val) {
+      if (val == errorCode) {
         message = i;
-        break;
+        return false;
       }
-    }
+    });
     message = message || "Unknown";
     
     return "Error: " + message;
