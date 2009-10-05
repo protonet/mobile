@@ -10,29 +10,31 @@ protonet.controls.Navigation = {
   },
   
   _loadHtml: function() {
-    var that = this;
     $.ajax({
       url: this.TEMPLATE_URL,
       type: "GET",
       success: function(response){
         $("body").append(response);
-        that._initElements();
-        that._initEvents();
-      }
+        this._initElements();
+        this._initEvents();
+      }.bind(this)
     });
   },
   
   _initElements: function() {
     this._container = $("#navigation");
+    this._position();
   },
   
   _initEvents: function() {
-    var that = this;
     $(document).bind("keydown", "alt+space", function(event) {
-      that.toggle();
+      this.toggle();
       event.preventDefault();
       event.stopPropagation();
-    });
+    }.bind(this));
+    $(document).bind("keydown", "esc", function(event) {
+      this.hide();
+    }.bind(this));
   },
   
   toggle: function() {
@@ -44,13 +46,37 @@ protonet.controls.Navigation = {
   },
   
   show: function() {
+    this._position();
     this._container.show();
+    this._observePosition();
     this._visible = true;
   },
   
   hide: function() {
     this._container.fadeOut(200);
     this._visible = false;
+  },
+  
+  _position: function(slide) {
+    var html = $("html"),
+        window_ = $(window),
+        styles = {
+          left: html.scrollLeft() + (window_.width() / 2 - this._container.outerWidth() / 2),
+          top: html.scrollTop() + (window_.height() / 2 - this._container.outerHeight() / 2)
+        };
+    
+    if (slide) {
+      this._container.stop();
+      this._container.animate(styles);
+    } else {
+      this._container.css(styles);
+    }
+  },
+  
+  _observePosition: function() {
+    $(window).bind("scroll resize", function() {
+      this._position(true);
+    }.bind(this));
   }
 };
 

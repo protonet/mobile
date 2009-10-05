@@ -17,9 +17,7 @@ $(function() {
   var registration_password_field = $('#new-user-password');
   if(registration_password_field.length == 1) {
     // iphonify password field (onkeydown to avoid conflicts with inline hints)
-    registration_password_field.keydown(function() {
-      registration_password_field.unbind("keydown", arguments.callee).dPassword();
-    });
+    registration_password_field.dPassword();
     
     // user creation copy the password field for the confirmation thing
     var registration_password_confirmation_field = $('#new-user-password-confirmation');
@@ -30,7 +28,7 @@ $(function() {
 });
 
 $(function() {
-  $("input[type=text][title], input[type=password][title], textarea[title]").each(function() {
+  $("input:text[title], input:password[title], textarea[title]").each(function() {
     var input = $(this);
     new protonet.utils.InlineHint(input, input.attr("title"));
   });
