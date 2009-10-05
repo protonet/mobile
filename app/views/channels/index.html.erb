@@ -1,6 +1,9 @@
-<h2>Channels:</h2>
+<h2>Channels</h2>
 <ul id="channel-options">
-  <% @channels.each do |a| %>
-    <li><%= "<span class=\"name\">#{a.name}</span>: <span class=\"description\">#{a.description}</span>" %> <span class=\"option\"><%= current_user.channels.include?(a) ? link_to('nicht mehr zuhören', current_user.listens.find_by_channel_id(a.id), :method => :delete) : link_to('zuhören', listens_path(:channel_id => a.id), :method => :post) %></span></li>
-  <% end %>
+  <%- @channels.each do |c| -%>
+    <li>
+      <%= "#{c.name} <span>(#{c.description})</span>" %>
+      <%= "<span class=\"control\">listen #{current_user.channels.include?(c) ? link_to('OFF', current_user.listens.find_by_channel_id(c.id), :class => 'off', :method => :delete) : link_to('ON', listens_path(:channel_id => c.id), :class => 'on', :method => :post)}</span>" %>
+    </li>
+  <%- end -%>
 </ul>

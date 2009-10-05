@@ -647,39 +647,59 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 
 /* =CHANNEL OPTIONS
 --------------------------------------------------------------------------- */
-#channel-options {
-  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-  background: rgb(255, 255, 255);
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-  font-size: 1.2em;
-  margin: 0 0 1.5em;
-  padding: 0.1em;
-  width: 400px;
+h2 {
+  color: rgb(107, 107, 107);
+  font-family: monospace, courier, sans-serif;
+  font-size: 3.5em;
+  font-weight: normal;
+  left: 180px;
+  position: absolute;
+  text-transform: lowercase;
+  top: 27px;
 }
-#channel-options ul {
-  padding: 0.5em;
+#channel-options {
+  background: rgb(247, 247, 247);
+  border: 0.1em solid rgb(212, 212, 212);
+  margin: 0 1em 1.5em;
+  padding: 1em 1em 0.5em;
+  width: 550px;
 }
 #channel-options li {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.4);
-  padding: 0.5em;
-  margin-bottom: 0.5em;
-}
-#channel-options li:last-child {
-  border: 0 none;
-  margin-bottom: 0;
-}
-#channel-options .name {
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+  background: rgb(255, 255, 255) url(/images/bkg_message.png) repeat-x scroll left bottom;
+  border-radius: 0.5em;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  color: rgb(0, 0, 0);
+  font-size: 1.4em;
   font-weight: bold;
-  display: inline-block;
+  margin: 0 0 0.5em;
+  padding: 1em 0.6em;
+  text-decoration: none;
 }
-#channel-options .description {
-  display: inline-block;
+#channel-options li span {
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: normal;
 }
-#channel-options .option {
-  display: inline-block;
+#channel-options .control {
   float: right;
+}
+
+#channel-options a {
+  background: url(/images/spr_on_off.png) no-repeat;
+  display: inline-block;
+  height: 31px;
+  margin: 0 0 0 0.5em;
+  position :relative;
+  text-indent: -500em;
+  top: -5px;
+  width: 82px;
+}
+#channel-options a.off {
+  background-position: 0 0;
+}
+#channel-options a.on {
+  background-position: 0 -31px;
 }
 
 /* =CLEARFIX
