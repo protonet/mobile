@@ -16,7 +16,7 @@ $(function() {
   
   // iphonify password field 
   var registration_password_field = $('#new-user-password');
-  if(!registration_password_field.empty()) {
+  if(registration_password_field.length == 1) {
     // user creation copy the password field for the confirmation thing
     var registration_password_confirmation_field = $('#new-user-password-confirmation');
     registration_password_field.dPassword();
