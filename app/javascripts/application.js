@@ -10,6 +10,7 @@ if(!window.console) {
 // protonet namespace
 var protonet = protonet || {};
 protonet.controls = protonet.controls || {};
+protonet.utils = protonet.utils || {};
 
 
 // Function binding - Taken from http://snipplr.com/view.php?codeview&id=13987
