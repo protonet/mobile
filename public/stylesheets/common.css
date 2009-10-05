@@ -272,6 +272,11 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   margin-bottom: 0.1em;
   padding: 0.2em 0.5em 0.2em 25px;
   position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
 }
 #file-list li.file {
   background: rgb(241, 241, 241) url(/images/icn_file.png) scroll no-repeat left top;
@@ -293,9 +298,10 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   background: rgb(255, 255, 255) url(/images/icn_directory.png) scroll no-repeat left top;
   border: 1px solid rgb(0, 0, 0);
 }
-#file-list li.file:not(.upload-error):not(.disabled):hover {
+#file-list li.file:not(.upload-error):not(.disabled):hover,
+#file-list li.file:not(.upload-error):not(.disabled):focus {
   background: rgb(255, 255, 255) url(/images/icn_file.png) scroll no-repeat left top;
-  border: 1px solid rgb(0, 0, 0);
+  border: 1px solid rgb(100, 100, 100);
 }
 #file-list form {
   margin-bottom: 0.3em;
@@ -722,45 +728,48 @@ h2 {
 /* =GENERIC CONTEXT MENU STYLES -> THIS IS COMING FROM THE CONTEXTMENU PLUGIN
 =========================================================================== */
 .contextMenu {
-	position: absolute;
-	width: 120px;
-	z-index: 99999;
-	border: solid 1px #CCC;
-	background: #FFF;
-	padding: 0px;
-	margin: 0px;
-	display: none;
+  position: absolute;
+  width: 120px;
+  z-index: 1;
+  border: solid 1px #CCC;
+  background: #FFF;
+  padding: 0px;
+  margin: 0px;
+  display: none;
+  box-shadow: 2px 2px 2px #666;
+  -moz-box-shadow: 2px 2px 2px #666;
+  -webkit-box-shadow: 2px 2px 2px #666;
 }
 .contextMenu li {
-	list-style: none;
-	padding: 0px;
-	margin: 0px;
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
 }
 .contextMenu a {
-	color: #333;
-	text-decoration: none;
-	display: block;
-	line-height: 20px;
-	height: 20px;
-	background-position: 6px center;
-	background-repeat: no-repeat;
-	outline: none;
-	padding: 1px 5px;
-	padding-left: 28px;
+  color: #333;
+  text-decoration: none;
+  display: block;
+  line-height: 20px;
+  height: 20px;
+  background-position: 6px center;
+  background-repeat: no-repeat;
+  outline: none;
+  padding: 1px 5px;
+  padding-left: 28px;
 }
 .contextMenu li.hover a {
-	color: #FFF;
-	background-color: #FCB852;
+  color: #FFF;
+  background-color: #FCB852;
 }
 .contextMenu li.disabled a {
-	color: #AAA;
-	cursor: default;
+  color: #AAA;
+  cursor: default;
 }
 .contextMenu li.hover.disabled a {
-	background-color: transparent;
+  background-color: transparent;
 }
 .contextMenu li.separator {
-	border-top: solid 1px #CCC;
+  border-top: solid 1px #CCC;
 }
 .contextMenu li.download a { 
   background-image: url(/images/file_download.png);
@@ -772,5 +781,5 @@ h2 {
 /* =INLINE HINT
 --------------------------------------------------------------------------- */
 .inline-hint {
-	color: #888;
+  color: #888;
 }

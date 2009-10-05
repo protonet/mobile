@@ -9,7 +9,8 @@
   </form>
   <ul class="root">
     <% file_system.each do |name, type| %>
-    <li class="<%= type %>"><%= name %></li>
+    <!-- tabindex="-1" ensures that the element is focusable via css -->
+    <li class="<%= type %>" tabindex="-1"><%= name %></li>
     <% end %>
   </ul>
   <% form_tag system_files_path, {:id => "file-stash"} do %>
