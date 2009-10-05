@@ -10,17 +10,19 @@
 //= require "utils/inline_hint.js"
 
 var cc = new CommunicationConsole({'config': protonet.config});
-var Dispatcher    = new DispatchingSystem(protonet.config.dispatching_server, protonet.config.token, protonet.config.user_id);
+var Dispatcher = new DispatchingSystem(protonet.config.dispatching_server, protonet.config.token, protonet.config.user_id);
 
 $(function() {
   var file_widget = new protonet.controls.FileWidget();
-  
-  // iphonify password field 
   var registration_password_field = $('#new-user-password');
   if(registration_password_field.length == 1) {
+    // iphonify password field (onkeydown to avoid conflicts with inline hints)
+    registration_password_field.keydown(function() {
+      registration_password_field.unbind("keydown", arguments.callee).dPassword();
+    });
+    
     // user creation copy the password field for the confirmation thing
     var registration_password_confirmation_field = $('#new-user-password-confirmation');
-    registration_password_field.dPassword();
     $('#registration-form').submit(function(){
       registration_password_confirmation_field.val(registration_password_field.val());
     });

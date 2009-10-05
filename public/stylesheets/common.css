@@ -46,6 +46,11 @@ table {
   border-spacing: 0;
 }
 
+button::-moz-focus-inner {
+  padding: 0;
+  border: 0 none;
+}
+
 /* =FONTS
 =========================================================================== */
 @font-face {
@@ -531,7 +536,7 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 }
 #login-form button span em {
   background: rgb(151, 151, 151) url(/images/bkg_button.png) repeat-x scroll left bottom;
-  color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
   display: block;
   font-style: normal;
   line-height: 14px;
@@ -594,6 +599,9 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   padding: 0;
   vertical-align: baseline;
   width: 40px;
+}
+#message-form button:hover {
+  background-color: rgb(0, 0, 0);
 }
 #message-form button span {
   background: transparent url(/images/return.png) scroll no-repeat center center;
