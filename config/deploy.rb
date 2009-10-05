@@ -59,7 +59,7 @@ namespace :passenger do
 end
 
 
-after "deploy", "deploy:create_protonet_symlinks"
+after "deploy:finalize_update", "deploy:create_protonet_symlinks"
 after "deploy", "deploy:cleanup"
 after "deploy", "passenger:restart"
 
