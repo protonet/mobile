@@ -5,21 +5,21 @@ ActionController::Routing::Routes.draw do |map|
   map.resources   :tweets
   map.resources   :listens
   map.resources   :assets
-  map.resources   :navigation
-
-  map.files '/filewidget', :controller => 'assets', :action => 'test_for_file_browser'
-
+  map.resources   :networks
+  
+  map.navigation '/navigation', :controller => 'navigation', :action => 'index'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.register '/register', :controller => 'users', :action => 'create'
   map.signup '/signup', :controller => 'users', :action => 'new'
+
   map.resources :users
 
   map.resource :session
   
   map.namespace :system do |system|
     system.connect      'foundations', :controller => 'foundations'
-    system.resources    'files'
+    system.resources    :files
   end
   
   map.namespace :images do |images|

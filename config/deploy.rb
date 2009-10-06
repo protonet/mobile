@@ -38,7 +38,7 @@ namespace :deploy do
   task :monit, :roles => :app do
     upload_monit_file
     # move it to the correct location
-    sudo "mv /home/protonet/dashboard/shared/monit_ptn_node /etc/monit"
+    sudo "mv /home/protonet/dashboard/shared/monit_ptn_node /etc/monit/"
     # and restart monit
     sudo "/etc/init.d/monit restart"
   end

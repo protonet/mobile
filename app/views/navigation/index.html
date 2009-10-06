@@ -1,10 +1,10 @@
 <div id="navigation">
   <ul>
-    <li class="home">Home</li>
-    <li class="preferences">Preferences</li>
-    <li class="files">Files</li>
-    <li class="users">Users</li>
-    <li class="nodes">Nodes</li>
-    <li class="channels">Channels</li>
+    <li class="home"><%= link_to "Home", root_path %></li>
+    <li class="preferences"><%= link_to "Preferences", root_path %></li>
+    <li class="files"><%= link_to "Files", system_files_path %></li>
+    <li class="users"><%= link_to "Users", users_path %></li>
+    <li class="networks"><%= link_to "Nodes", networks_path %></li>
+    <li class="channels"><%= link_to "Channels", channels_path %></li>
   </ul>
 </div>

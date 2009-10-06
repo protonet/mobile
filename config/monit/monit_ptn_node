@@ -103,8 +103,8 @@ set logfile syslog facility log_daemon
 #    
 
 check process js_dispatching_server.rb with pidfile /home/protonet/dashboard/shared/pids/js_dispatching_server.rb.pid
-	start program = "RAILS_ENV=production /usr/local/bin/ruby /home/protonet/dashboard/current/messaging/js_dispatching_control.rb start"
-	stop program = "RAILS_ENV=production /usr/local/bin/ruby /home/protonet/dashboard/current/messaging/js_dispatching_control.rb stop"
+	start program = "/bin/bash -c 'export RAILS_ENV=production; /usr/local/bin/ruby /home/protonet/dashboard/current/messaging/js_dispatching_control.rb start'"
+	stop program = "/bin/bash -c 'export RAILS_ENV=production; /usr/local/bin/ruby /home/protonet/dashboard/current/messaging/js_dispatching_control.rb stop'"
 	if 3 restarts within 5 cycles then timeout
 
 #  check process apache with pidfile /usr/local/apache/logs/httpd.pid

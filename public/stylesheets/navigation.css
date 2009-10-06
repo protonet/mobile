@@ -44,6 +44,12 @@
   -webkit-user-select: none;
 }
 
+#navigation li a {
+  font-family: "Univers LT 47 CondensedLt";
+  color: #fff;
+  text-decoration: none;
+}
+
 #navigation li:hover {
   -moz-border-radius: 12px;
   -webkit-border-radius: 12px;
@@ -64,7 +70,7 @@
 
 /* Second row */
 #navigation .users,
-#navigation .nodes,
+#navigation .networks,
 #navigation .channels {
 }
 
@@ -90,7 +96,7 @@
   background-position: 20px -116px;
 }
 
-#navigation .nodes {
+#navigation .networks {
   background-position: -131px -116px;
 }
 

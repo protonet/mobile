@@ -35,6 +35,10 @@ protonet.controls.Navigation = {
     $(document).bind("keydown", "esc", function(event) {
       this.hide();
     }.bind(this));
+    // send user to link defined by <a href=
+    this._container.find('li').click(function(event) {
+      document.location = $(this).find('a')[0].href;
+    });
   },
   
   toggle: function() {
