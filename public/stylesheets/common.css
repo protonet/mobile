@@ -70,10 +70,6 @@ button::-moz-focus-inner {
 
 /* =STYLES
 =========================================================================== */
-html, body {
-  height: 100%;
-}
-
 body {
   background: rgb(255, 255, 255) url(/images/bkg_body.png) scroll repeat left top;
   border: 0;

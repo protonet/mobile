@@ -62,11 +62,10 @@ protonet.controls.Navigation = {
   },
   
   _position: function(slide) {
-    var html = $("html"),
-        window_ = $(window),
+    var window_ = $(window),
         styles = {
-          left: html.scrollLeft() + (window_.width() / 2 - this._container.outerWidth() / 2),
-          top: html.scrollTop() + (window_.height() / 2 - this._container.outerHeight() / 2)
+          left: window_.scrollLeft() + (window_.width() / 2 - this._container.outerWidth() / 2),
+          top: window_.scrollTop() + (window_.height() / 2 - this._container.outerHeight() / 2)
         };
     
     if (slide) {
