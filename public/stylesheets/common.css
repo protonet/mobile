@@ -88,11 +88,12 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 .header {
   background: transparent url(/images/bkg_header.png) scroll repeat-x 0 0;
   height: 69px;
-  width: 100%;
   position: relative;
+  width: 100%;
 }
 
-.header img {
+.header a {
+  display: inline-block;
   margin: 10px;
 }
 
@@ -664,7 +665,12 @@ h2 {
   left: 180px;
   position: absolute;
   text-transform: lowercase;
-  top: 27px;
+  top: 25px;
+}
+#channel-options h3 {
+  font-size: 1.4em;
+  font-weight: bold;
+  margin: 0 0 0.5em;
 }
 #channel-options {
   background: rgb(247, 247, 247);
@@ -709,6 +715,36 @@ h2 {
 }
 #channel-options a.on {
   background-position: 0 -31px;
+}
+
+#channel-search {
+  margin-bottom: 2em;
+}
+#channel-search button {
+  border: 0 none;
+  float: left;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  width: 40px;
+}
+#channel-search button span {
+  display: none;
+}
+#channel-search button.reset {
+  background: transparent url(/images/icn_parent.png) scroll no-repeat 0 0;
+}
+#channel-search button.search {
+  background: transparent url(/images/icn_search.png) scroll no-repeat 0 0;
+}
+#channel-search input {
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  float: left;
+  font-size: 2.5em;
+  line-height: 1em;
+  margin: 0;
+  padding: 0.1em 0.2em;
+  width: 255px;
 }
 
 /* =CLEARFIX
