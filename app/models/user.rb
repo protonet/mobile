@@ -22,6 +22,8 @@ class User < ActiveRecord::Base
   has_many  :listens
   has_many  :channels, :through => :listens
   has_one   :avatar, :class_name => 'Images::Avatar', :dependent => :destroy
+  
+  named_scope :registered, :conditions => {:temporary_identifier => nil}
 
   after_create :create_ldap_user if configatron.ldap_active
   after_create :listen_to_home

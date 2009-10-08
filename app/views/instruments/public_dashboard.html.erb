@@ -62,26 +62,7 @@
       </button>
     <%- end -%>
   <%- end -%>
+  <%= render :partial => 'users/user_list', :locals => {:users => []} %>
   
   <%= render :partial => 'system/files/file_list', :locals => {:file_system => System::FileSystem.all} %>
-  
-  <!-- <div id="user-list">
-    <ul>
-      <li>
-        <img src="/images/userpicture.jpg" width="21" height="21" alt="">
-        <span>Kathy <span class="status">(online)</span></span>
-      </li>
-      <li>
-        <img src="/images/userpicture.jpg" width="21" height="21" alt="">
-        <span>Kathy <span class="status">(online)</span></span>
-      </li>
-      <li>
-        <img src="/images/userpicture.jpg" width="21" height="21" alt="">
-        <span>Kathy <span class="status">(online)</span></span>
-      </li>
-    </ul>
-    <a id="expand-user-list" href="#" title="show more">
-      <span>show more</span>
-    </a>
-  </div> -->
 </div>
