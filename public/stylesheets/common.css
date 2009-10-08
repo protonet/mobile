@@ -100,7 +100,6 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   display: inline-block;
   width: 648px;
   vertical-align: top;
-  margin-right: 20px;
 }
 .side {
   display: inline-block;
@@ -124,9 +123,8 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 }
 #channel ul {
   border: 1px solid rgba(255, 255, 255, 0.4);
-  float: left;
   padding: 0.3em 0.6em;
-  width: 100%;
+  overflow: hidden;
 }
 #channel li {
   -moz-border-radius: 0.3em;
@@ -309,8 +307,6 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   position: relative;
   white-space: nowrap;
   overflow: hidden;
-  user-select: none;
-  -webkit-user-select: none;
   -moz-user-select: none;
 }
 #file-list li.file {

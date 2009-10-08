@@ -36,6 +36,10 @@
 </div>
 
 <div class="side">
+  <div id="navigation-link">
+    <a href="#">SHOW NAVIGATION <span>[ALT + SPACE]</span></a>
+  </div>
+  
   <%- if current_user.stranger? -%>
     <% form_for :user, :url => users_path, :html => {:id => "registration-form"} do |f| -%>
       <fieldset>

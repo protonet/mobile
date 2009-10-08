@@ -23,6 +23,7 @@ protonet.controls.Navigation = {
   
   _initElements: function() {
     this._container = $("#navigation");
+    this._link = $("#navigation-link");
     this._position();
   },
   
@@ -35,6 +36,12 @@ protonet.controls.Navigation = {
     $(document).bind("keydown", "esc", function(event) {
       this.hide();
     }.bind(this));
+    
+    this._link.bind("click", function(event) {
+      event.preventDefault();
+      this.show();
+    }.bind(this));
+    
     // send user to link defined by <a href=
     this._container.find('li').click(function(event) {
       document.location = $(this).find('a')[0].href;
