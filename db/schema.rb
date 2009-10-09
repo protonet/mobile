@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090715175003) do
+ActiveRecord::Schema.define(:version => 20091006170858) do
 
   create_table "assets", :force => true do |t|
     t.string   "filename"
@@ -37,6 +37,15 @@ ActiveRecord::Schema.define(:version => 20090715175003) do
   create_table "listens", :force => true do |t|
     t.integer  "channel_id"
     t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "networks", :force => true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.string   "key"
+    t.string   "supernode"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

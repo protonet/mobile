@@ -1,1 +1,23 @@
-nodes
+<h2>Networks</h2>
+<div id="network" style="float:left;">
+  <form id="network-search" action="/network/search">
+    <fieldset>
+      <input type="text" value="<%= params[:description] %>" name="description" title="search all networks"/>
+    </fieldset>
+  </form>
+  
+  <ul>
+    <%- @networks.each do |n| -%>
+      <li>
+        <%= "#{n.name}" %>
+        <%= "<span class=\"control\">#{link_to('OFF', 'foo', :class => 'off', :method => :delete)}</span>" %>
+      </li>
+    <%- end -%>
+  </ul>
+</div>
+<div id="network-monitor-wrapper">
+  <div id="network-monitor">
+
+    <!-- border: 0.1em solid #D4D4D4; -->
+  </div>
+</div>

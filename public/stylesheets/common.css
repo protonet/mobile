@@ -107,7 +107,6 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
   width: 314px;
   vertical-align: top;
 }
-
 /* =CHANNEL
 --------------------------------------------------------------------------- */
 #channel {
@@ -172,7 +171,192 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 #channel .add a:before {
   content: "\002B\0020";
 }
+/* =CHANNEL OPTIONS
+--------------------------------------------------------------------------- */
+h2 {
+  color: rgb(107, 107, 107);
+  font-family: monospace, courier, sans-serif;
+  font-size: 3.5em;
+  font-weight: normal;
+  left: 180px;
+  position: absolute;
+  text-transform: lowercase;
+  top: 25px;
+}
+#channel-options h3 {
+  color: rgb(107, 107, 107);
+  font-size: 1.4em;
+  font-weight: bold;
+  margin: 0 0 0.5em;
+}
+#channel-options {
+  background: rgb(247, 247, 247);
+  border: 0.1em solid rgb(212, 212, 212);
+  margin: 0 1em 1.5em;
+  padding: 1em 1em 0.5em;
+  width: 550px;
+}
+#channel-options li {
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+  background: rgb(255, 255, 255) url(/images/bkg_message.png) repeat-x scroll left bottom;
+  border-radius: 0.5em;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  color: rgb(0, 0, 0);
+  font-size: 1.4em;
+  font-weight: bold;
+  margin: 0 0 0.5em;
+  padding: 1em 0.6em;
+  text-decoration: none;
+}
+#channel-options li span {
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: normal;
+}
+#channel-options .control {
+  float: right;
+}
 
+#channel-options a {
+  background: url(/images/spr_on_off.png) no-repeat;
+  display: inline-block;
+  height: 31px;
+  margin: 0 0 0 0.5em;
+  position :relative;
+  text-indent: -500em;
+  top: -5px;
+  width: 82px;
+}
+#channel-options a.off {
+  background-position: 0 0;
+}
+#channel-options a.on {
+  background-position: 0 -31px;
+}
+
+#channel-search {
+  margin-bottom: 1em;
+}
+#channel-search button {
+  border: 0 none;
+  float: left;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  width: 40px;
+}
+#channel-search button span {
+  display: none;
+}
+#channel-search button.reset {
+  background: transparent url(/images/icn_parent.png) scroll no-repeat 0 0;
+}
+#channel-search button.search {
+  background: transparent url(/images/icn_search.png) scroll no-repeat 0 0;
+}
+#channel-search input {
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  float: left;
+  font-size: 2.5em;
+  line-height: 1em;
+  margin: 0;
+  padding: 0.1em 0.2em;
+  width: 540px;
+}
+/* =NETWORK
+--------------------------------------------------------------------------- */
+h2 {
+  color: rgb(107, 107, 107);
+  font-family: monospace, courier, sans-serif;
+  font-size: 3.5em;
+  font-weight: normal;
+  left: 180px;
+  position: absolute;
+  text-transform: lowercase;
+  top: 25px;
+}
+#network h3 {
+  font-size: 1.4em;
+  font-weight: bold;
+  margin: 0 0 0.5em;
+}
+#network {
+  background: rgb(247, 247, 247);
+  border: 0.1em solid rgb(212, 212, 212);
+  margin: 0 1em 1.5em;
+  padding: 1em 1em 0.5em;
+  width: 350px;
+}
+#network li {
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+  background: rgb(255, 255, 255) url(/images/bkg_message.png) repeat-x scroll left bottom;
+  border-radius: 0.5em;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  color: rgb(0, 0, 0);
+  font-size: 1.4em;
+  font-weight: bold;
+  margin: 0 0 0.5em;
+  padding: 1em 0.6em;
+  text-decoration: none;
+}
+#network li span {
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: normal;
+}
+#network .control {
+  float: right;
+}
+
+#network a {
+  background: url(/images/spr_on_off.png) no-repeat;
+  display: inline-block;
+  height: 31px;
+  margin: 0 0 0 0.5em;
+  position :relative;
+  text-indent: -500em;
+  top: -5px;
+  width: 82px;
+}
+#network a.off {
+  background-position: 0 0;
+}
+#network a.on {
+  background-position: 0 -31px;
+}
+#network-search {
+  margin-bottom: 1em;
+}
+#network-search input {
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  float: left;
+  font-size: 2.5em;
+  line-height: 1em;
+  margin: 0;
+  padding: 0.1em 0.2em;
+  width: 338px;
+}
+/* =NETWORK-MONITOR
+--------------------------------------------------------------------------- */
+#network-monitor-wrapper {
+  background: rgb(247, 247, 247);
+  border: 0.1em solid rgb(212, 212, 212);
+  margin: 0 1em 1.5em;
+  padding: 1em 1em 0.5em;
+  width: 540px;
+  height: 590px;
+  float:left;
+}
+#network-monitor {
+ -moz-border-radius: 0.5em;
+ -webkit-border-radius: 0.5em;
+ width: 520px;
+ height: 570px;
+ opacity:0.95;
+ background-color: #141414;
+ padding: 1em 1em 0.5em;
+ border: 0.1em solid #FDAB54;
+}
 /* =USERWIDGET
 --------------------------------------------------------------------------- */
 #user-list {
@@ -689,99 +873,6 @@ button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, ul, l
 .notice span {
   background: rgb(113, 200, 103) url(/images/icn_notice.png) no-repeat scroll 0.3em 0.3em;
 }
-
-/* =CHANNEL OPTIONS
---------------------------------------------------------------------------- */
-h2 {
-  color: rgb(107, 107, 107);
-  font-family: monospace, courier, sans-serif;
-  font-size: 3.5em;
-  font-weight: normal;
-  left: 180px;
-  position: absolute;
-  text-transform: lowercase;
-  top: 25px;
-}
-#channel-options h3 {
-  font-size: 1.4em;
-  font-weight: bold;
-  margin: 0 0 0.5em;
-}
-#channel-options {
-  background: rgb(247, 247, 247);
-  border: 0.1em solid rgb(212, 212, 212);
-  margin: 0 1em 1.5em;
-  padding: 1em 1em 0.5em;
-  width: 550px;
-}
-#channel-options li {
-  -moz-border-radius: 0.5em;
-  -webkit-border-radius: 0.5em;
-  background: rgb(255, 255, 255) url(/images/bkg_message.png) repeat-x scroll left bottom;
-  border-radius: 0.5em;
-  border: 1px solid rgba(0, 0, 0, 0.5);
-  color: rgb(0, 0, 0);
-  font-size: 1.4em;
-  font-weight: bold;
-  margin: 0 0 0.5em;
-  padding: 1em 0.6em;
-  text-decoration: none;
-}
-#channel-options li span {
-  color: rgba(0, 0, 0, 0.5);
-  font-weight: normal;
-}
-#channel-options .control {
-  float: right;
-}
-
-#channel-options a {
-  background: url(/images/spr_on_off.png) no-repeat;
-  display: inline-block;
-  height: 31px;
-  margin: 0 0 0 0.5em;
-  position :relative;
-  text-indent: -500em;
-  top: -5px;
-  width: 82px;
-}
-#channel-options a.off {
-  background-position: 0 0;
-}
-#channel-options a.on {
-  background-position: 0 -31px;
-}
-
-#channel-search {
-  margin-bottom: 2em;
-}
-#channel-search button {
-  border: 0 none;
-  float: left;
-  height: 40px;
-  margin: 0;
-  padding: 0;
-  width: 40px;
-}
-#channel-search button span {
-  display: none;
-}
-#channel-search button.reset {
-  background: transparent url(/images/icn_parent.png) scroll no-repeat 0 0;
-}
-#channel-search button.search {
-  background: transparent url(/images/icn_search.png) scroll no-repeat 0 0;
-}
-#channel-search input {
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  float: left;
-  font-size: 2.5em;
-  line-height: 1em;
-  margin: 0;
-  padding: 0.1em 0.2em;
-  width: 255px;
-}
-
 /* =CLEARFIX
 =========================================================================== */
 #message-form:after {
