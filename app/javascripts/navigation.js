@@ -39,7 +39,7 @@ protonet.controls.Navigation = {
     
     this._link.bind("click", function(event) {
       event.preventDefault();
-      this.show();
+      this.toggle();
     }.bind(this));
     
     // send user to link defined by <a href=
