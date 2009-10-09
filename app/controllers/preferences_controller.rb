@@ -1,7 +1,7 @@
 class PreferencesController < ApplicationController
   
   def index
-    render :text => 'foobar'
+    @preferences = [{:url => 'foobar', :name => 'your profile'}, {:url => 'networks', :name => 'network settings'}]
   end
   
 end
