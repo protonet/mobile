@@ -10,6 +10,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources   :assets
   map.resources   :networks
   
+  map.preferences '/preferences', :controller => 'preferences', :action => 'index'
   map.navigation '/navigation', :controller => 'navigation', :action => 'index'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.login '/login', :controller => 'sessions', :action => 'new'

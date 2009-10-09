@@ -257,7 +257,7 @@ h2 {
 #channel-search input {
   border: 1px solid rgba(0, 0, 0, 0.4);
   float: left;
-  font-size: 2.5em;
+  font-size: 1.8em;
   line-height: 1em;
   margin: 0;
   padding: 0.1em 0.2em;
@@ -330,11 +330,11 @@ h2 {
 #network-search input {
   border: 1px solid rgba(0, 0, 0, 0.4);
   float: left;
-  font-size: 2.5em;
+  font-size: 1.8em;
   line-height: 1em;
   margin: 0;
   padding: 0.1em 0.2em;
-  width: 338px;
+  width: 341px;
 }
 /* =NETWORK-MONITOR
 --------------------------------------------------------------------------- */
