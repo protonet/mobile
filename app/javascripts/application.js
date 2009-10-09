@@ -25,3 +25,14 @@ Function.prototype.bind = function () {
     return thisObj.apply(obj, args.concat(Array.prototype.slice.call(arguments)));
   };
 };
+
+//= require "navigation.js"
+//= require "utils/inline_hint.js"
+
+// add inline hints
+$(function() {
+  $("input:text[title], input:password[title], textarea[title]").each(function() {
+    var input = $(this);
+    new protonet.utils.InlineHint(input, input.attr("title"));
+  });
+});

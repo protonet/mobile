@@ -6,8 +6,6 @@
 //= require "/lib/jquery.contextMenu.js"
 //= require "file_widget/file_context_menu.js"
 //= require "lib/jQuery.dPassword.js"
-//= require "navigation.js"
-//= require "utils/inline_hint.js"
 
 var cc = new CommunicationConsole({'config': protonet.config});
 var Dispatcher = new DispatchingSystem(protonet.config.dispatching_server, protonet.config.token, protonet.config.user_id);
@@ -25,11 +23,4 @@ $(function() {
       registration_password_confirmation_field.val(registration_password_field.val());
     });
   }
-});
-
-$(function() {
-  $("input:text[title], input:password[title], textarea[title]").each(function() {
-    var input = $(this);
-    new protonet.utils.InlineHint(input, input.attr("title"));
-  });
 });
