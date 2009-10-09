@@ -1,9 +1,20 @@
 <h2>Channels</h2>
-<ul id="channel-options">
-  <%- @channels.each do |c| -%>
-    <li>
-      <%= "#{c.name} <span>(#{c.description})</span>" %>
-      <%= "<span class=\"control\">listen #{current_user.channels.include?(c) ? link_to('OFF', current_user.listens.find_by_channel_id(c.id), :class => 'off', :method => :delete) : link_to('ON', listens_path(:channel_id => c.id), :class => 'on', :method => :post)}</span>" %>
-    </li>
-  <%- end -%>
-</ul>
+<div id="channel-options">
+  <form id="channel-search" action="/channels/search">
+    <fieldset>
+      <button class="reset"><span>reset</span></button>
+      <input type="text" value="<%= params[:description] %>" name="description"/>
+      <button class="search"><span>search</span></button>
+    </fieldset>
+  </form>
+  
+  <h3>Network</h3>
+  <ul>
+    <%- @channels.each do |c| -%>
+      <li>
+        <%= "#{c.name} <span>(#{c.description})</span>" %>
+        <%= "<span class=\"control\">listen #{current_user.channels.include?(c) ? link_to('OFF', current_user.listens.find_by_channel_id(c.id), :class => 'off', :method => :delete) : link_to('ON', listens_path(:channel_id => c.id), :class => 'on', :method => :post)}</span>" %>
+      </li>
+    <%- end -%>
+  </ul>
+</div>

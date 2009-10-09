@@ -1,4 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
+  
+  map.connect 'channels/search', :controller => 'channels', :action => 'search'
+  
   map.resources :channels do |channels|
     channels.resources :tweets
   end
