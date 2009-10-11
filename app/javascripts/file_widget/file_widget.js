@@ -14,7 +14,7 @@ protonet.controls.FileWidget = function() {
 
 protonet.controls.FileWidget.prototype = {
   "initUpload": function() {
-    new this.FileUpload();
+    new this.FileUpload(this);
   },
   
   "initContextMenu": function() {

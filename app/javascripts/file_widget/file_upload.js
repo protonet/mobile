@@ -7,7 +7,8 @@
 // upload progress
 // upload error
 
-protonet.controls.FileWidget.prototype.FileUpload = function() {
+protonet.controls.FileWidget.prototype.FileUpload = function(parent) {
+  this.parent = parent;
   this._initElements();
   this._initForm();
   this._initTitle();
@@ -88,7 +89,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
       flash_url:                    "flash/swfupload.swf",
       button_placeholder_id:        "file-upload-flash",
       file_size_limit:              "100000 MB",
-      post_params:                  { "authenticity_token": this._token },
+      post_params:                  { "authenticity_token": this._token},
       button_width:                 110,
       button_height:                22,
       button_window_mode:           SWFUpload.WINDOW_MODE.TRANSPARENT,
@@ -101,6 +102,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
       file_queue_limit:             0,
       file_queued_handler:          this.__fileQueued.bind(this),
       file_dialog_complete_handler: this.__fileDialogComplete.bind(this),
+      upload_start_handler:         this.__uploadStart.bind(this),
       upload_progress_handler:      this.__uploadProgress.bind(this),
       upload_success_handler:       this.__uploadSuccess.bind(this),
       upload_error_handler:         this.__uploadError.bind(this)
@@ -125,6 +127,13 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     this._fileList[0].scrollTop = this._fileList[0].scrollHeight;
     this._swfUpload.startUpload();
     
+  },
+  
+  __uploadStart: function() {
+    // set path for this file
+    var post_params = this._swfUpload.settings.post_params;
+    post_params["file_path"] = this.parent.current_path;
+    this._swfUpload.setPostParams(post_params);
   },
   
   __uploadProgress: function(file, bytesLoaded, bytesTotal) {

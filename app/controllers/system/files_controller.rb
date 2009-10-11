@@ -14,7 +14,9 @@ module System
     
     def create
       if params[:file]
-        target_file = "#{RAILS_ROOT}/#{Rails.env == 'production' ? '../' : ''}../shared/user-files/#{params["Filename"]}"
+        # FIXME make sure this is not hackable (filename could now be ../../.. and move basically anywhere)
+        cleared_file_path = System::FileSystem.cleared_path("#{params["file_path"]}/#{params["Filename"]}")
+        target_file = "#{Rails.env == 'production' ? '../' : ''}#{cleared_file_path}"
         FileUtils.mv(params[:file].path, target_file)
         return head :ok
       else
