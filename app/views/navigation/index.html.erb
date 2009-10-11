@@ -1,10 +1,10 @@
 <div id="navigation">
   <ul>
-    <li class="home"><%= link_to "Home", root_path %></li>
-    <li class="preferences"><%= link_to "Preferences", preferences_path %></li>
-    <li class="files"><%= link_to "Files", system_files_path %></li>
-    <li class="users"><%= link_to "Users", users_path %></li>
-    <li class="networks"><%= link_to "Networks", networks_path %></li>
-    <li class="channels"><%= link_to "Channels", channels_path %></li>
+    <li class="home<%= " disabled" unless @allowed[root_path] %>"><%= link_to "Home", root_path %></li>
+    <li class="preferences<%= " disabled" unless @allowed[preferences_path] %>"><%= link_to "Preferences", preferences_path %></li>
+    <li class="files<%= " disabled" unless @allowed[system_files_path] %>"><%= link_to "Files", system_files_path %></li>
+    <li class="users<%= " disabled" unless @allowed[users_path] %>"><%= link_to "Users", users_path %></li>
+    <li class="networks<%= " disabled" unless @allowed[networks_path] %>"><%= link_to "Networks", networks_path %></li>
+    <li class="channels<%= " disabled" unless @allowed[channels_path] %>"><%= link_to "Channels", channels_path %></li>
   </ul>
 </div>
