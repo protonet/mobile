@@ -15,7 +15,15 @@ $(function() {
   var registration_password_field = $('#new-user-password');
   if(registration_password_field.length == 1) {
     // iphonify password field (onkeydown to avoid conflicts with inline hints)
-    registration_password_field.dPassword();
+    registration_password_field.dPassword({"ICON_PATH": "images/lock.png", "ICON_STYLES": {
+  		display: "inline",
+  		position: "absolute",
+  		width: "16px", height: "16px",
+  		margin: "3px 0 0 -25px",
+  		overflow: "hidden", cursor: "pointer",
+  		backgroundRepeat: "no-repeat"
+  	}
+  	});
     
     // user creation copy the password field for the confirmation thing
     var registration_password_confirmation_field = $('#new-user-password-confirmation');
