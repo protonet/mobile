@@ -16,3 +16,11 @@
     <%- end -%>
   </ul>
 </div>
+
+<div id="channel-administration">
+  <% form_for :channel, :url => channels_path, :action => 'post', :html => {:id => 'channel-add'} do |f| -%>
+    <fieldset>
+      <%= f.text_field :name, {:value=> '', :title => 'add an additional channel ...'} %>
+    </fieldset>
+  <% end %>
+</div>

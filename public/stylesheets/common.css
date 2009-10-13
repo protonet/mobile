@@ -190,12 +190,14 @@ h2 {
   margin: 0 0 0.5em;
 }
 #channel-options {
+  vertical-align: top;
   background: rgb(247, 247, 247);
   border: 0.1em solid rgb(212, 212, 212);
+  display: inline-block;
+  height: 591px;
   margin: 0 1em 1.5em;
   padding: 1em 1em 0.5em;
   width: 550px;
-  height: 591px;
 }
 #channel-options li {
   -moz-border-radius: 0.5em;
@@ -264,6 +266,27 @@ h2 {
   padding: 0.1em 0.2em;
   width: 540px;
 }
+
+#channel-administration {
+  vertical-align: top;
+  background: rgb(247, 247, 247);
+  border: 0.1em solid rgb(212, 212, 212);
+  display: inline-block;
+  height: 591px;
+  margin: 0 1em 1.5em;
+  padding: 1em 1em 0.5em;
+  width: 350px;
+}
+#channel-administration input {
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  float: left;
+  font-size: 1.8em;
+  line-height: 1em;
+  margin: 0;
+  padding: 0.1em 0.2em;
+  width: 340px;
+}
+
 /* =NETWORK
 --------------------------------------------------------------------------- */
 h2 {
