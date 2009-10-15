@@ -27,5 +27,13 @@ module BackendAdapters
       `/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -I`.match(/BSSID: (.*)/)[1].gsub(/0{1}:?/, '00').delete(':')
     end
     
+    def get_interface_names
+      puts `cat #{RAILS_ROOT}/lib/backend_adapters/utilities/ifconfig_parser_development_mock | awk -f #{RAILS_ROOT}/lib/backend_adapters/utilities/ifconfig_parser.awk`
+    end
+
+    def get_interface_information(iface)
+      puts `cat #{RAILS_ROOT}/lib/backend_adapters/utilities/ifconfig_parser_development_mock | awk -f #{RAILS_ROOT}/lib/backend_adapters/utilities/ifconfig_parser.awk -v "interface=#{iface}" -v "keys=inet6 addr,inet addr"`
+    end
+    
   end
 end

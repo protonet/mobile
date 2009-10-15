@@ -10,7 +10,9 @@ module System
       :give_internet_rights_to_client,
       :rewoke_internet_rights_from_client,
       :ssid_of_base_station,
-      :server_ips
+      :server_ips,
+      :get_interface_names,
+      :get_interface_information
       ].freeze
   
     class << self
