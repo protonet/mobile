@@ -9,6 +9,9 @@
 
 protonet.controls.FileWidget.prototype.FileUpload = function(parent) {
   this.parent = parent;
+  if (!this.parent) {
+    throw new Error("FileUpload: Missing instance of parent class \"FileWidget\"");
+  }
   this._initElements();
   this._initForm();
   this._initTitle();
@@ -46,6 +49,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
       this._swfUpload.startUpload();
     } else {
       this._reset();
+      this.parent.initContextMenu();
     }
   },
   
@@ -114,7 +118,8 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     console.log("file queue for: " + file.name);
     
     this._fullSize += file.size;
-    this._fileList.append('<li class="file disabled" id="file-' + file.id + '">' + file.name + " <span>(0 %)</span></li>");
+    // TODO: We need one global mechanism which renders file entries
+    this._fileList.append('<li class="file disabled" id="file-' + file.id + '" tabindex="-1">' + file.name + " <span>(0 %)</span></li>");
   },
   
   __fileDialogComplete: function(numSelectedFiles) {

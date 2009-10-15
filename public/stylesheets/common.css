@@ -536,20 +536,24 @@ h2 {
 }
 #user-list input {
   border: 1px solid rgba(0, 0, 0, 0.4);
+  border-right: 0;
+  border-left: 0;
   float: left;
   font-size: 1em;
   line-height: 1em;
   margin: 0;
-  padding: 0.1em 0.2em;
-  width: 255px;
+  padding: 0.15em 0.2em;
+  width: 260px;
 }
 #user-list .hierarchy {
   border: 1px solid rgba(0, 0, 0, 0.4);
+  border-right: 0;
+  border-left: 0;
   float: left;
   font-size: 1em;
   line-height: 1em;
   margin: 0;
-  padding: 0.1em 0.2em;
+  padding: 0.15em 0.2em;
   width: 255px;
   background-color: white;
   height: 16px;
@@ -678,18 +682,34 @@ h2 {
 
 #file-list .hierarchy {
   border: 1px solid rgba(0, 0, 0, 0.4);
+  border-right: 0;
+  border-left: 0;
   float: left;
   font-size: 1em;
   line-height: 1em;
   margin: 0;
   padding: 0.1em 0.2em;
-  width: 255px;
+  width: 260px;
   background-color: white;
   height: 16px;
 }
 
 #file-list .hierarchy a {
-  padding: 0 2px;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  color: #888;
+}
+
+#file-list .hierarchy a:last-child {
+  color: #000;
+}
+
+#file-list .hierarchy a:hover {
+  color: #FDAB54;
+}
+
+#file-list .hierarchy a:last-child:hover {
+  color: #000;
 }
 
 

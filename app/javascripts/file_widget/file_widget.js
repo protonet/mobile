@@ -1,3 +1,5 @@
+//= require "../utils/escape_html.js"
+
 protonet.controls.FileWidget = function() {
   this.wrapper = $("#file-list");
   this.file_list = this.wrapper.find('ul.root');
@@ -22,8 +24,9 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "gotoPath": function(path) {
-    var path = path || ''
+    path = path || '';
     var self = this;
+    this.file_list.fadeTo(100, 0.4);
     jQuery.getJSON('system/files', {"path": path}, function(data) {
       self.renderResponse(data);
     });
@@ -31,9 +34,10 @@ protonet.controls.FileWidget.prototype = {
   
   "observeDirectories": function() {
     var self = this;
-    directories = this.wrapper.find('li.directory')
+    directories = this.wrapper.find('li.directory');
     if(directories.length != 0) {
-      directories.click(function(){
+      directories.click(function(event){
+        event.preventDefault();
         self.moveDown($(this).html());
       });      
     }
@@ -51,15 +55,16 @@ protonet.controls.FileWidget.prototype = {
   "renderResponse": function(objects) {
     var self = this;
     var html = '';
-    $(objects).each(function(i){html += self.createElementFor(objects[i]);})
-    html == '' ? this.file_list.empty() : this.file_list.html($(html));
+    $(objects).each(function(i){ html += self.createElementFor(objects[i]); });
+    this.file_list[0].scrollTop = 0;
+    this.file_list.html(html ? $(html) : '').stop().fadeTo(100, 1);
     // now observe those directories
     this.observeDirectories();
     this.initContextMenu(this);
   },
   
   "createElementFor": function(object) {
-    return '<li class="' + object.type +'">' + object.name + '</li>'
+    return '<li class="' + object.type +'" tabindex="-1">' + object.name + '</li>';
   },
   
   "moveDown": function(path) {
@@ -81,8 +86,11 @@ protonet.controls.FileWidget.prototype = {
     var self = this;
     var path = this.current_path;
     var old_index = this.hierarchy_bar.children().size() + 1; // we'll be adding one a the end of this method
-    object_to_add = $('<a href="#">' + blob + '/</a>');
-    object_to_add.click(function(e){ 
+    var blobHtml = protonet.utils.escapeHtml(blob + '/');
+    var blobTitle = protonet.utils.escapeHtml('Go to folder "' + (blob || "/") + '"');
+    object_to_add = $('<a href="#" title="' + blobTitle + '">' + blobHtml + '</a>');
+    object_to_add.click(function(event){
+      event.preventDefault(); 
       self.gotoPath(path);
       var new_index = self.hierarchy_bar.children().size();
       while(new_index > old_index) {
@@ -101,5 +109,4 @@ protonet.controls.FileWidget.prototype = {
   "removeDeepestDirectory": function(directory_string) {
     return directory_string.replace(/(\/[^\/]*)$/g,'');
   }
-     
-}
+};
