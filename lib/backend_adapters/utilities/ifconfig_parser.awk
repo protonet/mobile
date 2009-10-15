@@ -46,6 +46,12 @@ function getInterface() {
   
   # { "foo": {
   output = output "{"
+  
+  if(length(keys_array) == 0) {
+    keys_array[0] = "inet addr"
+    keys_array[1] = "inet6 addr"
+  }
+
   for(key in keys_array) {
     # { "foo": { "key": "value"
     output = output "\"" keys_array[key] "\":" "\"" get(keys_array[key]) "\","
