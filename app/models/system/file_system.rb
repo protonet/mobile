@@ -12,6 +12,7 @@ module System
       bar
     end
 
+    # TODO clear path names <b>BLA</b> potentially hackable!
     # pass path with a leading slash: /foobar not foobar
     def self.cleared_path(path)
       # todo aj: test cleaning of paths

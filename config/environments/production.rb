@@ -26,5 +26,5 @@ config.action_view.cache_template_loading            = true
 
 # Enable threaded mode
 # config.threadsafe!
-configatron.dispatching_server = '127.0.0.1'
-
+System::Backend.backend_connection = BackendAdapters::Ubuntu.new
+puts "Backend '#{System::Backend.backend_connection.info}' connected successfully!"
