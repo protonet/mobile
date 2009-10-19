@@ -44,6 +44,12 @@ protonet.controls.Navigation = {
     
     // send user to link defined by <a href=
     this._container.find('li').click(function(event) {
+      if ($(this).hasClass("disabled")) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+      
       document.location = $(this).find('a')[0].href;
     });
   },

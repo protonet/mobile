@@ -67,6 +67,10 @@
   opacity: 0.4;
 }
 
+#navigation li.disabled a {
+  cursor: not-allowed;
+}
+
 /* First row */
 #navigation .home,
 #navigation .preferences,
