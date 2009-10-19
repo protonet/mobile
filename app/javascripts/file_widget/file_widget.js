@@ -26,7 +26,7 @@ protonet.controls.FileWidget.prototype = {
   "gotoPath": function(path) {
     path = path || '';
     var self = this;
-    this.file_list.fadeTo(100, 0.4);
+    this.file_list.fadeTo(100, 0.2);
     jQuery.getJSON('system/files', {"path": path}, function(data) {
       self.renderResponse(data);
     });
@@ -57,7 +57,7 @@ protonet.controls.FileWidget.prototype = {
     var html = '';
     $(objects).each(function(i){ html += self.createElementFor(objects[i]); });
     this.file_list[0].scrollTop = 0;
-    this.file_list.html(html ? $(html) : '').stop().fadeTo(100, 1);
+    this.file_list.html(html ? $(html) : '').stop().fadeTo(200, 1);
     // now observe those directories
     this.observeDirectories();
     this.initContextMenu(this);

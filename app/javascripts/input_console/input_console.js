@@ -7,16 +7,11 @@ function CommandBlob(args) {
   console.log('new command blob has been created');
 }
 
-CommandBlob.prototype = {
-  "class": null,
-  "foobar": function() {
-    
-  }
-}
 
 function InputConsole(args) {
   var self = this;
   this.input_console  = args.input_console;
+  this.form = args.form;
   // this.output_console = args.output_console;
   this.parent_widget  = args.parent_widget;
   this.console_mode = false;
@@ -33,6 +28,11 @@ function InputConsole(args) {
   // bind event handling on the input
   this.input_console.keyup(function(event) {
     self.eventHandler(event);
+  });
+  
+  // bind submit
+  this.form.submit(function(event) {
+    self.tweet(event);
   });
   
   this.command_hash = {};
@@ -82,18 +82,15 @@ InputConsole.prototype = {
     var currentTarget   = event.currentTarget;
     var selectionEndsAt = event.currentTarget.selectionEnd;
     var selectionIndex  = selectionEndsAt - 1;
-    
+    var previousCharacter, currentCharacter;
     
     // retrieve the previous character
-    if(selectionIndex == 0)
-    {
-      var previousCharacter= null;
-      var currentCharacter = currentTarget.value.substr((selectionIndex), 1);
-    }
-    else
-    {
-      var previousCharacter= currentTarget.value.substr((selectionIndex - 1), 1);
-      var currentCharacter = currentTarget.value.substr((selectionIndex), 1);
+    if(selectionIndex == 0) {
+      previousCharacter = null;
+      currentCharacter = currentTarget.value.substr((selectionIndex), 1);
+    } else {
+      previousCharacter= currentTarget.value.substr((selectionIndex - 1), 1);
+      currentCharacter = currentTarget.value.substr((selectionIndex), 1);
       // this.linearity = this.last_position && (this.last_position + 1 == selectionEndsAt);
     }
         
@@ -112,7 +109,7 @@ InputConsole.prototype = {
         if(previousCharacter == ' ' || !previousCharacter)
         {
           console.log('entering console mode');
-          console.log('person mode')
+          console.log('person mode');
           this.console_mode = 'person';
           var command = new CommandBlob({'starts_at': selectionIndex, 'command_type': this.console_mode});
           this.last_command_blob = command;
@@ -146,9 +143,9 @@ InputConsole.prototype = {
       // case space
       // end of command sequence
       case 32:
-        var currentTarget   = event.currentTarget;
-        var selectionEndsAt = event.currentTarget.selectionEnd;
-        var selectionIndex  = selectionEndsAt - 1;
+        currentTarget   = event.currentTarget;
+        selectionEndsAt = event.currentTarget.selectionEnd;
+        selectionIndex  = selectionEndsAt - 1;
         
         if(this.console_mode) 
         {
@@ -168,6 +165,7 @@ InputConsole.prototype = {
         break;
                 
       case 'foobar':
+        // REALLY IMPORTANT CASE
         break;
     }
     // output.text(input_console.attr('value'));
@@ -178,21 +176,12 @@ InputConsole.prototype = {
       case 9:
         console.log('requesting help');
         event.stopPropagation();
-        event.stopImmediatePropagation();
         event.preventDefault();
-        event.cancelBubble = true
-        // debugger;
         break;
         
       case 13:
         console.log('sending via js');
-        form = $('#message-form');
-        this.parent_widget.addAndSendTweet(form);
-        
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-        event.preventDefault();
-        event.cancelBubble = true
+        this.tweet(event);
         break;
     }
     
@@ -200,6 +189,12 @@ InputConsole.prototype = {
   
   "prepareDataForHandler": function(event) {
     //test
-  }
+  },
   
-}    
+  tweet: function(event) {
+    console.log('sending via js');
+    this.parent_widget.addAndSendTweet();
+    event.stopPropagation();
+    event.preventDefault();
+  }
+};

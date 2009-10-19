@@ -562,7 +562,7 @@ h2 {
 /* =FEEDVIEWER (OUTER)
 --------------------------------------------------------------------------- */
 #feed-viewer {
-  width:  610px;
+  width:  613px;
   height: 780px;
   position: relative;
   overflow: hidden;
@@ -726,7 +726,7 @@ h2 {
 .user-messages li {
   margin: 0 0 1.5em 90px;
   position: relative;
-  width: 500px;
+  width: 507px;
 }
 .user-messages li:last-child {
   margin-bottom: 0;

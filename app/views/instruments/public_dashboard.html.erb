@@ -27,7 +27,7 @@
   </div>
   
   <div id="feed-viewer">
-    <div id="feed-holder" style="width:<%= @channels.size * 610 %>px; left: <%= @channels.index(@active_channel) * -604 %>px;">
+    <div id="feed-holder" style="width:<%= @channels.size * 613 %>px; left: <%= @channels.index(@active_channel) * -613 %>px;">
       <% @channels.each do |c| %>
         <%= render :partial => '/tweets/tweet_list', :locals => {:tweets => c.tweets.recent, :channel => c} %>
       <% end %>
