@@ -1,5 +1,17 @@
 <h2>Channels</h2>
 <div id="channel-options">
+  <ul>
+    <li>
+      <% form_for :channel, :url => channels_path, :action => 'post', :html => { :id => 'channel-add' } do |f| -%>
+        <fieldset>
+          <%= f.text_field :name, { :title => 'add an channel-name ...' } %>
+          <%= f.text_field :description, { :title => 'add an description ...' } %>
+          <%= f.submit 'Create' %>
+        </fieldset>
+      <% end %>
+    </li>
+  </ul>
+  
   <form id="channel-search" action="/channels/search">
     <fieldset>
       <input type="text" value="<%= params[:description] %>" name="description" title="search for interesting channels ..."/>
@@ -11,16 +23,20 @@
     <%- @channels.each do |c| -%>
       <li>
         <%= "#{c.name} <span>(#{c.description})</span>" %>
-        <%= "<span class=\"control\">listen #{current_user.channels.include?(c) ? link_to('OFF', current_user.listens.find_by_channel_id(c.id), :class => 'off', :method => :delete) : link_to('ON', listens_path(:channel_id => c.id), :class => 'on', :method => :post)}</span>" %>
+        <%= link_to 'edit', "#", :class => "edit", :rel => "edit-#{c.id}" %>
+        <%= link_to 'delete', destroy_channel_path(c), :class => "destroy" %>
+        <%= "<span class=\"control\">listen #{current_user.channels.include?(c) ? link_to('OFF', current_user.listens.find_by_channel_id(c.id), :class => 'listen off', :method => :delete) : link_to('ON', listens_path(:channel_id => c.id), :class => 'listen on', :method => :post)}</span>" %>
+      </li>
+      <li id="edit-<%= c.id %>" class="channel-edit">
+        <% form_for :channel, :url => { :action => 'update' } do |f| -%>
+          <fieldset>
+            <%= f.hidden_field :id, { :value => c.id } %>
+            <%= f.text_field :name, { :value => c.name, :title => 'add an channel-name ...' } %>
+            <%= f.text_field :description, { :value => c.description, :title => 'add an description ...' }  %>
+            <%= f.submit 'Save' %>
+          </fieldset>
+        <% end %>
       </li>
     <%- end -%>
   </ul>
-</div>
-
-<div id="channel-administration">
-  <% form_for :channel, :url => channels_path, :action => 'post', :html => {:id => 'channel-add'} do |f| -%>
-    <fieldset>
-      <%= f.text_field :name, {:value=> '', :title => 'add an additional channel ...'} %>
-    </fieldset>
-  <% end %>
 </div>

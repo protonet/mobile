@@ -220,7 +220,7 @@ h2 {
   float: right;
 }
 
-#channel-options a {
+#channel-options a.listen {
   background: url(/images/spr_on_off.png) no-repeat;
   display: inline-block;
   height: 31px;
@@ -235,6 +235,20 @@ h2 {
 }
 #channel-options a.on {
   background-position: 0 -31px;
+}
+#channel-options li .add,
+#channel-options li .edit,
+#channel-options li .destroy {
+  display: none;
+}
+#channel-options li:hover .add,
+#channel-options li:hover .edit,
+#channel-options li:hover .destroy {
+  display: inline;
+}
+
+.channel-edit {
+  display: none;
 }
 
 #channel-search {
