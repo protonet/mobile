@@ -3,6 +3,8 @@ $("a").click(function() {
 
   if ($("#" + item).is(':hidden')) {
     $(".channel-edit").slideUp("medium");
-    $("#" + item).slideDown("medium");
   }
+  $("#" + item).slideToggle("medium");
+  
+  return false;
 });
