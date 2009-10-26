@@ -8,15 +8,18 @@
     </fieldset>
   </form>
   <ul class="root">
-    <% file_system.each do |name, type| %>
+    <% file_system.each do |type, items| %>
+      <% items.each do |item| %>
+        <li class="<%= type %>" tabindex="-1"><%= item %></li>      
+      <% end %>
     <!-- tabindex="-1" ensures that the element is focusable via css -->
-    <li class="<%= type %>" tabindex="-1"><%= name %></li>
     <% end %>
   </ul>
   <% form_tag system_files_path, {:id => "file-stash"} do %>
     <div id="file-upload-flash"></div>
     <fieldset>
       <button class="add" id="upload-button"><span>+</span></button> <label id="upload-button-label" for="upload-button">add files here …</label>
+      <a id="new-folder-button" href="#">new folder</a>
     </fieldset>
   <% end %>
 </div>

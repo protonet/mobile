@@ -24,7 +24,10 @@ ActionController::Routing::Routes.draw do |map|
   map.resource :session
   
   map.namespace :system do |system|
-    system.connect      'foundations', :controller => 'foundations'
+    system.connect            'foundations', :controller => 'foundations'
+    system.namespace :files_controller do |files|
+      files.create_directory   'create_directory', :action => 'create_directory'
+    end
     system.resources    :files
   end
   

@@ -2,14 +2,15 @@ module System
   class FileSystem
 
     def self.all(directory = '')
-      bar = {}
+      files = {}
       Dir.chdir(cleared_path(directory)) do
-        foo = Dir.glob("*")
-        foo.each do |entry|
-          bar[entry] = File.ftype(entry)
+        target_dir = Dir.glob("*")
+        target_dir.each do |entry|
+          files[File.ftype(entry)] ||= []
+          files[File.ftype(entry)].push(entry)
         end
       end
-      bar
+      files
     end
 
     # TODO clear path names <b>BLA</b> potentially hackable!
@@ -21,7 +22,7 @@ module System
     end
 
     def self.public_path
-      @uploads_path ||= RAILS_ROOT + (Rails.env.production? ? "/../../shared/user-files" : "/../shared/user-files")
+      @uploads_path ||= RAILS_ROOT + (Rails.env.production? ? "/home/protonet/dashboard/shared/user-files" : "/../shared/user-files")
     end
 
   end  

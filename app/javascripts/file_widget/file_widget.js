@@ -8,6 +8,7 @@ protonet.controls.FileWidget = function() {
   
   this.observeDirectories();
   this.observeBackButton();
+  this.observeFolderCreateButton();
   this.current_path = '';
   this.addPathBlob('');
   this.initUpload();
@@ -32,9 +33,9 @@ protonet.controls.FileWidget.prototype = {
     });
   },
   
-  "observeDirectories": function() {
+  "observeDirectories": function(directories) {
     var self = this;
-    directories = this.wrapper.find('li.directory');
+    directories || (directories = this.wrapper.find('li.directory'));
     if(directories.length != 0) {
       directories.click(function(event){
         event.preventDefault();
@@ -55,7 +56,11 @@ protonet.controls.FileWidget.prototype = {
   "renderResponse": function(objects) {
     var self = this;
     var html = '';
-    $(objects).each(function(i){ html += self.createElementFor(objects[i]); });
+    $(objects).each(function(i){
+      $(objects[i].name).each(function(j) {
+        html += self.createElementFor({"type": objects[i].type, "name": objects[i].name[j]}); 
+      });
+    });
     this.file_list[0].scrollTop = 0;
     this.file_list.html(html ? $(html) : '').stop().fadeTo(200, 1);
     // now observe those directories
@@ -108,5 +113,38 @@ protonet.controls.FileWidget.prototype = {
   
   "removeDeepestDirectory": function(directory_string) {
     return directory_string.replace(/(\/[^\/]*)$/g,'');
+  },
+  
+  "observeFolderCreateButton": function() {
+    $('#new-folder-button').click(function(event){
+      this.addFolder();
+      event.preventDefault();
+    }.bind(this));
+  },
+  
+  "addFolder": function() {
+    var create_folder_url = "system/files/create_directory";
+    var new_folder = $(this.createElementFor({"type": "directory", "name": ""}));
+    var new_folder_form = $('<form action="' + create_folder_url +'"></form>');
+    var new_folder_input = $('<input name="directory_name" type="text" style="width:247px; display: block; height: 17px;"/>');
+
+    new_folder.append(new_folder_form);    
+    new_folder_form.append(new_folder_input);
+    new_folder_form.append($('<input name="file_path" type="hidden" value="' + this.current_path + '"/>'));
+    new_folder_form.append($('<input name="authenticity_token" type="hidden" value="' + protonet.config.authenticity_token + '"/>'));
+    
+    new_folder_form.submit(function(event){
+      event.preventDefault();
+      $.post(create_folder_url, new_folder_form.serialize(), function() {
+        new_folder.html(new_folder_input.val());
+        this.observeDirectories(new_folder);
+      }.bind(this));
+    }.bind(this));
+    
+    this.file_list.append(new_folder);
+    
+    new_folder_input.focus();
   }
+  
+  
 };
