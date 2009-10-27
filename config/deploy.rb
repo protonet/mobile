@@ -16,9 +16,11 @@ set :runner, "protonet"
 
 set :scm, :git
 
-role :app, "protonet-7.local"
-role :web, "protonet-7.local"
-role :db,  "protonet-7.local", :primary => true
+target_node = ENV["NODE"] || "protonet-7.local"
+
+role :app, target_node
+role :web, target_node
+role :db,  target_node, :primary => true
 
 namespace :deploy do
   
