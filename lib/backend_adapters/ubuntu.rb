@@ -41,11 +41,11 @@ module BackendAdapters
     end
     
     def get_interfaces
-      JSON.parse `ifconfig | awk -f #{RAILS_ROOT}/lib/backend_adapters/utilities/ifconfig_parser.awk`
+      JSON.parse `/sbin/ifconfig | original-awk -f #{RAILS_ROOT}/lib/backend_adapters/utilities/ifconfig_parser.awk`
     end
 
     def get_interface_information(iface)
-      JSON.parse `ifconfig | awk -f #{RAILS_ROOT}/lib/backend_adapters/utilities/ifconfig_parser.awk -v "interface=#{iface}" -v "keys=inet6 addr,inet addr"`
+      JSON.parse `/sbin/ifconfig | original-awk -f #{RAILS_ROOT}/lib/backend_adapters/utilities/ifconfig_parser.awk -v "interface=#{iface}" -v "keys=inet6 addr,inet addr"`
     end
     
     
