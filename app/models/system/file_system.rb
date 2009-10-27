@@ -10,6 +10,10 @@ module System
           files[File.ftype(entry)].push(entry)
         end
       end
+      # sort alphabetically since not all systems return fs entries in the correct order
+      files.each do |type, array|
+        files[type] = array.sort!
+      end
       files
     end
 
