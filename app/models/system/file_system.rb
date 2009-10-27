@@ -22,7 +22,7 @@ module System
     end
 
     def self.public_path
-      @uploads_path ||= RAILS_ROOT + (Rails.env.production? ? "/home/protonet/dashboard/shared/user-files" : "/../shared/user-files")
+      @uploads_path ||= (Rails.env.production? ? "/home/protonet/dashboard/shared/user-files" : RAILS_ROOT + "/../shared/user-files")
     end
 
   end  
