@@ -36,3 +36,10 @@ $(function() {
     new protonet.utils.InlineHint(input, input.attr("title"));
   });
 });
+
+//= require "utils/notification_message.js"
+
+// add notification message neatification
+$(function() {
+  new protonet.utils.NotificationMessage();
+});

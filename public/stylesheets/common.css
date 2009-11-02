@@ -868,6 +868,7 @@ h2 {
   position: absolute;
   right: 10px;
   top: 10px;
+  z-index: 2;
 }
 #login-form fieldset {
   float: left;
@@ -992,31 +993,37 @@ h2 {
 /* =ERROR, =WARNING and =NOTICE messages
 --------------------------------------------------------------------------- */
 .message {
+  left: 0;
+  position: fixed;
+  top: -50px;
+  width: 100%;
+  z-index: 1;
+}
+.message p {
+  -moz-border-radius-bottomleft: 1em;
+  -moz-border-radius-bottomright: 1em;
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  background-color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(0, 0, 0, 0.4);
+  border-style: none solid solid solid;
+  border-width: 0 1px 1px 1px;
   font-size: 1.2em;
-  margin: 0 1em 1em;
+  margin: 0 auto;
+  padding: 1em 1.8em;
+  width: 80%;
 }
 .message span {
-  border: 0.1em solid rgba(255, 255, 255, 0.75);
   display: block;
   padding: 0.3em 0.3em 0.3em 2.3em;
 }
-.warning {
-  border: 0.1em solid rgba(245, 218, 87, 0.75);
-}
 .warning span {
-  background: rgb(245, 218, 87) url(/images/icn_warning.png) no-repeat scroll 0.3em 0.3em;
-}
-.error {
-  border: 0.1em solid rgba(245, 131, 105, 0.75);
+  background: transparent url(/images/icn_warning.png) no-repeat scroll 0.3em 0.3em;
 }
 .error span {
-  background: rgb(245, 131, 105) url(/images/icn_error.png) no-repeat scroll 0.3em 0.3em;
-}
-.notice {
-  border: 0.1em solid rgba(113, 200, 103, 0.75);
+  background: transparent url(/images/icn_error.png) no-repeat scroll 0.3em 0.3em;
 }
 .notice span {
-  background: rgb(113, 200, 103) url(/images/icn_notice.png) no-repeat scroll 0.3em 0.3em;
+  background: transparent url(/images/icn_notice.png) no-repeat scroll 0.3em 0.3em;
 }
 /* =CLEARFIX
 =========================================================================== */

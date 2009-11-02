@@ -40,10 +40,15 @@
         <%= link_to 'logout', :controller => :sessions, :action => :destroy %>
       </div>
     <% end %>
-    
-    <%= "<p class=\"notice message\"><span>#{flash[:notice]}</span></p>" if flash[:notice] %>
-    <%= "<p class=\"error message\"><span>#{flash[:error]}</span></p>" if flash[:error] %>
-    <%= "<p class=\"warning message\"><span>#{flash[:warning]}</span></p>" if flash[:warning] %>
+
+    <%- unless flash.empty? -%>
+      <div class="message">
+        <%= "<p class=\"notice\"><span>#{flash[:notice]}</span></p>" if flash[:notice] %>
+        <%= "<p class=\"error\"><span>#{flash[:error]}</span></p>" if flash[:error] %>
+        <%= "<p class=\"warning\"><span>#{flash[:warning]}</span></p>" if flash[:warning] %>
+      </div>
+    <%- end -%>
+
     <%= yield %>
 
     <script type="text/javascript" charset="utf-8">
