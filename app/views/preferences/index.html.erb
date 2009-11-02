@@ -8,20 +8,11 @@
   
   <ul>
     <%- @preferences.each do |p| -%>
-      <li>
-        <%= "#{p[:name]}" %>
+      <li id ="<%= p[:url] %>">
+        <%= p[:name] %>
       </li>
     <%- end -%>
   </ul>
 </div>
 <div id="preferences-details">
-  <% @network_interfaces.each do |interface| %>
-    <% name = interface.keys.first %>
-    INTERFACE NAME:<br />
-    <%= name %><br />
-    IPv4:<br />
-    <%= interface[name]["inet addr"] %><br />
-    IPv6:<br />
-    <%= interface[name]["inet6 addr"] %><br />
-  <% end %>
 </div>
