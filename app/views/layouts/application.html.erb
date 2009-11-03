@@ -7,7 +7,7 @@
     <meta name="robots" content="noindex, nofollow" />
     <%= stylesheet_link_tag("common", :cache => false) %>
     <%= stylesheet_link_tag("navigation", :cache => false) %>
-    <title><%= strip_tags(yield(:page_title)) %></title>
+    <title><%= strip_tags(yield(:page_title)) || 'protonet - changing the internet, one node at a time' %></title>
   </head>
 
   <body>

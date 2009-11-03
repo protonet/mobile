@@ -16,10 +16,13 @@
     <% end %>
   </ul>
   <% form_tag system_files_path, {:id => "file-stash"} do %>
-    <div id="file-upload-flash"></div>
     <fieldset>
-      <button class="add" id="upload-button"><span>+</span></button> <label id="upload-button-label" for="upload-button">add files here …</label>
-      <a id="new-folder-button" href="#">new folder</a>
+      <div id="upload-controls">
+        <button class="add" id="upload-button"><span>+</span></button> <label id="upload-button-label" for="upload-button">add files here</label>
+      </div>
+      <div id="folder-controls">
+        <a id="new-folder-button" href="#">new folder</a>
+      </div>
     </fieldset>
   <% end %>
 </div>

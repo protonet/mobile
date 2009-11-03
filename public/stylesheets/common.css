@@ -668,9 +668,13 @@ h2 {
   width: 20px;
 }
 #file-list #upload-button-label {
-  line-height: 20px;
   margin: 0 0 0 4px;
-  color: #555;
+}
+#folder-controls a,
+#file-list #upload-button-label {
+  line-height: 20px;
+  text-decoration: underline;
+  color: #333;
 }
 #file-list button span {
   display: none;
@@ -727,7 +731,28 @@ h2 {
   color: #000;
 }
 
+#upload-controls {
+  float: left;
+  overflow: hidden;
+  position: relative;
+  width: 130px;
+}
 
+#upload-controls input[type='file'] {
+  cursor: pointer;
+  display: block;
+  position: absolute;
+  opacity: 0;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  font-size: 50px;
+}
+
+#folder-controls {
+  float: right;
+  margin: 0 4px 0;
+}
 
 /* =TWEETS (=MESSAGES)
 --------------------------------------------------------------------------- */
