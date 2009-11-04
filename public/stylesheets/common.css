@@ -1030,7 +1030,7 @@ h2 {
 .message {
   left: 0;
   position: fixed;
-  top: -50px;
+  top: -500px;
   width: 100%;
   z-index: 1;
 }
