@@ -1,0 +1,38 @@
+protonet.user.Browser = {
+  SUPPORTS_HTML5_MULTIPLE_FILE_UPLOAD: function() {
+    var supportsMultipleAttribute = typeof($('<input type="file" />').attr("multiple")) != "undefined";
+    var supportsXhrUpload = typeof((new XMLHttpRequest).upload) != "undefined";
+    
+    return supportsXhrUpload && supportsMultipleAttribute;
+  },
+  
+  
+  SUPPORTS_FLASH_UPLOAD: function() {
+    var flash;
+    
+    if (window.ActiveXObject) {
+      for (var i=8, flashVersions=20; i<flashVersions; i++) {
+        try {
+          flash = new ActiveXObject("ShockwaveFlash.ShockwaveFlash." + i);
+          if (flash) { return true; }
+        } catch(e) {}
+      }
+    }
+    
+    if (navigator.plugins) {
+      flash = navigator.plugins["Shockwave Flash"];
+      if (flash) {
+        var flashVersion = parseInt(flash.description.split("Shockwave Flash ")[1], 10);
+        if (flashVersion >= 8) { return true; }
+      }
+    }
+    
+    return false;
+  },
+  
+  
+  SUPPORTS_HTML5_DRAG_AND_DROP: function() {
+    var testElement = $("<div />")[0];
+    return typeof(testElement.ondragenter) != "undefined";
+  }
+};

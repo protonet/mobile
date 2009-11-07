@@ -1,4 +1,5 @@
 //= require "../lib/swfupload.js"
+//= require "../user/browser.js"
 
 // this is the order in which the files are sent to the server
 // 
@@ -18,9 +19,9 @@ protonet.controls.FileWidget.prototype.FileUpload = function(parent) {
   this._initTitle();
   this._reset();
   
-  if (this._supportsHtml5MultipleFilesUpload()) {
+  if (protonet.user.Browser.SUPPORTS_HTML5_MULTIPLE_FILE_UPLOAD()) {
     this._initHtml5Upload();
-  } else if (this._supportsFlashUpload()) {
+  } else if (protonet.user.Browser.SUPPORTS_FLASH_UPLOAD()) {
     this._initSwfUpload();
   } else {
     // TODO: Fallback for when the users neither hasn't flash nor safari 4
@@ -53,45 +54,6 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     document.title = this._oldTitle;
   },
   
-  // HTML5 Multiple file upload detection
-  _supportsHtml5MultipleFilesUpload: function() {
-    var supportsMultipleAttribute = typeof($('<input type="file" />').attr("multiple")) != "undefined";
-    var supportsXhrUpload = typeof((new XMLHttpRequest).upload) != "undefined";
-    return supportsXhrUpload && supportsMultipleAttribute;
-  },
-  
-  // --------- FLASH 8 DETECTION START ---------
-  _supportsFlashUpload: function() {
-    return this._supportsFlashUpload_W3C() || this._supportsFlashUpload_MSIE();
-  },
-  
-  // Firefox, Safari, Chrome, ...
-  _supportsFlashUpload_W3C: function() {
-    if (window.ActiveXObject) {
-      for (var i=8, flashVersions=20; i<flashVersions; i++) {
-        try {
-          var flash = new ActiveXObject("ShockwaveFlash.ShockwaveFlash." + i);
-          if (flash) { return true; }
-        } catch(e) {}
-      }
-    }
-    return false;
-  },
-  
-  // Bitchy IE
-  _supportsFlashUpload_MSIE: function() {
-    if (navigator.plugins) {
-      var flash = navigator.plugins["Shockwave Flash"];
-      if (flash) {
-        var flashVersion = parseInt(flash.description.split("Shockwave Flash ")[1], 10);
-        if (flashVersion >= 8) { return true; }
-      }
-    }
-    return false;
-  },
-  // --------- FLASH 8 DETECTION END ---------
-  
-  
   _getProgress: function(bytesLoaded, bytesTotal) {
     var fileProgress = Math.round(bytesLoaded / bytesTotal * 100),
         fullProgress = Math.round((this._loadedSize + bytesLoaded) / this._fullSize * 100);
@@ -119,29 +81,59 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
   // =========================================================================================
   _initHtml5Upload: function() {
     this._input = $('<input type="file" multiple="true" name="files[]" />');
-    this._input.change(this.__html5_upload.bind(this));
+    this._input.change(function() {
+      this.__html5_upload(this._input[0].files);
+    }.bind(this));
+    
     this._uploadControls.append(this._input);
     
-    this.__html5_extendFile();
+    if (protonet.user.Browser.SUPPORTS_HTML5_DRAG_AND_DROP()) {
+      this._initHtml5DragDrop();
+    }
   },
+  
+  _initHtml5DragDrop: function() {
+    this._fileList.bind("dragenter", this.__html5_dragEnter.bind(this));
+  },
+  
   
   
   // --------- HTML5 UPLOAD HANDLER START ---------
-  __html5_extendFile: function() {
-    // Returns simple object with all needed information
-    File.prototype.asObject = function() {
-      return { id: this.getId(), name: this.fileName, size: this.fileSize };
-    };
+  __html5_dragEnter: function() {
+    console.log("drag enter ...");
     
-    // Generates and returns an id based on file size and file name (TODO: better solution?)
-    File.prototype.getId = function() {
-      return this.fileSize + "-" + this.fileName.replace(/[^a-z0-9]/gi, "");
-    };
+    this._dragInput = $('<input type="file" multiple="true" name="files[]" />');
+    this._dragInput.css({
+      height: this._fileList.height(),
+      width: this._fileList.width()
+    });
+    this._dragInput.bind("dragleave", this.__html5_dragLeave.bind(this));
+    this._fileList.before(this._dragInput);
+    this._fileList.addClass("highlight");
+    this._dragInput.change(this.__html5_dropped.bind(this));
   },
   
-  __html5_upload: function() {
+  __html5_dragLeave: function() {
+    console.log("drag leave ...");
+    
+    this._dragInput.remove();
+    this._fileList.removeClass("highlight");
+  },
+  
+  __html5_dropped: function() {
+    console.log("files dropped ...");
+    
+    this.__html5_upload(this._dragInput[0].files);
+    this.__html5_dragLeave();
+  },
+  
+  __html5_upload: function(files) {
+    if (!files) {
+      throw new Error("FileUpload: File array not passed");
+    }
+    
+    this._files = files;
     this._currentFileIndex = 0;
-    this._files = this._input[0].files;
     
     // Queue files and extend
     // Caution: Don't use any lib's "each" helper here

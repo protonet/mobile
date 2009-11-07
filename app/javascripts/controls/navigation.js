@@ -1,6 +1,3 @@
-var protonet = protonet || {};
-protonet.controls = protonet.controls || {};
-
 protonet.controls.Navigation = {
   TEMPLATE_URL: "/navigation",
   _visible: false,
@@ -95,7 +92,3 @@ protonet.controls.Navigation = {
     }.bind(this));
   }
 };
-
-$(function() {
-  protonet.controls.Navigation.initialize();
-});

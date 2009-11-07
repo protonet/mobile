@@ -738,12 +738,19 @@ h2 {
   width: 130px;
 }
 
-#upload-controls input[type='file'] {
-  cursor: pointer;
+#file-list input[type=file] {
   display: block;
   position: absolute;
   opacity: 0;
   z-index: 1;
+}
+
+#file-list .root.highlight {
+  border: 1px solid #FDAB54;
+}
+
+#upload-controls input[type=file] {
+  cursor: pointer;
   top: 0;
   left: 0;
   font-size: 50px;

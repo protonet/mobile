@@ -2,6 +2,6 @@
 //= require "file_widget/file_upload.js"
 //= require "file_widget/file_context_menu.js"
 
-$('document').ready(function() {
+$(function() {
   var file_widget = new protonet.controls.FileWidget();
 });
