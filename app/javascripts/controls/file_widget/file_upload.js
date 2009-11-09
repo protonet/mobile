@@ -1,5 +1,5 @@
-//= require "../lib/swfupload.js"
-//= require "../user/browser.js"
+//= require "../../lib/swfupload.js"
+//= require "../../user/browser.js"
 
 // this is the order in which the files are sent to the server
 // 

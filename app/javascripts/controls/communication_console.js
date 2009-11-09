@@ -1,6 +1,4 @@
-function CommunicationConsole(args) {
-  var self = this;
-  
+protonet.controls.CommunicationConsole = function(args) {
   // elements
   this.input = $("#message");
   this.form = $("#message-form");
@@ -8,7 +6,7 @@ function CommunicationConsole(args) {
   
   // add sub views
   this.channel_selector = new ChannelSelector({"parent_widget": this});
-  this.input_console = new InputConsole({
+  this.input_console    = new protonet.controls.InputConsole({
     "input_console": this.input,
     "parent_widget": this,
     "form": this.form
@@ -43,9 +41,9 @@ function CommunicationConsole(args) {
   
   // set correct status
   // $('#js-status').
-}
+};
 
-CommunicationConsole.prototype = {
+protonet.controls.CommunicationConsole.prototype = {
   "addAndSendTweet": function() {
     new Tweet({
       "message": this.input.val(),
@@ -98,7 +96,7 @@ function ChannelSelector(args) {
   this.container = $('#channel');
   
   // get feed-holder
-  this.feed_holder = $('#feed-holder');
+  this.feed_holder = $("#feed-holder");
     
   // get all channel links and bind click
   this.container.find('.channel a').click(function(){
