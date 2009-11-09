@@ -72,7 +72,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     return this._uploadUrl +
       "?_rails_dashboard_session=" + protonet.config.session_id +
       "&authenticity_token=" + encodeURIComponent(this._token) +
-      "&file_path" + encodeURIComponent(this.parent.current_path);
+      "&file_path=" + encodeURIComponent(this.parent.current_path);
   },
   
   
@@ -241,6 +241,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
       file_queue_limit:             0,
       file_queued_handler:          this.__swfUpload_fileQueued.bind(this),
       file_dialog_complete_handler: this.__swfUpload_fileDialogComplete.bind(this),
+      upload_start_handler:         this.__swfUpload_uploadStart.bind(this),
       upload_progress_handler:      this.__swfUpload_uploadProgress.bind(this),
       upload_success_handler:       this.__swfUpload_uploadSuccess.bind(this),
       upload_error_handler:         this.__swfUpload_uploadError.bind(this)
@@ -260,6 +261,11 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     
     // Start upload immediately after user has chosen files
     this._swfUpload.startUpload();
+  },
+  
+  __swfUpload_uploadStart: function() {
+    // reset path for this file, needed since moving within dirs is ajax
+    this._swfUpload.setUploadURL(this._getUploadUrl());
   },
   
   __swfUpload_uploadProgress: function(file, bytesLoaded, bytesTotal) {
