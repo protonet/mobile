@@ -153,13 +153,15 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     
     this._html5Upload = new XMLHttpRequest();
     this.__html5_setHandler(this._html5Upload);
+        
+    this._html5Upload.open("post", this._getUploadUrl(), true);
     
+    this._html5Upload.setRequestHeader("content-length", this._currentFile.fileSize);
     this._html5Upload.setRequestHeader("X-Requested-With", "XMLHttpRequest");
     this._html5Upload.setRequestHeader("X-File-Name", this._currentFile.fileName);
     this._html5Upload.setRequestHeader("X-File-Size", this._currentFile.fileSize);
     this._html5Upload.setRequestHeader("Content-Type", "multipart/form-data");
     
-    this._html5Upload.open("post", this._getUploadUrl(), true);
     this._html5Upload.send(this._currentFile);
     
     // Firefox' and W3C's way,
