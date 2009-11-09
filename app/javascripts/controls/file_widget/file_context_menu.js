@@ -1,3 +1,5 @@
+//= require "../../lib/jquery.contextMenu.js"
+
 protonet.controls.FileWidget.prototype.FileContextMenu = function(parent) {
   this.parent = parent;
   this.files = $("#file-list li.file");
