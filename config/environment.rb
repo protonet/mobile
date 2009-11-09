@@ -9,6 +9,10 @@ require File.join(File.dirname(__FILE__), 'boot')
 # for app wide configurations
 require "configatron"
 
+#  hack this needs to be removed
+require "#{RAILS_ROOT}/lib/rack_ext.rb"
+
+
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
