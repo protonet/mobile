@@ -743,6 +743,7 @@ h2 {
   position: absolute;
   opacity: 0;
   z-index: 1;
+  width: auto;
 }
 
 #file-list .root.highlight {
@@ -752,8 +753,10 @@ h2 {
 #upload-controls input[type=file] {
   cursor: pointer;
   top: 0;
-  left: 0;
+  right: 0;
   font-size: 50px;
+  line-height: 50px;
+  height: 46px;
 }
 
 #folder-controls {
@@ -1124,4 +1127,13 @@ h2 {
 --------------------------------------------------------------------------- */
 .inline-hint {
   color: #888;
+}
+
+/* =STUFF
+--------------------------------------------------------------------------- */
+.invisible-iframe {
+  width: 1px;
+  height: 1px;
+  border: 0;
+  position: absolute;
 }

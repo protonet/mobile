@@ -24,8 +24,8 @@ protonet.controls.FileWidget.prototype.FileUpload = function(parent) {
   } else if (protonet.user.Browser.SUPPORTS_FLASH_UPLOAD()) {
     this._initSwfUpload();
   } else {
-    // TODO: Fallback for when the users neither hasn't flash nor safari 4
-    alert("No Flash or HTML 5 Upload supported");
+    // Fallback
+    this._initLegacyUpload();
   }
 };
 
@@ -300,6 +300,56 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     return "Error: " + message;
   },
   // --------- SWF UPLOAD HANDLER END ---------
+  
+  
+  
+  
+  // =========================================================================================
+  // ==================== OLD HTML MAGIC! Makes no girl lift her skirt... ====================
+  // =========================================================================================
+  _initLegacyUpload: function() {
+    this._input = $('<input type="file" name="file" />');
+    this._uploadControls.append(this._input);
+    
+    this._input.change(this.__legacy_fileDialogComplete.bind(this));
+  },
+  
+  
+  // --------- LEGACY UPLOAD HANDLER START ---------
+  __legacy_fileDialogComplete: function() {
+    var fileName = this._input.val();
+    this._currentFile = {
+      id: new Date().getTime(),
+      name: fileName,
+      size: 0
+    };
+    
+    this._iframe = $('<iframe src="about:blank" class="invisible-iframe" name="invisible-iframe" />');
+    this._inputFilename = $('<input type="hidden" name="Filename" value="' + fileName + '" />');
+    this._form.append(this._iframe);
+    this._form.append(this._inputFilename);
+    this._iframe.load(this.__legacy_uploadSuccess.bind(this));
+    this._form.attr({
+      target: "invisible-iframe",
+      action: this._getUploadUrl()
+    });
+    
+    this.__fileQueued(this._currentFile);
+    this.__fileDialogComplete(this._currentFile);
+    this._form.submit();
+  },
+  
+  __legacy_uploadSuccess: function() {
+    // setTimeout is necessary to avoid loading spinner bug in Firefox
+    setTimeout(function() {
+      this._inputFilename.remove();
+      this._iframe.remove();
+    }.bind(this), 100);
+    
+    this.__uploadSuccess(this._currentFile);
+    this.__uploadCompleted();
+  },
+  // --------- LEGACY UPLOAD HANDLER END ---------
   
   
   

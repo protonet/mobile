@@ -15,7 +15,7 @@
     <!-- tabindex="-1" ensures that the element is focusable via css -->
     <% end %>
   </ul>
-  <% form_tag system_files_path, {:id => "file-stash"} do %>
+  <% form_tag system_files_path, {:id => "file-stash", :multipart => true} do %>
     <fieldset>
       <div id="upload-controls">
         <button class="add" id="upload-button"><span>+</span></button> <label id="upload-button-label" for="upload-button">add files here</label>
