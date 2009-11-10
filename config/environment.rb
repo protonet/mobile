@@ -10,7 +10,7 @@ require File.join(File.dirname(__FILE__), 'boot')
 require "configatron"
 
 #  hack this needs to be removed
-require "#{RAILS_ROOT}/lib/rack_ext.rb"
+require "#{RAILS_ROOT}/lib/rack_ext.rb" if defined?(Rack)
 
 
 Rails::Initializer.run do |config|
