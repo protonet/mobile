@@ -11,8 +11,9 @@ module System
         end
       end
       # sort alphabetically since not all systems return fs entries in the correct order
+      # TODO: aj: also doesn't correctly sort umlaute a ä A becomes a A ä
       files.each do |type, array|
-        files[type] = array.sort!
+        files[type] = array.sort! {|a,b| a.downcase <=> b.downcase}
       end
       files
     end
