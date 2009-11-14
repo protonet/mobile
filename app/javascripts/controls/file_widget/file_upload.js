@@ -156,7 +156,6 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
         
     this._html5Upload.open("post", this._getUploadUrl(), true);
     
-    this._html5Upload.setRequestHeader("content-length", this._currentFile.fileSize);
     this._html5Upload.setRequestHeader("X-Requested-With", "XMLHttpRequest");
     this._html5Upload.setRequestHeader("X-File-Name", this._currentFile.fileName);
     this._html5Upload.setRequestHeader("X-File-Size", this._currentFile.fileSize);
