@@ -70,7 +70,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
   
   _getUploadUrl: function() {
     return this._uploadUrl +
-      "?_rails_dashboard_session=" + protonet.config.session_id +
+      "?_rails_dashboard_session=" + encodeURIComponent(protonet.config.session_id) +
       "&authenticity_token=" + encodeURIComponent(this._token) +
       "&file_path=" + encodeURIComponent(this.parent.current_path);
   },

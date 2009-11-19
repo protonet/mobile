@@ -157,6 +157,14 @@ protonet.controls.InputConsole.prototype = {
         
       // Return/Enter key
       case 13:
+        if (event.shiftKey) {
+          break;
+        }
+        if (!this.input_console.val()) {
+          event.preventDefault();
+          break;
+        }
+        
         this.tweet(event);
         break;
     }

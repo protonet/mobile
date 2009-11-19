@@ -1,7 +1,7 @@
 protonet.user.Browser = {
   SUPPORTS_HTML5_MULTIPLE_FILE_UPLOAD: function() {
-    var supportsMultipleAttribute = typeof($('<input type="file" />').attr("multiple")) != "undefined";
-    var supportsXhrUpload = typeof((new XMLHttpRequest).upload) != "undefined";
+    var supportsMultipleAttribute = "multiple" in $('<input type="file" />')[0];
+    var supportsXhrUpload = "upload" in new XMLHttpRequest();
     
     return supportsXhrUpload && supportsMultipleAttribute;
   },
@@ -33,6 +33,6 @@ protonet.user.Browser = {
   
   SUPPORTS_HTML5_DRAG_AND_DROP: function() {
     var testElement = $("<div />")[0];
-    return typeof(testElement.ondragenter) != "undefined";
+    return "ondragenter" in testElement;
   }
 };

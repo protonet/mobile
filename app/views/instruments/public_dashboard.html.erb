@@ -1,16 +1,25 @@
 <div class="main">
   <%- form_for :tweet, :url => tweets_path, :html => { :id => "message-form" } do |f| -%>
-    <fieldset>
-      <%= f.label(:message, "enter your message") %>
-      <%= f.text_area(:message, :id => "message", :title => "enter your message ...") %>
-      <%= f.hidden_field('channel_id', :id => "message_channel_id", :name => 'message_channel_id', :value => @active_channel.id) %>
-      <%= f.hidden_field(:socket_id) %>
-    </fieldset>
-    <button type="submit" name="commit">
-      <span>
-        <em>submit</em>
-      </span>
-    </button>
+    <div id="text-input">
+      <fieldset>
+        <%= f.label(:message, "enter your message") %>
+        <%= f.text_area(:message, :id => "message", :title => "enter your message ...") %>
+        <%= f.hidden_field('channel_id', :id => "message_channel_id", :name => 'message_channel_id', :value => @active_channel.id) %>
+        <%= f.hidden_field(:socket_id) %>
+      </fieldset>
+      <button type="submit" name="commit">
+        <span>
+          <em>submit</em>
+        </span>
+      </button>
+    </div>
+    <div id="text-extension">
+      <ul id="text-extension-results">
+        <li><a href="#" class="media" target="_blank"></a></li>
+        <li><a href="#" class="title" target="_blank"></a></li>
+        <li><a href="#" class="description" target="_blank"></a></li>
+      </ul>
+    </div>
   <%- end -%>
   
   <div id="channel">

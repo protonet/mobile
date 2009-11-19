@@ -11,6 +11,9 @@ protonet.controls.CommunicationConsole = function(args) {
     "parent_widget": this,
     "form": this.form
   });
+  this.text_extension   = new protonet.controls.TextExtension({
+    "input": this.input
+  });
   
   // this.room_viewer        = new ChatRoomViewer({'parent_widget': this});
   // this.chat_input         = new ChatInput({'parent_widget': this});

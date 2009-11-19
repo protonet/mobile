@@ -20,6 +20,23 @@ Function.prototype.bind = function () {
 
 
 
+
+//---------------------------- STRING ----------------------------
+String.prototype.startsWith = function(str) {
+  return this.indexOf(str) === 0;
+};
+
+String.prototype.truncate = function(length) {
+  try {
+    var truncation = "...";
+    return this.length > length ? this.slice(0, length - truncation.length) + truncation : String(this);
+  } catch(e) {
+    console.log(e);
+  }
+};
+
+
+
 //---------------------------- HTML5 FILE ----------------------------
 if (typeof(File) == "object") {
   
