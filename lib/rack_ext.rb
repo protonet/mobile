@@ -1,26 +1,54 @@
 # hackedy hack hack
-
 module Rack::Utils::Multipart
-  
+
   def self.parse_multipart(env)
-    if env['HTTP_X_FILE_NAME']
+    if filename = env['HTTP_X_FILE_NAME']
+      content_type = ''
+      name = env['HTTP_CONTENT_DISPOSITION'].match(/.*\s+name="?([^\";]*)"?/ni)[1]
+      content_length = env['CONTENT_LENGTH'].to_i
+      input = env['rack.input']
+      
+      if input.class == Tempfile
+        body = input
+      else
+        body = Tempfile.new("RackMultipart")
+        body.binmode  if body.respond_to?(:binmode)
+        input = env['rack.input']
+        input.rewind
+        bufsize = 16384
+        buf = ""
+        loop {
+          if(bufsize < content_length)
+            body << input.read(bufsize, '')
+            content_length -= bufsize
+          else
+            body << input.read(content_length, '')
+            content_length = 0
+          end
+          break if content_length == 0
+        }
+        body.rewind
+      end
+      
       params = {}
-      data = {:filename => env['HTTP_X_FILE_NAME'], :type => "application/octet-stream",
-              :name => 'file', :tempfile => env["rack.input"], :head => "Content-Disposition: form-data; name=\"file\"; filename=\"#{env['HTTP_X_FILE_NAME']}\"\r\nContent-Type: application/octet-stream\r\n"}
-      Rack::Utils.normalize_params(params, 'file', data) unless data.nil?
+      data = {:filename => filename, :type => "application/octet-stream",
+              :name => name, :tempfile => body, :head => "Content-Disposition: form-data; name=\"#{name}\"; filename=\"#{filename}\"\r\nContent-Type: application/octet-stream\r\n"}
+      Rack::Utils.normalize_params(params, name, data) unless data.nil?
       return params
+      
     elsif not env['CONTENT_TYPE'] =~
         %r|\Amultipart/.*boundary=\"?([^\";,]+)\"?|n
       nil
     else
       boundary = "--#{$1}"
+
       params = {}
       buf = ""
       content_length = env['CONTENT_LENGTH'].to_i
       input = env['rack.input']
       input.rewind
 
-      boundary_size = boundary.size + EOL.size
+      boundary_size = Utils.bytesize(boundary) + EOL.size
       bufsize = 16384
 
       content_length -= boundary_size
@@ -31,8 +59,7 @@ module Rack::Utils::Multipart
       raise EOFError, "bad content body"  unless status == boundary + EOL
 
       rx = /(?:#{EOL})?#{Regexp.quote boundary}(#{EOL}|--)/n
-      
-      
+
       loop {
         head = nil
         body = ''
@@ -91,7 +118,7 @@ module Rack::Utils::Multipart
                   :name => name, :tempfile => body, :head => head}
         elsif !filename && content_type
           body.rewind
-          
+
           # Generic multipart cases, not coming from a form
           data = {:type => content_type,
                   :name => name, :tempfile => body, :head => head}
@@ -99,7 +126,7 @@ module Rack::Utils::Multipart
           data = body
         end
 
-        Rack::Utils.normalize_params(params, name, data) unless data.nil?
+        Utils.normalize_params(params, name, data) unless data.nil?
 
         break  if buf.empty? || content_length == -1
       }
@@ -109,5 +136,5 @@ module Rack::Utils::Multipart
       params
     end
   end
-    
+  
 end

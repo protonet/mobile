@@ -62,6 +62,7 @@ Thread.new{ EM.run() } unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATC
 
 if defined?(PhusionPassenger)
     PhusionPassenger.on_event(:starting_worker_process) do |forked|
+      require "#{RAILS_ROOT}/lib/rack_ext.rb" # overwrite multipart parsing
         if forked
             # We're in smart spawning mode.
             Thread.new{ EM.run() }

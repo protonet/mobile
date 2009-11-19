@@ -50,7 +50,45 @@ git submodule update
 
 install the needed gems:
 
-sudo gem install jeremymcanally-context faker random_data mocha configatron sprockets ruby-debug eventmachine tmm1-amqp json sqlite3-ruby daemons ruby-net-ldap rmagick --no-rdoc --no-ri
+sudo gem install jeremymcanally-context faker random_data mocha configatron sprockets ruby-debug eventmachine tmm1-amqp json sqlite3-ruby daemons ruby-net-ldap rmagick passenger --no-rdoc --no-ri
+
+setup apache for local development:
+sudo passenger-install-apache2-module
+sudo mate /etc/apache2/httpd.conf
+sudo mate /etc/apache2/other/protonet.conf
+sudo apachectl graceful
+mate /etc/hosts
+tail -f log/development
+touch tmp/restart.txt
+
+
+# /etc/apache2/httpd.conf
+LoadModule passenger_module /Library/Ruby/Gems/1.8/gems/passenger-2.2.5/ext/apache2/mod_passenger.so
+   PassengerRoot /Library/Ruby/Gems/1.8/gems/passenger-2.2.5
+   PassengerRuby /System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/bin/ruby
+
+# /etc/apache2/other/protonet.conf
+NameVirtualHost *:80
+
+<VirtualHost *:80>
+  ServerName protonet.local
+  DocumentRoot "/Users/jelveh/Projekte/protonet-dashboard/public"
+  RailsEnv development
+  RailsAllowModRewrite off
+  <directory "/Users/jelveh/Projekte/protonet-dashboard/public">
+    Order allow,deny
+    Allow from all
+  </directory>
+</VirtualHost>
+
+
+# /etc/hosts
+
+127.0.0.1 protonet.local
+
+ATTN: change your apache user to the same user passenger is running in - FIXME!
+
+http://railscasts.com/episodes/122-passenger-in-development
 
 ATTENTION: you might need to install some other dependecies.
 
