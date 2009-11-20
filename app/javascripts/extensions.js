@@ -27,12 +27,8 @@ String.prototype.startsWith = function(str) {
 };
 
 String.prototype.truncate = function(length) {
-  try {
-    var truncation = "...";
-    return this.length > length ? this.slice(0, length - truncation.length) + truncation : String(this);
-  } catch(e) {
-    console.log(e);
-  }
+  var truncation = "...";
+  return this.length > length ? this.slice(0, length - truncation.length) + truncation : String(this);
 };
 
 

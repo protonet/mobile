@@ -1,4 +1,5 @@
 //= require "../data/yql.js"
+//= require "../media/get_screenshot.js"
 
 protonet.controls.TextExtension = function(args) {
   if (!args || !args.input) {
@@ -64,7 +65,10 @@ protonet.controls.TextExtension.prototype = {
   _request: function() {
     new protonet.data.YQL.Query(
       "SELECT * FROM html WHERE url='" + this.url + "' AND (xpath = '//meta[@name=\"description\"]' OR xpath='//title' OR xpath='//img')"
-    ).execute(this._showResults.bind(this));
+    ).execute(
+      this._showResults.bind(this), // success
+      this._reset.bind(this) // failure
+    );
   },
   
   _showResults: function(response) {
@@ -105,7 +109,7 @@ protonet.controls.TextExtension.prototype = {
   _expand: function() {
     this.container.removeClass("loading-bar");
     this.container.stop().animate({
-      height: "75px"
+      height: "102px"
     }, 100);
   },
   
@@ -120,7 +124,7 @@ protonet.controls.TextExtension.prototype = {
   },
   
   _getScreenshot: function() {
-    return '<img src="http://api.thumbalizr.com/?width=100&url=' + encodeURIComponent(this.url) + '" height="60" width="80" />';
+    return '<img src="' + protonet.media.getScreenShot(this.url, "T") +'" height="70" width="90" />';
   },
   
   _prepareUrl: function(url) {

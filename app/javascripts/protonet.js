@@ -6,3 +6,4 @@ protonet.controls   = protonet.controls   || {};
 protonet.utils      = protonet.utils      || {};
 protonet.user       = protonet.user       || {};
 protonet.data       = protonet.data       || {};
+protonet.media      = protonet.media     || {};
