@@ -31,6 +31,19 @@ String.prototype.truncate = function(length) {
   return this.length > length ? this.slice(0, length - truncation.length) + truncation : String(this);
 };
 
+String.prototype.px = function() {
+  return this + "px";
+};
+
+
+
+
+//---------------------------- NUMBER ----------------------------
+Number.prototype.px = function() {
+  return this + "px";
+};
+
+
 
 
 //---------------------------- HTML5 FILE ----------------------------

@@ -1143,7 +1143,6 @@ h2 {
 }
 
 #text-extension-results h3 {
-  margin: 0 0 6px;
   padding: 3px 5px;
   color: rgb(0, 0, 0);
   border-bottom: 1px solid rgba(0, 0, 0, 0.4) ;
@@ -1175,11 +1174,10 @@ h2 {
 }
 
 #text-extension-results ul {
-  margin: 3px 5px;
+  margin: 4px;
   position: relative;
-  min-height: 72px;
-  padding: 0 40px 0 97px;
-  overflow: hidden;
+  height: 72px;
+  padding: 0 0 0 97px;
 }
 
 #text-extension-results a {
@@ -1209,16 +1207,25 @@ h2 {
   margin: 0 0 4px 0;
 }
 
+#text-extension-results a.title span {
+  color: #999;
+}
+
 #text-extension-results a.description {
   color: rgb(150, 150, 150);
 }
 
-#text-input {
-  overflow: hidden;
+#text-extension-results.yt ul {
+  padding-left: 127px;
+  height: 92px;
 }
 
 #text-extension.loading-bar {
   background: url(/images/loading_bar.gif) no-repeat center center;
+}
+
+#text-input {
+  overflow: hidden;
 }
 
 /* =INLINE HINT

@@ -1,5 +1,7 @@
 //= require "../data/yql.js"
+//= require "../data/youtube.js"
 //= require "../media/get_screenshot.js"
+//= require "../utils/format_seconds.js"
 
 protonet.controls.TextExtension = function(args) {
   if (!args || !args.input) {
@@ -12,6 +14,7 @@ protonet.controls.TextExtension = function(args) {
   this.input = args.input;
   this.container = $("#text-extension");
   this.results = $("#text-extension-results");
+  this.removeLink = this.container.find("a.remove");
   
   this.regExp = /(\S+\.{1}[^\s\,\.\!]+)/g;
   
@@ -22,80 +25,92 @@ protonet.controls.TextExtension.prototype = {
   _initEvents: function() {
     this.input.bind("paste", this._paste.bind(this));
     this.input.bind("keyup", this._keyUp.bind(this));
+    this.removeLink.bind("click", this._remove.bind(this));
   },
   
   _paste: function() {
     // Some jerk at w3c decided to fire the onpaste before the text is inserted
     // therefore we need to delay the parsing
-    setTimeout(this._parse.bind(this), 0);
+    setTimeout(this._parse.bind(this), 10);
   },
   
   _keyUp: function(event) {
     var isSpaceBar = event.keyCode == 32,
         isLineBreak = event.shiftKey && event.keyCode == 13;
     
-    if (isSpaceBar || isLineBreak) { this._parse(); }
+    if (isSpaceBar || isLineBreak) {
+      this._parse();
+    }
+  },
+  
+  _remove: function(event) {
+    event.preventDefault();
+    
+    this.input.focus();
+    this._reset();
   },
   
   _parse: function() {
-    if (this.url) {
-      return;
-    }
+    if (this.url) { return; }
     
     var matchUrls = this.input.val().match(this.regExp);
-    if (!matchUrls) {
-      return;
-    }
+    if (!matchUrls) { return; }
     
-    for (var i=0, url = matchUrls[i]; i<matchUrls.length; i++) {
-      if (url.length > 10 && (url.startsWith("http") || url.startsWith("www."))) {
-        this.url = this._prepareUrl(url);
-        this._request();
-        this._show();
+    
+    for (var i=0; i<matchUrls.length; i++) {
+      var url = matchUrls[i],
+          hasMinLength = url.length > 10,
+          hasUrlPrefix = url.startsWith("http") || url.startsWith("www."),
+          isLastUrl = (url == this._lastUrl);
+      
+      if (hasMinLength && hasUrlPrefix && !isLastUrl) {
+        this._selectUrl(url);
         break;
       }
     }
   },
   
-  _reset: function() {
-    this._hide();
-    delete this.url;
+  _selectUrl: function(url) {
+    this.url = this._prepareUrl(url);
+    this.provider = this._getDataProvider(url);
+    if (this.provider && this.url) {
+      this._show();
+      this._request();
+    }
+  },
+  
+  _getDataProvider: function(url) {
+    var instance, providers = ["YouTube", "WebLink"]; // Order is important
+    for (var i=0; i<providers.length; i++) {
+      instance = new protonet.controls.TextExtension[providers[i]](url);
+      if (instance.match()) {
+        break;
+      };
+    }
+    return instance;
   },
   
   _request: function() {
-    new protonet.data.YQL.Query(
-      "SELECT * FROM html WHERE url='" + this.url + "' AND (xpath = '//meta[@name=\"description\"]' OR xpath='//title' OR xpath='//img')"
-    ).execute(
-      this._showResults.bind(this), // success
-      this._reset.bind(this) // failure
-    );
+    this.provider.loadData(this._render.bind(this), this._reset.bind(this), this._reset.bind(this));
   },
   
-  _showResults: function(response) {
-    var data = response.query.results;
-    if (!data) {
-      this._reset();
-      return;
-    }
-    
-    if (data.title) {
-      var title = String(data.title).truncate(75);
-      this.results.find(".title").html(title);
-    }
-    
-    var description;
-    if (data.meta && data.meta.content) {
-      description = String(data.meta.content).truncate(200);
-    } else {
-      description = this.url.truncate(50);
-    }
-    this.results.find(".description").html(description);
-    
-    this.results.find(".media").append(this._getScreenshot());
-    this.results.find("a").attr("href", this.url);
+  _render: function() {
+    this.results.find(".description").html(this.provider.getDescription().truncate(200));
+    this.results.find(".title").html(this.provider.getTitle().truncate(75));
+    this.results.find(".media").html(this.provider.getMedia());
+    this.results.find(".type").html(this.provider.getType());
+    this.results.find("a.link").attr("href", this.url);
+    this.results.attr("class", this.provider.getClassName());
+    this.results.show();
     
     this._expand();
-    this.results.show();
+  },
+  
+  _reset: function() {
+    this._hide();
+    this._lastUrl = this.url;
+    delete this.url;
+    delete this.provider;
   },
   
   _show: function() {
@@ -109,22 +124,18 @@ protonet.controls.TextExtension.prototype = {
   _expand: function() {
     this.container.removeClass("loading-bar");
     this.container.stop().animate({
-      height: "102px"
+      height: this.results.height().px()
     }, 100);
   },
   
   _hide: function() {
     this.results.stop().hide();
     this.container.stop().animate({
-      height: "0px",
+      height: 0,
       opacity: 0
     }, 200, function() {
       this.container.hide();
     }.bind(this));
-  },
-  
-  _getScreenshot: function() {
-    return '<img src="' + protonet.media.getScreenShot(this.url, "T") +'" height="70" width="90" />';
   },
   
   _prepareUrl: function(url) {
@@ -134,3 +145,6 @@ protonet.controls.TextExtension.prototype = {
     return url;
   }
 };
+
+//= require "text_extension/web_link.js"
+//= require "text_extension/youtube.js"
