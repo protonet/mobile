@@ -8,7 +8,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources   :tweets
   map.resources   :listens
   map.resources   :assets
-  map.resources   :networks
+  map.resources   :networks do |networks|
+    networks.map '/map', :controller => 'networks', :action => 'map'
+  end
   
   map.preferences '/preferences', :controller => 'preferences', :action => 'index'
   map.navigation '/navigation', :controller => 'navigation', :action => 'index'
