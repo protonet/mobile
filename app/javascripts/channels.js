@@ -5,6 +5,6 @@ $("a").click(function() {
     $(".channel-edit").slideUp("medium");
   }
   $("#" + item).slideToggle("medium");
-  
+
   return false;
 });
