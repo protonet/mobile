@@ -72,7 +72,7 @@ protonet.controls.TextExtension.prototype = {
   
   _selectUrl: function(url) {
     this.url = this._prepareUrl(url);
-    this.provider = this._getDataProvider(url);
+    this.provider = this._getDataProvider(this.url);
     if (this.provider && this.url) {
       this._show();
       this._request();
@@ -82,7 +82,7 @@ protonet.controls.TextExtension.prototype = {
   _getDataProvider: function(url) {
     var instance, providers = ["YouTube", "WebLink"]; // Order is important
     for (var i=0; i<providers.length; i++) {
-      instance = new protonet.controls.TextExtension[providers[i]](url);
+      instance = new protonet.controls.TextExtension[providers[i]](url, this);
       if (instance.match()) {
         break;
       };
@@ -95,15 +95,18 @@ protonet.controls.TextExtension.prototype = {
   },
   
   _render: function() {
-    this.results.find(".description").html(this.provider.getDescription().truncate(200));
-    this.results.find(".title").html(this.provider.getTitle().truncate(75));
-    this.results.find(".media").html(this.provider.getMedia());
+    this.results.find(".description").html(this.provider.getDescription());
+    this.results.find(".title").html(this.provider.getTitle());
     this.results.find(".type").html(this.provider.getType());
-    this.results.find("a.link").attr("href", this.url);
+    this.results.find("a.link").attr("href", this.provider.getLink());
     this.results.attr("class", this.provider.getClassName());
+    this.results.find(".media")
+      .html(this.provider.getMedia())
+      .bind("click", this.provider.getMediaLink());
     this.results.show();
     
-    this._expand();
+    this.container.removeClass("loading-bar");
+    this.expand();
   },
   
   _reset: function() {
@@ -121,10 +124,9 @@ protonet.controls.TextExtension.prototype = {
     }, 200);
   },
   
-  _expand: function() {
-    this.container.removeClass("loading-bar");
+  expand: function() {
     this.container.stop().animate({
-      height: this.results.height().px()
+      height: this.results.outerHeight(true).px()
     }, 100);
   },
   

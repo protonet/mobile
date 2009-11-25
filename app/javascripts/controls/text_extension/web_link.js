@@ -36,7 +36,7 @@ protonet.controls.TextExtension.WebLink.prototype = {
   getDescription: function() {
     var description = this.data.meta && this.data.meta.content;
     description = description || this.url;
-    return String(description);
+    return String(description).truncate(200);
   },
   
   getTitle: function() {
@@ -44,7 +44,7 @@ protonet.controls.TextExtension.WebLink.prototype = {
     if ($.isArray(title)) {
       title = $.trim(title.join(" "));
     }
-    return String(title);
+    return String(title).truncate(75);
   },
   
   getMedia: function() {
@@ -61,5 +61,13 @@ protonet.controls.TextExtension.WebLink.prototype = {
   
   getClassName: function() {
     return "web-link";
+  },
+  
+  getLink: function() {
+    return this.url;
+  },
+  
+  getMediaLink: function() {
+    return function() {};
   }
 };
