@@ -1,0 +1,17 @@
+<p>
+  <%= image_tag current_user.active_avatar_url %>
+</p>
+<p>
+  <b>Name:</b>
+  <%=h current_user.display_name %>
+</p>
+
+<button onclick="$('#avatar-upload').toggle()">
+  <span>
+    <em>change</em>
+  </span>
+</button>
+
+<div id="avatar-upload" style="display:none;">
+  <%= render new_images_avatar_path %>
+</div>

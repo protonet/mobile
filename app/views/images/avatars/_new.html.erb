@@ -1,0 +1,11 @@
+<% form_for Images::Avatar.new, :html => { :multipart => true } do |f| %>
+  <%= f.error_messages %>
+  <p>
+    <b>Upload Image</b><br />
+    <%= f.file_field :image_file %>
+  </p>
+
+  <p>
+    <%= f.submit "Upload" %>
+  </p>
+<% end %>

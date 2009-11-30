@@ -12,7 +12,6 @@ require "configatron"
 #  hack this needs to be removed
 require "#{RAILS_ROOT}/lib/rack_ext.rb" if defined?(Rack) && !defined?(PhusionPassenger)
 
-
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
@@ -54,6 +53,8 @@ Rails::Initializer.run do |config|
   config.cache_store = :mem_cache_store
     
 end
+
+ActiveSupport::JSON.backend = 'JSONGem'
 
 # this starts the eventmachine reactor in a new thread
 # since the Em.run block is blocking until stopped this will ensure
