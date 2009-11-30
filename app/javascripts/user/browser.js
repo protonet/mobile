@@ -3,7 +3,8 @@ protonet.user.Browser = {
     var supportsMultipleAttribute = "multiple" in $('<input type="file" />')[0];
     var supportsXhrUpload = "upload" in new XMLHttpRequest();
     
-    return supportsXhrUpload && supportsMultipleAttribute;
+    // Firefox 3.6 goes fucking insane when uploading files since files are transferred through ram
+    return supportsXhrUpload && supportsMultipleAttribute && !jQuery.browser.mozilla;
   },
   
   
