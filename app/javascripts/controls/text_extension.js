@@ -14,6 +14,7 @@ protonet.controls.TextExtension = function(args) {
   this.input = args.input;
   this.container = $("#text-extension");
   this.results = $("#text-extension-results");
+  this.resultTemplate = this.results.html();
   this.removeLink = this.container.find("a.remove");
   
   this.regExp = /(\S+\.{1}[^\s\,\.\!]+)/g;
@@ -58,7 +59,7 @@ protonet.controls.TextExtension.prototype = {
     
     
     for (var i=0; i<matchUrls.length; i++) {
-      var url = matchUrls[i],
+      var url = this._prepareUrl(matchUrls[i]),
           hasMinLength = url.length > 10,
           hasUrlPrefix = url.startsWith("http") || url.startsWith("www."),
           isLastUrl = (url == this._lastUrl);
@@ -71,7 +72,7 @@ protonet.controls.TextExtension.prototype = {
   },
   
   _selectUrl: function(url) {
-    this.url = this._prepareUrl(url);
+    this.url = url;
     this.provider = this._getDataProvider(this.url);
     if (this.provider && this.url) {
       this._show();
@@ -126,7 +127,8 @@ protonet.controls.TextExtension.prototype = {
   
   expand: function() {
     this.container.stop().animate({
-      height: this.results.outerHeight(true).px()
+      height: this.results.outerHeight(true).px(),
+      opacity: 100
     }, 100);
   },
   
@@ -137,6 +139,7 @@ protonet.controls.TextExtension.prototype = {
       opacity: 0
     }, 200, function() {
       this.container.hide();
+      this.results.html(this.resultTemplate);
     }.bind(this));
   },
   

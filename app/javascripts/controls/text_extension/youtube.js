@@ -41,16 +41,16 @@ protonet.controls.TextExtension.YouTube.prototype = {
     event.preventDefault();
     event.stopPropagation();
     
-    $(event.target).attr("id", "text-extension-media");
+    var placeholderId = "text-extension-media";
+    $(event.target).attr("id", placeholderId);
     $.getScript("http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js", function() {
       swfobject.embedSWF(
         "http://www.youtube.com/v/" + this._extractId() + "?&playerapiid=ytplayer&autoplay=1&egm=0&hd=1&showinfo=0&rel=0",
-        "text-extension-media",
+        placeholderId,
         "590", "356", "8"
       );
       this.parent.container.css("height", "auto");
     }.bind(this));
-
   },
   
   getDescription: function() {

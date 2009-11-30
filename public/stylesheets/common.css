@@ -1177,6 +1177,28 @@ h2 {
   position: relative;
 }
 
+#text-extension .remove {
+  position: absolute;
+  display: block;
+  width: 13px;
+  height: 13px;
+  top: 3px;
+  color: #fff;
+  line-height: 13px;
+  text-align: center;
+  right: 5px;
+  background: #999;
+}
+
+#text-extension .remove:hover {
+  background: #666;
+  text-decoration: none;
+}
+
+#text-extension a {
+  text-decoration: none;
+}
+
 #text-extension-results {
   position: relative;
   display: none;
@@ -1190,24 +1212,6 @@ h2 {
   position: relative;
 }
 
-#text-extension-results h3 .remove {
-  position: absolute;
-  display: block;
-  width: 13px;
-  height: 13px;
-  top: 3px;
-  color: #fff;
-  line-height: 13px;
-  text-align: center;
-  right: 5px;
-  background: #999;
-}
-
-#text-extension-results h3 .remove:hover {
-  background: #666;
-  text-decoration: none;
-}
-
 #text-extension-results h3 .type {
   font-weight: bold;
   color: #FDAB54;
@@ -1216,10 +1220,6 @@ h2 {
 #text-extension-results ul {
   padding: 4px;
   overflow: hidden;
-}
-
-#text-extension-results a {
-  text-decoration: none;
 }
 
 #text-extension-results a:hover {
@@ -1237,6 +1237,7 @@ h2 {
   float: left;
   border: 1px solid #999;
   line-height: 0;
+  text-decoration: none;
 }
 
 #text-extension-results a.title {
@@ -1260,7 +1261,7 @@ h2 {
 }
 
 #text-extension-results.yt a.media:hover:after {
-  content: "▶";
+  content: "\25BA";
   color: #fff;
   position: absolute;
   top: 50%;
