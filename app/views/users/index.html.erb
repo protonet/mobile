@@ -1,0 +1,19 @@
+<h1>Listing users</h1>
+
+<table>
+  <tr>
+    <th>Filename</th>
+    <th>Content type</th>
+    <th>Size</th>
+    <th>Download counter</th>
+  </tr>
+
+<% @users.each do |user| %>
+  <tr>
+    <td><%=h user.display_name %></td>
+    <td><%= link_to 'Show', user %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />

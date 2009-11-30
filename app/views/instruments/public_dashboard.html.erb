@@ -1,0 +1,85 @@
+<div class="main">
+  <%- form_for :tweet, :url => tweets_path, :html => { :id => "message-form" } do |f| -%>
+    <div id="text-input">
+      <fieldset>
+        <%= f.label(:message, "enter your message") %>
+        <%= f.text_area(:message, :id => "message", :title => "enter your message ...") %>
+        <%= f.hidden_field('channel_id', :id => "message_channel_id", :name => 'message_channel_id', :value => @active_channel.id) %>
+        <%= f.hidden_field(:socket_id) %>
+      </fieldset>
+      <button type="submit" name="commit">
+        <span>
+          <em>submit</em>
+        </span>
+      </button>
+    </div>
+    <div id="text-extension">
+      
+      <div id="text-extension-results">
+        <h3>Attachment: <span class="type"></span> <a href="#" title="Remove" class="remove">x</a></h3>
+        <ul>
+          <li><a href="#" class="media link" target="_blank"></a></li>
+          <li><a href="#" class="title link" target="_blank"></a></li>
+          <li><a href="#" class="description link" target="_blank"></a></li>
+        </ul>
+      </div>
+    </div>
+  <%- end -%>
+  
+  <div id="channel">
+    <ul>
+      <% @channels.each_with_index do |c, index| %>
+        <li id="channel-<%= c.id %>" class="channel <%= 'active' if c == @active_channel %>">
+          <%= link_to c.name.capitalize, {:channel_id => c.id, :index => index}, {:title => c.description} %>
+        </li>
+      <% end %>
+      <li class="add">
+        <a href="/channels" title="">new channel</a>
+      </li>
+    </ul>
+  </div>
+  
+  <div id="feed-viewer">
+    <div id="feed-holder" style="width:<%= @channels.size * 613 %>px; left: <%= @channels.index(@active_channel) * -613 %>px;">
+      <% @channels.each do |c| %>
+        <%= render :partial => '/tweets/tweet_list', :locals => {:tweets => c.tweets.recent, :channel => c} %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="side">
+  <div id="navigation-link">
+    <a href="#">SHOW NAVIGATION <span>[ALT + SPACE]</span></a>
+  </div>
+  
+  <%- if current_user.stranger? -%>
+    <% form_for :user, :url => users_path, :html => {:id => "registration-form"} do |f| -%>
+      <fieldset>
+        <legend>
+          <strong>JOIN the (r)evolution</strong>
+          <span>no email, no credit card, just pure awesomeness!</span>
+        </legend>
+        <ul>
+          <li>
+            <%= label_tag "login" %>
+            <%= f.text_field "login", {:id => 'new-user-login', :title => 'user name'} %>
+          </li>
+          <li>
+            <%= label_tag "password" %>
+            <%= f.password_field "password", {:id => 'new-user-password'} %>
+            <%= f.hidden_field "password_confirmation", {:id => 'new-user-password-confirmation'} %>
+          </li>
+        </ul>
+      </fieldset>
+      <button type="submit" name="join">
+        <span>
+          <em>Join</em>
+        </span>
+      </button>
+    <%- end -%>
+  <%- end -%>
+  <%= render :partial => 'users/user_list', :locals => {:users => []} %>
+  
+  <%= render :partial => 'system/files/file_list', :locals => {:file_system => System::FileSystem.all} %>
+</div>

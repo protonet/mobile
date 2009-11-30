@@ -1,5 +1,2 @@
-module Merb
-  module AssetsHelper
-
-  end
-end # Merb
+module AssetsHelper
+end

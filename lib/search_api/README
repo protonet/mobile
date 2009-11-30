@@ -1,0 +1,6 @@
+To starting the search web service ruby startup.rb
+
+
+Adding new Routes go to routes and add a new route like this 
+
+@routes.add :method => 'get'    ,:url =>  'search', :controller => 'simple_search'     

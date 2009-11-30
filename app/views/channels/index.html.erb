@@ -1,0 +1,47 @@
+<h2>Channels</h2>
+<div id="channel-options">
+  <%= link_to 'create a channel', "#", :class => "channel-create", :rel => "channel-create" %>
+
+  <ul id="channel-create">
+    <li>
+      <% form_for :channel, :url => channels_path, :action => 'post', :html => { :class => "content" } do |f| -%>
+        <fieldset>
+          <%= f.text_field :name, { :title => 'add an channel-name…' } %>
+          <%= f.text_field :description, { :title => 'add an description…' } %>
+          <%= button 'Create' %>
+        </fieldset>
+      <% end %>
+    </li>
+  </ul>
+
+  <form id="channel-search" action="/channels/search">
+    <fieldset>
+      <input type="text" value="<%= params[:description] %>" name="description" title="search for interesting channels…"/>
+    </fieldset>
+  </form>
+
+  <ul>
+    <%- @channels.each do |c| -%>
+      <li>
+        <div class="content">
+          <%= "#{c.name} <span>(#{c.description})</span>" %>
+          <span class="control">
+            <span class="destroy"><%= link_to 'delete', destroy_channel_path(c) %> | </span>
+            <span class="edit"><%= link_to 'edit', "#", :rel => "edit-#{c.id}" %> | </span>
+            listen <%= channel_listen_control(c) %>
+          </span>
+        </div>
+      </li>
+      <li id="edit-<%= c.id %>" class="channel-edit">
+        <% form_for :channel, :url => { :action => 'update' }, :html => { :class => "content" } do |f| -%>
+          <fieldset>
+            <%= f.hidden_field :id, { :value => c.id, :id => "channel-id-#{c.id}" } %>
+            <%= f.text_field :name, { :value => c.name, :title => 'add an channel-name…', :id => "channel-name-#{c.id}" } %>
+            <%= f.text_field :description, { :value => c.description, :title => 'add an description…', :id => "channel-description-#{c.id}" } %>
+            <%= button 'Save' %>
+          </fieldset>
+        <% end %>
+      </li>
+    <%- end -%>
+  </ul>
+</div>

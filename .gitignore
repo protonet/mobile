@@ -1,2 +1,13 @@
+log/*.log
+tmp/**/*
+.DS_Store
+doc/api
+doc/app
 *.pid
-db/*.sqlite3
+*.sqlite3
+public/javascripts/sprockets.js
+public/javascripts/all.js
+public/stylesheets/all.css
+public/sprockets/*
+public/uploads/*
+public/avatars/*

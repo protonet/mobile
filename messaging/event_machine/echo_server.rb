@@ -8,15 +8,11 @@ require 'eventmachine'
 module EchoServer
   
   @@test = 0
-  @@foo = {}
-  @@foo[self.object_id] = self
   
   def receive_data(data)
     answer = data + ' -> ' + (@@test += 1).to_s + "\n"
     puts("data: #{data}\nanswer:#{answer.to_s}")
-    @@foo.each do |k, v|
-      v.send_data(answer)
-    end
+    send_data(answer)
   end
   
 end

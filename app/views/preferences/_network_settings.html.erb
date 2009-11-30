@@ -1,0 +1,9 @@
+<% @network_interfaces.each do |interface| %>
+  <% name = interface.keys.first %>
+  INTERFACE NAME:<br />
+  <%= name %><br />
+  IPv4:<br />
+  <%= interface[name]["inet addr"] %><br />
+  IPv6:<br />
+  <%= interface[name]["inet6 addr"] %><br />
+<% end %>

@@ -1,0 +1,16 @@
+<ul class="user-messages" id="messages-for-channel-<%= channel.id %>">
+  <% tweets.each do |t| %>
+    <li>
+      <span class="message-usericon">
+        <img src=<%= t.user.active_avatar_url %> width="47" height="47" alt="">
+      </span>
+      <p>
+        <span class="message-info">
+          <span class="message-author"><%= t.author %></span>
+          <span class="message-date">(<%= t.created_at %>)</span>
+        </span>
+        <%= h t.message %>
+      </p>
+    </li>
+  <% end %>
+</ul>

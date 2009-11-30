@@ -1,14 +1,8 @@
 #!/usr/bin/env ruby
-require 'rubygems'
-require 'eventmachine'
-require 'json'
-require 'ruby-debug'
-# the following is needed when you run the dispatcher in an merb env
-# it needs to be reworked, a whole env just for db/model access is overkill`
-module_path = defined?(Merb) ? Merb.root + '/messaging/event_machine' : File.dirname(__FILE__)
-require(module_path + "/modules/flash_server.rb")
-require 'mq'
-Debugger.start
+# this is here to make sure environment.rb doens't recreate the EventMachine Loop
+RUN_FROM_DISPATCHER = true
+require File.dirname(__FILE__) + '/../../config/environment'
+require File.dirname(__FILE__) + '/modules/flash_server.rb'
 
 # awesome stuff happening here
 module JsDispatchingServer
@@ -28,39 +22,46 @@ module JsDispatchingServer
       if authenticate_user(auth) && !@subscribed
         bind_socket_to_queues
       end
+    else
+      send_data(data)
     end
+    
   end
   
   def unbind
     log("connection #{@key} closed")
-    @user && @user.joined_rooms.each do |room|
-      @user.leave_room(room)
-    end
+    # @user && @user.joined_rooms.each do |room|
+    #   @user.leave_room(room)
+    # end
   end
   
   def authenticate_user(auth_data)
-    potential_user = User.get(auth_data["user_id"])
-    @user = potential_user if potential_user && potential_user.token_valid?(auth_data["token"])
+    potential_user = User.find(auth_data["user_id"])
+    
+    @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data["token"])
     if potential_user
-      log("authenticated #{potential_user.display_name}") 
+      log("authenticated #{potential_user.display_name}")
+      send_data("#{{"x_target" => "socket_id", "socket_id" => "#{@key}"}.to_json}\0")
       bind_socket_to_queues
     else
       log("could not authenticate #{auth_data.inspect}")
-      debugger
     end
   end
   
   def bind_socket_to_queues
     amq = MQ.new
-    @user.joined_rooms.each do |room|
-      amq.queue("consumer-#{@key}-chats").bind(amq.topic('chats'), :key => "chats.r#{room.id}").subscribe{ |msg|
-        send_data("chats_" + msg + "\0")
+    @user.channels.each do |channel|
+      amq.queue("consumer-#{@key}-channel.a#{channel.id}").bind(amq.topic("channels"), :key => "channels.a#{channel.id}").subscribe{ |msg|
+        message = JSON(msg)
+        sender_socket_id = message['socket_id']
+        message.merge!({:x_target => 'cc.receiveMessage'})
+        if sender_socket_id && sender_socket_id.to_i != @key
+          log('sending data out: ' + message.to_s + ' ' + sender_socket_id)
+          send_data("#{message.to_json}\0")
+        end
       }
-      log("subscribing to room #{room.id}")
+      log("subscribing to channel #{channel.id}")
     end
-    amq.queue("consumer-#{@key}-assets").bind(amq.topic('assets'), :key => 'assets.all').subscribe{ |msg|
-      send_data("assets_" + msg + "\0")
-    }
     @subscribed = true
   end 
   

@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+  <head>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta name="robots" content="noindex, nofollow" />
+    <%= stylesheet_link_tag("common", :cache => false) %>
+    <%= stylesheet_link_tag("navigation", :cache => false) %>
+    <title><%= strip_tags(yield(:page_title)) || 'protonet - changing the internet, one node at a time' %></title>
+  </head>
+
+  <body>
+    <div class="header">
+      <%= link_to '<img src="/images/protonet_logo.png" width="166" height="52" alt="protonet" />', root_path %>
+    </div>
+    <% if current_user.stranger? %>
+      <%- form_tag session_path, { :id => "login-form" } do -%>
+        <fieldset>
+          <ul>
+            <li>
+              <%= label_tag "login" %>
+              <%= text_field_tag "login", @login, :title => 'user name' %>
+            </li>
+            <li>
+              <%= label_tag "password" %>
+              <%= password_field_tag "password", nil, :title => 'password' %>
+            </li>
+          </ul>
+        </fieldset>
+        <button type="submit" name="commit">
+          <span>
+            <em>login</em>
+          </span>
+        </button>
+      <%- end -%>
+    <% else %>
+      <div id="mini-menu">
+        Hello <%= link_to current_user.display_name, user_path(current_user.id) %>:&nbsp;
+        <%= link_to 'logout', :controller => :sessions, :action => :destroy %>
+      </div>
+    <% end %>
+
+    <%- unless flash.empty? -%>
+      <div class="message">
+        <%= "<p class=\"notice\"><span>#{flash[:notice]}</span></p>" if flash[:notice] %>
+        <%= "<p class=\"error\"><span>#{flash[:error]}</span></p>" if flash[:error] %>
+        <%= "<p class=\"warning\"><span>#{flash[:warning]}</span></p>" if flash[:warning] %>
+      </div>
+    <%- end -%>
+
+    <%= yield %>
+
+    <script type="text/javascript" charset="utf-8">
+      var protonet = protonet || {};
+      protonet.config = {
+        dispatching_server: '<%= request.env["SERVER_NAME"] %>',
+        token: '<%= current_user.communication_token %>',
+        user_name: '<%= current_user.display_name %>',
+        user_id: '<%= current_user.id %>',
+        user_channel_ids: '<%= current_user.channels && current_user.channels.map {|c| c.id}.to_json %>',
+        user_icon_url: '<%= current_user.active_avatar_url %>',
+        session_id: '<%= cookies["_rails_dashboard_session"] %>',
+        authenticity_token: '<%= form_authenticity_token %>'
+      };
+    </script>
+    
+    <%= sprockets_include_tag(:default) %>    
+    <%= sprockets_include_tag(controller_name.to_sym) %>
+    
+  </body>
+  
+</html>

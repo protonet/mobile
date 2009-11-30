@@ -1,0 +1,18 @@
+<h2>Preferences</h2>
+<div id="preferences" style="float:left;">
+  <form id="preferences-search" action="/preferences/search">
+    <fieldset>
+      <input type="text" value="<%= params[:description] %>" name="description" title="search for preferences ..."/>
+    </fieldset>
+  </form>
+  
+  <ul>
+    <%- @preferences.each do |p| -%>
+      <li id ="<%= p[:url] %>">
+        <%= p[:name] %>
+      </li>
+    <%- end -%>
+  </ul>
+</div>
+<div id="preferences-details">
+</div>

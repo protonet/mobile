@@ -1,4 +1,11 @@
 #!/usr/bin/env ruby
+
+# DEPRECATED
+# DEPRECATED
+# DEPRECATED
+# DEPRECATED
+# DEPRECATED
+
 require 'optparse'
 
 local_path                = File.dirname(__FILE__)

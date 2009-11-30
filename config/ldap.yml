@@ -1,0 +1,21 @@
+development:
+  # host: 127.0.0.1
+  # base: dc=protonet,dc=info
+  # bind_dn: cn=admin,dc=protonet,dc=info
+  # password: dude$$09
+  host: 127.0.0.1
+  base: dc=my-domain,dc=com
+  bind_dn: cn=Manager,dc=my-domain,dc=com
+  password: secret
+
+test:
+  host: 127.0.0.1
+  base: dc=my-domain,dc=com
+  bind_dn: cn=Manager,dc=my-domain,dc=com
+  password: secret
+
+production:
+  host: 127.0.0.1
+  base: dc=protonet,dc=info
+  bind_dn: cn=admin,dc=protonet,dc=info
+  password: dude$$09

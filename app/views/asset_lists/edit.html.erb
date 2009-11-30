@@ -1,7 +1,0 @@
-so you wanna edit the <%= @list.name %> list?<br />
-
-<%= form_for @list, :action => url(:controller => "asset_lists", :action => "update", :id => @list.id) do %>
-  <%= text_field  :name, :label => "Name: " %><br />
-  <%= text_area   :description, :label => "Description: ", :cols => 40, :rows => 5 %><br />
-  <%= submit "update" %>
-<% end =%>

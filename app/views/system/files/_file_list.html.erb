@@ -1,0 +1,30 @@
+<div id="file-list">
+  <form id="file-navigation">
+    <fieldset>
+      <button class="parent"><span>parent</span></button>
+      <input />
+      <div class="hierarchy"></div>
+      <button class="search"><span>search</span></button>
+    </fieldset>
+  </form>
+  <ul class="root">
+    <% file_system.each do |type, items| %>
+      <% items.each do |item| %>
+        <li class="<%= type %>" tabindex="-1"><%= item %></li>      
+      <% end %>
+    <!-- tabindex="-1" ensures that the element is focusable via css -->
+    <% end %>
+  </ul>
+  <% form_tag system_files_path, {:id => "file-stash", :multipart => true} do %>
+    <fieldset>
+      <div id="upload-controls">
+        <button class="add" id="upload-button"><span>+</span></button> <label id="upload-button-label" for="upload-button">add files here</label>
+      </div>
+      <div id="folder-controls">
+        <a id="new-folder-button" href="#">new folder</a>
+      </div>
+    </fieldset>
+  <% end %>
+</div>
+
+<%= render :partial => 'system/files/file_list_context_menu' %>

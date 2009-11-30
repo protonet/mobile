@@ -1,122 +1,120 @@
-class User
-  include DataMapper::Resource
+require 'digest/sha1'
+
+class User < ActiveRecord::Base
+  include Authentication
+  include Authentication::ByPassword
+  include Authentication::ByCookieToken
+
+  validates_presence_of     :login,    :unless => :skip_validation
+  validates_length_of       :login,    :within => 3..40, :unless => :skip_validation
+  validates_uniqueness_of   :login,    :unless => :skip_validation
+  validates_format_of       :login,    :with => Authentication.login_regex, :message => Authentication.bad_login_message, :unless => :skip_validation
+
+  validates_format_of       :name,     :with => Authentication.name_regex,  :message => Authentication.bad_name_message, :allow_nil => true, :unless => :skip_validation
+  validates_length_of       :name,     :maximum => 100, :unless => :skip_validation
+
+  # HACK HACK HACK -- how to do attr_accessible from here?
+  # prevents a user from submitting a crafted form that bypasses activation
+  # anything else you want your user to change should be added here.
+  attr_accessible :login, :email, :name, :password, :password_confirmation
+
+  has_many  :tweets
+  has_many  :listens
+  has_many  :channels, :through => :listens
+  has_one   :avatar, :class_name => 'Images::Avatar', :dependent => :destroy
   
-  class TokenGenerationError < RuntimeError; end
-  
-  before :save, :encrypt_password
-  before :save, :downcase_login
-  
-  attr_accessor :password, :password_confirmation
-  
-  has n, :chat_rooms
-  has n, :chat_room_users
-  has n, :joined_rooms, :through => :chat_room_users, :remote_name => :chat_rooms, :class_name => "ChatRoom", :child_key => "user_id"
-  has 1, :profile, :class_name => 'UserProfile'
-  
-  property :id,                         Integer,  :serial => true
-  property :name,                       String,   :nullable => true
-  property :login,                      String,   :nullable => false, :unique => true # validates automatically on uniqueness
-  property :crypted_password,           String
-  property :salt,                       String
-  property :remember_token_expires_at,  DateTime
-  property :remember_token,             String
-  property :current_ip,                 String,   :nullable => true
-  property :last_polled_at,             DateTime
-  property :realm_id,                   String
-  property :online,                     Boolean
-  property :token,                      String,   :nullable => true
-  property :token_expires_at,           DateTime, :nullable => true
-  
-  validates_length            :login,                   :within => 3..40
-  validates_present           :password,                :on => [:create, :password_change]
-  validates_present           :password_confirmation,   :on => [:create, :password_change]
-  validates_length            :password,                :within => 4..40, :on => [:create, :password_change]
-  validates_is_confirmed      :password,                :on => [:create, :password_change]
-  
-  class << self
-    
-    def authenticate(params)
-      u = first(:login => params[:login])
-      if u
-        u.crypted_password == u.encrypt(params[:password], u.salt) ? u : nil
-      else
-        nil
-      end
-    end
-  
-    def all_connected_users
-      Backend.get_ips_of_currently_connected_clients.collect do |ip|
-        User.first(:current_ip => ip) || User.new(:name => "not logged in yet ;) #{ip}")
-      end.compact
-    end
-    
+  named_scope :registered, :conditions => {:temporary_identifier => nil}
+
+  after_create :create_ldap_user if configatron.ldap_active
+  after_create :listen_to_home
+
+  # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
+  #
+  # uff.  this is really an authorization, not authentication routine.  
+  # We really need a Dispatch Chain here or something.
+  # This will also let us return a human error message.
+  #
+  def self.authenticate(login, password)
+    return nil if login.blank? || password.blank?
+    u = find_by_login(login.downcase) # need to get the salt
+    u && u.authenticated?(password) ? u : nil
   end
   
-  def join_room(room)
-    # room.users << self && room.save unless room.users.include?(self)
-    # TODO as soon as n-m associations and thru things work correclty this is done the old way:
-    # http://datamapper.lighthouseapp.com/projects/20609-datamapper/tickets/725-bug-with-many-to-many-association
-    unless ChatRoomUser.first(:user_id => self.id, :chat_room_id => room.id)
-      
-      ChatRoomUser.new(:user_id => self.id, :chat_room_id => room.id).save && reload
-    end
+  def generate_new_communication_token
+    self.communication_token = self.class.make_token
+    self.communication_token_expires_at = Time.now + 1.day
+    save
+    # todo: propagate
   end
   
-  def leave_room(room)
-    room_user = ChatRoomUser.first(:user_id => self.id, :chat_room_id => room.id)
-    if room_user
-      
-      room_user.destroy && reload
-    end
-  end
-  
-  def poll(ip, force_update=false)
-    update_attributes(:current_ip => ip, :last_polled_at => DateTime.now) if (force_update || current_ip.nil? || !last_polled_at || last_polled_at < DateTime.now - 5.minutes)
-  end
-  
-  def generate_new_token
-    self.token = encrypt(crypted_password, DateTime.now)
-    self.token_expires_at = DateTime.now + 1 # DateTime additions are in days
-    @token
-  end
-  
-  def token
-    generate_new_token && self.save unless self.token_expires_at && self.token_expires_at > DateTime.now
-    @token
+  def communication_token
+    generate_new_communication_token unless communication_token_expires_at && communication_token_expires_at > Time.now
+    read_attribute(:communication_token)
   end
     
-  def token_valid?(token)
-    token == self.token && self.token_expires_at > DateTime.now
+  def communication_token_valid?(token)
+    token && token == read_attribute(:communication_token) && communication_token_expires_at > DateTime.now
+  end
+  
+  # create a user with a session id
+  def self.stranger(session_id)
+    u = find_or_create_by_temporary_identifier(session_id)  do |u|
+      u.name = "stranger_number_#{session_id[0,10]}"
+      u.listen_to_home
+    end
+    u
+  end
+  
+  def self.all_strangers(conditions)
+    find(:all, :conditions => {:temporary_identifier => 'IS NOT NULL'})
+  end
+  
+  def self.delete_old_strangers!
+    destroy_all(:temporary_identifier => 'IS NOT NULL')
+  end
+  
+  def stranger?
+    !temporary_identifier.blank?
+  end
+
+  def login=(value)
+    write_attribute :login, (value ? value.downcase : nil)
+  end
+
+  def email=(value)
+    write_attribute :email, (value ? value.downcase : nil)
   end
   
   def display_name
-    name || login
+    name.blank? ? login : name
   end
   
-  def attributes(scenario=nil)
-    case scenario
-    when :chat
-      {:id => id, :name => display_name}.merge(profile && profile.attributes(:chat) || {})
-    else
-      super()
-    end
-  end
-    
-  # Encrypts some data with the salt.
-  def encrypt(password, salt)
-    Digest::SHA1.hexdigest("--#{salt}--#{password}--")
+  def listen_to_home
+    return if listening_to_home?
+    channels << Channel.home
+    save
   end
   
-  private
-    def downcase_login
-      # attr writer need to be called this way todo: find out why
-      self.login = login.downcase if login
-    end
+  def listening_to_home?
+    channels.try(:include?, Channel.home)
+  end
+  
+  # skip validation if the user is a logged out (stranger) user
+  def skip_validation
+    stranger?
+  end
+  
+  def create_ldap_user
+    Ldap::User.create_for_user(self) unless stranger?
+  end
+  
 
-    def encrypt_password
-      return if password.blank?
-      self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{login}--") if new_record?
-      self.crypted_password = encrypt(password, salt)
-    end
+  def password_required_with_logged_out_user?
+    skip_validation ? false : password_required_without_logged_out_user?
+  end
+  alias_method_chain :password_required?, :logged_out_user
   
+  def active_avatar_url
+    avatar ? "/images/avatars/#{avatar.id}" : '/images/userpicture.jpg'
+  end
 end
