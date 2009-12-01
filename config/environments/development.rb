@@ -25,3 +25,5 @@ if File.exists?(File.join(RAILS_ROOT,'tmp', 'debug.txt'))
   Debugger.start_remote
   File.delete(File.join(RAILS_ROOT,'tmp', 'debug.txt'))
 end
+
+configatron.user_file_path = RAILS_ROOT + "/../shared/user-files"

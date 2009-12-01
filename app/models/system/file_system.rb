@@ -27,7 +27,7 @@ module System
     end
 
     def self.public_path
-      @uploads_path ||= (Rails.env.production? ? "/home/protonet/dashboard/shared/user-files" : RAILS_ROOT + "/../shared/user-files")
+      @uploads_path ||= configatron.user_file_path
     end
 
   end  

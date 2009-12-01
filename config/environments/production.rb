@@ -28,3 +28,5 @@ config.action_view.cache_template_loading            = true
 # config.threadsafe!
 System::Backend.backend_connection = BackendAdapters::Ubuntu.new
 puts "Backend '#{System::Backend.backend_connection.info}' connected successfully!"
+
+configatron.user_file_path = (File.exists?("/home/protonet/dashboard/shared/user-files") ? "/home/protonet/dashboard/shared/user-files" : "/var/www/protonet-dashboard/shared/user-files")
