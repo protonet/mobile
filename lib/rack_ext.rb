@@ -48,7 +48,7 @@ module Rack::Utils::Multipart
       input = env['rack.input']
       input.rewind
 
-      boundary_size = Utils.bytesize(boundary) + EOL.size
+      boundary_size = Rack::Utils.bytesize(boundary) + EOL.size
       bufsize = 16384
 
       content_length -= boundary_size
@@ -126,7 +126,7 @@ module Rack::Utils::Multipart
           data = body
         end
 
-        Utils.normalize_params(params, name, data) unless data.nil?
+        Rack::Utils.normalize_params(params, name, data) unless data.nil?
 
         break  if buf.empty? || content_length == -1
       }

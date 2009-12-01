@@ -4,19 +4,23 @@ set :repository,  "git@github.com:dudemeister/protonet-dashboard.git"
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
 # via the :deploy_to variable:
-set :deploy_to, "~/dashboard"
+
+deploy_to_path = (ENV["LIVE"] ? "/var/www/protonet-dashboard" : "~/dashboard")
+set :deploy_to, deploy_to_path
 set :deploy_via, :copy
 set :copy_cache, true
 set :copy_exclude, ".git/*"
 set :git_enable_submodules, 1
 
-set :user, "protonet"
+set(:use_sudo, false) if ENV["LIVE"]
+
+set :user, "www-data"
 # todo: change this to www-data or something
-set :runner, "protonet"
+set :runner, "www-data"
 
 set :scm, :git
 
-target_node = ENV["NODE"] || "protonet-7.local"
+target_node = "protonet-deploy" # || ENV["NODE"] || "protonet-7.local"
 
 role :app, target_node
 role :web, target_node
@@ -27,13 +31,13 @@ namespace :deploy do
   desc "prepare node for installation"
   task :prepare, :roles => :app do
     # create needed directories
-    run "mkdir -p ~/dashboard/shared/log"
-    run "mkdir -p ~/dashboard/shared/db"
-    run "mkdir -p ~/dashboard/shared/user-files"
-    run "mkdir -p ~/dashboard/shared/avatars"
-    run "mkdir -p ~/dashboard/shared/pids"
-    run "mkdir -p ~/dashboard/shared/system"
-    run "mkdir -p ~/dashboard/releases"
+    run "mkdir -p #{deploy_to_path}/shared/log"
+    run "mkdir -p #{deploy_to_path}/shared/db"
+    run "mkdir -p #{deploy_to_path}/shared/user-files"
+    run "mkdir -p #{deploy_to_path}/shared/avatars"
+    run "mkdir -p #{deploy_to_path}/shared/pids"
+    run "mkdir -p #{deploy_to_path}/shared/system"
+    run "mkdir -p #{deploy_to_path}/releases"
   end
   
   desc "deploy monit configuration"
