@@ -6,6 +6,7 @@
         <%= f.text_area(:message, :id => "message", :title => "enter your message ...") %>
         <%= f.hidden_field('channel_id', :id => "message_channel_id", :name => 'message_channel_id', :value => @active_channel.id) %>
         <%= f.hidden_field(:socket_id) %>
+        <%= f.hidden_field('text_extension', :id => 'text-extension-input', :name => 'text_extension', :value => '') %>
       </fieldset>
       <button type="submit" name="commit">
         <span>
@@ -14,15 +15,6 @@
       </button>
     </div>
     <div id="text-extension">
-      
-      <div id="text-extension-results">
-        <h3>Attachment: <span class="type"></span></h3>
-        <ul>
-          <li><a href="#" class="media link" target="_blank"></a></li>
-          <li><a href="#" class="title link" target="_blank"></a></li>
-          <li><a href="#" class="description link" target="_blank"></a></li>
-        </ul>
-      </div>
       <a href="#" title="Remove" class="remove">x</a>
     </div>
   <%- end -%>
@@ -83,4 +75,17 @@
   <%= render :partial => 'users/user_list', :locals => {:users => []} %>
   
   <%= render :partial => 'system/files/file_list', :locals => {:file_system => System::FileSystem.all} %>
+</div>
+
+
+<%# Templates for JavaScript %>
+<div id="templates">
+  <div id="message-template">
+    <%= render :partial => 'tweets/tweet', :locals => {:message => '', :avatar => '/images/userpicture.jpg',
+                                                       :author => '', :created_at => ''} %>
+  </div>
+  
+  <div id="text-extension-template">
+    <%= render :partial => 'tweets/text_extension' %>
+  </div>
 </div>

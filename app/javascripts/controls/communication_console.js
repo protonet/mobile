@@ -11,9 +11,7 @@ protonet.controls.CommunicationConsole = function(args) {
     "parent_widget": this,
     "form": this.form
   });
-  this.text_extension   = new protonet.controls.TextExtension({
-    "input": this.input
-  });
+  this.text_extension   = new protonet.controls.TextExtension({"input": this.input});
   
   // this.room_viewer        = new ChatRoomViewer({'parent_widget': this});
   // this.chat_input         = new ChatInput({'parent_widget': this});
@@ -33,7 +31,7 @@ protonet.controls.CommunicationConsole = function(args) {
   // available data so it doesn't need to be dependent on the
   // room activation process
   // this.activateFeedSelector();
-
+  
   // keep it simple, no init for now
   // this.openLobby();
   
@@ -48,50 +46,55 @@ protonet.controls.CommunicationConsole = function(args) {
 
 protonet.controls.CommunicationConsole.prototype = {
   "addAndSendTweet": function() {
-    new Tweet({
+    // render
+    new protonet.controls.Tweet({
       "message": this.input.val(),
+      "text_extension": this.text_extension,
       "author": this.user_config.user_name,
       "channel_id": this.input_channel_id.val(),
       "user_icon_url": this.user_config.user_icon_url
     });
+    
+    // send to server
     $.post(this.form.attr("action"), this.form.serialize());
     this.input.val("");
   },
   
   "receiveMessage": function(message) {
     console.log('cc is receiving message');
-    new Tweet({
+    new protonet.controls.Tweet({
       "message": message.message,
       "author": message.author,
       "channel_id": message.channel_id,
-      "user_icon_url": message.user_icon_url
+      "user_icon_url": message.user_icon_url,
+      "text_extension": message.text_extension
     });
   }
   
 };
 
-function Tweet(args) {
-  var self = this;
+protonet.controls.Tweet = (function() {
+  var template;
   
-  this.message      = protonet.utils.escapeHtml(args.message);
-  this.author       = args.author;
-  this.message_date = new Date();
-  this.channel_id   = args.channel_id;
+  return function(args) {
+    this.message      = protonet.utils.escapeHtml(args.message);
+    this.author       = args.author;
+    this.message_date = new Date();
+    this.channel_id   = args.channel_id;
+    
+    template = template || $("#message-template");
+    
+    this.list_element = $(template.html());
+    this.list_element.find(".message-usericon > img").attr("src", args.user_icon_url);
+    this.list_element.find(".message-author").html(this.author);
+    this.list_element.find(".message-date").html(this.message_date);
+    this.list_element.find("p").append(this.message);
+    
+    this.channel_ul = $('#messages-for-channel-' + this.channel_id);
+    this.channel_ul.prepend(this.list_element);
+  };
+})();
   
-  this.list_element = $('<li></li>');
-  this.user_icon    = $('<span class="message-usericon"><img width="47" height="47" alt="" src="' + args.user_icon_url + '"/></span>');
-  console.log(this.user_icon);
-  this.paragraph    = $('<p></p>');
-  this.message_info = '<span class="message-info"> <span class="message-author">' + this.author + '</span> <span class="message-date">(' + this.message_date + ')</span></span>';
-
-  this.list_element.append(this.user_icon);
-  this.list_element.append(this.paragraph);
-  this.paragraph.append(this.message_info);
-  this.paragraph.append(this.message);
-  this.channel_ul = $('#messages-for-channel-' + this.channel_id);
-  this.channel_ul.prepend(this.list_element);
-}
-
 function ChannelSelector(args) {
   var self = this;
   

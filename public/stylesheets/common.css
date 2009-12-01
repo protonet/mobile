@@ -1188,6 +1188,7 @@ h2 {
   text-align: center;
   right: 5px;
   background: #999;
+  z-index: 1;
 }
 
 #text-extension .remove:hover {
@@ -1199,12 +1200,15 @@ h2 {
   text-decoration: none;
 }
 
-#text-extension-results {
-  position: relative;
-  display: none;
+#text-extension.loading-bar {
+  background: url(/images/loading_bar.gif) no-repeat center center;
 }
 
-#text-extension-results h3 {
+.text-extension-results {
+  position: relative;
+}
+
+.text-extension-results h3 {
   padding: 3px 5px;
   color: rgb(0, 0, 0);
   border-bottom: 1px solid rgba(0, 0, 0, 0.4) ;
@@ -1212,27 +1216,27 @@ h2 {
   position: relative;
 }
 
-#text-extension-results h3 .type {
+.text-extension-results h3 .type {
   font-weight: bold;
   color: #FDAB54;
 }
 
-#text-extension-results ul {
+.text-extension-results ul {
   padding: 4px;
   overflow: hidden;
 }
 
-#text-extension-results a:hover {
+.text-extension-results a:hover {
   text-decoration: underline;
 }
 
-#text-extension-results li:first-child {
+.text-extension-results li:first-child {
   margin: 0 10px 0 0;
   float: left;
   position: relative;
 }
 
-#text-extension-results a.media {
+.text-extension-results a.media {
   background-color: rgb(200, 200, 200);
   float: left;
   border: 1px solid #999;
@@ -1240,27 +1244,23 @@ h2 {
   text-decoration: none;
 }
 
-#text-extension-results a.title {
+.text-extension-results a.title {
   display: block;
   font-weight: bold;
   margin: 0 0 4px 0;
   min-width: 200px;
 }
 
-#text-extension-results a.title span {
+.text-extension-results a.title span {
   color: #999;
 }
 
-#text-extension-results a.description {
+.text-extension-results a.description {
   color: rgb(150, 150, 150);
   min-width: 200px;
 }
 
-#text-extension.loading-bar {
-  background: url(/images/loading_bar.gif) no-repeat center center;
-}
-
-#text-extension-results.yt a.media:hover:after {
+.text-extension-results.yt a.media:hover:after {
   content: "\25BA";
   color: #fff;
   position: absolute;
@@ -1277,12 +1277,18 @@ h2 {
   text-shadow: 2px 2px 2px #000;
 }
 
-#text-extension-results.yt a.media:active:after {
+.text-extension-results.yt a.media:active:after {
   opacity: 0.6;
 }
 
 #text-input {
   overflow: hidden;
+}
+
+/* =TEMPLATES
+--------------------------------------------------------------------------- */
+#templates {
+  display: none;
 }
 
 /* =INLINE HINT

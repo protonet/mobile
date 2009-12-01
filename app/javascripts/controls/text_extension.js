@@ -13,8 +13,8 @@ protonet.controls.TextExtension = function(args) {
   
   this.input = args.input;
   this.container = $("#text-extension");
-  this.results = $("#text-extension-results");
-  this.resultTemplate = this.results.html();
+  this.resultsTemplate = $("#text-extension-template");
+  this.hiddenInput = $("#text-extension-input");
   this.removeLink = this.container.find("a.remove");
   
   this.regExp = /(\S+\.{1}[^\s\,\.\!]+)/g;
@@ -48,7 +48,7 @@ protonet.controls.TextExtension.prototype = {
     event.preventDefault();
     
     this.input.focus();
-    this._reset();
+    this.reset();
   },
   
   _parse: function() {
@@ -92,27 +92,39 @@ protonet.controls.TextExtension.prototype = {
   },
   
   _request: function() {
-    this.provider.loadData(this._render.bind(this), this._reset.bind(this), this._reset.bind(this));
+    this.provider.loadData(this._render.bind(this), this.reset.bind(this), this.reset.bind(this));
   },
   
   _render: function() {
-    this.results.find(".description").html(this.provider.getDescription());
-    this.results.find(".title").html(this.provider.getTitle());
-    this.results.find(".type").html(this.provider.getType());
-    this.results.find("a.link").attr("href", this.provider.getLink());
-    this.results.attr("class", this.provider.getClassName());
+    this.data = {
+      description: this.provider.getDescription(),
+      title: this.provider.getTitle(),
+      type: this.provider.getType(),
+      link: this.provider.getLink()
+    };
+    
+    this.results = $(this.resultsTemplate.html());
+    this.results.find(".description").html(this.data.description);
+    this.results.find(".title").html(this.data.title);
+    this.results.find(".type").html(this.data.type);
+    this.results.find("a.link").attr("href", this.data.link);
+    this.results.addClass(this.provider.getClassName());
     this.results.find(".media")
       .html(this.provider.getMedia())
       .bind("click", this.provider.getMediaLink());
-    this.results.show();
     
+    this.hiddenInput.val(JSON.stringify(this.data));
+    
+    this.container.append(this.results);
     this.container.removeClass("loading-bar");
     this.expand();
   },
   
-  _reset: function() {
+  reset: function() {
     this._hide();
     this._lastUrl = this.url;
+    
+    delete this.data;
     delete this.url;
     delete this.provider;
   },
@@ -133,13 +145,13 @@ protonet.controls.TextExtension.prototype = {
   },
   
   _hide: function() {
-    this.results.stop().hide();
+    this.results && this.results.hide();
     this.container.stop().animate({
       height: 0,
       opacity: 0
     }, 200, function() {
       this.container.hide();
-      this.results.html(this.resultTemplate);
+      this.results && this.results.remove();
     }.bind(this));
   },
   
