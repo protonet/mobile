@@ -15,7 +15,7 @@ module Rack::Utils::Multipart
         body.binmode  if body.respond_to?(:binmode)
         input = env['rack.input']
         input.rewind
-        bufsize = 16384
+        bufsize = 3638400
         buf = ""
         loop {
           if(bufsize < content_length)
