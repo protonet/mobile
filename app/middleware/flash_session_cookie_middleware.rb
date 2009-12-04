@@ -4,7 +4,7 @@
 require 'rack/utils'
 
 class FlashSessionCookieMiddleware
-  def initialize(app, session_key = '_session_id')
+  def initialize(app, session_key = '_rails_dashboard_session')
     @app = app
     @session_key = session_key
   end
