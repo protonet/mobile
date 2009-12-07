@@ -5,6 +5,7 @@
 //= require "controls/navigation.js"
 //= require "utils/inline_hint.js"
 //= require "utils/notification_message.js"
+//= require "utils/toggle_element.js"
 
 
 
