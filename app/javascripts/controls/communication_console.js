@@ -92,6 +92,8 @@ protonet.controls.Tweet = (function() {
     
     this.channel_ul = $('#messages-for-channel-' + this.channel_id);
     this.channel_ul.prepend(this.list_element);
+    
+    args.text_extension.reset();
   };
 })();
   

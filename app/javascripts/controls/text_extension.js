@@ -47,6 +47,8 @@ protonet.controls.TextExtension.prototype = {
   _remove: function(event) {
     event.preventDefault();
     
+    this._lastUrl = this.url;
+    
     this.input.focus();
     this.reset();
   },
@@ -122,7 +124,6 @@ protonet.controls.TextExtension.prototype = {
   
   reset: function() {
     this._hide();
-    this._lastUrl = this.url;
     
     delete this.data;
     delete this.url;
