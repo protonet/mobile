@@ -63,9 +63,12 @@ DispatchingSystem.prototype = {
 
   "messageReceived": function(raw_data) {
     console.log(raw_data + ' wurde empfangen.');
-    
-    // make it a first class object
-    eval("var message = " + raw_data);
+    // FIXME: Handle this in the flash socket
+    if($.trim(raw_data).startsWith("<?xml")) {
+      return;
+    }
+    // FIXME: JSON is only HTML5
+    var message = JSON.parse(raw_data);
     
     switch(message.x_target) {
       // special case: on initial successful connection this sets the socket_id
