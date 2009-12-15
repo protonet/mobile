@@ -12,6 +12,13 @@ class Socket {
   }
 
   static function onReceive(data:String) {
+    /*
+     * Fix for ExternalInterface Error When Parameters Contain Special Characters (stupid Adobe)
+     * http://www.digitalmachina.com/archives/2009/03/11/externalinterface-error-when-parameters-contain-special-characters/
+     */
+/*    data = data.split("\n").join("\\n");
+    data = data.split("\r").join("\\r");*/
+    data = data.split("\\").join("\\\\");
     ExternalInterface.call("Dispatcher.messageReceived", data );
   }
   

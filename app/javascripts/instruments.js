@@ -18,6 +18,12 @@ $(function() {
 });
 
 
+// Initialize text extensions
+$(function() {
+  protonet.controls.TextExtension.initialize();
+});
+
+
 // Initialize file stuff
 $(function() {
   new protonet.controls.FileWidget();

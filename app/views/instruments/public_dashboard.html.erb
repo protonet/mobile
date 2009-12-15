@@ -14,7 +14,7 @@
         </span>
       </button>
     </div>
-    <div id="text-extension">
+    <div id="text-extension-preview">
       <a href="#" title="Remove" class="remove">x</a>
     </div>
   <%- end -%>
@@ -86,6 +86,7 @@
   </div>
   
   <div id="text-extension-template">
-    <%= render :partial => 'tweets/text_extension' %>
+    <%= render :partial => 'tweets/text_extension', :locals => {:type => '', :media => '',
+                                                                :description => '', :title => ''} %>
   </div>
 </div>

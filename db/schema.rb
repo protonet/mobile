@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091006170858) do
+ActiveRecord::Schema.define(:version => 20091207190703) do
 
   create_table "assets", :force => true do |t|
     t.string   "filename"
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(:version => 20091006170858) do
     t.text     "message"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "text_extension"
   end
 
   create_table "users", :force => true do |t|

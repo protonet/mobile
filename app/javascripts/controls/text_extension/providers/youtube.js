@@ -1,13 +1,16 @@
+//= require "../../../data/youtube.js"
+//= require "../../../utils/format_seconds.js"
+
 /**
  * YouTube Provider
  */
-protonet.controls.TextExtension.YouTube = function(url, parent) {
+protonet.controls.TextExtension.providers.YouTube = function(url) {
   this.url = url;
-  this.parent = parent;
+  this.data = {};
   this._regExp = /youtube.com\/watch\?v\=([\w_-]*)/i;
 };
 
-protonet.controls.TextExtension.YouTube.prototype = {
+protonet.controls.TextExtension.providers.YouTube.prototype = {
   match: function() {
     return this._regExp.test(this.url);
   },
@@ -24,13 +27,26 @@ protonet.controls.TextExtension.YouTube.prototype = {
     );
   },
   
+  setData: function(data) {
+    this.data = data;
+  },
+  
   _onSuccess: function(onSuccessCallback, onEmptyResultCallback, response) {
-    this.data = response.entry;
-    if (this.data) {
-      onSuccessCallback(response);
-    } else {
-      onEmptyResultCallback(response);
+    var entry = response.entry;
+    if (!entry) {
+      return onEmptyResultCallback(response);
     }
+    
+    this.data = {
+      description:  entry["media$group"]["media$description"]["$t"],
+      duration:     entry["media$group"]["yt$duration"].seconds,
+      thumbnail:    entry["media$group"]["media$thumbnail"][0],
+      title:        entry["media$group"]["media$title"]["$t"],
+      type:         "YouTube",
+      url:          this.url
+    };
+    
+    onSuccessCallback(this.data);
   },
   
   _onError: function(onErrorCallback, response) {
@@ -45,31 +61,28 @@ protonet.controls.TextExtension.YouTube.prototype = {
     $(event.target).attr("id", placeholderId);
     $.getScript("http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js", function() {
       swfobject.embedSWF(
-        "http://www.youtube.com/v/" + this._extractId() + "?&playerapiid=ytplayer&autoplay=1&egm=0&hd=1&showinfo=0&rel=0",
+        "http://www.youtube.com/v/" + this._extractId() + "?playerapiid=ytplayer&autoplay=1&egm=0&hd=1&showinfo=0&rel=0",
         placeholderId,
-        "590", "356", "8"
+        "auto", "auto", "8"
       );
-      this.parent.container.css("height", "auto");
     }.bind(this));
   },
   
   getDescription: function() {
-    var description = this.data["media$group"]["media$description"]["$t"];
+    var description = this.data.description;
     description = description || this.url;
     return String(description).truncate(75);
   },
   
   getTitle: function() {
-    var mediaGroup = this.data["media$group"],
-        seconds = protonet.utils.formatSeconds(mediaGroup["yt$duration"].seconds),
-        title = String(mediaGroup["media$title"]["$t"]).truncate(70) + " <span>(" + seconds + ")</span>";
+    var seconds = protonet.utils.formatSeconds(this.data.duration),
+        title = String(this.data.title).truncate(70) + " <span>(" + seconds + ")</span>";
     return title;
   },
   
   getMedia: function() {
-    var thumbnail = this.data["media$group"]["media$thumbnail"][0],
+    var thumbnail = this.data.thumbnail,
         img = $("<img />");
-    img.bind("click", this._showVideo.bind(this));
     img.attr({
       src: thumbnail.url,
       height: thumbnail.height,
@@ -78,19 +91,8 @@ protonet.controls.TextExtension.YouTube.prototype = {
     return img;
   },
   
-  getType: function() {
-    return "YouTube Video";
-  },
-  
-  getClassName: function() {
-    return "yt";
-  },
-  
-  getLink: function() {
-    return this.url;
-  },
-  
-  getMediaLink: function() {
+  getMediaCallback: function() {
     return this._showVideo.bind(this);
   }
 };
+

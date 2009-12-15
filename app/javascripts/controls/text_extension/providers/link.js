@@ -1,11 +1,14 @@
+//= require "../../../data/yql.js"
+//= require "../../../media/get_screenshot.js"
+
 /**
  * WebLink Provider
  */
-protonet.controls.TextExtension.WebLink = function(url) {
+protonet.controls.TextExtension.providers.Link = function(url) {
   this.url = url;
 };
 
-protonet.controls.TextExtension.WebLink.prototype = {
+protonet.controls.TextExtension.providers.Link.prototype = {
   match: function() {
     return !!this.url;
   },
@@ -20,54 +23,56 @@ protonet.controls.TextExtension.WebLink.prototype = {
     );
   },
   
+  setData: function(data) {
+    this.data = data;
+  },
+  
   _onSuccess: function(onSuccessCallback, onEmptyResultCallback, response) {
-    this.data = response.query.results;
-    if (this.data) {
-      onSuccessCallback(response);
-    } else {
-      onEmptyResultCallback(response);
+    console.log("YQL diagnostics: ", response.query.diagnostics);
+    
+    var results = response.query.results;
+    if (!results) {
+      return onEmptyResultCallback(response);
     }
+    
+    this.data = {
+      description:  results.meta && results.meta.content,
+      title:        $.isArray(results.title) ? $.trim(results.title.join(" ")) : results.title,
+      type:         "Link",
+      url:          this.url,
+      thumbnail:    protonet.media.getScreenShot(this.url, "T")
+    };
+    
+    onSuccessCallback(this.data);
   },
   
   _onError: function(onErrorCallback, response) {
+    console.log("YQL Timeout.");
+    
     onErrorCallback(response);
   },
   
   getDescription: function() {
-    var description = this.data.meta && this.data.meta.content;
+    var description = this.data.description;
     description = description || this.url;
     return String(description).truncate(200);
   },
   
   getTitle: function() {
     var title = this.data.title;
-    if ($.isArray(title)) {
-      title = $.trim(title.join(" "));
-    }
     return String(title).truncate(75);
   },
   
   getMedia: function() {
-    return $('<img />').attr({
-      src: protonet.media.getScreenShot(this.url, "T"),
+    var thumbnail = this.data.thumbnail;
+    return $("<img />").attr({
+      src: thumbnail,
       height: 70,
       width: 90
     });
   },
   
-  getType: function() {
-    return "Link";
-  },
-  
-  getClassName: function() {
-    return "web-link";
-  },
-  
-  getLink: function() {
-    return this.url;
-  },
-  
-  getMediaLink: function() {
+  getMediaCallback: function() {
     return function() {};
   }
 };

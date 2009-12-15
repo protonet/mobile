@@ -11,7 +11,8 @@ protonet.controls.CommunicationConsole = function(args) {
     "parent_widget": this,
     "form": this.form
   });
-  this.text_extension   = new protonet.controls.TextExtension({"input": this.input});
+  
+  this.text_extension_input = new protonet.controls.TextExtension.Input(this.input);
   
   // this.room_viewer        = new ChatRoomViewer({'parent_widget': this});
   // this.chat_input         = new ChatInput({'parent_widget': this});
@@ -49,7 +50,7 @@ protonet.controls.CommunicationConsole.prototype = {
     // render
     new protonet.controls.Tweet({
       "message": this.input.val(),
-      "text_extension": this.text_extension,
+      "text_extension": this.text_extension_input.getData(),
       "author": this.user_config.user_name,
       "channel_id": this.input_channel_id.val(),
       "user_icon_url": this.user_config.user_icon_url
@@ -58,17 +59,17 @@ protonet.controls.CommunicationConsole.prototype = {
     // send to server
     $.post(this.form.attr("action"), this.form.serialize());
     this.input.val("");
+    
+    this.text_extension_input.reset();
   },
   
   "receiveMessage": function(message) {
     console.log('cc is receiving message');
-    new protonet.controls.Tweet({
-      "message": message.message,
-      "author": message.author,
-      "channel_id": message.channel_id,
-      "user_icon_url": message.user_icon_url,
-      "text_extension": message.text_extension
-    });
+    
+    try {
+      message.text_extension = JSON.parse(message.text_extension);
+    } catch(e) {}
+    new protonet.controls.Tweet(message);
   }
   
 };
@@ -77,26 +78,34 @@ protonet.controls.Tweet = (function() {
   var template;
   
   return function(args) {
-    this.message      = protonet.utils.escapeHtml(args.message);
-    this.author       = args.author;
-    this.message_date = new Date();
-    this.channel_id   = args.channel_id;
+    this.message          = protonet.utils.escapeHtml(args.message);
+    this.author           = args.author;
+    this.message_date     = new Date();
+    this.channel_id       = args.channel_id;
+    this.text_extension   = args.text_extension;
+    
     
     template = template || $("#message-template");
     
     this.list_element = $(template.html());
     this.list_element.find(".message-usericon > img").attr("src", args.user_icon_url);
     this.list_element.find(".message-author").html(this.author);
-    this.list_element.find(".message-date").html(this.message_date);
-    this.list_element.find("p").append(this.message);
+    this.list_element.find(".message-date").html(this.message_date.toGMTString());
     
-    this.channel_ul = $('#messages-for-channel-' + this.channel_id);
+    var messageContainer = this.list_element.find(".message-text");
+    messageContainer.append(this.message);
+    
+    if (this.text_extension) {
+      protonet.controls.TextExtension.render(messageContainer, this.text_extension);
+    }
+    
+    this.channel_ul = $("#messages-for-channel-" + this.channel_id);
     this.channel_ul.prepend(this.list_element);
-    
-    args.text_extension.reset();
   };
 })();
-  
+
+
+// TODO scopify this
 function ChannelSelector(args) {
   var self = this;
   

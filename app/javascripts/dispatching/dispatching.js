@@ -67,6 +67,7 @@ DispatchingSystem.prototype = {
     if($.trim(raw_data).startsWith("<?xml")) {
       return;
     }
+    
     // FIXME: JSON is only HTML5
     var message = JSON.parse(raw_data);
     
