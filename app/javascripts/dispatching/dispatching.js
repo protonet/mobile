@@ -39,7 +39,8 @@ DispatchingSystem.prototype = {
   },
 
   "authenticateUser": function() {
-    this.sendMessage('auth_response:' + '{"user_id":' + this.user_id + ', "token":"' + this.user_auth_token + '"}');
+    json_request = {"operation": "authentication", "payload": {"user_id": this.user_id, "token": this.user_auth_token}};
+    this.sendMessage(JSON.stringify(json_request));
   },
 
   // destination_id is your key for eventmachine/js communication

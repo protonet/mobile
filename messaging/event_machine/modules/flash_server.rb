@@ -19,6 +19,7 @@ module FlashServer
       return receive_data_without_policy_handler(messages[1]) if messages[1]
       return send_swf_policy if messages[0].match(/policy-file-request/)
     end
+    log("doing nothing, handing data over to dispatcher")
     receive_data_without_policy_handler(data)
   end
   

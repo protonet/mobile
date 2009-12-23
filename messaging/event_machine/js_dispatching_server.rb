@@ -15,14 +15,18 @@ module JsDispatchingServer
   
   def receive_data(data)
     log("received: #{data}")
-    if data.match(/^auth_response:(.*)/)
-      # bind_socket_to_queues()
-      auth = JSON.parse($1.chomp("\000"))
-      log("auth json: #{auth.inspect}")
-      if authenticate_user(auth) && !@subscribed
+    data = begin 
+      JSON.parse(data.chomp("\000"))
+    rescue JSON::ParserError
+      data
+    end
+    if data.is_a?(Hash) && data["operation"] == "authentication"
+      log("auth json: #{data["payload"].inspect}")
+      if json_authenticate(data["payload"]) && !@subscribed
         bind_socket_to_queues
       end
     else
+      # play echoserver if request could not be understood
       send_data(data)
     end
     
@@ -35,7 +39,7 @@ module JsDispatchingServer
     # end
   end
   
-  def authenticate_user(auth_data)
+  def json_authenticate(auth_data)
     potential_user = User.find(auth_data["user_id"])
     
     @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data["token"])
@@ -56,8 +60,9 @@ module JsDispatchingServer
         sender_socket_id = message['socket_id']
         message.merge!({:x_target => 'cc.receiveMessage'})
         if sender_socket_id && sender_socket_id.to_i != @key
-          log('sending data out: ' + message.to_s + ' ' + sender_socket_id)
-          send_data("#{message.to_json}\0")
+          message_json = message.to_json
+          log('sending data out: ' + message_json + ' ' + sender_socket_id)
+          send_data("#{message_json}\0")
         end
       }
       log("subscribing to channel #{channel.id}")
