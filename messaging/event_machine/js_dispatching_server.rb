@@ -20,7 +20,7 @@ module JsDispatchingServer
     rescue JSON::ParserError
       data
     end
-    if data.is_a?(Hash) && data["operation"] == "authentication"
+    if data.is_a?(Hash) && data["operation"] == "authenticate"
       log("auth json: #{data["payload"].inspect}")
       if json_authenticate(data["payload"]) && !@subscribed
         bind_socket_to_queues
