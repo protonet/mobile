@@ -25,6 +25,20 @@ class SessionsController < ApplicationController
       redirect_to login_url
     end
   end
+  
+  def create_token
+    user = User.authenticate(params[:login], params[:password])
+    respond_to do |format|
+      format.json do
+        if user
+          render :json => {:user_id => user.id.to_s, :token => user.communication_token}
+        else
+          render :json => {:user_id => "0", :token => ''}
+        end
+      end
+      format.html { render :text => '' }
+    end
+  end
 
   def destroy
     logout_killing_session!

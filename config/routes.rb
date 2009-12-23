@@ -20,6 +20,9 @@ ActionController::Routing::Routes.draw do |map|
   map.signup '/signup', :controller => 'users', :action => 'new'
 
   map.destroy_channel 'channels/:id/destroy', :controller => 'channels', :action => 'destroy'
+  
+  map.create_token_session 'sessions/create_token.:format', :controller => 'sessions', :action => 'create_token'
+  
 
   map.resources :users
 
