@@ -18,6 +18,7 @@ module JsDispatchingServer
     data = begin 
       JSON.parse(data.chomp("\000"))
     rescue JSON::ParserError
+      log("JSON PARSE ERROR! was this intended?")
       data
     end
     if data.is_a?(Hash) && data["operation"] == "authenticate"
@@ -40,6 +41,7 @@ module JsDispatchingServer
   end
   
   def json_authenticate(auth_data)
+    return false if auth_data.nil?
     potential_user = User.find(auth_data["user_id"])
     
     @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data["token"])
