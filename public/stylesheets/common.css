@@ -480,9 +480,7 @@ h2 {
 --------------------------------------------------------------------------- */
 #feed-viewer {
   width:  613px;
-  height: 780px;
   position: relative;
-  overflow: hidden;
   clear: both;
 }
 

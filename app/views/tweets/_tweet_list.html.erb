@@ -1,5 +1,5 @@
 <ul class="user-messages" id="messages-for-channel-<%= channel.id %>">
-  <%- tweets.each do |t| -%>
+  <%- tweets[0..25].each do |t| -%>
     <%= render :partial => '/tweets/tweet', :locals => {:message => t.message, :avatar => t.user.active_avatar_url,
                                                         :author => t.author, :created_at => t.created_at,
                                                         :html_id => "tweet-#{t.id}"} %>
