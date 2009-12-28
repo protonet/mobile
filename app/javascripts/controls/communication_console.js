@@ -1,4 +1,5 @@
 //= require "../utils/convert_urls_to_links.js"
+//= require "browser_title.js"
 
 protonet.controls.CommunicationConsole = function(args) {
   // elements
@@ -71,7 +72,9 @@ protonet.controls.CommunicationConsole.prototype = {
     try {
       message.text_extension = JSON.parse(message.text_extension);
     } catch(e) {}
+    
     new protonet.controls.Tweet(message);
+    protonet.controls.BrowserTitle.set("+++ New messages! +++", true);
   }
   
 };
