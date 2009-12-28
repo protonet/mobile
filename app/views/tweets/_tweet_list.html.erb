@@ -1,6 +1,15 @@
 <ul class="user-messages" id="messages-for-channel-<%= channel.id %>">
   <%- tweets.each do |t| -%>
     <%= render :partial => '/tweets/tweet', :locals => {:message => t.message, :avatar => t.user.active_avatar_url,
-                                                        :author => t.author, :created_at => t.created_at} %>
+                                                        :author => t.author, :created_at => t.created_at,
+                                                        :html_id => "tweet-#{t.id}"} %>
+    <%- unless t.text_extension.blank? -%>
+    <script type="text/javascript">//<![CDATA[
+      protonet.globals.textExtensions.push({
+        container_id: <%= "tweet-#{t.id}".to_json %>,
+        data: <%= t.text_extension %>
+      });
+    //]]></script>
+    <%- end -%>
   <%- end -%>
 </ul>

@@ -5,10 +5,28 @@
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
     <meta http-equiv="pragma" content="no-cache" />
     <meta name="robots" content="noindex, nofollow" />
+    <title><%= strip_tags(yield(:page_title)) || 'protonet - changing the internet, one node at a time' %></title>
+    
     <%= stylesheet_link_tag("common", :cache => false) %>
     <%= stylesheet_link_tag("navigation", :cache => false) %>
     <%= stylesheet_link_tag("text_extension", :cache => false) %>
-    <title><%= strip_tags(yield(:page_title)) || 'protonet - changing the internet, one node at a time' %></title>
+    <script type="text/javascript">//<![CDATA[
+      var protonet = protonet || {};
+      protonet.config = {
+        dispatching_server: '<%= request.env["SERVER_NAME"] %>',
+        token: '<%= current_user.communication_token %>',
+        user_name: '<%= current_user.display_name %>',
+        user_id: '<%= current_user.id %>',
+        user_channel_ids: '<%= current_user.channels && current_user.channels.map {|c| c.id}.to_json %>',
+        user_icon_url: '<%= current_user.active_avatar_url %>',
+        session_id: '<%= cookies["_rails_dashboard_session"] %>',
+        authenticity_token: '<%= form_authenticity_token %>'
+      };
+
+      protonet.globals = {
+        textExtensions: []
+      };
+    //]]></script>
   </head>
 
   <body>
@@ -51,24 +69,6 @@
     <%- end -%>
 
     <%= yield %>
-
-    <script type="text/javascript" charset="utf-8">
-      var protonet = protonet || {};
-      protonet.config = {
-        dispatching_server: '<%= request.env["SERVER_NAME"] %>',
-        token: '<%= current_user.communication_token %>',
-        user_name: '<%= current_user.display_name %>',
-        user_id: '<%= current_user.id %>',
-        user_channel_ids: '<%= current_user.channels && current_user.channels.map {|c| c.id}.to_json %>',
-        user_icon_url: '<%= current_user.active_avatar_url %>',
-        session_id: '<%= cookies["_rails_dashboard_session"] %>',
-        authenticity_token: '<%= form_authenticity_token %>'
-      };
-      
-      protonet.globals = {
-        textExtensions: []
-      };
-    </script>
     
     <%= sprockets_include_tag(:default) %>    
     <%= sprockets_include_tag(controller_name.to_sym) %>

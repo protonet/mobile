@@ -5,10 +5,11 @@ protonet.controls.TextExtension = {
   
   renderQueue: function() {
     if (protonet.globals.textExtensions && protonet.globals.textExtensions.length) {
-      $.each(protonet.globals.textExtensions, function(i, val) {
-        //new this.Renderer()
-      });
-    }
+       $.each(protonet.globals.textExtensions, function(i, val) {
+         var container = $("#" + val.container_id + " > .message-text");
+         new this.Renderer(container, val.data);
+       }.bind(this));
+     }
     
     protonet.globals.textExtensions = [];
   },
