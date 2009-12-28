@@ -57,11 +57,9 @@ protonet.controls.TextExtension.Input.prototype = {
     
     for (var i=0; i<matchUrls.length; i++) {
       var url = this._prepareUrl(matchUrls[i]),
-          hasMinLength = url.length > 10,
-          hasUrlPrefix = url.startsWith("http") || url.startsWith("www."),
           isLastUrl = (url == this._lastUrl);
       
-      if (hasMinLength && hasUrlPrefix && !isLastUrl) {
+      if (url.isUrl() && !isLastUrl) {
         this._selectUrl(url);
         break;
       }

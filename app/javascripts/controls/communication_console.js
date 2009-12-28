@@ -1,3 +1,5 @@
+//= require "../utils/convert_urls_to_links.js"
+
 protonet.controls.CommunicationConsole = function(args) {
   // elements
   this.input = $("#message");
@@ -79,6 +81,7 @@ protonet.controls.Tweet = (function() {
   
   return function(args) {
     this.message          = protonet.utils.escapeHtml(args.message);
+    this.message          = protonet.utils.convertUrlsToLinks(this.message);
     this.author           = args.author;
     this.message_date     = new Date();
     this.channel_id       = args.channel_id;

@@ -1,4 +1,4 @@
 $(function() {
   var input = $("a");
-  new protonet.utils.ToggleElement(input);
+  protonet.utils.toggleElement(input);
 });

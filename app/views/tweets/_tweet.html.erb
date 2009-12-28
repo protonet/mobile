@@ -7,6 +7,10 @@
       <span class="message-author"><%= author %></span>
       <span class="message-date">(<%= created_at %>)</span>
     </span>
-    <%= h message %>
+    <%=
+      auto_link(h(message), :urls, :target => '_blank') do |url|
+        truncate(url, 40)
+      end
+    %>
   </div>
 </li>

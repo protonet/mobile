@@ -35,6 +35,14 @@ String.prototype.px = function() {
   return this + "px";
 };
 
+String.prototype.isUrl = function() {
+  var url = this,
+      hasMinLength = url.length > 10,
+      hasUrlPrefix = url.startsWith("http") || url.startsWith("www.");
+  
+  return hasMinLength && hasUrlPrefix;
+};
+
 
 
 
