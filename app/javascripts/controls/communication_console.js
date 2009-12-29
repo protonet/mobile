@@ -74,7 +74,8 @@ protonet.controls.CommunicationConsole.prototype = {
     } catch(e) {}
     
     new protonet.controls.Tweet(message);
-    protonet.controls.BrowserTitle.set("+++ New messages! +++", true);
+    
+    protonet.controls.BrowserTitle.set("+++ New messages", true, true);
   }
   
 };

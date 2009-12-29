@@ -1,23 +1,34 @@
 protonet.controls.BrowserTitle = (function() {
-  var restoredTitle, isBlurred, animation, autoRestore;
+  var restoredTitle,
+      isBlurred,
+      animation,
+      autoRestore,
+      VISIBLE_CHARACTERS_IN_TITLE = 200;
   
   $(window).blur(_blur);
   $(window).focus(_focus);
   
-  function set(message, onlyWhenPageIsBlurred) {
+  function set(message, onlyWhenPageIsBlurred, shouldBeAnimated) {
     if (onlyWhenPageIsBlurred && !_isPageBlurred()) {
       return;
     }
     
     restoredTitle = restoredTitle || document.title;
     
-    document.title = message;
-    
     // Auto restore title when page is focused
     autoRestore = onlyWhenPageIsBlurred;
+    
+    // Only set title and return if no animation wished
+    if (!shouldBeAnimated) {
+      document.title = message;
+      return;
+    }
+    
+    _animate(message);
   }
   
   function restore() {
+    clearInterval(animation);
     autoRestore = false;
     document.title = restoredTitle;
   }
@@ -36,8 +47,27 @@ protonet.controls.BrowserTitle = (function() {
       isBlurred = false;
       autoRestore && restore();
     }, 100);
-    
   }
+  
+  function _animate(message) {
+    var documentTitle = _extendTitle(message, message);
+    document.title = documentTitle;
+    
+    animation = setInterval(function() {
+      documentTitle = documentTitle.substr(1);
+      documentTitle = _extendTitle(documentTitle, message);
+      document.title = documentTitle;
+    }, 400);
+  }
+  
+  function _extendTitle(title, message) {
+    while (title.length < VISIBLE_CHARACTERS_IN_TITLE) {
+      title += " " + message;
+    }
+    return title;
+  }
+  
+  
   
   return {
     set: set,
