@@ -173,7 +173,13 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
   __html5_setHandler: function() {
     var uploadObj = this._html5Upload.upload;
     uploadObj.onprogress = this.__html5_uploadProgress.bind(this);
-    uploadObj.onload = this.__html5_uploadSuccess.bind(this);
+    uploadObj.onload = this.__html5_uploadComplete.bind(this);
+    
+    this._html5Upload.onreadystatechange = function (aEvt) {  
+      if (this._html5Upload.readyState == 4 && this._html5Upload.status == 200) {
+        this.__html5_uploadSuccess();
+      }
+    }.bind(this);
     
     // TODO: Build error handling
     //uploadObj.onerror = this.__html5_uploadError.bind(this);
@@ -194,7 +200,11 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     this.__uploadProgress(this._currentFile.asObject(), event.loaded, event.total);
   },
   
-  __html5_uploadSuccess: function(event) {
+  __html5_uploadComplete: function() {
+    this.__uploadComplete(this._currentFile.asObject());
+  },
+  
+  __html5_uploadSuccess: function() {
     this.__uploadSuccess(this._currentFile.asObject());
     
     this.__html5_proceed();
@@ -378,7 +388,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     this._fullSize += file.size;
     
     // TODO: We need one global mechanism which renders file entries
-    this._fileList.append('<li class="file disabled" id="file-' + file.id + '" tabindex="-1">' + file.name + "<span>(0 %)</span></li>");
+    this._fileList.append('<li class="file disabled" id="file-' + file.id + '" tabindex="-1">' + file.name + " <span>(0 %)</span></li>");
   },
   
   __uploadProgress: function(file, bytesLoaded, bytesTotal) {
@@ -394,6 +404,15 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     status.html(this._wrap(progress.file + " %"));
     
     document.title = this._oldTitle + " - Uploading " + progress.full + " %";
+  },
+  
+  __uploadComplete: function(file) {
+    console.log("upload completed for: " + file.name + " (id: " + file.id + ")");
+    
+    var status = this._fileList.find("#file-" + file.id + " span");
+    status.html(this._wrap("finishing ..."));
+    
+    document.title = this._oldTitle + " - Finishing upload ...";
   },
   
   __uploadError: function(file, errorMessage) {
