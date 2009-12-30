@@ -1,4 +1,4 @@
-protonet.utils.convertUrlsToLinks = (function() {
+protonet.utils.autoLink = (function() {
   var REG_EXP = /(\S+\.{1}[^\s\,\.\!]+)/g,
       MAX_DISPLAY_LENGTH = 40;
   

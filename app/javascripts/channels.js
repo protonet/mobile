@@ -1,4 +1,4 @@
 $(function() {
-  var input = $("a");
+  var input = $("a[rel]");
   protonet.utils.toggleElement(input);
 });

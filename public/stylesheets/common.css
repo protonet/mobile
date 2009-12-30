@@ -693,6 +693,11 @@ h2 {
   min-height: 4em;
   padding: 0.3em 1.8em;
 }
+
+.user-messages .message-text p {
+  white-space: pre;
+}
+
 .user-messages .message-usericon {
   background: transparent url(/images/icn_message_arrow.png) no-repeat scroll right 19px;
   bottom: 0.3em;

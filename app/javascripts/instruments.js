@@ -1,6 +1,5 @@
 //= require "dispatching/dispatching.js"
 //= require "controls/communication_console.js"
-//= require "controls/input_console.js"
 //= require "controls/text_extension.js"
 //= require "controls/file_widget.js"
 //= require "controls/file_widget/file_upload.js"

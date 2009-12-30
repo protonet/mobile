@@ -8,5 +8,9 @@ module ApplicationHelper
       ), :type => "submit", :name => "commit"
     )
   end
+  
+  def nl2br(str)
+    str.gsub(/\n/, '<br />')
+  end
 
 end

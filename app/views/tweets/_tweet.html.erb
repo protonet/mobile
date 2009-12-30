@@ -7,10 +7,10 @@
       <span class="message-author"><%= author %></span>
       <span class="message-date">(<%= created_at %>)</span>
     </span>
-    <%=
-      auto_link(h(message), :urls, :target => '_blank') do |url|
+    <p><%=
+      auto_link(nl2br(h(message)), :urls, :target => '_blank') do |url|
         truncate(url, 40)
       end
-    %>
+    %></p>
   </div>
 </li>
