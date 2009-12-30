@@ -3,6 +3,7 @@ protonet.controls.BrowserTitle = (function() {
       isBlurred,
       animation,
       autoRestore,
+      isAnimating,
       VISIBLE_CHARACTERS_IN_TITLE = 200;
   
   $(window).blur(_blur);
@@ -10,6 +11,10 @@ protonet.controls.BrowserTitle = (function() {
   
   function set(message, onlyWhenPageIsBlurred, shouldBeAnimated) {
     if (onlyWhenPageIsBlurred && !_isPageBlurred()) {
+      return;
+    }
+    
+    if (shouldBeAnimated && isAnimating) {
       return;
     }
     
@@ -28,7 +33,7 @@ protonet.controls.BrowserTitle = (function() {
   }
   
   function restore() {
-    clearInterval(animation);
+    _stopAnimation();
     autoRestore = false;
     document.title = restoredTitle;
   }
@@ -58,6 +63,13 @@ protonet.controls.BrowserTitle = (function() {
       documentTitle = _extendTitle(documentTitle, message);
       document.title = documentTitle;
     }, 400);
+    
+    isAnimating = true;
+  }
+  
+  function _stopAnimation() {
+    clearInterval(animation);
+    isAnimating = false;
   }
   
   function _extendTitle(title, message) {
