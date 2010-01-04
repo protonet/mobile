@@ -1,4 +1,5 @@
 <h2>Users</h2>
+<%= link_to 'delete strangers older than 2 days', :action => 'delete_stranger_older_than_two_days' %>
 
 <ul class="users options">
   <%- @users.each do |u| -%>

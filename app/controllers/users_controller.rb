@@ -23,7 +23,7 @@ class UsersController < ApplicationController
   def new
     @user = User.new
   end
- 
+
   def create
     logout_keeping_session!
     @user = User.new(params[:user])
@@ -40,5 +40,10 @@ class UsersController < ApplicationController
       flash[:error]  = "We couldn't set up that account, sorry.  Please try again, or contact an admin (link is above)."
       redirect_to :action => 'new'
     end
+  end
+  
+  def delete_stranger_older_than_two_days
+    User.delete_strangers_older_than_two_days!
+    redirect_to 'index'
   end
 end

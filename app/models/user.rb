@@ -66,11 +66,14 @@ class User < ActiveRecord::Base
   end
   
   def self.all_strangers(conditions)
-    find(:all, :conditions => {:temporary_identifier => 'IS NOT NULL'})
+    find(:all, :conditions => {:temporary_identifier => 'IS NOT NULL'}).each do |user|
+      # make all tweets of deleted users anonymous
+      user.tweets.update_all("user_id = 0")
+    end
   end
-  
-  def self.delete_old_strangers!
-    destroy_all(:temporary_identifier => 'IS NOT NULL')
+
+  def self.delete_strangers_older_than_two_days!
+    destroy_all(["temporary_identifier IS NOT NULL AND updated_at < ?", Time.now - 2.days])
   end
   
   def stranger?

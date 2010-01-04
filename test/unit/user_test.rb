@@ -8,7 +8,8 @@ class UserTest < Test::Unit::TestCase
       User.stranger('session_id2').update_attributes(:created_at => Time.now - 2.days)
       User.stranger('session_id3').update_attributes(:created_at => Time.now - 3.days)
       assert User.all_strangers
-      User.delete_old_strangers!
+      # destroy all strangers
+      User.destroy_all({:temporary_identifier => 'IS NOT NULL'})
     end
   end
   
