@@ -12,5 +12,19 @@ module ApplicationHelper
   def nl2br(str)
     str.gsub(/\n/, '<br />')
   end
-
+  
+  def auto_link_file_paths(str)
+    str.gsub(/file:(.*?[^\<\s\,]+)/) {|s|
+      path = $1
+      file_name = extract_file_name($1)
+      
+      file_name ? ('<a href="' + path + '" target="_blank">' + truncate(file_name, 40) + '</a>') : s
+    }
+  end
+  
+  private
+    def extract_file_name(path)
+      match = path.match(/file_path=.*%2F(.*)/)
+      match && match[1] && CGI.unescape(match[1])
+    end
 end

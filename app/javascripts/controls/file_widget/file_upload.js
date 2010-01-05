@@ -21,7 +21,7 @@ protonet.controls.FileWidget.prototype.FileUpload = function(parent) {
   
   if (protonet.user.Browser.SUPPORTS_HTML5_MULTIPLE_FILE_UPLOAD()) {
     this._initHtml5Upload();
-  } else if (protonet.user.Browser.SUPPORTS_FLASH_UPLOAD()) {
+  } else if (protonet.user.Browser.SUPPORTS_FLASH_UPLOAD() && false) {
     this._initSwfUpload();
   } else {
     // Fallback
@@ -50,6 +50,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     this._loadedSize = 0;
     this._fullSize = 0;
     this._numSelectedFiles = 0;
+    this._selectedFiles = [];
     window.onbeforeunload = null;
     document.title = this._oldTitle;
   },
@@ -173,7 +174,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
   __html5_setHandler: function() {
     var uploadObj = this._html5Upload.upload;
     uploadObj.onprogress = this.__html5_uploadProgress.bind(this);
-    uploadObj.onload = this.__html5_uploadComplete.bind(this);
+    uploadObj.onload = this.__html5_uploadAlmostFinished.bind(this);
     
     this._html5Upload.onreadystatechange = function (aEvt) {  
       if (this._html5Upload.readyState == 4 && this._html5Upload.status == 200) {
@@ -191,7 +192,9 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
   
   __html5_fileDialogComplete: function() {
     var numSelectedFiles = this._files.length;
-    if (numSelectedFiles == 0) { return; }
+    if (numSelectedFiles == 0) {
+      return;
+    }
     
     this.__fileDialogComplete(numSelectedFiles);
   },
@@ -200,8 +203,8 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     this.__uploadProgress(this._currentFile.asObject(), event.loaded, event.total);
   },
   
-  __html5_uploadComplete: function() {
-    this.__uploadComplete(this._currentFile.asObject());
+  __html5_uploadAlmostFinished: function() {
+    this.__uploadAlmostFinished(this._currentFile.asObject());
   },
   
   __html5_uploadSuccess: function() {
@@ -214,7 +217,6 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     if (--this._numSelectedFiles > 0) {
       this.__html5_uploadFile();
     } else {
-      console.log("--------------");
       this.__uploadCompleted();
     }
   },
@@ -353,7 +355,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     });
     
     this.__fileQueued(this._currentFile);
-    this.__fileDialogComplete(this._currentFile);
+    this.__fileDialogComplete(1);
     this._form.submit();
   },
   
@@ -406,7 +408,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     document.title = this._oldTitle + " - Uploading " + progress.full + " %";
   },
   
-  __uploadComplete: function(file) {
+  __uploadAlmostFinished: function(file) {
     console.log("upload completed for: " + file.name + " (id: " + file.id + ")");
     
     var status = this._fileList.find("#file-" + file.id + " span");
@@ -432,11 +434,20 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     listElement.removeClass("disabled");
     listElement.find("span").remove();
     
+    this._selectedFiles.push(file);
+    
     this._loadedSize += file.size;
   },
   
   __uploadCompleted: function() {
-    console.log("upload finished ...");
+    console.log("upload finished, all selected files uploaded ...");
+    
+    if (confirm("Do you want to publish the uploaded files to the timeline?")) {
+      var fileNames = $.map(this._selectedFiles, function(file) {
+        return file.name;
+      });
+      this.parent.publish(fileNames);
+    }
     
     // All files are uploaded
     this._reset();

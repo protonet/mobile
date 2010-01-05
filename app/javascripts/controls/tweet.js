@@ -1,4 +1,5 @@
 //= require "../utils/auto_link.js"
+//= require "../utils/auto_link_file_paths.js"
 //= require "../utils/escape_html.js"
 //= require "../utils/nl2br.js"
 
@@ -6,9 +7,11 @@ protonet.controls.Tweet = (function() {
   var template;
   
   function TweetClass(args) {
-    this.message          = protonet.utils.escapeHtml(args.message);
+    this.originalMessage  = args.message;
+    this.message          = protonet.utils.escapeHtml(this.originalMessage);
     this.message          = protonet.utils.nl2br(this.message);
     this.message          = protonet.utils.autoLink(this.message);
+    this.message          = protonet.utils.autoLinkFilePaths(this.message);
     this.author           = args.author;
     this.message_date     = new Date();
     this.channel_id       = args.channel_id;
@@ -35,8 +38,13 @@ protonet.controls.Tweet = (function() {
   
   TweetClass.prototype = {
     send: function() {
+      var params = this.form.serialize();
+      
+      // Overwrite message, because we don't always want to send the textarea value
+      params += "&" + encodeURIComponent("tweet[message]=" + this.originalMessage);
+      
       // send to server
-      $.post(this.form.attr("action"), this.form.serialize());
+      $.post(this.form.attr("action"), params);
     }
   };
   

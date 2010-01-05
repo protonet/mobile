@@ -9,7 +9,7 @@ protonet.controls.ChannelSelector = (function() {
     container = $("#channel");
   
     // get feed-holder
-    feed_Holder = $("#feed-holder");
+    feedHolder = $("#feed-holder");
     
     // get all channel links and bind click
     container.find(".channel a").click(function() {

@@ -1,6 +1,8 @@
 //= require "../utils/escape_html.js"
 
-protonet.controls.FileWidget = function() {
+protonet.controls.FileWidget = function(communicationConsole) {
+  this.communicationConsole = communicationConsole;
+  
   this.wrapper = $("#file-list");
   this.file_list = this.wrapper.find('ul.root');
   this.hierarchy_bar = this.wrapper.find('#file-navigation .hierarchy');
@@ -144,7 +146,32 @@ protonet.controls.FileWidget.prototype = {
     this.file_list.append(new_folder);
     
     new_folder_input.focus();
+  },
+  
+  "getFilePathFor": function(fileName) {
+    return this.current_path + '/' + fileName;
+  },
+  
+  "getDownloadPathFor": function(fileName) {
+    var filePath = this.getFilePathFor(fileName);
+    return "/system/files/show?file_path=" + encodeURIComponent(filePath);
+  },
+  
+  /**
+   * Publishes one or more files to the timeline
+   * Takes a single fileName or an array of fileNames as argument
+   */
+  "publish": function(fileNames) {
+    fileNames = $.isArray(fileNames) ? fileNames : [fileNames];
+    
+    var message = "Published the following file(s): \n";
+    message += $.map(fileNames, function(fileName) {
+      return "  - file:" + this.getDownloadPathFor(fileName);
+    }.bind(this)).join("\n");
+    
+    this.communicationConsole.sendTweetFromMessage(message);
   }
-  
-  
 };
+
+//= require "file_widget/file_upload.js"
+//= require "file_widget/file_context_menu.js"

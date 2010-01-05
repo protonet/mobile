@@ -482,12 +482,13 @@ h2 {
   width:  613px;
   position: relative;
   clear: both;
+  overflow: hidden;
 }
 
 /* =FEEDVIEWER (INNER)
 --------------------------------------------------------------------------- */
 #feed-holder {
-  position: absolute;
+  position: relative;
 }
 
 /* =FILEBROWSER
@@ -695,7 +696,7 @@ h2 {
 }
 
 .user-messages .message-text p {
-  white-space: pre;
+  white-space: pre-wrap;
 }
 
 .user-messages .message-usericon {
@@ -1031,6 +1032,9 @@ h2 {
 }
 .contextMenu li.delete a {
   background-image: url(/images/file_delete.png);
+}
+.contextMenu li.publish a {
+  background-image: url(/images/icn_file_publish.png);
 }
 
 /* =TEMPLATES

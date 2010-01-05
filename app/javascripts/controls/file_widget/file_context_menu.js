@@ -16,25 +16,34 @@ protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
     }.bind(this));
     
     var self = this;
-    this.files.click(function(event) {
+    this.files.live("click", function() {
       self.download($(this));
     });
   },
   
   "download": function(el) {
-    var current_file_path = this._getFilePathFor(el);
-    console.log('download: ' + current_file_path);
-    document.location = "system/files/show?file_path=" + encodeURIComponent(current_file_path);
+    var fileName = el.html(),
+        downloadPath = this.parent.getDownloadPathFor(fileName);
+    location.href = downloadPath;
+    
+    console.log('download: ' + filePath);
   },
   
   "delete": function(el) {
-    var current_file_path = this._getFilePathFor(el);
-    console.log('delete: ' + current_file_path);
-    $.post('system/files/delete', {"file_path": current_file_path});
+    var fileName = el.html(),
+        filePath = this.parent.getFilePathFor(fileName);
+    
+    $.post('system/files/delete', {"file_path": filePath});
     el.remove();
+    
+    console.log('delete: ' + filePath);
   },
   
-  "_getFilePathFor": function(el) {
-    return this.parent.current_path + '/' + el.html();
+  "publish": function(el) {
+    var fileName = el.html();
+    
+    this.parent.publish(fileName);
+    
+    console.log('publish: ' + fileName);
   }
 };

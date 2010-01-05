@@ -173,7 +173,7 @@ protonet.controls.InputConsole.prototype = {
   
   "tweet": function(event) {
     console.log("sending via js");
-    this.parent_widget.addAndSendTweet();
+    this.parent_widget.sendTweetFromInput();
     event.stopPropagation();
     event.preventDefault();
   }

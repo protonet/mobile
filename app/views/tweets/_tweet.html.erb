@@ -8,7 +8,7 @@
       <span class="message-date">(<%= created_at %>)</span>
     </span>
     <p><%=
-      auto_link(nl2br(h(message)), :urls, :target => '_blank') do |url|
+      auto_link_file_paths auto_link(nl2br(h(message)), :urls, :target => '_blank') do |url|
         truncate(url, 40)
       end
     %></p>
