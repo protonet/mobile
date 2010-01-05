@@ -1167,6 +1167,33 @@ h2 {
   padding: 0.2em 0.7em;
 }
 
+/* =USERS
+--------------------------------------------------------------------------- */
+.users a.cleanup {
+  display: block;
+  font-size: 1.2em;
+  margin: 0 0 1em;
+  text-align: right;
+}
+.users dl:after {
+  clear: both;
+  content: ".";
+  display: block;
+  height: 0;
+  visibility: hidden;
+}
+.users dt {
+  clear: left;
+  float: left;
+  padding: 0.2em 0.4em;
+  vertical-align: top;
+}
+.users dd {
+  min-height: 1.4em;
+  padding: 0.2em 0.4em 0.2em 130px;
+  vertical-align: top;
+}
+
 /* =CHANNELS
 --------------------------------------------------------------------------- */
 .channels a.create {
