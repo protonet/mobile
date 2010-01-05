@@ -42,6 +42,7 @@ module JsDispatchingServer
   
   def json_authenticate(auth_data)
     return false if auth_data.nil?
+    return false if auth_data["user_id"] == 0
     potential_user = User.find(auth_data["user_id"])
     
     @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data["token"])
