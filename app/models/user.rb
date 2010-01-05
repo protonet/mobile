@@ -68,7 +68,7 @@ class User < ActiveRecord::Base
   def self.all_strangers(conditions)
     find(:all, :conditions => {:temporary_identifier => 'IS NOT NULL'}).each do |user|
       # make all tweets of deleted users anonymous
-      user.tweets.update_all("user_id = 0")
+      user.tweets.each {|t| t.update_attribute(:user_id, 0)}
     end
   end
 
