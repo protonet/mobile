@@ -41,7 +41,18 @@ class UsersController < ApplicationController
       redirect_to :action => 'new'
     end
   end
-  
+
+  def update
+    user = User.find(params[:user][:id])
+    success = user && user.update_attributes(params[:user])
+    if success && user.errors.empty?
+      flash[:notice] = "Successfully updated user '#{params[:user][:name]}'"
+    else
+      flash[:error] = "Could not update user '#{params[:user][:name]}'"
+    end
+    redirect_to :action => 'index'
+  end
+
   def delete_stranger_older_than_two_days
     User.delete_strangers_older_than_two_days!
     redirect_to 'index'

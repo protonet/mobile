@@ -20,9 +20,9 @@
           <% form_for :user, :url => { :action => 'update' } do |f| -%>
             <fieldset>
               <%= f.hidden_field :id, { :value => u.id, :id => "user-id-#{u.id}" } %>
-              <%= f.text_field :display_name, { :value => u.display_name, :id => "user-display-name-#{u.id}", :title => "Name of the user…" } %>
+              <%= f.text_field :name, { :value => u.name, :id => "user-name-#{u.id}", :title => "Name of the user…" } %>
               <%= f.text_field :email, { :value => u.email, :id => "user-email-#{u.id}", :title => "E-Mail of the user…" } %>
-              <%= button 'Save' %>
+              <%= button "Save" %>
             </fieldset>
           <% end %>
         </div>
