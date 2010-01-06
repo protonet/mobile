@@ -55,7 +55,7 @@
       <%- end -%>
     <% else %>
       <div id="mini-menu">
-        Hello <%= link_to current_user.display_name, user_path(current_user.id) %>:&nbsp;
+        Hello <%= link_to current_user.display_name, preferences_path %>:&nbsp;
         <%= link_to 'logout', :controller => :sessions, :action => :destroy %>
       </div>
     <% end %>
