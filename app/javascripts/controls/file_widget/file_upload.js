@@ -21,7 +21,7 @@ protonet.controls.FileWidget.prototype.FileUpload = function(parent) {
   
   if (protonet.user.Browser.SUPPORTS_HTML5_MULTIPLE_FILE_UPLOAD()) {
     this._initHtml5Upload();
-  } else if (protonet.user.Browser.SUPPORTS_FLASH_UPLOAD() && false) {
+  } else if (protonet.user.Browser.SUPPORTS_FLASH_UPLOAD()) {
     this._initSwfUpload();
   } else {
     // Fallback
