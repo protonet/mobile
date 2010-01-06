@@ -2,7 +2,7 @@ class Images::Avatar < ActiveRecord::Base
   set_table_name :images_avatars  
   
   acts_as_fleximage do 
-    image_directory 'public/avatars'
+    image_directory configatron.avatars_path
     default_image_path 'public/images/userpicture.jpg'
   end
   
