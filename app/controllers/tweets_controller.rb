@@ -1,8 +1,10 @@
 class TweetsController < ApplicationController
   
   def index
+    @no_wrap = true
     channel = Channel.find(:first, :conditions => {:id => params[:channel_id]})
-    render :partial => 'tweet_list', :locals => {:tweets => (channel ? channel.tweets.recent : []), :channel => channel || 0}
+    tweets  = (channel ? channel.tweets.all(:conditions => ["tweets.id < ?", params[:first_id]], :order => "tweets.id DESC", :limit => 25) : [])
+    render :partial => 'tweet_list', :locals => {:tweets => tweets, :channel => channel || 0}
   end
 
   def new

@@ -2,6 +2,7 @@
 //= require "controls/communication_console.js"
 //= require "controls/text_extension.js"
 //= require "controls/file_widget.js"
+//= require "controls/endless_scroller.js"
 //= require "lib/jQuery.dPassword.js"
 
 
@@ -25,6 +26,10 @@ $(function() {
   new protonet.controls.FileWidget(window.cc);
 });
 
+// Initialize endless scrolling
+$(function() {
+  new protonet.controls.EndlessScroller();
+});
 
 // Initialize password stuff
 $(function() {
