@@ -30,6 +30,6 @@ System::Backend.backend_connection = BackendAdapters::Ubuntu.new
 puts "Backend '#{System::Backend.backend_connection.info}' connected successfully!"
 
 configatron.user_file_path = (File.exists?("/home/protonet/dashboard/shared/user-files") ? "/home/protonet/dashboard/shared/user-files" : "/var/www/protonet-dashboard/shared/user-files")
-configatron.avatars_path = (File.exists?("/home/protonet/dashboard/shared/avatars") ? "/home/protonet/dashboard/shared/avatars" : "/var/www/protonet-dashboard/shared/avatars")
+configatron.avatars_path = "public/system/avatars"
 
 configatron.ldap_active = false

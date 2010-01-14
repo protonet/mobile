@@ -14,6 +14,8 @@ class SessionsController < ApplicationController
       # button. Uncomment if you understand the tradeoffs.
       # reset_session
       self.current_user = user
+      # auto set remember me... we might need to change that back sometime later
+      params[:remember_me] = "1"
       new_cookie_flag = (params[:remember_me] == "1")
       handle_remember_cookie! new_cookie_flag
       redirect_back_or_default('/')

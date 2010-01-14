@@ -55,6 +55,6 @@ class UsersController < ApplicationController
 
   def delete_stranger_older_than_two_days
     User.delete_strangers_older_than_two_days!
-    redirect_to 'index'
+    redirect_to :action => 'index'
   end
 end
