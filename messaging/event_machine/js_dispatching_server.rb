@@ -35,9 +35,7 @@ module JsDispatchingServer
   
   def unbind
     log("connection #{@key} closed")
-    # @user && @user.joined_rooms.each do |room|
-    #   @user.leave_room(room)
-    # end
+    unbind_socket_from_queues
   end
   
   def json_authenticate(auth_data)
@@ -56,9 +54,11 @@ module JsDispatchingServer
   end
   
   def bind_socket_to_queues
+    @queues = []
     amq = MQ.new
     @user.channels.each do |channel|
-      amq.queue("consumer-#{@key}-channel.a#{channel.id}").bind(amq.topic("channels"), :key => "channels.a#{channel.id}").subscribe{ |msg|
+      channel_queue = amq.queue("consumer-#{@key}-channel.a#{channel.id}", :auto_delete => true)
+      channel_queue.bind(amq.topic("channels"), :key => "channels.a#{channel.id}").subscribe do |msg|
         message = JSON(msg)
         sender_socket_id = message['socket_id']
         message.merge!({:x_target => 'cc.receiveMessage'})
@@ -67,14 +67,15 @@ module JsDispatchingServer
           log('sending data out: ' + message_json + ' ' + sender_socket_id)
           send_data("#{message_json}\0")
         end
-      }
+      end
+      @queues << channel_queue
       log("subscribing to channel #{channel.id}")
     end
     @subscribed = true
   end 
   
   def unbind_socket_from_queues
-    # not implemented yet
+    @queues && @queues.each {|q| q.unsubscribe}
   end
   
   include FlashServer
