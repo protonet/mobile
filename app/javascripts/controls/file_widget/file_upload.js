@@ -447,6 +447,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
         return file.name;
       });
       this.parent.publish(fileNames);
+      $(window).scrollTop(0);
     }
     
     // All files are uploaded

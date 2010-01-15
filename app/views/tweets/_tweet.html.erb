@@ -5,10 +5,10 @@
   <div class="message-text">
     <span class="message-info">
       <span class="message-author"><%= author %></span>
-      <span class="message-date">(<%= created_at %>)</span>
+      <span class="message-date pretty-date" <%= "title=\"#{convert_to_gmt(created_at)}\"" unless created_at.blank? %>><%= created_at %></span>
     </span>
     <p><%=
-      auto_link_file_paths auto_link(nl2br(h(message)), :urls, :target => '_blank') do |url|
+      auto_link_file_paths nl2br(auto_link(h(message), :urls, :target => '_blank')) do |url|
         truncate(url, 40)
       end
     %></p>

@@ -50,7 +50,8 @@ git submodule update
 
 install the needed gems:
 
-sudo gem install jeremymcanally-context faker random_data mocha configatron sprockets ruby-debug eventmachine tmm1-amqp json sqlite3-ruby daemons ruby-net-ldap rmagick passenger --no-rdoc --no-ri
+gem sources -a http://gems.github.com
+sudo gem install jeremymcanally-context faker random_data mocha configatron sprockets ruby-debug eventmachine tmm1-amqp json sqlite3-ruby daemons ruby-net-ldap rmagick passenger rack --no-rdoc --no-ri
 
 setup apache for local development:
 sudo passenger-install-apache2-module

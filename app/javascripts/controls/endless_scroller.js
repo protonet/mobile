@@ -21,6 +21,10 @@ protonet.controls.EndlessScroller = (function() {
       $.get("/tweets", {channel_id : 1, first_id: first_tweet.id.match(/tweet-(.*)/)[1]}, function(data) {
         $("#messages-for-channel-1").append(data);
         this.loading = false;
+        
+        protonet.controls.TextExtension.renderQueue();
+        protonet.controls.PrettyDate.update();
+        
       }.bind(this));
     }
   };

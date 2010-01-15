@@ -13,6 +13,10 @@ module ApplicationHelper
     str.gsub(/\n/, '<br />')
   end
   
+  def convert_to_gmt(str)
+    Time.at(str.to_i)
+  end
+  
   def auto_link_file_paths(str)
     str.gsub(/file:(.*?[^\<\s\,]+)/) {|s|
       path = $1

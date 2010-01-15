@@ -3,6 +3,7 @@
 //= require "controls/text_extension.js"
 //= require "controls/file_widget.js"
 //= require "controls/endless_scroller.js"
+//= require "controls/pretty_date.js"
 //= require "lib/jQuery.dPassword.js"
 
 
@@ -26,10 +27,21 @@ $(function() {
   new protonet.controls.FileWidget(window.cc);
 });
 
+
 // Initialize endless scrolling
 $(function() {
   new protonet.controls.EndlessScroller();
 });
+
+
+// Initialize pretty dates ("2 minutes ago")
+$(function() {
+  protonet.controls.PrettyDate.initialize();
+  setInterval(function() {
+    protonet.controls.PrettyDate.update();
+  }, 10000);
+});
+
 
 // Initialize password stuff
 $(function() {
