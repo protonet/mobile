@@ -26,6 +26,7 @@ protonet.controls.ChannelSelector = (function() {
       
       // set form channel_id to correct value
       args.parent_widget.input_channel_id.val(channelId);
+      args.parent_widget.input_channel_id.trigger('change');
       
       return false;
     });
