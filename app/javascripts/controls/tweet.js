@@ -35,6 +35,8 @@ protonet.controls.Tweet = (function() {
       protonet.controls.TextExtension.render(messageContainer, this.text_extension);
     }
     
+    var scrollPosition = $(window).scrollTop();
+    
     this.channel_ul = $("#messages-for-channel-" + this.channel_id);
     this.channel_ul.prepend(this.list_element);
     
@@ -42,7 +44,6 @@ protonet.controls.Tweet = (function() {
      * Avoid user experience problems when user scrolls down to read a tweet while others are pushing
      * new tweets
      */
-    var scrollPosition = $(window).scrollTop();
     if (scrollPosition > 150) {
       $(window).scrollTop(scrollPosition + this.list_element.outerHeight(true));
     }

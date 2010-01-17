@@ -13,8 +13,8 @@ module ApplicationHelper
     str.gsub(/\n/, '<br />')
   end
   
-  def convert_to_gmt(str)
-    Time.at(str.to_i)
+  def convert_to_rfc(str)
+    Time.at(str.to_i).rfc2822
   end
   
   def auto_link_file_paths(str)

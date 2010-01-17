@@ -15,7 +15,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   
   loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
     new protonet.data.YQL.Query(
-      "SELECT * FROM html WHERE " + 
+      "SELECT content FROM html WHERE " + 
         "url='" + this.url + "' AND (xpath = '//meta[@name=\"description\"]' OR xpath='//title')"
     ).execute(
       this._onSuccess.bind(this, onSuccessCallback, onEmptyResultCallback),

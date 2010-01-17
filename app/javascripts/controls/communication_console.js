@@ -30,6 +30,10 @@ protonet.controls.CommunicationConsole = function(args) {
 
 protonet.controls.CommunicationConsole.prototype = {
   "sendTweetFromInput": function() {
+    if (!this.input.val()) {
+      return;
+    }
+    
     // render and send
     new protonet.controls.Tweet({
       "form": this.form,
