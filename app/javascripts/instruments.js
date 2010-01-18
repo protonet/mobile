@@ -39,7 +39,7 @@ $(function() {
   protonet.controls.PrettyDate.initialize();
   setInterval(function() {
     protonet.controls.PrettyDate.update();
-  }, 10000);
+  }, 30000);
 });
 
 
