@@ -2,11 +2,9 @@ protonet.utils.escapeHtml = (function() {
   var MAP = {
     '&': '&amp;',
     '<': '&lt;',
-    '>': '&gt;',
-    '"': '&#34;',
-    "'": '&#39;'
+    '>': '&gt;'
   };
   return function(str) {
-    return str.replace(/[&<>'"]/g, function(c) { return MAP[c]; });
+    return str.replace(/[&<>]/g, function(c) { return MAP[c]; });
   };
 })();
