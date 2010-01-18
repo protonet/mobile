@@ -92,7 +92,12 @@ protonet.controls.TextExtension.Input.prototype = {
   },
   
   _request: function() {
-    this.provider.loadData(this._render.bind(this), this.reset.bind(this), this.reset.bind(this));
+    this.provider.loadData(this._render.bind(this), this._unsupportedUrlReset.bind(this), this.reset.bind(this));
+  },
+  
+  _unsupportedUrlReset: function() {
+    this._lastUrl = this.url;
+    this.reset();
   },
   
   _render: function(data) {
