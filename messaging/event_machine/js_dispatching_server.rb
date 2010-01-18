@@ -7,8 +7,12 @@ require File.dirname(__FILE__) + '/modules/flash_server.rb'
 # awesome stuff happening here
 module JsDispatchingServer
   
+  @@online_users = {}
+  @@open_sockets = []
+  
   def post_init
     @key ||= rand(100000)
+    @@open_sockets << self
     log('post-init')
     log('opened')
   end
@@ -35,7 +39,28 @@ module JsDispatchingServer
   
   def unbind
     log("connection #{@key} closed")
+    @@open_sockets = @@open_sockets.reject {|s| s == self}
+    remove_from_online_users
     unbind_socket_from_queues
+  end
+  
+  def add_to_online_users
+    @@online_users[@user.id] ||= []
+    @@online_users[@user.id] << @key
+    data = {:x_target => "UserWidget.update", :online_users => @@online_users}.to_json + "\0"
+    @@open_sockets.each {|s| s.send_data(data)}
+    log(@@online_users.inspect)
+    Rails.cache.write("online_users", @@online_users)
+  end
+  
+  def remove_from_online_users
+    return unless @user
+    @@online_users[@user.id] = @@online_users[@user.id].reject {|socket_id| socket_id == @key}
+    @@online_users.delete(@user.id) if @@online_users[@user.id].empty?
+    data = {:x_target => "UserWidget.update", :online_users => @@online_users}.to_json + "\0"
+    @@open_sockets.each {|s| s.send_data(data)}
+    log(@@online_users.inspect)
+    Rails.cache.write("online_users", @@online_users)
   end
   
   def json_authenticate(auth_data)
@@ -44,10 +69,11 @@ module JsDispatchingServer
     potential_user = User.find(auth_data["user_id"])
     
     @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data["token"])
-    if potential_user
+    if @user
       log("authenticated #{potential_user.display_name}")
       send_data("#{{"x_target" => "socket_id", "socket_id" => "#{@key}"}.to_json}\0")
       bind_socket_to_queues
+      add_to_online_users
     else
       log("could not authenticate #{auth_data.inspect}")
     end

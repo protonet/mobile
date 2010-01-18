@@ -420,6 +420,11 @@ h2 {
   -webkit-user-select: none;
   -moz-user-select: none;
 }
+#user-list li.online {
+  background-image: url(/images/bullet_green.png);
+  background-repeat: no-repeat;
+  background-position: center right;
+}
 #user-list li > ul {
   display: none;
 }

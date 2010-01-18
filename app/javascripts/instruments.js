@@ -3,6 +3,7 @@
 //= require "controls/text_extension.js"
 //= require "controls/file_widget.js"
 //= require "controls/endless_scroller.js"
+//= require "controls/user_widget.js"
 //= require "controls/pretty_date.js"
 //= require "lib/jQuery.dPassword.js"
 
@@ -31,6 +32,11 @@ $(function() {
 // Initialize endless scrolling
 $(function() {
   new protonet.controls.EndlessScroller();
+});
+
+// Initialize user widget
+$(function() {
+  window.UserWidget = new protonet.controls.UserWidget();
 });
 
 
