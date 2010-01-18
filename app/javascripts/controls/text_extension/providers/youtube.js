@@ -5,6 +5,7 @@
  * YouTube Provider
  */
 protonet.controls.TextExtension.providers.YouTube = function(url) {
+  this.id = new Date().getTime() + Math.round(Math.random() * 1000);
   this.url = url;
   this.data = {};
   this._regExp = /youtube.com\/watch\?v\=([\w_-]*)/i;
@@ -57,7 +58,7 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
     event.preventDefault();
     event.stopPropagation();
     
-    var placeholderId = "text-extension-media";
+    var placeholderId = "text-extension-media-" + this.id;
     $(event.target).attr("id", placeholderId);
     $.getScript("http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js", function() {
       swfobject.embedSWF(
