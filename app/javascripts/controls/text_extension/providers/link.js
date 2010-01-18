@@ -37,7 +37,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     
     this.data = {
       description:  results.meta && results.meta.content,
-      title:        $.isArray(results.title) ? $.trim(results.title.join(" ")) : results.title,
+      title:        String(results.title || this.url.replace(/http.*?\:\/\/(www.)?/i, "")),
       type:         "Link",
       url:          this.url,
       thumbnail:    protonet.media.getScreenShot(this.url, "T")
@@ -68,7 +68,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     return $("<img />").attr({
       src: thumbnail,
       height: 70,
-      width: 90
+      width: 97
     });
   },
   
