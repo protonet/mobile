@@ -12,6 +12,11 @@ module System
         @mq ||= MQ.new
         @mq.topic(name)
       end
+      
+      def fanout(name)
+        @mq ||= MQ.new
+        @mq.fanout(name)
+      end
 
       def active?
         @mq ||= MQ.new
