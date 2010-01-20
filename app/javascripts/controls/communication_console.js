@@ -46,7 +46,7 @@ protonet.controls.CommunicationConsole.prototype = {
     
     this.input.val("");
     
-    this.text_extension_input.reset();
+    this.text_extension_input.submitted();
   },
   
   "sendTweetFromMessage": function(message) {

@@ -22,7 +22,7 @@ protonet.controls.TextExtension.Input.prototype = {
   _initEvents: function() {
     this.input.bind("paste", this._paste.bind(this));
     this.input.bind("keyup", this._keyUp.bind(this));
-    this.removeLink.bind("click", this._remove.bind(this));
+    this.removeLink.bind("click", this._cancel.bind(this));
   },
   
   _paste: function() {
@@ -40,7 +40,7 @@ protonet.controls.TextExtension.Input.prototype = {
     }
   },
   
-  _remove: function(event) {
+  _cancel: function(event) {
     event.preventDefault();
     
     this._lastUrl = this.url;
@@ -150,7 +150,14 @@ protonet.controls.TextExtension.Input.prototype = {
     return url;
   },
   
+  submitted: function() {
+    this.provider.cancel();
+    this.reset();
+  },
+  
   reset: function() {
+    this.container.stop();
+    
     if (this.container.is(":visible")) {
       this._hide();
     }

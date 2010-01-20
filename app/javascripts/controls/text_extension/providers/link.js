@@ -28,6 +28,10 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   },
   
   _onSuccess: function(onSuccessCallback, onEmptyResultCallback, response) {
+    if (this._canceled) {
+      return;
+    }
+    
     console.log("YQL diagnostics: ", response.query.diagnostics);
     
     var results = response.query.results;
@@ -47,6 +51,10 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   },
   
   _onError: function(onErrorCallback, response) {
+    if (this._canceled) {
+      return;
+    }
+    
     console.log("YQL Timeout.");
     
     onErrorCallback(response);
@@ -74,5 +82,9 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   
   getMediaCallback: function() {
     return function() {};
+  },
+  
+  cancel: function() {
+    this._canceled = true;
   }
 };

@@ -33,6 +33,10 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
   },
   
   _onSuccess: function(onSuccessCallback, onEmptyResultCallback, response) {
+    if (this._canceled) {
+      return;
+    }
+    
     var entry = response.entry;
     if (!entry) {
       return onEmptyResultCallback(response);
@@ -51,6 +55,10 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
   },
   
   _onError: function(onErrorCallback, response) {
+    if (this._canceled) {
+      return;
+    }
+    
     onErrorCallback(response);
   },
   
@@ -94,6 +102,10 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
   
   getMediaCallback: function() {
     return this._showVideo.bind(this);
+  },
+  
+  cancel: function() {
+    this._canceled = true;
   }
 };
 

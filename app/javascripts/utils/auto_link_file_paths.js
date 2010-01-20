@@ -17,7 +17,7 @@ protonet.utils.autoLinkFilePaths = (function() {
       var fileName = extractFileName(path);
 
       return fileName
-        ? ('<a href="' + path + '" target="_blank">' + fileName.truncate(MAX_DISPLAY_LENGTH) + '</a>')
+        ? ('<a href="' + path + '">' + fileName.truncate(MAX_DISPLAY_LENGTH) + '</a>')
         : match;
     });
   }
