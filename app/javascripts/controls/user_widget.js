@@ -11,7 +11,7 @@ protonet.controls.UserWidget = (function() {
   
   UserWidget.prototype = {
     "update": function(data) {
-      online_users = data["online_users"];
+      var online_users = data["online_users"];
       for(var i in this.user_objects) {
         var current_dom_object = this.user_objects[i];
         if(online_users[i]) {
