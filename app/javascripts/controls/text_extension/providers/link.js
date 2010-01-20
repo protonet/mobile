@@ -14,12 +14,13 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   },
   
   loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
+    var yqlCallback = this._yqlCallback.bind(this, onSuccessCallback);
+    
     new protonet.data.YQL.Query(
       "SELECT content FROM html WHERE " + 
         "url='" + this.url + "' AND (xpath = '//meta[@name=\"description\"]' OR xpath='//title')"
     ).execute(
-      this._onSuccess.bind(this, onSuccessCallback, onEmptyResultCallback),
-      this._onError.bind(this, onErrorCallback)
+      yqlCallback, yqlCallback
     );
   },
   
@@ -27,17 +28,12 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     this.data = data;
   },
   
-  _onSuccess: function(onSuccessCallback, onEmptyResultCallback, response) {
+  _yqlCallback: function(onSuccessCallback, response) {
     if (this._canceled) {
       return;
     }
     
-    console.log("YQL diagnostics: ", response.query.diagnostics);
-    
-    var results = response.query.results;
-    if (!results) {
-      return onEmptyResultCallback(response);
-    }
+    var results = (response && response.query && response.query.results) || {};
     
     this.data = {
       description:  results.meta && results.meta.content,
@@ -48,16 +44,6 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     };
     
     onSuccessCallback(this.data);
-  },
-  
-  _onError: function(onErrorCallback, response) {
-    if (this._canceled) {
-      return;
-    }
-    
-    console.log("YQL Timeout.");
-    
-    onErrorCallback(response);
   },
   
   getDescription: function() {
