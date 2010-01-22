@@ -28,7 +28,9 @@ module JsDispatchingServer
     if data.is_a?(Hash) && data["operation"] == "authenticate"
       log("auth json: #{data["payload"].inspect}")
       if json_authenticate(data["payload"]) && !@subscribed
-        bind_socket_to_queues
+        bind_socket_to_system_queue
+        bind_socket_to_user_queues
+        add_to_online_users
       end
     else
       # play echoserver if request could not be understood
@@ -47,22 +49,27 @@ module JsDispatchingServer
   def add_to_online_users
     @@online_users[@user.id] ||= []
     @@online_users[@user.id] << @key
-    data = {:x_target => "UserWidget.update", :online_users => @@online_users}.to_json + "\0"
-    @@open_sockets.each {|s| s.send_data(data)}
+    send_online_user
     log(@@online_users.inspect)
-    Rails.cache.write("online_users", @@online_users)
   end
   
   def remove_from_online_users
     return unless @user
     @@online_users[@user.id] = @@online_users[@user.id].reject {|socket_id| socket_id == @key}
     @@online_users.delete(@user.id) if @@online_users[@user.id].empty?
-    data = {:x_target => "UserWidget.update", :online_users => @@online_users}.to_json + "\0"
-    @@open_sockets.each {|s| s.send_data(data)}
+    send_online_user
     log(@@online_users.inspect)
-    Rails.cache.write("online_users", @@online_users)
   end
   
+  def send_online_user
+    data = {:x_target => "UserWidget.update", :online_users => @@online_users}.to_json
+    amq = MQ.new
+    amq.topic("system").publish(data, :key => "system.user")
+    # due to some weird behaviour when calling publish
+    # we need to send the data directly to the current socket
+    send_data(data + "\0")    
+  end
+
   def json_authenticate(auth_data)
     return false if auth_data.nil?
     return false if auth_data["user_id"] == 0
@@ -72,15 +79,24 @@ module JsDispatchingServer
     if @user
       log("authenticated #{potential_user.display_name}")
       send_data("#{{"x_target" => "socket_id", "socket_id" => "#{@key}"}.to_json}\0")
-      bind_socket_to_queues
-      add_to_online_users
     else
       log("could not authenticate #{auth_data.inspect}")
     end
   end
-  
-  def bind_socket_to_queues
-    @queues = []
+
+  def bind_socket_to_system_queue
+    @queues ||= []
+    amq = MQ.new
+    queue = amq.queue("system-queue-#{@key}", :auto_delete => true)
+    queue.bind(amq.topic('system'), :key => 'system.#').subscribe do |msg|
+      send_data(msg + "\0")
+      log("got system message: #{msg.inspect}")
+    end
+    @queues << queue
+  end
+
+  def bind_socket_to_user_queues
+    @queues ||= []
     amq = MQ.new
     @user.channels.each do |channel|
       channel_queue = amq.queue("consumer-#{@key}-channel.a#{channel.id}", :auto_delete => true)
