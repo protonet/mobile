@@ -35,11 +35,11 @@ protonet.utils.convertToPrettyDate = (function() {
     }
     
     if (difference < ONE_HOUR) {
-      return prepareOutput(MINUTES_AGO, Math.floor(difference / 60));
+      return prepareOutput(MINUTES_AGO, Math.floor(difference / ONE_MINUTE));
     }
     
     if (difference < ONE_DAY) {
-      return prepareOutput(HOURS_AGO, Math.floor(difference / 60 / 60));
+      return prepareOutput(HOURS_AGO, Math.floor(difference / ONE_HOUR));
     }
     
     if (difference < TWO_DAYS) {
@@ -47,13 +47,13 @@ protonet.utils.convertToPrettyDate = (function() {
     }
     
     if (difference < ONE_WEEK) {
-      return prepareOutput(DAYS_AGO, Math.floor(difference / 60 / 60 / 24));
+      return prepareOutput(DAYS_AGO, Math.floor(difference / ONE_DAY));
     }
     
     if (difference < ONE_MONTH) {
-      return prepareOutput(WEEKS_AGO, Math.ceil(difference / 60 / 60 / 24 / 7));
+      return prepareOutput(WEEKS_AGO, Math.ceil(difference / ONE_WEEK));
     }
     
-    return backThen.toLocaleString();
+    return date.toLocaleString();
   };
 })();
