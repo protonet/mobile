@@ -96,17 +96,17 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
   
   getMedia: function() {
     var thumbnail = this.data.thumbnail,
-        img = $("<img />");
-    img.attr({
-      src: thumbnail.url,
-      height: thumbnail.height,
-      width: thumbnail.width
-    });
-    return img;
-  },
-  
-  getMediaCallback: function() {
-    return this._showVideo.bind(this);
+        anchor = $("<a />", {
+          href: this.url,
+          target: "_blank"
+        }),
+        img = $("<img />", {
+          src: thumbnail.url,
+          height: thumbnail.height,
+          width: thumbnail.width
+        });
+    anchor.click(this._showVideo.bind(this));
+    return anchor.append(img);
   },
   
   cancel: function() {

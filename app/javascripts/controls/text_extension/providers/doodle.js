@@ -57,10 +57,6 @@ protonet.controls.TextExtension.providers.Doodle.prototype = {
     return iframe;
   },
   
-  getMediaCallback: function() {
-    return function() {};
-  },
-  
   cancel: function() {
     this._canceled = true;
   }

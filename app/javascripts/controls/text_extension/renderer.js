@@ -17,10 +17,8 @@ protonet.controls.TextExtension.Renderer = function(container, data, provider) {
   results.find(".title").html(title);
   results.find(".type").html(type);
   results.find("a.link").attr("href", data.url);
+  results.find(".media").html(provider.getMedia());
   results.addClass(data.type);
-  results.find(".media")
-    .html(provider.getMedia())
-    .click(provider.getMediaCallback());
   
   container.append(results);
   

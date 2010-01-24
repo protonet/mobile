@@ -58,16 +58,17 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   },
   
   getMedia: function() {
-    var thumbnail = this.data.thumbnail;
-    return $("<img />").attr({
-      src: thumbnail,
-      height: 70,
-      width: 97
-    });
-  },
-  
-  getMediaCallback: function() {
-    return function() {};
+    var thumbnail = this.data.thumbnail,
+        anchor = $("<a />", {
+          href: this.url,
+          target: "_blank"
+        }),
+        img = $("<img />", {
+          src: thumbnail,
+          height: 70,
+          width: 97
+        });
+    return anchor.append(img);
   },
   
   cancel: function() {

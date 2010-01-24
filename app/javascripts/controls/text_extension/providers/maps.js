@@ -52,10 +52,6 @@ protonet.controls.TextExtension.providers.Maps.prototype = {
     return iframe;
   },
   
-  getMediaCallback: function() {
-    return function() {};
-  },
-  
   cancel: function() {
     this._canceled = true;
   }

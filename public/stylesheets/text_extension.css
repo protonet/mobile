@@ -70,18 +70,26 @@
   overflow: hidden;
 }
 
-.text-extension-results li:first-child {
+.text-extension-results .media {
   margin: 0 10px 0 0;
   float: left;
   position: relative;
+  line-height: 0;
 }
 
-.text-extension-results a.media {
-  background-color: rgb(200, 200, 200);
-  float: left;
-  border: 1px solid #999;
+.text-extension-results .media a {
   line-height: 0;
-  text-decoration: none;
+}
+
+.text-extension-results .media iframe {
+  border: 0;
+  width: 447px;
+  height: 170px;
+}
+
+#text-extension-preview .text-extension-results .media iframe {
+  width: 590px;
+  height: 170px;
 }
 
 .text-extension-results a.title {
@@ -120,7 +128,7 @@
   width: 447px;
 }
 
-.text-extension-results.YouTube a.media:after {
+.text-extension-results.YouTube .media a:after {
   content: "\25BA";
   color: #fff;
   position: absolute;
@@ -137,32 +145,10 @@
   text-shadow: 2px 2px 2px #000;
 }
 
-.text-extension-results.YouTube a.media:hover:after {
+.text-extension-results.YouTube .media a:hover:after {
   opacity: 0.9;
 }
 
-.text-extension-results.YouTube a.media:active:after {
+.text-extension-results.YouTube .media a:active:after {
   opacity: 0.7;
-}
-
-/* Doodle Provider */
-.text-extension-results.Doodle iframe {
-	width: 445px;
-	height: 180px;
-}
-
-#text-extension-preview .text-extension-results.Doodle iframe {
-	width: 588px;
-	height: 180px;
-}
-
-/* Maps Provider */
-.text-extension-results.Maps iframe {
-	width: 445px;
-	height: 180px;
-}
-
-#text-extension-preview .text-extension-results.Maps iframe {
-	width: 588px;
-	height: 180px;
 }
