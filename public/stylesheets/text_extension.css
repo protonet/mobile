@@ -150,3 +150,19 @@
 	width: 445px;
 	height: 180px;
 }
+
+#text-extension-preview .text-extension-results.Doodle iframe {
+	width: 588px;
+	height: 180px;
+}
+
+/* Maps Provider */
+.text-extension-results.Maps iframe {
+	width: 445px;
+	height: 180px;
+}
+
+#text-extension-preview .text-extension-results.Maps iframe {
+	width: 588px;
+	height: 180px;
+}
