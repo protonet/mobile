@@ -144,3 +144,9 @@
 .text-extension-results.YouTube a.media:active:after {
   opacity: 0.7;
 }
+
+/* Doodle Provider */
+.text-extension-results.Doodle iframe {
+	width: 445px;
+	height: 180px;
+}

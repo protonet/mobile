@@ -8,7 +8,7 @@ protonet.controls.TextExtension.providers.YouTube = function(url) {
   this.id = new Date().getTime() + Math.round(Math.random() * 1000);
   this.url = url;
   this.data = {};
-  this._regExp = /youtube.com\/watch\?v\=([\w_-]*)/i;
+  this._regExp = /youtube\.com\/watch\?v\=([\w_-]*)/i;
 };
 
 protonet.controls.TextExtension.providers.YouTube.prototype = {
@@ -44,8 +44,9 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
     
     this.data = {
       description:  entry["media$group"]["media$description"]["$t"],
-      duration:     entry["media$group"]["yt$duration"].seconds,
+      duration:     entry["media$group"]["yt$duration"].seconds, 
       thumbnail:    entry["media$group"]["media$thumbnail"][0],
+      embeddable:   !entry["yt$noembed"],
       title:        entry["media$group"]["media$title"]["$t"],
       type:         "YouTube",
       url:          this.url
@@ -63,6 +64,10 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
   },
   
   _showVideo: function(event) {
+    if (!this.data.embeddable) {
+      return;
+    }
+    
     event.preventDefault();
     event.stopPropagation();
     
@@ -85,7 +90,7 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
   
   getTitle: function() {
     var seconds = protonet.utils.formatSeconds(this.data.duration),
-        title = String(this.data.title).truncate(70) + " <span>(" + seconds + ")</span>";
+        title = String(this.data.title).truncate(70) + " (" + seconds + ")";
     return title;
   },
   
