@@ -151,7 +151,7 @@ protonet.controls.TextExtension.Input.prototype = {
   },
   
   submitted: function() {
-    this.provider.cancel();
+    this.provider && this.provider.cancel();
     this.reset();
   },
   
