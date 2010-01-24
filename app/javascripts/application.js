@@ -1,5 +1,4 @@
 //= require "lib/jquery-1.4.min.js"
-//= require "lib/jquery.hotkeys-0.7.9.min.js"
 //= require "extensions.js"
 //= require "protonet.js"
 //= require "controls/navigation.js"

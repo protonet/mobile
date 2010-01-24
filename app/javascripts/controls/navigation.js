@@ -1,3 +1,6 @@
+//= require "../lib/jquery.hotkeys-0.7.9.min.js"
+//= require "../user/browser.js"
+
 protonet.controls.Navigation = {
   TEMPLATE_URL: "/navigation",
   _visible: false,
@@ -13,6 +16,7 @@ protonet.controls.Navigation = {
       success: function(response){
         $("body").append(response);
         this._initElements();
+        this._initShortcut();
         this._initEvents();
       }.bind(this)
     });
@@ -25,14 +29,13 @@ protonet.controls.Navigation = {
   },
   
   _initEvents: function() {
-    $(document).bind("keydown", "alt+space", function(event) {
+    $(document).bind("keydown", this._shortcut, function(event) {
       this.toggle();
       event.preventDefault();
       event.stopPropagation();
     }.bind(this));
-    $(document).bind("keydown", "esc", function(event) {
-      this.hide();
-    }.bind(this));
+    
+    $(document).bind("keydown", "esc", this.hide.bind(this));
     
     this._link.bind("click", function(event) {
       event.preventDefault();
@@ -40,15 +43,20 @@ protonet.controls.Navigation = {
     }.bind(this));
     
     // send user to link defined by <a href=
-    this._container.find('li').click(function(event) {
+    this._container.find("li").click(function(event) {
       if ($(this).hasClass("disabled")) {
         event.preventDefault();
         event.stopPropagation();
         return;
       }
       
-      document.location = $(this).find('a')[0].href;
+      document.location = $(this).find("a").attr("href");
     });
+  },
+  
+  _initShortcut: function() {
+    this._shortcut = protonet.user.Browser.IS_ON_WINDOWS() ? "ctrl+space" : "alt+space";
+    this._link.find(".shortcut").html("[" + this._shortcut.toUpperCase() + "]");
   },
   
   toggle: function() {

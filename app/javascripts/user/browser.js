@@ -35,5 +35,9 @@ protonet.user.Browser = {
   SUPPORTS_HTML5_DRAG_AND_DROP: function() {
     var testElement = $("<div />")[0];
     return "ondragenter" in testElement;
+  },
+  
+  IS_ON_WINDOWS: function() {
+    return navigator.userAgent.indexOf("Windows") != -1;
   }
 };
