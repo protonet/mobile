@@ -46,7 +46,7 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
       description:  entry["media$group"]["media$description"]["$t"],
       duration:     entry["media$group"]["yt$duration"].seconds, 
       thumbnail:    entry["media$group"]["media$thumbnail"][0],
-      embeddable:   !entry["yt$noembed"],
+      noembed:      !!entry["yt$noembed"],
       title:        entry["media$group"]["media$title"]["$t"],
       type:         "YouTube",
       url:          this.url
@@ -64,7 +64,7 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
   },
   
   _showVideo: function(event) {
-    if (!this.data.embeddable) {
+    if (this.data.noembed) {
       return;
     }
     
