@@ -47,7 +47,7 @@ protonet.controls.TextExtension.providers.Maps.prototype = {
   
   getMedia: function() {
     var url = this.url + "&output=embed",
-        iframe = $("<iframe />").attr({ src: url });
+        iframe = $("<iframe />", { src: url });
     
     return iframe;
   },

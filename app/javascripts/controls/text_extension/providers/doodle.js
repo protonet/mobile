@@ -48,7 +48,7 @@ protonet.controls.TextExtension.providers.Doodle.prototype = {
   getMedia: function() {
     var interval,
         url = "http://www.doodle.com/summary.html?pollId=" + this._extractId(),
-        iframe = $("<iframe />").attr({ src: url });
+        iframe = $("<iframe />", { src: url });
     
     interval = setInterval(function() {
       iframe.is(":visible") ? iframe.attr("src", url) : clearInterval(interval);
