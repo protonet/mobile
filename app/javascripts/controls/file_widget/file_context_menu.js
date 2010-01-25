@@ -26,7 +26,7 @@ protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
         downloadPath = this.parent.getDownloadPathFor(fileName);
     location.href = downloadPath;
     
-    console.log('download: ' + filePath);
+    console.log('download: ' + downloadPath);
   },
   
   "delete": function(el) {

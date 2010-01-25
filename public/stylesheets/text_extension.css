@@ -83,6 +83,7 @@
 
 .text-extension-results .media a {
   line-height: 0;
+  text-decoration: none !important;
 }
 
 .text-extension-results .media iframe {
@@ -148,7 +149,6 @@
   width: 80px;
   text-align: center;
   margin: -30px 0 0 -30px;
-  text-decoration: none;
   line-height: 60px;
   font-size: 50px;
   opacity: 0.7;
