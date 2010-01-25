@@ -42,7 +42,7 @@ protonet.controls.TextExtension.providers.XING.prototype = {
       title:        String(results.title),
       type:         "XING",
       url:          this.url,
-      thumbnail:    "http://www.xing.com" + (results.img && results.img.src.replace(".jpg", "_s3.jpg") || "/img/users/nobody_m_s3.gif")
+      thumbnail:    "http://www.xing.com" + (results.img && results.img.src.replace(/(\,\d)*?\.jpg/, "_s3.jpg") || "/img/users/nobody_m_s3.gif")
     };
     
     onSuccessCallback(this.data);
