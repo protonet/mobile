@@ -73,10 +73,16 @@ protonet.controls.TextExtension.providers.Vimeo.prototype = {
     var placeholderId = "text-extension-media-" + this.id;
     $(event.target).attr("id", placeholderId);
     $.getScript("http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js", function() {
+      var params = {
+        allowfullscreen: true,
+        wmode: "opaque"
+      };
+      
       swfobject.embedSWF(
-        "http://vimeo.com/moogaloop.swf?clip_id=" + this._extractId() + "&server=vimeo.com&show_title=1&fullscreen=1",
+        "http://vimeo.com/moogaloop.swf?clip_id=" + this._extractId() + "&server=vimeo.com&show_title=1&show_byline=1&show_portrait=0&color=&fullscreen=1",
         placeholderId,
-        "auto", "auto", "8"
+        "auto", "auto", "8",
+        null, {}, params
       );
     }.bind(this));
   },
@@ -84,7 +90,7 @@ protonet.controls.TextExtension.providers.Vimeo.prototype = {
   getDescription: function() {
     var description = this.data.description;
     description = description || this.url;
-    return String(description).truncate(75);
+    return String(description).truncate(200);
   },
   
   getTitle: function() {

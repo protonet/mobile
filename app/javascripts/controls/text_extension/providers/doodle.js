@@ -52,7 +52,7 @@ protonet.controls.TextExtension.providers.Doodle.prototype = {
     
     interval = setInterval(function() {
       iframe.is(":visible") ? iframe.attr("src", url) : clearInterval(interval);
-    }, 30000);
+    }, 60000);
     
     return iframe;
   },

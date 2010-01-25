@@ -108,7 +108,7 @@
 }
 
 .text-extension-results a.description {
-  color: rgb(150, 150, 150);
+  color: rgb(120, 120, 120);
   min-width: 200px;
 }
 
@@ -121,19 +121,22 @@
 }
 
 
-/* YouTube/Vimeo Provider */
+/* YouTube/Vimeo/Slideshare Provider */
+#text-extension-preview .text-extension-results.Slideshare object,
 #text-extension-preview .text-extension-results.Vimeo object,
 #text-extension-preview .text-extension-results.YouTube object {
   width: 590px;
   height: 280px;
 }
 
+.text-extension-results.Slideshare object,
 .text-extension-results.Vimeo object,
 .text-extension-results.YouTube object {
   height: 280px;
   width: 447px;
 }
 
+.text-extension-results.Slideshare .media a:after,
 .text-extension-results.Vimeo .media a:after,
 .text-extension-results.YouTube .media a:after {
   content: "\25BA";
@@ -152,11 +155,13 @@
   text-shadow: 2px 2px 2px #000;
 }
 
+.text-extension-results.Slideshare .media a:hover:after,
 .text-extension-results.Vimeo .media a:hover:after,
 .text-extension-results.YouTube .media a:hover:after {
   opacity: 0.9;
 }
 
+.text-extension-results.Slideshare .media a:active:after,
 .text-extension-results.Vimeo .media a:active:after,
 .text-extension-results.YouTube .media a:active:after {
   opacity: 0.7;

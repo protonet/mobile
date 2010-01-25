@@ -1,28 +1,24 @@
-//= require "../../../data/youtube.js"
-//= require "../../../utils/format_seconds.js"
+//= require "../../../lib/webtoolkit.sha1.js"
+//= require "../../../data/slideshare.js"
 
 /**
- * YouTube Provider
+ * Slideshare Provider
  */
-protonet.controls.TextExtension.providers.YouTube = function(url) {
+protonet.controls.TextExtension.providers.Slideshare = function(url) {
   this.id = new Date().getTime() + Math.round(Math.random() * 1000);
   this.url = url;
   this.data = {};
-  this._regExp = /youtube\.com\/watch\?v\=([\w_-]*)/i;
+  this._regExp = /slideshare\.net\/[\w-]+?\/[\w-]+?$/i;
 };
 
-protonet.controls.TextExtension.providers.YouTube.prototype = {
+protonet.controls.TextExtension.providers.Slideshare.prototype = {
   match: function() {
     return this._regExp.test(this.url);
   },
   
-  _extractId: function() {
-    return this.url.match(this._regExp)[1];
-  },
-  
   loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
-    protonet.data.YouTube.getVideo(
-      this._extractId(),
+    protonet.data.SlideShare.getSlideShow(
+      this.url,
       this._onSuccess.bind(this, onSuccessCallback, onEmptyResultCallback),
       this._onError.bind(this, onErrorCallback)
     );
@@ -37,18 +33,17 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
       return;
     }
     
-    var entry = response.entry;
+    var entry = response.query && response.query.results && response.query.results.Slideshow;
     if (!entry) {
       return onEmptyResultCallback(response);
     }
     
     this.data = {
-      description:  entry["media$group"]["media$description"]["$t"],
-      duration:     entry["media$group"]["yt$duration"].seconds, 
-      thumbnail:    entry["media$group"]["media$thumbnail"][0],
-      noembed:      !!entry["yt$noembed"],
-      title:        entry["media$group"]["media$title"]["$t"],
-      type:         "YouTube",
+      description:  entry.Description,
+      thumbnail:    entry.ThumbnailSmallURL,
+      title:        entry.Title,
+      type:         "Slideshare",
+      embed_url:    $(entry.Embed).find("param[name=movie]").attr("value"), 
       url:          this.url
     };
     
@@ -64,10 +59,6 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
   },
   
   _showVideo: function(event) {
-    if (this.data.noembed) {
-      return;
-    }
-    
     event.preventDefault();
     event.stopPropagation();
     
@@ -80,7 +71,7 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
       };
       
       swfobject.embedSWF(
-        "http://www.youtube.com/v/" + this._extractId() + "?playerapiid=ytplayer&autoplay=1&egm=0&hd=1&showinfo=0&rel=0",
+        this.data.embed_url,
         placeholderId,
         "auto", "auto", "8",
         null, {}, params
@@ -95,9 +86,7 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
   },
   
   getTitle: function() {
-    var seconds = protonet.utils.formatSeconds(this.data.duration),
-        title = String(this.data.title).truncate(70) + " (" + seconds + ")";
-    return title;
+    return String(this.data.title).truncate(70);
   },
   
   getMedia: function() {
@@ -107,9 +96,9 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
           target: "_blank"
         }),
         img = $("<img />", {
-          src: thumbnail.url,
-          height: thumbnail.height,
-          width: thumbnail.width
+          src: thumbnail,
+          height: 90,
+          width: 120
         });
     anchor.click(this._showVideo.bind(this));
     return anchor.append(img);

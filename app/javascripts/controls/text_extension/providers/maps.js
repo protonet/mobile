@@ -19,7 +19,7 @@ protonet.controls.TextExtension.providers.Maps.prototype = {
   
   _extractQuery: function() {
     var match = this.url.match(/&q=(.+?)&/i);
-    return match && match[1];
+    return match && decodeURIComponent(match[1].replace(/\+/g, " "));
   },
   
   loadData: function(onSuccessCallback) {

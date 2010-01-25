@@ -55,7 +55,7 @@ protonet.controls.Navigation = {
   },
   
   _initShortcut: function() {
-    this._shortcut = protonet.user.Browser.IS_ON_WINDOWS() ? "ctrl+space" : "alt+space";
+    this._shortcut = protonet.user.Browser.IS_ON_WINDOWS() || protonet.user.Browser.IS_ON_UBUNTU() ? "ctrl+space" : "alt+space";
     this._link.find(".shortcut").html("[" + this._shortcut.toUpperCase() + "]");
   },
   

@@ -1,5 +1,5 @@
 protonet.utils.autoLink = (function() {
-  var REG_EXP = /(\S+\.{1}[^\s\,\.\!]+)/g,
+  var REG_EXP = /(https?:\/\/[-\w\.]+:?\/[\w\/_\.-]*(\?\S+)?)/gi, // old /(\S+\.{1}[^\s\,\.\!]+)/g
       MAX_DISPLAY_LENGTH = 40;
   
   return function(str) {

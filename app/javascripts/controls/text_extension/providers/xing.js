@@ -1,24 +1,26 @@
 //= require "../../../data/yql.js"
-//= require "../../../media/get_screenshot.js"
 
 /**
- * WebLink Provider
+ * XING Profile Provider
  */
-protonet.controls.TextExtension.providers.Link = function(url) {
+protonet.controls.TextExtension.providers.XING = function(url) {
   this.url = url;
+  this._regExp = /xing\.com\/profile\/(.+?)[^\?]/i;
 };
 
-protonet.controls.TextExtension.providers.Link.prototype = {
+protonet.controls.TextExtension.providers.XING.prototype = {
   match: function() {
-    return !!this.url;
+    return this._regExp.test(this.url);
   },
+  
+  
   
   loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
     var yqlCallback = this._yqlCallback.bind(this, onSuccessCallback);
     
     new protonet.data.YQL.Query(
-      "SELECT content FROM html WHERE " + 
-        "url='" + this.url + "' AND (xpath='//meta[@name=\"description\"]' OR xpath='//title')"
+      "SELECT content, src FROM html WHERE " + 
+        "url='" + this.url + "' AND (xpath='//meta[@name=\"description\"]' OR xpath='//title' OR xpath='//img[@id=\"photo\"]')"
     ).execute(
       yqlCallback, yqlCallback
     );
@@ -37,10 +39,10 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     
     this.data = {
       description:  results.meta && results.meta.content,
-      title:        String(results.title || this.url.replace(/http.*?\:\/\/(www.)?/i, "")),
-      type:         "Link",
+      title:        String(results.title),
+      type:         "XING",
       url:          this.url,
-      thumbnail:    protonet.media.getScreenShot(this.url, "T")
+      thumbnail:    "http://www.xing.com" + (results.img && results.img.src.replace(".jpg", "_s3.jpg") || "/img/users/nobody_m_s3.gif")
     };
     
     onSuccessCallback(this.data);
@@ -65,8 +67,8 @@ protonet.controls.TextExtension.providers.Link.prototype = {
         }),
         img = $("<img />", {
           src: thumbnail,
-          height: 70,
-          width: 97
+          height: 93,
+          width: 70
         });
     return anchor.append(img);
   },
