@@ -10,20 +10,54 @@ protonet.controls.UserWidget = (function() {
   };
   
   UserWidget.prototype = {
+    // note to self: a more performant version would be:
+    // send an integer identifier (update 102923)
+    // if I received (update - 1) just do an incremental udpate
+    // this would ensure data integrity and be very fast ;)
     "update": function(data) {
       var online_users = data["online_users"];
+
       for(var i in this.user_objects) {
         var current_dom_object = this.user_objects[i];
-        if(online_users[i]) {
-          if(!current_dom_object.hasClass("online")) {
-            current_dom_object.addClass("online");
-          }
-        } else {
-          current_dom_object.removeClass("online");
+        var css_class = this.cssClassForConnections(online_users[i]);
+        if(!current_dom_object.hasClass(css_class)) {
+          current_dom_object.attr("class", css_class);
+        }
+      }
+      
+      this.sortEntries();
+    },
+    
+    "cssClassForConnections": function(sockets) {
+      if(!sockets) return 'offline';
+      
+      for(var x in sockets) {
+        var socket = sockets[x][1];
+        switch(socket)
+        {
+        case 'web':
+          type = "online";
+          break;
+        case 'api':
+          type = "api";
+          break;
+        }
+        // web trumps socket, break if the user has a web connection
+        if(type == 'web') break;
+      };
+      return type;
+    },
+    
+    "sortEntries": function() {
+      var user_list = $("#user-list ul.root");
+      console.log(this.user_objects);
+      for(var e in this.user_objects) {
+        if(this.user_objects[e].attr('class').match(/online/)) {
+          user_list.prepend(this.user_objects[e]);
         }
       };
     }
-  };
+   };
   
   return UserWidget;
   

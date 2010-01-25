@@ -39,7 +39,7 @@ DispatchingSystem.prototype = {
   },
 
   "authenticateUser": function() {
-    json_request = {"operation": "authenticate", "payload": {"user_id": this.user_id, "token": this.user_auth_token}};
+    json_request = {"operation": "authenticate", "payload": {"user_id": this.user_id, "token": this.user_auth_token, "type": "web"}};
     this.sendMessage(JSON.stringify(json_request));
   },
 
