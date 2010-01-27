@@ -35,15 +35,10 @@ protonet.controls.TextExtension.providers.GIST.prototype = {
   },
     
   getDescription: function() {
-    // var description = this.data.description;
-    // description = description || this.url;
-    // return String('description').truncate(200);
     return "";
   },
   
   getTitle: function() {
-    // var title = this.data.title;
-    // return String('title').truncate(75);
     return "";
   },
   
