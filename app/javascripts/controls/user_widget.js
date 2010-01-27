@@ -55,6 +55,21 @@ protonet.controls.UserWidget = (function() {
           user_list.prepend(this.user_objects[e]);
         }
       };
+    },
+    
+    "updateWritingStatus": function(data) {
+      var user_id = data["data"]["user_id"];
+      var status  = data["data"]["status"];
+      var current_dom_object = this.user_objects[user_id];
+      if(current_dom_object && status == "writing") {
+        if(!current_dom_object.hasClass("writing")) {
+          current_dom_object.attr("class", "writing");
+        }
+      } else {
+        if(!current_dom_object.hasClass("online")) {
+          current_dom_object.attr("class", "online");
+        }
+      }
     }
    };
   

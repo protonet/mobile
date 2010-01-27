@@ -25,6 +25,10 @@ module JsDispatchingServer
       log("JSON PARSE ERROR! was this intended?")
       data
     end
+    handle_received_json(data)
+  end
+  
+  def handle_received_json(data)
     if data.is_a?(Hash) && data["operation"] == "authenticate"
       log("auth json: #{data["payload"].inspect}")
       if json_authenticate(data["payload"]) && !@subscribed
@@ -34,6 +38,8 @@ module JsDispatchingServer
         bind_socket_to_user_queues
         add_to_online_users
       end
+    elsif @user && data.is_a?(Hash) && data["operation"].match(/^user\.(.*)/)
+      update_user_status($1)
     else
       # play echoserver if request could not be understood
       send_data(data)
@@ -64,7 +70,8 @@ module JsDispatchingServer
   def add_to_online_users
     @@online_users[@user.id] ||= []
     @@online_users[@user.id] << [@key, @type]
-    send_online_user
+    data = {:x_target => "UserWidget.update", :online_users => @@online_users}.to_json
+    send_user_data(data)
     log(@@online_users.inspect)
   end
   
@@ -72,18 +79,22 @@ module JsDispatchingServer
     return unless @user
     @@online_users[@user.id] = @@online_users[@user.id].reject {|socket_id, _| socket_id == @key}
     @@online_users.delete(@user.id) if @@online_users[@user.id].empty?
-    send_online_user
+    data = {:x_target => "UserWidget.update", :online_users => @@online_users}.to_json
+    send_user_data(data)
     log(@@online_users.inspect)
   end
   
-  def send_online_user
-    data = {:x_target => "UserWidget.update", :online_users => @@online_users}.to_json
+  def update_user_status(status)
+    data = {:x_target => "UserWidget.updateWritingStatus", :data => {:user_id => @user.id, :status => status}}.to_json
+    send_user_data(data)
+  end
+  
+  def send_user_data(data)
     amq = MQ.new
     amq.topic("system").publish(data, :key => "system.user")
     # due to some weird behaviour when calling publish
     # we need to send the data directly to the current socket
     send_data(data + "\0")
-    log("got system message: #{data.inspect}")
   end
 
   def bind_socket_to_system_queue

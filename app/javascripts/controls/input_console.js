@@ -16,6 +16,7 @@ protonet.controls.InputConsole = function(args) {
   this.last_command_blob  = null;
   this.previousValue      = "";
   this.command_hash       = {};
+  this.writing            = false;
   
   this.initEvents();
 };
@@ -89,6 +90,8 @@ protonet.controls.InputConsole.prototype = {
       previousCharacter = currentValue.substr(selectionIndex - 1, 1);
       currentCharacter  = currentValue.substr(selectionIndex, 1);
     }
+    
+    this.sendWriteNotification(selectionIndex);
     
     // console.log("prev", previousCharacter, 'current', currentCharacter);
     // console.log(selectionIndex, selectionEndsAt);
@@ -174,7 +177,43 @@ protonet.controls.InputConsole.prototype = {
   "tweet": function(event) {
     console.log("sending via js");
     this.parent_widget.sendTweetFromInput();
+
+    this.sendStoppedWritingNotification();
+
     event.stopPropagation();
     event.preventDefault();
+  },
+  
+  "sendWriteNotification": function(last_index) {
+    if(!this.writing || this.recheck) {
+      this.recheck = false;
+      if(!this.writing) {
+        this.sendStartedWritingNotification();
+        // console.log("writing");
+        this.writing = true;
+      }
+      setTimeout(function(){
+        if(last_index == this.last_index) {
+          this.sendStoppedWritingNotification();
+          // console.log("stopped writing");
+          this.writing = false;
+        }
+      }.bind(this), 4000);
+      setTimeout(function(){
+        // console.log('setting recheck');
+        this.recheck = true;
+      }.bind(this), 500);
+      this.last_index = last_index;
+    }
+  },
+  
+  "sendStoppedWritingNotification": function() {
+    json_request = {"operation": "user.stopped_writing", "payload": {"user_id": protonet.config.user_id}};
+    window.Dispatcher.sendMessage(JSON.stringify(json_request));
+  },
+  
+  "sendStartedWritingNotification": function() {
+    json_request = {"operation": "user.writing", "payload": {"user_id": protonet.config.user_id}};
+    window.Dispatcher.sendMessage(JSON.stringify(json_request));
   }
 };
