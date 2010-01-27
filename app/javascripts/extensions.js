@@ -55,8 +55,7 @@ Number.prototype.px = function() {
 
 
 //---------------------------- HTML5 FILE ----------------------------
-if (typeof(File) == "object") {
-  
+if (/object|function/.test(typeof(File))) {
   File.prototype.asObject = function() {
     return { id: this.getId(), name: this.fileName, size: this.fileSize };
   };
