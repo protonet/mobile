@@ -50,7 +50,6 @@ protonet.controls.UserWidget = (function() {
     
     "sortEntries": function() {
       var user_list = $("#user-list ul.root");
-      console.log(this.user_objects);
       for(var e in this.user_objects) {
         if(this.user_objects[e].attr('class').match(/online/)) {
           user_list.prepend(this.user_objects[e]);
