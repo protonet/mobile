@@ -24,7 +24,7 @@ module System
     def create
       if params[:file]
         # FIXME make sure this is not hackable (filename could now be ../../.. and move basically anywhere)
-        cleared_file_path = System::FileSystem.cleared_path("#{params["file_path"]}/#{params[:file].original_filename}")
+        cleared_file_path = System::FileSystem.cleared_path("#{params["file_path"]}/#{params[:file].original_filename.strip}")
         target_file = cleared_file_path
         FileUtils.mv(params[:file].path, target_file)
         return head(:ok)

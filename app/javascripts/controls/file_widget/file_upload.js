@@ -50,6 +50,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     this._loadedSize = 0;
     this._fullSize = 0;
     this._numSelectedFiles = 0;
+    this._uploadErrors = 0;
     this._selectedFiles = [];
     window.onbeforeunload = null;
     document.title = this._oldTitle;
@@ -176,7 +177,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     uploadObj.onprogress = this.__html5_uploadProgress.bind(this);
     uploadObj.onload = this.__html5_uploadAlmostFinished.bind(this);
     
-    this._html5Upload.onreadystatechange = function (aEvt) {  
+    this._html5Upload.onreadystatechange = function() {  
       if (this._html5Upload.readyState == 4 && this._html5Upload.status == 200) {
         this.__html5_uploadSuccess();
       }
@@ -270,9 +271,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
   
   __swfUpload_fileDialogComplete: function(numSelectedFiles) {
     if (numSelectedFiles == 0) { return; }
-    
     this.__fileDialogComplete(numSelectedFiles);
-    
     // Start upload immediately after user has chosen files
     this._swfUpload.startUpload();
   },
@@ -293,6 +292,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
   },
   
   __swfUpload_uploadError: function(file, errorCode) {
+    console.log("ERROR");
     var errorMessage = this.__swfUpload_getErrorMessage(errorCode);
     this.__uploadError(file, errorMessage);
     
@@ -424,6 +424,8 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     listElement.addClass("upload-error");
     listElement.find("span").html(this._wrap(errorMessage));
     
+    this._uploadErrors++;
+    
     this._loadedSize += file.size;
   },
   
@@ -442,7 +444,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
   __uploadCompleted: function() {
     console.log("upload finished, all selected files uploaded ...");
     
-    if (confirm("Do you want to publish the uploaded files to the timeline?")) {
+    if (this._uploadErrors < this._selectedFiles.length && confirm("Do you want to publish the uploaded files to the timeline?")) {
       var fileNames = $.map(this._selectedFiles, function(file) {
         return file.name;
       });

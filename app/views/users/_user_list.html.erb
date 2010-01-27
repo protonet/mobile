@@ -10,7 +10,7 @@
     <% User.registered.each do |user| %>
     <!-- tabindex="-1" ensures that the element is focusable via css -->
     <li class="" tabindex="-1" id="user-list-user-<%= user.id %>">
-      <img src="/images/userpicture-mini.jpg" width="20" height="20" alt="Userpicture Mini">
+      <img src="/images/userpicture-mini.jpg" width="20" height="20" alt="Userpicture Mini" />
       <%= user.display_name %>
     </li>
     <% end %>

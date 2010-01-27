@@ -153,7 +153,7 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "getDownloadPathFor": function(fileName) {
-    var filePath = this.getFilePathFor(fileName);
+    var filePath = this.getFilePathFor($.trim(fileName));
     return "/system/files/show?file_path=" + encodeURIComponent(filePath);
   },
   

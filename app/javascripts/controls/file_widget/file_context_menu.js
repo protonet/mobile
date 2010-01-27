@@ -24,7 +24,13 @@ protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
   "download": function(el) {
     var fileName = el.html(),
         downloadPath = this.parent.getDownloadPathFor(fileName);
-    location.href = downloadPath;
+    
+    if (protonet.user.Browser.IS_CHROME()) {
+      // It's not possible to download other files when chrome opens file via location.href
+      window.open(downloadPath);
+    } else {
+      location.href = downloadPath;
+    }
     
     console.log('download: ' + downloadPath);
   },

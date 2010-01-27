@@ -24,7 +24,7 @@ protonet.user.Browser = {
       flash = navigator.plugins["Shockwave Flash"];
       if (flash) {
         var flashVersion = parseInt(flash.description.split("Shockwave Flash ")[1], 10);
-        if (flashVersion >= 8) { return true; }
+        if (flashVersion >= 10) { return true; }
       }
     }
     
@@ -43,5 +43,9 @@ protonet.user.Browser = {
   
   IS_ON_UBUNTU: function() {
     return navigator.userAgent.indexOf("Ubuntu") != -1;
+  },
+  
+  IS_CHROME: function() {
+    return navigator.userAgent.indexOf("Chrome/") != -1;
   }
 };
