@@ -178,13 +178,20 @@ protonet.controls.InputConsole.prototype = {
     console.log("sending via js");
     this.parent_widget.sendTweetFromInput();
 
-    this.sendStoppedWritingNotification();
+    clearTimeout(this.write_timeout);
+    this.writing = false;
+    this.recheck = false;
 
+    this.sendStoppedWritingNotification();
+    
     event.stopPropagation();
     event.preventDefault();
   },
   
   "sendWriteNotification": function(last_index) {
+    if(last_index == -1) {
+      return false;
+    }
     if(!this.writing || this.recheck) {
       this.recheck = false;
       if(!this.writing) {
@@ -192,7 +199,8 @@ protonet.controls.InputConsole.prototype = {
         // console.log("writing");
         this.writing = true;
       }
-      setTimeout(function(){
+      clearTimeout(this.write_timeout);
+      this.write_timeout = setTimeout(function(){
         if(last_index == this.last_index) {
           this.sendStoppedWritingNotification();
           // console.log("stopped writing");
