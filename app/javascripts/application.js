@@ -1,4 +1,4 @@
-//= require "lib/jquery-1.4.min.js"
+//= require "lib/jquery-1.4.1.min.js"
 //= require "extensions.js"
 //= require "protonet.js"
 //= require "controls/navigation.js"

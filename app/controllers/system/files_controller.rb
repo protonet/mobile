@@ -24,7 +24,15 @@ module System
     def create
       if params[:file]
         # FIXME make sure this is not hackable (filename could now be ../../.. and move basically anywhere)
-        cleared_file_path = System::FileSystem.cleared_path("#{params["file_path"]}/#{params[:file].original_filename.strip}")
+        filename = params[:file].original_filename.strip
+        
+        # Fix file name encoding bug
+        if request.env['HTTP_X_UPLOAD_TYPE'] == 'HTML5'
+          latin1_to_utf8 = Iconv.new("UTF8//TRANSLIT//IGNORE", "LATIN1")
+          filename = latin1_to_utf8.iconv(filename)
+        end
+        
+        cleared_file_path = System::FileSystem.cleared_path("#{params["file_path"]}/#{filename}")
         target_file = cleared_file_path
         FileUtils.mv(params[:file].path, target_file)
         return head(:ok)

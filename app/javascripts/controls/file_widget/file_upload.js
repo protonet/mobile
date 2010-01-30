@@ -143,6 +143,9 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
       this.__html5_fileQueued(this._files[i]);
     }
     
+    // Disable until uploaded
+    this._input.add(this._dragInput).attr("disabled", true);
+    
     // Dialog complete
     this.__html5_fileDialogComplete();
     
@@ -161,6 +164,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     this._html5Upload.setRequestHeader("X-Requested-With", "XMLHttpRequest");
     this._html5Upload.setRequestHeader("X-File-Name", this._currentFile.fileName);
     this._html5Upload.setRequestHeader("X-File-Size", this._currentFile.fileSize);
+    this._html5Upload.setRequestHeader("X-Upload-Type", "HTML5");
     this._html5Upload.setRequestHeader("Content-Type", "multipart/form-data");
     this._html5Upload.setRequestHeader("Content-Disposition","form-data; name=\"file\"; filename=\"" + this._currentFile.fileName +"\"");
     
@@ -218,6 +222,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     if (--this._numSelectedFiles > 0) {
       this.__html5_uploadFile();
     } else {
+      this._input.add(this._dragInput).removeAttr("disabled");
       this.__uploadCompleted();
     }
   },
@@ -244,6 +249,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
       flash_url:                    "flash/swfupload.swf",
       button_placeholder_id:        placeHolder.attr("id"),
       file_size_limit:              "100000 MB",
+      button_disabled :             false,
       button_width:                 110,
       button_height:                22,
       button_window_mode:           SWFUpload.WINDOW_MODE.TRANSPARENT,
@@ -255,6 +261,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
       file_upload_limit:            100,
       file_queue_limit:             0,
       file_queued_handler:          this.__swfUpload_fileQueued.bind(this),
+      file_queue_error_handler:     this.__swfUpload_fileQueueError.bind(this), 
       file_dialog_complete_handler: this.__swfUpload_fileDialogComplete.bind(this),
       upload_start_handler:         this.__swfUpload_uploadStart.bind(this),
       upload_progress_handler:      this.__swfUpload_uploadProgress.bind(this),
@@ -269,9 +276,16 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     this.__fileQueued(file);
   },
   
-  __swfUpload_fileDialogComplete: function(numSelectedFiles) {
-    if (numSelectedFiles == 0) { return; }
-    this.__fileDialogComplete(numSelectedFiles);
+  __swfUpload_fileQueueError: function(file) {
+    this.__swfUpload_proceed();
+    alert(file.name + " cannot be uploaded because it has zero bytes");
+  },
+  
+  __swfUpload_fileDialogComplete: function(numSelectedFiles, numSelectedFilesQueued) {
+    if (numSelectedFilesQueued == 0) { return; }
+    
+    this._swfUpload.setButtonDisabled(true);
+    this.__fileDialogComplete(numSelectedFilesQueued);
     // Start upload immediately after user has chosen files
     this._swfUpload.startUpload();
   },
@@ -300,9 +314,11 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
   },
   
   __swfUpload_proceed: function() {
+    console.log("proceed", this._numSelectedFiles);
     if (--this._numSelectedFiles > 0) {
       this._swfUpload.startUpload();
     } else {
+      this._swfUpload.setButtonDisabled(false);
       this.__uploadCompleted();
     }
   },
@@ -357,6 +373,9 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     this.__fileQueued(this._currentFile);
     this.__fileDialogComplete(1);
     this._form.submit();
+    
+    this._input.attr("disabled", true);
+
   },
   
   __legacy_uploadSuccess: function() {
@@ -365,6 +384,8 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
       this._inputFilename.remove();
       this._iframe.remove();
     }.bind(this), 100);
+    
+    this._input.removeAttr("disabled", true);
     
     this.__uploadSuccess(this._currentFile);
     this.__uploadCompleted();
@@ -389,13 +410,17 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     
     this._fullSize += file.size;
     
-    // TODO: We need one global mechanism which renders file entries
-    this._fileList.append('<li class="file disabled" id="file-' + file.id + '" tabindex="-1">' + file.name + " <span>(0 %)</span></li>");
+    var li = this.parent.createElementFor({ type: "file", name: file.name, id: "file-" + file.id })
+      .addClass("disabled")
+      .prepend($("<span />").html("(0 %)"));
+    
+    this._fileList.append(li);
+    
   },
   
   __uploadProgress: function(file, bytesLoaded, bytesTotal) {
-    // Ensure that this method is called only once every 100 milliseconds, otherwise safari gets slow
-    if ((new Date() - this._lastProgressFlush) < 100) {
+    // Ensure that this method is called only once every 200 milliseconds, otherwise safari gets slow
+    if ((new Date() - this._lastProgressFlush) < 200) {
       return;
     }
     

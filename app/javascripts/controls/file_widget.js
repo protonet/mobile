@@ -47,31 +47,38 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "observeBackButton": function() {
-    var self = this;
     this.wrapper.find("button.parent").click(function(event){
-      self.moveUp();
-      event.stopPropagation();
-      return false;
-    });
+      this.moveUp();
+      event.preventDefault();
+    }.bind(this));
   },
   
   "renderResponse": function(objects) {
-    var self = this;
-    var html = '';
+    this.file_list.html("");
     $(objects).each(function(i){
       $(objects[i].name).each(function(j) {
-        html += self.createElementFor({"type": objects[i].type, "name": objects[i].name[j]}); 
-      });
-    });
-    this.file_list[0].scrollTop = 0;
-    this.file_list.html(html ? $(html) : '').stop().fadeTo(200, 1);
+        this.file_list.append(this.createElementFor({"type": objects[i].type, "name": objects[i].name[j]}));
+      }.bind(this));
+    }.bind(this));
+    
+    this.file_list.attr("scrollTop", 0).stop().fadeTo(200, 1);
+    
     // now observe those directories
     this.observeDirectories();
     this.initContextMenu(this);
   },
   
   "createElementFor": function(object) {
-    return '<li class="' + object.type +'" tabindex="-1">' + object.name + '</li>';
+    var li = $("<li />", {
+      className: object.type,
+      tabindex: "-1"
+    }).html(object.name);
+    
+    if (object.id) {
+      li.attr("id", object.id);
+    }
+    
+    return li;
   },
   
   "moveDown": function(path) {
@@ -90,11 +97,11 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "addPathBlob": function(blob) {
-    var self = this;
-    var path = this.current_path;
-    var old_index = this.hierarchy_bar.children().size() + 1; // we'll be adding one a the end of this method
-    var blobHtml = protonet.utils.escapeHtml(blob + '/');
-    var blobTitle = protonet.utils.escapeHtml('Go to folder "' + (blob || "/") + '"');
+    var self = this,
+        path = this.current_path,
+        old_index = this.hierarchy_bar.children().size() + 1, // we'll be adding one a the end of this method
+        blobHtml = protonet.utils.escapeHtml(blob + '/'),
+        blobTitle = protonet.utils.escapeHtml('Go to folder "' + (blob || "/") + '"');
     object_to_add = $('<a href="#" title="' + blobTitle + '">' + blobHtml + '</a>');
     object_to_add.click(function(event){
       event.preventDefault(); 
@@ -125,10 +132,10 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "addFolder": function() {
-    var create_folder_url = "system/files/create_directory";
-    var new_folder = $(this.createElementFor({"type": "directory", "name": ""}));
-    var new_folder_form = $('<form action="' + create_folder_url +'"></form>');
-    var new_folder_input = $('<input name="directory_name" type="text" style="width:247px; display: block; height: 17px;"/>');
+    var create_folder_url = "system/files/create_directory",
+        new_folder = this.createElementFor({"type": "directory", "name": ""}),
+        new_folder_form = $('<form action="' + create_folder_url +'"></form>'),
+        new_folder_input = $('<input name="directory_name" type="text" style="width:247px; display: block; height: 17px;"/>');
 
     new_folder.append(new_folder_form);    
     new_folder_form.append(new_folder_input);

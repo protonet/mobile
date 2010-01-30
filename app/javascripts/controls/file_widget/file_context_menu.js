@@ -16,12 +16,16 @@ protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
     }.bind(this));
     
     var self = this;
-    this.files.live("click", function() {
+    this.files.die("click").live("click", function() {
       self.download($(this));
     });
   },
   
   "download": function(el) {
+    if (el.hasClass("disabled")) {
+      return;
+    }
+    
     var fileName = el.html(),
         downloadPath = this.parent.getDownloadPathFor(fileName);
     

@@ -79,7 +79,7 @@ protonet.controls.TextExtension.providers.Vimeo.prototype = {
       };
       
       swfobject.embedSWF(
-        "http://vimeo.com/moogaloop.swf?clip_id=" + this._extractId() + "&server=vimeo.com&show_title=1&show_byline=1&show_portrait=0&color=&fullscreen=1",
+        "http://vimeo.com/moogaloop.swf?clip_id=" + this._extractId() + "&server=vimeo.com&show_title=1&show_byline=1&show_portrait=0&color=&fullscreen=1&autoplay=1",
         placeholderId,
         "auto", "auto", "8",
         null, {}, params
