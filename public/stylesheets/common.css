@@ -426,14 +426,10 @@ h2 {
   background-position: center right;
 }
 #user-list li.online {
-  background-image: url(/images/bullet_green.png);
-  background-repeat: no-repeat;
-  background-position: center right;
+  background: transparent url(/images/bullet_green.png) no-repeat center right;
 }
 #user-list li.api {
-  background-image: url(/images/link.png);
-  background-repeat: no-repeat;
-  background-position: center right;
+  background: transparent url(/images/link.png) no-repeat center right;
 }
 #user-list li > ul {
   display: none;
@@ -443,7 +439,7 @@ h2 {
   vertical-align: middle;
 }
 #user-list li:hover {
-  background: rgb(255, 255, 255);
+  background-color: rgb(255, 255, 255);
   border: 1px solid rgb(0, 0, 0);
 }
 #user-list button {
