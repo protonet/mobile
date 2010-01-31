@@ -20,7 +20,7 @@ protonet.controls.ChannelSelector = (function() {
       // get id of channel
       var channelId = parseInt(anchor.attr("href").match(REG_EXP_CHANNEL_ID)[1], 10);
       
-      feedHolder.animate({ left: index * -613 }, "fast");
+      feedHolder.animate({ left: index * -611 }, "fast");
       container.find(".active").toggleClass("active");
       anchor.parent("li").toggleClass("active");
       

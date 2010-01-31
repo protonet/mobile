@@ -2,21 +2,40 @@
 
 protonet.controls.FileWidget.prototype.FileContextMenu = function(parent) {
   this.parent = parent;
-  this.files = $("#file-list li.file");
-  this.initialize();
+  this.container = $("#file-list");
+  this._createIframe();
+  this.update();
+  this.setClick();
 };
 
 protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
-  "initialize": function() {
+  "_createIframe": function() {
+    /**
+     * We need an iframe for openening the downloads to avoid problems
+     * with the socket connection
+     */
+    this._iframe = $("<iframe />", {
+      src: "javascript:'<html></html>'",
+      frameborder: 0,
+      width: 1,
+      height: 1,
+      className: "hidden-iframe"
+    });
+    $("body").append(this._iframe);
+  },
+  
+  "update": function() {
+    this.files = this.container.find("li.file");
     this.files.contextMenu({
       menu: "file-list-menu"
-    },
-    function(action, el, pos) {
+    }, function(action, el, pos) {
       this[action](el);
     }.bind(this));
-    
+  },
+  
+  "setClick": function() {
     var self = this;
-    this.files.die("click").live("click", function() {
+    this.files.live("click", function() {
       self.download($(this));
     });
   },
@@ -29,12 +48,7 @@ protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
     var fileName = el.html(),
         downloadPath = this.parent.getDownloadPathFor(fileName);
     
-    if (protonet.user.Browser.IS_CHROME()) {
-      // It's not possible to download other files when chrome opens file via location.href
-      window.open(downloadPath);
-    } else {
-      location.href = downloadPath;
-    }
+    this._iframe.get(0).contentWindow.location.replace(downloadPath);
     
     console.log('download: ' + downloadPath);
   },

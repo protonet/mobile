@@ -23,7 +23,11 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "initContextMenu": function() {
-    new this.FileContextMenu(this);
+    if (!this._contextMenu) {
+      this._contextMenu = new this.FileContextMenu(this);
+    } else {
+      this._contextMenu.update();
+    }
   },
   
   "gotoPath": function(path) {

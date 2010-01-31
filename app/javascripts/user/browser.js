@@ -43,9 +43,5 @@ protonet.user.Browser = {
   
   IS_ON_UBUNTU: function() {
     return navigator.userAgent.indexOf("Ubuntu") != -1;
-  },
-  
-  IS_CHROME: function() {
-    return navigator.userAgent.indexOf("Chrome/") != -1;
   }
 };
