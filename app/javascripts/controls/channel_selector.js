@@ -6,10 +6,10 @@ protonet.controls.ChannelSelector = (function() {
   
   return function(args) {
     // get container
-    container = $("#channel");
-  
+    container = container || $("#channel");
+    
     // get feed-holder
-    feedHolder = $("#feed-holder");
+    feedHolder = feedHolder || $("#feed-holder");
     
     // get all channel links and bind click
     container.find(".channel a").click(function() {
@@ -23,7 +23,7 @@ protonet.controls.ChannelSelector = (function() {
       feedHolder.animate({ left: index * -611 }, "fast");
       container.find(".active").toggleClass("active");
       anchor.parent("li").toggleClass("active");
-      
+    
       // set form channel_id to correct value
       args.parent_widget.input_channel_id.val(channelId);
       args.parent_widget.input_channel_id.trigger('change');
