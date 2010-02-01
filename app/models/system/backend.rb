@@ -8,7 +8,7 @@ module System
       :info,
       :get_ips_of_currently_connected_clients,
       :give_internet_rights_to_client,
-      :rewoke_internet_rights_from_client,
+      :revoke_internet_rights_from_client,
       :ssid_of_base_station,
       :server_ips,
       :get_interfaces,
