@@ -340,6 +340,10 @@ h2 {
   margin: 0 0 0.5em;
   padding: 1em 0.6em;
   text-decoration: none;
+  cursor: pointer;
+}
+#preferences li.clicked {
+  background: none;
 }
 #preferences li span {
   color: rgba(0, 0, 0, 0.5);
