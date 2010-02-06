@@ -8,6 +8,7 @@
 
 
 
+
 //---------------------------- INITIALIZE APPLICATION ----------------------------
 
 // add inline hints
