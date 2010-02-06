@@ -16,11 +16,11 @@ namespace :deploy do
     # create needed directories
     run "mkdir -p #{shared_path}/log"
     run "mkdir -p #{shared_path}/db"
-    run "mkdir -p #{shared_path}/user-files"
-    run "mkdir -p #{shared_path}/avatars"
-    run "mkdir -p #{shared_path}/pids"
+    run "mkdir -p #{shared_path}/user-files; chmod 770 #{shared_path}/user-files"
+    run "mkdir -p #{shared_path}/avatars; chmod 770 #{shared_path}/avatars"
+    run "mkdir -p #{shared_path}/pids; chmod 770 #{shared_path}/pids"
     run "mkdir -p #{shared_path}/system"
-    run "if [ ! -f #{shared_path}/db/production.sqlite ]; then touch #{shared_path}/db/production.sqlite3; chmod 777 #{shared_path}/db/production.sqlite3; fi"
+    run "if [ ! -f #{shared_path}/db/production.sqlite ]; then touch #{shared_path}/db/production.sqlite3; chmod 770 #{shared_path}/db/production.sqlite3; fi"
   end
   
   desc "deploy monit configuration"

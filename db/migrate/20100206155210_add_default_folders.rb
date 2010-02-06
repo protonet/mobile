@@ -1,6 +1,6 @@
 class AddDefaultFolders < ActiveRecord::Migration
   def self.up
-    user_files_path = RAILS_ROOT + "/../shared/user-files"
+    user_files_path = configatron.user_file_path
     FileUtils.mkdir_p(user_files_path)
     FileUtils.mkdir_p(user_files_path + "/Movies")
     FileUtils.mkdir_p(user_files_path + "/TV Series")
