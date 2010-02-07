@@ -84,6 +84,15 @@ set logfile syslog facility log_daemon
 ## configuration, actual services parameters or manage the services using the 
 ## web interface.
 #
+set httpd port 2812 # and
+#use address localhost
+
+##Monit web-server ACL.
+# allow localhost      # allow localhost to connect to the server and
+# allow 172            # allow 172.x to connect to the server,
+                     # You can give only one per entry
+
+allow protonet:admin     # user name and password for authentication.
 ###############################################################################
 ## Services
 ###############################################################################
@@ -102,9 +111,9 @@ set logfile syslog facility log_daemon
 #
 #    
 
-check process js_dispatching_server.rb with pidfile /home/protonet/dashboard/shared/pids/js_dispatching_server.rb.pid
-	start program = "/bin/bash -c 'export RAILS_ENV=production; /usr/local/bin/ruby /home/protonet/dashboard/current/messaging/js_dispatching_control.rb start'"
-	stop program = "/bin/bash -c 'export RAILS_ENV=production; /usr/local/bin/ruby /home/protonet/dashboard/current/messaging/js_dispatching_control.rb stop'"
+check process js_dispatching_control.rb with pidfile /home/protonet/dashboard/shared/pids/js_dispatching_server.rb.pid
+	start program = "/usr/bin/env RAILS_ENV=production /usr/local/bin/ruby /home/protonet/dashboard/current/messaging/js_dispatching_control.rb start"
+	stop program  = "/usr/bin/env RAILS_ENV=production /usr/local/bin/ruby /home/protonet/dashboard/current/messaging/js_dispatching_control.rb stop"
 	if 3 restarts within 5 cycles then timeout
 
 #  check process apache with pidfile /usr/local/apache/logs/httpd.pid
