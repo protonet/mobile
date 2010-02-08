@@ -25,14 +25,14 @@ namespace :deploy do
   
   desc "deploy monit configuration"
   task :monit, :roles => :app do
-    monit_command = "monit -c /home/protonet/dashboard/shared/system/monit_ptn_node -l ~/dashboard/shared/log/monit.log -p ~/dashboard/shared/pids/monit.pid"
-    run monit_command + " quit"
-    top.upload("config/monit/monit_ptn_node", "#{shared_path}/system/monit_ptn_node")
+    monit_command = "monit -c #{shared_path}/system/monit_ptn_node -l #{shared_path}/log/monit.log -p #{shared_path}/pids/monit.pid"
+    monit_config_string = File.read("config/monit/monit_ptn_node").gsub(/\$shared_path\$/, shared_path).gsub(/\$current_path\$/, current_path)
+    top.upload(StringIO.new(monit_config_string), "#{shared_path}/system/monit_ptn_node")
     run "chmod 700 #{shared_path}/system/monit_ptn_node"
-    run monit_command    
     # and restart monit
-    # sudo "/etc/init.d/monit restart"
-    # run 
+    run monit_command + " quit"
+    sleep 1
+    run monit_command    
   end
 
   desc "set all the necessary symlinks"

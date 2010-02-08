@@ -111,9 +111,9 @@ allow protonet:admin     # user name and password for authentication.
 #
 #    
 
-check process js_dispatching_control.rb with pidfile /home/protonet/dashboard/shared/pids/js_dispatching_server.rb.pid
-	start program = "/usr/bin/env RAILS_ENV=production /usr/local/bin/ruby /home/protonet/dashboard/current/messaging/js_dispatching_control.rb start"
-	stop program  = "/usr/bin/env RAILS_ENV=production /usr/local/bin/ruby /home/protonet/dashboard/current/messaging/js_dispatching_control.rb stop"
+check process js_dispatching_control.rb with pidfile $shared_path$/pids/js_dispatching_server.rb.pid
+	start program = "/usr/bin/env RAILS_ENV=production /usr/local/bin/ruby $current_path$/messaging/js_dispatching_control.rb start"
+	stop program  = "/usr/bin/env RAILS_ENV=production /usr/local/bin/ruby $current_path$/messaging/js_dispatching_control.rb stop"
 	if 3 restarts within 5 cycles then timeout
 
 #  check process apache with pidfile /usr/local/apache/logs/httpd.pid
