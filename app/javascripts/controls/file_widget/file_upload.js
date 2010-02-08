@@ -103,6 +103,10 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
       event.preventDefault();
       event.stopPropagation();
     }.bind(this));
+    
+    /**
+     * Following event has to be set the native way, otherwise the event object gets mangled
+     */
     this._fileList.get(0).addEventListener("drop", function(event) {
       this._fileList.removeClass("highlight");
       this.__html5_upload(event.dataTransfer.files);
@@ -147,7 +151,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     }
     
     // Disable until uploaded
-    this._input.add(this._dragInput).attr("disabled", true);
+    this._input.attr("disabled", true);
     
     // Dialog complete
     this.__html5_fileDialogComplete();
@@ -232,7 +236,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     if (--this._numSelectedFiles > 0) {
       this.__html5_uploadFile();
     } else {
-      this._input.add(this._dragInput).removeAttr("disabled");
+      this._input.removeAttr("disabled");
       this.__uploadCompleted();
     }
   },

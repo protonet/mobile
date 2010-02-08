@@ -5,6 +5,10 @@
  */
 protonet.controls.TextExtension.providers.Twitpic = function(url) {
   this.url = url;
+  this.data = {
+    type: "Twitpic",
+    url: this.url
+  };
   
   /**
    * Matches
@@ -46,12 +50,10 @@ protonet.controls.TextExtension.providers.Twitpic.prototype = {
       return onEmptyResultCallback(response);
     }
     
-    this.data = {
+    $.extend(this.data, {
       description:  (results.div && results.div.p) || "",
-      title:        results.title,
-      type:         "Twitpic",
-      url:          this.url
-    };
+      title:        results.title
+    });
     
     onSuccessCallback(this.data);
   },

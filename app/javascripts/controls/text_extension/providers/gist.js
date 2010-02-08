@@ -5,6 +5,10 @@
  */
 protonet.controls.TextExtension.providers.GIST = function(url) {
   this.url = url;
+  this.data = {
+    type:         "GIST",
+    url:          this.url
+  };
   // http://gist.github.com/286785
   this._regExp = /gist\.github\.com\/([0-9]*)/i;
 };
@@ -20,12 +24,6 @@ protonet.controls.TextExtension.providers.GIST.prototype = {
   
   loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
     // debugger;
-    this.data = {
-      description:  "",
-      title:        "",
-      type:         "GIST",
-      url:          this.url
-    };
     onSuccessCallback(this.data);
   },
   

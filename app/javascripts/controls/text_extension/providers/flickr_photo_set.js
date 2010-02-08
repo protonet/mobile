@@ -6,7 +6,11 @@
  */
 protonet.controls.TextExtension.providers.FlickrPhotoSet = function(url) {
   this.url = url;
-  this.data = {};
+  this.data = {
+    type: "FlickrPhotoSet",
+    url: this.url,
+    title: "Flickr Photo Set"
+  };
   this._regExp = /flickr\.com\/photos\/.+?\/sets\/(\d{1,20})/i;
 };
 
@@ -36,12 +40,7 @@ protonet.controls.TextExtension.providers.FlickrPhotoSet.prototype = {
       return;
     }
     
-    this.data = {
-      type: "FlickrPhotoSet",
-      url: this.url,
-      title: "Flickr Photo Set",
-      photos: photoDetails
-    };
+    $.extend(this.data, { photos: photoDetails });
     
     onSuccessCallback(this.data);
   },
@@ -72,7 +71,7 @@ protonet.controls.TextExtension.providers.FlickrPhotoSet.prototype = {
         title: photo.title
       });
       anchor = $("<a />", {
-        href: this.url,
+        href: photo.url,
         target: "_blank"
       }).append(img);
       

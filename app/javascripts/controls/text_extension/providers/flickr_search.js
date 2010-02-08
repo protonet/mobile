@@ -2,11 +2,14 @@
 
 
 /**
- * Flickr Photo Ser Provider
+ * Flickr Photo Set Provider
  */
 protonet.controls.TextExtension.providers.FlickrSearch = function(url) {
   this.url = url;
-  this.data = {};
+  this.data = {
+    type: "FlickrSearch",
+    url: this.url
+  };
   this._regExp = /flickr\.com\/search\/.*[\?&]q\=(.+?)($|&)/i;
 };
 
@@ -36,12 +39,10 @@ protonet.controls.TextExtension.providers.FlickrSearch.prototype = {
       return;
     }
     
-    this.data = {
-      type: "FlickrSearch",
-      url: this.url,
-      title: "Search for '" + this._extractQuery() + "'",
+    $.extend(this.data, {
+      title: "Search results for '" + this._extractQuery() + "'",
       photos: photoDetails
-    };
+    });
     
     onSuccessCallback(this.data);
   },
@@ -72,7 +73,7 @@ protonet.controls.TextExtension.providers.FlickrSearch.prototype = {
         title: photo.title
       });
       anchor = $("<a />", {
-        href: this.url,
+        href: photo.url,
         target: "_blank"
       }).append(img);
       

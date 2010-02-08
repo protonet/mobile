@@ -6,7 +6,10 @@
  */
 protonet.controls.TextExtension.providers.Flickr = function(url) {
   this.url = url;
-  this.data = {};
+  this.data = {
+    url: this.url,
+    type: "Flickr"
+  };
   this._regExp = /flickr\.com\/photos\/[\w@]+?\/(\d{1,20})/i;
 };
 
@@ -36,10 +39,7 @@ protonet.controls.TextExtension.providers.Flickr.prototype = {
       return;
     }
     
-    this.data = $.extend({
-      type: "Flickr",
-      url: this.url
-    }, photoDetails);
+    $.extend(this.data, photoDetails);
     
     onSuccessCallback(this.data);
   },

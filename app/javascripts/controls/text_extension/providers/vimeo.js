@@ -8,7 +8,10 @@
 protonet.controls.TextExtension.providers.Vimeo = function(url) {
   this.id = new Date().getTime() + Math.round(Math.random() * 1000);
   this.url = url;
-  this.data = {};
+  this.data = {
+    url: this.url,
+    type: "Vimeo"
+  };
   this._regExp = /vimeo\.com\/(\d+)/i;
 };
 
@@ -42,15 +45,13 @@ protonet.controls.TextExtension.providers.Vimeo.prototype = {
       return onEmptyResultCallback(response);
     }
     
-    this.data = {
+    $.extend(this.data, {
       description:  protonet.utils.stripTags(entry.description),
       duration:     entry.duration, 
       thumbnail:    entry.thumbnail_small,
       title:        entry.title,
-      type:         "Vimeo",
-      url:          this.url,
       tags:         entry.tags
-    };
+    });
     
     onSuccessCallback(this.data);
   },
@@ -73,19 +74,17 @@ protonet.controls.TextExtension.providers.Vimeo.prototype = {
     
     var placeholderId = "text-extension-media-" + this.id;
     $(event.target).attr("id", placeholderId);
-    $.getScript("http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js", function() {
-      var params = {
-        allowfullscreen: true,
-        wmode: "opaque"
-      };
-      
-      swfobject.embedSWF(
-        "http://vimeo.com/moogaloop.swf?clip_id=" + this._extractId() + "&server=vimeo.com&show_title=1&show_byline=1&show_portrait=0&color=&fullscreen=1&autoplay=1",
-        placeholderId,
-        "auto", "auto", "8",
-        null, {}, params
-      );
-    }.bind(this));
+    var params = {
+      allowfullscreen: true,
+      wmode: "opaque"
+    };
+    
+    swfobject.embedSWF(
+      "http://vimeo.com/moogaloop.swf?clip_id=" + this._extractId() + "&server=vimeo.com&show_title=1&show_byline=1&show_portrait=0&color=&fullscreen=1&autoplay=1",
+      placeholderId,
+      "auto", "auto", "8",
+      null, {}, params
+    );
   },
   
   getDescription: function() {

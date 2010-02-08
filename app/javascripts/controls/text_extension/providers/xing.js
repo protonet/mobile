@@ -5,6 +5,10 @@
  */
 protonet.controls.TextExtension.providers.XING = function(url) {
   this.url = url;
+  this.data = {
+    url: this.url,
+    type: "XING"
+  };
   this._regExp = /xing\.com\/profile\/(.+?)[^\?]/i;
 };
 
@@ -37,14 +41,12 @@ protonet.controls.TextExtension.providers.XING.prototype = {
     
     var results = (response && response.query && response.query.results) || {};
     
-    this.data = {
+    $.extend(this.data, {
       description:  results.meta && results.meta[0] && results.meta[0].content,
       tags:         results.meta && results.meta[1] && results.meta[1].content,
       title:        String(results.title),
-      type:         "XING",
-      url:          this.url,
       thumbnail:    "http://www.xing.com" + (results.img && results.img.src.replace(/(\,\d)*?\.jpg/, "_s3.jpg") || "/img/users/nobody_m_s3.gif")
-    };
+    });
     
     onSuccessCallback(this.data);
   },

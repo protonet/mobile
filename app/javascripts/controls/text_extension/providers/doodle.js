@@ -3,6 +3,12 @@
  */
 protonet.controls.TextExtension.providers.Doodle = function(url) {
   this.url = url;
+  this.data = {
+    description: "",
+    title: "",
+    type: "Doodle",
+    url: this.url
+  };
   
   /**
    * Matches
@@ -23,13 +29,6 @@ protonet.controls.TextExtension.providers.Doodle.prototype = {
   },
   
   loadData: function(onSuccessCallback) {
-    this.data = {
-      description:  "",
-      title:        "",
-      type:         "Doodle",
-      url:          this.url
-    };
-    
     onSuccessCallback(this.data);
   },
   

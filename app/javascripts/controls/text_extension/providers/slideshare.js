@@ -7,7 +7,10 @@
 protonet.controls.TextExtension.providers.Slideshare = function(url) {
   this.id = new Date().getTime() + Math.round(Math.random() * 1000);
   this.url = url;
-  this.data = {};
+  this.data = {
+    url: this.url,
+    type: "Slideshare"
+  };
   this._regExp = /slideshare\.net\/[\w-]+?\/[\w-]+?$/i;
 };
 
@@ -38,14 +41,12 @@ protonet.controls.TextExtension.providers.Slideshare.prototype = {
       return onEmptyResultCallback(response);
     }
     
-    this.data = {
+    $.extend(this.data, {
       description:  entry.Description,
       thumbnail:    entry.ThumbnailSmallURL,
       title:        entry.Title,
-      type:         "Slideshare",
-      embed_url:    $(entry.Embed).find("param[name=movie]").attr("value"), 
-      url:          this.url
-    };
+      embed_url:    $(entry.Embed).find("param[name=movie]").attr("value")
+    });
     
     onSuccessCallback(this.data);
   },
@@ -64,19 +65,17 @@ protonet.controls.TextExtension.providers.Slideshare.prototype = {
     
     var placeholderId = "text-extension-media-" + this.id;
     $(event.target).attr("id", placeholderId);
-    $.getScript("http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js", function() {
-      var params = {
-        allowfullscreen: true,
-        wmode: "opaque"
-      };
-      
-      swfobject.embedSWF(
-        this.data.embed_url,
-        placeholderId,
-        "auto", "auto", "8",
-        null, {}, params
-      );
-    }.bind(this));
+    var params = {
+      allowfullscreen: true,
+      wmode: "opaque"
+    };
+    
+    swfobject.embedSWF(
+      this.data.embed_url,
+      placeholderId,
+      "auto", "auto", "8",
+      null, {}, params
+    );
   },
   
   getDescription: function() {

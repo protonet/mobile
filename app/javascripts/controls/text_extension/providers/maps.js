@@ -3,6 +3,10 @@
  */
 protonet.controls.TextExtension.providers.Maps = function(url) {
   this.url = url;
+  this.data = {
+    type: "Maps",
+    url: this.url
+  };
   
   /**
    * Matches
@@ -28,12 +32,10 @@ protonet.controls.TextExtension.providers.Maps.prototype = {
   },
   
   loadData: function(onSuccessCallback) {
-    this.data = {
+    $.extend(this.data, {
       description:  this._extractHNear() || "",
-      title:        this._extractQuery() || "",
-      type:         "Maps",
-      url:          this.url
-    };
+      title:        this._extractQuery() || ""
+    });
     
     onSuccessCallback(this.data);
   },

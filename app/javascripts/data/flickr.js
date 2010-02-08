@@ -61,19 +61,15 @@ protonet.data.Flickr.getPhoto = (function() {
 
 
 protonet.data.Flickr.getPhotoSet = (function() {
-  var YQL_GET_PHOTOSET_INFO = "SELECT id FROM flickr.photosets.photos WHERE photoset_id = '{id}' LIMIT 10",
-      YQL_GET_PHOTO_INFO = "SELECT title, description FROM flickr.photos.info WHERE photo_id IN ({sub_select})",
+  var MULTI_QUERY = "SELECT * FROM query.multi WHERE queries=\"{queries}\"",
+      YQL_GET_PHOTOSET_INFO = "SELECT id FROM flickr.photosets.photos WHERE photoset_id = '{id}' LIMIT 10",
+      YQL_GET_PHOTO_INFO = "SELECT urls, title, description, url FROM flickr.photos.info WHERE photo_id IN ({sub_select})",
       YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE label='Square' and photo_id IN ({sub_select})",
       callbacks,
       photoSetId,
       data = [];
   
-  function photoSizesLoaded(response) {
-    var results = response && response.query && response.query.results;
-    if (!results) {
-      return callback.failure();
-    }
-    
+  function photoSizesLoaded(results) {
     data = $.map(data, function(photo, i) {
       return $.extend({
         thumbnail: {
@@ -83,28 +79,15 @@ protonet.data.Flickr.getPhotoSet = (function() {
         }
       }, photo);
     });
-    
-    callbacks.success(data);
   }
   
-  function photoInfosLoaded(response) {
-    var results = response && response.query && response.query.results;
-    if (!results) {
-      return callbacks.failure();
-    }
-    
+  function photoInfosLoaded(results) {
     data = $.map(results.photo, function(photo) {
       return {
-        title: photo.title
+        title: photo.title,
+        url: photo.urls.url.content
       };
     });
-    
-    var yqlQuery = YQL_GET_PHOTO_SIZES.replace("{sub_select}", YQL_GET_PHOTOSET_INFO.replace("{id}", photoSetId));
-    
-    new protonet.data.YQL.Query(yqlQuery).execute(
-      photoSizesLoaded,
-      callbacks.failure
-    );
   }
   
   function getPhotoSet(id, onSuccess, onFailure) {
@@ -114,10 +97,22 @@ protonet.data.Flickr.getPhotoSet = (function() {
       failure: onFailure || $.noop
     };
     
-    var yqlQuery = YQL_GET_PHOTO_INFO.replace("{sub_select}", YQL_GET_PHOTOSET_INFO.replace("{id}", photoSetId));
+    var subSelect = YQL_GET_PHOTOSET_INFO.replace("{id}", photoSetId),
+        yqlQuery1 = YQL_GET_PHOTO_INFO.replace("{sub_select}", subSelect),
+        yqlQuery2 = YQL_GET_PHOTO_SIZES.replace("{sub_select}", subSelect);
     
-    new protonet.data.YQL.Query(yqlQuery).execute(
-      photoInfosLoaded,
+    new protonet.data.YQL.Query(MULTI_QUERY.replace("{queries}", [yqlQuery1, yqlQuery2].join(";"))).execute(
+      function(response) {
+        var results = response && response.query && response.query.results;
+        if (!results) {
+          return callback.failure();
+        }
+        
+        photoInfosLoaded(results.results[0]);
+        photoSizesLoaded(results.results[1]);
+        
+        callbacks.success(data);
+      },
       callbacks.failure
     );
   }
@@ -129,19 +124,15 @@ protonet.data.Flickr.getPhotoSet = (function() {
 
 
 protonet.data.Flickr.getPhotoSearch = (function() {
-  var YQL_GET_PHOTOSET_INFO = "SELECT id FROM flickr.photos.search WHERE text = '{query}' AND sort = 'relevance' LIMIT 10",
-      YQL_GET_PHOTO_INFO = "SELECT title, description FROM flickr.photos.info WHERE photo_id IN ({sub_select})",
+  var MULTI_QUERY = "SELECT * FROM query.multi WHERE queries=\"{queries}\"",
+      YQL_GET_PHOTOSET_INFO = "SELECT id FROM flickr.photos.search WHERE text = '{query}' AND sort = 'relevance' LIMIT 10",
+      YQL_GET_PHOTO_INFO = "SELECT urls, title, description FROM flickr.photos.info WHERE photo_id IN ({sub_select})",
       YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE label='Square' and photo_id IN ({sub_select})",
       callbacks,
       photoSetId,
       data = [];
   
-  function photoSizesLoaded(response) {
-    var results = response && response.query && response.query.results;
-    if (!results) {
-      return callback.failure();
-    }
-    
+  function photoSizesLoaded(results) {
     data = $.map(data, function(photo, i) {
       return $.extend({
         thumbnail: {
@@ -151,28 +142,15 @@ protonet.data.Flickr.getPhotoSearch = (function() {
         }
       }, photo);
     });
-    
-    callbacks.success(data);
   }
   
-  function photoInfosLoaded(response) {
-    var results = response && response.query && response.query.results;
-    if (!results) {
-      return callbacks.failure();
-    }
-    
+  function photoInfosLoaded(results) {
     data = $.map(results.photo, function(photo) {
       return {
-        title: photo.title
+        title: photo.title,
+        url: photo.urls.url.content
       };
     });
-    
-    var yqlQuery = YQL_GET_PHOTO_SIZES.replace("{sub_select}", YQL_GET_PHOTOSET_INFO.replace("{query}", searchQuery));
-    
-    new protonet.data.YQL.Query(yqlQuery).execute(
-      photoSizesLoaded,
-      callbacks.failure
-    );
   }
   
   function getPhotoSearch(query, onSuccess, onFailure) {
@@ -182,11 +160,23 @@ protonet.data.Flickr.getPhotoSearch = (function() {
       failure: onFailure || $.noop
     };
     
-    var yqlQuery = YQL_GET_PHOTO_INFO.replace("{sub_select}", YQL_GET_PHOTOSET_INFO.replace("{query}", searchQuery));
+    var subSelect = YQL_GET_PHOTOSET_INFO.replace("{query}", searchQuery),
+        yqlQuery1 = YQL_GET_PHOTO_INFO.replace("{sub_select}", subSelect),
+        yqlQuery2 = YQL_GET_PHOTO_SIZES.replace("{sub_select}", subSelect);
+        
     
-    new protonet.data.YQL.Query(yqlQuery).execute(
-      photoInfosLoaded,
-      callbacks.failure
+    new protonet.data.YQL.Query(MULTI_QUERY.replace("{queries}", [yqlQuery1, yqlQuery2].join(";"))).execute(
+      function(response) {
+        var results = response && response.query && response.query.results;
+        if (!results) {
+          return callback.failure();
+        }
+        
+        photoInfosLoaded(results.results[0]);
+        photoSizesLoaded(results.results[1]);
+        
+        callbacks.success(data);
+      }, callbacks.failure
     );
   }
   

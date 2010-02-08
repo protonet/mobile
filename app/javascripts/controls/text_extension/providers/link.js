@@ -6,6 +6,10 @@
  */
 protonet.controls.TextExtension.providers.Link = function(url) {
   this.url = url;
+  this.data = {
+    type: "Link",
+    url: this.url
+  };
 };
 
 protonet.controls.TextExtension.providers.Link.prototype = {
@@ -35,14 +39,12 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     
     var results = (response && response.query && response.query.results) || {};
     
-    this.data = {
+    $.extend(this.data, {
       description:  results.meta && results.meta[0] && results.meta[0].content,
       tags:         results.meta && results.meta[1] && results.meta[1].content,
       title:        String(results.title || this.url.replace(/http.*?\:\/\/(www.)?/i, "")),
-      type:         "Link",
-      url:          this.url,
       thumbnail:    protonet.media.ScreenShot.get(this.url)
-    };
+    });
     
     onSuccessCallback(this.data);
   },

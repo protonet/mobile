@@ -7,6 +7,10 @@
 protonet.controls.TextExtension.providers.YouTube = function(url) {
   this.id = new Date().getTime() + Math.round(Math.random() * 1000);
   this.url = url;
+  this.data = {
+    url: this.url,
+    type: "YouTube"
+  };
   this._regExp = /youtube\.com\/watch\?v\=([\w_-]*)/i;
 };
 
@@ -41,16 +45,14 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
       return onEmptyResultCallback(response);
     }
     
-    this.data = {
+    $.extend(this.data, {
       description:  entry["media$group"]["media$description"]["$t"],
       duration:     entry["media$group"]["yt$duration"].seconds, 
       thumbnail:    entry["media$group"]["media$thumbnail"][0],
       noembed:      !!entry["yt$noembed"],
       tags:         entry["media$group"]["media$keywords"]["$t"], 
-      title:        entry["media$group"]["media$title"]["$t"],
-      type:         "YouTube",
-      url:          this.url
-    };
+      title:        entry["media$group"]["media$title"]["$t"]
+    });
     
     onSuccessCallback(this.data);
   },
@@ -73,19 +75,17 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
     
     var placeholderId = "text-extension-media-" + this.id;
     $(event.target).attr("id", placeholderId);
-    $.getScript("http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js", function() {
-      var params = {
-        allowfullscreen: true,
-        wmode: "opaque"
-      };
-      
-      swfobject.embedSWF(
-        "http://www.youtube.com/v/" + this._extractId() + "?playerapiid=ytplayer&autoplay=1&egm=0&hd=1&showinfo=0&rel=0",
-        placeholderId,
-        "auto", "auto", "8",
-        null, {}, params
-      );
-    }.bind(this));
+    var params = {
+      allowfullscreen: true,
+      wmode: "opaque"
+    };
+    
+    swfobject.embedSWF(
+      "http://www.youtube.com/v/" + this._extractId() + "?playerapiid=ytplayer&autoplay=1&egm=0&hd=1&showinfo=0&rel=0",
+      placeholderId,
+      "auto", "auto", "8",
+      null, {}, params
+    );
   },
   
   getDescription: function() {

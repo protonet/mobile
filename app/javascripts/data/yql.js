@@ -10,7 +10,7 @@ protonet.data.YQL.Query = function(query) {
 
 protonet.data.YQL.Query.prototype = {
   TIMEOUT: 6000,
-  YQL_URL: "http://query.yahooapis.com/v1/public/yql?format=json&callback=?",
+  YQL_URL: "http://query.yahooapis.com/v1/public/yql?format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=?",
   
   execute: function(onSuccessCallback, onFailureCallback) {
     var timeouted, fallback = setTimeout(function() {
