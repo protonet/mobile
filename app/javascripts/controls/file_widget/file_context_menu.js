@@ -20,8 +20,7 @@ protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
       width: 1,
       height: 1,
       className: "hidden-iframe"
-    });
-    $("body").append(this._iframe);
+    }).appendTo("body");
   },
   
   "update": function() {
@@ -35,7 +34,8 @@ protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
   
   "setClick": function() {
     var self = this;
-    this.files.live("click", function() {
+    this.files.live("click", function(event) {
+      event.preventDefault();
       self.download($(this));
     });
   },

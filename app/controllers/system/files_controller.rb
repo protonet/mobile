@@ -21,6 +21,15 @@ module System
       end
     end
     
+    def delete_directory
+      if params[:directory_name]
+        FileUtils.rm_rf(System::FileSystem.cleared_path("#{params["file_path"]}/#{params["directory_name"]}"))
+        return head(:ok)
+      else
+        return head(:error)
+      end
+    end
+    
     def create
       if params[:file]
         # FIXME make sure this is not hackable (filename could now be ../../.. and move basically anywhere)

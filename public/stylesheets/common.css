@@ -563,15 +563,20 @@ h2 {
 #file-list li > ul {
   display: none;
 }
-#file-list li.directory:hover {
+#file-list li.directory:hover,
+#file-list li.directory:focus {
   background: rgb(255, 255, 255) url(/images/icn_directory.png) scroll no-repeat left top;
-  border: 1px solid rgb(0, 0, 0);
 }
 #file-list li.file:not(.upload-error):not(.disabled):hover,
 #file-list li.file:not(.upload-error):not(.disabled):focus {
   background: rgb(255, 255, 255) url(/images/icn_file.png) scroll no-repeat left top;
+}
+
+#file-list li.directory:focus,
+#file-list li.file:not(.upload-error):not(.disabled):focus {
   border: 1px solid rgb(100, 100, 100);
 }
+
 #file-list form {
   margin-bottom: 0.3em;
 }
@@ -1053,6 +1058,12 @@ h2 {
 }
 .contextMenu li.download a { 
   background-image: url(/images/file_download.png);
+}
+.contextMenu li.open a {
+  background-image: url(/images/folder_go.png);
+}
+#folder-list-menu.contextMenu li.delete a {
+  background-image: url(/images/folder_delete.png);
 }
 .contextMenu li.delete a {
   background-image: url(/images/file_delete.png);

@@ -1,0 +1,41 @@
+//= require "../../lib/jquery.contextMenu.js"
+
+protonet.controls.FileWidget.prototype.FolderContextMenu = function(parent) {
+  this.parent = parent;
+  this.container = $("#file-list");
+  this.update();
+  this.setClick();
+};
+
+protonet.controls.FileWidget.prototype.FolderContextMenu.prototype = {
+  "update": function() {
+    this.folders = this.container.find("li.directory");
+    this.folders.contextMenu({
+      menu: "folder-list-menu"
+    }, function(action, el, pos) {
+      this[action](el);
+    }.bind(this));
+  },
+  
+  "setClick": function() {
+    var self = this;
+    this.folders.live("click", function(event) {
+      event.preventDefault();
+      self.open($(this));
+    });
+  },
+  
+  "open": function(el) {
+    this.parent.moveDown(el.html());
+  },
+  
+  "delete": function(el) {
+    var folderName = el.html();
+    
+    $.post('system/files/delete_directory', {
+      file_path: this.parent.current_path,
+      directory_name: folderName
+    });
+    el.remove();
+  }
+};

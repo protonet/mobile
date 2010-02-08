@@ -8,7 +8,6 @@ protonet.controls.FileWidget = function(communicationConsole) {
   this.hierarchy_bar = this.wrapper.find('#file-navigation .hierarchy');
   this.search_input  = this.wrapper.find('#file-navigation input');
   
-  this.observeDirectories();
   this.observeBackButton();
   this.observeFolderCreateButton();
   this.current_path = '';
@@ -23,10 +22,16 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "initContextMenu": function() {
-    if (!this._contextMenu) {
-      this._contextMenu = new this.FileContextMenu(this);
+    if (this._fileContextMenu) {
+      this._fileContextMenu.update();
     } else {
-      this._contextMenu.update();
+      this._fileContextMenu = new this.FileContextMenu(this);
+    }
+    
+    if (this._folderContextMenu) {
+      this._folderContextMenu.update();
+    } else {
+      this._folderContextMenu = new this.FolderContextMenu(this);
     }
   },
   
@@ -37,17 +42,6 @@ protonet.controls.FileWidget.prototype = {
     jQuery.getJSON('system/files', {"path": path}, function(data) {
       self.renderResponse(data);
     });
-  },
-  
-  "observeDirectories": function(directories) {
-    var self = this;
-    directories || (directories = this.wrapper.find('li.directory'));
-    if(directories.length != 0) {
-      directories.click(function(event){
-        event.preventDefault();
-        self.moveDown($(this).html());
-      });      
-    }
   },
   
   "observeBackButton": function() {
@@ -68,7 +62,6 @@ protonet.controls.FileWidget.prototype = {
     this.file_list.attr("scrollTop", 0).stop().fadeTo(200, 1);
     
     // now observe those directories
-    this.observeDirectories();
     this.initContextMenu(this);
   },
   
@@ -136,6 +129,9 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "addFolder": function() {
+    /**
+     * TODO unfuck this
+     */
     var create_folder_url = "system/files/create_directory",
         new_folder = this.createElementFor({"type": "directory", "name": ""}),
         new_folder_form = $('<form action="' + create_folder_url +'"></form>'),
@@ -150,7 +146,7 @@ protonet.controls.FileWidget.prototype = {
       event.preventDefault();
       $.post(create_folder_url, new_folder_form.serialize(), function() {
         new_folder.html(new_folder_input.val());
-        this.observeDirectories(new_folder);
+        this.initContextMenu();
       }.bind(this));
     }.bind(this));
     
@@ -186,3 +182,4 @@ protonet.controls.FileWidget.prototype = {
 
 //= require "file_widget/file_upload.js"
 //= require "file_widget/file_context_menu.js"
+//= require "file_widget/folder_context_menu.js"
