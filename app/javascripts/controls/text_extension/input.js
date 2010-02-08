@@ -13,7 +13,7 @@ protonet.controls.TextExtension.Input = function(input) {
   this.hiddenInput = $("#text-extension-input");
   this.removeLink = this.container.find("a.remove");
   
-  this.regExp = /(\S+\.{1}[^\s\,\.\!]+)/g;
+  this.regExp = /(\b(((https?|ftp):\/\/)|(www\.))[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
   
   this._initEvents();
 };

@@ -99,6 +99,7 @@
   border: 0;
   width: 447px;
   height: 178px;
+  margin-bottom: 5px;
 }
 
 #text-extension-preview .text-extension-results .media iframe {
@@ -144,6 +145,7 @@
 .text-extension-results.YouTube object {
   height: 280px;
   width: 447px;
+  margin-bottom: 5px;
 }
 
 .text-extension-results.Slideshare .media a:after,
@@ -211,7 +213,7 @@
   height: 185px;
 }
 
-/* Flickr Photo Sets */
+/* Flickr Photo Sets/Search */
 .text-extension-results.FlickrSearch .media a,
 .text-extension-results.FlickrPhotoSet .media a {
   margin: 0 5px 5px 0;

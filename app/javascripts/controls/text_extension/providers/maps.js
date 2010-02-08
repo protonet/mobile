@@ -22,9 +22,14 @@ protonet.controls.TextExtension.providers.Maps.prototype = {
     return match && decodeURIComponent(match[1].replace(/\+/g, " "));
   },
   
+  _extractHNear: function() {
+    var match = this.url.match(/&hnear=(.+?)&/i);
+    return match && decodeURIComponent(match[1].replace(/\+/g, " "));
+  },
+  
   loadData: function(onSuccessCallback) {
     this.data = {
-      description:  "",
+      description:  this._extractHNear() || "",
       title:        this._extractQuery() || "",
       type:         "Maps",
       url:          this.url
