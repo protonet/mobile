@@ -1,5 +1,5 @@
 //= require "../../../data/yql.js"
-//= require "../../../media/get_screenshot.js"
+//= require "../../../media/screenshot.js"
 
 /**
  * WebLink Provider
@@ -40,7 +40,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
       title:        String(results.title || this.url.replace(/http.*?\:\/\/(www.)?/i, "")),
       type:         "Link",
       url:          this.url,
-      thumbnail:    protonet.media.getScreenShot(this.url, "T")
+      thumbnail:    protonet.media.ScreenShot.get(this.url)
     };
     
     onSuccessCallback(this.data);
@@ -61,13 +61,51 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     var thumbnail = this.data.thumbnail,
         anchor = $("<a />", {
           href: this.url,
-          target: "_blank"
+          target: "_blank",
+          className: "fetching"
         }),
         img = $("<img />", {
-          src: thumbnail,
-          height: 70,
-          width: 97
-        });
+          src: thumbnail
+        }),
+        checks = 0,
+        checkAvailibility = function() {
+          protonet.media.ScreenShot.isAvailable(this.url, undefined, function(isAvailable) {
+            if (isAvailable || ++checks > 10) {
+              anchor.removeClass("fetching");
+              img.attr("src", img.attr("src") + "&cachebuster");
+              clearInterval(interval);
+            }
+          });
+        }.bind(this),
+        interval = setInterval(checkAvailibility, 6000),
+        hoverTimeout;
+    
+    img.hover(function() {
+      if (anchor.hasClass("fetching")) {
+        return;
+      }
+      
+      clearTimeout(hoverTimeout);
+      hoverTimeout = setTimeout(function() {
+        img.stop().animate({
+          width: "280px",
+          height: "202px"
+        }, "fast");
+      }, 400);
+    }, function() {
+      if (anchor.hasClass("fetching")) {
+        return;
+      }
+      
+      clearTimeout(hoverTimeout);
+      img.stop().animate({
+        width: "97px",
+        height: "70px"
+      }, "fast");
+    });
+    
+    checkAvailibility();
+    
     return anchor.append(img);
   },
   

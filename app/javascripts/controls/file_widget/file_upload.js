@@ -89,58 +89,61 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     
     this._uploadControls.append(this._input);
     
-    if (protonet.user.Browser.SUPPORTS_HTML5_DRAG_AND_DROP()) {
-      this._initHtml5DragDrop();
-    }
+    this._initHtml5DragDrop();
   },
   
   _initHtml5DragDrop: function() {
-    this._fileList.bind("dragenter", this.__html5_dragEnter.bind(this));
+    this._fileList.bind("dragleave", function(event) {
+      this._fileList.removeClass("highlight");
+      event.preventDefault();
+      event.stopPropagation();
+    }.bind(this));
+    this._fileList.bind("dragover", function(event) {
+      this._fileList.addClass("highlight");
+      event.preventDefault();
+      event.stopPropagation();
+    }.bind(this));
+    this._fileList.get(0).addEventListener("drop", function(event) {
+      this._fileList.removeClass("highlight");
+      this.__html5_upload(event.dataTransfer.files);
+      event.preventDefault();
+      event.stopPropagation();
+    }.bind(this), false);
   },
   
   
   
   // --------- HTML5 UPLOAD HANDLER START ---------
-  __html5_dragEnter: function() {
-    console.log("drag enter ...");
-    
-    this._dragInput = $('<input type="file" multiple="true" name="files[]" />');
-    this._dragInput.css({
-      height: this._fileList.height(),
-      width: this._fileList.width()
-    });
-    this._dragInput.bind("dragleave", this.__html5_dragLeave.bind(this));
-    this._fileList.before(this._dragInput);
-    this._fileList.addClass("highlight");
-    this._dragInput.change(this.__html5_dropped.bind(this));
-  },
-  
-  __html5_dragLeave: function() {
-    console.log("drag leave ...");
-    
-    this._dragInput.remove();
-    this._fileList.removeClass("highlight");
-  },
-  
-  __html5_dropped: function() {
-    console.log("files dropped ...");
-    
-    this.__html5_upload(this._dragInput[0].files);
-    this.__html5_dragLeave();
-  },
-  
   __html5_upload: function(files) {
     if (!files) {
       throw new Error("FileUpload: File array not passed");
     }
     
-    this._files = files;
+    this._files = [];
     this._currentFileIndex = 0;
+    
+    var MB_250 = 250 * 1024 * 1024;
     
     // Queue files and extend
     // Caution: Don't use any lib's "each" helper here
-    for (var i=0, fileLength=this._files.length; i<fileLength; i++) {
-      this.__html5_fileQueued(this._files[i]);
+    for (var i=0, fileLength=files.length; i<fileLength; i++) {
+      var allowed = false;
+      if ($.browser.mozilla && files[i].size > MB_250) {
+        var message = "The file '" + files[i].name + "' is bigger than 250 MB." +
+                      "Uploading this file could crash your Firefox.\n" + 
+                      "Do you want to upload this file anyway?\n" +
+                      "(Tip: Use Chrome or Safari to avoid such problems)";
+        if (confirm(message)) {
+          allowed = true;
+        }
+      } else {
+        allowed = true;
+      }
+      
+      if (allowed) {
+        this.__html5_fileQueued(files[i]);
+        this._files.push(files[i]);
+      }
     }
     
     // Disable until uploaded
@@ -168,12 +171,19 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     this._html5Upload.setRequestHeader("Content-Type", "multipart/form-data");
     this._html5Upload.setRequestHeader("Content-Disposition","form-data; name=\"file\"; filename=\"" + this._currentFile.fileName +"\"");
     
-    this._html5Upload.send(this._currentFile);
-    
-    // Firefox' and W3C's way,
-    // ...unfortunately it transfers files through memory!
-    // this._html5Upload.overrideMimeType("text/plain; charset=x-user-defined-binary");
-    // this._html5Upload.sendAsBinary(this._currentFile.getAsBinary());
+    /**
+     * Only use file reader in mozilla browsers to avoid performance problems
+     * Sadly mozilla needs to have the file in the memory because the upload can be started
+     */
+    if (protonet.user.Browser.SUPPORTS_FILE_READER() && $.browser.mozilla) {
+      var fileReader = new FileReader();
+      fileReader.onload = function(event) {
+        this._html5Upload.sendAsBinary(event.target.result);
+      }.bind(this);
+      fileReader.readAsBinaryString(this._currentFile);
+    } else {
+      this._html5Upload.send(this._currentFile);
+    }
   },
   
   __html5_setHandler: function() {
@@ -464,6 +474,8 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     this._selectedFiles.push(file);
     
     this._loadedSize += file.size;
+    
+    this.parent.initContextMenu();
   },
   
   __uploadCompleted: function() {
@@ -479,7 +491,6 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     
     // All files are uploaded
     this._reset();
-    this.parent.initContextMenu();
   }
   // --------- GENERIC UPLOAD HANDLER END ---------
 };

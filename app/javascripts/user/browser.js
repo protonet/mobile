@@ -3,10 +3,12 @@ protonet.user.Browser = {
     var supportsMultipleAttribute = "multiple" in $('<input type="file" />')[0],
         supportsXhrUpload = "upload" in new XMLHttpRequest();
     
-    // Firefox 3.6 goes fucking insane when uploading files since files are transferred through ram
-    return supportsXhrUpload && supportsMultipleAttribute && !$.browser.mozilla;
+    return supportsXhrUpload && supportsMultipleAttribute;
   },
   
+  SUPPORTS_FILE_READER: function() {
+    return (/function|object/).test(typeof(window.FileReader)) && "readAsBinaryString" in new window.FileReader();
+  },
   
   SUPPORTS_FLASH_UPLOAD: function() {
     var flash;
@@ -31,17 +33,33 @@ protonet.user.Browser = {
     return false;
   },
   
-  
-  SUPPORTS_HTML5_DRAG_AND_DROP: function() {
-    var testElement = $("<div />")[0];
-    return "ondragenter" in testElement;
-  },
-  
   IS_ON_WINDOWS: function() {
     return navigator.userAgent.indexOf("Windows") != -1;
   },
   
   IS_ON_UBUNTU: function() {
     return navigator.userAgent.indexOf("Ubuntu") != -1;
+  },
+  
+  SUPPORTS_HTML5_AUDIO: function() {
+    return (/function|object/).test(typeof(window.Audio)) && "canPlayType" in new window.Audio();
+  },
+  
+  SUPPORTS_HTML5_AUDIO_MP3: function() {
+    if (!this.SUPPORTS_HTML5_AUDIO()) {
+      return false;
+    }
+    
+    var canPlayMp3 = new window.Audio().canPlayType("audio/mpeg");
+    return canPlayMp3 != "no" && canPlayMp3 != "";
+  },
+  
+  SUPPORTS_HTML5_AUDIO_OGG: function() {
+    if (!this.SUPPORTS_HTML5_AUDIO()) {
+      return false;
+    }
+    
+    var canPlayOgg = new window.Audio().canPlayType("audio/ogg");
+    return canPlayOgg != "no" && canPlayOgg != "";
   }
 };

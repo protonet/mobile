@@ -20,6 +20,7 @@ class NavigationController < ApplicationController
     end
     respond_to do |format|
       format.js do
+        response.headers['Content-type'] = "text/html; charset=utf-8"
         render :template => 'navigation/index.html', :layout => false
       end
     end

@@ -35,6 +35,7 @@ protonet.controls.Tweet = (function() {
       protonet.controls.TextExtension.render(messageContainer, this.text_extension);
     }
     
+    
     var scrollPosition = $(window).scrollTop();
     
     this.channel_ul = $("#messages-for-channel-" + this.channel_id);

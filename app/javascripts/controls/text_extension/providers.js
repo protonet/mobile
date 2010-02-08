@@ -1,5 +1,16 @@
 protonet.controls.TextExtension.providers = {};
-protonet.controls.TextExtension.sortedProviders = ["YouTube", "Maps", "Slideshare", "Vimeo", "Doodle", "XING", "Flickr", "Twitpic", "Link"]; // sorted by priority
+protonet.controls.TextExtension.sortedProviders = [
+  "YouTube",
+  "Maps",
+  "Slideshare",
+  "Vimeo",
+  "Doodle",
+  "XING",
+  "Flickr",
+  "FlickrPhotoSet",
+  "Twitpic",
+  "Link"
+]; // sorted by priority
 
 //= require "providers/link.js"
 //= require "providers/youtube.js"
@@ -10,3 +21,4 @@ protonet.controls.TextExtension.sortedProviders = ["YouTube", "Maps", "Slideshar
 //= require "providers/xing.js"
 //= require "providers/twitpic.js"
 //= require "providers/flickr.js"
+//= require "providers/flickr_photo_set.js"

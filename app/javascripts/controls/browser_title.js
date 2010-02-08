@@ -1,16 +1,16 @@
+//= require "../utils/is_window_focused.js"
+
 protonet.controls.BrowserTitle = (function() {
   var restoredTitle,
-      isBlurred,
       animation,
       autoRestore,
       isAnimating,
       VISIBLE_CHARACTERS_IN_TITLE = 200;
-  
-  $(window).blur(_blur);
+      
   $(window).focus(_focus);
   
   function set(message, onlyWhenPageIsBlurred, shouldBeAnimated) {
-    if (onlyWhenPageIsBlurred && !_isPageBlurred()) {
+    if (onlyWhenPageIsBlurred && protonet.utils.isWindowFocused()) {
       return;
     }
     
@@ -38,18 +38,9 @@ protonet.controls.BrowserTitle = (function() {
     document.title = restoredTitle;
   }
   
-  function _isPageBlurred() {
-    return isBlurred;
-  }
-  
-  function _blur() {
-    isBlurred = true;
-  }
-  
   function _focus() {
     // Timeout is needed for Safari (who otherwise doesn't restore the title)
     setTimeout(function() {
-      isBlurred = false;
       autoRestore && restore();
     }, 100);
   }

@@ -2,6 +2,8 @@
 //= require "input_console.js"
 //= require "channel_selector.js"
 //= require "browser_title.js"
+//= require "../utils/is_window_focused.js"
+//= require "../user/browser.js"
 
 protonet.controls.CommunicationConsole = function(args) {
   // elements
@@ -69,6 +71,14 @@ protonet.controls.CommunicationConsole.prototype = {
     
     new protonet.controls.Tweet(message);
     
-    protonet.controls.BrowserTitle.set("+++ New messages", true, true);
+    if (!protonet.utils.isWindowFocused()) {
+      protonet.controls.BrowserTitle.set("+++ New messages", true, true);
+      
+      if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_OGG()) {
+        new Audio("/sounds/notification.ogg").play();
+      } else if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_MP3()) {
+        new Audio("/sounds/notification.mp3").play();
+      }
+    }
   }
 };

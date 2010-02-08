@@ -2,15 +2,15 @@
 
 
 /**
- * Flickr Provider
+ * Flickr Photo Ser Provider
  */
-protonet.controls.TextExtension.providers.Flickr = function(url) {
+protonet.controls.TextExtension.providers.FlickrPhotoSet = function(url) {
   this.url = url;
   this.data = {};
-  this._regExp = /flickr\.com\/photos\/[\w@]+?\/(\d{1,20})/i;
+  this._regExp = /flickr\.com\/photos\/.+?\/sets\/(\d{1,20})/i;
 };
 
-protonet.controls.TextExtension.providers.Flickr.prototype = {
+protonet.controls.TextExtension.providers.FlickrPhotoSet.prototype = {
   match: function() {
     return this._regExp.test(this.url);
   },
@@ -20,7 +20,7 @@ protonet.controls.TextExtension.providers.Flickr.prototype = {
   },
   
   loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
-    protonet.data.Flickr.getPhoto(
+    protonet.data.Flickr.getPhotoSet(
       this._extractId(),
       this._onSuccess.bind(this, onSuccessCallback, onEmptyResultCallback),
       this._onError.bind(this, onErrorCallback)
@@ -36,10 +36,12 @@ protonet.controls.TextExtension.providers.Flickr.prototype = {
       return;
     }
     
-    this.data = $.extend({
-      type: "Flickr",
-      url: this.url
-    }, photoDetails);
+    this.data = {
+      type: "FlickrPhotoSet",
+      url: this.url,
+      title: "Flickr Photo Set",
+      photos: photoDetails
+    };
     
     onSuccessCallback(this.data);
   },
@@ -53,9 +55,7 @@ protonet.controls.TextExtension.providers.Flickr.prototype = {
   },
   
   getDescription: function() {
-    var description = this.data.description;
-    description = description || this.url;
-    return String(description).truncate(200);
+    return "";
   },
   
   getTitle: function() {
@@ -63,17 +63,21 @@ protonet.controls.TextExtension.providers.Flickr.prototype = {
   },
   
   getMedia: function() {
-    var anchor = $("<a />", {
+    var container = $("<div />"), anchor, img;
+    $.each(this.data.photos, function(i, photo) {
+      img = $("<img />", {
+        src: photo.thumbnail.src,
+        title: photo.title
+      });
+      anchor = $("<a />", {
         href: this.url,
         target: "_blank"
-      }),
-      img = $("<img />", {
-        src: this.data.thumbnail.src,
-        width: this.data.thumbnail.width,
-        height: this.data.thumbnail.height
-      });
+      }).append(img);
+      
+      container.append(anchor);
+    }.bind(this));
     
-    return anchor.append(img);
+    return container;
   },
   
   cancel: function() {

@@ -2,7 +2,12 @@
 
 protonet.controls.TextExtension.Renderer = function(container, data, provider) {
   if (!provider) {
-    provider = new protonet.controls.TextExtension.providers[data.type](data.url);
+    var providerClass = protonet.controls.TextExtension.providers[data.type];
+    if (!providerClass) {
+      return;
+    }
+    
+    provider = new providerClass(data.url);
     provider.setData(data);
   }
   
