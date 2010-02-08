@@ -199,7 +199,7 @@
 }
 
 .text-extension-results.Link .media a.fetching img {
-  opacity: 0.3;
+  opacity: 0.6;
 }
 
 .text-extension-results.Link .media a.fetching {
@@ -212,6 +212,7 @@
 }
 
 /* Flickr Photo Sets */
+.text-extension-results.FlickrSearch .media a,
 .text-extension-results.FlickrPhotoSet .media a {
   margin: 0 5px 5px 0;
   display: block;
@@ -220,10 +221,12 @@
   height: 75px;
 }
 
+.text-extension-results.FlickrSearch .media a:nth-child(6),
 .text-extension-results.FlickrPhotoSet .media a:nth-child(6) {
   clear: left;
 }
 
+.text-extension-results.FlickrSearch .title,
 .text-extension-results.FlickrPhotoSet .title {
   clear: both;
 }

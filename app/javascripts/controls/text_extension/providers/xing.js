@@ -20,7 +20,7 @@ protonet.controls.TextExtension.providers.XING.prototype = {
     
     new protonet.data.YQL.Query(
       "SELECT content, src FROM html WHERE " + 
-        "url='" + this.url + "' AND (xpath='//meta[@name=\"description\"]' OR xpath='//title' OR xpath='//img[@id=\"photo\"]')"
+        "url='" + this.url + "' AND (xpath='//meta[@name=\"description\"]' OR xpath='//title' OR xpath='//meta[@name=\"keywords\"]' OR xpath='//img[@id=\"photo\"]')"
     ).execute(
       yqlCallback, yqlCallback
     );
@@ -38,7 +38,8 @@ protonet.controls.TextExtension.providers.XING.prototype = {
     var results = (response && response.query && response.query.results) || {};
     
     this.data = {
-      description:  results.meta && results.meta.content,
+      description:  results.meta && results.meta[0] && results.meta[0].content,
+      tags:         results.meta && results.meta[1] && results.meta[1].content,
       title:        String(results.title),
       type:         "XING",
       url:          this.url,

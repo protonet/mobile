@@ -124,3 +124,71 @@ protonet.data.Flickr.getPhotoSet = (function() {
   
   return getPhotoSet;
 })();
+
+
+
+
+protonet.data.Flickr.getPhotoSearch = (function() {
+  var YQL_GET_PHOTOSET_INFO = "SELECT id FROM flickr.photos.search WHERE text = '{query}' AND sort = 'relevance' LIMIT 10",
+      YQL_GET_PHOTO_INFO = "SELECT title, description FROM flickr.photos.info WHERE photo_id IN ({sub_select})",
+      YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE label='Square' and photo_id IN ({sub_select})",
+      callbacks,
+      photoSetId,
+      data = [];
+  
+  function photoSizesLoaded(response) {
+    var results = response && response.query && response.query.results;
+    if (!results) {
+      return callback.failure();
+    }
+    
+    data = $.map(data, function(photo, i) {
+      return $.extend({
+        thumbnail: {
+          width: results.size[i].width,
+          height: results.size[i].height,
+          src: results.size[i].source
+        }
+      }, photo);
+    });
+    
+    callbacks.success(data);
+  }
+  
+  function photoInfosLoaded(response) {
+    var results = response && response.query && response.query.results;
+    if (!results) {
+      return callbacks.failure();
+    }
+    
+    data = $.map(results.photo, function(photo) {
+      return {
+        title: photo.title
+      };
+    });
+    
+    var yqlQuery = YQL_GET_PHOTO_SIZES.replace("{sub_select}", YQL_GET_PHOTOSET_INFO.replace("{query}", searchQuery));
+    
+    new protonet.data.YQL.Query(yqlQuery).execute(
+      photoSizesLoaded,
+      callbacks.failure
+    );
+  }
+  
+  function getPhotoSearch(query, onSuccess, onFailure) {
+    searchQuery = query;
+    callbacks = {
+      success: onSuccess || $.noop,
+      failure: onFailure || $.noop
+    };
+    
+    var yqlQuery = YQL_GET_PHOTO_INFO.replace("{sub_select}", YQL_GET_PHOTOSET_INFO.replace("{query}", searchQuery));
+    
+    new protonet.data.YQL.Query(yqlQuery).execute(
+      photoInfosLoaded,
+      callbacks.failure
+    );
+  }
+  
+  return getPhotoSearch;
+})();

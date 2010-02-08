@@ -4,24 +4,24 @@
 /**
  * Flickr Photo Ser Provider
  */
-protonet.controls.TextExtension.providers.FlickrPhotoSet = function(url) {
+protonet.controls.TextExtension.providers.FlickrSearch = function(url) {
   this.url = url;
   this.data = {};
-  this._regExp = /flickr\.com\/photos\/.+?\/sets\/(\d{1,20})/i;
+  this._regExp = /flickr\.com\/search\/?\?q\=(.+?)($|&)/i;
 };
 
-protonet.controls.TextExtension.providers.FlickrPhotoSet.prototype = {
+protonet.controls.TextExtension.providers.FlickrSearch.prototype = {
   match: function() {
     return this._regExp.test(this.url);
   },
   
-  _extractId: function() {
-    return this.url.match(this._regExp)[1];
+  _extractQuery: function() {
+    return decodeURIComponent(this.url.match(this._regExp)[1]);
   },
   
   loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
-    protonet.data.Flickr.getPhotoSet(
-      this._extractId(),
+    protonet.data.Flickr.getPhotoSearch(
+      this._extractQuery(),
       this._onSuccess.bind(this, onSuccessCallback, onEmptyResultCallback),
       this._onError.bind(this, onErrorCallback)
     );
@@ -37,9 +37,9 @@ protonet.controls.TextExtension.providers.FlickrPhotoSet.prototype = {
     }
     
     this.data = {
-      type: "FlickrPhotoSet",
+      type: "FlickrSearch",
       url: this.url,
-      title: "Flickr Photo Set",
+      title: "Search for '" + this._extractQuery() + "'",
       photos: photoDetails
     };
     

@@ -48,7 +48,8 @@ protonet.controls.TextExtension.providers.Vimeo.prototype = {
       thumbnail:    entry.thumbnail_small,
       title:        entry.title,
       type:         "Vimeo",
-      url:          this.url
+      url:          this.url,
+      tags:         entry.tags
     };
     
     onSuccessCallback(this.data);

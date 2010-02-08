@@ -18,7 +18,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     
     new protonet.data.YQL.Query(
       "SELECT content FROM html WHERE " + 
-        "url='" + this.url + "' AND (xpath='//meta[@name=\"description\"]' OR xpath='//title')"
+        "url='" + this.url + "' AND (xpath='//meta[@name=\"description\"]' OR xpath='//meta[@name=\"keywords\"]' OR xpath='//title')"
     ).execute(
       yqlCallback, yqlCallback
     );
@@ -36,7 +36,8 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     var results = (response && response.query && response.query.results) || {};
     
     this.data = {
-      description:  results.meta && results.meta.content,
+      description:  results.meta && results.meta[0] && results.meta[0].content,
+      tags:         results.meta && results.meta[1] && results.meta[1].content,
       title:        String(results.title || this.url.replace(/http.*?\:\/\/(www.)?/i, "")),
       type:         "Link",
       url:          this.url,
@@ -72,7 +73,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
           protonet.media.ScreenShot.isAvailable(this.url, undefined, function(isAvailable) {
             if (isAvailable || ++checks > 10) {
               anchor.removeClass("fetching");
-              img.attr("src", img.attr("src") + "&cachebuster");
+              img.attr("src", img.attr("src") + "&cachebuster=" + new Date().getTime());
               clearInterval(interval);
             }
           });

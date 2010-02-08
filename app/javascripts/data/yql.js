@@ -9,7 +9,7 @@ protonet.data.YQL.Query = function(query) {
 
 
 protonet.data.YQL.Query.prototype = {
-  TIMEOUT: 4000,
+  TIMEOUT: 6000,
   YQL_URL: "http://query.yahooapis.com/v1/public/yql?format=json&callback=?",
   
   execute: function(onSuccessCallback, onFailureCallback) {
