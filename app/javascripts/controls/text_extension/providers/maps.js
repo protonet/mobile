@@ -33,8 +33,8 @@ protonet.controls.TextExtension.providers.Maps.prototype = {
   
   loadData: function(onSuccessCallback) {
     $.extend(this.data, {
-      description:  this._extractHNear() || "",
-      title:        this._extractQuery() || ""
+      description:  this._extractQuery() || "",
+      title:        this._extractHNear() || ""
     });
     
     onSuccessCallback(this.data);
@@ -53,10 +53,15 @@ protonet.controls.TextExtension.providers.Maps.prototype = {
   },
   
   getMedia: function() {
-    var url = this.url + "&output=embed",
-        iframe = $("<iframe />", { src: url });
+    var url = this.url,
+        isStreetView = url.indexOf("&cbp=") != -1;
+    if (isStreetView) {
+      url += "&output=svembed";
+    } else {
+      url += "&output=embed";
+    }
     
-    return iframe;
+    return $("<iframe />", { src: url });
   },
   
   cancel: function() {

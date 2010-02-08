@@ -104,7 +104,6 @@
 
 #text-extension-preview .text-extension-results .media iframe {
   width: 590px;
-  height: 170px;
 }
 
 .text-extension-results a.title {
@@ -231,4 +230,9 @@
 .text-extension-results.FlickrSearch .title,
 .text-extension-results.FlickrPhotoSet .title {
   clear: both;
+}
+
+/* Maps */
+.text-extension-results.Maps .media iframe {
+  height: 200px;
 }
