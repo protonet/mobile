@@ -7,7 +7,7 @@
 protonet.controls.TextExtension.providers.FlickrSearch = function(url) {
   this.url = url;
   this.data = {};
-  this._regExp = /flickr\.com\/search\/?\?q\=(.+?)($|&)/i;
+  this._regExp = /flickr\.com\/search\/.*[\?&]q\=(.+?)($|&)/i;
 };
 
 protonet.controls.TextExtension.providers.FlickrSearch.prototype = {
@@ -16,7 +16,7 @@ protonet.controls.TextExtension.providers.FlickrSearch.prototype = {
   },
   
   _extractQuery: function() {
-    return decodeURIComponent(this.url.match(this._regExp)[1]);
+    return decodeURIComponent(this.url.match(this._regExp)[1].replace(/\+/g, " "));
   },
   
   loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {

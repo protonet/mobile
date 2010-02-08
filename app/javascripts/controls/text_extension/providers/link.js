@@ -74,12 +74,12 @@ protonet.controls.TextExtension.providers.Link.prototype = {
             if (isAvailable || ++checks > 10) {
               anchor.removeClass("fetching");
               img.attr("src", img.attr("src") + "&cachebuster=" + new Date().getTime());
-              clearInterval(interval);
+              clearInterval(this.interval);
             }
-          });
+          }.bind(this));
         }.bind(this),
-        interval = setInterval(checkAvailibility, 6000),
         hoverTimeout;
+    
     
     img.hover(function() {
       if (anchor.hasClass("fetching")) {
@@ -106,11 +106,13 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     });
     
     checkAvailibility();
+    this.interval = setInterval(checkAvailibility, 6000);
     
     return anchor.append(img);
   },
   
   cancel: function() {
+    clearInterval(this.interval);
     this._canceled = true;
   }
 };
