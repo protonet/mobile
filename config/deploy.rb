@@ -11,6 +11,7 @@ set :scm, :git
 
 namespace :deploy do
   
+  # use deploy:setup first ;)
   desc "prepare node for installation"
   task :prepare, :roles => :app do
     # create needed directories
