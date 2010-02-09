@@ -5,7 +5,8 @@
 //= require "../utils/convert_to_pretty_date.js"
 
 protonet.controls.Tweet = (function() {
-  var template;
+  var template,
+      HALF_HOUR = 1000 * 60 * 30;
   
   function TweetClass(args) {
     this.originalMessage  = args.message;
@@ -14,39 +15,48 @@ protonet.controls.Tweet = (function() {
     this.message          = protonet.utils.nl2br(this.message);
     this.message          = protonet.utils.autoLinkFilePaths(this.message);
     this.author           = args.author;
-    this.message_date     = new Date();
-    this.channel_id       = args.channel_id;
-    this.text_extension   = args.text_extension;
+    this.messageDate      = new Date();
+    this.channelId        = args.channel_id;
+    this.textExtension    = args.text_extension;
     this.form             = args.form;
     
     template = template || $("#message-template");
     
-    this.list_element = $(template.html());
-    this.list_element.find(".message-usericon > img").attr("src", args.user_icon_url);
-    this.list_element.find(".message-author").html(this.author);
-    this.list_element.find(".message-date")
-      .attr("title", this.message_date)
-      .html(protonet.utils.convertToPrettyDate(this.message_date));
+    this.listElement = $(template.html());
+    this.listElement.find(".message-usericon > img").attr("src", args.user_icon_url);
+    this.listElement.find(".message-author").html(this.author);
+    this.listElement.find(".message-date")
+      .attr("title", this.messageDate)
+      .html(protonet.utils.convertToPrettyDate(this.messageDate));
     
-    var messageContainer = this.list_element.find(".message-text");
+    var messageContainer = this.listElement.find(".message-text");
     messageContainer.find("p").append(this.message);
     
-    if (this.text_extension) {
-      protonet.controls.TextExtension.render(messageContainer, this.text_extension);
+    if (this.textExtension) {
+      protonet.controls.TextExtension.render(messageContainer, this.textExtension);
     }
     
-    
+    this.channelUl = $("#messages-for-channel-" + this.channelId);
     var scrollPosition = $(window).scrollTop();
-    
-    this.channel_ul = $("#messages-for-channel-" + this.channel_id);
-    this.channel_ul.prepend(this.list_element);
+    var lastTweet = this.channelUl.find(":first-child");
+    var lastTweetHappenedInLastHalfHour = this.messageDate - new Date(lastTweet.find(".message-date").attr("title")) < HALF_HOUR;
+    var canBeGroupedWithLastTweet = lastTweet.length
+        && lastTweetHappenedInLastHalfHour
+        && !this.textExtension
+        && lastTweet.find(".message-author").html() == this.author;
+        
+    if (canBeGroupedWithLastTweet) {
+      lastTweet.find(".message-text").prepend(messageContainer.html());
+    } else {
+      this.channelUl.prepend(this.listElement);
+    }
     
     /**
      * Avoid user experience problems when user scrolls down to read a tweet while others are pushing
      * new tweets
      */
     if (scrollPosition > 150) {
-      $(window).scrollTop(scrollPosition + this.list_element.outerHeight(true));
+      $(window).scrollTop(scrollPosition + this.listElement.outerHeight(true));
     }
   };
   

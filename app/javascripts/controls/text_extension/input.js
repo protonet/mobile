@@ -2,9 +2,6 @@ protonet.controls.TextExtension.Input = function(input) {
   if (!input) {
     throw new Error("TextExtension: Missing input element");
   }
-  if (navigator.onLine === false) {
-    return;
-  }
   
   this.input = input;
   this.sortedProviders = protonet.controls.TextExtension.sortedProviders;

@@ -12,7 +12,10 @@ protonet.controls.CommunicationConsole = function(args) {
   this.input_channel_id = $("#message_channel_id");
   
   // add sub views
-  this.channel_selector = new protonet.controls.ChannelSelector({"parent_widget": this});
+  this.channel_selector = new protonet.controls.ChannelSelector({
+    "parent_widget": this,
+    "channel_input": this.input_channel_id
+  });
   this.input_console    = new protonet.controls.InputConsole({
     "input_console": this.input,
     "parent_widget": this,
@@ -64,21 +67,24 @@ protonet.controls.CommunicationConsole.prototype = {
   
   "receiveMessage": function(message) {
     console.log("cc is receiving message");
-    
-    try {
-      message.text_extension = JSON.parse(message.text_extension);
-    } catch(e) {}
-    
+
+    message.text_extension = message.text_extension && JSON.parse(message.text_extension);
     new protonet.controls.Tweet(message);
     
-    if (!protonet.utils.isWindowFocused()) {
+    var tweetIsSameChannel = this.input_channel_id.val() == message.channel_id;
+    
+    // Notification stuff
+    if (!protonet.utils.isWindowFocused() && tweetIsSameChannel) {
       protonet.controls.BrowserTitle.set("+++ New messages", true, true);
-      
       if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_OGG()) {
         new Audio("/sounds/notification.ogg").play();
       } else if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_MP3()) {
         new Audio("/sounds/notification.mp3").play();
       }
+    }
+    
+    if (!tweetIsSameChannel) {
+      this.channel_selector.notify(message.channel_id);
     }
   }
 };
