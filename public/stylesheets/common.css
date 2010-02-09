@@ -148,9 +148,22 @@ div, button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, 
   float: left;
   padding: 0.2em 0.6em;
   text-decoration: none;
+  position: relative;
 }
 #channel a:hover {
   background: rgb(173, 173, 173);
+}
+#channel a .notification {
+  position: absolute;
+  right: -5px;
+  top: -5px;
+  padding: 2px 3px;
+  line-height: 1;
+  font-size: 8px;
+  background-color: #FDAB54;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
 }
 #channel li.active a {
   background: rgb(173, 173, 173) url() no-repeat scroll center -3px;
@@ -726,14 +739,19 @@ h2 {
 .user-messages .message-text p {
   white-space: pre-wrap;
   overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.user-messages .message-text p:last-child {
+  margin-bottom: 5px;
 }
 
 .user-messages .message-usericon {
   background: transparent url(/images/icn_message_arrow.png) no-repeat scroll right 19px;
-  bottom: 0.3em;
   display: block;
   left: -90px;
   position: absolute;
+  bottom: 0.3em;
   width: 91px;
 }
 .user-messages .message-usericon img {
@@ -748,6 +766,7 @@ h2 {
 .user-messages .message-author {
   font-size: 0.7em;
   font-weight: bold;
+  color: #666;
 }
 .user-messages .message-date {
   color: rgba(0, 0, 0, 0.5);

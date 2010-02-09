@@ -2,7 +2,7 @@
   <%- tweets[0..25].each do |t| -%>
     <%= render :partial => '/tweets/tweet', :locals => {:message => t.message, :avatar => t.user.active_avatar_url,
                                                         :author => t.author, :created_at => t.created_at,
-                                                        :html_id => "tweet-#{t.id}"} %>
+                                                        :html_id => "tweet-#{t.id}" } %>
     <%- unless t.text_extension.blank? -%>
     <script type="text/javascript">//<![CDATA[
       protonet.globals.textExtensions.push({
