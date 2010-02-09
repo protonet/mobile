@@ -30,7 +30,7 @@ DispatchingSystem.prototype = {
     // was the flash socket
     this.socket = document.getElementById(this.socketId);
     this.connectSocket();
-    $(window).bind('beforeunload', function(){
+    $(window).bind('unload', function(){
       this.socket.closeSocket();
     }.bind(this));
   },
@@ -41,7 +41,17 @@ DispatchingSystem.prototype = {
   
   "socketConnectCallback": function(args) {
     console.log('connection established? ' + args);
+    this.startSocketCheck();
     this.authenticateUser();
+  },
+  
+  "startSocketCheck": function() {
+    setInterval(function(){this.pingSocket()}.bind(this), 30000);
+  },
+  
+  "pingSocket": function() {
+    json_request = {"operation": "ping"};
+    this.sendMessage(JSON.stringify(json_request));
   },
 
   "authenticateUser": function() {

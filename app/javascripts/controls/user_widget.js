@@ -16,10 +16,9 @@ protonet.controls.UserWidget = (function() {
     // this would ensure data integrity and be very fast ;)
     "update": function(data) {
       var online_users = data["online_users"];
-
       for(var i in this.user_objects) {
         var current_dom_object = this.user_objects[i];
-        var css_class = this.cssClassForConnections(online_users[i]);
+        var css_class = this.cssClassForConnections(online_users[i] && online_users[i]["connections"]);
         if(!current_dom_object.hasClass(css_class)) {
           current_dom_object.attr("class", css_class);
         }

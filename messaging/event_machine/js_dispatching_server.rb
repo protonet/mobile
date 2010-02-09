@@ -38,8 +38,15 @@ module JsDispatchingServer
         bind_socket_to_user_queues
         add_to_online_users
       end
-    elsif @user && data.is_a?(Hash) && data["operation"].match(/^user\.(.*)/)
-      update_user_status($1)
+    elsif @user && data.is_a?(Hash)
+      case data["operation"]
+      when /^user\.(.*)/
+        update_user_status($1)
+      when /^ping$/
+        @@online_users[@user.id] ||= {}
+        @@online_users[@user.id]["last_seen"] = Time.now.to_i
+        log('crazy got ping!!')
+      end
     else
       # play echoserver if request could not be understood
       send_data(data)
@@ -68,8 +75,9 @@ module JsDispatchingServer
   end
   
   def add_to_online_users
-    @@online_users[@user.id] ||= []
-    @@online_users[@user.id] << [@key, @type]
+    @@online_users[@user.id] ||= {}
+    @@online_users[@user.id]["connections"] ||= []
+    @@online_users[@user.id]["connections"] << [@key, @type]
     data = {:x_target => "UserWidget.update", :online_users => @@online_users}.to_json
     send_user_data(data)
     log(@@online_users.inspect)
@@ -77,8 +85,8 @@ module JsDispatchingServer
   
   def remove_from_online_users
     return unless @user
-    @@online_users[@user.id] = @@online_users[@user.id].reject {|socket_id, _| socket_id == @key}
-    @@online_users.delete(@user.id) if @@online_users[@user.id].empty?
+    @@online_users[@user.id]["connections"] = @@online_users[@user.id]["connections"].reject {|socket_id, _| socket_id == @key}
+    @@online_users.delete(@user.id) if @@online_users[@user.id]["connections"].empty?
     data = {:x_target => "UserWidget.update", :online_users => @@online_users}.to_json
     send_user_data(data)
     log(@@online_users.inspect)
