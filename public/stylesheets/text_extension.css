@@ -83,16 +83,16 @@
   line-height: 0;
 }
 
-.text-extension-results .media a:hover {
-  -webkit-box-shadow: 0px 0px 20px #333;
-  -moz-box-shadow: 0px 0px 20px #333;
-  box-shadow: 0px 0px 20px #333;
-}
-
 .text-extension-results .media a {
   display: block;
   line-height: 0;
   text-decoration: none !important;
+}
+
+.text-extension-results .media img:hover {
+  -webkit-box-shadow: 0 0 20px #333;
+  -moz-box-shadow: 0 0 20px #333;
+  box-shadow: 0 0 20px #333;
 }
 
 .text-extension-results .media iframe {
@@ -113,10 +113,6 @@
   min-width: 200px;
 }
 
-.text-extension-results a.title span {
-  color: #999;
-}
-
 .text-extension-results a.description {
   color: rgb(120, 120, 120);
   min-width: 200px;
@@ -131,7 +127,10 @@
 }
 
 
-/* YouTube/Vimeo/Slideshare Provider */
+
+
+/* =VIDEO/FLASH TEXT EXTENSION (YouTube, Slideshare, ...)
+--------------------------------------------------------------------------- */
 #text-extension-preview .text-extension-results.Slideshare object,
 #text-extension-preview .text-extension-results.Vimeo object,
 #text-extension-preview .text-extension-results.YouTube object {
@@ -177,26 +176,22 @@
   opacity: 0.7;
 }
 
-/* Link */
-.text-extension-results.Link .media {
-  position: relative;
+/* TODO: Fix this, it is needed (again) to avoid :hover conflict with :after pseudo elements */
+.text-extension-results.Slideshare .media a:hover img,
+.text-extension-results.Vimeo .media a:hover img,
+.text-extension-results.YouTube .media a:hover img {
+  -webkit-box-shadow: 0 0 20px #333;
+  -moz-box-shadow: 0 0 20px #333;
+  box-shadow: 0 0 20px #333;
 }
+
+/* =LINK TEXT EXTENSION
+--------------------------------------------------------------------------- */
 .text-extension-results.Link .media,
+.text-extension-results.Link .media a,
 .text-extension-results.Link .media img {
   width: 97px;
   height: 70px;
-}
-
-.text-extension-results.Link .media a {
-  display: block;
-  position: absolute;
-  z-index: 5;
-}
-
-.text-extension-results.Link .media a:not(.fetching):hover {
-  margin: -1px 0 0 -1px;
-  border: 1px solid #fff;
-  z-index: 6;
 }
 
 .text-extension-results.Link .media a.fetching img {
@@ -207,23 +202,41 @@
   background: transparent url(/images/screenshot_fetching.gif) no-repeat center center;
 }
 
-/* Doodle */
+/* =DOODLE TEXT EXTENSION
+--------------------------------------------------------------------------- */
 #text-extension-preview .text-extension-results.Doodle iframe {
   height: 185px;
 }
 
-/* Flickr Photo Sets/Search */
-.text-extension-results.FlickrSearch .media a,
-.text-extension-results.FlickrPhotoSet .media a {
-  margin: 0 5px 5px 0;
-  display: block;
-  float: left;
-  width: 75px;
-  height: 75px;
+/* =FLICKR TEXT EXTENSIONS
+--------------------------------------------------------------------------- */
+.text-extension-results.FlickrSearch .media,
+.text-extension-results.FlickrPhotoSet .media {
+  position: relative;
 }
 
-.text-extension-results.FlickrSearch .media a:nth-child(6),
-.text-extension-results.FlickrPhotoSet .media a:nth-child(6) {
+.text-extension-results.FlickrSearch .media a,
+.text-extension-results.FlickrPhotoSet .media a {
+  width: 75px;
+  height: 75px;
+  margin: 0 5px 5px 0;
+  float: left;
+  display: block;
+}
+
+.text-extension-results.FlickrSearch .media img:hover,
+.text-extension-results.FlickrPhotoSet .media img:hover {
+  background: #eee;
+}
+
+.text-extension-results.FlickrSearch .media a:nth-child(5n) img,
+.text-extension-results.FlickrPhotoSet .media a:nth-child(5n) img {
+  position: absolute;
+  right: 5px; /* Ensure that resizing effect aligns right, to avoid overflow problems */
+}
+
+.text-extension-results.FlickrSearch .media a:nth-child(6n),
+.text-extension-results.FlickrPhotoSet .media a:nth-child(6n) {
   clear: left;
 }
 
@@ -232,7 +245,8 @@
   clear: both;
 }
 
-/* Maps */
+/* =MAPS TEXT EXTENSION
+--------------------------------------------------------------------------- */
 .text-extension-results.Maps .media iframe {
   height: 200px;
 }

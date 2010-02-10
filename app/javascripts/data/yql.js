@@ -18,7 +18,7 @@ protonet.data.YQL.Query.prototype = {
       onFailureCallback();
     }, this.TIMEOUT);
     
-    $.getJSON(this.YQL_URL, {
+    var ajax = $.getJSON(this.YQL_URL, {
       q: this._query
     }, function(response) {
       if (timeouted) { return; }

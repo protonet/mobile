@@ -4,7 +4,7 @@
 protonet.data.Flickr = {};
 protonet.data.Flickr.getPhoto = (function() {
   var YQL_GET_PHOTO_INFO = "SELECT title, description FROM flickr.photos.info WHERE photo_id = '{id}'",
-      YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE photo_id = '{id}'",
+      YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE photo_id = '{id}' and label IN ('Thumbnail', 'Small')",
       callbacks,
       photoId,
       data;
@@ -14,12 +14,11 @@ protonet.data.Flickr.getPhoto = (function() {
     if (!results) {
       return callback.failure();
     }
-    
-    data.thumbnail = {
-      width: results.size[1].width,
-      height: results.size[1].height,
-      src: results.size[1].source
-    };
+
+    data = $.extend({
+      thumbnail: results.size[0],
+      preview: results.size[1]
+    }, data);
     
     callbacks.success(data);
   }
@@ -65,19 +64,17 @@ protonet.data.Flickr.getPhotoSet = (function() {
                     "SELECT * FROM multiquery WHERE queries=\"{queries}\"",
       YQL_GET_PHOTOSET_INFO = "SELECT id FROM flickr.photosets.photos WHERE photoset_id = '{id}' LIMIT 10",
       YQL_GET_PHOTO_INFO = "SELECT urls, title, description, url FROM flickr.photos.info WHERE photo_id IN ({sub_select})",
-      YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE label='Square' and photo_id IN ({sub_select})",
+      YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE photo_id IN ({sub_select}) AND label IN ('Square', 'Small')",
       callbacks,
       photoSetId,
       data = [];
   
   function photoSizesLoaded(results) {
     data = $.map(data, function(photo, i) {
+      i *= 2;
       return $.extend({
-        thumbnail: {
-          width: results.size[i].width,
-          height: results.size[i].height,
-          src: results.size[i].source
-        }
+        thumbnail: results.size[i],
+        preview: results.size[i + 1]
       }, photo);
     });
   }
@@ -128,20 +125,18 @@ protonet.data.Flickr.getPhotoSearch = (function() {
   var MULTI_QUERY = "USE \"http://www.datatables.org/data/query.multi.xml\" AS multiquery;" +
                     "SELECT * FROM multiquery WHERE queries=\"{queries}\"",
       YQL_GET_PHOTOSET_INFO = "SELECT id FROM flickr.photos.search WHERE text = '{query}' AND sort = 'relevance' LIMIT 10",
-      YQL_GET_PHOTO_INFO = "SELECT urls, title, description FROM flickr.photos.info WHERE photo_id IN ({sub_select})",
-      YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE label='Square' and photo_id IN ({sub_select})",
+      YQL_GET_PHOTO_INFO = "SELECT urls, title, description, url FROM flickr.photos.info WHERE photo_id IN ({sub_select})",
+      YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE photo_id IN ({sub_select}) AND label IN ('Square', 'Small')",
       callbacks,
       photoSetId,
       data = [];
   
   function photoSizesLoaded(results) {
     data = $.map(data, function(photo, i) {
+      i *= 2;
       return $.extend({
-        thumbnail: {
-          width: results.size[i].width,
-          height: results.size[i].height,
-          src: results.size[i].source
-        }
+        thumbnail: results.size[i],
+        preview: results.size[i + 1]
       }, photo);
     });
   }

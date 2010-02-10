@@ -512,7 +512,7 @@ h2 {
   width: 613px;
   position: relative;
   clear: both;
-  overflow: hidden;
+  overflow-y: hidden;
 }
 
 /* =FEEDVIEWER (INNER)

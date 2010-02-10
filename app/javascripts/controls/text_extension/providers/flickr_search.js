@@ -1,4 +1,5 @@
 //= require "../../../data/flickr.js"
+//= require "../../../effects/hover_resize.js"
 
 
 /**
@@ -69,13 +70,24 @@ protonet.controls.TextExtension.providers.FlickrSearch.prototype = {
     var container = $("<div />"), anchor, img;
     $.each(this.data.photos, function(i, photo) {
       img = $("<img />", {
-        src: photo.thumbnail.src,
+        // TODO remove this "src" after some time, it's only here for backward compatibility reasons
+        src: photo.thumbnail.source || photo.thumbnail.src,
         title: photo.title
+      }).attr({
+        width: photo.thumbnail.width,
+        height: photo.thumbnail.height
       });
       anchor = $("<a />", {
         href: photo.url,
         target: "_blank"
       }).append(img);
+      
+      if (photo.preview) {
+        new protonet.effects.HoverResize(img, {
+          height: photo.preview.height,
+          width: photo.preview.width
+        }, photo.preview.source);
+      }
       
       container.append(anchor);
     }.bind(this));

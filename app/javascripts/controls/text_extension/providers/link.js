@@ -1,5 +1,9 @@
 //= require "../../../data/yql.js"
 //= require "../../../media/screenshot.js"
+//= require "../../../effects/hover_resize.js"
+//= require "../../../utils/parse_url.js"
+//= require "../../../utils/strip_tags.js"
+
 
 /**
  * WebLink Provider
@@ -18,31 +22,96 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   },
   
   loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
-    var yqlCallback = this._yqlCallback.bind(this, onSuccessCallback);
+    var yqlSearchTableCallback = this._yqlSearchTableCallback.bind(this, onSuccessCallback),
+        yqlHtmlTableCallback = this._yqlHtmlTableCallback.bind(this, onSuccessCallback),
+        yqlTimeoutCallback = this._yqlTimeoutCallback.bind(this, onSuccessCallback),
+        urlParts = protonet.utils.parseUrl(this.url);
+    
+    this._shortUrl = urlParts.host + urlParts.port + urlParts.path + urlParts.query;
+    
+    new protonet.data.YQL.Query(
+      "SELECT title, abstract FROM search.web WHERE " + 
+        "query='" + this._shortUrl + "' AND url LIKE '%" + this._shortUrl + "%' LIMIT 1"
+    ).execute(
+      yqlSearchTableCallback,
+      yqlSearchTableCallback
+    );
     
     new protonet.data.YQL.Query(
       "SELECT content FROM html WHERE " + 
         "url='" + this.url + "' AND (xpath='//meta[@name=\"description\"]' OR xpath='//meta[@name=\"keywords\"]' OR xpath='//title')"
     ).execute(
-      yqlCallback, yqlCallback
+      yqlHtmlTableCallback,
+      yqlHtmlTableCallback
     );
+    
+    setTimeout(yqlTimeoutCallback, 6000);
   },
   
   setData: function(data) {
     this.data = data;
   },
   
-  _yqlCallback: function(onSuccessCallback, response) {
-    if (this._canceled) {
+  _yqlHtmlTableCallback: function(onSuccessCallback, response) {
+    if (this._canceled || this._yqlFinished) {
       return;
     }
     
-    var results = (response && response.query && response.query.results) || {};
+    var results = (response &&
+                   response.query &&
+                   response.query.results);
+    
+    if (!results) {
+      return;
+    }
+    
+    this._yqlFinished = true;
     
     $.extend(this.data, {
       description:  results.meta && results.meta[0] && results.meta[0].content,
       tags:         results.meta && results.meta[1] && results.meta[1].content,
-      title:        String(results.title || this.url.replace(/http.*?\:\/\/(www.)?/i, "")),
+      title:        String(results.title || this._shortUrl).replace(/^,+/, "").replace(/,+$/, ""),
+      thumbnail:    protonet.media.ScreenShot.get(this.url)
+    });
+    
+    onSuccessCallback(this.data);
+  },
+  
+  _yqlSearchTableCallback: function(onSuccessCallback, response) {
+    if (this._canceled || this._yqlFinished) {
+      return;
+    }
+    
+    var result = (response &&
+                  response.query &&
+                  response.query.results &&
+                  response.query.results.result);    
+    
+    if (!result) {
+      return;
+    }
+    
+    this._yqlFinished = true;
+    
+    $.extend(this.data, {
+      description:  protonet.utils.stripTags(result["abstract"] || ""),
+      title:        protonet.utils.stripTags(result.title || this._shortUrl),
+      thumbnail:    protonet.media.ScreenShot.get(this.url)
+    });
+    
+    onSuccessCallback(this.data);
+  },
+  
+  _yqlTimeoutCallback: function(onSuccessCallback) {
+    if (this._canceled || this._yqlFinished) {
+      return;
+    }
+    
+    this._yqlFinished = true;
+    
+    $.extend(this.data, {
+      description:  "",
+      title:        this._shortUrl,
       thumbnail:    protonet.media.ScreenShot.get(this.url)
     });
     
@@ -76,45 +145,20 @@ protonet.controls.TextExtension.providers.Link.prototype = {
             if (isAvailable || ++checks > 10) {
               anchor.removeClass("fetching");
               img.attr("src", img.attr("src") + "&cachebuster=" + new Date().getTime());
-              clearInterval(this.interval);
+              new protonet.effects.HoverResize(img, { width: 280, height: 202 });
+            } else {
+              this.timeout = setTimeout(checkAvailibility, 6000);
             }
           }.bind(this));
-        }.bind(this),
-        hoverTimeout;
-    
-    
-    img.hover(function() {
-      if (anchor.hasClass("fetching")) {
-        return;
-      }
-      
-      clearTimeout(hoverTimeout);
-      hoverTimeout = setTimeout(function() {
-        img.stop().animate({
-          width: "280px",
-          height: "202px"
-        }, "fast");
-      }, 400);
-    }, function() {
-      if (anchor.hasClass("fetching")) {
-        return;
-      }
-      
-      clearTimeout(hoverTimeout);
-      img.stop().animate({
-        width: "97px",
-        height: "70px"
-      }, "fast");
-    });
+        }.bind(this);
     
     checkAvailibility();
-    this.interval = setInterval(checkAvailibility, 6000);
     
     return anchor.append(img);
   },
   
   cancel: function() {
-    clearInterval(this.interval);
+    clearTimeout(this.timeout);
     this._canceled = true;
   }
 };

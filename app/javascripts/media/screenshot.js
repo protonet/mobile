@@ -21,10 +21,10 @@ protonet.media.ScreenShot = (function() {
   
   function isAvailable(url, size, callback) {
     var checkUrl = BASE_URL + "/exists" +
-    "?url=" + encodeURIComponent(url) + 
-    "&devkey=" + KEY +
-    "&size=" + (size || DEFAULT_SIZE) +
-    "&cachebuster=" + new Date().getTime();
+      "?url=" + encodeURIComponent(url) + 
+      "&devkey=" + KEY +
+      "&size=" + (size || DEFAULT_SIZE) +
+      "&cachebuster=" + new Date().getTime();
     
     var script = document.createElement("script");
     script.onload = function() {
@@ -35,6 +35,7 @@ protonet.media.ScreenShot = (function() {
       callback(false);
       $(script).remove();
     };
+    script.async = true;
     script.src = checkUrl;
     document.body.appendChild(script);
   }
