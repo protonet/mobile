@@ -1,8 +1,10 @@
+<% if !defined?(show_wrapper_start) || show_wrapper_start -%>
 <li <%= "id=\"#{html_id}\"" unless html_id.blank? %>>
   <span class="message-usericon">
     <img src="<%= avatar %>" width="47" height="47" alt="" />
   </span>
   <div class="message-text">
+<% end %>
     <span class="message-info">
       <span class="message-author"><%= author %></span>
       <span class="message-date pretty-date" <%= "title=\"#{convert_to_rfc(created_at)}\"" unless created_at.blank? %>><%= created_at %></span>
@@ -12,5 +14,7 @@
         CGI.unescapeHTML(truncate(url, 40))
       })
     %></p>
+<% if !defined?(show_wrapper_end) || show_wrapper_end -%>
   </div>
 </li>
+<% end %>
