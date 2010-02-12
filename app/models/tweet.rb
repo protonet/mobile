@@ -11,6 +11,10 @@ class Tweet < ActiveRecord::Base
   
   after_create :send_to_queue if configatron.messaging_bus_active
   
+  def text_extension?
+    !text_extension.blank?
+  end
+  
   def send_to_queue
     channels.each do |channel|
       RAILS_DEFAULT_LOGGER.info("=================================>>>>>>>>>>>>>>>>>>>>>>>>>>> send_to_queues: #{channels.collect {|a| a.id}.join(' ')}")
