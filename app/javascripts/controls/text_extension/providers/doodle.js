@@ -9,23 +9,23 @@ protonet.controls.TextExtension.providers.Doodle = function(url) {
     type: "Doodle",
     url: this.url
   };
-  
+};
+
+protonet.controls.TextExtension.providers.Doodle.prototype = {
   /**
    * Matches
    * http://www.doodle.com/participation.html?pollId=w6azsxu3bmdw6zsw
    * http://www.doodle.com/embedPoll.html?pollId=w6azsxu3bmdw6zsw
    * http://www.doodle.com/w6azsxu3bmdw6zsw
    */
-  this._regExp = /doodle\.com\/(participation\.html\?pollId\=)*([\w]+?$)/i;
-};
-
-protonet.controls.TextExtension.providers.Doodle.prototype = {
+  REG_EXP: /doodle\.com\/(participation\.html\?pollId\=)*([\w]+?$)/i,
+  
   match: function() {
-    return this._regExp.test(this.url);
+    return this.REG_EXP.test(this.url);
   },
 
   _extractId: function() {
-    return this.url.match(this._regExp)[2];
+    return this.url.match(this.REG_EXP)[2];
   },
   
   loadData: function(onSuccessCallback) {

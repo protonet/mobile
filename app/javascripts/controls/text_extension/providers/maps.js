@@ -7,18 +7,18 @@ protonet.controls.TextExtension.providers.Maps = function(url) {
     type: "Maps",
     url: this.url
   };
-  
+};
+
+protonet.controls.TextExtension.providers.Maps.prototype = {
   /**
    * Matches
    * http://maps.google.de/?ie=UTF8&ll=37.0625,-95.677068&spn=31.977057,79.013672&z=4
    * http://maps.google.com/maps?f=q&source=s_q&hl=en&geocode=&q=hamburg&sll=37.0625,-95.677068&sspn=31.977057,79.013672&ie=UTF8&hq=&hnear=Hamburg,+Germany&z=10
    */
-  this._regExp = /maps\.google\.[\w.]{2,5}\/(maps)*\?/i;
-};
-
-protonet.controls.TextExtension.providers.Maps.prototype = {
+  REG_EXP: /maps\.google\.[\w.]{2,5}\/(maps)*\?/i,
+  
   match: function() {
-    return this._regExp.test(this.url);
+    return this.REG_EXP.test(this.url);
   },
   
   _extractQuery: function() {

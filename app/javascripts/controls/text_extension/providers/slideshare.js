@@ -11,12 +11,13 @@ protonet.controls.TextExtension.providers.Slideshare = function(url) {
     url: this.url,
     type: "Slideshare"
   };
-  this._regExp = /slideshare\.net\/[\w-]+?\/[\w-]+?$/i;
 };
 
 protonet.controls.TextExtension.providers.Slideshare.prototype = {
+  REG_EXP: /slideshare\.net\/[\w-]+?\/[\w-]+?$/i,
+  
   match: function() {
-    return this._regExp.test(this.url);
+    return this.REG_EXP.test(this.url);
   },
   
   loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {

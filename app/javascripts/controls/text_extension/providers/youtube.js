@@ -11,16 +11,17 @@ protonet.controls.TextExtension.providers.YouTube = function(url) {
     url: this.url,
     type: "YouTube"
   };
-  this._regExp = /youtube\.com\/watch\?v\=([\w_-]*)/i;
 };
 
 protonet.controls.TextExtension.providers.YouTube.prototype = {
+  REG_EXP: /youtube\.com\/watch\?v\=([\w_-]*)/i,
+  
   match: function() {
-    return this._regExp.test(this.url);
+    return this.REG_EXP.test(this.url);
   },
   
   _extractId: function() {
-    return this.url.match(this._regExp)[1];
+    return this.url.match(this.REG_EXP)[1];
   },
   
   loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {

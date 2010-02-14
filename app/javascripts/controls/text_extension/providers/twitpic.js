@@ -9,23 +9,23 @@ protonet.controls.TextExtension.providers.Twitpic = function(url) {
     type: "Twitpic",
     url: this.url
   };
-  
+};
+
+protonet.controls.TextExtension.providers.Twitpic.prototype = {
   /**
    * Matches
    * http://twitpic.com/d1x47
    * http://twitpic.com/d1x47#
    * http://twitpic.com/d1x47/full
    */
-  this._regExp = /twitpic\.com\/(\w{5,7}?)$|#$|\/full$/i;
-};
-
-protonet.controls.TextExtension.providers.Twitpic.prototype = {
+  REG_EXP: /twitpic\.com\/(\w{5,7}?)$|#$|\/full$/i,
+  
   match: function() {
-    return this._regExp.test(this.url);
+    return this.REG_EXP.test(this.url);
   },
 
   _extractId: function() {
-    return this.url.match(this._regExp)[1];
+    return this.url.match(this.REG_EXP)[1];
   },
   
   loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {

@@ -9,17 +9,21 @@ protonet.controls.TextExtension.providers.GIST = function(url) {
     type:         "GIST",
     url:          this.url
   };
-  // http://gist.github.com/286785
-  this._regExp = /gist\.github\.com\/([0-9]*)/i;
 };
 
 protonet.controls.TextExtension.providers.GIST.prototype = {
+  /**
+   * Matches:
+   * http://gist.github.com/286785
+   */
+  REG_EXP: /gist\.github\.com\/([0-9]*)/i,
+  
   match: function() {
-    return this._regExp.test(this.url);
+    return this.REG_EXP.test(this.url);
   },
   
   _extractId: function() {
-    return this.url.match(this._regExp)[1];
+    return this.url.match(this.REG_EXP)[1];
   },
   
   loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {

@@ -11,21 +11,36 @@ protonet.controls.TextExtension.providers.FlickrSearch = function(url) {
     type: "FlickrSearch",
     url: this.url
   };
-  this._regExp = /flickr\.com\/search\/.*[\?&]q\=(.+?)($|&)/i;
 };
 
 protonet.controls.TextExtension.providers.FlickrSearch.prototype = {
+  REG_EXP: /flickr\.com\/search\/.*[\?&]q\=(.+?)($|&)/i,
+  
+  SORT_TRANSLATION: {
+    "int": "interestingness-desc",
+    "rec": "date-posted-desc",
+    "*": "relevance"
+  },
+  
   match: function() {
-    return this._regExp.test(this.url);
+    return this.REG_EXP.test(this.url);
   },
   
   _extractQuery: function() {
-    return decodeURIComponent(this.url.match(this._regExp)[1].replace(/\+/g, " "));
+    return decodeURIComponent(this.url.match(this.REG_EXP)[1].replace(/\+/g, " "));
+  },
+  
+  _extractSort: function() {
+    var match = this.url.match(/(&|\?)s=(\w*)/),
+        sortKey = match && decodeURIComponent(match[2]);
+    alert(sortKey);
+    return this.SORT_TRANSLATION[sortKey] || this.SORT_TRANSLATION["*"];
   },
   
   loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
     protonet.data.Flickr.getPhotoSearch(
       this._extractQuery(),
+      this._extractSort(),
       this._onSuccess.bind(this, onSuccessCallback, onEmptyResultCallback),
       this._onError.bind(this, onErrorCallback)
     );

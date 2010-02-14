@@ -11,16 +11,17 @@ protonet.controls.TextExtension.providers.Flickr = function(url) {
     url: this.url,
     type: "Flickr"
   };
-  this._regExp = /flickr\.com\/photos\/[\w@]+?\/(\d{1,20})/i;
 };
 
 protonet.controls.TextExtension.providers.Flickr.prototype = {
+  REG_EXP: /flickr\.com\/photos\/[\w@]+?\/(\d{1,20})/i,
+  
   match: function() {
-    return this._regExp.test(this.url);
+    return this.REG_EXP.test(this.url);
   },
   
   _extractId: function() {
-    return this.url.match(this._regExp)[1];
+    return this.url.match(this.REG_EXP)[1];
   },
   
   loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {

@@ -9,15 +9,14 @@ protonet.controls.TextExtension.providers.XING = function(url) {
     url: this.url,
     type: "XING"
   };
-  this._regExp = /xing\.com\/profile\/(.+?)[^\?]/i;
 };
 
 protonet.controls.TextExtension.providers.XING.prototype = {
+  REG_EXP: /xing\.com\/profile\/(.+?)[^\?]/i,
+  
   match: function() {
-    return this._regExp.test(this.url);
+    return this.REG_EXP.test(this.url);
   },
-  
-  
   
   loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
     var yqlCallback = this._yqlCallback.bind(this, onSuccessCallback);

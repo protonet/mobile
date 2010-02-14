@@ -12,16 +12,17 @@ protonet.controls.TextExtension.providers.Vimeo = function(url) {
     url: this.url,
     type: "Vimeo"
   };
-  this._regExp = /vimeo\.com\/(\d+)/i;
 };
 
 protonet.controls.TextExtension.providers.Vimeo.prototype = {
+  REG_EXP: /vimeo\.com\/(\d+)/i,
+  
   match: function() {
-    return this._regExp.test(this.url);
+    return this.REG_EXP.test(this.url);
   },
   
   _extractId: function() {
-    return this.url.match(this._regExp)[1];
+    return this.url.match(this.REG_EXP)[1];
   },
   
   loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {

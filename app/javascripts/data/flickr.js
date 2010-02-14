@@ -14,7 +14,7 @@ protonet.data.Flickr.getPhoto = (function() {
     if (!results) {
       return callbacks.failure();
     }
-
+    
     data = $.extend({
       thumbnail: results.size[0],
       preview: results.size[1]
@@ -66,7 +66,6 @@ protonet.data.Flickr.getPhotoSet = (function() {
       YQL_GET_PHOTO_INFO = "SELECT urls, title, description, url FROM flickr.photos.info WHERE photo_id IN ({sub_select})",
       YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE photo_id IN ({sub_select}) AND label IN ('Square', 'Small')",
       callbacks,
-      photoSetId,
       data = [];
   
   function photoSizesLoaded(results) {
@@ -88,8 +87,7 @@ protonet.data.Flickr.getPhotoSet = (function() {
     });
   }
   
-  function getPhotoSet(id, onSuccess, onFailure) {
-    photoSetId = id;
+  function getPhotoSet(photoSetId, onSuccess, onFailure) {
     callbacks = {
       success: onSuccess || $.noop,
       failure: onFailure || $.noop
@@ -124,11 +122,10 @@ protonet.data.Flickr.getPhotoSet = (function() {
 protonet.data.Flickr.getPhotoSearch = (function() {
   var MULTI_QUERY = "USE \"http://www.datatables.org/data/query.multi.xml\" AS multiquery;" +
                     "SELECT * FROM multiquery WHERE queries=\"{queries}\"",
-      YQL_GET_PHOTOSET_INFO = "SELECT id FROM flickr.photos.search WHERE text = '{query}' AND sort = 'relevance' LIMIT 10",
+      YQL_GET_PHOTOS_INFO = "SELECT id FROM flickr.photos.search WHERE text = '{query}' AND sort = '{sort}' LIMIT 10",
       YQL_GET_PHOTO_INFO = "SELECT urls, title, description, url FROM flickr.photos.info WHERE photo_id IN ({sub_select})",
       YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE photo_id IN ({sub_select}) AND label IN ('Square', 'Small')",
       callbacks,
-      photoSetId,
       data = [];
   
   function photoSizesLoaded(results) {
@@ -150,14 +147,13 @@ protonet.data.Flickr.getPhotoSearch = (function() {
     });
   }
   
-  function getPhotoSearch(query, onSuccess, onFailure) {
-    searchQuery = query;
+  function getPhotoSearch(searchQuery, sort, onSuccess, onFailure) {
     callbacks = {
       success: onSuccess || $.noop,
       failure: onFailure || $.noop
     };
     
-    var subSelect = YQL_GET_PHOTOSET_INFO.replace("{query}", searchQuery),
+    var subSelect = YQL_GET_PHOTOS_INFO.replace("{query}", searchQuery).replace("{sort}", sort),
         yqlQuery1 = YQL_GET_PHOTO_INFO.replace("{sub_select}", subSelect),
         yqlQuery2 = YQL_GET_PHOTO_SIZES.replace("{sub_select}", subSelect);
         

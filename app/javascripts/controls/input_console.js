@@ -101,7 +101,7 @@ protonet.controls.InputConsole.prototype = {
       case "@":
         // check wether the previous character is a space
         // if yes this is the beginning of a command sequence
-        if (jQuery.trim(previousCharacter) === "") {
+        if ($.trim(previousCharacter) === "") {
           
           console.log("person mode");
           this.console_mode = "person";
