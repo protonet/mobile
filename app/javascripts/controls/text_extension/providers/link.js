@@ -27,11 +27,11 @@ protonet.controls.TextExtension.providers.Link.prototype = {
         yqlTimeoutCallback = this._yqlTimeoutCallback.bind(this, onSuccessCallback),
         urlParts = protonet.utils.parseUrl(this.url);
     
-    this._shortUrl = urlParts.host + urlParts.port + urlParts.path + urlParts.query;
+    this._shortUrl = urlParts.host + urlParts.path + urlParts.query;
     
     new protonet.data.YQL.Query(
       "SELECT title, abstract FROM search.web WHERE " + 
-        "query='" + this._shortUrl + "' AND sites='" + urlParts.host + "' LIMIT 1"
+        "query='" + this._shortUrl + "' AND sites='" + urlParts.host + "' AND url LIKE '%" + this._shortUrl + "%' LIMIT 1"
     ).execute(
       yqlSearchTableCallback,
       yqlSearchTableCallback
@@ -119,8 +119,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   },
   
   getDescription: function() {
-    var description = this.data.description;
-    description = description;
+    var description = this.data.description || "";
     return String(description).truncate(200);
   },
   

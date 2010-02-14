@@ -68,10 +68,9 @@ protonet.controls.CommunicationConsole.prototype = {
   "receiveMessage": function(message) {
     console.log("cc is receiving message");
     
+    var tweetIsSameChannel = this.input_channel_id.val() == message.channel_id;
     message.text_extension = message.text_extension && JSON.parse(message.text_extension);
     new protonet.controls.Tweet(message);
-    
-    var tweetIsSameChannel = this.input_channel_id.val() == message.channel_id;
     
     // Notification stuff
     if (!protonet.utils.isWindowFocused() && tweetIsSameChannel) {

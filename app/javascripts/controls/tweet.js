@@ -19,10 +19,13 @@ protonet.controls.Tweet = (function() {
     this.channelId        = args.channel_id;
     this.textExtension    = args.text_extension;
     this.form             = args.form;
+    this.id               = args.id;
     
     template = template || $("#message-template");
     
     this.listElement = $(template.html());
+    this.htmlId = this.listElement.attr("id").replace("{id}", this.id);
+    this.listElement.attr("id", this.htmlId);
     this.listElement.find(".message-usericon > img").attr("src", args.user_icon_url);
     this.listElement.find(".message-author").html(this.author);
     this.listElement.find(".message-date")
@@ -33,7 +36,16 @@ protonet.controls.Tweet = (function() {
     messageContainer.find("p").append(this.message);
     
     if (this.textExtension) {
-      protonet.controls.TextExtension.render(messageContainer, this.textExtension);
+      if (this.channelId == protonet.globals.channelSelector.getCurrentChannelId()) {
+        protonet.controls.TextExtension.render(messageContainer, this.textExtension);
+      } else {
+        // Put in queue, so that it gets rendered when the channel is focused
+        protonet.globals.textExtensions.push({
+          data: this.textExtension,
+          container_id: this.htmlId,
+          channel_id: this.channelId
+        });
+      }
     }
     
     this.channelUl = $("#messages-for-channel-" + this.channelId);
