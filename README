@@ -108,14 +108,7 @@ http://hopper.squarespace.com/blog/2008/7/22/simple-amqp-library-for-ruby.html
 
 === COMPILING THE SOCKET:
 
-How to compile a new version of the messaging actionscript:
-
-Get the os x version of the compiler from http://www.mtasc.org/ :
-http://www.mtasc.org/zip/mtasc-1.12-osx.zip (is the version we used for the current version)
-
-let it compile the source:
-
-~/Projekte/misc/mtasc-1.12-osx/mtasc -version 8 -header 100:100:100 -main -swf ~/Projekte/merb_data/dashboard/public/flash/socket.swf -v socket.as
+TextMate -> Bundles -> ActionScript -> MTASC -> Build with MTASC
 
 === FLASH SOCKET COMMUNICATION CAVEATS
 
