@@ -19,7 +19,7 @@ protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
   
   "setClick": function() {
     var self = this;
-    this.files.live("click", function(event) {
+    this.files.die("click").live("click", function(event) {
       event.preventDefault();
       self.download($(this));
     });

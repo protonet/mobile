@@ -176,7 +176,7 @@ protonet.controls.FileWidget.prototype = {
       return "  - file:" + this.getDownloadPathFor(fileName);
     }.bind(this)).join("\n");
     
-    this.communicationConsole.sendTweetFromMessage(message);
+    protonet.globals.communicationConsole.sendTweetFromMessage(message);
   }
 };
 

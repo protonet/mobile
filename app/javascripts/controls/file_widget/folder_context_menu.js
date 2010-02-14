@@ -19,7 +19,7 @@ protonet.controls.FileWidget.prototype.FolderContextMenu.prototype = {
   
   "setClick": function() {
     var self = this;
-    this.folders.live("click", function(event) {
+    this.folders.die("click").live("click", function(event) {
       event.preventDefault();
       self.open($(this));
     });
