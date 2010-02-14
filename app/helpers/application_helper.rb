@@ -22,7 +22,7 @@ module ApplicationHelper
       path = $1
       file_name = extract_file_name($1)
       
-      file_name ? ('<a href="' + path + '" target="_blank">' + truncate(file_name, 40) + '</a>') : s
+      file_name ? ('<a href="' + path + '">' + truncate(file_name, 40) + '</a>') : s
     }
   end
   
