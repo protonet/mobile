@@ -1,43 +1,50 @@
-protonet.controls.EndlessScroller = (function() {
+//= require "../lib/jquery.inview.js"
 
+protonet.controls.EndlessScroller = (function() {
+  var REG_EXP_CHANNEL_ID = /messages-for-channel-(\d*)/,
+      REG_EXP_TWEET_INDEX = /tweet-(\d*)/;
+  
   function EndlessScroller(args) {
-    this.loading = false;
-    this.channel_id = this.getCurrentChannelId();
-    cc.input_channel_id.change(function(){
-      this.channel_id = this.getCurrentChannelId();
-    }.bind(this));
-    this.end_reached = {};
-    $(window).scroll(function () { 
-      var window_size = $(document).height();
-      // where are we?
-      var position_from_top = $(window).scrollTop();
-      if(!this.end_reached[this.channel_id] && !this.loading && (window_size - position_from_top < 1100)) {
-        this.loading = true;
-        this.loadNewTweets();
-      }
+    this.channelId = protonet.globals.channelSelector.getCurrentChannelId();
+    this._observe();
+    
+    protonet.globals.channelSelector.onSwitch(function() {
+      var oldChannel = $("#messages-for-channel-" + this.channelId);
+      oldChannel.children().unbind("inview");
+      this.channelId = protonet.globals.channelSelector.getCurrentChannelId();
+      
+      this._observe();
     }.bind(this));
   };
   
   EndlessScroller.prototype = {
-    "loadNewTweets": function() {
-      var elements = $("#messages-for-channel-" + this.channel_id + " > li");
-      first_tweet = elements[elements.size()-1];
-      $.get("/tweets", {channel_id : this.channel_id, first_id: first_tweet.id.match(/tweet-(.*)/)[1]}, function(data) {
-        if(data=="\n") {
-          this.end_reached[this.channel_id] = true;
-        } else {
-          $("#messages-for-channel-" + this.channel_id).append(data);
-          protonet.controls.TextExtension.renderQueue();
-          protonet.controls.PrettyDate.update();          
-        }
-        
-        this.loading = false;
-        
+    "_observe": function() {
+      var channel = $("#messages-for-channel-" + this.channelId),
+          lastTweet = channel.children("li:last-child");
+      lastTweet.bind("inview", function() {
+        lastTweet.unbind("inview");
+        this.loadNewTweets(lastTweet, channel);
       }.bind(this));
     },
     
-    "getCurrentChannelId": function() {
-      return cc.input_channel_id.val();
+    "loadNewTweets": function(lastTweet, channel) {
+      var params = {
+        channel_id: this.channelId,
+        first_id: lastTweet.attr("id").match(REG_EXP_TWEET_INDEX)[1]
+      };
+      
+      $.get("/tweets", params, function(data) {
+        if ($.trim(data)) {
+          channel.append(data);
+          
+          // Ok, let the browser breathe and then do the rest
+          setTimeout(function() {
+            protonet.controls.TextExtension.renderQueue();
+            protonet.controls.PrettyDate.update();
+          }, 100);
+          this._observe();
+        }
+      }.bind(this));
     }
   };
   

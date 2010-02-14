@@ -31,6 +31,7 @@
     <%- if t.text_extension? -%>
     <script type="text/javascript">//<![CDATA[
       protonet.globals.textExtensions.push({
+        channel_id: <%= channel.id.to_json %>,
         container_id: <%= "tweet-#{t.id}".to_json %>,
         data: <%= t.text_extension %>
       });

@@ -7,6 +7,7 @@ function DispatchingSystem(server, user_auth_token, user_id) {
 }
    
 DispatchingSystem.prototype = {
+  "VERSION": 1, // Increase this number manually if you want to invalidate browser cache
   
   "createSocket": function() {
     var container = $('<div id="socket-container" />').appendTo("body"),
@@ -14,7 +15,7 @@ DispatchingSystem.prototype = {
         params = { allowscriptaccess: "sameDomain" };
     
     swfobject.embedSWF(
-      "/flash/socket.swf",
+      "/flash/socket.swf?v=" + this.VERSION,
       "socket-container",
       "auto", "auto", "8",
       null, {}, params, attributes
@@ -96,10 +97,6 @@ DispatchingSystem.prototype = {
         console.log('default handling: ' + message.x_target + '(message)');
         eval(message.x_target + '(message)');
     }
-  },
-
-  "parseMessage": function(data) {
-  
   },
 
   "sendMessage": function(data, delimit) {

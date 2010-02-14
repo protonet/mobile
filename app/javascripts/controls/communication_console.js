@@ -12,17 +12,17 @@ protonet.controls.CommunicationConsole = function(args) {
   this.input_channel_id = $("#message_channel_id");
   
   // add sub views
-  this.channel_selector = new protonet.controls.ChannelSelector({
+  protonet.globals.channelSelector = new protonet.controls.ChannelSelector({
     "parent_widget": this,
     "channel_input": this.input_channel_id
   });
-  this.input_console    = new protonet.controls.InputConsole({
+  protonet.globals.inputConsole = new protonet.controls.InputConsole({
     "input_console": this.input,
     "parent_widget": this,
     "form": this.form
   });
   
-  this.text_extension_input = new protonet.controls.TextExtension.Input(this.input);
+  protonet.globals.textExtensionInput = new protonet.controls.TextExtension.Input(this.input);
   
   // make it a global user object
   this.user_config      = args.config;
@@ -43,7 +43,7 @@ protonet.controls.CommunicationConsole.prototype = {
     new protonet.controls.Tweet({
       "form": this.form,
       "message": this.input.val(),
-      "text_extension": this.text_extension_input.getData(),
+      "text_extension": protonet.globals.textExtensionInput.getData(),
       "author": this.user_config.user_name,
       "channel_id": this.input_channel_id.val(),
       "user_icon_url": this.user_config.user_icon_url
@@ -51,7 +51,7 @@ protonet.controls.CommunicationConsole.prototype = {
     
     this.input.val("");
     
-    this.text_extension_input.submitted();
+    protonet.globals.textExtensionInput.submitted();
   },
   
   "sendTweetFromMessage": function(message) {
@@ -67,7 +67,7 @@ protonet.controls.CommunicationConsole.prototype = {
   
   "receiveMessage": function(message) {
     console.log("cc is receiving message");
-
+    
     message.text_extension = message.text_extension && JSON.parse(message.text_extension);
     new protonet.controls.Tweet(message);
     
@@ -84,7 +84,7 @@ protonet.controls.CommunicationConsole.prototype = {
     }
     
     if (!tweetIsSameChannel) {
-      this.channel_selector.notify(message.channel_id);
+      protonet.globals.channelSelector.notify(message.channel_id);
     }
   }
 };

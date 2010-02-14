@@ -2,12 +2,10 @@ protonet.controls.ChannelSelector = (function() {
   var container,
       feedHolder,
       channelInput,
-      parentWidget,
-      REG_EXP_ELEMENT_INDEX = /index=([0-9]*)/,
-      REG_EXP_CHANNEL_ID = /channel_id=([0-9]*)/;
+      REG_EXP_ELEMENT_INDEX = /index=(\d*)/,
+      REG_EXP_CHANNEL_ID = /channel_id=(\d*)/;
   
   function ChannelSelector(params) {
-    parentWidget = params.parent_widget;
     channelInput = params.channel_input;
     
     container = container || $("#channel");
@@ -20,16 +18,17 @@ protonet.controls.ChannelSelector = (function() {
     _observe: function() {
       container.find(".channel a").click(function(event) {
         var anchor = $(this),
+            href = anchor.attr("href"),
             // get the index of the element
-            index = parseInt(anchor.attr("href").match(REG_EXP_ELEMENT_INDEX)[1], 10),
+            index = parseInt(href.match(REG_EXP_ELEMENT_INDEX)[1], 10),
             // get id of channel
-            channelId = parseInt(anchor.attr("href").match(REG_EXP_CHANNEL_ID)[1], 10);
+            channelId = parseInt(href.match(REG_EXP_CHANNEL_ID)[1], 10);
 
         feedHolder.animate({ left: index * -611 }, "fast");
         container.find(".active").toggleClass("active");
         anchor.parent("li").toggleClass("active");
         anchor.find(".notification").remove();
-
+        
         // set form channel_id to correct value
         currentChannel = channelId;
         channelInput.val(channelId).trigger("change");
@@ -45,6 +44,14 @@ protonet.controls.ChannelSelector = (function() {
         notificationElement = $("<span />", { html: 0, className: "notification" }).appendTo(anchor);
       }
       notificationElement.html(parseInt(notificationElement.html(), 10) + 1);
+    },
+    
+    getCurrentChannelId: function() {
+      return parseInt(channelInput.val(), 10);
+    },
+    
+    onSwitch: function(callback) {
+      channelInput.change(callback);
     }
   };
   

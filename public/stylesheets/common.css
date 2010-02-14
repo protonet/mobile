@@ -457,9 +457,9 @@ h2 {
   margin-right: 2px;
   vertical-align: middle;
 }
-#user-list li:hover {
+#user-list li:hover,
+#user-list li:focus {
   background-color: rgb(255, 255, 255);
-  border: 1px solid rgb(0, 0, 0);
 }
 #user-list button {
   border: 0 none;
@@ -583,11 +583,6 @@ h2 {
 #file-list li.file:not(.upload-error):not(.disabled):hover,
 #file-list li.file:not(.upload-error):not(.disabled):focus {
   background: rgb(255, 255, 255) url(/images/icn_file.png) scroll no-repeat left top;
-}
-
-#file-list li.directory:focus,
-#file-list li.file:not(.upload-error):not(.disabled):focus {
-  border: 1px solid rgb(100, 100, 100);
 }
 
 #file-list form {

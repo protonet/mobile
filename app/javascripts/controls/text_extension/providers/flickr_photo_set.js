@@ -57,7 +57,7 @@ protonet.controls.TextExtension.providers.FlickrPhotoSet.prototype = {
   getDescription: function() {
     return $.map(this.data.photos, function(photo) {
       return photo.title;
-    }).join(", ");
+    }).join(", ").truncate(240);
   },
   
   getTitle: function() {

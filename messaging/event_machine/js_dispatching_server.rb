@@ -124,7 +124,7 @@ module JsDispatchingServer
       channel_queue.bind(amq.topic("channels"), :key => "channels.a#{channel.id}").subscribe do |msg|
         message = JSON(msg)
         sender_socket_id = message['socket_id']
-        message.merge!({:x_target => 'cc.receiveMessage'})
+        message.merge!({:x_target => 'protonet.globals.communicationConsole.receiveMessage'})
         if sender_socket_id && sender_socket_id.to_i != @key
           message_json = message.to_json
           log('sending data out: ' + message_json + ' ' + sender_socket_id)

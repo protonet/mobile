@@ -12,7 +12,7 @@ protonet.data.Flickr.getPhoto = (function() {
   function photoSizesLoaded(response) {
     var results = response && response.query && response.query.results;
     if (!results) {
-      return callback.failure();
+      return callbacks.failure();
     }
 
     data = $.extend({
@@ -103,7 +103,7 @@ protonet.data.Flickr.getPhotoSet = (function() {
       function(response) {
         var results = response && response.query && response.query.results;
         if (!results) {
-          return callback.failure();
+          return callbacks.failure();
         }
         
         photoInfosLoaded(results.results[0]);
@@ -166,7 +166,7 @@ protonet.data.Flickr.getPhotoSearch = (function() {
       function(response) {
         var results = response && response.query && response.query.results;
         if (!results) {
-          return callback.failure();
+          return callbacks.failure();
         }
         
         photoInfosLoaded(results.results[0]);

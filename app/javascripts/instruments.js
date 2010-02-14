@@ -12,8 +12,8 @@
 
 // Initialize communication stuff
 $(function() {
-  window.cc = new protonet.controls.CommunicationConsole({"config": protonet.config});
-  window.Dispatcher = new DispatchingSystem(protonet.config.dispatching_server, protonet.config.token, protonet.config.user_id);
+  protonet.globals.communicationConsole = new protonet.controls.CommunicationConsole({"config": protonet.config});
+  protonet.globals.dispatcher = new DispatchingSystem(protonet.config.dispatching_server, protonet.config.token, protonet.config.user_id);
 });
 
 

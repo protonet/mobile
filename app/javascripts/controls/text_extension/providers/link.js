@@ -31,7 +31,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     
     new protonet.data.YQL.Query(
       "SELECT title, abstract FROM search.web WHERE " + 
-        "query='" + this._shortUrl + "' AND url LIKE '%" + this._shortUrl + "%' LIMIT 1"
+        "query='" + this._shortUrl + "' AND sites='" + urlParts.host + "' LIMIT 1"
     ).execute(
       yqlSearchTableCallback,
       yqlSearchTableCallback
@@ -120,7 +120,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   
   getDescription: function() {
     var description = this.data.description;
-    description = description || this.url;
+    description = description;
     return String(description).truncate(200);
   },
   

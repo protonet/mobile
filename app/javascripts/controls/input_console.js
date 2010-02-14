@@ -217,11 +217,11 @@ protonet.controls.InputConsole.prototype = {
   
   "sendStoppedWritingNotification": function() {
     json_request = {"operation": "user.stopped_writing", "payload": {"user_id": protonet.config.user_id}};
-    window.Dispatcher.sendMessage(JSON.stringify(json_request));
+    protonet.globals.dispatcher.sendMessage(JSON.stringify(json_request));
   },
   
   "sendStartedWritingNotification": function() {
     json_request = {"operation": "user.writing", "payload": {"user_id": protonet.config.user_id}};
-    window.Dispatcher.sendMessage(JSON.stringify(json_request));
+    protonet.globals.dispatcher.sendMessage(JSON.stringify(json_request));
   }
 };

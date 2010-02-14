@@ -4,11 +4,11 @@ class Socket {
   static var socket:XMLSocket;
 
   static function test(data:String) {
-    ExternalInterface.call("Dispatcher.test", data);
+    ExternalInterface.call("protonet.globals.dispatcher.test", data);
   }
 
   static function sendData(data:String) {
-    ExternalInterface.call("Dispatcher.sentCallback", socket.send(unescape(data)) );
+    ExternalInterface.call("protonet.globals.dispatcher.sentCallback", socket.send(unescape(data)) );
   }
 
   static function onReceive(data:String) {
@@ -16,14 +16,12 @@ class Socket {
      * Fix for ExternalInterface Error When Parameters Contain Special Characters (stupid Adobe)
      * http://www.digitalmachina.com/archives/2009/03/11/externalinterface-error-when-parameters-contain-special-characters/
      */
-/*    data = data.split("\n").join("\\n");
-    data = data.split("\r").join("\\r");*/
     data = data.split("\\").join("\\\\");
-    ExternalInterface.call("Dispatcher.messageReceived", data );
+    ExternalInterface.call("protonet.globals.dispatcher.messageReceived", data );
   }
   
   static function onConnect(status:Boolean) {
-    ExternalInterface.call("Dispatcher.socketConnectCallback", status );
+    ExternalInterface.call("protonet.globals.dispatcher.socketConnectCallback", status );
   }
   
   static function connectSocket(ip:String) {
@@ -45,7 +43,7 @@ class Socket {
     ExternalInterface.addCallback("connectSocket", null, connectSocket);
     ExternalInterface.addCallback("closeSocket", null, closeSocket);
     
-    ExternalInterface.call("Dispatcher.socketReadyCallback");
+    ExternalInterface.call("protonet.globals.dispatcher.socketReadyCallback");
     
 
     

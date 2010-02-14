@@ -3,26 +3,11 @@
 protonet.controls.FileWidget.prototype.FileContextMenu = function(parent) {
   this.parent = parent;
   this.container = $("#file-list");
-  this._createIframe();
   this.update();
   this.setClick();
 };
 
 protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
-  "_createIframe": function() {
-    /**
-     * We need an iframe for openening the downloads to avoid problems
-     * with the socket connection
-     */
-    this._iframe = $("<iframe />", {
-      src: "javascript:'<html></html>'",
-      frameborder: 0,
-      width: 1,
-      height: 1,
-      className: "hidden-iframe"
-    }).appendTo("body");
-  },
-  
   "update": function() {
     this.files = this.container.find("li.file");
     this.files.contextMenu({
@@ -48,7 +33,7 @@ protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
     var fileName = el.html(),
         downloadPath = this.parent.getDownloadPathFor(fileName);
     
-    this._iframe.get(0).contentWindow.location.replace(downloadPath);
+    location.href = downloadPath;
     
     console.log('download: ' + downloadPath);
   },
