@@ -4,12 +4,11 @@ protonet.controls.FileWidget.prototype.FileContextMenu = function(parent) {
   this.parent = parent;
   this.container = $("#file-list");
   this.update();
-  this.setClick();
 };
 
 protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
   "update": function() {
-    this.files = this.container.find("li.file");
+    this.files = this.container.find("li.file > a");
     this.files.contextMenu({
       menu: "file-list-menu"
     }, function(action, el, pos) {
@@ -17,25 +16,8 @@ protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
     }.bind(this));
   },
   
-  "setClick": function() {
-    var self = this;
-    this.files.die("click").live("click", function(event) {
-      event.preventDefault();
-      self.download($(this));
-    });
-  },
-  
   "download": function(el) {
-    if (el.hasClass("disabled")) {
-      return;
-    }
-    
-    var fileName = el.html(),
-        downloadPath = this.parent.getDownloadPathFor(fileName);
-    
-    location.href = downloadPath;
-    
-    console.log('download: ' + downloadPath);
+    location.href = el.attr("href");
   },
   
   "delete": function(el) {

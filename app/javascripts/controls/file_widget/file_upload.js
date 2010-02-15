@@ -424,9 +424,8 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     
     this._fullSize += file.size;
     
-    var li = this.parent.createElementFor({ type: "file", name: file.name, id: "file-" + file.id })
-      .addClass("disabled")
-      .prepend($("<span />").html("(0 %)"));
+    var li = this.parent.createElementFor({ type: "file", name: file.name, id: "file-" + file.id }).addClass("disabled");
+    li.children().prepend($("<span />").html("(0 %)"));
     
     this._fileList.append(li);
     

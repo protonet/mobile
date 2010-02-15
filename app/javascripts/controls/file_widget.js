@@ -37,11 +37,8 @@ protonet.controls.FileWidget.prototype = {
   
   "gotoPath": function(path) {
     path = path || '';
-    var self = this;
     this.file_list.fadeTo(100, 0.2);
-    jQuery.getJSON('system/files', {"path": path}, function(data) {
-      self.renderResponse(data);
-    });
+    jQuery.getJSON('system/files', {"path": path}, this.renderResponse.bind(this));
   },
   
   "observeBackButton": function() {
@@ -53,9 +50,9 @@ protonet.controls.FileWidget.prototype = {
   
   "renderResponse": function(objects) {
     this.file_list.html("");
-    $(objects).each(function(i){
-      $(objects[i].name).each(function(j) {
-        this.file_list.append(this.createElementFor({"type": objects[i].type, "name": objects[i].name[j]}));
+    $(objects).each(function(i, object){
+      $(object.name).each(function(j, fileName) {
+        this.file_list.append(this.createElementFor({"type": objects[i].type, "name": fileName}));
       }.bind(this));
     }.bind(this));
     
@@ -66,10 +63,10 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "createElementFor": function(object) {
-    var li = $("<li />", {
-      className: object.type,
-      tabindex: "-1"
-    }).html(object.name);
+    var li = $("<li />", { className: object.type, tabindex: "-1" }),
+        anchor = $("<a />", { href: this.getDownloadPathFor(object.name), html: object.name });
+    
+    anchor.appendTo(li);
     
     if (object.id) {
       li.attr("id", object.id);
@@ -79,7 +76,7 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "moveDown": function(path) {
-    this.current_path += '/' + path;
+    this.current_path += "/" + path;
     this.gotoPath(this.current_path);
     this.addPathBlob(path);
   },
@@ -94,22 +91,21 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "addPathBlob": function(blob) {
-    var self = this,
-        path = this.current_path,
+    var path = this.current_path,
         old_index = this.hierarchy_bar.children().size() + 1, // we'll be adding one a the end of this method
         blobHtml = protonet.utils.escapeHtml(blob + '/'),
         blobTitle = protonet.utils.escapeHtml('Go to folder "' + (blob || "/") + '"');
-    object_to_add = $('<a href="#" title="' + blobTitle + '">' + blobHtml + '</a>');
+    object_to_add = $('<a />', { href: "#", title: blobTitle, html: blobHtml });
     object_to_add.click(function(event){
       event.preventDefault(); 
-      self.gotoPath(path);
-      var new_index = self.hierarchy_bar.children().size();
+      this.gotoPath(path);
+      var new_index = this.hierarchy_bar.children().size();
       while(new_index > old_index) {
-        self.removePathBlob();
-        self.current_path = self.removeDeepestDirectory(self.current_path);
+        this.removePathBlob();
+        this.current_path = this.removeDeepestDirectory(this.current_path);
         new_index--;
       }
-    });
+    }.bind(this));
     this.hierarchy_bar.append(object_to_add);
   },
   

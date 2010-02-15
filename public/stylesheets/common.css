@@ -545,17 +545,21 @@ h2 {
   margin-bottom: 0;
 }
 #file-list li {
+  margin-bottom: 0.1em;
+}
+#file-list li a {
+  display: block;
   background: rgb(241, 241, 241);
   border: 1px solid rgb(241, 241, 241);
-  cursor: pointer;
   margin-bottom: 0.1em;
   padding: 0.2em 0.5em 0.2em 25px;
   position: relative;
   white-space: nowrap;
   overflow: hidden;
   -moz-user-select: none;
+  text-decoration: none;
 }
-#file-list li.file {
+#file-list li.file a {
   background: rgb(241, 241, 241) url(/images/icn_file.png) scroll no-repeat left top;
 }
 #file-list li.file.disabled {
@@ -570,18 +574,18 @@ h2 {
   margin-right: 5px;
 }
 
-#file-list li.directory {
+#file-list li.directory a {
   background: rgb(241, 241, 241) url(/images/icn_directory.png) scroll no-repeat left top;
 }
 #file-list li > ul {
   display: none;
 }
-#file-list li.directory:hover,
-#file-list li.directory:focus {
+#file-list li.directory a:hover,
+#file-list li.directory a:focus {
   background: rgb(255, 255, 255) url(/images/icn_directory.png) scroll no-repeat left top;
 }
-#file-list li.file:not(.upload-error):not(.disabled):hover,
-#file-list li.file:not(.upload-error):not(.disabled):focus {
+#file-list li.file:not(.upload-error):not(.disabled) a:hover,
+#file-list li.file:not(.upload-error):not(.disabled) a:focus {
   background: rgb(255, 255, 255) url(/images/icn_file.png) scroll no-repeat left top;
 }
 

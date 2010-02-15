@@ -9,7 +9,7 @@ protonet.controls.FileWidget.prototype.FolderContextMenu = function(parent) {
 
 protonet.controls.FileWidget.prototype.FolderContextMenu.prototype = {
   "update": function() {
-    this.folders = this.container.find("li.directory");
+    this.folders = this.container.find("li.directory > a");
     this.folders.contextMenu({
       menu: "folder-list-menu"
     }, function(action, el, pos) {
