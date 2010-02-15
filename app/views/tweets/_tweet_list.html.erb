@@ -6,9 +6,9 @@
   <% merging = false %>
   <%- tweets.each_with_index do |t, i| -%>
 
-    <% same_poster_as_next = (t.user.id == (tweets[i + 1] && tweets[i + 1].user.id)) && !t.text_extension? %>
+    <% same_poster_as_next = (t.user.id == (tweets[i + 1] && tweets[i + 1].user.id)) && !t.text_extension? && !tweets[i + 1].text_extension? %>
 
-    <% last_id = (same_poster_as_next ? (tweets[(i + 1)..25].find {|innertweet| (innertweet.user.id != t.user.id) || innertweet.text_extension? } || tweets.last).id : t.id) %>
+    <% last_id = (same_poster_as_next ? ((next_tweet_outside_of_merge = tweets[(i + 1)..25].find {|innertweet| (innertweet.user.id != t.user.id) || innertweet.text_extension? }) && tweets[tweets.index(next_tweet_outside_of_merge)-1] || tweets.last).id : t.id) %>
 
     <% merging = true if same_poster_as_next %>
 
@@ -32,7 +32,7 @@
     <script type="text/javascript">//<![CDATA[
       protonet.globals.textExtensions.push({
         channel_id: <%= channel.id.to_json %>,
-        container_id: <%= "tweet-#{t.id}".to_json %>,
+        container_id: <%= "tweet-#{last_id}".to_json %>,
         data: <%= t.text_extension %>
       });
     //]]></script>
