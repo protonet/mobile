@@ -1,6 +1,6 @@
-role :app, "172.16.110.128"
-role :web, "172.16.110.128"
-role :db,  "172.16.110.128", :primary => true
+role :app, "172.20.3.185"
+role :web, "172.20.3.185"
+role :db,  "172.20.3.185", :primary => true
 
 set :deploy_to, "/home/protonet/dashboard"
 set :use_sudo, false
