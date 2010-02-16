@@ -1,15 +1,29 @@
 #!/usr/bin/env ruby
 # this is here to make sure environment.rb doens't recreate the EventMachine Loop
 RUN_FROM_DISPATCHER = true
-require File.dirname(__FILE__) + '/../../config/environment'
+require 'rubygems'
+require 'active_record'
+require 'yaml'
+require 'configatron'
+require 'eventmachine'
+require 'json'
+require 'mq'
 require File.dirname(__FILE__) + '/modules/flash_server.rb'
+require File.dirname(__FILE__) + '/../../vendor/plugins/restful-authentication/init.rb'
+
+dbconfig = YAML::load(File.open(File.dirname(__FILE__)  + '/../../config/database.yml'))
+ActiveRecord::Base.establish_connection(dbconfig[ENV["RAILS_ENV"] || "development"])
+
+require File.dirname(__FILE__) + '/../../app/models/user.rb'
+require File.dirname(__FILE__) + '/../../app/models/listen.rb'
+require File.dirname(__FILE__) + '/../../app/models/channel.rb'
 
 # awesome stuff happening here
 module JsDispatchingServer
   
   @@online_users = {}
   @@open_sockets = []
-  
+    
   def post_init
     @key ||= rand(1000000)
     @@open_sockets << self
@@ -156,4 +170,10 @@ EventMachine::run do
   EventMachine::start_server(host, port, JsDispatchingServer)
   puts "Started JsDispatchingServer on #{host}:#{port}..."
   puts $$
+  EventMachine::PeriodicTimer.new(45) do
+    online_users = JsDispatchingServer.send(:class_variable_get, :@@online_users)
+    online_users.each do |u|
+      puts("#{online_users.inspect}")
+    end
+  end
 end
