@@ -79,7 +79,7 @@ class User < ActiveRecord::Base
   end
 
   def self.delete_strangers_older_than_two_days!
-    destroy_all(["temporary_identifier IS NOT NULL AND updated_at < ?", Time.now - 2.days])
+    destroy_all(["temporary_identifier IS NOT NULL AND updated_at < ?", Time.now - 2.days]).each {|user| user.tweets.each {|t| t.update_attribute(:user_id, 0)}}
   end
   
   def stranger?
