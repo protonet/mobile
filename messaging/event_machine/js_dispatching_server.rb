@@ -156,4 +156,10 @@ EventMachine::run do
   EventMachine::start_server(host, port, JsDispatchingServer)
   puts "Started JsDispatchingServer on #{host}:#{port}..."
   puts $$
+  EventMachine::PeriodicTimer.new(45) do
+    online_users = JsDispatchingServer.send(:class_variable_get, :@@online_users)
+    online_users.each do |u|
+      puts("online user watcher #{online_users.inspect}")
+    end
+  end
 end
