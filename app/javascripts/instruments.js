@@ -31,7 +31,7 @@ $(function() {
 
 // Initialize endless scrolling
 $(function() {
-  new protonet.controls.EndlessScroller();
+  protonet.globals.endlessScroller = new protonet.controls.EndlessScroller();
 });
 
 // Initialize user widget

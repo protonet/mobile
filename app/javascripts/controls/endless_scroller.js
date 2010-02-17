@@ -45,6 +45,31 @@ protonet.controls.EndlessScroller = (function() {
           this._observe();
         }
       }.bind(this));
+    },
+    
+    "loadNotReceivedTweets": function() {
+      var channels = $("#feed-viewer ul");
+      channels.each(function(i){
+        var channel = $(channels[i]);
+        var firstTweet = channel.children("li:first-child");
+        var params = {
+          channel_id: this.channelId,
+          last_id: firstTweet.attr("id").match(REG_EXP_TWEET_INDEX)[1]
+        };
+
+        $.get("/tweets", params, function(data) {
+          if ($.trim(data)) {
+            channel.prepend(data);
+
+            // Ok, let the browser breathe and then do the rest
+            setTimeout(function() {
+              protonet.controls.TextExtension.renderQueue();
+              protonet.controls.PrettyDate.update();
+            }, 100);
+            this._observe();
+          }
+        }.bind(this));
+      });
     }
   };
   
