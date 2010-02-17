@@ -2,7 +2,7 @@
 
 protonet.controls.EndlessScroller = (function() {
   var REG_EXP_CHANNEL_ID = /messages-for-channel-(\d*)/,
-      REG_EXP_TWEET_INDEX = /tweet-(\d*)/;
+      REG_EXP_TWEET_INDEX = /tweet-(\d*)-(\d*)/;
   
   function EndlessScroller(args) {
     this.channelId = protonet.globals.channelSelector.getCurrentChannelId();
@@ -30,7 +30,7 @@ protonet.controls.EndlessScroller = (function() {
     "loadNewTweets": function(lastTweet, channel) {
       var params = {
         channel_id: this.channelId,
-        first_id: lastTweet.attr("id").match(REG_EXP_TWEET_INDEX)[1]
+        first_id: lastTweet.attr("id").match(REG_EXP_TWEET_INDEX)[2]
       };
       
       $.get("/tweets", params, function(data) {
@@ -50,26 +50,31 @@ protonet.controls.EndlessScroller = (function() {
     "loadNotReceivedTweets": function() {
       var channels = $("#feed-viewer ul");
       channels.each(function(i){
+      
         var channel = $(channels[i]);
         var firstTweet = channel.children("li:first-child");
-        var params = {
-          channel_id: this.channelId,
-          last_id: firstTweet.attr("id").match(REG_EXP_TWEET_INDEX)[1]
-        };
+        if(firstTweet.attr("id").match(REG_EXP_TWEET_INDEX)) {
+          var params = {
+            channel_id: channel.attr("id").match(REG_EXP_CHANNEL_ID)[1],
+            last_id: firstTweet.attr("id").match(REG_EXP_TWEET_INDEX)[1]
+          };
 
-        $.get("/tweets", params, function(data) {
-          if ($.trim(data)) {
-            channel.prepend(data);
+          $.get("/tweets", params, function(data) {
+            if ($.trim(data)) {
+              channel.prepend(data);
 
-            // Ok, let the browser breathe and then do the rest
-            setTimeout(function() {
-              protonet.controls.TextExtension.renderQueue();
-              protonet.controls.PrettyDate.update();
-            }, 100);
-            this._observe();
-          }
-        }.bind(this));
+              // Ok, let the browser breathe and then do the rest
+              setTimeout(function() {
+                protonet.controls.TextExtension.renderQueue();
+                protonet.controls.PrettyDate.update();
+              }, 100);
+              this._observe();
+            }
+          }.bind(this));          
+        }
+      
       });
+      
     }
   };
   

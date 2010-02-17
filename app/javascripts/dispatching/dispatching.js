@@ -58,6 +58,7 @@ DispatchingSystem.prototype = {
       setTimeout(function(){this.socket_reconnecting = false}.bind(this), 60000);
       console.log('socket offline');
       this.socket.closeSocket();
+      protonet.globals.endlessScroller.loadNotReceivedTweets();
       this.connectSocket();
     }
     
