@@ -47,33 +47,35 @@ DispatchingSystem.prototype = {
   },
   
   "startSocketCheck": function() {
-    setInterval(function(){this.pingSocket()}.bind(this), 30000);
+    if(!this.socket_check_interval) {
+      this.socket_check_interval = setInterval(function(){this.socketCheck()}.bind(this), 30000);
+    }
+  },
+  
+  "socketCheck": function() {
+    if((new Date() - this.socket_active) > 60000 && !this.socket_reconnecting) {
+      this.socket_reconnecting = true;
+      setTimeout(function(){this.socket_reconnecting = false}.bind(this), 60000);
+      console.log('socket offline');
+      this.socket.closeSocket();
+      this.connectSocket();
+    }
+    
+    this.pingSocket();
   },
   
   "pingSocket": function() {
     json_request = {"operation": "ping"};
     this.sendMessage(JSON.stringify(json_request));
   },
+  
+  "pingSocketCallback": function(message) {
+    this.socket_active = new Date();
+  },
 
   "authenticateUser": function() {
     json_request = {"operation": "authenticate", "payload": {"user_id": this.user_id, "token": this.user_auth_token, "type": "web"}};
     this.sendMessage(JSON.stringify(json_request));
-  },
-
-  // destination_id is your key for eventmachine/js communication
-  // e.g. eventmachine sends an destination_id with each message
-  // and the dispatcher finds the correct destination for this
-  "addRecipient": function(destination_id, recipient_object) {
-  
-  },
-
-  // maybe not needed will see
-  "removeRecipient": function(destination_id) {
-  
-  },
-
-  "findDestination": function(data) {
-
   },
 
   "messageReceived": function(raw_data) {
@@ -107,11 +109,6 @@ DispatchingSystem.prototype = {
     this.socket.sendData(data);
   },
 
-  "dispatch": function(to, data) {
-    // ;)
-    to(data);
-  },
-  
   "test": function(args) {
     console.log('dispatcher called test');
   }

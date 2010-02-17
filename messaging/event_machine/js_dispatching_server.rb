@@ -11,6 +11,7 @@ module JsDispatchingServer
   @@open_sockets = []
   
   def post_init
+    self.set_comm_inactivity_timeout(60)
     @key ||= rand(1000000)
     @@open_sockets << self
     log('post-init')
@@ -43,9 +44,7 @@ module JsDispatchingServer
       when /^user\.(.*)/
         update_user_status($1)
       when /^ping$/
-        @@online_users[@user.id] ||= {}
-        @@online_users[@user.id]["last_seen"] = Time.now.to_i
-        log('crazy got ping!!')
+        send_ping_answer
       end
     else
       # play echoserver if request could not be understood
@@ -95,6 +94,11 @@ module JsDispatchingServer
   def update_user_status(status)
     data = {:x_target => "UserWidget.updateWritingStatus", :data => {:user_id => @user.id, :status => status}}.to_json
     send_user_data(data)
+  end
+
+  def send_ping_answer
+    data = {:x_target => "protonet.globals.dispatcher.pingSocketCallback"}.to_json
+    send_data(data + "\0")
   end
   
   def send_user_data(data)
@@ -156,10 +160,4 @@ EventMachine::run do
   EventMachine::start_server(host, port, JsDispatchingServer)
   puts "Started JsDispatchingServer on #{host}:#{port}..."
   puts $$
-  EventMachine::PeriodicTimer.new(45) do
-    online_users = JsDispatchingServer.send(:class_variable_get, :@@online_users)
-    online_users.each do |u|
-      puts("online user watcher #{online_users.inspect}")
-    end
-  end
 end

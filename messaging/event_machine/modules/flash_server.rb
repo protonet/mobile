@@ -11,7 +11,7 @@ module FlashServer
   end
   
   def receive_data_with_policy_handler(data)
-    log("policy server receiving: #{data}")
+    # log("policy server receiving: #{data}")
     messages = data.split("\0")
     unless @policy_sent
       @policy_sent = true
@@ -19,7 +19,7 @@ module FlashServer
       return receive_data_without_policy_handler(messages[1]) if messages[1]
       return send_swf_policy if messages[0].match(/policy-file-request/)
     end
-    log("doing nothing, handing data over to dispatcher")
+    # log("doing nothing, handing data over to dispatcher")
     receive_data_without_policy_handler(data)
   end
   
