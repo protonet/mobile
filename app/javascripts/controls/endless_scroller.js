@@ -23,14 +23,14 @@ protonet.controls.EndlessScroller = (function() {
           lastTweet = channel.children("li:last-child");
       lastTweet.bind("inview", function() {
         lastTweet.unbind("inview");
-        this.loadNewTweets(lastTweet, channel);
+        this.loadOlderTweets(lastTweet, channel);
       }.bind(this));
     },
     
-    "loadNewTweets": function(lastTweet, channel) {
+    "loadOlderTweets": function(lastTweet, channel) {
       var params = {
         channel_id: this.channelId,
-        first_id: lastTweet.attr("id").match(REG_EXP_TWEET_INDEX)[2]
+        last_id: lastTweet.attr("id").match(REG_EXP_TWEET_INDEX)[2]
       };
       
       $.get("/tweets", params, function(data) {
@@ -56,7 +56,7 @@ protonet.controls.EndlessScroller = (function() {
         if(firstTweet.attr("id").match(REG_EXP_TWEET_INDEX)) {
           var params = {
             channel_id: channel.attr("id").match(REG_EXP_CHANNEL_ID)[1],
-            last_id: firstTweet.attr("id").match(REG_EXP_TWEET_INDEX)[1]
+            first_id: firstTweet.attr("id").match(REG_EXP_TWEET_INDEX)[1]
           };
 
           $.get("/tweets", params, function(data) {
