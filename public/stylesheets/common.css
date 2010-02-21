@@ -491,7 +491,7 @@ h2 {
   margin: 0;
   padding: 0.15em 0.2em;
   width: 260px;
-  height: 16px;
+  height: 15px;
 }
 #user-list .hierarchy {
   border: 1px solid rgba(0, 0, 0, 0.4);
@@ -577,6 +577,13 @@ h2 {
 #file-list li.directory a {
   background: rgb(241, 241, 241) url(/images/icn_directory.png) scroll no-repeat left top;
 }
+
+#file-list li.directory input {
+  width: 247px;
+  display: block;
+  height: 15px;
+}
+
 #file-list li > ul {
   display: none;
 }

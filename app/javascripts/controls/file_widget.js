@@ -64,7 +64,7 @@ protonet.controls.FileWidget.prototype = {
   
   "createElementFor": function(object) {
     var li = $("<li />", { className: object.type, tabindex: "-1" }),
-        anchor = $("<a />", { href: this.getDownloadPathFor(object.name), html: object.name });
+        anchor = $("<a />", { href: this.getDownloadPathFor(object.name), html: object.name, title: object.name });
     
     anchor.appendTo(li);
     
@@ -125,29 +125,54 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "addFolder": function() {
-    /**
-     * TODO unfuck this
-     */
     var create_folder_url = "system/files/create_directory",
-        new_folder = this.createElementFor({"type": "directory", "name": ""}),
-        new_folder_form = $('<form action="' + create_folder_url +'"></form>'),
-        new_folder_input = $('<input name="directory_name" type="text" style="width:247px; display: block; height: 17px;"/>');
-
-    new_folder.append(new_folder_form);    
-    new_folder_form.append(new_folder_input);
-    new_folder_form.append($('<input name="file_path" type="hidden" value="' + this.current_path + '"/>'));
-    new_folder_form.append($('<input name="authenticity_token" type="hidden" value="' + protonet.config.authenticity_token + '"/>'));
+        new_folder = this.createElementFor({ type: "directory", name: ""}),
+        new_folder_input = $("<input />"),
+        stop = function(event) { event.preventDefault(); event.stopPropagation(); },
+        link = new_folder.find("a").html(new_folder_input).bind("click", stop);
     
-    new_folder_form.submit(function(event){
+    new_folder_input.bind("keydown", "esc", function(event) {
       event.preventDefault();
-      $.post(create_folder_url, new_folder_form.serialize(), function() {
-        new_folder.html(new_folder_input.val());
-        this.initContextMenu();
-      }.bind(this));
+      new_folder_input.unbind("keydown");
+      new_folder.remove();
+    });
+    
+    new_folder_input.bind("keydown", "return", function(event) {
+      event.preventDefault();
+      
+      if (!$.trim(new_folder_input.val())) {
+        return;
+      }
+      
+      $.ajax({
+        type: "POST",
+        url: create_folder_url,
+        data: {
+          directory_name:     new_folder_input.val(),
+          file_path:          this.current_path,
+          authenticity_token: protonet.config.authenticity_token
+        },
+        beforeSend: function() {
+          new_folder_input.attr("disabled", true);
+        },
+        complete: function() {
+          new_folder_input.attr("disabled", false);
+        },
+        success: function() {
+          new_folder_input.unbind("keydown");
+          link.unbind("click", stop).html(new_folder_input.val());
+          this.initContextMenu();
+        }.bind(this),
+        error: function(transport) {
+          if (transport.status == "409") {
+            alert("Folder already exists. Please choose a different name.");
+            new_folder_input[0].select();
+          }
+        }
+      });
     }.bind(this));
     
-    this.file_list.append(new_folder);
-    
+    this.file_list.find("li.directory:last").after(new_folder);
     new_folder_input.focus();
   },
   
