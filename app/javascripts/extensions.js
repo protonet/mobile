@@ -1,7 +1,5 @@
 //---------------------------- CONSOLE ----------------------------
-if (!console) {
-  var console = { log: function() {} };
-}
+window.console = window.console || { log: function() {} };
 
 
 
