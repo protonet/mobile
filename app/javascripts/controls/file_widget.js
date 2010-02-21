@@ -1,8 +1,6 @@
 //= require "../utils/escape_html.js"
 
-protonet.controls.FileWidget = function(communicationConsole) {
-  this.communicationConsole = communicationConsole;
-  
+protonet.controls.FileWidget = function() {
   this.wrapper = $("#file-list");
   this.file_list = this.wrapper.find('ul.root');
   this.hierarchy_bar = this.wrapper.find('#file-navigation .hierarchy');

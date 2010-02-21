@@ -68,8 +68,7 @@ protonet.media.getSocialNetworkPhoto = (function() {
   }
   
   function handleYqlResponse(response) {
-    var results = response && response.query && response.query.results || {},
-        photoUrl = results.img && results.img.src;
+    var photoUrl = response.img && response.img.src;
     
     if (photoUrl) {
       if (!photoUrl.startsWith("http")) {

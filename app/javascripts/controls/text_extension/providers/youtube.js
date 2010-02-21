@@ -24,11 +24,11 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
     return this.url.match(this.REG_EXP)[1];
   },
   
-  loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
+  loadData: function(onSuccessCallback, onFailureCallback) {
     protonet.data.YouTube.getVideo(
       this._extractId(),
-      this._onSuccess.bind(this, onSuccessCallback, onEmptyResultCallback),
-      this._onError.bind(this, onErrorCallback)
+      this._onSuccess.bind(this, onSuccessCallback, onFailureCallback),
+      this._onFailure.bind(this, onFailureCallback)
     );
   },
   
@@ -36,34 +36,31 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
     this.data = data;
   },
   
-  _onSuccess: function(onSuccessCallback, onEmptyResultCallback, response) {
+  _onSuccess: function(onSuccessCallback, onFailureCallback, response) {
     if (this._canceled) {
       return;
     }
     
-    var entry = response.entry;
-    if (!entry) {
-      return onEmptyResultCallback(response);
-    }
+    var mediaGroup = response["media$group"];
     
     $.extend(this.data, {
-      description:  entry["media$group"]["media$description"]["$t"],
-      duration:     entry["media$group"]["yt$duration"].seconds, 
-      thumbnail:    entry["media$group"]["media$thumbnail"][0],
-      noembed:      !!entry["yt$noembed"],
-      tags:         entry["media$group"]["media$keywords"]["$t"], 
-      title:        entry["media$group"]["media$title"]["$t"]
+      description:  mediaGroup["media$description"]["$t"],
+      duration:     mediaGroup["yt$duration"].seconds, 
+      thumbnail:    mediaGroup["media$thumbnail"][0],
+      noembed:      !!response["yt$noembed"],
+      tags:         mediaGroup["media$keywords"]["$t"], 
+      title:        mediaGroup["media$title"]["$t"]
     });
     
     onSuccessCallback(this.data);
   },
   
-  _onError: function(onErrorCallback, response) {
+  _onError: function(onFailureCallback, response) {
     if (this._canceled) {
       return;
     }
     
-    onErrorCallback(response);
+    onFailureCallback(response);
   },
   
   _showVideo: function(event) {

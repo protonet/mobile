@@ -26,7 +26,7 @@ protonet.controls.TextExtension.providers.GIST.prototype = {
     return this.url.match(this.REG_EXP)[1];
   },
   
-  loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
+  loadData: function(onSuccessCallback) {
     // debugger;
     onSuccessCallback(this.data);
   },

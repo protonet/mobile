@@ -33,16 +33,15 @@ protonet.controls.TextExtension.providers.FlickrSearch.prototype = {
   _extractSort: function() {
     var match = this.url.match(/(&|\?)s=(\w*)/),
         sortKey = match && decodeURIComponent(match[2]);
-    alert(sortKey);
     return this.SORT_TRANSLATION[sortKey] || this.SORT_TRANSLATION["*"];
   },
   
-  loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
+  loadData: function(onSuccessCallback, onFailureCallback) {
     protonet.data.Flickr.getPhotoSearch(
       this._extractQuery(),
       this._extractSort(),
-      this._onSuccess.bind(this, onSuccessCallback, onEmptyResultCallback),
-      this._onError.bind(this, onErrorCallback)
+      this._onSuccess.bind(this, onSuccessCallback),
+      this._onFailure.bind(this, onFailureCallback)
     );
   },
   
@@ -50,7 +49,7 @@ protonet.controls.TextExtension.providers.FlickrSearch.prototype = {
     this.data = data;
   },
   
-  _onSuccess: function(onSuccessCallback, onEmptyResultCallback, photoDetails) {
+  _onSuccess: function(onSuccessCallback, photoDetails) {
     if (this._canceled) {
       return;
     }
@@ -63,12 +62,12 @@ protonet.controls.TextExtension.providers.FlickrSearch.prototype = {
     onSuccessCallback(this.data);
   },
   
-  _onError: function(onErrorCallback, response) {
+  _onFailure: function(onFailureCallback, response) {
     if (this._canceled) {
       return;
     }
     
-    onErrorCallback(response);
+    onFailureCallback(response);
   },
   
   getDescription: function() {

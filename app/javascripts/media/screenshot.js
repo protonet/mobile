@@ -23,8 +23,7 @@ protonet.media.ScreenShot = (function() {
     var checkUrl = BASE_URL + "/exists" +
       "?url=" + encodeURIComponent(url) + 
       "&devkey=" + KEY +
-      "&size=" + (size || DEFAULT_SIZE) +
-      "&cachebuster=" + new Date().getTime();
+      "&size=" + (size || DEFAULT_SIZE);
     
     var script = document.createElement("script");
     script.onload = function() {

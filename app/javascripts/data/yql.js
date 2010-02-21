@@ -1,9 +1,5 @@
 protonet.data.YQL = {};
 protonet.data.YQL.Query = function(query) {
-  if (!query) {
-    throw new Error("YQL Query: Missing query!");
-  }
-  
   this._query = query;
 };
 
@@ -12,23 +8,30 @@ protonet.data.YQL.Query.prototype = {
   TIMEOUT: 5000,
   YQL_URL: "http://query.yahooapis.com/v1/public/yql?format=json&callback=?",
   
-  execute: function(onSuccessCallback, onFailureCallback) {
-    var timeouted, fallback = setTimeout(function() {
-      timeouted = true;
-      onFailureCallback();
-    }, this.TIMEOUT);
-    
-    var ajax = $.getJSON(this.YQL_URL, {
-      q: this._query
-    }, function(response) {
-      if (timeouted) { return; }
-      clearTimeout(fallback);
-      
-      if (response.error) {
-        onFailureCallback(response);
-      } else {
-        onSuccessCallback(response);
-      }
+  execute: function(onSuccess, onFailure) {
+    $.jsonp({
+      url: this.YQL_URL,
+      data: {
+        q: this._query
+      },
+      pageCache: true,
+      cache: true,
+      timeout: this.TIMEOUT,
+      success: function(response) {
+        response = response || {};
+        
+        if (response.error) {
+          return onFailure(response);
+        }
+        
+        var results = response.query && response.query.results;
+        if (!results) {
+          return onFailure(response);
+        }
+        
+        onSuccess(results);
+      },
+      error: onFailure
     });
   }
 };

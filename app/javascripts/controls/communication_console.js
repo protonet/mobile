@@ -5,7 +5,7 @@
 //= require "../utils/is_window_focused.js"
 //= require "../user/browser.js"
 
-protonet.controls.CommunicationConsole = function(args) {
+protonet.controls.CommunicationConsole = function() {
   // elements
   this.input = $("#message");
   this.form = $("#message-form");
@@ -25,12 +25,12 @@ protonet.controls.CommunicationConsole = function(args) {
   protonet.globals.textExtensionInput = new protonet.controls.TextExtension.Input(this.input);
   
   // make it a global user object
-  this.user_config      = args.config;
-  this.current_user_id  = args.config.user_id;
+  this.user_config      = protonet.config;
+  this.current_user_id  = protonet.config.user_id;
   
   // active informations
   this.active_feed_id = 1; // home
-  this.feeds = args.feed_ids || {};
+  this.feeds = protonet.config.feed_ids || {};
 };
 
 protonet.controls.CommunicationConsole.prototype = {

@@ -1,4 +1,4 @@
-//= require "dispatching/dispatching.js"
+//= require "dispatching/dispatching_system.js"
 //= require "controls/communication_console.js"
 //= require "controls/text_extension.js"
 //= require "controls/file_widget.js"
@@ -12,8 +12,8 @@
 
 // Initialize communication stuff
 $(function() {
-  protonet.globals.communicationConsole = new protonet.controls.CommunicationConsole({"config": protonet.config});
-  protonet.globals.dispatcher = new DispatchingSystem(protonet.config.dispatching_server, protonet.config.token, protonet.config.user_id);
+  protonet.globals.communicationConsole = new protonet.controls.CommunicationConsole();
+  protonet.globals.dispatcher = new protonet.dispatching.DispatchingSystem();
 });
 
 
@@ -25,7 +25,7 @@ $(function() {
 
 // Initialize file stuff
 $(function() {
-  new protonet.controls.FileWidget(window.cc);
+  new protonet.controls.FileWidget();
 });
 
 

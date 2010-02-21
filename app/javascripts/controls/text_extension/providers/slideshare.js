@@ -20,11 +20,11 @@ protonet.controls.TextExtension.providers.Slideshare.prototype = {
     return this.REG_EXP.test(this.url);
   },
   
-  loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
+  loadData: function(onSuccessCallback, onFailureCallback) {
     protonet.data.SlideShare.getSlideShow(
       this.url,
-      this._onSuccess.bind(this, onSuccessCallback, onEmptyResultCallback),
-      this._onError.bind(this, onErrorCallback)
+      this._onSuccess.bind(this, onSuccessCallback),
+      this._onFailure.bind(this, onFailureCallback)
     );
   },
   
@@ -32,32 +32,27 @@ protonet.controls.TextExtension.providers.Slideshare.prototype = {
     this.data = data;
   },
   
-  _onSuccess: function(onSuccessCallback, onEmptyResultCallback, response) {
+  _onSuccess: function(onSuccessCallback, response) {
     if (this._canceled) {
       return;
     }
     
-    var entry = response.query && response.query.results && response.query.results.Slideshow;
-    if (!entry) {
-      return onEmptyResultCallback(response);
-    }
-    
     $.extend(this.data, {
-      description:  entry.Description,
-      thumbnail:    entry.ThumbnailSmallURL,
-      title:        entry.Title,
-      embed_url:    $(entry.Embed).find("param[name=movie]").attr("value")
+      description:  response.Description,
+      thumbnail:    response.ThumbnailSmallURL,
+      title:        response.Title,
+      embed_url:    $(response.Embed).find("param[name=movie]").attr("value")
     });
     
     onSuccessCallback(this.data);
   },
   
-  _onError: function(onErrorCallback, response) {
+  _onFailure: function(onFailureCallback, response) {
     if (this._canceled) {
       return;
     }
     
-    onErrorCallback(response);
+    onFailureCallback(response);
   },
   
   _showVideo: function(event) {

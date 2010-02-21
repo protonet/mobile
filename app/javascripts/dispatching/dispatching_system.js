@@ -1,12 +1,12 @@
-function DispatchingSystem(server, user_auth_token, user_id) {
-  this.server = server;
-  this.user_auth_token = user_auth_token;
-  this.user_id = user_id;
+protonet.dispatching.DispatchingSystem = function() {
+  this.server = protonet.config.dispatching_server;
+  this.user_auth_token = protonet.config.token;
+  this.user_id = protonet.config.user_id;
   this.socketId = "flash_socket";
   this.createSocket();
-}
+};
    
-DispatchingSystem.prototype = {
+protonet.dispatching.DispatchingSystem.prototype = {
   "VERSION": 1, // Increase this number manually if you want to invalidate browser cache
   
   "createSocket": function() {
@@ -48,14 +48,14 @@ DispatchingSystem.prototype = {
   
   "startSocketCheck": function() {
     if(!this.socket_check_interval) {
-      this.socket_check_interval = setInterval(function(){this.socketCheck()}.bind(this), 30000);
+      this.socket_check_interval = setInterval(this.socketCheck.bind(this), 30000);
     }
   },
   
   "socketCheck": function() {
     if((new Date() - this.socket_active) > 60000 && !this.socket_reconnecting) {
       this.socket_reconnecting = true;
-      setTimeout(function(){this.socket_reconnecting = false}.bind(this), 60000);
+      setTimeout(function(){ this.socket_reconnecting = false; }.bind(this), 60000);
       console.log('socket offline');
       this.socket.closeSocket();
       protonet.globals.endlessScroller.loadNotReceivedTweets();

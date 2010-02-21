@@ -1,4 +1,5 @@
 //= require "lib/jquery-1.4.2.min.js"
+//= require "lib/jquery.jsonp-1.1.3.min.js"
 //= require "lib/swfobject-2.2.js"
 //= require "extensions.js"
 //= require "protonet.js"
