@@ -21,7 +21,7 @@ protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
   },
   
   "delete": function(el) {
-    var fileName = el.html(),
+    var fileName = el.text(),
         filePath = this.parent.getFilePathFor(fileName);
     
     $.post('system/files/delete', {"file_path": filePath});
@@ -31,7 +31,7 @@ protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
   },
   
   "publish": function(el) {
-    var fileName = el.html();
+    var fileName = el.text();
     
     this.parent.publish(fileName);
     

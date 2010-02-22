@@ -129,45 +129,50 @@ protonet.controls.FileWidget.prototype = {
         stop = function(event) { event.preventDefault(); event.stopPropagation(); },
         link = new_folder.find("a").html(new_folder_input).bind("click", stop);
     
-    new_folder_input.bind("keydown", "esc", function(event) {
-      event.preventDefault();
-      new_folder_input.unbind("keydown");
-      new_folder.remove();
+    new_folder_input.bind("keydown", function(event) {
+      if (event.keyCode == "27") {
+        event.preventDefault();
+        new_folder_input.unbind("keydown");
+        new_folder.remove();
+      }
     });
     
-    new_folder_input.bind("keydown", "return", function(event) {
-      event.preventDefault();
-      
-      if (!$.trim(new_folder_input.val())) {
-        return;
+    new_folder_input.bind("keydown", function(event) {
+      if (event.keyCode == 13) {
+        event.preventDefault();
+        
+        if (!$.trim(new_folder_input.val())) {
+          return;
+        }
+        $.ajax({
+          type: "POST",
+          url: create_folder_url,
+          data: {
+            directory_name:     new_folder_input.val(),
+            file_path:          this.current_path,
+            authenticity_token: protonet.config.authenticity_token
+          },
+          beforeSend: function() {
+            new_folder_input.attr("disabled", true);
+          },
+          complete: function() {
+            new_folder_input.attr("disabled", false);
+          },
+          success: function() {
+            new_folder_input.unbind("keydown");
+            link.unbind("click", stop).html(new_folder_input.val());
+            this.initContextMenu();
+          }.bind(this),
+          error: function(transport) {
+            if (transport.status == "409") {
+              alert("Folder already exists. Please choose a different name.");
+              new_folder_input[0].select();
+            }
+          }
+        });
       }
       
-      $.ajax({
-        type: "POST",
-        url: create_folder_url,
-        data: {
-          directory_name:     new_folder_input.val(),
-          file_path:          this.current_path,
-          authenticity_token: protonet.config.authenticity_token
-        },
-        beforeSend: function() {
-          new_folder_input.attr("disabled", true);
-        },
-        complete: function() {
-          new_folder_input.attr("disabled", false);
-        },
-        success: function() {
-          new_folder_input.unbind("keydown");
-          link.unbind("click", stop).html(new_folder_input.val());
-          this.initContextMenu();
-        }.bind(this),
-        error: function(transport) {
-          if (transport.status == "409") {
-            alert("Folder already exists. Please choose a different name.");
-            new_folder_input[0].select();
-          }
-        }
-      });
+
     }.bind(this));
     
     this.file_list.find("li.directory:last").after(new_folder);
