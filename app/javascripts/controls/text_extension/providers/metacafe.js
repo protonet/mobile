@@ -13,7 +13,7 @@ protonet.controls.TextExtension.providers.Metacafe = function(url) {
 };
 
 protonet.controls.TextExtension.providers.Metacafe.prototype = {
-  REG_EXP: /metacafe\.com\/watch\/\d+/i,
+  REG_EXP: /metacafe\.com\/watch\/.+\//i,
   
   match: function() {
     return this.REG_EXP.test(this.url);
@@ -91,7 +91,9 @@ protonet.controls.TextExtension.providers.Metacafe.prototype = {
           target: "_blank"
         }),
         img = $("<img />", {
-          src: this.data.image_src
+          src: this.data.image_src,
+          width: 136,
+          height: 81
         });
     anchor.click(this._showVideo.bind(this));
     return anchor.append(img);
