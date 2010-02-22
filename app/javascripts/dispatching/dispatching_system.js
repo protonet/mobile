@@ -34,6 +34,9 @@ protonet.dispatching.DispatchingSystem.prototype = {
     $(window).bind('unload', function(){
       this.socket.closeSocket();
     }.bind(this));
+    $(window).bind('focus', function(){
+      this.reconnectSocketIfNotConnected();
+    }.bind(this));
   },
     
   "connectSocket": function() {
@@ -52,16 +55,19 @@ protonet.dispatching.DispatchingSystem.prototype = {
     }
   },
   
-  "socketCheck": function() {
-    if((new Date() - this.socket_active) > 60000 && !this.socket_reconnecting) {
+  "reconnectSocketIfNotConnected": function() {
+    if((new Date() - this.socket_active) > 40000 && !this.socket_reconnecting) {
       this.socket_reconnecting = true;
-      setTimeout(function(){ this.socket_reconnecting = false; }.bind(this), 60000);
+      setTimeout(function(){ this.socket_reconnecting = false; }.bind(this), 40000);
       console.log('socket offline');
       this.socket.closeSocket();
       protonet.globals.endlessScroller.loadNotReceivedTweets();
       this.connectSocket();
     }
-    
+  },
+  
+  "socketCheck": function() {
+    this.reconnectSocketIfNotConnected();
     this.pingSocket();
   },
   
