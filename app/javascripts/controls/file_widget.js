@@ -61,8 +61,13 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "createElementFor": function(object) {
-    var li = $("<li />", { className: object.type, tabindex: "-1" }),
-        anchor = $("<a />", { href: this.getDownloadPathFor(object.name), html: object.name, title: object.name });
+    var objectName = protonet.utils.escapeHtml(object.name),
+        li = $("<li />", { className: object.type, tabindex: "-1" }),
+        anchor = $("<a />", {
+          href: this.getDownloadPathFor(object.name),
+          html: objectName,
+          title: objectName
+        });
     
     anchor.appendTo(li);
     

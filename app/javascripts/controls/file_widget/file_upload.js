@@ -93,28 +93,26 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
   },
   
   _initHtml5DragDrop: function() {
-    this._fileList.bind("dragleave", function(event) {
-      this._fileList.removeClass("highlight");
-      event.preventDefault();
-      event.stopPropagation();
-    }.bind(this));
-    this._fileList.bind("dragover", function(event) {
-      this._fileList.addClass("highlight");
-      event.preventDefault();
-      event.stopPropagation();
-    }.bind(this));
-    
     /**
      * Following event has to be set the native way, otherwise the event object gets mangled
      */
-    this._fileList.get(0).addEventListener("drop", function(event) {
+    var fileList = this._fileList[0];
+    fileList.addEventListener("dragleave", function(event) {
+      event.preventDefault();
       this._fileList.removeClass("highlight");
+    }.bind(this), false);
+    
+    fileList.addEventListener("dragover", function(event) {
+      event.preventDefault();
+      this._fileList.addClass("highlight");
+    }.bind(this), false);
+    
+    fileList.addEventListener("drop", function(event) {
+      event.preventDefault();
       var files = event.dataTransfer.files;
       if (files && files.length > 0) {
         this.__html5_upload(event.dataTransfer.files);
       }
-      event.preventDefault();
-      event.stopPropagation();
     }.bind(this), false);
   },
   
