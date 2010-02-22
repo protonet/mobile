@@ -80,7 +80,7 @@ if(jQuery)( function($) {
                         var srcElement = $(this);
                         srcElement.unbind('mouseup');
                         if( evt.button == 2 ) {
-                            e.preventDefault();
+                            evt.preventDefault();
                             
                             // Hide context menus that may be showing
                             $("." + o.menuCssName).hide();
