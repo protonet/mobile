@@ -24,7 +24,7 @@ protonet.controls.Tweet = (function() {
     template = template || $("#message-template");
     
     this.listElement = $(template.html());
-    this.htmlId = this.listElement.attr("id").replace("{id}", this.id);
+    this.htmlId = this.listElement.attr("id").replace(/\{id\}/g, this.id);
     this.listElement.attr("id", this.htmlId);
     this.listElement.find(".message-usericon > img").attr("src", args.user_icon_url);
     this.listElement.find(".message-author").html(this.author);

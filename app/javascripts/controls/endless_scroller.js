@@ -28,15 +28,31 @@ protonet.controls.EndlessScroller = (function() {
     },
     
     "loadOlderTweets": function(lastTweet, channel) {
-      var params = {
+      this._load(channel, {
         channel_id: this.channelId,
         last_id: lastTweet.attr("id").match(REG_EXP_TWEET_INDEX)[2]
-      };
-      
+      }, "append");
+    },
+    
+    "loadNotReceivedTweets": function() {
+      var channels = $("#feed-viewer ul");
+      channels.each(function(i, channel){
+        channel = $(channel);
+        var firstTweet = channel.children("li:first-child");
+        if(firstTweet.attr("id").match(REG_EXP_TWEET_INDEX)) {
+          this._load(channel, {
+            channel_id: channel.attr("id").match(REG_EXP_CHANNEL_ID)[1],
+            first_id: firstTweet.attr("id").match(REG_EXP_TWEET_INDEX)[1]
+          }, "prepend");
+        }
+      }.bind(this));
+    },
+    
+    "_load": function(channel, params, method) {
       $.get("/tweets", params, function(data) {
         if ($.trim(data)) {
-          channel.append(data);
-          
+          channel[method](data);
+
           // Ok, let the browser breathe and then do the rest
           setTimeout(function() {
             protonet.controls.TextExtension.renderQueue();
@@ -45,36 +61,6 @@ protonet.controls.EndlessScroller = (function() {
           this._observe();
         }
       }.bind(this));
-    },
-    
-    "loadNotReceivedTweets": function() {
-      var channels = $("#feed-viewer ul");
-      channels.each(function(i){
-      
-        var channel = $(channels[i]);
-        var firstTweet = channel.children("li:first-child");
-        if(firstTweet.attr("id").match(REG_EXP_TWEET_INDEX)) {
-          var params = {
-            channel_id: channel.attr("id").match(REG_EXP_CHANNEL_ID)[1],
-            first_id: firstTweet.attr("id").match(REG_EXP_TWEET_INDEX)[1]
-          };
-
-          $.get("/tweets", params, function(data) {
-            if ($.trim(data)) {
-              channel.prepend(data);
-
-              // Ok, let the browser breathe and then do the rest
-              setTimeout(function() {
-                protonet.controls.TextExtension.renderQueue();
-                protonet.controls.PrettyDate.update();
-              }, 100);
-              this._observe();
-            }
-          }.bind(this));          
-        }
-      
-      });
-      
     }
   };
   

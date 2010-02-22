@@ -92,11 +92,6 @@ protonet.controls.TextExtension.Input.prototype = {
     this.provider.loadData(this._render.bind(this), this._unsupportedUrlReset.bind(this), this.reset.bind(this));
   },
   
-  _unsupportedUrlReset: function() {
-    this._lastUrl = this.url;
-    this.reset();
-  },
-  
   _render: function(data) {
     this.data = data;
     
@@ -149,6 +144,11 @@ protonet.controls.TextExtension.Input.prototype = {
   
   submitted: function() {
     this.provider && this.provider.cancel();
+    this.reset();
+  },
+ 
+  _unsupportedUrlReset: function() {
+    this._lastUrl = this.url;
     this.reset();
   },
   

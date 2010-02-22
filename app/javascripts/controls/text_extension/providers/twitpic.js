@@ -28,31 +28,25 @@ protonet.controls.TextExtension.providers.Twitpic.prototype = {
     return this.url.match(this.REG_EXP)[1];
   },
   
-  loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
-    var yqlCallback = this._yqlCallback.bind(this, onSuccessCallback, onEmptyResultCallback, onErrorCallback);
+  loadData: function(onSuccessCallback, onFailureCallback) {
+    var yqlCallback = this._yqlCallback.bind(this, onSuccessCallback);
     
     new protonet.data.YQL.Query(
       "SELECT content,p FROM html WHERE " + 
         "url='" + this.url + "' AND (xpath='//title' OR xpath='//div[@id=\"view-photo-caption\"]')"
     ).execute(
-      yqlCallback, yqlCallback
+      yqlCallback, onFailureCallback
     );
   },
   
-  _yqlCallback: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback, response) {
+  _yqlCallback: function(onSuccessCallback, response) {
     if (this._canceled) {
       return;
     }
     
-    var results = response && response.query && response.query.results;
-    
-    if (!results) {
-      return onEmptyResultCallback(response);
-    }
-    
     $.extend(this.data, {
-      description:  (results.div && results.div.p) || "",
-      title:        results.title
+      description:  (response.div && response.div.p) || "",
+      title:        response.title
     });
     
     onSuccessCallback(this.data);

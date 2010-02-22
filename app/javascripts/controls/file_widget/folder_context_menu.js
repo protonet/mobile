@@ -26,11 +26,11 @@ protonet.controls.FileWidget.prototype.FolderContextMenu.prototype = {
   },
   
   "open": function(el) {
-    this.parent.moveDown(el.html());
+    this.parent.moveDown(el.text());
   },
   
   "delete": function(el) {
-    var folderName = el.html();
+    var folderName = el.text();
     
     $.post('system/files/delete_directory', {
       file_path: this.parent.current_path,

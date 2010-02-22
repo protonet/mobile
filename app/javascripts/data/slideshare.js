@@ -5,7 +5,7 @@ protonet.data.SlideShare = (function() {
       SECRET = "IVnEB1Vn",
       URL = "http://www.slideshare.net/api/2/get_slideshow";
   
-  function getSlideShow(slideShareUrl, onSuccessCallback, onFailureCallback) {
+  function getSlideShow(slideShareUrl, onSuccess, onFailure) {
     var timestamp = Math.round(new Date().getTime() / 1000),
         hash = SHA1(SECRET + "" + timestamp),
         apiUrl = URL + "?" + $.param({
@@ -16,8 +16,14 @@ protonet.data.SlideShare = (function() {
         });
     
     new protonet.data.YQL.Query("select * from xml where url='" + apiUrl + "'").execute(
-      onSuccessCallback,
-      onFailureCallback
+      function(response) {
+        var slideshow = response.Slideshow;
+        if (!slideshow) {
+          return onFailure(response);
+        }
+        onSuccess(slideshow);
+      },
+      onFailure
     );
   }
   

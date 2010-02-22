@@ -109,7 +109,10 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
      */
     this._fileList.get(0).addEventListener("drop", function(event) {
       this._fileList.removeClass("highlight");
-      this.__html5_upload(event.dataTransfer.files);
+      var files = event.dataTransfer.files;
+      if (files && files.length > 0) {
+        this.__html5_upload(event.dataTransfer.files);
+      }
       event.preventDefault();
       event.stopPropagation();
     }.bind(this), false);
@@ -171,9 +174,9 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     this._html5Upload.setRequestHeader("X-Requested-With", "XMLHttpRequest");
     this._html5Upload.setRequestHeader("X-File-Name", this._currentFile.fileName);
     this._html5Upload.setRequestHeader("X-File-Size", this._currentFile.fileSize);
-    this._html5Upload.setRequestHeader("X-Upload-Type", "HTML5");
-    this._html5Upload.setRequestHeader("Content-Type", "multipart/form-data");
-    this._html5Upload.setRequestHeader("Content-Disposition","form-data; name=\"file\"; filename=\"" + this._currentFile.fileName +"\"");
+    this._html5Upload.setRequestHeader("X-Fix-Encoding", $.browser.webkit);
+    this._html5Upload.setRequestHeader("Content-Type", "multipart/form-data; charset=utf-8");
+    this._html5Upload.setRequestHeader("Content-Disposition", "form-data; name=\"file\"; filename=\"" + encodeURIComponent(this._currentFile.fileName) +"\"");
     
     /**
      * Only use file reader in mozilla browsers to avoid performance problems

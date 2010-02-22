@@ -1,5 +1,6 @@
 protonet.controls.ChannelSelector = (function() {
   var container,
+      channelWidth,
       feedHolder,
       channelInput,
       REG_EXP_ELEMENT_INDEX = /index=(\d*)/,
@@ -10,6 +11,7 @@ protonet.controls.ChannelSelector = (function() {
     
     container = container || $("#channel");
     feedHolder = feedHolder || $("#feed-holder");
+    channelWidth = channelWidth || $("#feed-holder").find("ul:first").outerWidth(true);
     
     this._observe();
   }
@@ -24,14 +26,19 @@ protonet.controls.ChannelSelector = (function() {
             // get id of channel
             channelId = parseInt(href.match(REG_EXP_CHANNEL_ID)[1], 10);
 
-        feedHolder.animate({ left: index * -611 }, "fast");
+        feedHolder.animate({
+          left: index * -channelWidth
+        }, "fast", function() {
+          // set form channel_id to correct value after a short pause
+          setTimeout(function() {
+            currentChannel = channelId;
+            channelInput.val(channelId).trigger("change");
+          }, 100);
+        });
+        
         container.find(".active").toggleClass("active");
         anchor.parent("li").toggleClass("active");
         anchor.find(".notification").remove();
-        
-        // set form channel_id to correct value
-        currentChannel = channelId;
-        channelInput.val(channelId).trigger("change");
         
         event.preventDefault();
       });

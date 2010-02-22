@@ -14,8 +14,13 @@ module System
     
     def create_directory
       if params[:directory_name]
-        FileUtils.mkdir(System::FileSystem.cleared_path("#{params["file_path"]}/#{params["directory_name"]}"))
-        return head(:ok)
+        begin
+          FileUtils.mkdir(System::FileSystem.cleared_path("#{params["file_path"]}/#{params["directory_name"]}"))
+        rescue
+          return head(409)
+        else
+          return head(:ok)
+        end
       else
         return head(:error)
       end
@@ -36,7 +41,7 @@ module System
         filename = params[:file].original_filename.strip
         
         # Fix file name encoding bug
-        if request.env['HTTP_X_UPLOAD_TYPE'] == 'HTML5'
+        if request.env['HTTP_X_FIX_ENCODING'] == 'true'
           latin1_to_utf8 = Iconv.new("UTF8//TRANSLIT//IGNORE", "LATIN1")
           filename = latin1_to_utf8.iconv(filename)
         end

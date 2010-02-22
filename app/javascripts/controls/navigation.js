@@ -1,4 +1,3 @@
-//= require "../lib/jquery.hotkeys-0.7.9.min.js"
 //= require "../user/browser.js"
 
 protonet.controls.Navigation = {
@@ -29,13 +28,19 @@ protonet.controls.Navigation = {
   },
   
   _initEvents: function() {
-    $(document).bind("keydown", this._shortcut, function(event) {
-      this.toggle();
-      event.preventDefault();
-      event.stopPropagation();
+    $(document).bind("keydown", function(event) {
+      if (event.keyCode == 32 && event[this._shortcutMetaKey]) {
+        this.toggle();
+        event.preventDefault();
+        event.stopPropagation();
+      }
     }.bind(this));
     
-    $(document).bind("keydown", "esc", this.hide.bind(this));
+    $(document).bind("keydown", function(event) {
+      if (event.keyCode == 27) {
+        this.hide();
+      }
+    }.bind(this));
     
     this._link.bind("click", function(event) {
       event.preventDefault();
@@ -55,8 +60,15 @@ protonet.controls.Navigation = {
   },
   
   _initShortcut: function() {
-    this._shortcut = protonet.user.Browser.IS_ON_WINDOWS() || protonet.user.Browser.IS_ON_UBUNTU() ? "ctrl+space" : "alt+space";
-    this._link.find(".shortcut").html("[" + this._shortcut.toUpperCase() + "]");
+    var shortcut;
+    if (protonet.user.Browser.IS_ON_WINDOWS() || protonet.user.Browser.IS_ON_UBUNTU()) {
+      shortcut = "[CTRL+SPACE]";
+      this._shortcutMetaKey = "ctrlKey";
+    } else {
+      shortcut = "[ALT+SPACE]";
+      this._shortcutMetaKey = "altKey";
+    }
+    this._link.find(".shortcut").html(shortcut);
   },
   
   toggle: function() {

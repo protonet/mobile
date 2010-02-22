@@ -1,4 +1,5 @@
 //= require "../../../data/yql.js"
+//= require "../../../data/google.js"
 //= require "../../../media/screenshot.js"
 //= require "../../../effects/hover_resize.js"
 //= require "../../../utils/parse_url.js"
@@ -21,101 +22,62 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     return !!this.url;
   },
   
-  loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
-    var yqlSearchTableCallback = this._yqlSearchTableCallback.bind(this, onSuccessCallback),
-        yqlHtmlTableCallback = this._yqlHtmlTableCallback.bind(this, onSuccessCallback),
-        yqlTimeoutCallback = this._yqlTimeoutCallback.bind(this, onSuccessCallback),
-        urlParts = protonet.utils.parseUrl(this.url);
+  loadData: function(onSuccessCallback) {
+    // preload screenshot
+    this.data.thumbnail = new Image().src = protonet.media.ScreenShot.get(this.url);
     
-    this._shortUrl = urlParts.host + urlParts.path + urlParts.query;
-    
-    new protonet.data.YQL.Query(
-      "SELECT title, abstract FROM search.web WHERE " + 
-        "query='" + this._shortUrl + "' AND sites='" + urlParts.host + "' AND url LIKE '%" + this._shortUrl + "%' LIMIT 1"
-    ).execute(
-      yqlSearchTableCallback,
-      yqlSearchTableCallback
+    protonet.data.Google.search(
+      this.url,
+      this._googleSearchCallback.bind(this, onSuccessCallback),
+      this._googleSearchFailureCallback.bind(this, onSuccessCallback)
     );
+  },
+  
+  _googleSearchCallback: function(onSuccessCallback, response) {
+    var result = response[0];
+    $.extend(this.data, {
+      description:  protonet.utils.stripTags(result.content),
+      title:        protonet.utils.stripTags(result.title)
+    });
     
+    onSuccessCallback(this.data);
+  },
+  
+  _googleSearchFailureCallback: function(onSuccessCallback, response) {
+    if (this._canceled) {
+      return;
+    }
+    
+    // Ok google, doesn't know anything about the given url, so we try to get our own data using YQL html lookup
     new protonet.data.YQL.Query(
       "SELECT content FROM html WHERE " + 
-        "url='" + this.url + "' AND (xpath='//meta[@name=\"description\"]' OR xpath='//meta[@name=\"keywords\"]' OR xpath='//title')"
+      "url='" + this.url + "' AND (xpath='//meta[@name=\"description\"]' OR xpath='//meta[@name=\"keywords\"]' OR xpath='//title')"
     ).execute(
-      yqlHtmlTableCallback,
-      yqlHtmlTableCallback
+      this._yqlCallback.bind(this, onSuccessCallback),
+      this._yqlCallback.bind(this, onSuccessCallback)
     );
+  },
+  
+  _yqlCallback: function(onSuccessCallback, response) {
+    if (this._canceled) {
+      return;
+    }
     
-    setTimeout(yqlTimeoutCallback, 6000);
+    var urlParts = protonet.utils.parseUrl(this.url),
+        shortUrl = urlParts.host + urlParts.path + urlParts.query,
+        meta = response.meta;
+    
+    $.extend(this.data, {
+      description:  (meta && meta[0] && meta[0].content) || "",
+      tags:         (meta && meta[1] && meta[1].content) || "",
+      title:        String(response.title || shortUrl).replace(/^,+/, "").replace(/,+$/, "")
+    });
+    
+    onSuccessCallback(this.data);
   },
   
   setData: function(data) {
     this.data = data;
-  },
-  
-  _yqlHtmlTableCallback: function(onSuccessCallback, response) {
-    if (this._canceled || this._yqlFinished) {
-      return;
-    }
-    
-    var results = (response &&
-                   response.query &&
-                   response.query.results);
-    
-    if (!results) {
-      return;
-    }
-    
-    this._yqlFinished = true;
-    
-    $.extend(this.data, {
-      description:  results.meta && results.meta[0] && results.meta[0].content,
-      tags:         results.meta && results.meta[1] && results.meta[1].content,
-      title:        String(results.title || this._shortUrl).replace(/^,+/, "").replace(/,+$/, ""),
-      thumbnail:    protonet.media.ScreenShot.get(this.url)
-    });
-    
-    onSuccessCallback(this.data);
-  },
-  
-  _yqlSearchTableCallback: function(onSuccessCallback, response) {
-    if (this._canceled || this._yqlFinished) {
-      return;
-    }
-    
-    var result = (response &&
-                  response.query &&
-                  response.query.results &&
-                  response.query.results.result);    
-    
-    if (!result) {
-      return;
-    }
-    
-    this._yqlFinished = true;
-    
-    $.extend(this.data, {
-      description:  protonet.utils.stripTags(result["abstract"] || ""),
-      title:        protonet.utils.stripTags(result.title || this._shortUrl),
-      thumbnail:    protonet.media.ScreenShot.get(this.url)
-    });
-    
-    onSuccessCallback(this.data);
-  },
-  
-  _yqlTimeoutCallback: function(onSuccessCallback) {
-    if (this._canceled || this._yqlFinished) {
-      return;
-    }
-    
-    this._yqlFinished = true;
-    
-    $.extend(this.data, {
-      description:  "",
-      title:        this._shortUrl,
-      thumbnail:    protonet.media.ScreenShot.get(this.url)
-    });
-    
-    onSuccessCallback(this.data);
   },
   
   getDescription: function() {
@@ -135,25 +97,32 @@ protonet.controls.TextExtension.providers.Link.prototype = {
           target: "_blank",
           className: "fetching"
         }),
-        img = $("<img />", {
-          src: thumbnail
-        }),
+        img,
         checks = 0,
+        // Check every 4 seconds if screenshot is available
         checkAvailibility = function() {
-          protonet.media.ScreenShot.isAvailable(this.url, undefined, function(isAvailable) {
-            if (isAvailable || ++checks > 10) {
-              anchor.removeClass("fetching");
-              img.attr("src", img.attr("src") + "&cachebuster=" + new Date().getTime());
-              new protonet.effects.HoverResize(img, { width: 280, height: 202 });
+          protonet.media.ScreenShot.isAvailable(this.url, null, function(isAvailable) {
+            if (checks == 0) {
+              img = $("<img />", { src: thumbnail  }).appendTo(anchor);
+            }
+            
+            if (checks > 0 && isAvailable) {
+              img.attr("src", thumbnail + "&loaded");
+            }
+            
+            if (checks > 8 || isAvailable) {
+             anchor.removeClass("fetching"); 
+             new protonet.effects.HoverResize(img, { width: 280, height: 202 });
             } else {
-              this.timeout = setTimeout(checkAvailibility, 6000);
+              checks++;
+              this.timeout = setTimeout(checkAvailibility, 4000);
             }
           }.bind(this));
         }.bind(this);
     
     checkAvailibility();
     
-    return anchor.append(img);
+    return anchor;
   },
   
   cancel: function() {

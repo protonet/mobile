@@ -1,6 +1,6 @@
 //---------------------------- CONSOLE ----------------------------
-if (!console) {
-  var console = { log: function() {} };
+if (!window.console) {
+  window.console = { log: function() {} };
 }
 
 

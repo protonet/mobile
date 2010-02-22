@@ -10,28 +10,18 @@ protonet.data.Flickr.getPhoto = (function() {
       data;
   
   function photoSizesLoaded(response) {
-    var results = response && response.query && response.query.results;
-    if (!results) {
-      return callbacks.failure();
-    }
-    
     data = $.extend({
-      thumbnail: results.size[0],
-      preview: results.size[1]
+      thumbnail: response.size[0],
+      preview: response.size[1]
     }, data);
     
     callbacks.success(data);
   }
   
   function photoInfoLoaded(response) {
-    var results = response && response.query && response.query.results;
-    if (!results) {
-      return callbacks.failure();
-    }
-    
     data = {
-      description: protonet.utils.stripTags(results.photo.description),
-      title: results.photo.title
+      description: protonet.utils.stripTags(response.photo.description),
+      title: response.photo.title
     };
     
     new protonet.data.YQL.Query(YQL_GET_PHOTO_SIZES.replace("{id}", photoId)).execute(
@@ -99,13 +89,8 @@ protonet.data.Flickr.getPhotoSet = (function() {
     
     new protonet.data.YQL.Query(MULTI_QUERY.replace("{queries}", [yqlQuery1, yqlQuery2].join(";"))).execute(
       function(response) {
-        var results = response && response.query && response.query.results;
-        if (!results) {
-          return callbacks.failure();
-        }
-        
-        photoInfosLoaded(results.results[0]);
-        photoSizesLoaded(results.results[1]);
+        photoInfosLoaded(response.results[0]);
+        photoSizesLoaded(response.results[1]);
         
         callbacks.success(data);
       },
@@ -160,13 +145,8 @@ protonet.data.Flickr.getPhotoSearch = (function() {
     
     new protonet.data.YQL.Query(MULTI_QUERY.replace("{queries}", [yqlQuery1, yqlQuery2].join(";"))).execute(
       function(response) {
-        var results = response && response.query && response.query.results;
-        if (!results) {
-          return callbacks.failure();
-        }
-        
-        photoInfosLoaded(results.results[0]);
-        photoSizesLoaded(results.results[1]);
+        photoInfosLoaded(response.results[0]);
+        photoSizesLoaded(response.results[1]);
         
         callbacks.success(data);
       }, callbacks.failure

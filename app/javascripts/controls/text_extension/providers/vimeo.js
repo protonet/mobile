@@ -25,11 +25,11 @@ protonet.controls.TextExtension.providers.Vimeo.prototype = {
     return this.url.match(this.REG_EXP)[1];
   },
   
-  loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
+  loadData: function(onSuccessCallback, onFailureCallback) {
     protonet.data.Vimeo.getVideo(
       this._extractId(),
-      this._onSuccess.bind(this, onSuccessCallback, onEmptyResultCallback),
-      this._onError.bind(this, onErrorCallback)
+      this._onSuccess.bind(this, onSuccessCallback, onFailureCallback),
+      this._onFailure.bind(this, onFailureCallback)
     );
   },
   
@@ -37,32 +37,28 @@ protonet.controls.TextExtension.providers.Vimeo.prototype = {
     this.data = data;
   },
   
-  _onSuccess: function(onSuccessCallback, onEmptyResultCallback, response) {
+  _onSuccess: function(onSuccessCallback, onFailureCallback, response) {
     if (this._canceled) {
       return;
-    }
-    var entry = response[0];
-    if (!entry) {
-      return onEmptyResultCallback(response);
     }
     
     $.extend(this.data, {
       description:  protonet.utils.stripTags(entry.description),
-      duration:     entry.duration, 
-      thumbnail:    entry.thumbnail_small,
-      title:        entry.title,
-      tags:         entry.tags
+      duration:     response.duration,
+      thumbnail:    response.thumbnail_small,
+      title:        response.title,
+      tags:         response.tags
     });
     
     onSuccessCallback(this.data);
   },
   
-  _onError: function(onErrorCallback, response) {
+  _onFailure: function(onFailureCallback, response) {
     if (this._canceled) {
       return;
     }
     
-    onErrorCallback(response);
+    onFailureCallback(response);
   },
   
   _showVideo: function(event) {

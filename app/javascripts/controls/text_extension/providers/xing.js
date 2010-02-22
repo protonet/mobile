@@ -18,7 +18,7 @@ protonet.controls.TextExtension.providers.XING.prototype = {
     return this.REG_EXP.test(this.url);
   },
   
-  loadData: function(onSuccessCallback, onEmptyResultCallback, onErrorCallback) {
+  loadData: function(onSuccessCallback) {
     var yqlCallback = this._yqlCallback.bind(this, onSuccessCallback);
     
     new protonet.data.YQL.Query(
@@ -38,13 +38,14 @@ protonet.controls.TextExtension.providers.XING.prototype = {
       return;
     }
     
-    var results = (response && response.query && response.query.results) || {};
+    var meta = response.meta,
+        img = response.img;
     
     $.extend(this.data, {
-      description:  results.meta && results.meta[0] && results.meta[0].content,
-      tags:         results.meta && results.meta[1] && results.meta[1].content,
-      title:        String(results.title),
-      thumbnail:    "http://www.xing.com" + (results.img && results.img.src.replace(/(\,\d)*?\.jpg/, "_s3.jpg") || "/img/users/nobody_m_s3.gif")
+      description:  (meta && meta[0] && meta[0].content) || "",
+      tags:         (meta && meta[1] && meta[1].content) || "",
+      title:        String(response.title || ""),
+      thumbnail:    "http://www.xing.com" + (img && img.src.replace(/(\,\d)*?\.jpg/, "_s3.jpg") || "/img/users/nobody_m_s3.gif")
     });
     
     onSuccessCallback(this.data);
