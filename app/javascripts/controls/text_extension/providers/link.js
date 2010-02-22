@@ -1,4 +1,4 @@
-//= require "../../../data/yql.js"
+//= require "../../../data/meta_data.js"
 //= require "../../../data/google.js"
 //= require "../../../media/screenshot.js"
 //= require "../../../effects/hover_resize.js"
@@ -49,12 +49,8 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     }
     
     // Ok google, doesn't know anything about the given url, so we try to get our own data using YQL html lookup
-    new protonet.data.YQL.Query(
-      "SELECT content FROM html WHERE " + 
-      "url='" + this.url + "' AND (xpath='//meta[@name=\"description\"]' OR xpath='//meta[@name=\"keywords\"]' OR xpath='//title')"
-    ).execute(
-      this._yqlCallback.bind(this, onSuccessCallback),
-      this._yqlCallback.bind(this, onSuccessCallback)
+    protonet.data.MetaData.get(
+      this.url, this._yqlCallback.bind(this, onSuccessCallback), this._yqlCallback.bind(this, onSuccessCallback)
     );
   },
   
@@ -64,13 +60,12 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     }
     
     var urlParts = protonet.utils.parseUrl(this.url),
-        shortUrl = urlParts.host + urlParts.path + urlParts.query,
-        meta = response.meta;
+        shortUrl = urlParts.host + urlParts.path + urlParts.query;
     
     $.extend(this.data, {
-      description:  (meta && meta[0] && meta[0].content) || "",
-      tags:         (meta && meta[1] && meta[1].content) || "",
-      title:        String(response.title || shortUrl).replace(/^,+/, "").replace(/,+$/, "")
+      description:  response.description || "",
+      tags:         response.keywords || "",
+      title:        response.title || shortUrl
     });
     
     onSuccessCallback(this.data);
@@ -81,13 +76,11 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   },
   
   getDescription: function() {
-    var description = this.data.description || "";
-    return String(description).truncate(200);
+    return this.data.description.truncate(200);
   },
   
   getTitle: function() {
-    var title = this.data.title;
-    return String(title).truncate(75);
+    return this.data.title.truncate(75);
   },
   
   getMedia: function() {
@@ -110,7 +103,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
               img.attr("src", thumbnail + "&loaded");
             }
             
-            if (checks > 8 || isAvailable) {
+            if (checks > 6 || isAvailable) {
              anchor.removeClass("fetching"); 
              new protonet.effects.HoverResize(img, { width: 280, height: 202 });
             } else {

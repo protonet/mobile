@@ -37,8 +37,8 @@ protonet.user.Browser = {
     return navigator.userAgent.indexOf("Windows") != -1;
   },
   
-  IS_ON_UBUNTU: function() {
-    return navigator.userAgent.indexOf("Ubuntu") != -1;
+  IS_ON_LINUX: function() {
+    return navigator.userAgent.indexOf("Linux") != -1;
   },
   
   SUPPORTS_HTML5_AUDIO: function() {

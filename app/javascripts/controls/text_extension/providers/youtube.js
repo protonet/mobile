@@ -55,7 +55,7 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
     onSuccessCallback(this.data);
   },
   
-  _onError: function(onFailureCallback, response) {
+  _onFailure: function(onFailureCallback, response) {
     if (this._canceled) {
       return;
     }

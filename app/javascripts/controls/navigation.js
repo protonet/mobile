@@ -61,7 +61,7 @@ protonet.controls.Navigation = {
   
   _initShortcut: function() {
     var shortcut;
-    if (protonet.user.Browser.IS_ON_WINDOWS() || protonet.user.Browser.IS_ON_UBUNTU()) {
+    if (protonet.user.Browser.IS_ON_WINDOWS() || protonet.user.Browser.IS_ON_LINUX()) {
       shortcut = "[CTRL+SPACE]";
       this._shortcutMetaKey = "ctrlKey";
     } else {
