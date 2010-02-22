@@ -13,6 +13,7 @@ module TweetsHelper
     @merging = true if same_poster_as_next && !t.text_extension?
   
     @first_post_in_a_merge = @merging && !@showed_wrapper_start
+    @first_id = t.id if !@merging || @first_post_in_a_merge
     @showed_wrapper_start  = true if @first_post_in_a_merge
   
     @last_post_in_a_merge  = @merging && (!same_poster_as_next || t.text_extension?)
@@ -22,8 +23,11 @@ module TweetsHelper
     
     @last_id = if @first_post_in_a_merge
       cut_tweet = nil
-      tweets[(i + 1)..25].each do |innertweet| 
-        (cut_tweet = innertweet and break) if innertweet.user.id == t.user.id && innertweet.text_extension?
+      tweets[(i + 1)..25].each do |innertweet|
+        if innertweet.user.id == t.user.id && innertweet.text_extension?
+          cut_tweet = innertweet
+          break
+        end
         (cut_tweet = tweets[tweets.index(innertweet) - 1] and break) if innertweet.user.id != t.user.id
       end
       cut_tweet ||= tweets.last
@@ -35,6 +39,6 @@ module TweetsHelper
     @show_wrapper_start   = false if @last_post_in_a_merge
     @showed_wrapper_start = false if @last_post_in_a_merge
     
-    [@show_wrapper_start, @show_wrapper_end, @last_id]
+    [@show_wrapper_start, @show_wrapper_end, @first_id, @last_id]
   end
 end
