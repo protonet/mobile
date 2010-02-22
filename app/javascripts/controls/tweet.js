@@ -24,7 +24,9 @@ protonet.controls.Tweet = (function() {
     template = template || $("#message-template");
     
     this.listElement = $(template.html());
-    this.htmlId = this.listElement.attr("id").replace(/\{id\}/g, this.id);
+    if(this.id) {
+      this.htmlId = this.listElement.attr("id").replace(/\{id\}/g, this.id);
+    }
     this.listElement.attr("id", this.htmlId);
     this.listElement.find(".message-usericon > img").attr("src", args.user_icon_url);
     this.listElement.find(".message-author").html(this.author);
@@ -56,6 +58,7 @@ protonet.controls.Tweet = (function() {
         && lastTweetHappenedInLastHalfHour
         && !this.textExtension
         && lastTweet.find(".message-author").html() == this.author;
+    this.groupedTweet = canBeGroupedWithLastTweet;
         
     if (canBeGroupedWithLastTweet) {
       lastTweet.find(".message-text").prepend(messageContainer.html());
@@ -78,9 +81,21 @@ protonet.controls.Tweet = (function() {
       
       // Overwrite message, because we don't always want to send the textarea value
       params += "&" + encodeURIComponent("tweet[message]=" + this.originalMessage);
-      
       // send to server
-      $.post(this.form.attr("action"), params);
+      $.post(this.form.attr("action"), params, function(data){
+        this.htmlId = this.listElement.attr("id");
+        
+        if(!this.groupedTweet) {
+          this.htmlId = this.htmlId.replace("{id}", data);
+          this.htmlId = this.htmlId.replace("{id}", data);
+          this.listElement.attr("id", this.htmlId);
+        } else {
+          var wrapper = this.channelUl.children("li:first");
+          var first_id = wrapper.attr("id").match(/tweet-(\d*)-\d*/)[1];
+          var html_id = wrapper.attr("id").replace(new RegExp("tweet-"+first_id), "tweet-" + data);
+          wrapper.attr("id", html_id);
+        }
+      }.bind(this));
     }
   };
   

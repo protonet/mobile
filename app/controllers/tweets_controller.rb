@@ -22,7 +22,7 @@ class TweetsController < ApplicationController
     # saving, nothing else is done here for the moment
     @tweet.save
     respond_to do |format|
-      format.js  { render :nothing => true }
+      format.js  { render :text => @tweet.id }
       format.html { redirect_to :controller => :instruments, :channel_id => channels.first.id }
     end
     
