@@ -82,6 +82,7 @@ protonet.controls.TextExtension.Input.prototype = {
       }
       
       instance = new this.providers[providerName](url, this);
+      console.log(providerName);
       if (instance.match()) {
         return instance;
       }

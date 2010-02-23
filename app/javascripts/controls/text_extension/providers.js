@@ -11,6 +11,9 @@ protonet.controls.TextExtension.sortedProviders = [
   "FlickrSearch",
   "Twitpic",
   "Metacafe",
+  "Break",
+  "DailyMotion",
+  "CollegeHumor",
   "Link"
 ]; // sorted by priority
 
@@ -26,3 +29,6 @@ protonet.controls.TextExtension.sortedProviders = [
 //= require "providers/flickr_photo_set.js"
 //= require "providers/flickr_search.js"
 //= require "providers/metacafe.js"
+//= require "providers/break.js"
+//= require "providers/daily_motion.js"
+//= require "providers/college_humor.js"

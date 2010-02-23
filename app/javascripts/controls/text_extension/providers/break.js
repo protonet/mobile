@@ -1,19 +1,19 @@
 //= require "../../../data/meta_data.js"
 
 /**
- * MetaCafe Provider
+ * Break.com Provider
  */
-protonet.controls.TextExtension.providers.Metacafe = function(url) {
+protonet.controls.TextExtension.providers.Break = function(url) {
   this.id = new Date().getTime() + Math.round(Math.random() * 1000);
   this.url = url;
   this.data = {
     url: this.url,
-    type: "Metacafe"
+    type: "Break"
   };
 };
 
-protonet.controls.TextExtension.providers.Metacafe.prototype = {
-  REG_EXP: /metacafe\.com\/watch\/.+\//i,
+protonet.controls.TextExtension.providers.Break.prototype = {
+  REG_EXP: /break\.com\/index\/.+/i,
   
   match: function() {
     return this.REG_EXP.test(this.url);
@@ -90,8 +90,8 @@ protonet.controls.TextExtension.providers.Metacafe.prototype = {
         }),
         img = $("<img />", {
           src: this.data.image_src,
-          width: 136,
-          height: 81
+          width: 150,
+          height: 100
         });
     anchor.click(this._showVideo.bind(this));
     return anchor.append(img);
