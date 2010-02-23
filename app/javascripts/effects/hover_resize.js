@@ -37,7 +37,6 @@ protonet.effects.HoverResize.prototype = {
   _mouseOut: function() {
     clearTimeout(this.timeout);
     
-    console.log("width:", this.oldSize.width.px());
     this.element.stop().animate({
       width: this.oldSize.width.px(),
       height: this.oldSize.height.px()
