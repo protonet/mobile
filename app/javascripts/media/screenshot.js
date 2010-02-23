@@ -15,7 +15,8 @@ protonet.media.ScreenShot = (function() {
       BASE_URL +
       "?size=" + (size || DEFAULT_SIZE) + 
       "&devkey=" + KEY +
-      "&url=" + encodeURIComponent(url);
+      "&url=" + encodeURIComponent(url) +
+      "&nothumb=" + encodeURIComponent(protonet.config.base_url + "/images/transparent.gif");
     return screenShotUrl;
   }
   

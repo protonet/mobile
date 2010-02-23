@@ -220,6 +220,7 @@
 
 .text-extension-results.Link .media a.fetching img {
   opacity: 0.6;
+  background-color: #999;
 }
 
 .text-extension-results.Link .media a.fetching {

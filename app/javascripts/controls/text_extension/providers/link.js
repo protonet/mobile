@@ -97,7 +97,6 @@ protonet.controls.TextExtension.providers.Link.prototype = {
           protonet.media.ScreenShot.isAvailable(this.url, null, function(isAvailable) {
             if (checks == 0) {
               img = $("<img />", { src: thumbnail  }).appendTo(anchor);
-              new protonet.effects.HoverResize(img, { width: 280, height: 202 });
             }
             
             if (checks > 0 && isAvailable) {
@@ -106,6 +105,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
             
             if (checks > 6 || isAvailable) {
              anchor.removeClass("fetching");
+             new protonet.effects.HoverResize(img, { width: 280, height: 202 });
             } else {
               checks++;
               this.timeout = setTimeout(checkAvailibility, 4000);

@@ -2,9 +2,10 @@ protonet.effects.HoverResize = function(elementToResize, hoverSize, hoverSrc) {
   this.element = elementToResize;
   this.size = hoverSize;
   this.src = hoverSrc;
+  
   this.oldSize = {
-    height: this.element.attr("height") || this.element.height(),
-    width: this.element.attr("width")  || this.element.width()
+    height: this.element.height(),
+    width: this.element.width()
   };
   this.oldSrc = this.element.attr("src");
   
@@ -36,6 +37,7 @@ protonet.effects.HoverResize.prototype = {
   _mouseOut: function() {
     clearTimeout(this.timeout);
     
+    console.log("width:", this.oldSize.width.px());
     this.element.stop().animate({
       width: this.oldSize.width.px(),
       height: this.oldSize.height.px()

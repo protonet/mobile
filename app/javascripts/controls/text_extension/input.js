@@ -73,8 +73,8 @@ protonet.controls.TextExtension.Input.prototype = {
   },
   
   _getDataProvider: function(url) {
-    var instance, i, providerName;
-    for (i=0; i<this.sortedProviders.length; i++) {
+    var instance, i, providerName, providerLength = this.sortedProviders.length;
+    for (i=0; i<providerLength; i++) {
       providerName = this.sortedProviders[i];
       
       if (!this.providers.hasOwnProperty(providerName)) {
@@ -82,7 +82,6 @@ protonet.controls.TextExtension.Input.prototype = {
       }
       
       instance = new this.providers[providerName](url, this);
-      console.log(providerName);
       if (instance.match()) {
         return instance;
       }
@@ -90,7 +89,7 @@ protonet.controls.TextExtension.Input.prototype = {
   },
   
   _request: function() {
-    this.provider.loadData(this._render.bind(this), this._unsupportedUrlReset.bind(this), this.reset.bind(this));
+    this.provider.loadData(this._render.bind(this), this._unsupportedUrlReset.bind(this));
   },
   
   _render: function(data) {
@@ -145,6 +144,7 @@ protonet.controls.TextExtension.Input.prototype = {
   
   submitted: function() {
     this.provider && this.provider.cancel();
+    delete this._lastUrl;
     this.reset();
   },
  

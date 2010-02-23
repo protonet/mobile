@@ -13,6 +13,7 @@
     <script type="text/javascript">//<![CDATA[
       var protonet = protonet || {};
       protonet.config = {
+        base_url: "http://" + location.host + (location.port ? ":" + location.port : ""),
         dispatching_server: '<%= request.env["SERVER_NAME"] %>',
         token: '<%= current_user.communication_token %>',
         user_name: '<%= current_user.display_name %>',
