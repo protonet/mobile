@@ -4,7 +4,7 @@ class TweetsController < ApplicationController
     @no_wrap = true
     channel = Channel.find(:first, :conditions => {:id => params[:channel_id]})
     if    params[:last_id]
-      tweets  = (channel ? channel.tweets.all(:conditions => ["tweets.id < ?", params[:last_id]], :order => "tweets.id DESC", :limit => 25) : [])
+      tweets  = (channel ? Tweet.find_tweets_older_than(params[:last_id]) : [])
     elsif params[:first_id]
       tweets  = (channel ? channel.tweets.all(:conditions => ["tweets.id > ?", params[:first_id]], :order => "tweets.id DESC") : [])
     end
