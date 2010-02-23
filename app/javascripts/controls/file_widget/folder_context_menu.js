@@ -2,7 +2,7 @@
 
 protonet.controls.FileWidget.prototype.FolderContextMenu = function(parent) {
   this.parent = parent;
-  this.container = $("#file-list");
+  this.container = parent.wrapper;
   this.update();
   this.setClick();
 };

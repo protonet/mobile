@@ -131,6 +131,9 @@
 
 /* =VIDEO/FLASH TEXT EXTENSION (YouTube, Slideshare, ...)
 --------------------------------------------------------------------------- */
+#text-extension-preview .text-extension-results.CollegeHumor object,
+#text-extension-preview .text-extension-results.DailyMotion object,
+#text-extension-preview .text-extension-results.Break object,
 #text-extension-preview .text-extension-results.Metacafe object,
 #text-extension-preview .text-extension-results.Slideshare object,
 #text-extension-preview .text-extension-results.Vimeo object,
@@ -139,6 +142,9 @@
   height: 280px;
 }
 
+.text-extension-results.CollegeHumor object,
+.text-extension-results.DailyMotion object,
+.text-extension-results.Break object,
 .text-extension-results.Metacafe object,
 .text-extension-results.Slideshare object,
 .text-extension-results.Vimeo object,
@@ -148,6 +154,9 @@
   margin-bottom: 5px;
 }
 
+.text-extension-results.CollegeHumor .media a:after,
+.text-extension-results.DailyMotion .media a:after,
+.text-extension-results.Break .media a:after,
 .text-extension-results.Metacafe .media a:after,
 .text-extension-results.Slideshare .media a:after,
 .text-extension-results.Vimeo .media a:after,
@@ -167,6 +176,9 @@
   text-shadow: 2px 2px 2px #000;
 }
 
+.text-extension-results.CollegeHumor .media a:hover:after,
+.text-extension-results.DailyMotion .media a:hover:after,
+.text-extension-results.Break .media a:hover:after,
 .text-extension-results.Metacafe .media a:hover:after,
 .text-extension-results.Slideshare .media a:hover:after,
 .text-extension-results.Vimeo .media a:hover:after,
@@ -174,6 +186,9 @@
   opacity: 0.9;
 }
 
+.text-extension-results.CollegeHumor .media a:active:after,
+.text-extension-results.DailyMotion .media a:active:after,
+.text-extension-results.Break .media a:active:after,
 .text-extension-results.Metacafe .media a:active:after,
 .text-extension-results.Slideshare .media a:active:after,
 .text-extension-results.Vimeo .media a:active:after,
@@ -182,6 +197,9 @@
 }
 
 /* TODO: Fix this, it is needed (again) to avoid :hover conflict with :after pseudo elements */
+.text-extension-results.CollegeHumor .media a:hover img,
+.text-extension-results.DailyMotion .media a:hover img,
+.text-extension-results.Break .media a:hover img,
 .text-extension-results.Metacafe .media a:hover img,
 .text-extension-results.Slideshare .media a:hover img,
 .text-extension-results.Vimeo .media a:hover img,

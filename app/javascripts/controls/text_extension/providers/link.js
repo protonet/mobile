@@ -36,8 +36,8 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   _googleSearchCallback: function(onSuccessCallback, response) {
     var result = response[0];
     $.extend(this.data, {
-      description:  protonet.utils.stripTags(result.content),
-      title:        protonet.utils.stripTags(result.title)
+      description:  protonet.utils.stripTags(result.content || ""),
+      title:        protonet.utils.stripTags(result.title || "")
     });
     
     onSuccessCallback(this.data);
@@ -76,11 +76,11 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   },
   
   getDescription: function() {
-    return this.data.description.truncate(200);
+    return String(this.data.description || "").truncate(200);
   },
   
   getTitle: function() {
-    return this.data.title.truncate(75);
+    return String(this.data.title || "").truncate(75);
   },
   
   getMedia: function() {
@@ -97,6 +97,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
           protonet.media.ScreenShot.isAvailable(this.url, null, function(isAvailable) {
             if (checks == 0) {
               img = $("<img />", { src: thumbnail  }).appendTo(anchor);
+              new protonet.effects.HoverResize(img, { width: 280, height: 202 });
             }
             
             if (checks > 0 && isAvailable) {
@@ -104,8 +105,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
             }
             
             if (checks > 6 || isAvailable) {
-             anchor.removeClass("fetching"); 
-             new protonet.effects.HoverResize(img, { width: 280, height: 202 });
+             anchor.removeClass("fetching");
             } else {
               checks++;
               this.timeout = setTimeout(checkAvailibility, 4000);

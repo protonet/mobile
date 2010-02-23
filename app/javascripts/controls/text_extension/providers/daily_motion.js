@@ -1,19 +1,19 @@
 //= require "../../../data/meta_data.js"
 
 /**
- * MetaCafe Provider
+ * DailyMotion.com Provider
  */
-protonet.controls.TextExtension.providers.Metacafe = function(url) {
+protonet.controls.TextExtension.providers.DailyMotion = function(url) {
   this.id = new Date().getTime() + Math.round(Math.random() * 1000);
   this.url = url;
   this.data = {
     url: this.url,
-    type: "Metacafe"
+    type: "DailyMotion"
   };
 };
 
-protonet.controls.TextExtension.providers.Metacafe.prototype = {
-  REG_EXP: /metacafe\.com\/watch\/.+\//i,
+protonet.controls.TextExtension.providers.DailyMotion.prototype = {
+  REG_EXP: /dailymotion\.com\/video\/.+/i,
   
   match: function() {
     return this.REG_EXP.test(this.url);
@@ -90,8 +90,8 @@ protonet.controls.TextExtension.providers.Metacafe.prototype = {
         }),
         img = $("<img />", {
           src: this.data.image_src,
-          width: 136,
-          height: 81
+          width: 160,
+          height: 120
         });
     anchor.click(this._showVideo.bind(this));
     return anchor.append(img);

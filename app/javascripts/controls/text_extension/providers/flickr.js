@@ -14,7 +14,7 @@ protonet.controls.TextExtension.providers.Flickr = function(url) {
 };
 
 protonet.controls.TextExtension.providers.Flickr.prototype = {
-  REG_EXP: /flickr\.com\/photos\/[\w@]+?\/(\d{1,20})/i,
+  REG_EXP: /flickr\.com\/photos\/[\w@-_]+?\/(\d{1,20})/i,
   
   match: function() {
     return this.REG_EXP.test(this.url);

@@ -69,20 +69,23 @@ if(jQuery)( function($) {
             // Loop each context menu
             $(this).each( function() {
                 var el = $(this);
-                var offset = $(el).offset();
+                var offset = el.offset();
                 // Add contextMenu class
                 menu.addClass(o.menuCssName);
+                
                 // Simulate a true right click
-                $(this).mousedown( function(e) {
+                el.mousedown( function(e) {
                     var evt = e;
                     $(this).mouseup( function(e) {
                         var srcElement = $(this);
-                        $(this).unbind('mouseup');
+                        srcElement.unbind('mouseup');
                         if( evt.button == 2 ) {
+                            evt.preventDefault();
+                            
                             // Hide context menus that may be showing
                             $("." + o.menuCssName).hide();
                             
-                            if( $(el).hasClass('disabled') ) return false;
+                            if( el.hasClass('disabled') ) return false;
                             
                             // Detect mouse position
                             var d = {}, x, y;
@@ -145,7 +148,7 @@ if(jQuery)( function($) {
                     menu.each(function() { $(this).bind('mousedown.disableTextSelect', function() { return false; }); });
                 }
                 // Disable browser context menu (requires both selectors to work in IE/Safari + FF/Chrome)
-                $(el).add('UL.' + o.menuCssName).bind('contextmenu', function() { return false; });
+                el.add('UL.' + o.menuCssName).bind('contextmenu', function() { return false; });
                 
             });
             return $(this);

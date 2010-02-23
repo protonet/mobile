@@ -16,7 +16,7 @@
  */
 protonet.data.MetaData = {
   QUERY: "SELECT * FROM html WHERE url = '{url}' AND xpath='//head' LIMIT 1",
-  REL_MATCH: (/video_src|image_src/i),
+  REL_MATCH: (/video_src|image_src|audio_src/i),
   
   get: function(url, onSuccess, onFailure) {
     var query = this.QUERY.replace("{url}", url);
@@ -30,6 +30,7 @@ protonet.data.MetaData = {
       onFailure();
     }
     
+    head.title = (head.title && head.title.content) || head.title;
     data.title = $.trim(String(head.title || "").replace(/^,+/, "").replace(/,+$/, ""));
     
     $.each($.makeArray(head.meta), function(i, metaTag) {

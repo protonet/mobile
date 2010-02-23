@@ -109,6 +109,8 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     
     fileList.addEventListener("drop", function(event) {
       event.preventDefault();
+      this._fileList.removeClass("highlight");
+      
       var files = event.dataTransfer.files;
       if (files && files.length > 0) {
         this.__html5_upload(event.dataTransfer.files);
