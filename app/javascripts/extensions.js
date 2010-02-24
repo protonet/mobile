@@ -1,6 +1,6 @@
 //---------------------------- CONSOLE ----------------------------
-if (!window.console) {
-  window.console = { log: function() {} };
+if (typeof(console) == "undefined" || typeof(console.log) != "function") {
+  console = { log: function() {} };
 }
 
 
