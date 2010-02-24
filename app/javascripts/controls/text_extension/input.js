@@ -9,6 +9,7 @@ protonet.controls.TextExtension.Input = function(input) {
   this.container = $("#text-extension-preview");
   this.hiddenInput = $("#text-extension-input");
   this.removeLink = this.container.find("a.remove");
+  this._ignoreUrls = [];
   
   this.regExp = /(\b(((https?|ftp):\/\/)|(www\.))[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
   
@@ -40,7 +41,7 @@ protonet.controls.TextExtension.Input.prototype = {
   _cancel: function(event) {
     event.preventDefault();
     
-    this._lastUrl = this.url;
+    this._ignoreUrls.push(this.url);
     
     this.input.focus();
     this.reset();
@@ -54,9 +55,9 @@ protonet.controls.TextExtension.Input.prototype = {
     
     for (var i=0; i<matchUrls.length; i++) {
       var url = this._prepareUrl(matchUrls[i]),
-          isLastUrl = (url == this._lastUrl);
+          shouldBeIgnored = $.inArray(url, this._ignoreUrls) != -1;
       
-      if (url.isUrl() && !isLastUrl) {
+      if (!shouldBeIgnored && url.isUrl()) {
         this._selectUrl(url);
         break;
       }
@@ -89,7 +90,7 @@ protonet.controls.TextExtension.Input.prototype = {
   },
   
   _request: function() {
-    this.provider.loadData(this._render.bind(this), this._unsupportedUrlReset.bind(this));
+    this.provider.loadData(this._render.bind(this), this._ignoreUrlAndReset.bind(this));
   },
   
   _render: function(data) {
@@ -144,12 +145,12 @@ protonet.controls.TextExtension.Input.prototype = {
   
   submitted: function() {
     this.provider && this.provider.cancel();
-    delete this._lastUrl;
+    this._ignoreUrls = [];
     this.reset();
   },
  
-  _unsupportedUrlReset: function() {
-    this._lastUrl = this.url;
+  _ignoreUrlAndReset: function() {
+    this._ignoreUrls.push(this.url);
     this.reset();
   },
   

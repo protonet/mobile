@@ -22,8 +22,12 @@ protonet.controls.TextExtension.providers.XING.prototype = {
     var yqlCallback = this._yqlCallback.bind(this, onSuccessCallback);
     
     new protonet.data.YQL.Query(
-      "SELECT content, src FROM html WHERE " + 
-        "url='" + this.url + "' AND (xpath='//meta[@name=\"description\"]' OR xpath='//title' OR xpath='//meta[@name=\"keywords\"]' OR xpath='//img[@id=\"photo\"]')"
+      "SELECT content, src FROM html WHERE url='" + this.url + "' AND xpath IN ('"+
+          "//meta[@name=\"description\"]'," +
+          "'//title'," +
+          "'//meta[@name=\"keywords\"]'," +
+          "'//img[@id=\"photo\"]'" +
+      ")"
     ).execute(
       yqlCallback, yqlCallback
     );
