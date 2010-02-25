@@ -38,6 +38,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.namespace :images do |images|
     images.resources :avatars
+    images.resources :externals
   end
   
   SprocketsApplication.routes(map, :resources)
