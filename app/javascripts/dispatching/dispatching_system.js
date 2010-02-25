@@ -20,23 +20,21 @@ protonet.dispatching.DispatchingSystem.prototype = {
       "auto", "auto", "8",
       null, {}, params, attributes
     );
-    
-    this.socket = document.getElementById(this.socketId);
   },
   
   "socketReadyCallback": function() {
     console.log('socket ready, trying to establish connection');
-    // todo fix this, it is double done, was needed for safari
-    // for some reasons the this.socket didn't behave as if it
-    // was the flash socket
-    this.socket = document.getElementById(this.socketId);
+    
+    this.socket = swfobject.getObjectById(this.socketId);
     this.connectSocket();
-    $(window).bind('unload', function(){
-      this.socket.closeSocket();
-    }.bind(this));
-    $(window).bind('focus', function(){
-      this.reconnectSocketIfNotConnected();
-    }.bind(this));
+    $(window).bind({
+      unload: function() {
+        this.socket.closeSocket();
+      }.bind(this),
+      focus: function() {
+        this.reconnectSocketIfNotConnected();
+      }.bind(this)
+    });
   },
     
   "connectSocket": function() {
@@ -49,7 +47,7 @@ protonet.dispatching.DispatchingSystem.prototype = {
       this.startSocketCheck();
       this.authenticateUser();
     } else {
-      setTimeout(function(){this.reconnectSocketIfNotConnected()}.bind(this), 5000);
+      setTimeout(this.reconnectSocketIfNotConnected.bind(this), 5000);
     }
   },
   
