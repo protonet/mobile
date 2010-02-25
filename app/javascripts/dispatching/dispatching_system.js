@@ -96,7 +96,6 @@ protonet.dispatching.DispatchingSystem.prototype = {
       return;
     }
     
-    // FIXME: JSON is only HTML5
     var message = JSON.parse(raw_data);
     
     switch(message.x_target) {
