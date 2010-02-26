@@ -1,5 +1,4 @@
 class Images::ExternalsController < ApplicationController
-  caches_page :show
   
   def show
     if params[:image_file_url]
