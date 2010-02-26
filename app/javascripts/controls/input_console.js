@@ -1,8 +1,9 @@
 protonet.controls.CommandBlob = function(args) {
-  this.starts_at    = args.starts_at;
-  this.ends_at      = args.ends_at;
-  this.command_type = args.command_type;
-  this.destination  = args.destination;
+  this.starts_at        = args.starts_at;
+  this.ends_at          = args.ends_at;
+  this.command_type     = args.command_type;
+  this.destination      = args.destination;
+  this.last_match_index = 0;
   
   console.log("new command blob has been created");
 };
@@ -153,6 +154,27 @@ protonet.controls.InputConsole.prototype = {
     switch(event.which) {
       // Tab
       case 9:
+        var command_blob           = this.last_command_blob;
+        if(!command_blob.base_value) {
+          command_blob.base_value    = this.input_console.val().substring(command_blob.starts_at + 1, this.input_console.attr("selectionEnd"));
+        }
+        var user_names    = window.UserWidget.user_names.slice(command_blob.last_match_index);
+        for(i in user_names) {
+          if(match = user_names[i].match(new RegExp("^" + command_blob.base_value))) {
+            if(!command_blob.replace_value) {
+              command_blob.replace_value = command_blob.base_value;
+            }
+            var new_value = this.input_console.val().replace("@" + command_blob.replace_value, "@" + user_names[i]);
+            command_blob.replace_value = user_names[i];
+            this.input_console.val(new_value);
+            command_blob.last_match_index = (command_blob.last_match_index + parseInt(i) + 1);
+            console.log(command_blob.last_match_index);
+            break;
+          }
+          if(i + 1 == user_names.length) {
+            command_blob.last_match_index = 0;
+          }
+        }
         console.log("requesting help");
         event.stopPropagation();
         event.preventDefault();
