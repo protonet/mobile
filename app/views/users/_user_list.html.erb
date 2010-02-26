@@ -11,7 +11,7 @@
     <!-- tabindex="-1" ensures that the element is focusable via css -->
     <li class="" tabindex="-1" id="user-list-user-<%= user.id %>">
       <img src="<%= user.active_avatar_url || '/images/userpicture-mini.jpg' %>" width="20" height="20" alt="Userpicture Mini" />
-      <%= user.display_name %>
+      <span><%= user.display_name %></span>
     </li>
     <% end %>
   </ul>

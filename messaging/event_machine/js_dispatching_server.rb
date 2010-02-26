@@ -75,6 +75,7 @@ module JsDispatchingServer
   
   def add_to_online_users
     @@online_users[@user.id] ||= {}
+    @@online_users[@user.id]["name"] ||= @user.display_name
     @@online_users[@user.id]["connections"] ||= []
     @@online_users[@user.id]["connections"] << [@key, @type]
     data = {:x_target => "UserWidget.update", :online_users => @@online_users}.to_json

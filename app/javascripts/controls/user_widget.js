@@ -2,10 +2,12 @@ protonet.controls.UserWidget = (function() {
 
   function UserWidget(args) {
     this.user_list = $("#user-list li");
+    this.user_names = [];
     this.user_objects = {};
     this.user_list.each(function(i){
       var user_id = this.user_list[i].id.match(/user-list-user-(.*)/)[1];
       this.user_objects[user_id] = $(this.user_list[i]);
+      this.user_names.push(this.user_objects[user_id].children("span").html());
     }.bind(this));
   };
   
