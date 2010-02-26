@@ -13,7 +13,7 @@ protonet.controls.TextExtension.providers.Break = function(url) {
 };
 
 protonet.controls.TextExtension.providers.Break.prototype = {
-  REG_EXP: /break\.com\/index\/.+/i,
+  REG_EXP: /break\.com\/.+?\/.+/i,
   
   match: function() {
     return this.REG_EXP.test(this.url);

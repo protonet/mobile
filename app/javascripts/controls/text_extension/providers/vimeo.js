@@ -43,7 +43,7 @@ protonet.controls.TextExtension.providers.Vimeo.prototype = {
     }
     
     $.extend(this.data, {
-      description:  protonet.utils.stripTags(entry.description),
+      description:  protonet.utils.stripTags(response.description),
       duration:     response.duration,
       thumbnail:    response.thumbnail_small,
       title:        response.title,
