@@ -96,7 +96,9 @@ protonet.controls.TextExtension.providers.Link.prototype = {
         checkAvailibility = function() {
           protonet.media.ScreenShot.isAvailable(this.url, null, function(isAvailable) {
             if (checks == 0) {
-              img = $("<img />", { src: thumbnail  }).appendTo(anchor);
+              img = $("<img />", {
+                src: thumbnail
+              }).appendTo(anchor);
             }
             
             if (checks > 0 && isAvailable) {

@@ -2,11 +2,6 @@ protonet.effects.HoverResize = function(elementToResize, hoverSize, hoverSrc) {
   this.element = elementToResize;
   this.size = hoverSize;
   this.src = hoverSrc;
-  
-  this.oldSize = {
-    height: this.element.height(),
-    width: this.element.width()
-  };
   this.oldSrc = this.element.attr("src");
   
   this.element.hover(this._mouseOver.bind(this), this._mouseOut.bind(this));
@@ -15,11 +10,15 @@ protonet.effects.HoverResize = function(elementToResize, hoverSize, hoverSrc) {
 
 protonet.effects.HoverResize.prototype = {
   _preload: function() {
-    $("<img />").attr("src", this.src);
+    new Image().src = this.src;
   },
   
   _mouseOver: function() {
     this._preload();
+    this.oldSize = {
+      height: this.element.height(),
+      width: this.element.width()
+    };
     
     clearTimeout(this.timeout);
     this.timeout = setTimeout(function() {

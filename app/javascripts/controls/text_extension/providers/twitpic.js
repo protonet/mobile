@@ -33,7 +33,7 @@ protonet.controls.TextExtension.providers.Twitpic.prototype = {
     
     new protonet.data.YQL.Query(
       "SELECT content,p FROM html WHERE " + 
-        "url='" + this.url + "' AND (xpath='//title' OR xpath='//div[@id=\"view-photo-caption\"]')"
+        "url='" + this.url + "' AND xpath IN ('//title', '//div[@id=\"view-photo-caption\"]')"
     ).execute(
       yqlCallback, onFailureCallback
     );
