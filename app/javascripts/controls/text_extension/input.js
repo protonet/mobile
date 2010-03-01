@@ -155,7 +155,6 @@ protonet.controls.TextExtension.Input.prototype = {
   
   reset: function() {
     this.container.stop();
-    
     if (this.container.is(":visible")) {
       this._hide();
     }

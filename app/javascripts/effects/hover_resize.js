@@ -10,7 +10,9 @@ protonet.effects.HoverResize = function(elementToResize, hoverSize, hoverSrc) {
 
 protonet.effects.HoverResize.prototype = {
   _preload: function() {
-    new Image().src = this.src;
+    if (this.src) {
+      new Image().src = this.src;
+    }
   },
   
   _mouseOver: function() {

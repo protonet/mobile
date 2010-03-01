@@ -33,6 +33,10 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   },
   
   _googleSearchCallback: function(onSuccessCallback, response) {
+    if (this._canceled) {
+      return;
+    }
+    
     var result = response[0];
     $.extend(this.data, {
       description:  protonet.utils.stripTags(result.content || ""),
