@@ -16,8 +16,7 @@ protonet.controls.TextExtension.Renderer = (function() {
     
     template = template || $("#text-extension-template");
     templateHtml = templateHtml || $(template.html());
-    console.log("---------------");
-    console.log(data);
+    
     var results = templateHtml.clone(),
         description = protonet.utils.escapeHtml(provider.getDescription()),
         title = protonet.utils.escapeHtml(provider.getTitle()),
