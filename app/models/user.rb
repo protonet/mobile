@@ -42,7 +42,7 @@ class User < ActiveRecord::Base
   
   def generate_new_communication_token
     self.communication_token = self.class.make_token
-    self.communication_token_expires_at = Time.now + 1.day
+    self.communication_token_expires_at = Time.now + 5.day
     save
     # todo: propagate
   end

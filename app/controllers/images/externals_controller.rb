@@ -1,6 +1,8 @@
 class Images::ExternalsController < ApplicationController
   
   def show
+    @width = params[:width]
+    @height = params[:height]
     if params[:image_file_url]
       @external = Images::External.find_or_create_by_image_url(params[:image_file_url])
     elsif params[:id]
