@@ -11,5 +11,6 @@ public/stylesheets/all.css
 public/sprockets/*
 public/uploads/*
 public/avatars/*
+public/images/avatars/*
 public/externals/*
 public/images/externals/*
