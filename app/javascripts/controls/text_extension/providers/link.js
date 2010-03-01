@@ -12,7 +12,6 @@
 protonet.controls.TextExtension.providers.Link = function(url) {
   this.url = url;
   this.data = {
-    type: "Link",
     url: this.url
   };
 };

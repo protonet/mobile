@@ -8,13 +8,13 @@
 protonet.controls.TextExtension.providers.Vimeo = function(url) {
   this.url = url;
   this.data = {
-    url: this.url,
-    type: "Vimeo"
+    url: this.url
   };
 };
 
 protonet.controls.TextExtension.providers.Vimeo.prototype = {
   REG_EXP: /vimeo\.com\/(\d+)/i,
+  CLASS_NAME: "flash-video",
   
   match: function() {
     return this.REG_EXP.test(this.url);
@@ -61,10 +61,6 @@ protonet.controls.TextExtension.providers.Vimeo.prototype = {
   },
   
   _showVideo: function(event) {
-    if (this.data.noembed) {
-      return;
-    }
-    
     event.preventDefault();
     event.stopPropagation();
     

@@ -7,13 +7,13 @@
 protonet.controls.TextExtension.providers.Slideshare = function(url) {
   this.url = url;
   this.data = {
-    url: this.url,
-    type: "Slideshare"
+    url: this.url
   };
 };
 
 protonet.controls.TextExtension.providers.Slideshare.prototype = {
   REG_EXP: /slideshare\.net\/[\w-]+?\/[\w-]+?$/i,
+  CLASS_NAME: "flash-video",
   
   match: function() {
     return this.REG_EXP.test(this.url);

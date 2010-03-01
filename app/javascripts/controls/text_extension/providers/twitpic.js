@@ -6,7 +6,6 @@
 protonet.controls.TextExtension.providers.Twitpic = function(url) {
   this.url = url;
   this.data = {
-    type: "Twitpic",
     url: this.url
   };
 };

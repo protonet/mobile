@@ -6,13 +6,13 @@
 protonet.controls.TextExtension.providers.CollegeHumor = function(url) {
   this.url = url;
   this.data = {
-    url: this.url,
-    type: "CollegeHumor"
+    url: this.url
   };
 };
 
 protonet.controls.TextExtension.providers.CollegeHumor.prototype = {
   REG_EXP: /collegehumor\.com\/video\:\d+/i,
+  CLASS_NAME: "flash-video",
   
   match: function() {
     return this.REG_EXP.test(this.url);
@@ -51,10 +51,6 @@ protonet.controls.TextExtension.providers.CollegeHumor.prototype = {
   },
   
   _showVideo: function(event) {
-    if (!this.data.video_src) {
-      return;
-    }
-    
     event.preventDefault();
     event.stopPropagation();
     
@@ -92,7 +88,10 @@ protonet.controls.TextExtension.providers.CollegeHumor.prototype = {
           width: 150,
           height: 100
         });
-    anchor.click(this._showVideo.bind(this));
+        
+    if (this.data.video_src) {
+      anchor.click(this._showVideo.bind(this));
+    }
     return anchor.append(img);
   },
   

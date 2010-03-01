@@ -6,8 +6,7 @@
 protonet.controls.TextExtension.providers.GIST = function(url) {
   this.url = url;
   this.data = {
-    type:         "GIST",
-    url:          this.url
+    url: this.url
   };
 };
 

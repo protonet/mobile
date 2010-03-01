@@ -6,8 +6,7 @@
 protonet.controls.TextExtension.providers.XING = function(url) {
   this.url = url;
   this.data = {
-    url: this.url,
-    type: "XING"
+    url: this.url
   };
 };
 
