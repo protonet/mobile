@@ -5,7 +5,6 @@
  * YouTube Provider
  */
 protonet.controls.TextExtension.providers.YouTube = function(url) {
-  this.id = new Date().getTime() + Math.round(Math.random() * 1000);
   this.url = url;
   this.data = {
     url: this.url,
@@ -71,8 +70,6 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
     event.preventDefault();
     event.stopPropagation();
     
-    var placeholderId = "text-extension-media-" + this.id;
-    $(event.target).attr("id", placeholderId);
     var params = {
       allowfullscreen: true,
       wmode: "opaque"
@@ -80,7 +77,7 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
     
     swfobject.embedSWF(
       "http://www.youtube.com/v/" + this._extractId() + "?playerapiid=ytplayer&autoplay=1&egm=0&hd=1&showinfo=0&rel=0",
-      placeholderId,
+      this.id,
       "auto", "auto", "8",
       null, {}, params
     );
@@ -99,10 +96,12 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
   },
   
   getMedia: function() {
+    this.id = "text-extension-preview-" + new Date().getTime() + Math.round(Math.random() * 1000);
     var thumbnail = this.data.thumbnail,
         anchor = $("<a />", {
           href: this.url,
-          target: "_blank"
+          target: "_blank",
+          id: this.id
         }),
         img = $("<img />", {
           src: thumbnail.url,

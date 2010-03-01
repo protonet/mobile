@@ -5,7 +5,6 @@
  * Slideshare Provider
  */
 protonet.controls.TextExtension.providers.Slideshare = function(url) {
-  this.id = new Date().getTime() + Math.round(Math.random() * 1000);
   this.url = url;
   this.data = {
     url: this.url,
@@ -59,8 +58,6 @@ protonet.controls.TextExtension.providers.Slideshare.prototype = {
     event.preventDefault();
     event.stopPropagation();
     
-    var placeholderId = "text-extension-media-" + this.id;
-    $(event.target).attr("id", placeholderId);
     var params = {
       allowfullscreen: true,
       wmode: "opaque"
@@ -68,7 +65,7 @@ protonet.controls.TextExtension.providers.Slideshare.prototype = {
     
     swfobject.embedSWF(
       this.data.embed_url,
-      placeholderId,
+      this.id,
       "auto", "auto", "8",
       null, {}, params
     );
@@ -85,10 +82,12 @@ protonet.controls.TextExtension.providers.Slideshare.prototype = {
   },
   
   getMedia: function() {
+    this.id = "text-extension-media-" + new Date().getTime() + Math.round(Math.random() * 1000);
     var thumbnail = this.data.thumbnail,
         anchor = $("<a />", {
           href: this.url,
-          target: "_blank"
+          target: "_blank",
+          id: this.id
         }),
         img = $("<img />", {
           src: thumbnail,
