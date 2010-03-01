@@ -40,8 +40,8 @@ ActionController::Routing::Routes.draw do |map|
     images.resources :avatars
     #  crazy resizing on the fly, I had to slightly uglify the url so the rails caching can handle it
     # examples:
-    # http://localhost:3000/images/externals/resize/0/0/http://www.goddesscruise.com/parts_of_boat.gif      -> for original size
-    # http://localhost:3000/images/externals/resize/100/100/http://www.goddesscruise.com/parts_of_boat.gif  -> any other size ;)
+    # /images/externals/resize/0/0/http://www.goddesscruise.com/parts_of_boat.gif      -> for original size
+    # /images/externals/resize/100/100/http://www.goddesscruise.com/parts_of_boat.gif  -> any other size ;)
     images.connect  'externals/resize/:width/:height/:image_file_url', :controller => 'externals',
       :action => 'show', :width => /\d*/, :heigth => /\d*/, :image_file_url => /.*/
     images.resources :externals
