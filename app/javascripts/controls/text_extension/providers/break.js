@@ -4,7 +4,6 @@
  * Break.com Provider
  */
 protonet.controls.TextExtension.providers.Break = function(url) {
-  this.id = new Date().getTime() + Math.round(Math.random() * 1000);
   this.url = url;
   this.data = {
     url: this.url,
@@ -59,8 +58,6 @@ protonet.controls.TextExtension.providers.Break.prototype = {
     event.preventDefault();
     event.stopPropagation();
     
-    var placeholderId = "text-extension-media-" + this.id;
-    $(event.target).attr("id", placeholderId);
     var params = {
       allowfullscreen: true,
       wmode: "opaque"
@@ -68,7 +65,7 @@ protonet.controls.TextExtension.providers.Break.prototype = {
     
     swfobject.embedSWF(
       this.data.video_src,
-      placeholderId,
+      this.id,
       "auto", "auto", "8",
       null, {}, params
     );
@@ -83,10 +80,12 @@ protonet.controls.TextExtension.providers.Break.prototype = {
   },
   
   getMedia: function() {
+    this.id = "text-extension-preview-" + new Date().getTime() + Math.round(Math.random() * 1000);
     var thumbnail = this.data.image_src,
         anchor = $("<a />", {
           href: this.url,
-          target: "_blank"
+          target: "_blank",
+          id: this.id
         }),
         img = $("<img />", {
           src: this.data.image_src,
@@ -94,6 +93,7 @@ protonet.controls.TextExtension.providers.Break.prototype = {
           height: 100
         });
     anchor.click(this._showVideo.bind(this));
+    
     return anchor.append(img);
   },
   
