@@ -4,7 +4,6 @@
 protonet.controls.TextExtension.providers.Maps = function(url) {
   this.url = url;
   this.data = {
-    type: "Maps",
     url: this.url
   };
 };

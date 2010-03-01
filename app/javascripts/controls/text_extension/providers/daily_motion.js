@@ -6,13 +6,13 @@
 protonet.controls.TextExtension.providers.DailyMotion = function(url) {
   this.url = url;
   this.data = {
-    url: this.url,
-    type: "DailyMotion"
+    url: this.url
   };
 };
 
 protonet.controls.TextExtension.providers.DailyMotion.prototype = {
   REG_EXP: /dailymotion\.com\/video\/.+/i,
+  CLASS_NAME: "flash-video",
   
   match: function() {
     return this.REG_EXP.test(this.url);
@@ -51,10 +51,6 @@ protonet.controls.TextExtension.providers.DailyMotion.prototype = {
   },
   
   _showVideo: function(event) {
-    if (!this.data.video_src) {
-      return;
-    }
-    
     event.preventDefault();
     event.stopPropagation();
     
@@ -92,7 +88,10 @@ protonet.controls.TextExtension.providers.DailyMotion.prototype = {
           width: 160,
           height: 120
         });
-    anchor.click(this._showVideo.bind(this));
+    
+    if (this.data.video_src) {
+      anchor.click(this._showVideo.bind(this));
+    }
     return anchor.append(img);
   },
   

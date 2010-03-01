@@ -74,15 +74,15 @@ protonet.controls.TextExtension.Input.prototype = {
   },
   
   _getDataProvider: function(url) {
-    var instance, i, providerName, providerLength = this.sortedProviders.length;
+    var instance, i, providerLength = this.sortedProviders.length;
     for (i=0; i<providerLength; i++) {
-      providerName = this.sortedProviders[i];
+      this.providerName = this.sortedProviders[i];
       
-      if (!this.providers.hasOwnProperty(providerName)) {
+      if (!this.providers.hasOwnProperty(this.providerName)) {
         continue;
       }
       
-      instance = new this.providers[providerName](url, this);
+      instance = new this.providers[this.providerName](url, this);
       if (instance.match()) {
         return instance;
       }
@@ -94,13 +94,12 @@ protonet.controls.TextExtension.Input.prototype = {
   },
   
   _render: function(data) {
-    this.data = data;
-    
+    this.data = $.extend({}, data, { type: this.providerName });
     this.renderer = new protonet.controls.TextExtension.Renderer(
-      this.container, data, this.provider
+      this.container, this.data, this.provider
     );
     
-    this.hiddenInput.val(JSON.stringify(data));
+    this.hiddenInput.val(JSON.stringify(this.data));
     this.container.removeClass("loading-bar");
     this.expand();
   },

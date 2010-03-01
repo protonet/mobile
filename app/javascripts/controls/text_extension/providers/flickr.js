@@ -8,8 +8,7 @@
 protonet.controls.TextExtension.providers.Flickr = function(url) {
   this.url = url;
   this.data = {
-    url: this.url,
-    type: "Flickr"
+    url: this.url
   };
 };
 

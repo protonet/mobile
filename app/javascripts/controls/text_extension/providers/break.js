@@ -6,13 +6,13 @@
 protonet.controls.TextExtension.providers.Break = function(url) {
   this.url = url;
   this.data = {
-    url: this.url,
-    type: "Break"
+    url: this.url
   };
 };
 
 protonet.controls.TextExtension.providers.Break.prototype = {
   REG_EXP: /break\.com\/.+?\/.+/i,
+  CLASS_NAME: "flash-video",
   
   match: function() {
     return this.REG_EXP.test(this.url);
@@ -51,10 +51,6 @@ protonet.controls.TextExtension.providers.Break.prototype = {
   },
   
   _showVideo: function(event) {
-    if (!this.data.video_src) {
-      return;
-    }
-    
     event.preventDefault();
     event.stopPropagation();
     
@@ -92,8 +88,10 @@ protonet.controls.TextExtension.providers.Break.prototype = {
           width: 150,
           height: 100
         });
-    anchor.click(this._showVideo.bind(this));
     
+    if (this.data.video_src) {
+      anchor.click(this._showVideo.bind(this));
+    }
     return anchor.append(img);
   },
   

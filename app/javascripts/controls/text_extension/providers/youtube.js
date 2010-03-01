@@ -7,13 +7,13 @@
 protonet.controls.TextExtension.providers.YouTube = function(url) {
   this.url = url;
   this.data = {
-    url: this.url,
-    type: "YouTube"
+    url: this.url
   };
 };
 
 protonet.controls.TextExtension.providers.YouTube.prototype = {
   REG_EXP: /youtube\.com\/watch\?v\=([\w_-]*)/i,
+  CLASS_NAME: "flash-video",
   
   match: function() {
     return this.REG_EXP.test(this.url);
@@ -63,10 +63,6 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
   },
   
   _showVideo: function(event) {
-    if (this.data.noembed) {
-      return;
-    }
-    
     event.preventDefault();
     event.stopPropagation();
     
@@ -108,7 +104,10 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
           height: thumbnail.height,
           width: thumbnail.width
         });
-    anchor.click(this._showVideo.bind(this));
+    
+    if (!this.data.noembed) {
+      anchor.click(this._showVideo.bind(this));
+    }
     return anchor.append(img);
   },
   

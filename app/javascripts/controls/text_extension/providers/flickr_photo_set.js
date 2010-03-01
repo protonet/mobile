@@ -8,7 +8,6 @@
 protonet.controls.TextExtension.providers.FlickrPhotoSet = function(url) {
   this.url = url;
   this.data = {
-    type: "FlickrPhotoSet",
     url: this.url,
     title: "Flickr Photo Set"
   };
