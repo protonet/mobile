@@ -4,7 +4,7 @@
 //= require "../../../effects/hover_resize.js"
 //= require "../../../utils/parse_url.js"
 //= require "../../../utils/strip_tags.js"
-
+//= require "../../../utils/strip_tracking_params.js"
 
 /**
  * WebLink Provider
@@ -24,9 +24,10 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   loadData: function(onSuccessCallback) {
     // preload screenshot
     this.data.thumbnail = protonet.media.ScreenShot.get(this.url);
+    this.queryUrl = protonet.utils.stripTrackingParams(this.url);
     
     protonet.data.Google.search(
-      this.url,
+      this.queryUrl,
       this._googleSearchCallback.bind(this, onSuccessCallback),
       this._googleSearchFailureCallback.bind(this, onSuccessCallback)
     );
@@ -53,7 +54,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     
     // Ok google, doesn't know anything about the given url, so we try to get our own data using YQL html lookup
     protonet.data.MetaData.get(
-      this.url, this._yqlCallback.bind(this, onSuccessCallback), this._yqlCallback.bind(this, onSuccessCallback)
+      this.queryUrl, this._yqlCallback.bind(this, onSuccessCallback), this._yqlCallback.bind(this, onSuccessCallback)
     );
   },
   
@@ -62,7 +63,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
       return;
     }
     
-    var urlParts = protonet.utils.parseUrl(this.url),
+    var urlParts = protonet.utils.parseUrl(this.queryUrl),
         shortUrl = urlParts.host + urlParts.path + urlParts.query;
     
     $.extend(this.data, {
