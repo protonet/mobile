@@ -22,9 +22,8 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   },
   
   loadData: function(onSuccessCallback) {
-    // preload screenshot
-    this.data.thumbnail = protonet.media.ScreenShot.get(this.url);
     this.queryUrl = protonet.utils.stripTrackingParams(this.url);
+    this.data.thumbnail = protonet.media.ScreenShot.get(this.queryUrl);
     
     protonet.data.Google.search(
       this.queryUrl,
@@ -133,7 +132,6 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   },
   
   cancel: function() {
-    clearTimeout(this.timeout);
     this._canceled = true;
   }
 };
