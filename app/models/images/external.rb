@@ -13,4 +13,8 @@ class Images::External < ActiveRecord::Base
     end
   end
   
+  def self.is_available(url)
+    !!find_by_image_url(url)
+  end
+  
 end

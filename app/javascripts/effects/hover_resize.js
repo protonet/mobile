@@ -17,6 +17,7 @@ protonet.effects.HoverResize.prototype = {
   
   _mouseOver: function() {
     this._preload();
+    
     this.oldSize = {
       height: this.element.height(),
       width: this.element.width()

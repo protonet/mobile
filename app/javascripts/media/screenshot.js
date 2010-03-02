@@ -11,6 +11,9 @@ protonet.media.ScreenShot = (function() {
       BASE_URL = "http://images.pageglimpse.com/v1/thumbnails",
       NO_THUMB = encodeURIComponent(protonet.config.base_url + "/images/transparent.gif");
   
+  /**
+   * Get screenshot url
+   */
   function get(url, size) {
     var screenShotUrl = 
       BASE_URL +
@@ -21,13 +24,39 @@ protonet.media.ScreenShot = (function() {
     return screenShotUrl;
   }
   
+  /**
+   * Fetch method checks via an interval image availability
+   * It fires a success callback when the screenshot is available
+   * If the image isn't available after maxChecks an failure callback is invoked
+   */
+  function fetch(url, size, options) {
+    var checks = 0, maxChecks = 10, interval = 3000;
+    options = $.extend({ success: $.noop, failure: $.noop }, options);
+    
+    var checkAvailability = function() {
+      isAvailable(url, size, function(status) {
+        if (status) {
+          return options.success && options.success();
+        }
+        if (++checks >= maxChecks) {
+          return options.failure && options.failure();
+        }
+
+        setTimeout(checkAvailability, interval);
+      });
+    };
+    checkAvailability();
+  }
+  
+  /**
+   * Asynchronously checks screenshot availibility
+   *
+   * No jquery involved here for performance reasons
+   * since this method could be invoked very often
+   */
   function isAvailable(url, size, callback) {
-    /**
-     * No jquery involved here for performance reasons
-     * since this method could be invoked very often
-     */
     var checkUrl = BASE_URL + "/exists" +
-      "?url=" + encodeURIComponent(url) + 
+      "?url=" + encodeURIComponent(url) +
       "&devkey=" + KEY +
       "&size=" + (size || DEFAULT_SIZE);
     
@@ -46,13 +75,15 @@ protonet.media.ScreenShot = (function() {
     document.body.appendChild(script);
   }
   
+  /**
+   * Purges script tag
+   *
+   * Removes all properties first, to avoid potential memory leaks
+   * try/catch needed to avoid js errors in IE
+   */
   function _removeScriptTag(script) {
     script.parentNode.removeChild(script);
     
-    /**
-     * Remove all properties first, to avoid potential memory leaks
-     * try/catch to avoid js errors in IE
-     */
     try {
       for (var prop in script) {
         delete script[prop];
@@ -62,6 +93,7 @@ protonet.media.ScreenShot = (function() {
   
   return {
     get: get,
+    fetch: fetch,
     isAvailable: isAvailable
   };
 })();

@@ -23,7 +23,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   
   loadData: function(onSuccessCallback) {
     // preload screenshot
-    this.data.thumbnail = new Image().src = protonet.media.ScreenShot.get(this.url);
+    this.data.thumbnail = protonet.media.ScreenShot.get(this.url);
     
     protonet.data.Google.search(
       this.url,
@@ -87,38 +87,46 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   },
   
   getMedia: function() {
-    var thumbnail = this.data.thumbnail,
-        anchor = $("<a />", {
-          href: this.url,
-          target: "_blank",
-          className: "fetching"
-        }),
-        img,
-        checks = 0,
-        // Check every 4 seconds if screenshot is available
-        checkAvailibility = function() {
-          protonet.media.ScreenShot.isAvailable(this.url, null, function(isAvailable) {
-            if (checks == 0) {
-              img = $("<img />", {
-                src: thumbnail
-              }).appendTo(anchor);
-            }
-            
-            if (checks > 0 && isAvailable) {
-              img.attr("src", thumbnail + "&loaded");
-            }
-            
-            if (checks > 6 || isAvailable) {
-             anchor.removeClass("fetching");
-             new protonet.effects.HoverResize(img, { width: 280, height: 202 });
-            } else {
-              checks++;
-              this.timeout = setTimeout(checkAvailibility, 4000);
-            }
-          }.bind(this));
-        }.bind(this);
+    var thumbnail = this.data.thumbnail;
+    var thumbnailReady = thumbnail + "&loaded";
+    var thumbnailSize = { width: 280, height: 200 };
     
-    checkAvailibility();
+    var anchor = $("<a />", {
+      href: this.url,
+      target: "_blank",
+      className: "fetching"
+    });
+    
+    var img;
+    
+    var renderImage = function(screenShotUrl) {
+      if (!img) {
+        img = $("<img />").appendTo(anchor);
+      }
+      img.attr("src", protonet.media.Proxy.getImageUrl(screenShotUrl, thumbnailSize));
+    };
+    
+    var renderAndObserveImage = function() {
+      renderImage(thumbnailReady);
+      anchor.removeClass("fetching");
+      new protonet.effects.HoverResize(img, thumbnailSize);
+    };
+    
+    protonet.media.Proxy.isImageAvailable(thumbnailReady, function(status) {
+      if (status) {
+        return renderAndObserveImage();
+      }
+      
+      renderImage(thumbnail);
+      protonet.media.ScreenShot.fetch(this.url, null, {
+        success: function() {
+          renderAndObserveImage();
+        },
+        failure: function() {
+          anchor.removeClass("fetching");
+        }
+      });
+    }.bind(this));
     
     return anchor;
   },
