@@ -39,15 +39,18 @@
   background: url(/images/loading_bar.gif) no-repeat center center;
 }
 
-.text-extension-results {
-  position: relative;
-  font-size: 10px; /* Ensure a unique font-size */
+#text-extension-preview .text-extension-results ul {
+  padding: 4px;
 }
-
 
 #text-extension-preview a,
 .text-extension-results a {
   text-decoration: none;
+}
+
+.text-extension-results {
+  position: relative;
+  font-size: 10px; /* Ensure a unique font-size */
 }
 
 .text-extension-results a:hover {
@@ -70,7 +73,7 @@
 }
 
 .text-extension-results ul {
-  padding: 4px;
+  padding: 0;
 }
 
 .text-extension-results ul:after {
@@ -125,7 +128,7 @@
 }
 
 .user-messages .text-extension-results {
-  margin-top: 10px;
+  margin: 10px 0 6px 0;
 }
 
 .user-messages .text-extension-results {
