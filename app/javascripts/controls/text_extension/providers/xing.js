@@ -11,6 +11,10 @@ protonet.controls.TextExtension.providers.XING = function(url) {
 };
 
 protonet.controls.TextExtension.providers.XING.prototype = {
+  /**
+   * Matches
+   * https://www.xing.com/profile/Christopher_Blum2
+   */
   REG_EXP: /xing\.com\/profile\/(.+?)[^\?]/i,
   
   match: function() {
@@ -66,16 +70,21 @@ protonet.controls.TextExtension.providers.XING.prototype = {
   },
   
   getMedia: function() {
-    var thumbnail = this.data.thumbnail,
-        anchor = $("<a />", {
-          href: this.url,
-          target: "_blank"
-        }),
-        img = $("<img />", {
-          src: thumbnail,
-          height: 93,
-          width: 70
-        });
+    var thumbnailSize = {
+      width: protonet.controls.TextExtension.config.IMAGE_WIDTH,
+      height: 90
+    };
+    var thumbnail = protonet.media.Proxy.getImageUrl(this.data.thumbnail, thumbnailSize);
+    
+    var anchor = $("<a />", {
+      href: this.url,
+      target: "_blank"
+    });
+    
+    var img = $("<img />", $.extend({
+      src: thumbnail
+    }, thumbnailSize));
+    
     return anchor.append(img);
   },
   

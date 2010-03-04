@@ -12,6 +12,10 @@ protonet.controls.TextExtension.providers.YouTube = function(url) {
 };
 
 protonet.controls.TextExtension.providers.YouTube.prototype = {
+  /**
+   * Matches:
+   * http://www.youtube.com/watch?v=s4_4abCWw-w
+   */
   REG_EXP: /youtube\.com\/watch\?v\=([\w_-]*)/i,
   CLASS_NAME: "flash-video",
   
@@ -93,17 +97,21 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
   
   getMedia: function() {
     this.id = "text-extension-preview-" + new Date().getTime() + Math.round(Math.random() * 1000);
-    var thumbnail = this.data.thumbnail,
-        anchor = $("<a />", {
-          href: this.url,
-          target: "_blank",
-          id: this.id
-        }),
-        img = $("<img />", {
-          src: thumbnail.url,
-          height: thumbnail.height,
-          width: thumbnail.width
-        });
+    var thumbnailSize = {
+      width: protonet.controls.TextExtension.config.IMAGE_WIDTH,
+      height: protonet.controls.TextExtension.config.IMAGE_HEIGHT
+    };
+    var thumbnail = protonet.media.Proxy.getImageUrl(this.data.thumbnail.url, thumbnailSize);
+    
+    var anchor = $("<a />", {
+      href: this.url,
+      target: "_blank",
+      id: this.id
+    });
+    
+    var img = $("<img />", $.extend({
+      src: thumbnail
+    }, thumbnailSize));
     
     if (!this.data.noembed) {
       anchor.click(this._showVideo.bind(this));

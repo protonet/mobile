@@ -12,6 +12,10 @@ protonet.controls.TextExtension.providers.Slideshare = function(url) {
 };
 
 protonet.controls.TextExtension.providers.Slideshare.prototype = {
+  /**
+   * Matches:
+   * http://www.slideshare.net/nathantwright/fostering-community-with-social-media-midwest-newspaper-summit-2010
+   */
   REG_EXP: /slideshare\.net\/[\w-]+?\/[\w-]+?$/i,
   CLASS_NAME: "flash-video",
   
@@ -83,18 +87,24 @@ protonet.controls.TextExtension.providers.Slideshare.prototype = {
   
   getMedia: function() {
     this.id = "text-extension-media-" + new Date().getTime() + Math.round(Math.random() * 1000);
-    var thumbnail = this.data.thumbnail,
-        anchor = $("<a />", {
-          href: this.url,
-          target: "_blank",
-          id: this.id
-        }),
-        img = $("<img />", {
-          src: thumbnail,
-          height: 90,
-          width: 120
-        });
-    anchor.click(this._showVideo.bind(this));
+    var thumbnailSize = {
+      width: protonet.controls.TextExtension.config.IMAGE_WIDTH,
+      height: protonet.controls.TextExtension.config.IMAGE_HEIGHT
+    };
+    var thumbnail = protonet.media.Proxy.getImageUrl(this.data.thumbnail, thumbnailSize);
+    var anchor = $("<a />", {
+      href: this.url,
+      target: "_blank",
+      id: this.id
+    });
+    var img = $("<img />", $.extend({
+      src: thumbnail
+    }, thumbnailSize));
+    
+    if (this.data.embed_url) {
+      anchor.click(this._showVideo.bind(this));
+    }
+    
     return anchor.append(img);
   },
   

@@ -15,6 +15,12 @@ protonet.data.Flickr.getPhoto = (function() {
       preview: response.size[1]
     }, data);
     
+    // Ensure that sizes are in proper format
+    data.thumbnail.width = Number(data.thumbnail.width);
+    data.thumbnail.height = Number(data.thumbnail.height);
+    data.preview.width = Number(data.preview.width);
+    data.preview.height = Number(data.preview.height);
+    
     callbacks.success(data);
   }
   
@@ -61,10 +67,18 @@ protonet.data.Flickr.getPhotoSet = (function() {
   function photoSizesLoaded(results) {
     data = $.map(data, function(photo, i) {
       i *= 2;
-      return $.extend({
+      var sizes = $.extend({
         thumbnail: results.size[i],
         preview: results.size[i + 1]
       }, photo);
+      
+      // Ensure that sizes are in proper format
+      sizes.thumbnail.width = Number(sizes.thumbnail.width);
+      sizes.thumbnail.height = Number(sizes.thumbnail.height);
+      sizes.preview.width = Number(sizes.preview.width);
+      sizes.preview.height = Number(sizes.preview.height);
+      
+      return sizes;
     });
   }
   
@@ -116,10 +130,18 @@ protonet.data.Flickr.getPhotoSearch = (function() {
   function photoSizesLoaded(results) {
     data = $.map(data, function(photo, i) {
       i *= 2;
-      return $.extend({
+      var sizes = $.extend({
         thumbnail: results.size[i],
         preview: results.size[i + 1]
       }, photo);
+      
+      // Ensure that sizes are in proper format
+      sizes.thumbnail.width = Number(sizes.thumbnail.width);
+      sizes.thumbnail.height = Number(sizes.thumbnail.height);
+      sizes.preview.width = Number(sizes.preview.width);
+      sizes.preview.height = Number(sizes.preview.height);
+      
+      return sizes;
     });
   }
   

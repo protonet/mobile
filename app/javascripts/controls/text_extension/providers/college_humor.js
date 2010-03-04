@@ -11,6 +11,10 @@ protonet.controls.TextExtension.providers.CollegeHumor = function(url) {
 };
 
 protonet.controls.TextExtension.providers.CollegeHumor.prototype = {
+  /**
+   * Matches:
+   * http://www.collegehumor.com/video:1929452
+   */
   REG_EXP: /collegehumor\.com\/video\:\d+/i,
   CLASS_NAME: "flash-video",
   
@@ -77,17 +81,21 @@ protonet.controls.TextExtension.providers.CollegeHumor.prototype = {
   
   getMedia: function() {
     this.id = "text-extension-media-" + new Date().getTime() + Math.round(Math.random() * 1000);
-    var thumbnail = this.data.image_src,
-        anchor = $("<a />", {
-          href: this.url,
-          target: "_blank",
-          id: this.id
-        }),
-        img = $("<img />", {
-          src: this.data.image_src,
-          width: 150,
-          height: 100
-        });
+    var thumbnailSize = {
+      width: protonet.controls.TextExtension.config.IMAGE_WIDTH,
+      height: protonet.controls.TextExtension.config.IMAGE_HEIGHT
+    };
+    var thumbnail = protonet.media.Proxy.getImageUrl(this.data.image_src, thumbnailSize);
+    
+    var anchor = $("<a />", {
+      href: this.url,
+      target: "_blank",
+      id: this.id
+    });
+    
+    var img = $("<img />", $.extend({
+      src: thumbnail
+    }, thumbnailSize));
         
     if (this.data.video_src) {
       anchor.click(this._showVideo.bind(this));

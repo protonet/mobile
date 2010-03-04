@@ -89,7 +89,11 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   getMedia: function() {
     var thumbnail = this.data.thumbnail;
     var thumbnailReady = thumbnail + "&loaded";
-    var thumbnailSize = { width: 280, height: 200 };
+    var thumbnailSize = {
+      width: protonet.controls.TextExtension.config.IMAGE_WIDTH,
+      height: protonet.controls.TextExtension.config.IMAGE_HEIGHT
+    };
+    var previewSize = { width: 280, height: 200 };
     
     var anchor = $("<a />", {
       href: this.url,
@@ -101,15 +105,32 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     
     var renderImage = function(screenShotUrl) {
       if (!img) {
-        img = $("<img />").appendTo(anchor);
+        img = $("<img />", thumbnailSize).appendTo(anchor);
       }
       img.attr("src", protonet.media.Proxy.getImageUrl(screenShotUrl, thumbnailSize));
     };
     
-    var renderAndObserveImage = function() {
-      renderImage(thumbnailReady);
+    var observeImage = function(previewScreenShotUrl) {
+      new protonet.effects.HoverResize(img, previewSize, previewScreenShotUrl);
+    };
+    
+    var hideIndicator = function() {
       anchor.removeClass("fetching");
-      new protonet.effects.HoverResize(img, thumbnailSize);
+    };
+    
+    var renderAndObserveImage = function() {
+      var previewUrl = protonet.media.Proxy.getImageUrl(thumbnailReady, previewSize);
+      
+      renderImage(thumbnailReady);
+      hideIndicator();
+      observeImage(previewUrl);
+    };
+    
+    var hideIndicatorAndObserveImage = function() {
+      var previewUrl = protonet.media.Proxy.getImageUrl(thumbnail, previewSize);
+      
+      hideIndicator();
+      observeImage(previewUrl);
     };
     
     protonet.media.Proxy.isImageAvailable(thumbnailReady, function(status) {
@@ -119,12 +140,8 @@ protonet.controls.TextExtension.providers.Link.prototype = {
       
       renderImage(thumbnail);
       protonet.media.ScreenShot.fetch(this.url, null, {
-        success: function() {
-          renderAndObserveImage();
-        },
-        failure: function() {
-          anchor.removeClass("fetching");
-        }
+        success: renderAndObserveImage,
+        failure: hideIndicatorAndObserveImage
       });
     }.bind(this));
     

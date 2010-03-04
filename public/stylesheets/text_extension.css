@@ -146,25 +146,36 @@
 .text-extension-results.flash-video .media a:after {
   content: "\25BA";
   color: #fff;
+  background: #000;
   position: absolute;
   top: 50%;
   left: 50%;
-  height: 60px;
-  width: 80px;
+  height: 30px;
+  width: 30px;
+  margin: -15px 0 0 -15px;
+  line-height: 29px;
+  font-size: 20px;
+  opacity: 0.65;
+  text-indent: 5px;
   text-align: center;
-  margin: -30px 0 0 -30px;
-  line-height: 60px;
-  font-size: 50px;
-  opacity: 0.7;
-  text-shadow: 2px 2px 2px #000;
+  border-radius: 20px;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  box-shadow: 0 0 2px 2px #999;
+  -webkit-box-shadow: 0 0 2px 2px #999;
+  -moz-box-shadow: 0 0 2px 2px #999;
+}
+
+.text-extension-results.flash-video .media {
+  overflow: hidden;
 }
 
 .text-extension-results.flash-video .media a:hover:after {
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 .text-extension-results.flash-video .media a:active:after {
-  opacity: 0.7;
+  opacity: 1;
 }
 
 /* =LINK TEXT EXTENSION
@@ -172,8 +183,8 @@
 .text-extension-results.Link .media,
 .text-extension-results.Link .media a,
 .text-extension-results.Link .media img {
-  width: 97px;
-  height: 70px;
+  width: 93px;
+  height: 67px;
 }
 
 .text-extension-results.Link .media a.fetching img {
@@ -200,8 +211,6 @@
 
 .text-extension-results.FlickrSearch .media a,
 .text-extension-results.FlickrPhotoSet .media a {
-  width: 75px;
-  height: 75px;
   margin: 0 5px 5px 0;
   float: left;
   display: block;

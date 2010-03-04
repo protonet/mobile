@@ -13,6 +13,10 @@ protonet.controls.TextExtension.providers.Flickr = function(url) {
 };
 
 protonet.controls.TextExtension.providers.Flickr.prototype = {
+  /**
+   * Matches:
+   * http://www.flickr.com/photos/phil76/4307719822/
+   */
   REG_EXP: /flickr\.com\/photos\/[\w@-_]+?\/(\d{1,20})/i,
   
   match: function() {
@@ -64,26 +68,35 @@ protonet.controls.TextExtension.providers.Flickr.prototype = {
   },
   
   getMedia: function() {
+    var thumbnailSize = {
+      width: protonet.controls.TextExtension.config.IMAGE_WIDTH, // fixed width
+      height: this.data.thumbnail.height
+    };
+    
+    var previewSize = {
+      height: this.data.preview.height,
+      width: this.data.preview.width
+    };
+    
+    // TODO remove this ".src" after some time, it's only here for backward compatibility reasons
+    var thumbnail = protonet.media.Proxy.getImageUrl(this.data.thumbnail.source || this.data.thumbnail.src, thumbnailSize);
+    var preview = protonet.media.Proxy.getImageUrl(this.data.preview.source, previewSize);
+    
     var anchor = $("<a />", {
-          href: this.url,
-          target: "_blank"
-        }).css({
-          width: this.data.thumbnail.width.px(),
-          height: this.data.thumbnail.height.px()
-        }),
-        img = $("<img />", {
-          // TODO remove this "src" after some time, it's only here for backward compatibility reasons
-          src: this.data.thumbnail.source || this.data.thumbnail.src
-        }).attr({
-          width: this.data.thumbnail.width,
-          height: this.data.thumbnail.height
-        });
+      href: this.url,
+      target: "_blank"
+    }).css({
+      // Needed for the hover effect to work
+      width: thumbnailSize.width.px(),
+      height: thumbnailSize.height.px()
+    });
+    
+    var img = $("<img />", $.extend({
+      src: thumbnail
+    }, thumbnailSize));
     
     if (this.data.preview) {
-      new protonet.effects.HoverResize(img, {
-        height: this.data.preview.height,
-        width: this.data.preview.width
-      }, this.data.preview.source);
+      new protonet.effects.HoverResize(img, previewSize, preview);
     }
     
     return anchor.append(img);

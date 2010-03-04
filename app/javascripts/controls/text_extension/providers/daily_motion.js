@@ -11,6 +11,11 @@ protonet.controls.TextExtension.providers.DailyMotion = function(url) {
 };
 
 protonet.controls.TextExtension.providers.DailyMotion.prototype = {
+  /**
+   * Matches:
+   * http://www.dailymotion.com/video/xcfc2g_%CE%B9%CE%BD%CF%86%CE%BF-live-at-block-33-thessaloniki_music
+   * http://www.dailymotion.com/video/x5x2ci_don-klik-anthem_music
+   */
   REG_EXP: /dailymotion\.com\/video\/.+/i,
   CLASS_NAME: "flash-video",
   
@@ -76,18 +81,22 @@ protonet.controls.TextExtension.providers.DailyMotion.prototype = {
   },
   
   getMedia: function() {
-    this.id = "text-extension-media-" + new Date().getTime() + Math.round(Math.random() * 1000);
-    var thumbnail = this.data.image_src,
-        anchor = $("<a />", {
-          href: this.url,
-          target: "_blank",
-          id: this.id
-        }),
-        img = $("<img />", {
-          src: this.data.image_src,
-          width: 160,
-          height: 120
-        });
+    this.id = "text-extension-preview-" + new Date().getTime() + Math.round(Math.random() * 1000);
+    var thumbnailSize = {
+      width: protonet.controls.TextExtension.config.IMAGE_WIDTH,
+      height: protonet.controls.TextExtension.config.IMAGE_HEIGHT
+    };
+    var thumbnail = protonet.media.Proxy.getImageUrl(this.data.image_src, thumbnailSize);
+    
+    var anchor = $("<a />", {
+      href: this.url,
+      target: "_blank",
+      id: this.id
+    });
+    
+    var img = $("<img />", $.extend({
+      src: thumbnail
+    }, thumbnailSize));
     
     if (this.data.video_src) {
       anchor.click(this._showVideo.bind(this));

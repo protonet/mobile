@@ -18,7 +18,7 @@ protonet.media.Proxy = (function() {
    * Optional size parameter causes server side cropping
    */
   function getImageUrl(url, size) {
-    size = $.extend(imageDefaultSize, size);
+    size = $.extend({}, imageDefaultSize, size);
     return IMAGE_URL
       .replace("{url}", encodeURIComponent(url))
       .replace("{width}", size.width)

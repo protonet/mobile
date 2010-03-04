@@ -13,6 +13,10 @@ protonet.controls.TextExtension.providers.Vimeo = function(url) {
 };
 
 protonet.controls.TextExtension.providers.Vimeo.prototype = {
+  /**
+   * Matches:
+   * http://vimeo.com/9669721
+   */
   REG_EXP: /vimeo\.com\/(\d+)/i,
   CLASS_NAME: "flash-video",
   
@@ -91,18 +95,24 @@ protonet.controls.TextExtension.providers.Vimeo.prototype = {
   
   getMedia: function() {
     this.id = "text-extension-preview-" + new Date().getTime() + Math.round(Math.random() * 1000);
-    var thumbnail = this.data.thumbnail,
-        anchor = $("<a />", {
-          href: this.url,
-          target: "_blank",
-          id: this.id
-        }),
-        img = $("<img />", {
-          src: thumbnail,
-          height: 75,
-          width: 100
-        });
+    var thumbnailSize = {
+      width: protonet.controls.TextExtension.config.IMAGE_WIDTH,
+      height: protonet.controls.TextExtension.config.IMAGE_HEIGHT
+    };
+    var thumbnail = protonet.media.Proxy.getImageUrl(this.data.thumbnail, thumbnailSize);
+    
+    var anchor = $("<a />", {
+      href: this.url,
+      target: "_blank",
+      id: this.id
+    });
+    
+    var img = $("<img />", $.extend({
+      src: thumbnail
+    }, thumbnailSize));
+    
     anchor.click(this._showVideo.bind(this));
+    
     return anchor.append(img);
   },
   

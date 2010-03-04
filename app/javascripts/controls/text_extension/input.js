@@ -4,7 +4,7 @@ protonet.controls.TextExtension.Input = function(input) {
   }
   
   this.input = input;
-  this.sortedProviders = protonet.controls.TextExtension.sortedProviders;
+  this.sortedProviders = protonet.controls.TextExtension.config.SORTED_PROVIDERS;
   this.providers = protonet.controls.TextExtension.providers;
   this.container = $("#text-extension-preview");
   this.hiddenInput = $("#text-extension-input");
