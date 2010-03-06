@@ -1,12 +1,19 @@
 protonet.controls.UserWidget = (function() {
-
+  var REG_EXP_ID = /user-list-user-(.*)/,
+      CONNECTION_CLASSES = {
+        "web": "online"
+      };
+  
   function UserWidget(args) {
-    this.user_list = $("#user-list li");
+    this.container = $("#user-list");
+    this.entries = this.container.find("li");
+    this.user_list = this.container.find("ul.root");
     this.user_names = [];
     this.user_objects = {};
-    this.user_list.each(function(i){
-      var user_id = this.user_list[i].id.match(/user-list-user-(.*)/)[1];
-      this.user_objects[user_id] = $(this.user_list[i]);
+    
+    this.entries.each(function(i, entry){
+      var user_id = entry.id.match(REG_EXP_ID)[1];
+      this.user_objects[user_id] = $(entry);
       this.user_names.push(this.user_objects[user_id].children("span").html());
     }.bind(this));
   };
@@ -17,11 +24,12 @@ protonet.controls.UserWidget = (function() {
     // if I received (update - 1) just do an incremental udpate
     // this would ensure data integrity and be very fast ;)
     "update": function(data) {
-      var online_users = data["online_users"];
+      var online_users = data.online_users;
       for(var i in this.user_objects) {
+        var online_user = online_users[i];
         var current_dom_object = this.user_objects[i];
-        var css_class = this.cssClassForConnections(online_users[i] && online_users[i]["connections"]);
-        if(!current_dom_object.hasClass(css_class)) {
+        var css_class = this.cssClassForConnections(online_user && online_user.connections);
+        if (!current_dom_object.hasClass(css_class)) {
           current_dom_object.attr("class", css_class);
         }
       }
@@ -30,44 +38,39 @@ protonet.controls.UserWidget = (function() {
     },
     
     "cssClassForConnections": function(sockets) {
-      if(!sockets) return 'offline';
+      if (!sockets) {
+        return "offline";
+      }
       
-      for(var x in sockets) {
+      for (var x in sockets) {
         var socket = sockets[x][1];
-        switch(socket)
-        {
-        case 'web':
-          type = "online";
-          break;
-        case 'api':
-          type = "api";
-          break;
-        }
+        var type = CONNECTION_CLASSES[socket] || socket;
         // web trumps socket, break if the user has a web connection
-        if(type == 'web') break;
+        if (type == "web") { break; }
       };
       return type;
     },
     
     "sortEntries": function() {
-      var user_list = $("#user-list ul.root");
-      for(var e in this.user_objects) {
-        if(this.user_objects[e].attr('class').match(/online/)) {
-          user_list.prepend(this.user_objects[e]);
+      this.entries.each(function(i, entry) {
+        entry = $(entry);
+        if (entry.hasClass("online")) {
+          this.user_list.prepend(entry);
         }
-      };
+      }.bind(this));
     },
     
     "updateWritingStatus": function(data) {
-      var user_id = data["data"]["user_id"];
-      var status  = data["data"]["status"];
+      var user_id = data.data.user_id;
+      var status  = data.data.status;
       var current_dom_object = this.user_objects[user_id];
-      if(current_dom_object && status == "writing") {
-        if(!current_dom_object.hasClass("writing")) {
+      if (current_dom_object && status == "writing") {
+        if (!current_dom_object.hasClass("writing")) {
+          this.user_list.prepend(current_dom_object);
           current_dom_object.attr("class", "writing");
         }
       } else {
-        if(!current_dom_object.hasClass("online")) {
+        if (!current_dom_object.hasClass("online")) {
           current_dom_object.attr("class", "online");
         }
       }

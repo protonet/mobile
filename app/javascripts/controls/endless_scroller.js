@@ -39,7 +39,7 @@ protonet.controls.EndlessScroller = (function() {
       channels.each(function(i, channel){
         channel = $(channel);
         var firstTweet = channel.children("li:first-child");
-        if(firstTweet.attr("id").match(REG_EXP_TWEET_INDEX)) {
+        if(firstTweet.length && firstTweet.attr("id").match(REG_EXP_TWEET_INDEX)) {
           this._load(channel, {
             channel_id: channel.attr("id").match(REG_EXP_CHANNEL_ID)[1],
             first_id: firstTweet.attr("id").match(REG_EXP_TWEET_INDEX)[1]

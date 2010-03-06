@@ -153,6 +153,8 @@
 
 .text-extension-results.flash-video .media a:after {
   content: "\25BA";
+  font-family: Arial;
+  font-size: 20px;
   color: #fff;
   background: #000;
   position: absolute;
@@ -161,17 +163,18 @@
   height: 30px;
   width: 30px;
   margin: -15px 0 0 -15px;
-  line-height: 29px;
-  font-size: 20px;
-  opacity: 0.65;
-  text-indent: 5px;
+  line-height: 30px;
+  opacity: 0.6;
+  text-indent: 4px;
+  vertical-align: middle;
   text-align: center;
   border-radius: 20px;
   -moz-border-radius: 20px;
   -webkit-border-radius: 20px;
-  box-shadow: 0 0 2px 2px #999;
-  -webkit-box-shadow: 0 0 2px 2px #999;
-  -moz-box-shadow: 0 0 2px 2px #999;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 2px 2px #333;
+  -webkit-box-shadow: 0 0 2px 2px #333;
+  -moz-box-shadow: 0 0 2px 2px #333;
 }
 
 .text-extension-results.flash-video .media {
