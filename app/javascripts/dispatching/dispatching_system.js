@@ -108,7 +108,7 @@ protonet.dispatching.DispatchingSystem.prototype = {
       // to the message form
       // todo: needs to be set globally
       case "socket_id":
-        protonet.globals.channelSelector.setCurrentChannelId(message.socket_id);
+        $('#tweet_socket_id').val(message.socket_id);
         break;
       default:
         console.log('default handling: ' + message.x_target + '(message)');
