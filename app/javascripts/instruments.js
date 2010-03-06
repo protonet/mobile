@@ -36,7 +36,7 @@ $(function() {
 
 // Initialize user widget
 $(function() {
-  window.UserWidget = new protonet.controls.UserWidget();
+  protonet.globals.userWidget = new protonet.controls.UserWidget();
 });
 
 

@@ -158,7 +158,7 @@ protonet.controls.InputConsole.prototype = {
         if(!command_blob.base_value) {
           command_blob.base_value    = this.input_console.val().substring(command_blob.starts_at + 1, this.input_console.attr("selectionEnd"));
         }
-        var user_names    = window.UserWidget.user_names.slice(command_blob.last_match_index);
+        var user_names    = protonet.globals.userWidget.user_names.slice(command_blob.last_match_index);
         for(i in user_names) {
           if(match = user_names[i].match(new RegExp("^" + command_blob.base_value))) {
             if(!command_blob.replace_value) {
@@ -167,7 +167,7 @@ protonet.controls.InputConsole.prototype = {
             var new_value = this.input_console.val().replace("@" + command_blob.replace_value, "@" + user_names[i]);
             command_blob.replace_value = user_names[i];
             this.input_console.val(new_value);
-            command_blob.last_match_index = (command_blob.last_match_index + parseInt(i) + 1);
+            command_blob.last_match_index = (command_blob.last_match_index + parseInt(i, 10) + 1);
             console.log(command_blob.last_match_index);
             break;
           }

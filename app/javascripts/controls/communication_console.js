@@ -68,13 +68,22 @@ protonet.controls.CommunicationConsole.prototype = {
   "receiveMessage": function(message) {
     console.log("cc is receiving message");
     
-    var tweetIsSameChannel = this.input_channel_id.val() == message.channel_id;
     message.text_extension = message.text_extension && JSON.parse(message.text_extension);
     new protonet.controls.Tweet(message);
     
-    // Notification stuff
-    if (!protonet.utils.isWindowFocused() && tweetIsSameChannel) {
+    this.notification(message.channel_id);
+  },
+  
+  "notification": function(channelId) {
+    var currentChannelId = protonet.globals.channelSelector.getCurrentChannelId();
+    channelId = channelId || currentChannelId;
+    var isCurrentChannel = channelId == currentChannelId;
+    
+    if (!protonet.utils.isWindowFocused() && isCurrentChannel) {
+      // Show fancy animated text in browser title
       protonet.controls.BrowserTitle.set("+++ New messages", true, true);
+      
+      // Play sound (some browsers don't support mp3 but ogg)
       if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_OGG()) {
         new Audio("/sounds/notification.ogg").play();
       } else if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_MP3()) {
@@ -82,8 +91,9 @@ protonet.controls.CommunicationConsole.prototype = {
       }
     }
     
-    if (!tweetIsSameChannel) {
-      protonet.globals.channelSelector.notify(message.channel_id);
+    // Show little badge on channel button if the channel isn't focused
+    if (!isCurrentChannel) {
+      protonet.globals.channelSelector.notify(channelId);
     }
   }
 };

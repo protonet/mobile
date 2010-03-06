@@ -18,6 +18,7 @@ protonet.controls.ChannelSelector = (function() {
   
   ChannelSelector.prototype = {
     _observe: function() {
+      var self = this;
       container.find(".channel a").click(function(event) {
         var anchor = $(this),
             href = anchor.attr("href"),
@@ -32,8 +33,8 @@ protonet.controls.ChannelSelector = (function() {
           // set form channel_id to correct value after a short pause
           setTimeout(function() {
             currentChannel = channelId;
-            channelInput.val(channelId).trigger("change");
-          }, 100);
+            self.setCurrentChannelId(channelId);
+          }.bind(this), 100);
         });
         
         container.find(".active").toggleClass("active");
@@ -55,6 +56,10 @@ protonet.controls.ChannelSelector = (function() {
     
     getCurrentChannelId: function() {
       return parseInt(channelInput.val(), 10);
+    },
+    
+    setCurrentChannelId: function(id) {
+      channelInput.val(id).trigger("change");
     },
     
     onSwitch: function(callback) {
