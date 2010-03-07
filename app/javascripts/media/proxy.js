@@ -8,7 +8,7 @@ protonet.media.Proxy = (function() {
    * callback is invoked with boolean status parameter
    */
   function isImageAvailable(url, callback) {
-    $.getJSON(IMAGE_AVAILABLE_URL.replace("{url}", url), function(response) {
+    $.getJSON(IMAGE_AVAILABLE_URL.replace("{url}", encodeURIComponent(url)), function(response) {
       callback(response.is_available);
     });
   }
@@ -20,7 +20,7 @@ protonet.media.Proxy = (function() {
   function getImageUrl(url, size) {
     size = $.extend({}, imageDefaultSize, size);
     return IMAGE_URL
-      .replace("{url}", url)
+      .replace("{url}", encodeURIComponent(url))
       .replace("{width}", size.width)
       .replace("{height}", size.height);
   }
