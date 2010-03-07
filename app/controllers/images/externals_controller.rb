@@ -1,9 +1,7 @@
 class Images::ExternalsController < ApplicationController
-  caches_page :show, :is_available
+  caches_page :show
   
   def show
-    expires_in 1.year, :public => true
-    
     @width = params[:width] unless params[:width] == '0'
     @height = params[:height] unless params[:height] == '0'
     if params[:image_file_url]
@@ -18,7 +16,6 @@ class Images::ExternalsController < ApplicationController
   
   def is_available
     is_available = Images::External.is_available(params[:image_file_url])
-    expires_in 1.day, :public => true if is_available
     
     respond_to do |format|
       format.json do
