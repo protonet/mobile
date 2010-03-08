@@ -15,8 +15,9 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
   /**
    * Matches:
    * http://www.youtube.com/watch?v=s4_4abCWw-w
+   * http://www.youtube.com/watch#!v=ylLzyHk54Z
    */
-  REG_EXP: /youtube\.com\/watch\?v\=([\w_-]*)/i,
+  REG_EXP: /youtube\.com\/watch(\?|#\!)v\=([\w_-]*)/i,
   CLASS_NAME: "flash-video",
   
   match: function() {
@@ -24,7 +25,7 @@ protonet.controls.TextExtension.providers.YouTube.prototype = {
   },
   
   _extractId: function() {
-    return this.url.match(this.REG_EXP)[1];
+    return this.url.match(this.REG_EXP)[2];
   },
   
   loadData: function(onSuccessCallback, onFailureCallback) {
