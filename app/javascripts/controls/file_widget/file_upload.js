@@ -174,7 +174,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     this._html5Upload.setRequestHeader("X-Requested-With", "XMLHttpRequest");
     this._html5Upload.setRequestHeader("X-File-Name", this._currentFile.fileName);
     this._html5Upload.setRequestHeader("X-File-Size", this._currentFile.fileSize);
-    this._html5Upload.setRequestHeader("X-Fix-Encoding", $.browser.webkit);
+    this._html5Upload.setRequestHeader("X-Fix-Encoding", protonet.user.Browser.HAS_FILE_UPLOAD_ENCODING_ISSUES());
     this._html5Upload.setRequestHeader("Content-Type", "multipart/form-data; charset=utf-8");
     this._html5Upload.setRequestHeader("Content-Disposition", "form-data; name=\"file\"; filename=\"" + encodeURIComponent(this._currentFile.fileName) +"\"");
     
