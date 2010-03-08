@@ -1,4 +1,5 @@
 //= require "../../../data/yql.js"
+//= require "../../../effects/hover_resize.js"
 
 /**
  * XING Profile Provider
@@ -52,7 +53,7 @@ protonet.controls.TextExtension.providers.XING.prototype = {
       description:  (meta && meta[0] && meta[0].content) || "",
       tags:         (meta && meta[1] && meta[1].content) || "",
       title:        String(response.title || ""),
-      thumbnail:    "http://www.xing.com" + (img && img.src.replace(/(\,\d)*?\.jpg/, "_s3.jpg") || "/img/users/nobody_m_s3.gif")
+      thumbnail:    "http://www.xing.com" + ((img && img.src) || "/img/users/nobody_m.gif")
     });
     
     onSuccessCallback(this.data);
@@ -74,16 +75,28 @@ protonet.controls.TextExtension.providers.XING.prototype = {
       width: protonet.controls.TextExtension.config.IMAGE_WIDTH,
       height: 90
     };
+    
+    var previewSize = {
+      width: 140,
+      height: 185
+    };
+    
     var thumbnail = protonet.media.Proxy.getImageUrl(this.data.thumbnail, thumbnailSize);
+    var preview = protonet.media.Proxy.getImageUrl(this.data.thumbnail, previewSize);
     
     var anchor = $("<a />", {
       href: this.url,
       target: "_blank"
+    }).css({
+      height: thumbnailSize.height.px(),
+      width: thumbnailSize.width.px()
     });
     
     var img = $("<img />", $.extend({
       src: thumbnail
     }, thumbnailSize));
+    
+    new protonet.effects.HoverResize(img, previewSize, preview);
     
     return anchor.append(img);
   },
