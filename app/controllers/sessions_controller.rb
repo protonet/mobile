@@ -33,7 +33,7 @@ class SessionsController < ApplicationController
     respond_to do |format|
       format.json do
         if user
-          render :json => {:user_id => user.id.to_s, :token => user.communication_token}
+          render :json => {:user_id => user.id.to_s, :token => user.communication_token, :authenticity_token => form_authenticity_token}
         else
           render :json => {:user_id => "0", :token => ''}
         end
