@@ -1,9 +1,8 @@
 protonet.media.Proxy = (function() {
   var imageDefaultSize = { width: 0, height: 0 }, // 0x0 => original size (Logic by Mr. Failveh)
       // Apache decodes urls before giving them to rails, therefore we need to double encode them
-      DOUBLE_ENCODE_URL = protonet.config.server == "Apache",
-      IMAGE_URL = "/images/externals/resize/{width}/{height}/{url}",
-      IMAGE_AVAILABLE_URL = "/images/externals/is_available/{url}";
+      IMAGE_URL = "/images/externals/show?width={width}&height={height}&image_file_url={url}",
+      IMAGE_AVAILABLE_URL = "/images/externals/is_available?image_file_url={url}";
   
   /**
    * Asynchronously checks if an image is already cached
@@ -28,11 +27,7 @@ protonet.media.Proxy = (function() {
   }
   
   function _prepareUrl(url) {
-    url = encodeURIComponent(url);
-    if (DOUBLE_ENCODE_URL) {
-      url = encodeURIComponent(url);
-    }
-    return url;
+    return encodeURIComponent(url);
   }
   
   return {

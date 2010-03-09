@@ -42,11 +42,8 @@ ActionController::Routing::Routes.draw do |map|
     # examples:
     # /images/externals/resize/0/0/http://www.goddesscruise.com/parts_of_boat.gif      -> for original size
     # /images/externals/resize/100/100/http://www.goddesscruise.com/parts_of_boat.gif  -> any other size ;)
-    images.connect  'externals/resize/:width/:height/:image_file_url', :controller => 'externals',
-      :action => 'show', :width => /\d*/, :heigth => /\d*/, :image_file_url => /.*/
-    images.connect  'externals/is_available/:image_file_url', :controller => 'externals',
-      :action => 'is_available', :image_file_url => /.*/
-    
+    images.connect  'externals/show',       :controller => 'externals', :action => 'show'
+    images.connect  'externals/is_available', :controller => 'externals', :action => 'is_available'
     images.resources :externals
   end
   
