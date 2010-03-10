@@ -89,7 +89,6 @@ protonet.controls.TextExtension.providers.FlickrSearch.prototype = {
     $.each(this.data.photos, function(i, photo) {
       // TODO remove this "src" after some time, it's only here for backward compatibility reasons
       thumbnail = protonet.media.Proxy.getImageUrl(photo.thumbnail.source || photo.thumbnail.src);
-      preview = protonet.media.Proxy.getImageUrl(photo.preview.source);
       
       img = $("<img />", {
         src: thumbnail,
@@ -107,6 +106,7 @@ protonet.controls.TextExtension.providers.FlickrSearch.prototype = {
       }).append(img);
       
       if (photo.preview) {
+        preview = protonet.media.Proxy.getImageUrl(photo.preview.source);
         new protonet.effects.HoverResize(img, {
           height: photo.preview.height,
           width: photo.preview.width

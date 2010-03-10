@@ -16,6 +16,10 @@ protonet.controls.UserWidget = (function() {
       this.user_objects[user_id] = $(entry);
       this.user_names.push(this.user_objects[user_id].children("span").html());
     }.bind(this));
+    
+    if (protonet.globals.inputConsole) {
+      protonet.globals.inputConsole.initAutocompleter(this.user_names);
+    }
   };
   
   UserWidget.prototype = {
@@ -74,8 +78,12 @@ protonet.controls.UserWidget = (function() {
           current_dom_object.attr("class", "online");
         }
       }
+    },
+    
+    "getUserNames": function() {
+      return this.user_names;
     }
-   };
+  };
   
   return UserWidget;
   

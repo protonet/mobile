@@ -1,185 +1,39 @@
-protonet.controls.CommandBlob = function(args) {
-  this.starts_at        = args.starts_at;
-  this.ends_at          = args.ends_at;
-  this.command_type     = args.command_type;
-  this.destination      = args.destination;
-  this.last_match_index = 0;
-  
-  console.log("new command blob has been created");
-};
+//= require "inline_autocompleter.js"
 
 
 protonet.controls.InputConsole = function(args) {
   this.input_console      = args.input_console;
   this.form               = args.form;
   this.parent_widget      = args.parent_widget;
-  this.console_mode       = null;
-  this.last_command_blob  = null;
-  this.previousValue      = "";
-  this.command_hash       = {};
   this.writing            = false;
   
   this.initEvents();
 };
 
 protonet.controls.InputConsole.prototype = {
+  "initAutocompleter": function(userNames) {
+    /**
+     * TODO: Should be easy to build a logic for channel name auto completion
+     */
+    userNames = $.map(userNames, function(userName) {
+      return "@" + userName;
+    });
+    
+    new protonet.controls.InlineAutocompleter(this.input_console, userNames, {
+      maxChars: 2
+    });
+  },
+  
   "initEvents": function() {
     // bind keydown handling for special key catching
-    this.input_console.keydown(this.specialKeyHandler.bind(this));
-    
-    // bind event handling on the input
-    this.input_console.keyup(this.eventHandler.bind(this));
+    this.input_console.keydown(this.keyDown.bind(this));
     
     // bind submit
     this.form.submit(this.tweet.bind(this));
   },
   
-  "errorCheck": function() {
-    if (this.console_mode) {
-      // @person
-      // allowed
-      
-      // @@channel
-      // allowed
-      
-      // @person.command
-      // allowed for commands ['direct', 'important', 'send_file', 'secure', 'dis']
-      
-      // @@channel.person.command
-      // allowed for commands ['direct', 'important', 'send_file', 'secure', 'dis']
-      
-      // @@channel.command
-      // allowed for commands ['important']
-      
-      // @@channel.subchannel.subchannel...
-      // allowed
-      
-      // @@channel.subchannel...person
-      // allowed
-      
-      // @person.command.command.command
-    }
-  },
-  
-  "addCommand": function(command) {
-    if(!command.starts_at) {
-      throw "foo"; // <--- WTF!?
-    }
-    this.command_hash[command.starts_at] = command;
-  },
-  
-  "eventHandler": function(event) {
-    // handle event preparation
-    // optimizable: move it into a function only called when one of the triggers has happened
-    var selectionEndsAt   = this.input_console.attr("selectionEnd");
-    var selectionIndex    = selectionEndsAt - 1;
-    var currentValue      = this.input_console.val();
-    var inputHasChanged   = currentValue !== this.previousValue;
-    var deletedCharacters = currentValue.length < this.previousValue.length;
-    var previousCharacter, currentCharacter;
-    
-    // check if input value has changed
-    if (!inputHasChanged) { return; }
-    
-    // store current value
-    this.previousValue = currentValue;
-    
-    // retrieve the previous character
-    if (selectionIndex === 0) {
-      currentCharacter  = currentValue.substr(selectionIndex, 1);
-    } else {
-      previousCharacter = currentValue.substr(selectionIndex - 1, 1);
-      currentCharacter  = currentValue.substr(selectionIndex, 1);
-    }
-    
-    this.sendWriteNotification(selectionIndex);
-    
-    // console.log("prev", previousCharacter, 'current', currentCharacter);
-    // console.log(selectionIndex, selectionEndsAt);
-    
-    switch (currentCharacter) {
-      // probably start of command sequence
-      case "@":
-        // check wether the previous character is a space
-        // if yes this is the beginning of a command sequence
-        if ($.trim(previousCharacter) === "") {
-          
-          console.log("person mode");
-          this.console_mode = "person";
-          
-          var command = new protonet.controls.CommandBlob({
-            starts_at: selectionIndex,
-            command_type: this.console_mode
-          });
-          this.last_command_blob = command;
-          
-        }
-        // check wether the previous character is a @
-        // if yes the user is now trying to talk to a channel rather
-        // than an end user
-        else if (previousCharacter === "@" && this.console_mode === "person") {
-          
-          console.log("channel mode");
-          this.console_mode = "channel";
-          this.last_command_blob.command_type = this.console_mode;
-          
-        }
-        break;
-      
-      // trying to call a method on x/y
-      case ".":
-        if (this.console_mode) {
-          console.log("trying to call a method on a(n) " + this.console_mode);
-        }
-        break;
-      
-      // end of command sequence
-      case " ":
-        if (this.console_mode)  {
-          if (this.last_command_blob) {
-            this.last_command_blob.ends_at = selectionIndex;
-            this.last_command_blob.destination = currentValue.substring(this.last_command_blob.starts_at, this.last_command_blob.ends_at);
-            console.log("closing command: ", this.last_command_blob);
-            
-            this.last_command_blob = null;
-          }
-          this.console_mode = null;
-          console.log("leaving console mode");
-        }
-        break;
-    }
-  },
-  
-  "specialKeyHandler": function(event) {
+  "keyDown": function(event) {
     switch(event.which) {
-      // Tab
-      case 9:
-        var command_blob           = this.last_command_blob;
-        if(!command_blob.base_value) {
-          command_blob.base_value    = this.input_console.val().substring(command_blob.starts_at + 1, this.input_console.attr("selectionEnd"));
-        }
-        var user_names    = protonet.globals.userWidget.user_names.slice(command_blob.last_match_index);
-        for(i in user_names) {
-          if(match = user_names[i].match(new RegExp("^" + command_blob.base_value))) {
-            if(!command_blob.replace_value) {
-              command_blob.replace_value = command_blob.base_value;
-            }
-            var new_value = this.input_console.val().replace("@" + command_blob.replace_value, "@" + user_names[i]);
-            command_blob.replace_value = user_names[i];
-            this.input_console.val(new_value);
-            command_blob.last_match_index = (command_blob.last_match_index + parseInt(i, 10) + 1);
-            console.log(command_blob.last_match_index);
-            break;
-          }
-          if(i + 1 == user_names.length) {
-            command_blob.last_match_index = 0;
-          }
-        }
-        console.log("requesting help");
-        event.stopPropagation();
-        event.preventDefault();
-        break;
-        
       // Return/Enter key
       case 13:
         if (event.shiftKey) {

@@ -3,6 +3,7 @@
 //= require "../utils/escape_html.js"
 //= require "../utils/nl2br.js"
 //= require "../utils/convert_to_pretty_date.js"
+//= require "../utils/highlight_replies.js"
 
 protonet.controls.Tweet = (function() {
   var template,
@@ -13,7 +14,9 @@ protonet.controls.Tweet = (function() {
   
   function TweetClass(args) {
     this.originalMessage  = args.message;
-    this.message          = protonet.utils.escapeHtml(this.originalMessage);
+    this.message          = this.originalMessage;
+    this.message          = protonet.utils.escapeHtml(this.message);
+    this.message          = protonet.utils.highlightReplies(this.message);
     this.message          = protonet.utils.autoLink(this.message);
     this.message          = protonet.utils.nl2br(this.message);
     this.message          = protonet.utils.autoLinkFilePaths(this.message);

@@ -80,7 +80,6 @@ protonet.controls.TextExtension.providers.Flickr.prototype = {
     
     // TODO remove this ".src" after some time, it's only here for backward compatibility reasons
     var thumbnail = protonet.media.Proxy.getImageUrl(this.data.thumbnail.source || this.data.thumbnail.src, thumbnailSize);
-    var preview = protonet.media.Proxy.getImageUrl(this.data.preview.source, previewSize);
     
     var anchor = $("<a />", {
       href: this.url,
@@ -96,6 +95,7 @@ protonet.controls.TextExtension.providers.Flickr.prototype = {
     }, thumbnailSize));
     
     if (this.data.preview) {
+      var preview = protonet.media.Proxy.getImageUrl(this.data.preview.source, previewSize);
       new protonet.effects.HoverResize(img, previewSize, preview);
     }
     

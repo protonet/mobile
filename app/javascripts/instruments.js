@@ -25,7 +25,7 @@ $(function() {
 
 // Initialize file stuff
 $(function() {
-  new protonet.controls.FileWidget();
+  protonet.globals.fileWidget = new protonet.controls.FileWidget();
 });
 
 
