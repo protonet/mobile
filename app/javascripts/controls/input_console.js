@@ -33,21 +33,24 @@ protonet.controls.InputConsole.prototype = {
   },
   
   "keyDown": function(event) {
-    switch(event.which) {
-      // Return/Enter key
-      case 13:
-        if (event.shiftKey) {
-          break;
-        }
-        if (!this.input_console.val()) {
-          event.preventDefault();
-          break;
-        }
-        
-        this.tweet(event);
-        break;
-    }
+    this.sendWriteNotification();
     
+    // Catch enter/return key
+    if (event.which == 13) {
+      
+      // Allow creating of line break when shift key is pressed
+      if (event.shiftKey) {
+        return;
+      }
+      
+      // Disable sending of empty messages
+      if (!this.input_console.val()) {
+        event.preventDefault();
+        return;
+      }
+      
+      this.tweet(event);
+    }
   },
   
   "tweet": function(event) {
@@ -64,30 +67,35 @@ protonet.controls.InputConsole.prototype = {
     event.preventDefault();
   },
   
-  "sendWriteNotification": function(last_index) {
-    if(last_index == -1) {
+  "sendWriteNotification": function() {
+    var caretPosition = this.input_console.attr("selectionEnd");
+    if (caretPosition == 0) {
       return false;
     }
-    if(!this.writing || this.recheck) {
+    
+    if (!this.writing || this.recheck) {
       this.recheck = false;
-      if(!this.writing) {
+      if (!this.writing) {
         this.sendStartedWritingNotification();
         // console.log("writing");
         this.writing = true;
       }
-      clearTimeout(this.write_timeout);
-      this.write_timeout = setTimeout(function(){
-        if(last_index == this.last_index) {
+      
+      clearTimeout(this.writeTimeout);
+      this.writeTimeout = setTimeout(function(){
+        if (caretPosition == this.caretPosition) {
           this.sendStoppedWritingNotification();
           // console.log("stopped writing");
           this.writing = false;
         }
-      }.bind(this), 4000);
+      }.bind(this), 3000);
+      
       setTimeout(function(){
         // console.log('setting recheck');
         this.recheck = true;
       }.bind(this), 500);
-      this.last_index = last_index;
+      
+      this.caretPosition = caretPosition;
     }
   },
   
