@@ -2,7 +2,7 @@
   <% hash.each do |user, tweets| %>
     <%= user.display_name %>
     <% tweets.each do |t| %>
-      <%= t.message %><br />
+      <%= t.id %><br />
     <% end %><br />
   <% end %>
 <% end %>
