@@ -4,16 +4,20 @@
  * Break.com Provider
  */
 protonet.controls.TextExtension.providers.Break = function(url) {
-  this.id = new Date().getTime() + Math.round(Math.random() * 1000);
   this.url = url;
   this.data = {
-    url: this.url,
-    type: "Break"
+    url: this.url
   };
 };
 
 protonet.controls.TextExtension.providers.Break.prototype = {
-  REG_EXP: /break\.com\/index\/.+/i,
+  /**
+   * Matches
+   * http://www.break.com/index/cool-beatbox-and-random-sound-montage.html
+   * http://www.break.com/cute-girls/hot-girl-in-the-sun.html
+   */
+  REG_EXP: /break\.com\/.+?\/.+/i,
+  CLASS_NAME: "flash-video",
   
   match: function() {
     return this.REG_EXP.test(this.url);
@@ -52,15 +56,9 @@ protonet.controls.TextExtension.providers.Break.prototype = {
   },
   
   _showVideo: function(event) {
-    if (!this.data.video_src) {
-      return;
-    }
-    
     event.preventDefault();
     event.stopPropagation();
     
-    var placeholderId = "text-extension-media-" + this.id;
-    $(event.target).attr("id", placeholderId);
     var params = {
       allowfullscreen: true,
       wmode: "opaque"
@@ -68,7 +66,7 @@ protonet.controls.TextExtension.providers.Break.prototype = {
     
     swfobject.embedSWF(
       this.data.video_src,
-      placeholderId,
+      this.id,
       "auto", "auto", "8",
       null, {}, params
     );
@@ -83,17 +81,26 @@ protonet.controls.TextExtension.providers.Break.prototype = {
   },
   
   getMedia: function() {
-    var thumbnail = this.data.image_src,
-        anchor = $("<a />", {
-          href: this.url,
-          target: "_blank"
-        }),
-        img = $("<img />", {
-          src: this.data.image_src,
-          width: 150,
-          height: 100
-        });
-    anchor.click(this._showVideo.bind(this));
+    this.id = "text-extension-preview-" + new Date().getTime() + Math.round(Math.random() * 1000);
+    var thumbnailSize = {
+      width: protonet.controls.TextExtension.config.IMAGE_WIDTH,
+      height: protonet.controls.TextExtension.config.IMAGE_HEIGHT
+    };
+    var thumbnail = protonet.media.Proxy.getImageUrl(this.data.image_src, thumbnailSize);
+    
+    var anchor = $("<a />", {
+      href: this.url,
+      target: "_blank",
+      id: this.id
+    });
+    
+    var img = $("<img />", $.extend({
+      src: thumbnail
+    }, thumbnailSize));
+    
+    if (this.data.video_src) {
+      anchor.click(this._showVideo.bind(this));
+    }
     return anchor.append(img);
   },
   

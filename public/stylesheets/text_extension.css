@@ -12,6 +12,10 @@
   position: relative;
 }
 
+#text-extension-preview .text-extension-results h3 {
+  display: block;
+}
+
 #text-extension-preview .remove {
   position: absolute;
   display: block;
@@ -35,15 +39,18 @@
   background: url(/images/loading_bar.gif) no-repeat center center;
 }
 
-.text-extension-results {
-  position: relative;
-  font-size: 10px; /* Ensure a unique font-size */
+#text-extension-preview .text-extension-results ul {
+  padding: 4px;
 }
-
 
 #text-extension-preview a,
 .text-extension-results a {
   text-decoration: none;
+}
+
+.text-extension-results {
+  position: relative;
+  font-size: 10px; /* Ensure a unique font-size */
 }
 
 .text-extension-results a:hover {
@@ -52,6 +59,7 @@
 
 
 .text-extension-results h3 {
+  display: none;
   padding: 3px 5px;
   color: rgb(0, 0, 0);
   border-bottom: 1px solid rgba(0, 0, 0, 0.4) ;
@@ -65,7 +73,7 @@
 }
 
 .text-extension-results ul {
-  padding: 4px;
+  padding: 0;
 }
 
 .text-extension-results ul:after {
@@ -89,6 +97,7 @@
   text-decoration: none !important;
 }
 
+.text-extension-results.flash-video .media a:hover img,
 .text-extension-results .media img:hover {
   -webkit-box-shadow: 0 0 20px #333;
   -moz-box-shadow: 0 0 20px #333;
@@ -119,7 +128,7 @@
 }
 
 .user-messages .text-extension-results {
-  margin-top: 12px;
+  margin: 10px 0 6px 0;
 }
 
 .user-messages .text-extension-results {
@@ -131,82 +140,53 @@
 
 /* =VIDEO/FLASH TEXT EXTENSION (YouTube, Slideshare, ...)
 --------------------------------------------------------------------------- */
-#text-extension-preview .text-extension-results.CollegeHumor object,
-#text-extension-preview .text-extension-results.DailyMotion object,
-#text-extension-preview .text-extension-results.Break object,
-#text-extension-preview .text-extension-results.Metacafe object,
-#text-extension-preview .text-extension-results.Slideshare object,
-#text-extension-preview .text-extension-results.Vimeo object,
-#text-extension-preview .text-extension-results.YouTube object {
+#text-extension-preview .text-extension-results.flash-video object {
   width: 590px;
   height: 280px;
 }
 
-.text-extension-results.CollegeHumor object,
-.text-extension-results.DailyMotion object,
-.text-extension-results.Break object,
-.text-extension-results.Metacafe object,
-.text-extension-results.Slideshare object,
-.text-extension-results.Vimeo object,
-.text-extension-results.YouTube object {
+.text-extension-results.flash-video object {
   height: 280px;
   width: 447px;
   margin-bottom: 5px;
 }
 
-.text-extension-results.CollegeHumor .media a:after,
-.text-extension-results.DailyMotion .media a:after,
-.text-extension-results.Break .media a:after,
-.text-extension-results.Metacafe .media a:after,
-.text-extension-results.Slideshare .media a:after,
-.text-extension-results.Vimeo .media a:after,
-.text-extension-results.YouTube .media a:after {
+.text-extension-results.flash-video .media a:after {
   content: "\25BA";
+  font-family: Arial;
+  font-size: 20px;
   color: #fff;
+  background: #000;
   position: absolute;
   top: 50%;
   left: 50%;
-  height: 60px;
-  width: 80px;
+  height: 30px;
+  width: 30px;
+  margin: -15px 0 0 -15px;
+  line-height: 30px;
+  opacity: 0.6;
+  text-indent: 4px;
+  vertical-align: middle;
   text-align: center;
-  margin: -30px 0 0 -30px;
-  line-height: 60px;
-  font-size: 50px;
-  opacity: 0.7;
-  text-shadow: 2px 2px 2px #000;
+  border-radius: 20px;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 2px 2px #333;
+  -webkit-box-shadow: 0 0 2px 2px #333;
+  -moz-box-shadow: 0 0 2px 2px #333;
 }
 
-.text-extension-results.CollegeHumor .media a:hover:after,
-.text-extension-results.DailyMotion .media a:hover:after,
-.text-extension-results.Break .media a:hover:after,
-.text-extension-results.Metacafe .media a:hover:after,
-.text-extension-results.Slideshare .media a:hover:after,
-.text-extension-results.Vimeo .media a:hover:after,
-.text-extension-results.YouTube .media a:hover:after {
-  opacity: 0.9;
+.text-extension-results.flash-video .media {
+  overflow: hidden;
 }
 
-.text-extension-results.CollegeHumor .media a:active:after,
-.text-extension-results.DailyMotion .media a:active:after,
-.text-extension-results.Break .media a:active:after,
-.text-extension-results.Metacafe .media a:active:after,
-.text-extension-results.Slideshare .media a:active:after,
-.text-extension-results.Vimeo .media a:active:after,
-.text-extension-results.YouTube .media a:active:after {
-  opacity: 0.7;
+.text-extension-results.flash-video .media a:hover:after {
+  opacity: 0.85;
 }
 
-/* TODO: Fix this, it is needed (again) to avoid :hover conflict with :after pseudo elements */
-.text-extension-results.CollegeHumor .media a:hover img,
-.text-extension-results.DailyMotion .media a:hover img,
-.text-extension-results.Break .media a:hover img,
-.text-extension-results.Metacafe .media a:hover img,
-.text-extension-results.Slideshare .media a:hover img,
-.text-extension-results.Vimeo .media a:hover img,
-.text-extension-results.YouTube .media a:hover img {
-  -webkit-box-shadow: 0 0 20px #333;
-  -moz-box-shadow: 0 0 20px #333;
-  box-shadow: 0 0 20px #333;
+.text-extension-results.flash-video .media a:active:after {
+  opacity: 1;
 }
 
 /* =LINK TEXT EXTENSION
@@ -214,12 +194,13 @@
 .text-extension-results.Link .media,
 .text-extension-results.Link .media a,
 .text-extension-results.Link .media img {
-  width: 97px;
-  height: 70px;
+  width: 93px;
+  height: 67px;
 }
 
 .text-extension-results.Link .media a.fetching img {
   opacity: 0.6;
+  background-color: #999;
 }
 
 .text-extension-results.Link .media a.fetching {
@@ -241,8 +222,6 @@
 
 .text-extension-results.FlickrSearch .media a,
 .text-extension-results.FlickrPhotoSet .media a {
-  width: 75px;
-  height: 75px;
   margin: 0 5px 5px 0;
   float: left;
   display: block;

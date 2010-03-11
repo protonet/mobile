@@ -30,8 +30,8 @@ protonet.data.MetaData = {
       onFailure();
     }
     
-    head.title = (head.title && head.title.content) || head.title;
-    data.title = $.trim(String(head.title || "").replace(/^,+/, "").replace(/,+$/, ""));
+    var title = (head.title && head.title.content) || head.title;
+    data.title = $.trim(String(title || "").replace(/^,+/, "").replace(/,+$/, ""));
     
     $.each($.makeArray(head.meta), function(i, metaTag) {
       if (metaTag.name && metaTag.content) {

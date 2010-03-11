@@ -8,6 +8,7 @@ class SessionsController < ApplicationController
   def create
     logout_keeping_session!
     user = User.authenticate(params[:login], params[:password])
+
     if user
       # Protects against session fixation attacks, causes request forgery
       # protection if user resubmits an earlier form using back
@@ -33,7 +34,8 @@ class SessionsController < ApplicationController
     respond_to do |format|
       format.json do
         if user
-          render :json => {:user_id => user.id.to_s, :token => user.communication_token}
+          self.current_user = user
+          render :json => {:user_id => user.id.to_s, :token => user.communication_token, :authenticity_token => form_authenticity_token}
         else
           render :json => {:user_id => "0", :token => ''}
         end

@@ -1,23 +1,36 @@
-protonet.controls.TextExtension.providers = {};
-protonet.controls.TextExtension.sortedProviders = [
-  "YouTube",
-  "Maps",
-  "Slideshare",
-  "Vimeo",
-  "Doodle",
-  "XING",
-  "Flickr",
-  "FlickrPhotoSet",
-  "FlickrSearch",
-  "Twitpic",
-  "Metacafe",
-  "Break",
-  "DailyMotion",
-  "CollegeHumor",
-  "Link"
-]; // sorted by priority
+protonet.controls.TextExtension.config = {
+  IMAGE_WIDTH: 93,
+  IMAGE_HEIGHT: 67,
+  SORTED_PROVIDERS: [
+    // sorted by priority
+    "YouTube",
+    "Maps",
+    "Slideshare",
+    "Vimeo",
+    "Doodle",
+    "XING",
+    "Flickr",
+    "FlickrPhotoSet",
+    "FlickrSearch",
+    "Twitpic",
+    "Metacafe",
+    "Break",
+    "DailyMotion",
+    "CollegeHumor",
+    "Image",
+    "Link"
+  ]
+};
 
+protonet.controls.TextExtension.providers = {};
+
+/**
+ * TODO:
+ * Add superclasses for similar text extensions (flash-video, image, image set, etc.)
+ * there's so much duplicated code right now. whatever. we have other prios.
+ */
 //= require "providers/link.js"
+//= require "providers/image.js"
 //= require "providers/youtube.js"
 //= require "providers/vimeo.js"
 //= require "providers/maps.js"

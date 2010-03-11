@@ -38,6 +38,13 @@ ActionController::Routing::Routes.draw do |map|
   
   map.namespace :images do |images|
     images.resources :avatars
+    #  crazy resizing on the fly, I had to slightly uglify the url so the rails caching can handle it
+    # examples:
+    # /images/externals/resize/0/0/http://www.goddesscruise.com/parts_of_boat.gif      -> for original size
+    # /images/externals/resize/100/100/http://www.goddesscruise.com/parts_of_boat.gif  -> any other size ;)
+    images.connect  'externals/show',       :controller => 'externals', :action => 'show'
+    images.connect  'externals/is_available', :controller => 'externals', :action => 'is_available'
+    images.resources :externals
   end
   
   SprocketsApplication.routes(map, :resources)

@@ -4,7 +4,6 @@
 protonet.controls.TextExtension.providers.Maps = function(url) {
   this.url = url;
   this.data = {
-    type: "Maps",
     url: this.url
   };
 };
@@ -22,21 +21,22 @@ protonet.controls.TextExtension.providers.Maps.prototype = {
   },
   
   _extractQuery: function() {
-    var match = this.url.match(/&q=(.+?)&/i);
+    var match = this.url.match(/&q=(.*?)&/i);
     return match && decodeURIComponent(match[1].replace(/\+/g, " "));
   },
   
   _extractHNear: function() {
-    var match = this.url.match(/&hnear=(.+?)&/i);
+    var match = this.url.match(/&hnear=(.*?)&/i);
     return match && decodeURIComponent(match[1].replace(/\+/g, " "));
   },
   
   loadData: function(onSuccessCallback) {
+    var near = this._extractHNear(),
+        query = this._extractQuery();
     $.extend(this.data, {
-      description:  this._extractQuery() || "",
-      title:        this._extractHNear() || ""
+      description:  near && query,
+      title:        near || query
     });
-    
     onSuccessCallback(this.data);
   },
   

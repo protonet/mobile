@@ -1,6 +1,6 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
-
+  
   def button(name)
     content_tag(:button,
       content_tag(:span,
@@ -24,6 +24,22 @@ module ApplicationHelper
       
       file_name ? ('<a href="' + path + '">' + truncate(file_name, 40) + '</a>') : s
     }
+  end
+  
+  def highlight_replies(str)
+    str.gsub(/(\s|^)@([^@\s$"']+)/) {|s|
+      $1 + "@" + '<span class="reply">' + $2 + '</span>';
+    }
+  end
+  
+  def format_tweet(message)
+    message = h(message)
+    message = highlight_replies(message)
+    message = auto_link(message, :urls, :target => '_blank') { |url|
+      CGI.unescapeHTML(truncate(url, 40))
+    }
+    message = nl2br(message)
+    message = auto_link_file_paths(message)
   end
   
   private

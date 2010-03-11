@@ -9,11 +9,7 @@
       <span class="message-author"><%= author %></span>
       <span class="message-date pretty-date" <%= "title=\"#{convert_to_rfc(created_at)}\"" unless created_at.blank? %>><%= created_at %></span>
     </span>
-    <p><%=
-      auto_link_file_paths nl2br(auto_link(h(message), :urls, :target => '_blank') { |url|
-        CGI.unescapeHTML(truncate(url, 40))
-      })
-    %></p>
+    <p><%= format_tweet(message) %></p>
 <% if !defined?(show_wrapper_end) || show_wrapper_end -%>
   </div>
 </li>

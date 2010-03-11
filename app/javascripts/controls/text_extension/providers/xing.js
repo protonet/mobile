@@ -1,4 +1,5 @@
 //= require "../../../data/yql.js"
+//= require "../../../effects/hover_resize.js"
 
 /**
  * XING Profile Provider
@@ -6,12 +7,15 @@
 protonet.controls.TextExtension.providers.XING = function(url) {
   this.url = url;
   this.data = {
-    url: this.url,
-    type: "XING"
+    url: this.url
   };
 };
 
 protonet.controls.TextExtension.providers.XING.prototype = {
+  /**
+   * Matches
+   * https://www.xing.com/profile/Christopher_Blum2
+   */
   REG_EXP: /xing\.com\/profile\/(.+?)[^\?]/i,
   
   match: function() {
@@ -22,8 +26,12 @@ protonet.controls.TextExtension.providers.XING.prototype = {
     var yqlCallback = this._yqlCallback.bind(this, onSuccessCallback);
     
     new protonet.data.YQL.Query(
-      "SELECT content, src FROM html WHERE " + 
-        "url='" + this.url + "' AND (xpath='//meta[@name=\"description\"]' OR xpath='//title' OR xpath='//meta[@name=\"keywords\"]' OR xpath='//img[@id=\"photo\"]')"
+      "SELECT content, src FROM html WHERE url='" + this.url + "' AND xpath IN ('"+
+          "//meta[@name=\"description\"]'," +
+          "'//title'," +
+          "'//meta[@name=\"keywords\"]'," +
+          "'//img[@id=\"photo\"]'" +
+      ")"
     ).execute(
       yqlCallback, yqlCallback
     );
@@ -45,7 +53,7 @@ protonet.controls.TextExtension.providers.XING.prototype = {
       description:  (meta && meta[0] && meta[0].content) || "",
       tags:         (meta && meta[1] && meta[1].content) || "",
       title:        String(response.title || ""),
-      thumbnail:    "http://www.xing.com" + (img && img.src.replace(/(\,\d)*?\.jpg/, "_s3.jpg") || "/img/users/nobody_m_s3.gif")
+      thumbnail:    "http://www.xing.com" + ((img && img.src) || "/img/users/nobody_m.gif")
     });
     
     onSuccessCallback(this.data);
@@ -63,16 +71,33 @@ protonet.controls.TextExtension.providers.XING.prototype = {
   },
   
   getMedia: function() {
-    var thumbnail = this.data.thumbnail,
-        anchor = $("<a />", {
-          href: this.url,
-          target: "_blank"
-        }),
-        img = $("<img />", {
-          src: thumbnail,
-          height: 93,
-          width: 70
-        });
+    var thumbnailSize = {
+      width: protonet.controls.TextExtension.config.IMAGE_WIDTH,
+      height: 90
+    };
+    
+    var previewSize = {
+      width: 140,
+      height: 185
+    };
+    
+    var thumbnail = protonet.media.Proxy.getImageUrl(this.data.thumbnail, thumbnailSize);
+    var preview = protonet.media.Proxy.getImageUrl(this.data.thumbnail, previewSize);
+    
+    var anchor = $("<a />", {
+      href: this.url,
+      target: "_blank"
+    }).css({
+      height: thumbnailSize.height.px(),
+      width: thumbnailSize.width.px()
+    });
+    
+    var img = $("<img />", $.extend({
+      src: thumbnail
+    }, thumbnailSize));
+    
+    new protonet.effects.HoverResize(img, previewSize, preview);
+    
     return anchor.append(img);
   },
   

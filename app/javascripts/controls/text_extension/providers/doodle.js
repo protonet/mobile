@@ -4,9 +4,6 @@
 protonet.controls.TextExtension.providers.Doodle = function(url) {
   this.url = url;
   this.data = {
-    description: "",
-    title: "",
-    type: "Doodle",
     url: this.url
   };
 };
@@ -37,11 +34,11 @@ protonet.controls.TextExtension.providers.Doodle.prototype = {
   },
   
   getDescription: function() {
-    return this.data.description;
+    return this.data.description || "";
   },
   
   getTitle: function() {
-    return this.data.title;
+    return this.data.title || "";
   },
   
   getMedia: function() {

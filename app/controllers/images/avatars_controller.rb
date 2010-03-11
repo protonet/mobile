@@ -1,4 +1,6 @@
 class Images::AvatarsController < ApplicationController
+  caches_page :show
+  
   def show
     @avatar = Images::Avatar.find_by_id(params[:id])
     

@@ -98,10 +98,10 @@ unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(Phusio
   puts "JS DISPATCHING: #{configatron.js_dispatching_active ? "#{colored_on}" : colored_off}"
   
   # checking ldap
-  configatron.ldap_active = begin
+  configatron.ldap.active = begin
     false
   end
-  puts "LDAP:           #{configatron.ldap_active ? colored_on : colored_off}"
+  puts "LDAP:           #{configatron.ldap.active ? colored_on : colored_off}"
   
   puts "                        "
   puts "------------------------"

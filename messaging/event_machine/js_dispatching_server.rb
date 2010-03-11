@@ -75,9 +75,10 @@ module JsDispatchingServer
   
   def add_to_online_users
     @@online_users[@user.id] ||= {}
+    @@online_users[@user.id]["name"] ||= @user.display_name
     @@online_users[@user.id]["connections"] ||= []
     @@online_users[@user.id]["connections"] << [@key, @type]
-    data = {:x_target => "UserWidget.update", :online_users => @@online_users}.to_json
+    data = {:x_target => "protonet.globals.userWidget.update", :online_users => @@online_users}.to_json
     send_user_data(data)
     log(@@online_users.inspect)
   end
@@ -86,13 +87,13 @@ module JsDispatchingServer
     return unless @user
     @@online_users[@user.id]["connections"] = @@online_users[@user.id]["connections"].reject {|socket_id, _| socket_id == @key}
     @@online_users.delete(@user.id) if @@online_users[@user.id]["connections"].empty?
-    data = {:x_target => "UserWidget.update", :online_users => @@online_users}.to_json
+    data = {:x_target => "protonet.globals.userWidget.update", :online_users => @@online_users}.to_json
     send_user_data(data)
     log(@@online_users.inspect)
   end
   
   def update_user_status(status)
-    data = {:x_target => "UserWidget.updateWritingStatus", :data => {:user_id => @user.id, :status => status}}.to_json
+    data = {:x_target => "protonet.globals.userWidget.updateWritingStatus", :data => {:user_id => @user.id, :status => status}}.to_json
     send_user_data(data)
   end
 

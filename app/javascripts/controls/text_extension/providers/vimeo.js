@@ -6,16 +6,19 @@
  * YouTube Provider
  */
 protonet.controls.TextExtension.providers.Vimeo = function(url) {
-  this.id = new Date().getTime() + Math.round(Math.random() * 1000);
   this.url = url;
   this.data = {
-    url: this.url,
-    type: "Vimeo"
+    url: this.url
   };
 };
 
 protonet.controls.TextExtension.providers.Vimeo.prototype = {
+  /**
+   * Matches:
+   * http://vimeo.com/9669721
+   */
   REG_EXP: /vimeo\.com\/(\d+)/i,
+  CLASS_NAME: "flash-video",
   
   match: function() {
     return this.REG_EXP.test(this.url);
@@ -43,7 +46,7 @@ protonet.controls.TextExtension.providers.Vimeo.prototype = {
     }
     
     $.extend(this.data, {
-      description:  protonet.utils.stripTags(entry.description),
+      description:  protonet.utils.stripTags(response.description),
       duration:     response.duration,
       thumbnail:    response.thumbnail_small,
       title:        response.title,
@@ -62,15 +65,9 @@ protonet.controls.TextExtension.providers.Vimeo.prototype = {
   },
   
   _showVideo: function(event) {
-    if (this.data.noembed) {
-      return;
-    }
-    
     event.preventDefault();
     event.stopPropagation();
     
-    var placeholderId = "text-extension-media-" + this.id;
-    $(event.target).attr("id", placeholderId);
     var params = {
       allowfullscreen: true,
       wmode: "opaque"
@@ -78,7 +75,7 @@ protonet.controls.TextExtension.providers.Vimeo.prototype = {
     
     swfobject.embedSWF(
       "http://vimeo.com/moogaloop.swf?clip_id=" + this._extractId() + "&server=vimeo.com&show_title=1&show_byline=1&show_portrait=0&color=&fullscreen=1&autoplay=1",
-      placeholderId,
+      this.id,
       "auto", "auto", "8",
       null, {}, params
     );
@@ -97,17 +94,25 @@ protonet.controls.TextExtension.providers.Vimeo.prototype = {
   },
   
   getMedia: function() {
-    var thumbnail = this.data.thumbnail,
-        anchor = $("<a />", {
-          href: this.url,
-          target: "_blank"
-        }),
-        img = $("<img />", {
-          src: thumbnail,
-          height: 75,
-          width: 100
-        });
+    this.id = "text-extension-preview-" + new Date().getTime() + Math.round(Math.random() * 1000);
+    var thumbnailSize = {
+      width: protonet.controls.TextExtension.config.IMAGE_WIDTH,
+      height: protonet.controls.TextExtension.config.IMAGE_HEIGHT
+    };
+    var thumbnail = protonet.media.Proxy.getImageUrl(this.data.thumbnail, thumbnailSize);
+    
+    var anchor = $("<a />", {
+      href: this.url,
+      target: "_blank",
+      id: this.id
+    });
+    
+    var img = $("<img />", $.extend({
+      src: thumbnail
+    }, thumbnailSize));
+    
     anchor.click(this._showVideo.bind(this));
+    
     return anchor.append(img);
   },
   

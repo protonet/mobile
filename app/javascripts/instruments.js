@@ -25,7 +25,7 @@ $(function() {
 
 // Initialize file stuff
 $(function() {
-  new protonet.controls.FileWidget();
+  protonet.globals.fileWidget = new protonet.controls.FileWidget();
 });
 
 
@@ -36,7 +36,7 @@ $(function() {
 
 // Initialize user widget
 $(function() {
-  window.UserWidget = new protonet.controls.UserWidget();
+  protonet.globals.userWidget = new protonet.controls.UserWidget();
 });
 
 

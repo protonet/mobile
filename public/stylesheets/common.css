@@ -111,6 +111,11 @@ div, button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, 
   position: absolute;
   visibility: hidden;
 }
+.reply {
+  color: #FDAB54;
+}
+
+
 /* =CHANNEL
 --------------------------------------------------------------------------- */
 #channel {

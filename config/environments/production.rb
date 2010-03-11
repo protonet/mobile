@@ -30,6 +30,11 @@ System::Backend.backend_connection = BackendAdapters::Ubuntu.new
 puts "Backend '#{System::Backend.backend_connection.info}' connected successfully!"
 
 configatron.user_file_path = (File.exists?("/home/protonet/dashboard/shared/user-files") ? "/home/protonet/dashboard/shared/user-files" : "/var/www/protonet-dashboard/shared/user-files")
-configatron.avatars_path = "public/system/avatars"
+configatron.images.avatars_path   = "public/system/avatars"
+configatron.images.externals_path = "public/system/externals"
 
-configatron.ldap_active = false
+configatron.ldap.active = false
+
+# checks for stage specific config files
+stage_config = "#{RAILS_ROOT}/config/environments/stage.rb"
+eval(IO.read(stage_config), binding, stage_config) if test(?f, stage_config)

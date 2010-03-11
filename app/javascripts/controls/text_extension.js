@@ -24,6 +24,7 @@ protonet.controls.TextExtension = {
   }
 };
 
+//= require "../media/proxy.js"
 //= require "text_extension/renderer.js"
 //= require "text_extension/input.js"
 //= require "text_extension/providers.js"

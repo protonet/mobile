@@ -3,14 +3,20 @@
 //= require "../utils/escape_html.js"
 //= require "../utils/nl2br.js"
 //= require "../utils/convert_to_pretty_date.js"
+//= require "../utils/highlight_replies.js"
 
 protonet.controls.Tweet = (function() {
   var template,
-      HALF_HOUR = 1000 * 60 * 30;
+      templateHtml,
+      HALF_HOUR = 1000 * 60 * 30,
+      ID_REG_EXP = /\{id\}/g,
+      TWEET_REG_EXP = /tweet-(\d*)-\d*/;
   
   function TweetClass(args) {
     this.originalMessage  = args.message;
-    this.message          = protonet.utils.escapeHtml(this.originalMessage);
+    this.message          = this.originalMessage;
+    this.message          = protonet.utils.escapeHtml(this.message);
+    this.message          = protonet.utils.highlightReplies(this.message);
     this.message          = protonet.utils.autoLink(this.message);
     this.message          = protonet.utils.nl2br(this.message);
     this.message          = protonet.utils.autoLinkFilePaths(this.message);
@@ -22,10 +28,11 @@ protonet.controls.Tweet = (function() {
     this.id               = args.id;
     
     template = template || $("#message-template");
+    templateHtml = templateHtml || $(template.html());
     
-    this.listElement = $(template.html());
+    this.listElement = templateHtml.clone();
     if(this.id) {
-      this.htmlId = this.listElement.attr("id").replace(/\{id\}/g, this.id);
+      this.htmlId = this.listElement.attr("id").replace(ID_REG_EXP, this.id);
     }
     this.listElement.attr("id", this.htmlId);
     this.listElement.find(".message-usericon > img").attr("src", args.user_icon_url);
@@ -50,18 +57,18 @@ protonet.controls.Tweet = (function() {
       }
     }
     
-    this.channelUl = $("#messages-for-channel-" + this.channelId);
     var scrollPosition = $(window).scrollTop();
-    var lastTweet = this.channelUl.find(":first-child");
-    var lastTweetHappenedInLastHalfHour = this.messageDate - new Date(lastTweet.find(".message-date").attr("title")) < HALF_HOUR;
-    var canBeGroupedWithLastTweet = lastTweet.length
+    
+    this.channelUl = $("#messages-for-channel-" + this.channelId);
+    this.lastTweet = this.channelUl.children(":first");
+    var lastTweetHappenedInLastHalfHour = this.messageDate - new Date(this.lastTweet.find(".message-date").attr("title")) < HALF_HOUR;
+    this.groupedTweet = this.lastTweet.length
         && lastTweetHappenedInLastHalfHour
         && !this.textExtension
-        && lastTweet.find(".message-author").html() == this.author;
-    this.groupedTweet = canBeGroupedWithLastTweet;
+        && this.lastTweet.find(".message-author").html() == this.author;
         
-    if (canBeGroupedWithLastTweet) {
-      lastTweet.find(".message-text").prepend(messageContainer.html());
+    if (this.groupedTweet) {
+      this.lastTweet.find(".message-text").prepend(messageContainer.html());
     } else {
       this.channelUl.prepend(this.listElement);
     }
@@ -78,22 +85,21 @@ protonet.controls.Tweet = (function() {
   TweetClass.prototype = {
     send: function() {
       var params = this.form.serialize();
-      
       // Overwrite message, because we don't always want to send the textarea value
       params += "&" + encodeURIComponent("tweet[message]=" + this.originalMessage);
+      
       // send to server
       $.post(this.form.attr("action"), params, function(data){
         this.htmlId = this.listElement.attr("id");
         
         if(!this.groupedTweet) {
-          this.htmlId = this.htmlId.replace("{id}", data);
-          this.htmlId = this.htmlId.replace("{id}", data);
+          this.htmlId = this.htmlId.replace(ID_REG_EXP, data);
           this.listElement.attr("id", this.htmlId);
         } else {
-          var wrapper = this.channelUl.children("li:first");
-          var first_id = wrapper.attr("id").match(/tweet-(\d*)-\d*/)[1];
-          var html_id = wrapper.attr("id").replace(new RegExp("tweet-"+first_id), "tweet-" + data);
-          wrapper.attr("id", html_id);
+          var wrapperId = this.lastTweet.attr("id");
+          var firstId = wrapperId.match(TWEET_REG_EXP)[1];
+          var htmlId = wrapperId.replace("tweet-" + firstId, "tweet-" + data);
+          this.lastTweet.attr("id", htmlId);
         }
       }.bind(this));
     }

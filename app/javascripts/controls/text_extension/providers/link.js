@@ -4,7 +4,7 @@
 //= require "../../../effects/hover_resize.js"
 //= require "../../../utils/parse_url.js"
 //= require "../../../utils/strip_tags.js"
-
+//= require "../../../utils/strip_tracking_params.js"
 
 /**
  * WebLink Provider
@@ -12,7 +12,6 @@
 protonet.controls.TextExtension.providers.Link = function(url) {
   this.url = url;
   this.data = {
-    type: "Link",
     url: this.url
   };
 };
@@ -23,17 +22,21 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   },
   
   loadData: function(onSuccessCallback) {
-    // preload screenshot
-    this.data.thumbnail = new Image().src = protonet.media.ScreenShot.get(this.url);
+    this.queryUrl = protonet.utils.stripTrackingParams(this.url);
+    this.data.thumbnail = protonet.media.ScreenShot.get(this.queryUrl);
     
     protonet.data.Google.search(
-      this.url,
+      this.queryUrl,
       this._googleSearchCallback.bind(this, onSuccessCallback),
       this._googleSearchFailureCallback.bind(this, onSuccessCallback)
     );
   },
   
   _googleSearchCallback: function(onSuccessCallback, response) {
+    if (this._canceled) {
+      return;
+    }
+    
     var result = response[0];
     $.extend(this.data, {
       description:  protonet.utils.stripTags(result.content || ""),
@@ -50,7 +53,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     
     // Ok google, doesn't know anything about the given url, so we try to get our own data using YQL html lookup
     protonet.data.MetaData.get(
-      this.url, this._yqlCallback.bind(this, onSuccessCallback), this._yqlCallback.bind(this, onSuccessCallback)
+      this.queryUrl, this._yqlCallback.bind(this, onSuccessCallback), this._yqlCallback.bind(this, onSuccessCallback)
     );
   },
   
@@ -59,7 +62,7 @@ protonet.controls.TextExtension.providers.Link.prototype = {
       return;
     }
     
-    var urlParts = protonet.utils.parseUrl(this.url),
+    var urlParts = protonet.utils.parseUrl(this.queryUrl),
         shortUrl = urlParts.host + urlParts.path + urlParts.query;
     
     $.extend(this.data, {
@@ -84,42 +87,68 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   },
   
   getMedia: function() {
-    var thumbnail = this.data.thumbnail,
-        anchor = $("<a />", {
-          href: this.url,
-          target: "_blank",
-          className: "fetching"
-        }),
-        img,
-        checks = 0,
-        // Check every 4 seconds if screenshot is available
-        checkAvailibility = function() {
-          protonet.media.ScreenShot.isAvailable(this.url, null, function(isAvailable) {
-            if (checks == 0) {
-              img = $("<img />", { src: thumbnail  }).appendTo(anchor);
-              new protonet.effects.HoverResize(img, { width: 280, height: 202 });
-            }
-            
-            if (checks > 0 && isAvailable) {
-              img.attr("src", thumbnail + "&loaded");
-            }
-            
-            if (checks > 6 || isAvailable) {
-             anchor.removeClass("fetching");
-            } else {
-              checks++;
-              this.timeout = setTimeout(checkAvailibility, 4000);
-            }
-          }.bind(this));
-        }.bind(this);
+    var thumbnail = this.data.thumbnail;
+    var thumbnailReady = thumbnail + "&loaded";
+    var thumbnailSize = {
+      width: protonet.controls.TextExtension.config.IMAGE_WIDTH,
+      height: protonet.controls.TextExtension.config.IMAGE_HEIGHT
+    };
+    var previewSize = { width: 280, height: 200 };
     
-    checkAvailibility();
+    var anchor = $("<a />", {
+      href: this.url,
+      target: "_blank",
+      className: "fetching"
+    });
+    
+    var img;
+    
+    var renderImage = function(screenShotUrl) {
+      if (!img) {
+        img = $("<img />", thumbnailSize).appendTo(anchor);
+      }
+      img.attr("src", protonet.media.Proxy.getImageUrl(screenShotUrl, thumbnailSize));
+    };
+    
+    var observeImage = function(previewScreenShotUrl) {
+      new protonet.effects.HoverResize(img, previewSize, previewScreenShotUrl);
+    };
+    
+    var hideIndicator = function() {
+      anchor.removeClass("fetching");
+    };
+    
+    var renderAndObserveImage = function() {
+      var previewUrl = protonet.media.Proxy.getImageUrl(thumbnailReady, previewSize);
+      
+      renderImage(thumbnailReady);
+      hideIndicator();
+      observeImage(previewUrl);
+    };
+    
+    var hideIndicatorAndObserveImage = function() {
+      var previewUrl = protonet.media.Proxy.getImageUrl(thumbnail, previewSize);
+      
+      hideIndicator();
+      observeImage(previewUrl);
+    };
+    
+    protonet.media.Proxy.isImageAvailable(thumbnailReady, function(status) {
+      if (status) {
+        return renderAndObserveImage();
+      }
+      
+      renderImage(thumbnail);
+      protonet.media.ScreenShot.fetch(this.url, null, {
+        success: renderAndObserveImage,
+        failure: hideIndicatorAndObserveImage
+      });
+    }.bind(this));
     
     return anchor;
   },
   
   cancel: function() {
-    clearTimeout(this.timeout);
     this._canceled = true;
   }
 };

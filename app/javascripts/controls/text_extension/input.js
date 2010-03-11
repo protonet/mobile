@@ -4,11 +4,12 @@ protonet.controls.TextExtension.Input = function(input) {
   }
   
   this.input = input;
-  this.sortedProviders = protonet.controls.TextExtension.sortedProviders;
+  this.sortedProviders = protonet.controls.TextExtension.config.SORTED_PROVIDERS;
   this.providers = protonet.controls.TextExtension.providers;
   this.container = $("#text-extension-preview");
   this.hiddenInput = $("#text-extension-input");
   this.removeLink = this.container.find("a.remove");
+  this._ignoreUrls = [];
   
   this.regExp = /(\b(((https?|ftp):\/\/)|(www\.))[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
   
@@ -40,7 +41,7 @@ protonet.controls.TextExtension.Input.prototype = {
   _cancel: function(event) {
     event.preventDefault();
     
-    this._lastUrl = this.url;
+    this._ignoreUrls.push(this.url);
     
     this.input.focus();
     this.reset();
@@ -54,9 +55,9 @@ protonet.controls.TextExtension.Input.prototype = {
     
     for (var i=0; i<matchUrls.length; i++) {
       var url = this._prepareUrl(matchUrls[i]),
-          isLastUrl = (url == this._lastUrl);
+          shouldBeIgnored = $.inArray(url, this._ignoreUrls) != -1;
       
-      if (url.isUrl() && !isLastUrl) {
+      if (!shouldBeIgnored && url.isUrl()) {
         this._selectUrl(url);
         break;
       }
@@ -73,16 +74,15 @@ protonet.controls.TextExtension.Input.prototype = {
   },
   
   _getDataProvider: function(url) {
-    var instance, i, providerName;
-    for (i=0; i<this.sortedProviders.length; i++) {
-      providerName = this.sortedProviders[i];
+    var instance, i, providerLength = this.sortedProviders.length;
+    for (i=0; i<providerLength; i++) {
+      this.providerName = this.sortedProviders[i];
       
-      if (!this.providers.hasOwnProperty(providerName)) {
+      if (!this.providers.hasOwnProperty(this.providerName)) {
         continue;
       }
       
-      instance = new this.providers[providerName](url, this);
-      console.log(providerName);
+      instance = new this.providers[this.providerName](url, this);
       if (instance.match()) {
         return instance;
       }
@@ -90,17 +90,16 @@ protonet.controls.TextExtension.Input.prototype = {
   },
   
   _request: function() {
-    this.provider.loadData(this._render.bind(this), this._unsupportedUrlReset.bind(this), this.reset.bind(this));
+    this.provider.loadData(this._render.bind(this), this._ignoreUrlAndReset.bind(this));
   },
   
   _render: function(data) {
-    this.data = data;
-    
+    this.data = $.extend({}, data, { type: this.providerName });
     this.renderer = new protonet.controls.TextExtension.Renderer(
-      this.container, data, this.provider
+      this.container, this.data, this.provider
     );
     
-    this.hiddenInput.val(JSON.stringify(data));
+    this.hiddenInput.val(JSON.stringify(this.data));
     this.container.removeClass("loading-bar");
     this.expand();
   },
@@ -118,7 +117,10 @@ protonet.controls.TextExtension.Input.prototype = {
       height: this.renderer.resultsElement.outerHeight(true).px(),
       opacity: 100
     }, 200, function() {
-      this.container.css("height", "auto");
+      this.container.css({
+        height: "auto",
+        overflow: ""
+      });
     }.bind(this));
   },
   
@@ -145,17 +147,17 @@ protonet.controls.TextExtension.Input.prototype = {
   
   submitted: function() {
     this.provider && this.provider.cancel();
+    this._ignoreUrls = [];
     this.reset();
   },
  
-  _unsupportedUrlReset: function() {
-    this._lastUrl = this.url;
+  _ignoreUrlAndReset: function() {
+    this._ignoreUrls.push(this.url);
     this.reset();
   },
   
   reset: function() {
     this.container.stop();
-    
     if (this.container.is(":visible")) {
       this._hide();
     }

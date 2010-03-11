@@ -8,9 +8,15 @@ protonet.dispatching.DispatchingSystem = function() {
    
 protonet.dispatching.DispatchingSystem.prototype = {
   "VERSION": 1, // Increase this number manually if you want to invalidate browser cache
+  "timeouts": {
+    SOCKET_CHECK: 30000,
+    SOCKET_OFFLINE: 40000,
+    SOCKET_RECONNECT: 5000
+  },
+  
   
   "createSocket": function() {
-    var container = $('<div id="socket-container" />').appendTo("body"),
+    var container = $("<div />", { id: "socket-container" }).appendTo("body"),
         attributes = { id: this.socketId },
         params = { allowscriptaccess: "sameDomain" };
     
@@ -20,23 +26,21 @@ protonet.dispatching.DispatchingSystem.prototype = {
       "auto", "auto", "8",
       null, {}, params, attributes
     );
-    
-    this.socket = document.getElementById(this.socketId);
   },
   
   "socketReadyCallback": function() {
     console.log('socket ready, trying to establish connection');
-    // todo fix this, it is double done, was needed for safari
-    // for some reasons the this.socket didn't behave as if it
-    // was the flash socket
-    this.socket = document.getElementById(this.socketId);
+    
+    this.socket = swfobject.getObjectById(this.socketId);
     this.connectSocket();
-    $(window).bind('unload', function(){
-      this.socket.closeSocket();
-    }.bind(this));
-    $(window).bind('focus', function(){
-      this.reconnectSocketIfNotConnected();
-    }.bind(this));
+    $(window).bind({
+      unload: function() {
+        this.socket.closeSocket();
+      }.bind(this),
+      focus: function() {
+        this.reconnectSocketIfNotConnected();
+      }.bind(this)
+    });
   },
     
   "connectSocket": function() {
@@ -45,24 +49,25 @@ protonet.dispatching.DispatchingSystem.prototype = {
   
   "socketConnectCallback": function(args) {
     console.log('connection established? ' + args);
+    
     if(args) {
       this.startSocketCheck();
       this.authenticateUser();
     } else {
-      setTimeout(function(){this.reconnectSocketIfNotConnected()}.bind(this), 5000);
+      setTimeout(this.reconnectSocketIfNotConnected.bind(this), this.timeouts.SOCKET_RECONNECT);
     }
   },
   
   "startSocketCheck": function() {
     if(!this.socket_check_interval) {
-      this.socket_check_interval = setInterval(this.socketCheck.bind(this), 30000);
+      this.socket_check_interval = setInterval(this.socketCheck.bind(this), this.timeouts.SOCKET_CHECK);
     }
   },
   
   "reconnectSocketIfNotConnected": function() {
-    if((new Date() - this.socket_active) > 40000 && !this.socket_reconnecting) {
+    if((new Date() - this.socket_active) > this.timeouts.SOCKET_OFFLINE && !this.socket_reconnecting) {
       this.socket_reconnecting = true;
-      setTimeout(function(){ this.socket_reconnecting = false; }.bind(this), 40000);
+      setTimeout(function(){ this.socket_reconnecting = false; }.bind(this), this.timeouts.SOCKET_OFFLINE);
       console.log('socket offline');
       this.socket.closeSocket();
       protonet.globals.endlessScroller.loadNotReceivedTweets();
@@ -90,13 +95,12 @@ protonet.dispatching.DispatchingSystem.prototype = {
   },
 
   "messageReceived": function(raw_data) {
-    console.log(raw_data + ' wurde empfangen.');
+    console.log(raw_data + ' received.');
     // FIXME: Handle this in the flash socket
     if($.trim(raw_data).startsWith("<?xml")) {
       return;
     }
     
-    // FIXME: JSON is only HTML5
     var message = JSON.parse(raw_data);
     
     switch(message.x_target) {

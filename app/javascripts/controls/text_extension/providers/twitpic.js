@@ -6,7 +6,6 @@
 protonet.controls.TextExtension.providers.Twitpic = function(url) {
   this.url = url;
   this.data = {
-    type: "Twitpic",
     url: this.url
   };
 };
@@ -18,7 +17,7 @@ protonet.controls.TextExtension.providers.Twitpic.prototype = {
    * http://twitpic.com/d1x47#
    * http://twitpic.com/d1x47/full
    */
-  REG_EXP: /twitpic\.com\/(\w{5,7}?)$|#$|\/full$/i,
+  REG_EXP: /twitpic\.com\/(\w{5,7}?)(#$|\/full)*$/i,
   
   match: function() {
     return this.REG_EXP.test(this.url);
@@ -33,7 +32,7 @@ protonet.controls.TextExtension.providers.Twitpic.prototype = {
     
     new protonet.data.YQL.Query(
       "SELECT content,p FROM html WHERE " + 
-        "url='" + this.url + "' AND (xpath='//title' OR xpath='//div[@id=\"view-photo-caption\"]')"
+        "url='" + this.url + "' AND xpath IN ('//title', '//div[@id=\"view-photo-caption\"]')"
     ).execute(
       yqlCallback, onFailureCallback
     );
@@ -65,15 +64,24 @@ protonet.controls.TextExtension.providers.Twitpic.prototype = {
   },
   
   getMedia: function() {
+    var thumbnailSize = {
+      width: protonet.controls.TextExtension.config.IMAGE_WIDTH,
+      height: protonet.controls.TextExtension.config.IMAGE_HEIGHT
+    };
+    
+    var thumbnail = protonet.media.Proxy.getImageUrl(
+      protonet.data.TwitPic.getPhotoUrl(this._extractId()),
+      thumbnailSize
+    );
+    
     var anchor = $("<a />", {
-        href: this.url,
-        target: "_blank"
-      }),
-      img = $("<img />", {
-        src: protonet.data.TwitPic.getPhotoUrl(this._extractId()),
-        width: 75,
-        height: 75
-      });
+      href: this.url,
+      target: "_blank"
+    });
+    
+    var img = $("<img />", $.extend({
+      src: thumbnail
+    }, thumbnailSize));
     
     return anchor.append(img);
   },

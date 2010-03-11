@@ -42,8 +42,9 @@ namespace :deploy do
     run "ln -s #{shared_path}/db #{release_path}/db/shared"
   end
   
-  task :start, :roles => :app do
-    # do nothing
+  desc "copy stage dependent config files"
+  task :copy_stage_config, :roles => :app do
+    run "if [ -f #{release_path}/config/stage_configs/#{stage}.rb ]; then cp #{release_path}/config/stage_configs/#{stage}.rb #{release_path}/config/environments/stage.rb; fi"
   end
   
   task :restart, :roles => :app do
@@ -60,6 +61,7 @@ namespace :passenger do
 end
 
 
+after "deploy:finalize_update", "deploy:copy_stage_config"
 after "deploy:finalize_update", "deploy:create_protonet_symlinks"
 after "deploy", "deploy:cleanup"
 after "deploy:start", "passenger:restart", "deploy:monit"

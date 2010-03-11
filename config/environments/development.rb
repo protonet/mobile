@@ -27,4 +27,5 @@ if File.exists?(File.join(RAILS_ROOT,'tmp', 'debug.txt'))
 end
 
 configatron.user_file_path = RAILS_ROOT + "/../shared/user-files"
-configatron.avatars_path = 'public/avatars'
+configatron.images.avatars_path   = "public/avatars"
+configatron.images.externals_path = "public/externals"

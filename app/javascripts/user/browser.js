@@ -61,5 +61,9 @@ protonet.user.Browser = {
     
     var canPlayOgg = new window.Audio().canPlayType("audio/ogg");
     return canPlayOgg != "no" && canPlayOgg != "";
+  },
+  
+  HAS_FILE_UPLOAD_ENCODING_ISSUES: function() {
+    return navigator.userAgent.indexOf("Safari") != -1 && navigator.userAgent.indexOf("Chrome") == -1;
   }
 };

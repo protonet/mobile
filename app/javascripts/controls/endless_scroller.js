@@ -39,16 +39,16 @@ protonet.controls.EndlessScroller = (function() {
       channels.each(function(i, channel){
         channel = $(channel);
         var firstTweet = channel.children("li:first-child");
-        if(firstTweet.attr("id").match(REG_EXP_TWEET_INDEX)) {
+        if (firstTweet.length && firstTweet.attr("id").match(REG_EXP_TWEET_INDEX)) {
           this._load(channel, {
             channel_id: channel.attr("id").match(REG_EXP_CHANNEL_ID)[1],
             first_id: firstTweet.attr("id").match(REG_EXP_TWEET_INDEX)[1]
-          }, "prepend");
+          }, "prepend", true);
         }
       }.bind(this));
     },
     
-    "_load": function(channel, params, method) {
+    "_load": function(channel, params, method, showNotification) {
       $.get("/tweets", params, function(data) {
         if ($.trim(data)) {
           channel[method](data);
@@ -57,6 +57,9 @@ protonet.controls.EndlessScroller = (function() {
           setTimeout(function() {
             protonet.controls.TextExtension.renderQueue();
             protonet.controls.PrettyDate.update();
+            if (showNotification) {
+              protonet.globals.communicationConsole.notification(params.channel_id);
+            }
           }, 100);
           this._observe();
         }
