@@ -17,6 +17,7 @@ protonet.controls.TextExtension.config = {
     "Break",
     "DailyMotion",
     "CollegeHumor",
+    "Image",
     "Link"
   ]
 };
@@ -29,6 +30,7 @@ protonet.controls.TextExtension.providers = {};
  * there's so much duplicated code right now. whatever. we have other prios.
  */
 //= require "providers/link.js"
+//= require "providers/image.js"
 //= require "providers/youtube.js"
 //= require "providers/vimeo.js"
 //= require "providers/maps.js"
