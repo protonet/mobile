@@ -26,12 +26,12 @@ protonet.controls.TextExtension.providers.Image.prototype = {
       var width = testImg.naturalWidth,
           height = testImg.naturalHeight;
       if (width > 300) {
+        height = height / 100 * (300 / (width / 100));
         width = 300;
-        height = height / 100 * (300 / (testImg.naturalWidth / 100));
       }
       if (height > 300) {
+        width = width / 100 * (300 / (height / 100));
         height = 300;
-        width = width / 100 * (300 / (testImg.naturalHeight / 100));
       }
       this._onSuccess(onSuccessCallback, {
         width: width,
