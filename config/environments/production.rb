@@ -33,4 +33,8 @@ configatron.user_file_path = (File.exists?("/home/protonet/dashboard/shared/user
 configatron.images.avatars_path   = "public/system/avatars"
 configatron.images.externals_path = "public/system/externals"
 
-configatron.ldap_active = false
+configatron.ldap.active = false
+
+# checks for stage specific config files
+stage_config = "#{RAILS_ROOT}/config/environments/stage.rb"
+eval(IO.read(stage_config), binding, stage_config) if test(?f, stage_config)

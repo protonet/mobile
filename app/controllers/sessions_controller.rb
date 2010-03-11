@@ -7,7 +7,12 @@ class SessionsController < ApplicationController
 
   def create
     logout_keeping_session!
-    user = User.authenticate(params[:login], params[:password])
+    if configatron.ldap.single_authentication
+      user = User.ldap_authenticate(params[:login], params[:password])
+    else
+      user = User.authenticate(params[:login], params[:password])
+    end
+
     if user
       # Protects against session fixation attacks, causes request forgery
       # protection if user resubmits an earlier form using back

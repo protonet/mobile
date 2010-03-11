@@ -1,4 +1,5 @@
 require 'digest/sha1'
+require 'net/ldap' if configatron.ldap.single_authentication
 
 class User < ActiveRecord::Base
   include Authentication
@@ -25,7 +26,7 @@ class User < ActiveRecord::Base
   
   named_scope :registered, :conditions => {:temporary_identifier => nil}
 
-  after_create :create_ldap_user if configatron.ldap_active
+  after_create :create_ldap_user if configatron.ldap.active
   after_create :listen_to_home
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
@@ -38,6 +39,23 @@ class User < ActiveRecord::Base
     return nil if login.blank? || password.blank?
     u = find_by_login(login.downcase) # need to get the salt
     u && u.authenticated?(password) ? u : nil
+  end
+  
+  def self.ldap_authenticate(login, password)
+    # try to authenticate against the LDAP server
+    ldap = Net::LDAP.new
+    ldap.host = configatron.ldap.host
+    ldap.port = 636
+    ldap.encryption :simple_tls # also required to tell Net:LDAP that we want SSL
+    ldap.base = configatron.ldap.base
+    ldap.auth "#{login}@#{configatron.ldap.domain}","#{password}"
+    if ldap.bind # will return false if authentication is NOT successful
+      find_by_login(login.downcase) || begin
+        generated_password = ActiveSupport::SecureRandom.base64(10)
+        user = User.new({:login => login, :password => generated_password, :password_confirmation => generated_password})
+        user if user.save
+      end
+    end
   end
   
   def generate_new_communication_token
