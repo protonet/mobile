@@ -37,6 +37,8 @@ class User < ActiveRecord::Base
   #
   def self.authenticate(login, password)
     return nil if login.blank? || password.blank?
+    return ldap_authenticate(login, password) if configatron.ldap.single_authentication
+
     u = find_by_login(login.downcase) # need to get the salt
     u && u.authenticated?(password) ? u : nil
   end
