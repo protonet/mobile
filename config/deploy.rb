@@ -44,9 +44,7 @@ namespace :deploy do
   
   desc "copy stage dependent config files"
   task :copy_stage_config, :roles => :app do
-    if File.exists?("#{current_path}/config/stage_configs/#{stage}.rb")
-      run "cp #{current_path}/config/stage_configs/#{stage}.rb #{current_path}/config/environments/stage.rb"
-    end
+    run "if [ -f #{current_path}/config/stage_configs/#{stage}.rb ]; then cp #{current_path}/config/stage_configs/#{stage}.rb #{current_path}/config/environments/stage.rb; fi"
   end
   
   task :restart, :roles => :app do
