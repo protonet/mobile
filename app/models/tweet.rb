@@ -9,7 +9,7 @@ class Tweet < ActiveRecord::Base
   attr_accessor :socket_id
   # validate_existence_of :channel
   
-  after_create :send_to_queue if configatron.messaging_bus_active
+  after_create :send_to_queue if configatron.messaging_bus_active == true
   
   def text_extension?
     !text_extension.blank?

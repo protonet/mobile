@@ -47,7 +47,7 @@
     <a href="#">SHOW NAVIGATION <span class="shortcut"></span></a>
   </div>
   
-  <%- if current_user.stranger? && !configatron.ldap.single_authentication -%>
+  <%- if current_user.stranger? && configatron.ldap.single_authentication != true -%>
     <% form_for :user, :url => users_path, :html => {:id => "registration-form"} do |f| -%>
       <fieldset>
         <legend>

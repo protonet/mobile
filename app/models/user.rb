@@ -1,5 +1,5 @@
 require 'digest/sha1'
-require 'net/ldap' if configatron.ldap.single_authentication
+require 'net/ldap' if configatron.ldap.single_authentication == true
 
 class User < ActiveRecord::Base
   include Authentication
@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
   
   named_scope :registered, :conditions => {:temporary_identifier => nil}
 
-  after_create :create_ldap_user if configatron.ldap.active
+  after_create :create_ldap_user if configatron.ldap.active == true
   after_create :listen_to_home
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
@@ -37,7 +37,7 @@ class User < ActiveRecord::Base
   #
   def self.authenticate(login, password)
     return nil if login.blank? || password.blank?
-    return ldap_authenticate(login, password) if configatron.ldap.single_authentication
+    return ldap_authenticate(login, password) if configatron.ldap.single_authentication == true
 
     u = find_by_login(login.downcase) # need to get the salt
     u && u.authenticated?(password) ? u : nil
