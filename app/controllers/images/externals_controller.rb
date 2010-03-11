@@ -1,4 +1,5 @@
 class Images::ExternalsController < ApplicationController
+  before_filter :set_cache_header, :only => [:show] if perform_caching
   
   def cache_page(content = nil, options = nil)
     return unless perform_caching && caching_allowed
@@ -48,4 +49,9 @@ class Images::ExternalsController < ApplicationController
       end
     end
   end
+  
+  private
+    def set_cache_header
+      response.headers['Cache-Control'] = 'public, max-age=31536000'
+    end
 end
