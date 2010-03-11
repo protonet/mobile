@@ -25,10 +25,14 @@ protonet.controls.InlineAutocompleter.prototype = {
     9,  // tab
     13, // return
     39, // right arrow
+    37, // left arrow
     46  // delete
   ],
   
-  TAB_KEY: 9,
+  END_SELECTION_KEYS: [
+    39, // right arrow
+    9   // tab
+  ],
   
   _observe: function() {
     this.input
@@ -47,13 +51,16 @@ protonet.controls.InlineAutocompleter.prototype = {
   
   _keyDown: function(event) {
     var pressedKey = event.which;
-    if (pressedKey == this.TAB_KEY && this._getSelectedText()) {
-      this._setCaretPosition(this.input.attr("selectionEnd"));
+    if ($.inArray(pressedKey, this.END_SELECTION_KEYS) != -1 && this._getSelectedText()) {
+      var valueLength = this.input.val().length;
+      var selectionEnd = this.input.attr("selectionEnd");
+      var suffix = valueLength > selectionEnd ? 1 : 0;
+      this._setCaretPosition(selectionEnd + suffix);
       event.preventDefault();
     }
   },
   
-  _findCompletions: function(skipped) {
+  _findCompletions: function() {
     var caretPosition = this._getCaretPosition();
     var value = this.input.val();
     var valueUntilCaret = value.substring(0, caretPosition);
@@ -89,7 +96,7 @@ protonet.controls.InlineAutocompleter.prototype = {
   
   _insert: function(str, position) {
     var oldValue = this.input.val();
-    var newValue = oldValue.substring(0, position) + str + oldValue.substring(position);
+    var newValue = oldValue.substring(0, position) + str + " " + oldValue.substring(position);
     this.input.val(newValue);
     this._markText(position, position + str.length);
   },

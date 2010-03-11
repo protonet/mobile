@@ -13,9 +13,15 @@ protonet.controls.TextExtension.providers.Image = function(url) {
 
 protonet.controls.TextExtension.providers.Image.prototype = {
   REG_EXP: /.{13,}\.(jpg|jpeg|gif|png)(\?.*)*/i,
+  MAX_SIZE: {
+    width: 325,
+    height: 325
+  },
   
   match: function() {
-    return this.REG_EXP.test(this.url);
+    return this.REG_EXP.test(this.url)
+      // Some wiki pages end with a typical image suffix (even though they are html pages)
+      && this.url.indexOf("/File:") == -1; 
   },
   
   loadData: function(onSuccessCallback, onFailureCallback) {
@@ -25,20 +31,20 @@ protonet.controls.TextExtension.providers.Image.prototype = {
     testImg.onload = function() {
       var width = testImg.naturalWidth,
           height = testImg.naturalHeight;
-      if (width > 300) {
-        height = height / 100 * (300 / (width / 100));
-        width = 300;
+      if (width > this.MAX_SIZE.width) {
+        height = height / 100 * (this.MAX_SIZE.width / (width / 100));
+        width = this.MAX_SIZE.width;
       }
-      if (height > 300) {
-        width = width / 100 * (300 / (height / 100));
-        height = 300;
+      if (height > this.MAX_SIZE.height) {
+        width = width / 100 * (this.MAX_SIZE.height / (height / 100));
+        height = this.MAX_SIZE.height;
       }
       this._onSuccess(onSuccessCallback, {
         width: width,
         height: height
       });
     }.bind(this);
-    testImg.src = this.url;
+    testImg.src = protonet.media.Proxy.getImageUrl(this.url);
   },
   
   _onSuccess: function(onSuccessCallback, previewSize) {

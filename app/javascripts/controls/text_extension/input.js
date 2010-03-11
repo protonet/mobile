@@ -117,7 +117,10 @@ protonet.controls.TextExtension.Input.prototype = {
       height: this.renderer.resultsElement.outerHeight(true).px(),
       opacity: 100
     }, 200, function() {
-      this.container.css("height", "auto");
+      this.container.css({
+        height: "auto",
+        overflow: ""
+      });
     }.bind(this));
   },
   
