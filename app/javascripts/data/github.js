@@ -16,7 +16,7 @@ protonet.data.GitHub = (function() {
       success: function(response) {
         var commit = response.commit;
         if (!commit) {
-          return onFailure(response);
+          return onFailure();
         }
         onSuccess(commit);
       },

@@ -1,6 +1,7 @@
 //= require "../../../data/github.js"
-//= require "../../../utils/convert_to_pretty_date.js"
 //= require "../../../utils/escape_html.js"
+//= require "../../../utils/parse_iso8601_date.js"
+//= require "../../../utils/convert_to_pretty_date.js"
 
 /**
  * GitHub Commits Provider
@@ -21,7 +22,6 @@ protonet.controls.TextExtension.providers.GithubCommits.prototype = {
   CLASS_NAME: "code",
   
   match: function() {
-    console.log(this.REG_EXP.test(this.url));
     return this.REG_EXP.test(this.url);
   },
   
@@ -51,7 +51,7 @@ protonet.controls.TextExtension.providers.GithubCommits.prototype = {
     this.data = data;
   },
   
-  _onFailure: function(response, onFailureCallback) {
+  _onFailure: function(onFailureCallback) {
     if (this._canceled) {
       return;
     }
@@ -64,6 +64,9 @@ protonet.controls.TextExtension.providers.GithubCommits.prototype = {
       return;
     }
     
+    response.committed_date = protonet.utils.parseISO8601Date(response.committed_date);
+    response.authored_date = protonet.utils.parseISO8601Date(response.authored_date);
+    
     $.extend(this.data, response);
     onSuccessCallback(this.data);
   },
@@ -71,6 +74,7 @@ protonet.controls.TextExtension.providers.GithubCommits.prototype = {
   getDescription: function() {
     var data = this.data,
         committer = data.committer || {},
+        
         date = protonet.utils.convertToPrettyDate(data.committed_date),
         description = committer.name + " (" + committer.login + "), " + data.repo + ", " + date;
     return String(description || "").truncate(200);
