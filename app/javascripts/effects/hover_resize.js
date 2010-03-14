@@ -32,7 +32,7 @@ protonet.effects.HoverResize.prototype = {
   
   _mouseOver: function() {
     this._over = true;
-    this.oldSize = {
+    this.oldSize = this.oldSize || {
       height: this.element.height(),
       width: this.element.width()
     };
