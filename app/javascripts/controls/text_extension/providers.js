@@ -17,6 +17,7 @@ protonet.controls.TextExtension.config = {
     "Break",
     "DailyMotion",
     "CollegeHumor",
+    "GithubCommits",
     "Image",
     "Link"
   ]
@@ -45,3 +46,4 @@ protonet.controls.TextExtension.providers = {};
 //= require "providers/break.js"
 //= require "providers/daily_motion.js"
 //= require "providers/college_humor.js"
+//= require "providers/github_commits.js"
