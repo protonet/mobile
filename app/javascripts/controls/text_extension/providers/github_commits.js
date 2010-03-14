@@ -2,6 +2,8 @@
 //= require "../../../utils/escape_html.js"
 //= require "../../../utils/parse_iso8601_date.js"
 //= require "../../../utils/convert_to_pretty_date.js"
+//= require "../../../utils/prettify_diff.js"
+
 
 /**
  * GitHub Commits Provider
@@ -127,7 +129,7 @@ protonet.controls.TextExtension.providers.GithubCommits.prototype = {
     
     if (file.diff) {
       var pre = $("<pre />", {
-        html: protonet.utils.escapeHtml(file.diff)
+        html: protonet.utils.prettifyDiff(protonet.utils.escapeHtml(file.diff))
       }).hide().appendTo(container);
       
       link.click(function(event) {

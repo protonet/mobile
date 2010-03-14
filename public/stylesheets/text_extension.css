@@ -260,16 +260,23 @@
 }
 
 .text-extension-results.code .media pre {
-  width: 447px;
-  max-height: 178px;
+  width: 460px;
+  max-height: 225px;
   overflow: auto;
   margin: 5px 0;
   font-size: 10px;
   background-color: #fff;
+  padding: 1px;
+  border: 1px solid #999;
+}
+
+.text-extension-results.code .media pre * {
+  white-space: pre;
+  font-family: monospace;
 }
 
 #text-extension-preview .text-extension-results.code .media pre {
-  width: 590px;
+  width: 586px;
 }
 
 /* =GITHUB COMMIT TEXT EXTENSION
