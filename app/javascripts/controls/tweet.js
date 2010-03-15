@@ -69,6 +69,11 @@ protonet.controls.Tweet = (function() {
         
     if (this.groupedTweet) {
       this.lastTweet.find(".message-text").prepend(messageContainer.html());
+      // not available if tweet is locally created i.e. users own tweet
+      //  filled by callback in send
+      if (this.id) {
+        this.replace_first_tweet_id_in_merge(this.id);
+      }
     } else {
       this.channelUl.prepend(this.listElement);
     }
@@ -96,12 +101,16 @@ protonet.controls.Tweet = (function() {
           this.htmlId = this.htmlId.replace(ID_REG_EXP, data);
           this.listElement.attr("id", this.htmlId);
         } else {
-          var wrapperId = this.lastTweet.attr("id");
-          var firstId = wrapperId.match(TWEET_REG_EXP)[1];
-          var htmlId = wrapperId.replace("tweet-" + firstId, "tweet-" + data);
-          this.lastTweet.attr("id", htmlId);
+          this.replace_first_tweet_id_in_merge(data);
         }
       }.bind(this));
+    },
+    
+    replace_first_tweet_id_in_merge: function(id) {
+      var wrapperId = this.lastTweet.attr("id");
+      var firstId = wrapperId.match(TWEET_REG_EXP)[1];
+      var htmlId = wrapperId.replace("tweet-" + firstId, "tweet-" + id);
+      this.lastTweet.attr("id", htmlId);
     }
   };
   
