@@ -42,6 +42,16 @@ protonet.controls.InlineAutocompleter.prototype = {
   
   _keyUp: function(event) {
     var pressedKey = event.which;
+    var value = this.input.val();
+    var caretPosition = this._getCaretPosition();
+    var currentInputCharacter = value.substring(caretPosition - 1, caretPosition).toLowerCase();
+    var currentEventCharacter = String.fromCharCode(pressedKey).toLowerCase();
+    
+    // Ok, let's check if the event character equals the last character in the input
+    if (currentInputCharacter !== currentEventCharacter) {
+      return;
+    }
+    
     if ($.inArray(pressedKey, this.IGNORE_KEYS) != -1) {
       return;
     }
@@ -54,8 +64,8 @@ protonet.controls.InlineAutocompleter.prototype = {
     if ($.inArray(pressedKey, this.END_SELECTION_KEYS) != -1 && this._getSelectedText()) {
       var valueLength = this.input.val().length;
       var selectionEnd = this.input.attr("selectionEnd");
-      var suffix = valueLength > selectionEnd ? 1 : 0;
-      this._setCaretPosition(selectionEnd + suffix);
+      this._insert(" ", selectionEnd);
+      this._setCaretPosition(selectionEnd + 1);
       event.preventDefault();
     }
   },
@@ -96,7 +106,7 @@ protonet.controls.InlineAutocompleter.prototype = {
   
   _insert: function(str, position) {
     var oldValue = this.input.val();
-    var newValue = oldValue.substring(0, position) + str + " " + oldValue.substring(position);
+    var newValue = oldValue.substring(0, position) + str + oldValue.substring(position);
     this.input.val(newValue);
     this._markText(position, position + str.length);
   },
