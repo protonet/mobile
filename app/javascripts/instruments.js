@@ -5,6 +5,7 @@
 //= require "controls/endless_scroller.js"
 //= require "controls/user_widget.js"
 //= require "controls/pretty_date.js"
+//= require "controls/fluid.js"
 //= require "lib/jQuery.dPassword.js"
 
 
@@ -48,6 +49,12 @@ $(function() {
   }, 30000);
 });
 
+// Initialize fluid if the app is running in a fluid container
+$(function() {
+  if(protonet.config.fluid) {
+    new protonet.controls.Fluid();
+  }
+});
 
 // Initialize password stuff
 $(function() {

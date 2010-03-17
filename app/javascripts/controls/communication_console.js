@@ -71,15 +71,18 @@ protonet.controls.CommunicationConsole.prototype = {
     message.text_extension = message.text_extension && JSON.parse(message.text_extension);
     new protonet.controls.Tweet(message);
     
-    this.notification(message.channel_id);
+    this.notification(message.channel_id, message);
   },
   
-  "notification": function(channelId) {
+  "notification": function(channelId, message) {
     var currentChannelId = protonet.globals.channelSelector.getCurrentChannelId();
     channelId = channelId || currentChannelId;
     var isCurrentChannel = channelId == currentChannelId;
     
     if (!protonet.utils.isWindowFocused() && isCurrentChannel) {
+      // Send general notification
+      $(this).trigger('new_message', message);
+
       // Show fancy animated text in browser title
       protonet.controls.BrowserTitle.set("+++ New messages", true, true);
       
