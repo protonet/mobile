@@ -14,6 +14,17 @@ class TweetsController < ApplicationController
   def new
   end
 
+  def show
+    t = Tweet.find params[:id]
+    if t
+      render :partial => '/tweets/tweet', :locals => {:message => t.message, :avatar => t.user.active_avatar_url,
+        :author => t.author, :created_at => t.created_at,
+        :html_id => "tweet-#{t.id}-#{last_id}", :show_wrapper_start => show_wrapper_start, :show_wrapper_end => show_wrapper_end }
+    else
+      render :text => ''
+    end
+  end
+
   def create
     author = current_user.display_name
     channels = Channel.find(:all, :conditions => ["id in (?)", [params[:message_channel_id]] ])
