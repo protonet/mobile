@@ -78,11 +78,15 @@ protonet.controls.CommunicationConsole.prototype = {
     var currentChannelId = protonet.globals.channelSelector.getCurrentChannelId();
     channelId = channelId || currentChannelId;
     var isCurrentChannel = channelId == currentChannelId;
-    
-    if (!protonet.utils.isWindowFocused() && isCurrentChannel) {
-      // Send general notification
-      $(this).trigger('new_message', message);
 
+    // Send general notification
+    if (!protonet.utils.isWindowFocused()) {
+      $(this).trigger('new_message', message);
+    }
+
+
+
+    if (!protonet.utils.isWindowFocused() && isCurrentChannel) {
       // Show fancy animated text in browser title
       protonet.controls.BrowserTitle.set("+++ New messages", true, true);
       
