@@ -15,11 +15,9 @@ class TweetsController < ApplicationController
   end
 
   def show
-    t = Tweet.find params[:id]
-    if t
-      render :partial => '/tweets/tweet', :locals => {:message => t.message, :avatar => t.user.active_avatar_url,
-        :author => t.author, :created_at => t.created_at,
-        :html_id => "tweet-#{t.id}", :show_wrapper_start => false, :show_wrapper_end => false }
+    tweet = Tweet.find(params[:id])
+    if tweet
+      render :partial => 'tweet_list', :locals => {:tweets => [tweet], :channel => Channel.find(tweet.channels.first.id)}
     else
       render :text => ''
     end
