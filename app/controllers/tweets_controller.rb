@@ -19,7 +19,7 @@ class TweetsController < ApplicationController
     if t
       render :partial => '/tweets/tweet', :locals => {:message => t.message, :avatar => t.user.active_avatar_url,
         :author => t.author, :created_at => t.created_at,
-        :html_id => "tweet-#{t.id}-#{last_id}", :show_wrapper_start => show_wrapper_start, :show_wrapper_end => show_wrapper_end }
+        :html_id => "tweet-#{t.id}", :show_wrapper_start => false, :show_wrapper_end => false }
     else
       render :text => ''
     end
