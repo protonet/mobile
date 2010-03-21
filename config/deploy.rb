@@ -2,8 +2,7 @@ set :application, "dashboard"
 set :repository,  "git@github.com:dudemeister/protonet-dashboard.git"
 
 # deploy paths are set in the stage definitions
-set :deploy_via, :copy
-set :copy_cache, true
+set :deploy_via, :remote_cache
 set :copy_exclude, ".git/*"
 set :git_enable_submodules, 1
 
