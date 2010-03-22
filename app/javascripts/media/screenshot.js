@@ -30,7 +30,7 @@ protonet.media.ScreenShot = (function() {
    * If the image isn't available after maxChecks an failure callback is invoked
    */
   function fetch(url, size, options) {
-    var checks = 0, maxChecks = 10, interval = 3000;
+    var checks = 0, maxChecks = 6, interval = 2500;
     options = $.extend({ success: $.noop, failure: $.noop }, options);
     
     var checkAvailability = function() {
