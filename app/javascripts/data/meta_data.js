@@ -15,8 +15,8 @@
  *
  */
 protonet.data.MetaData = {
-  QUERY: "SELECT * FROM html WHERE url = '{url}' AND xpath='//head' LIMIT 1",
-  REL_MATCH: (/video_src|image_src|audio_src/i),
+  QUERY: "SELECT * FROM html WHERE url = '{url}' AND xpath='descendant-or-self::title | descendant-or-self::meta | descendant-or-self::link'",
+  LINK_REL: ["video_src", "image_src", "audio_src"],
   
   get: function(url, onSuccess, onFailure) {
     var query = this.QUERY.replace("{url}", url);
@@ -24,23 +24,19 @@ protonet.data.MetaData = {
   },
   
   _success: function(onSuccess, onFailure, response) {
-    var head = response.head,
-        data = {};
-    if (!head) {
-      onFailure();
-    }
+    var data = {};
     
-    var title = (head.title && head.title.content) || head.title;
-    data.title = $.trim(String(title || "").replace(/^,+/, "").replace(/,+$/, ""));
+    var title = (response.title && response.title.content) || response.title;
+    data.title = $.makeArray(title)[0];
     
-    $.each($.makeArray(head.meta), function(i, metaTag) {
+    $.each($.makeArray(response.meta), function(i, metaTag) {
       if (metaTag.name && metaTag.content) {
         data[metaTag.name] = $.trim(String(metaTag.content || ""));
       }
     });
     
-    $.each($.makeArray(head.link), function(i, linkTag) {
-      if (linkTag.rel && linkTag.href && this.REL_MATCH.test(linkTag.rel)) {
+    $.each($.makeArray(response.link), function(i, linkTag) {
+      if (linkTag.rel && linkTag.href && $.inArray(linkTag.rel, this.LINK_REL) != -1) {
         data[linkTag.rel] = $.trim(String(linkTag.href || ""));
       }
     }.bind(this));
