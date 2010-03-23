@@ -21,6 +21,11 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     height: protonet.controls.TextExtension.config.IMAGE_HEIGHT
   },
   
+  previewSize: {
+     width: 280,
+     height: 200
+  },
+  
   match: function() {
     return !!this.url;
   },
@@ -82,13 +87,14 @@ protonet.controls.TextExtension.providers.Link.prototype = {
       src: protonet.media.Proxy.getImageUrl(thumbnail, this.thumbnailSize)
     }, this.thumbnailSize));
     
+    new protonet.effects.HoverResize(img, this.previewSize, protonet.media.Proxy.getImageUrl(thumbnail));
+    
     return anchor.append(img);
   },
   
   _getMediaByScreenShot: function() {
     var thumbnail = this.data.thumbnail;
     var thumbnailReady = thumbnail + "&loaded";
-    var previewSize = { width: 280, height: 200 };
     
     var anchor = $("<a />", {
       href: this.url,
@@ -106,27 +112,27 @@ protonet.controls.TextExtension.providers.Link.prototype = {
     };
     
     var observeImage = function(previewScreenShotUrl) {
-      new protonet.effects.HoverResize(img, previewSize, previewScreenShotUrl);
-    };
+      new protonet.effects.HoverResize(img, this.previewSize, previewScreenShotUrl);
+    }.bind(this);
     
     var hideIndicator = function() {
       anchor.removeClass("fetching");
     };
     
     var renderAndObserveImage = function() {
-      var previewUrl = protonet.media.Proxy.getImageUrl(thumbnailReady, previewSize);
+      var previewUrl = protonet.media.Proxy.getImageUrl(thumbnailReady, this.previewSize);
       
       renderImage(thumbnailReady);
       hideIndicator();
       observeImage(previewUrl);
-    };
+    }.bind(this);
     
     var hideIndicatorAndObserveImage = function() {
-      var previewUrl = protonet.media.Proxy.getImageUrl(thumbnail, previewSize);
+      var previewUrl = protonet.media.Proxy.getImageUrl(thumbnail, this.previewSize);
       
       hideIndicator();
       observeImage(previewUrl);
-    };
+    }.bind(this);
     
     protonet.media.Proxy.isImageAvailable(thumbnailReady, function(status) {
       if (status) {

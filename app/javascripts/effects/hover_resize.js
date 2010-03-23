@@ -1,3 +1,5 @@
+//= require "../utils/to_max_size.js"
+
 protonet.effects.HoverResize = function(elementToResize, hoverSize, hoverSrc) {
   this.element = elementToResize;
   this.size = hoverSize;
@@ -39,7 +41,7 @@ protonet.effects.HoverResize.prototype = {
     };
     
     this._preload(function(naturalSize) {
-      this.newSize = this.size || naturalSize;
+      this.newSize = this.newSize || protonet.utils.toMaxSize((this.size || naturalSize), this.size);
       
       if (!this.newSize) {
         return;

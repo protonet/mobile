@@ -14,8 +14,9 @@ protonet.controls.TextExtension.providers.Doodle.prototype = {
    * http://www.doodle.com/participation.html?pollId=w6azsxu3bmdw6zsw
    * http://www.doodle.com/embedPoll.html?pollId=w6azsxu3bmdw6zsw
    * http://www.doodle.com/w6azsxu3bmdw6zsw
+   * http://doodle.com/2tx7z9y5uc22zqic?adminKey=&participantKey=
    */
-  REG_EXP: /doodle\.com\/(participation\.html\?pollId\=)*([\w]+?$)/i,
+  REG_EXP: /doodle\.com\/(participation\.html\?pollId\=)*([\w]+?($|\?))/i,
   
   match: function() {
     return this.REG_EXP.test(this.url);

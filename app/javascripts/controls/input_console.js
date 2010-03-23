@@ -57,7 +57,7 @@ protonet.controls.InputConsole.prototype = {
     console.log("sending via js");
     this.parent_widget.sendTweetFromInput();
 
-    clearTimeout(this.write_timeout);
+    clearTimeout(this.writeTimeout);
     this.writing = false;
     this.recheck = false;
 
