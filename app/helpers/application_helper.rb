@@ -27,7 +27,7 @@ module ApplicationHelper
   end
   
   def highlight_replies(str)
-    str.gsub(/(\s|^)@([^@\s$"']+)/) {|s|
+    str.gsub(/(\s|^)@([^@\s$"')]+)/) {|s|
       $1 + "@" + '<span class="reply">' + $2 + '</span>';
     }
   end
@@ -36,7 +36,7 @@ module ApplicationHelper
     message = h(message)
     message = highlight_replies(message)
     message = auto_link(message, :urls, :target => '_blank') { |url|
-      CGI.unescapeHTML(truncate(url, 40))
+      CGI.unescapeHTML(truncate(url, 55))
     }
     message = nl2br(message)
     message = auto_link_file_paths(message)

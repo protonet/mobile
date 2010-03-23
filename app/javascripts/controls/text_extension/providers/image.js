@@ -1,5 +1,6 @@
 //= require "../../../effects/hover_resize.js"
 //= require "../../../utils/parse_url.js"
+//= require "../../../utils/to_max_size.js"
 
 /**
  * Image Provider
@@ -21,7 +22,7 @@ protonet.controls.TextExtension.providers.Image.prototype = {
   match: function() {
     return this.REG_EXP.test(this.url)
       // Some wiki pages end with a typical image suffix (even though they are html pages)
-      && this.url.indexOf("/File:") == -1; 
+      && this.url.indexOf("/File:") == -1;
   },
   
   loadData: function(onSuccessCallback, onFailureCallback) {
@@ -29,20 +30,13 @@ protonet.controls.TextExtension.providers.Image.prototype = {
     var testImg = new Image();
     testImg.onerror = this._onFailure.bind(this, onFailureCallback);
     testImg.onload = function() {
-      var width = testImg.naturalWidth,
-          height = testImg.naturalHeight;
-      if (width > this.MAX_SIZE.width) {
-        height = height / 100 * (this.MAX_SIZE.width / (width / 100));
-        width = this.MAX_SIZE.width;
-      }
-      if (height > this.MAX_SIZE.height) {
-        width = width / 100 * (this.MAX_SIZE.height / (height / 100));
-        height = this.MAX_SIZE.height;
-      }
-      this._onSuccess(onSuccessCallback, {
-        width: width,
-        height: height
-      });
+      // Calculate width and height based on provided maximum size
+      var dimensions = protonet.utils.toMaxSize({
+        width: testImg.naturalWidth,
+        height: testImg.naturalHeight
+      }, this.MAX_SIZE);
+      
+      this._onSuccess(onSuccessCallback, dimensions);
     }.bind(this);
     testImg.src = protonet.media.Proxy.getImageUrl(this.url);
   },

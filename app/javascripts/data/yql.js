@@ -6,7 +6,7 @@ protonet.data.YQL.Query = function(query) {
 
 protonet.data.YQL.Query.prototype = {
   TIMEOUT: 5000,
-  YQL_URL: "http://query.yahooapis.com/v1/public/yql?format=json&callback=?",
+  YQL_URL: "http://query.yahooapis.com/v1/public/yql?format=json&_maxage=3600&diagnostics=false&callback=?",
   
   execute: function(onSuccess, onFailure) {
     $.jsonp({

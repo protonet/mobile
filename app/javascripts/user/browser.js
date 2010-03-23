@@ -65,5 +65,9 @@ protonet.user.Browser = {
   
   HAS_FILE_UPLOAD_ENCODING_ISSUES: function() {
     return navigator.userAgent.indexOf("Safari") != -1 && navigator.userAgent.indexOf("Chrome") == -1;
+  },
+  
+  SUPPORTS_FLUID: function() {
+    return !!window.fluid;
   }
 };

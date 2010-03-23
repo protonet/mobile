@@ -1,6 +1,6 @@
 protonet.utils.autoLink = (function() {
   var REG_EXP = /(\b(((https?|ftp):\/\/)|(www\.))[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim, // old /(\S+\.{1}[^\s\,\.\!]+)/g
-      MAX_DISPLAY_LENGTH = 40;
+      MAX_DISPLAY_LENGTH = 55;
   
   return function(str) {
     return str.replace(REG_EXP, function(url) {

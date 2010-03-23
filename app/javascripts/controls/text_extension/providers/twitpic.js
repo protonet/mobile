@@ -1,4 +1,5 @@
 //= require "../../../data/twitpic.js"
+//= require "../../../effects/hover_resize.js"
 
 /**
  * Twitpic Provider
@@ -69,19 +70,29 @@ protonet.controls.TextExtension.providers.Twitpic.prototype = {
       height: protonet.controls.TextExtension.config.IMAGE_HEIGHT
     };
     
-    var thumbnail = protonet.media.Proxy.getImageUrl(
-      protonet.data.TwitPic.getPhotoUrl(this._extractId()),
-      thumbnailSize
-    );
+    var previewSize = {
+      width: 150,
+      height: 150
+    };
+    
+    var photo = protonet.data.TwitPic.getPhotoUrl(this._extractId());
+    
+    var thumbnail = protonet.media.Proxy.getImageUrl(photo, thumbnailSize);
+    var preview = protonet.media.Proxy.getImageUrl(photo);
     
     var anchor = $("<a />", {
       href: this.url,
       target: "_blank"
+    }).css({
+      width: thumbnailSize.width.px(),
+      height: thumbnailSize.height.px()
     });
     
     var img = $("<img />", $.extend({
       src: thumbnail
     }, thumbnailSize));
+    
+    new protonet.effects.HoverResize(img, previewSize, preview);
     
     return anchor.append(img);
   },

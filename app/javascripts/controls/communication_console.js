@@ -31,6 +31,14 @@ protonet.controls.CommunicationConsole = function() {
   // active informations
   this.active_feed_id = 1; // home
   this.feeds = protonet.config.feed_ids || {};
+  
+  /**
+   * TODO:
+   * Set all custom events on the window object, to make it as independent as possible
+   */
+  $(window).focus(function() {
+    $(this).trigger("reset_messages");
+  }.bind(this));
 };
 
 protonet.controls.CommunicationConsole.prototype = {
@@ -71,23 +79,30 @@ protonet.controls.CommunicationConsole.prototype = {
     message.text_extension = message.text_extension && JSON.parse(message.text_extension);
     new protonet.controls.Tweet(message);
     
-    this.notification(message.channel_id);
+    this.notification(message.channel_id, message);
   },
   
-  "notification": function(channelId) {
+  "notification": function(channelId, message) {
     var currentChannelId = protonet.globals.channelSelector.getCurrentChannelId();
     channelId = channelId || currentChannelId;
     var isCurrentChannel = channelId == currentChannelId;
+
+    // Send general notification
+    if (!protonet.utils.isWindowFocused()) {
+      $(this).trigger("new_message", message);
+    }
     
     if (!protonet.utils.isWindowFocused() && isCurrentChannel) {
       // Show fancy animated text in browser title
       protonet.controls.BrowserTitle.set("+++ New messages", true, true);
       
       // Play sound (some browsers don't support mp3 but ogg)
-      if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_OGG()) {
-        new Audio("/sounds/notification.ogg").play();
-      } else if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_MP3()) {
-        new Audio("/sounds/notification.mp3").play();
+      if (protonet.user.Config.get("sound")) {
+        if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_OGG()) {
+          new Audio("/sounds/notification.ogg").play();
+        } else if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_MP3()) {
+          new Audio("/sounds/notification.mp3").play();
+        }
       }
     }
     

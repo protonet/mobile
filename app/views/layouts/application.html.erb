@@ -17,7 +17,7 @@
     <script type="text/javascript">//<![CDATA[
       var protonet = protonet || {};
       protonet.config = {
-        base_url: "http://" + location.host + (location.port ? ":" + location.port : ""),
+        base_url: location.protocol + "//" + location.host,
         dispatching_server: '<%= request.env["SERVER_NAME"] %>',
         token: '<%= current_user.communication_token %>',
         user_name: '<%= current_user.display_name %>',
@@ -61,8 +61,10 @@
       <%- end -%>
     <% else %>
       <div id="mini-menu">
-        Hello <%= link_to current_user.display_name, preferences_path %>:&nbsp;
-        <%= link_to 'logout', :controller => :sessions, :action => :destroy %>
+        <strong>Hello <%= link_to current_user.display_name, preferences_path %>:</strong>
+        <span class="option-links">
+          <%= link_to 'logout', :controller => :sessions, :action => :destroy %>
+        </span>
       </div>
     <% end %>
 

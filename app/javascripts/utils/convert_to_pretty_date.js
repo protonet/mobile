@@ -19,6 +19,8 @@ protonet.utils.convertToPrettyDate = (function() {
   }
   
   return function(date) {
+    var origin = date;
+    
     if (date.constructor != Date) {
       date = new Date(date);
     }
@@ -27,7 +29,7 @@ protonet.utils.convertToPrettyDate = (function() {
         difference = (now - backThen) / 1000;
     
     if (isNaN(backThen)) {
-      throw new Error("convertToPrettyDate: Given date is invalid");
+      return origin;
     }
     
     if (difference < ONE_MINUTE) {

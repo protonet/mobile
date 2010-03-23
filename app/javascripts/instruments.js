@@ -1,3 +1,5 @@
+//= require "user/config.js"
+//= require "user/browser.js"
 //= require "dispatching/dispatching_system.js"
 //= require "controls/communication_console.js"
 //= require "controls/text_extension.js"
@@ -5,10 +7,17 @@
 //= require "controls/endless_scroller.js"
 //= require "controls/user_widget.js"
 //= require "controls/pretty_date.js"
+//= require "controls/fluid.js"
 //= require "lib/jQuery.dPassword.js"
 
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
+
+// Initialize configuration stuff
+$(function() {
+  protonet.user.Config.initialize();
+});
+
 
 // Initialize communication stuff
 $(function() {
@@ -48,6 +57,12 @@ $(function() {
   }, 30000);
 });
 
+// Initialize fluid if the app is running in a fluid container
+$(function() {
+  if (protonet.user.Browser.SUPPORTS_FLUID()) {
+    new protonet.controls.Fluid();
+  }
+});
 
 // Initialize password stuff
 $(function() {
