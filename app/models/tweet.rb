@@ -5,6 +5,7 @@ class Tweet < ActiveRecord::Base
   has_many    :channels, :through => :says
   
   named_scope :recent, :order => "tweets.id DESC"
+  validates_presence_of :message
   
   attr_accessor :socket_id
   # validate_existence_of :channel
