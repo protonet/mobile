@@ -931,6 +931,24 @@ h2 {
   top: 10px;
 }
 
+#mini-menu strong a {
+  font-weight: bold;
+}
+
+#mini-menu .option-links {
+  margin-left: 6px;
+}
+
+#mini-menu .option-links a {
+  color: #444;
+  padding-right: 3px;
+  border-right: 1px solid #999;
+}
+
+#mini-menu .option-links a:last-child {
+  border-right: 0;
+}
+
 
 /* =MESSAGE FORM
 --------------------------------------------------------------------------- */

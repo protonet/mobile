@@ -39,9 +39,6 @@ protonet.controls.BrowserTitle = (function() {
   }
   
   function _focus() {
-    // trigger reset_messages event for other part of the system to catch on
-    $(protonet.globals.communicationConsole).trigger("reset_messages");
-
     // Timeout is needed for Safari (who otherwise doesn't restore the title)
     setTimeout(function() {
       autoRestore && restore();

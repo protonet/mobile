@@ -1,3 +1,5 @@
+//= require "user/config.js"
+//= require "user/browser.js"
 //= require "dispatching/dispatching_system.js"
 //= require "controls/communication_console.js"
 //= require "controls/text_extension.js"
@@ -10,6 +12,12 @@
 
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
+
+// Initialize configuration stuff
+$(function() {
+  protonet.user.Config.initialize();
+});
+
 
 // Initialize communication stuff
 $(function() {
@@ -51,7 +59,7 @@ $(function() {
 
 // Initialize fluid if the app is running in a fluid container
 $(function() {
-  if(protonet.config.fluid) {
+  if (protonet.user.Browser.SUPPORTS_FLUID()) {
     new protonet.controls.Fluid();
   }
 });
