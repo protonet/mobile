@@ -1,5 +1,5 @@
 protonet.utils.highlightReplies = (function() {
-  var REG_EXP = /(\s|^)@([^@\s$"']+)/g,
+  var REG_EXP = /(\s|^)@([^@\s$"')]+)/g,
       TEMPLATE = '<span class="reply">{reply}</span>';
   
   return function(str) {

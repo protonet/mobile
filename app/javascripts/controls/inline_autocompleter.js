@@ -75,7 +75,13 @@ protonet.controls.InlineAutocompleter.prototype = {
     var value = this.input.val();
     var valueUntilCaret = value.substring(0, caretPosition);
     var valueFromCaret = value.substring(caretPosition);
-    var lastWhiteSpace = valueUntilCaret.lastIndexOf(" ") + 1; // TODO: honor also line breaks!
+    var lastWhiteSpace = Math.max(
+      valueUntilCaret.lastIndexOf(" "),
+      valueUntilCaret.lastIndexOf("\n"),
+      // we also handle opening parenthesis and brackets as "white space"
+      valueUntilCaret.lastIndexOf("("),
+      valueUntilCaret.lastIndexOf("[")
+    ) + 1;
     var prefix = valueUntilCaret.substring(lastWhiteSpace, caretPosition);
     prefix = this.options.lowerCase ? prefix.toLowerCase() : prefix;
     
