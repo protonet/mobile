@@ -57,4 +57,19 @@ class UsersController < ApplicationController
     User.delete_strangers_older_than_two_days!
     redirect_to :action => 'index'
   end
+
+  def list_channels
+    respond_to do |format|
+      format.json do
+        if current_user
+          channels = current_user.channels.collect { |c| {:id => c.id, :name => c.name, :description => c.description}}
+          render :json => {:channels => channels.to_json}
+        else
+          # TODO: remove hardcoded channel info, does it make sense to use Channel.find :first? what if it gets deleted later?
+          render :json => {:channels => [{:id => 1, :name => 'home', :description => 'your homebase'}]}
+        end
+      end
+    end
+  end
+
 end

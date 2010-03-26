@@ -39,23 +39,6 @@ class ChannelsController < ApplicationController
     redirect_to :action => 'index'
   end
 
-  def list
-    # TODO: using the token this way is ... well insecure?
-    user = User.find_by_communication_token params[:token]
-
-    respond_to do |format|
-      format.json do
-        if user
-          channels = user.channels.collect { |c| {:id => c.id, :name => c.name, :description => c.description}}
-          render :json => {:channels => channels.to_json}
-        else
-          # TODO: remove hardcoded channel info, does it make sense to use Channel.find :first? what if it gets deleted later?
-          render :json => {:channels => [{:id => 1, :name => 'home', :description => 'your homebase'}]}
-        end
-      end
-    end
-  end
-  
   def search
     @channels = Channel.all(:conditions => ["description LIKE ?", "%#{params[:description]}%"])
     render :index
