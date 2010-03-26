@@ -43,5 +43,12 @@ class ChannelsController < ApplicationController
     @channels = Channel.all(:conditions => ["description LIKE ?", "%#{params[:description]}%"])
     render :index
   end
-  
+
+  def list
+    respond_to do |format|
+      format.json do
+        render :json => {:channels => Channel.all.to_json}
+      end
+    end
+  end
 end

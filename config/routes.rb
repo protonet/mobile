@@ -3,6 +3,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'channels/search', :controller => 'channels', :action => 'search'
   
   map.list_channels 'channels/list.:format', :controller => 'channels', :action => 'list'
+  map.list_user_channels 'users/list_channels.:format', :controller => 'users', :action => 'list_channels'
   map.resources :channels do |channels|
     channels.resources :tweets
   end
