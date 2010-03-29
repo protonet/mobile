@@ -11,7 +11,7 @@ configatron.messaging_bus_active = true
 jabber = Jabber::Simple.new("xe.bot@im.xing.com", 'vv7/äÖ5!')
 
 muc = Jabber::MUC::SimpleMUCClient.new(jabber.client)
-muc.join("test@conference.im.xing.com/robot")
+muc.join("askrails@conference.im.xing.com/robot")
 
 EM.run do
   
