@@ -1,5 +1,7 @@
 //= require "../utils/escape_html.js"
 
+CHANNELID = 1; 
+
 protonet.controls.FileWidget = function() {
   this.wrapper = $("#file-list");
   this.file_list = this.wrapper.find('ul.root');
@@ -33,10 +35,16 @@ protonet.controls.FileWidget.prototype = {
     }
   },
   
+  "channelizePath": function(path) {
+    var trailingSlash = (path[0] == '/' ? '' : '/');
+    console.log('/' + CHANNELID + trailingSlash + path)
+    return '/' + CHANNELID + trailingSlash + path;
+  },
+  
   "gotoPath": function(path) {
     path = path || '';
     this.file_list.fadeTo(100, 0.2);
-    jQuery.getJSON('system/files', {"path": path}, this.renderResponse.bind(this));
+    jQuery.getJSON('system/files', {"path": this.channelizePath(path)}, this.renderResponse.bind(this));
   },
   
   "observeBackButton": function() {
@@ -154,7 +162,7 @@ protonet.controls.FileWidget.prototype = {
           url: create_folder_url,
           data: {
             directory_name:     new_folder_input.val(),
-            file_path:          this.current_path,
+            file_path:          this.channelizePath(this.current_path),
             authenticity_token: protonet.config.authenticity_token
           },
           beforeSend: function() {
@@ -185,7 +193,7 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "getFilePathFor": function(fileName) {
-    return this.current_path + '/' + fileName;
+    return this.channelizePath(this.current_path) + '/' + fileName;
   },
   
   "getDownloadPathFor": function(fileName) {
