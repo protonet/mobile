@@ -10,3 +10,4 @@ protonet.data           = protonet.data           || {};
 protonet.media          = protonet.media          || {};
 protonet.effects        = protonet.effects        || {};
 protonet.dispatching    = protonet.dispatching    || {};
+protonet.notifications  = protonet.notifications  || {};

@@ -26,7 +26,8 @@ protonet.controls.ChannelSelector = (function() {
             index = parseInt(href.match(REG_EXP_ELEMENT_INDEX)[1], 10),
             // get id of channel
             channelId = parseInt(href.match(REG_EXP_CHANNEL_ID)[1], 10);
-
+            // trigger global notification
+            $(protonet.globals.notifications).trigger("channel.changed", channelId);
         feedHolder.animate({
           left: index * -channelWidth
         }, "fast", function() {

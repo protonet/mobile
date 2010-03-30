@@ -1,12 +1,12 @@
 //= require "../utils/escape_html.js"
 
-CHANNELID = 1; 
-
 protonet.controls.FileWidget = function() {
   this.wrapper = $("#file-list");
-  this.file_list = this.wrapper.find('ul.root');
-  this.hierarchy_bar = this.wrapper.find('#file-navigation .hierarchy');
-  this.search_input  = this.wrapper.find('#file-navigation input');
+  this.file_list        = this.wrapper.find('ul.root');
+  this.hierarchy_bar    = this.wrapper.find('#file-navigation .hierarchy');
+  this.search_input     = this.wrapper.find('#file-navigation input');
+  // get channel id upon instantiation
+  this.currentChannelId = protonet.globals.channelSelector.getCurrentChannelId();
   
   this.observeBackButton();
   this.observeFolderCreateButton();
@@ -14,6 +14,10 @@ protonet.controls.FileWidget = function() {
   this.addPathBlob('');
   this.initUpload();
   this.initContextMenu();
+  $(protonet.globals.notifications).bind("channel.changed", function(e, id) {
+    this.currentChannelId = id;
+    this.gotoPath();
+  }.bind(this));
 };
 
 protonet.controls.FileWidget.prototype = {
@@ -37,8 +41,7 @@ protonet.controls.FileWidget.prototype = {
   
   "channelizePath": function(path) {
     var trailingSlash = (path[0] == '/' ? '' : '/');
-    console.log('/' + CHANNELID + trailingSlash + path)
-    return '/' + CHANNELID + trailingSlash + path;
+    return '/' + this.currentChannelId + trailingSlash + path;
   },
   
   "gotoPath": function(path) {

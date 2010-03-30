@@ -1,5 +1,6 @@
 //= require "user/config.js"
 //= require "user/browser.js"
+//= require "notifications/notifications.js"
 //= require "dispatching/dispatching_system.js"
 //= require "controls/communication_console.js"
 //= require "controls/text_extension.js"
@@ -21,8 +22,9 @@ $(function() {
 
 // Initialize communication stuff
 $(function() {
+  protonet.globals.notifications        = new protonet.notifications.Central();
   protonet.globals.communicationConsole = new protonet.controls.CommunicationConsole();
-  protonet.globals.dispatcher = new protonet.dispatching.DispatchingSystem();
+  protonet.globals.dispatcher           = new protonet.dispatching.DispatchingSystem();
 });
 
 
