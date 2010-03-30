@@ -15,3 +15,4 @@ public/images/avatars/*
 public/externals/*
 public/images/externals/*
 mkmf.log
+db/schema.rb
