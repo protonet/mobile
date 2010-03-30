@@ -31,11 +31,8 @@ protonet.controls.ChannelSelector = (function() {
         feedHolder.animate({
           left: index * -channelWidth
         }, "fast", function() {
-          // set form channel_id to correct value after a short pause
-          setTimeout(function() {
-            currentChannel = channelId;
-            self.setCurrentChannelId(channelId);
-          }.bind(this), 100);
+          currentChannel = channelId;
+          self.setCurrentChannelId(channelId);
         });
         
         container.find(".active").toggleClass("active");
