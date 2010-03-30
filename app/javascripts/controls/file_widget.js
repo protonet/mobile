@@ -16,6 +16,8 @@ protonet.controls.FileWidget = function() {
   this.initContextMenu();
   $(protonet.globals.notifications).bind("channel.changed", function(e, id) {
     this.currentChannelId = id;
+    this.current_path = "";
+    this.removeDirectoriesAboveCurrent(1);
     this.gotoPath();
   }.bind(this));
 };
@@ -40,8 +42,7 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "channelizePath": function(path) {
-    var trailingSlash = (path[0] == '/' ? '' : '/');
-    return '/' + this.currentChannelId + trailingSlash + path;
+    return '/' + this.currentChannelId + path;
   },
   
   "gotoPath": function(path) {
@@ -113,14 +114,18 @@ protonet.controls.FileWidget.prototype = {
     object_to_add.click(function(event){
       event.preventDefault(); 
       this.gotoPath(path);
-      var new_index = this.hierarchy_bar.children().size();
-      while(new_index > old_index) {
-        this.removePathBlob();
-        this.current_path = this.removeDeepestDirectory(this.current_path);
-        new_index--;
-      }
+      this.removeDirectoriesAboveCurrent(old_index);
     }.bind(this));
     this.hierarchy_bar.append(object_to_add);
+  },
+  
+  "removeDirectoriesAboveCurrent": function(old_index) {
+    var new_index = this.hierarchy_bar.children().size();
+    while(new_index > old_index) {
+      this.removePathBlob();
+      this.current_path = this.removeDeepestDirectory(this.current_path);
+      new_index--;
+    }
   },
   
   "removePathBlob": function() {
