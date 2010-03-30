@@ -41,7 +41,7 @@ protonet.effects.HoverResize.prototype = {
     };
     
     this._preload(function(naturalSize) {
-      this.newSize = this.newSize || protonet.utils.toMaxSize((this.size || naturalSize), this.size);
+      this.newSize = this.newSize || protonet.utils.toMaxSize(naturalSize, this.size);
       
       if (!this.newSize) {
         return;

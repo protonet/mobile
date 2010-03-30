@@ -8,7 +8,7 @@ protonet.utils.toMaxSize = function(size, maxSize) {
   var height = size.height, width = size.width;
   
   if (width > maxSize.width) {
-    height = size.height / 100 * (maxSize.width / (width / 100));
+    height = height / 100 * (maxSize.width / (width / 100));
     width = maxSize.width;
   }
   if (height > maxSize.height) {

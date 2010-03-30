@@ -192,11 +192,11 @@ protonet.controls.FileWidget.prototype = {
           }
         });
       }
-      
-
     }.bind(this));
     
-    this.file_list.find("li.directory:last").after(new_folder);
+    var lastDirectory = this.file_list.find("li.directory:last");
+    lastDirectory.length ? lastDirectory.after(new_folder) : this.file_list.append(new_folder);
+    
     new_folder_input.focus();
   },
   
