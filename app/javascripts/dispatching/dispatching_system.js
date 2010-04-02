@@ -47,10 +47,10 @@ protonet.dispatching.DispatchingSystem.prototype = {
     this.socket.connectSocket(this.server);
   },
   
-  "socketConnectCallback": function(args) {
-    console.log('connection established? ' + args);
+  "socketConnectCallback": function(status) {
+    console.log('connection established? ' + status);
     
-    if(args) {
+    if (status) {
       this.startSocketCheck();
       this.authenticateUser();
     } else {

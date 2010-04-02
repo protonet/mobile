@@ -45,7 +45,5 @@ class Socket {
     
     ExternalInterface.call("protonet.globals.dispatcher.socketReadyCallback");
     
-
-    
   }
 }
