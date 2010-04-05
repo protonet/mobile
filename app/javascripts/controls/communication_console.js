@@ -66,7 +66,8 @@ protonet.controls.CommunicationConsole.prototype = {
     // render and send
     new protonet.controls.Tweet({
       "form": this.form,
-      "message": message,
+      "message": message.message,
+      "text_extension": message.text_extension,
       "author": this.user_config.user_name,
       "channel_id": this.input_channel_id.val(),
       "user_icon_url": this.user_config.user_icon_url

@@ -246,6 +246,35 @@
   clear: both;
 }
 
+/* =LOCAL IMAGE TEXT EXTENSIONS
+--------------------------------------------------------------------------- */
+.text-extension-results.LocalImage .media {
+  position: relative;
+}
+
+.text-extension-results.LocalImage .media a {
+  margin: 0 5px 5px 0;
+  float: left;
+  display: block;
+}
+
+.text-extension-results.LocalImage .media img:hover {
+  background: #eee;
+}
+
+.text-extension-results.LocalImage .media a:nth-child(5n) img {
+  position: absolute;
+  right: 5px; /* Ensure that resizing effect aligns right, to avoid overflow problems */
+}
+
+.text-extension-results.LocalImage .media a:nth-child(6n) {
+  clear: left;
+}
+
+.text-extension-results.LocalImage .title {
+  clear: both;
+}
+
 /* =MAPS TEXT EXTENSION
 --------------------------------------------------------------------------- */
 .text-extension-results.Maps .media iframe {

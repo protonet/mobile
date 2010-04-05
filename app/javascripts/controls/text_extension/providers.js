@@ -3,6 +3,7 @@ protonet.controls.TextExtension.config = {
   IMAGE_HEIGHT: 67,
   SORTED_PROVIDERS: [
     // sorted by priority
+    "LocalImage",
     "YouTube",
     "Maps",
     "Slideshare",
@@ -47,3 +48,4 @@ protonet.controls.TextExtension.providers = {};
 //= require "providers/daily_motion.js"
 //= require "providers/college_humor.js"
 //= require "providers/github_commits.js"
+//= require "providers/local_image.js"

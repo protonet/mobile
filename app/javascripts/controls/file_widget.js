@@ -214,13 +214,37 @@ protonet.controls.FileWidget.prototype = {
    * Takes a single fileName or an array of fileNames as argument
    */
   "publish": function(fileNames) {
-    fileNames = $.isArray(fileNames) ? fileNames : [fileNames];
+    fileNames   = $.isArray(fileNames) ? fileNames : [fileNames];
+    var message           = {};
+    var published_photos  = [];
     
-    var message = "Published the following file(s): \n";
-    message += $.map(fileNames, function(fileName) {
-      return "  - file:" + this.getDownloadPathFor(fileName);
+    message.message = "Published the following file(s): \n";
+    message.message += $.map(fileNames, function(fileName) {
+      // fixme aj: redundant code this is available in local_image.js
+      var file_url = this.getDownloadPathFor(fileName);
+      if (fileName.match(/.*\.(jpg|gif|png)$/i)) {
+        published_photos.push({ 
+          // aj fixme there's already a method in local_image.js that does this - ask tiff
+          title:      file_url.match(/.*\/.*%2F(.*)$/)[1] || 'untitled',
+          thumbnail:  {width: 75, height: 75, source: file_url},
+          url:        file_url,
+          preview:    {source: file_url, height: 200, width: 200}
+        });
+      }
+      
+      return "  - file:" + file_url;
     }.bind(this)).join("\n");
     
+    if (published_photos.length > 0) {
+      message.text_extension = {
+        title:  "Images on this node",
+        type:   "LocalImage",
+        url:    this.getDownloadPathFor(fileNames[0]),
+        photos: published_photos
+      };
+      // aj fixme this doesn't belong here, but is necessary to be stored
+      $("#text-extension-input").val(JSON.stringify(message.text_extension));
+    }
     protonet.globals.communicationConsole.sendTweetFromMessage(message);
   }
 };
