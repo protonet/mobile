@@ -95,7 +95,7 @@ protonet.dispatching.DispatchingSystem.prototype = {
   },
 
   "messageReceived": function(raw_data) {
-    console.log(raw_data + ' received.');
+    // console.log(raw_data + ' received.');
     // FIXME: Handle this in the flash socket
     if($.trim(raw_data).startsWith("<?xml")) {
       return;
@@ -111,13 +111,13 @@ protonet.dispatching.DispatchingSystem.prototype = {
         $('#tweet_socket_id').val(message.socket_id);
         break;
       default:
-        console.log('default handling: ' + message.x_target + '(message)');
+        // console.log('default handling: ' + message.x_target + '(message)');
         eval(message.x_target + '(message)');
     }
   },
 
   "sendMessage": function(data, delimit) {
-    console.log('Trying to send: ' + data);
+    // console.log('Trying to send: ' + data);
     if(delimit) {
       data = data + "\0";
     }
