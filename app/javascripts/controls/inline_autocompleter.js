@@ -30,7 +30,6 @@ protonet.controls.InlineAutocompleter.prototype = {
   ],
   
   END_SELECTION_KEYS: [
-    39, // right arrow
     9   // tab
   ],
   
@@ -62,10 +61,8 @@ protonet.controls.InlineAutocompleter.prototype = {
   _keyDown: function(event) {
     var pressedKey = event.which;
     if ($.inArray(pressedKey, this.END_SELECTION_KEYS) != -1 && this._getSelectedText()) {
-      var valueLength = this.input.val().length;
       var selectionEnd = this.input.attr("selectionEnd");
-      this._insert(" ", selectionEnd);
-      this._setCaretPosition(selectionEnd + 1);
+      this._setCaretPosition(selectionEnd);
       event.preventDefault();
     }
   },

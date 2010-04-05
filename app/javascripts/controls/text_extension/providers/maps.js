@@ -45,11 +45,11 @@ protonet.controls.TextExtension.providers.Maps.prototype = {
   },
   
   getDescription: function() {
-    return this.data.description;
+    return this.data.description || "";
   },
   
   getTitle: function() {
-    return this.data.title;
+    return this.data.title || "";
   },
   
   getMedia: function() {
