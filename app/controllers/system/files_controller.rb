@@ -57,7 +57,8 @@ module System
     
     def show
       if params[:file_path]
-        send_file System::FileSystem.cleared_path(params[:file_path])
+        mime_type = Mime::Type.lookup_by_extension((m = params[:file_path].match(/.*\.(.*)/)) && m[1])
+        send_file(System::FileSystem.cleared_path(params[:file_path]), :type => mime_type, :disposition => 'inline')
       else
         return head(:error)
       end
