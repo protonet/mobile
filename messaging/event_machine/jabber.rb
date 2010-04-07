@@ -10,8 +10,12 @@ configatron.messaging_bus_active = true
 
 jabber = Jabber::Simple.new("xe.bot@im.xing.com", 'vv7/äÖ5!')
 
-muc = Jabber::MUC::SimpleMUCClient.new(jabber.client)
-muc.join("askrails@conference.im.xing.com/robot")
+askrails = Jabber::MUC::SimpleMUCClient.new(jabber.client)
+askrails.join("askrails@conference.im.xing.com/robot")
+
+cp = Jabber::MUC::SimpleMUCClient.new(jabber.client)
+cp.join("cp@conference.im.xing.com/robot")
+
 
 EM.run do
   
@@ -19,11 +23,16 @@ EM.run do
   channel_queue = amq.queue("consumer-jabber-bridge", :auto_delete => true)
   channel_queue.bind(amq.topic("channels"), :key => "channels.a#{4}").subscribe do |msg|
     message = JSON(msg)
-    muc.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"].match(/\{x\}/)
+    askrails.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"].match(/\{x\}/)
+  end
+  channel_queue.bind(amq.topic("channels"), :key => "channels.a#{16}").subscribe do |msg|
+    message = JSON(msg)
+    cp.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"].match(/\{x\}/)
   end
   
   EM::PeriodicTimer.new(1) do
-    muc.on_message do |time,user_name,msg|
+    
+    cp.on_message do |time,user_name,msg|
       user_name = user_name.downcase.gsub(/ /, '.')
       if(!time && !msg.match(/\{p\}/)) && !msg.match(/\{x\}/)
         begin
@@ -36,7 +45,22 @@ EM.run do
           puts e.inspect
         end
       end
-      
     end
+    
+    askrails.on_message do |time,user_name,msg|
+      user_name = user_name.downcase.gsub(/ /, '.')
+      if(!time && !msg.match(/\{p\}/)) && !msg.match(/\{x\}/)
+        begin
+          user = User.find_by_login(user_name)
+          tweet = Tweet.new({:author => "#{user_name}{x}", :user => user, :channels => Channel.find([4]), :message => msg.to_s})
+          tweet.socket_id = '0'
+          tweet.save
+        rescue Exception => e
+          puts "BAM!"
+          puts e.inspect
+        end
+      end
+    end
+    
   end
 end
