@@ -1,0 +1,8 @@
+<% tweets.each do |hash| %>
+  <% hash.each do |user, tweets| %>
+    <%= user.display_name %>
+    <% tweets.each do |t| %>
+      <%= t.id %><br />
+    <% end %><br />
+  <% end %>
+<% end %>
