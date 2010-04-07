@@ -37,7 +37,7 @@ protonet.data.MetaData = {
     });
     
     $.each($.makeArray(response.link), function(i, linkTag) {
-      if (typeof(linkTag.href) == "string" && $.inArray(linkTag.rel, this.LINK_REL) != -1) {
+      if (typeof(linkTag.href) == "string" && linkTag.href.length && $.inArray(linkTag.rel, this.LINK_REL) != -1) {
         var src = $.trim(linkTag.href);
         data[linkTag.rel] = protonet.utils.convertToAbsoluteUrl(src);
       }
