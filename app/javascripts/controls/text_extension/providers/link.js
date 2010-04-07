@@ -68,6 +68,10 @@ protonet.controls.TextExtension.providers.Link.prototype = {
   },
   
   getMedia: function() {
+    /**
+     * TODO:
+     * Also support relative urls as image_src (eg. "img/test.jpg")
+     */
     if (this.data.image_src && String(this.data.image_src).isUrl()) {
       return this._getMediaByImageSrc();
     } else {
