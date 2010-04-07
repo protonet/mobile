@@ -1,0 +1,32 @@
+//= require "parse_url.js"
+
+protonet.utils.convertToAbsoluteUrl = (function() {
+  var PROTOCOL_REG_EXP = /^(ftp|https?):\/\/.+/i,
+      PROTOCOL_RELATIVE_REG_EXP = /^\/{2}[^\/]/i,
+      DOMAIN_RELATIVE_REG_EXP = /^\/{1}[^\/]/i;
+      
+  return function(relativeUrl, parentUrl) {
+    // Already absolute, bye
+    if (PROTOCOL_REG_EXP.test(relativeUrl)) {
+      return relativeUrl;
+    }
+    
+    var parentUrlParts = protonet.utils.parseUrl(parentUrl);
+    
+    // Protocol-relative (eg. "//google.com/img/foo.jpg")
+    if (PROTOCOL_RELATIVE_REG_EXP.test(relativeUrl)) {
+      return parentUrlParts.protocol + ":" + relativeUrl;
+    }
+    
+    // Domain-relative (eg. "/img/foo.jpg")
+    if (DOMAIN_RELATIVE_REG_EXP.test(relativeUrl)) {
+      return parentUrlParts.protocol + "://" + parentUrlParts.host + relativeUrl;
+    }
+    
+    // Folder-relative (eg. "foo.jpg" or "../foo.jpg")
+    return parentUrlParts.protocol + "://" +
+           parentUrlParts.host +
+           parentUrlParts.path.substring(0, parentUrlParts.path.lastIndexOf("/")) + "/" +
+           relativeUrl;
+  };
+})();

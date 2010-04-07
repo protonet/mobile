@@ -1,4 +1,5 @@
 //= require "yql.js"
+//= require "../utils/convert_to_absolute_url.js"
 
 /**
  * Facebook created a standard for data sharing
@@ -36,8 +37,9 @@ protonet.data.MetaData = {
     });
     
     $.each($.makeArray(response.link), function(i, linkTag) {
-      if (linkTag.rel && linkTag.href && $.inArray(linkTag.rel, this.LINK_REL) != -1) {
-        data[linkTag.rel] = $.trim(String(linkTag.href || ""));
+      if (typeof(linkTag.href) == "string" && $.inArray(linkTag.rel, this.LINK_REL) != -1) {
+        var src = $.trim(linkTag.href);
+        data[linkTag.rel] = protonet.utils.convertToAbsoluteUrl(src);
       }
     }.bind(this));
     
