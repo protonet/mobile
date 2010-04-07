@@ -9,7 +9,7 @@ protonet.controls.ChannelSelector = (function() {
   function ChannelSelector(params) {
     channelInput = params.channel_input;
     
-    container = container || $("#channel");
+    container = container || $("#channels");
     feedHolder = feedHolder || $("#feed-holder");
     channelWidth = channelWidth || $("#feed-holder").find("ul:first").outerWidth(true);
     
@@ -19,7 +19,7 @@ protonet.controls.ChannelSelector = (function() {
   ChannelSelector.prototype = {
     _observe: function() {
       var self = this;
-      container.find(".channel a").click(function(event) {
+      container.find("li a").click(function(event) {
         var anchor = $(this),
             href = anchor.attr("href"),
             // get the index of the element
@@ -45,10 +45,11 @@ protonet.controls.ChannelSelector = (function() {
     },
     
     notify: function(channelId) {
-      var anchor = $("#channel-" + channelId).find("a"),
-          notificationElement = anchor.find(".notification");
+      var anchor = $("#channel-" + channelId).find("li a"),
+          notificationElement = anchor.find(".new-meeps");
       if (notificationElement.length == 0) {
-        notificationElement = $("<span />", { html: 0, className: "notification" }).appendTo(anchor);
+        // title="5 new meeps in <%= c.name.capitalize %>" would be nice
+        notificationElement = $("<sup />", { html: 0, className: "new-meeps" }).appendTo(anchor);
       }
       notificationElement.html(parseInt(notificationElement.html(), 10) + 1);
     },

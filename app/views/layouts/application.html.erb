@@ -1,3 +1,106 @@
+<!doctype html>
+<html>
+  <head>
+    <title>
+      <%= strip_tags(yield(:page_title)) || "protonet - changing the internet, one node at a time" %>
+    </title>
+    <meta charset="UTF-8">
+    <%= stylesheet_link_tag(stylesheets, :cache => false) %>
+    <script type="text/javascript">//<![CDATA[
+      var protonet = protonet || {};
+      protonet.config = {
+        dispatching_server: '<%= request.env["SERVER_NAME"] %>',
+        token: '<%= current_user.communication_token %>',
+        user_name: '<%= current_user.display_name %>',
+        user_id: '<%= current_user.id %>',
+        user_channel_ids: '<%= current_user.channels && current_user.channels.map {|c| c.id}.to_json %>',
+        user_icon_url: '<%= current_user.active_avatar_url %>',
+        session_id: '<%= cookies["_rails_dashboard_session"] %>',
+        authenticity_token: '<%= form_authenticity_token %>'
+      };
+
+      protonet.globals = {
+        textExtensions: []
+      };
+    //]]></script>
+  </head>
+  <body>
+    <%- unless flash.empty? -%>
+      <div class="message">
+        <%= "<p class=\"notice\"><span>#{flash[:notice]}</span></p>" if flash[:notice] %>
+        <%= "<p class=\"error\"><span>#{flash[:error]}</span></p>" if flash[:error] %>
+        <%= "<p class=\"warning\"><span>#{flash[:warning]}</span></p>" if flash[:warning] %>
+      </div>
+    <%- end -%>
+
+    <%- if current_user.stranger? -%>
+      <section id="login">
+        <h1>Welcome guest</h1>
+
+        <%- form_for :user, :url => users_path, :html => { :class => "sign-up form" } do |f| -%>
+          <fieldset>
+            <legend>Get started with <strong>signing up</strong> (it's free)</legend>
+            <div>
+              <%= f.label :username, "username" %>
+              <%= f.text_field :username, :title => "user name" %>
+            </div>
+            <div>
+              <%= f.label :password, "password" %>
+              <%= f.password_field :password, :title => "password" %>
+              <%= f.hidden_field "password_confirmation" %>
+            </div>
+            <div>
+              <%= f.label :signup_contact, "social media profile or email" %>
+              <%= f.text_field :signup_contact, :title => "social media profile or email" %>
+              <span class="hint">(e.g. http://www.facebook.com/hal.jordan)</span>
+            </div>
+            <div>
+              <button type="submit" name="join">sign up</button>
+            </div>
+          </fieldset>
+        <%- end -%>
+
+        <%- form_tag session_path, { :class => "login form" } do -%>
+          <fieldset>
+            <legend>or <strong>logging in</strong></legend>
+            <div>
+              <%= label_tag :login, "login", :for => "login_login" %>
+              <%= text_field_tag :login, @login, :title => "user name", :id => "login_login" %>
+            </div>
+            <div>
+              <%= label_tag :password, "password", :for => "login_password" %>
+              <%= password_field_tag :password, nil, :title => "password", :id => "login_password" %>
+              <span class="forgot-password"><a href="" class="hint" title="shit happens!">forgot password?</a></span>
+            </div>
+            <div>
+              <button type="submit" name="commit">login</button>
+            </div>
+          </fieldset>
+        <%- end -%>
+      </section>
+    <%- end -%>
+
+    <header<%= " class=\"login\"" if current_user.stranger? %>>
+      <a href="<%= root_path %>">protonet – it's yours</a>
+    </header>
+
+    <%= yield %>
+
+    <footer>
+      none
+    </footer>
+    
+    <%= sprockets_include_tag(:default) %>    
+    <%= sprockets_include_tag(controller_name.to_sym) %>
+  </body>
+</html>
+
+
+
+
+
+<% if false %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 
@@ -84,3 +187,5 @@
   </body>
   
 </html>
+
+<% end %>

@@ -27,9 +27,8 @@ protonet.controls.TextExtension.Renderer = (function() {
     results.find(".title").html(title);
     results.find(".type").html(type);
     results.find("a.link").attr("href", data.url);
-    results.find(".media").html(provider.getMedia());
-    results.addClass(data.type).addClass(className);
-    
+    results.filter(".media").html(provider.getMedia());
+    container.addClass(data.type).addClass(className);
     
     container.append(results);
     

@@ -1,0 +1,80 @@
+/* =CHANNELS
+=========================================================================== */
+
+#channels {
+  border-bottom: 1px solid rgb(180, 180, 180);
+  margin: 0 15px 20px;
+  padding: 0 115px 0 15px;
+  position: relative;
+}
+
+#channels ul {
+  height: 32px;
+  margin: 0 0 -1px;
+  overflow: hidden;
+  padding: 5px 0 0;
+}
+
+#channels li {
+  bottom: -3px;
+  display: inline-block;
+  margin-right: 5px;
+  position: relative;
+}
+
+#channels .active {
+  bottom: -1px;
+}
+
+#channels li a {
+  -moz-border-radius-topleft: 1em;
+  -moz-border-radius-topright: 1em;
+  -webkit-border-top-left-radius: 1em;
+  -webkit-border-top-right-radius: 1em;
+  background: -moz-linear-gradient(100% 100% 90deg, rgba(0, 0, 0, 0.1), transparent);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.1)));
+  border-top-left-radius: 1em;
+  border-top-right-radius: 1em;
+  border: 1px solid rgb(180, 180, 180);
+  color: rgb(180, 180, 180);
+  display: block;
+  line-height: 24px;
+  padding: 0 15px;
+  text-decoration: none;
+}
+
+#channels .active a {
+  background: rgb(255, 255, 255);
+  border-bottom: 1px solid rgb(255, 255, 255);
+  color: rgb(115, 139, 255);
+  font-size: 14px;
+  line-height: 30px;
+}
+
+#channels .new-meeps {
+  -moz-border-radius: 3em;
+  -webkit-border-radius: 3em;
+  background: hsl(20, 100%, 51%);;
+  color: rgb(255, 255, 255);
+  cursor: default;
+  line-height: 1em;
+  padding: 2px 4px;
+  position: absolute;
+  right: -3px;
+  top: -3px;
+}
+
+#channels .manage-channels {
+  bottom: 0;
+  color: rgb(180, 180, 180);
+  font-size: 11px;
+  position: absolute;
+  right: 15px;
+  text-decoration: none;
+}
+
+#channels .manage-channels:hover {
+  text-decoration: underline;
+}
+
+/* ==============================================================CHANNELS = */

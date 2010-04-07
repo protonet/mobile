@@ -8,10 +8,9 @@ protonet.controls.TextExtension = {
   renderQueue: function() {
     if (protonet.globals.textExtensions && protonet.globals.textExtensions.length) {
       var currentChannelId = protonet.globals.channelSelector.getCurrentChannelId();
-      
       protonet.globals.textExtensions = $.map(protonet.globals.textExtensions, function(extension) {
         if (extension.channel_id == currentChannelId) {
-          var container = $("#" + extension.container_id + " > .message-text");
+          var container = $("#" + extension.container_id + " > article:last .text-extension");
           new this.Renderer(container, extension.data);
           return null; // to remove the element from the array
         } else {

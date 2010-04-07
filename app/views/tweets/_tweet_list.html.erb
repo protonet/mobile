@@ -1,3 +1,13 @@
+<ul id="meeps">
+  <%- tweets[0..25].each do |t| -%>
+    <%= render :partial => '/tweets/tweet',
+      :locals => { :message => t.message, :avatar => t.user.active_avatar_url, :author => t.author,
+                   :created_at => t.created_at, :html_id => "tweet-#{t.id}"
+                 } %>
+  <%- end -%>
+</ul>
+
+<% if false %>
 <%= "<ul class=\"user-messages\" id=\"messages-for-channel-#{channel.id}\">" unless @no_wrap %>
   <% reset_wrapper_variables %>
   <%- tweets.each_with_index do |t, i| -%>
@@ -16,3 +26,4 @@
     <%- end -%>
   <%- end -%>
 <%= "</ul>" unless @no_wrap %>
+<% end %>

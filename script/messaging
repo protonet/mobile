@@ -1,7 +1,7 @@
 #/bin/bash
 
 # start rabbitmq
-RABBITMQ_NODE_IP_ADDRESS="" RABBITMQ_NODE_PORT="" RABBITMQ_LOG_BASE="/tmp" RABBITMQ_MNESIA_DIR="/tmp/rabbitmq-rabbit-mnesia" RABBITMQ_NODE_ONLY=true RABBITMQ_SERVER_START_ARGS=" -s rabbit" ./messaging/rabbitmq/scripts/rabbitmq-server
+RABBITMQ_NODE_IP_ADDRESS="" RABBITMQ_NODE_PORT="" RABBITMQ_LOG_BASE="/tmp" RABBITMQ_MNESIA_DIR="/tmp/rabbitmq-rabbit-mnesia" RABBITMQ_NODE_ONLY=true RABBITMQ_SERVER_START_ARGS=" -s rabbit" ./messaging/rabbitmq/scripts/rabbitmq-server &
 
 # start dispatching
-./messaging/event_machine/js_dispatching_server.rb
+./messaging/event_machine/js_dispatching_server.rb &

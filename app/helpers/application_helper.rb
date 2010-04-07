@@ -17,6 +17,10 @@ module ApplicationHelper
     Time.at(str.to_i).rfc2822
   end
   
+  def convert_to_iso(str)
+    Time.at(str.to_i).iso8601
+  end
+  
   def auto_link_file_paths(str)
     str.gsub(/file:(.*?[^\<\s\,]+)/) {|s|
       path = $1
@@ -24,6 +28,19 @@ module ApplicationHelper
       
       file_name ? ('<a href="' + path + '">' + truncate(file_name, 40) + '</a>') : s
     }
+  end
+  
+  def greet_user(user_name)
+    case
+    when Time.now >= Time.parse("03:01") && Time.now < Time.parse("12:00")
+      o = "Good morning "
+    when Time.now >= Time.parse("12:01") && Time.now < Time.parse("18:00")
+      o = "Good day "
+    when Time.now >= Time.parse("18:01")
+      o = "Good evening "
+    end
+    #o + link_to(user_name, preferences_path) # not yet!
+    o + user_name
   end
   
   def highlight_replies(str)
@@ -42,7 +59,12 @@ module ApplicationHelper
     message = auto_link_file_paths(message)
   end
   
+  def stylesheets
+    ["/css/reset", "/css/general", "/css/login", "/css/channels", "/css/meeps", "/css/text_extension"]
+  end
+  
   private
+  
     def extract_file_name(path)
       match = path.match(/file_path=.*%2F(.*)/)
       match && match[1] && CGI.unescape(match[1])

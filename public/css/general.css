@@ -1,0 +1,116 @@
+/* =GENERAL
+
+    COLORS:
+      black       hsl(0, 0%, 0%)
+      blue        hsl(230, 55%, 72%)
+      grey        hsl(0, 0%, 70%)
+      grey_dark   hsl(0, 0%, 40%)
+      orange      hsl(20, 100%, 51%)
+      white       hsl(0, 0%, 100%)
+=========================================================================== */
+
+body {
+  background: url(/img/background_top.png) repeat-x,
+              url(/img/background_bottom.png) repeat-x left bottom,
+              url(/img/background.png);
+  font: 14px/1.4em Verdana, sans-serif;
+  margin: 20px auto;
+  width: 940px;
+  color: hsl(0, 0%, 0%);
+}
+
+input {
+  font: 12px/1.4em Verdana, sans-serif;
+}
+
+a {
+  color: hsl(0, 0%, 0%);
+}
+
+a:hover {
+  color: hsl(230, 55%, 72%);
+}
+
+button {
+  -moz-border-radius: 0.5em;
+  -moz-outline-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+  -webkit-outline-radius: 0.5em; /* does not exist (yet) */
+  background: hsl(20, 100%, 71%);
+  background: -moz-linear-gradient(100% 100% 90deg, hsl(20, 100%, 61%), hsl(20, 100%, 71%));
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(hsl(20, 100%, 71%)), to(hsl(20, 100%, 61%)));
+  border-radius: 0.5em;
+  border: 1px solid hsl(0, 0%, 100%);
+  color: hsl(0, 0%, 100%);
+  outline-radius: 0.5em; /* does this exist? */
+  outline: 1px solid hsl(20, 100%, 61%);
+  padding: 2px 15px;
+}
+
+button:hover {
+  background: hsl(20, 100%, 71%);
+  background: -moz-linear-gradient(100% 100% 90deg, hsl(20, 100%, 51%), hsl(20, 100%, 71%));
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(hsl(20, 100%, 71%)), to(hsl(20, 100%, 51%)));
+  outline: 1px solid hsl(20, 100%, 51%);
+}
+
+header {
+  display: block;
+  margin: 0 -10px -30px;
+}
+
+header a {
+  background: url(/img/protonet.png) no-repeat;
+  display: block;
+  height: 121px;
+  text-indent: -500em;
+  width: 209px;
+}
+
+header.login {
+  background: url(/img/icn_login_arrow.png) no-repeat 220px 0;
+  padding-top: 20px;
+  position: relative;
+}
+
+section,
+aside {
+  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  background: rgb(255, 255, 255);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  display: inline-block;
+  min-height: 500px;
+  vertical-align: top;
+}
+
+.hint,
+.inline-hint {
+  color: hsl(0, 0%, 70%);
+}
+
+.reply {
+  color: hsl(20, 100%, 51%);
+}
+
+.greet-user {
+  margin: -20px 20px 0;
+  color: hsl(0, 0%, 40%);
+  text-align: right;
+}
+
+.greet-user a {
+  color: hsl(230, 55%, 72%);
+}
+
+#main {
+  width: 650px;
+  margin: 0 20px 0 0;
+  position: relative;
+}
+
+#side {
+  width: 260px;
+}
+
+/* ============================================================== GENERAL = */

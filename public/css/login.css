@@ -1,0 +1,70 @@
+/* =LOGIN
+=========================================================================== */
+
+#login {
+  min-height: 100px;
+  padding: 20px;
+  width: 900px;
+  margin: -20px 0 0;
+}
+
+#login h1 {
+  color: rgb(115, 139, 255);
+  font-size: 12px;
+  text-transform: lowercase;
+}
+
+#login .form {
+  border-right: 1px solid hsl(0, 0%, 70%);
+  display: inline-block;
+  padding: 5px 0;
+  vertical-align: top;
+  width: 437px;
+}
+
+#login .form legend {
+  color: hsl(0, 0%, 70%);
+  font-size: 17px;
+  padding-bottom: 10px;
+}
+
+#login .form label {
+  display: none;
+}
+
+#login .form input[type=text],
+#login .form input[type=password] {
+  border-color: hsl(0, 0%, 35%) hsl(0, 0%, 70%) hsl(0, 0%, 70%) hsl(0, 0%, 35%);
+  border-style: solid;
+  border-width: 1px;
+  padding: 2px 4px;
+  width: 200px;
+}
+
+#login .form div {
+  margin-bottom: 10px;
+}
+
+#login .form div:last-child {
+  margin-bottom: 0;
+}
+
+#login .hint {
+  font-size: 10px;
+}
+
+#login .forgot-password {
+  display: block;
+  margin: 12px 0 0;
+}
+
+#login .sign-up {
+  padding-right: 10px;
+}
+
+#login .login {
+  border: 0 none;
+  padding-left: 10px;
+}
+
+/* ================================================================ LOGIN = */
