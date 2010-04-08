@@ -6,6 +6,21 @@ require 'xmpp4r'
 require 'xmpp4r-simple'
 require 'xmpp4r/muc/helper/simplemucclient'
 
+def user_from_nickname(nick)
+  nick.downcase!
+  {
+    'Wolfram Müller-Grabellus' => 'wolfram.mgrabellus',
+    'Ralph von der Heyden'     => 'ralph.heyden',
+    'ü' => 'ue',
+    'ö' => 'oe',
+    'ä' => 'ae'
+  }.each do |k,v|
+    nick.sub!(k, v)
+  end
+  
+  nick.gsub(/ /, '.')
+end
+
 configatron.messaging_bus_active = true
 
 jabber = Jabber::Simple.new("xe.bot@im.xing.com", 'vv7/äÖ5!')
@@ -35,8 +50,8 @@ EM.run do
   
   EM::PeriodicTimer.new(1) do
 
-    cp.on_message do |time,nick,msg|
-      user_name = user_from_nickname(nick)
+    cp.on_message do |time,user_name,msg|
+      user_name = user_from_nickname(user_name)
       if(!time && !msg.match(/\{p\}/)) && !msg.match(/\{x\}/)
         begin
           user = User.find_by_login(user_name)
@@ -50,8 +65,8 @@ EM.run do
       end
     end
 
-    askrails.on_message do |time,nick,msg|
-      user_name = user_from_nickname(nick)
+    askrails.on_message do |time,user_name,msg|
+      user_name = user_from_nickname(user_name)
       if(!time && !msg.match(/\{p\}/)) && !msg.match(/\{x\}/)
         begin
           user = User.find_by_login(user_name)
@@ -68,17 +83,3 @@ EM.run do
   end
 end
 
-def user_from_nickname(nick)
-  nick.downcase!
-  [{
-    'Wolfram Müller-Grabellus' => 'wolfram.mgrabellus',
-    'Ralph von der Heyden'     => 'ralph.heyden',
-    'ü' => 'ue',
-    'ö' => 'oe',
-    'ä' => 'ae'
-  }].each do |k,v|
-    nick.sub!(k, v)
-  end
-  
-  nick.gsub(/ /, '.')
-end
