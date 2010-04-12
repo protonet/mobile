@@ -19,11 +19,14 @@ protonet.controls.TextExtension.providers.LocalImage.prototype = {
    * Matches:
    * http://global.protonet.com/xyz.jpg or gif or png
    */
-   
-  REG_EXP: new RegExp(protonet.config.base_url + "/.*\.(jpg|gif|png)", 'i'),
+  REG_EXP: /.*\.(jpe?g|gif|png)/i,
   
   match: function() {
-    return this.REG_EXP.test(this.url);
+    if (!this.url.toLowerCase().startsWith(protonet.config.base_url.toLowerCase())) {
+      return false;
+    }
+    var urlParts = protonet.utils.parseUrl(this.url);
+    return this.REG_EXP.test(urlParts.filename);
   },
   
   loadData: function(onSuccessCallback, onFailureCallback) {
