@@ -1,4 +1,5 @@
 //= require "../utils/escape_html.js"
+//= require "../utils/parse_url.js"
 
 protonet.controls.FileWidget = function() {
   this.wrapper = $("#file-list");
@@ -216,31 +217,29 @@ protonet.controls.FileWidget.prototype = {
   "publish": function(fileNames) {
     fileNames   = $.isArray(fileNames) ? fileNames : [fileNames];
     var message           = {};
-    var published_photos  = [];
+    var publishedPhotos  = [];
     
     message.message = "Published the following file(s): \n";
     message.message += $.map(fileNames, function(fileName) {
       // fixme aj: redundant code this is available in local_image.js
-      var file_url = this.getDownloadPathFor(fileName);
+      var fileUrl = this.getDownloadPathFor(fileName);
       if (fileName.match(/.*\.(jpg|gif|png)$/i)) {
-        published_photos.push({ 
+        publishedPhotos.push({ 
           // aj fixme there's already a method in local_image.js that does this - ask tiff
-          title:      file_url.match(/.*\/.*%2F(.*)$/)[1] || 'untitled',
-          thumbnail:  {width: 75, height: 75, source: file_url},
-          url:        file_url,
-          preview:    {source: file_url, height: 200, width: 200}
+          title:      protonet.utils.parseUrl(fileUrl).filename || 'untitled',
+          url:        fileUrl
         });
       }
       
-      return "  - file:" + file_url;
+      return "  - file:" + fileUrl;
     }.bind(this)).join("\n");
     
-    if (published_photos.length > 0) {
+    if (publishedPhotos.length > 0) {
       message.text_extension = {
         title:  "Images on this node",
         type:   "LocalImage",
         url:    this.getDownloadPathFor(fileNames[0]),
-        photos: published_photos
+        photos: publishedPhotos
       };
       // aj fixme this doesn't belong here, but is necessary to be stored
       $("#text-extension-input").val(JSON.stringify(message.text_extension));
