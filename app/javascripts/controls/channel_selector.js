@@ -42,6 +42,15 @@ protonet.controls.ChannelSelector = (function() {
         
         event.preventDefault();
       });
+      
+      $(protonet.globals.notifications).bind("message.new", function(e, message, channelId) {
+        /**
+         * Only show a little badge on the channel when it's not focused
+         */
+        if (channelId != this.getCurrentChannelId()) {
+          this.notify(channelId);
+        }
+      }.bind(this));
     },
     
     notify: function(channelId) {
