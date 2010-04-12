@@ -11,6 +11,7 @@ def user_from_nickname(nick)
   {
     'Wolfram Müller-Grabellus' => 'wolfram.mgrabellus',
     'Ralph von der Heyden'     => 'ralph.heyden',
+    'Tri Duong Tran'           => 'triduong.tran',
     'ü' => 'ue',
     'ö' => 'oe',
     'ä' => 'ae'
