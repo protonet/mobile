@@ -58,8 +58,11 @@ protonet.controls.TextExtension.providers.LocalImage.prototype = {
   getMedia: function() {
     var container = $("<div />"), anchor, img, thumbnail, preview;
     $.each(this.data.photos, function(i, photo) {
-      // TODO remove this "src" after some time, it's only here for backward compatibility reasons
-      thumbnail = (photo.thumbnail.source);
+      var thumbnailSize = {
+        width: protonet.controls.TextExtension.config.IMAGE_WIDTH,
+        height: protonet.controls.TextExtension.config.IMAGE_HEIGHT
+      };
+      thumbnail = protonet.media.Proxy.getImageUrl(protonet.config.base_url + photo.thumbnail.source, thumbnailSize);
       
       img = $("<img />", {
         src: thumbnail,
