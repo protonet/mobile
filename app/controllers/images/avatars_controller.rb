@@ -17,7 +17,7 @@ class Images::AvatarsController < ApplicationController
     @avatar = Images::Avatar.new(params[:images_avatar])
     @avatar.user = current_user
     if @avatar.save
-      redirect_to user_path(current_user)
+      redirect_to preferences_path
     else
       flash[:notice] = 'Your photo did not pass validation!'
       render :new
