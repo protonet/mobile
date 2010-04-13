@@ -54,13 +54,8 @@ protonet.controls.UserWidget = (function() {
     },
     
     "sortEntries": function() {
-      this.entries.filter(function() {
-        return $(this).hasClass("api");
-      }).prependTo(this.user_list);
-      
-      this.entries.filter(function() {
-        return $(this).hasClass("online");
-      }).prependTo(this.user_list);
+      this.entries.filter(".api").prependTo(this.user_list);
+      this.entries.filter(".online").prependTo(this.user_list);
     },
     
     "updateWritingStatus": function(data) {
