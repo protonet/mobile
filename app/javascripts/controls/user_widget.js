@@ -56,6 +56,7 @@ protonet.controls.UserWidget = (function() {
     "sortEntries": function() {
       this.entries.filter(".api").prependTo(this.user_list);
       this.entries.filter(".online").prependTo(this.user_list);
+      this.entries.filter(".writing").prependTo(this.user_list);
     },
     
     "updateWritingStatus": function(data) {
@@ -63,14 +64,10 @@ protonet.controls.UserWidget = (function() {
       var status  = data.data.status;
       var current_dom_object = this.user_objects[user_id];
       if (current_dom_object && status == "writing") {
-        if (!current_dom_object.hasClass("writing")) {
-          this.user_list.prepend(current_dom_object);
-          current_dom_object.attr("class", "writing");
-        }
+        this.user_list.prepend(current_dom_object);
+        current_dom_object.attr("class", "writing");
       } else {
-        if (!current_dom_object.hasClass("online")) {
-          current_dom_object.attr("class", "online");
-        }
+        current_dom_object.attr("class", "online");
       }
     },
     
