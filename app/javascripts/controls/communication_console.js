@@ -31,14 +31,6 @@ protonet.controls.CommunicationConsole = function() {
   // active informations
   this.active_feed_id = 1; // home
   this.feeds = protonet.config.feed_ids || {};
-  
-  /**
-   * TODO:
-   * Set all custom events on the window object, to make it as independent as possible
-   */
-  $(window).focus(function() {
-    $(this).trigger("reset_messages");
-  }.bind(this));
 };
 
 protonet.controls.CommunicationConsole.prototype = {
@@ -87,29 +79,23 @@ protonet.controls.CommunicationConsole.prototype = {
     var currentChannelId = protonet.globals.channelSelector.getCurrentChannelId();
     channelId = channelId || currentChannelId;
     var isCurrentChannel = channelId == currentChannelId;
-
+    var isAllowedToPlaySound = protonet.user.Config.get("sound");
+    
     // Send general notification
-    if (!protonet.utils.isWindowFocused()) {
-      $(this).trigger("new_message", message);
-    }
+    $(protonet.globals.notifications).trigger("message.new", [message, channelId]);
     
     if (!protonet.utils.isWindowFocused() && isCurrentChannel) {
       // Show fancy animated text in browser title
       protonet.controls.BrowserTitle.set("+++ New messages", true, true);
       
       // Play sound (some browsers don't support mp3 but ogg)
-      if (protonet.user.Config.get("sound")) {
+      if (isAllowedToPlaySound) {
         if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_OGG()) {
           new Audio("/sounds/notification.ogg").play();
         } else if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_MP3()) {
           new Audio("/sounds/notification.mp3").play();
         }
       }
-    }
-    
-    // Show little badge on channel button if the channel isn't focused
-    if (!isCurrentChannel) {
-      protonet.globals.channelSelector.notify(channelId);
     }
   }
 };

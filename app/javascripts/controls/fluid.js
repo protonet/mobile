@@ -1,8 +1,14 @@
+//= require "../utils/is_window_focused.js"
+
 protonet.controls.Fluid = function() {
   this.fluid = window.fluid;
   this.unreadMessages = 0;
   
-  $(protonet.globals.communicationConsole).bind("new_message", function(e, message) {
+  $(protonet.globals.notifications).bind("message.new", function(e, message) {
+    if (protonet.utils.isWindowFocused()) {
+      return;
+    }
+    
     this.unreadMessages++;
     this.fluid.dockBadge = this.unreadMessages;
     this.fluid.showGrowlNotification({
@@ -15,7 +21,7 @@ protonet.controls.Fluid = function() {
     });
   }.bind(this));
   
-  $(protonet.globals.communicationConsole).bind("reset_messages", function() {
+  $(window).focus(function() {
     this.unreadMessages = 0;
     this.fluid.dockBadge = "";
   }.bind(this));

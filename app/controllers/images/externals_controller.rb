@@ -26,15 +26,31 @@ class Images::ExternalsController < ApplicationController
     uri = request.env['REQUEST_URI']
     file_path = RAILS_ROOT + "/public" + request.path + '/' + Digest::MD5.hexdigest(uri) + ".jpg"
     if File.exists?(file_path)
-      return send_file(file_path, :disposition => 'inline')
+      return send_file(file_path, :type => 'image/jpeg', :disposition => 'inline')
     end
     @width = params[:width] unless params[:width] == '0'
     @height = params[:height] unless params[:height] == '0'
-    if params[:image_file_url]
-      @external = Images::External.find_or_create_by_image_url(params[:image_file_url])
+
+    # local file
+    # fixme: Srsly this screams for a better solution like a little teenage girl in the rollercoaster... (cblum)
+    # Next external url (like the one from another node) that contains "file_path" will just fail epicly
+    detect_local_file = /.+file_path=/i
+    if params[:image_file_url] =~ detect_local_file
+      file_path = params.delete(:image_file_url).gsub(detect_local_file, '')
+      @external = Images::External.new(:image_file => File.new(configatron.user_file_path.to_s + URI.decode(file_path), "r"))
+      @external.save
+    # global file
+    elsif params[:image_file_url]
+      begin
+        @external = Images::External.find_or_create_by_image_url(params[:image_file_url])
+      rescue OpenURI::HTTPError
+        return head 404
+      end
+    # by id
     elsif params[:id]
       @external = Images::External.find_by_id(params[:id])
     end
+
     respond_to do |format|
       format.jpg
     end

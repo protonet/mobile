@@ -7,7 +7,6 @@
 
 protonet.controls.Tweet = (function() {
   var template,
-      templateHtml,
       HALF_HOUR = 1000 * 60 * 30,
       ID_REG_EXP = /\{id\}/g,
       TWEET_REG_EXP = /tweet-(\d*)-\d*/;
@@ -20,22 +19,22 @@ protonet.controls.Tweet = (function() {
     this.message          = protonet.utils.autoLink(this.message);
     this.message          = protonet.utils.nl2br(this.message);
     this.message          = protonet.utils.autoLinkFilePaths(this.message);
-    this.author           = args.author;
     this.messageDate      = new Date();
+    this.author           = args.author;
+    this.user_icon_url    = args.user_icon_url;
     this.channelId        = args.channel_id;
     this.textExtension    = args.text_extension;
     this.form             = args.form;
     this.id               = args.id;
     
-    template = template || $("#message-template");
-    templateHtml = templateHtml || $(template.html());
+    this.listElement = this.getTemplate();
     
-    this.listElement = templateHtml.clone();
-    if(this.id) {
+    if (this.id) {
       this.htmlId = this.listElement.attr("id").replace(ID_REG_EXP, this.id);
+      this.listElement.attr("id", this.htmlId);
     }
-    this.listElement.attr("id", this.htmlId);
-    this.listElement.find(".message-usericon > img").attr("src", args.user_icon_url);
+    
+    this.listElement.find(".message-usericon > img").attr("src", this.user_icon_url);
     this.listElement.find(".message-author").html(this.author);
     this.listElement.find(".message-date")
       .attr("title", this.messageDate)
@@ -43,12 +42,13 @@ protonet.controls.Tweet = (function() {
     
     var messageContainer = this.listElement.find(".message-text");
     messageContainer.find("p").append(this.message);
+    var isCurrentChannel = (this.channelId == protonet.globals.channelSelector.getCurrentChannelId());
     
     if (this.textExtension) {
-      if (this.channelId == protonet.globals.channelSelector.getCurrentChannelId()) {
+      if (isCurrentChannel) {
         protonet.controls.TextExtension.render(messageContainer, this.textExtension);
       } else {
-        // Put in queue, so that it gets rendered when the channel is focused
+        // Put text extension in queue, so that it gets rendered when the channel is focused
         protonet.globals.textExtensions.push({
           data: this.textExtension,
           container_id: this.htmlId,
@@ -57,33 +57,31 @@ protonet.controls.Tweet = (function() {
       }
     }
     
-    var scrollPosition = $(window).scrollTop();
-    
     this.channelUl = $("#messages-for-channel-" + this.channelId);
-    this.lastTweet = this.channelUl.children(":first");
-    var lastTweetHappenedInLastHalfHour = this.messageDate - new Date(this.lastTweet.find(".message-date").attr("title")) < HALF_HOUR;
-    this.groupedTweet = this.lastTweet.length
-        && lastTweetHappenedInLastHalfHour
-        && !this.textExtension
-        && this.lastTweet.find(".message-author").html() == this.author;
-        
-    if (this.groupedTweet) {
-      this.lastTweet.find(".message-text").prepend(messageContainer.html());
+    this.previousTweetElement = this.channelUl.children(":first");
+    this.shouldBeMerged = this.isMergedTweet();
+    
+    var scrollPosition = $(window).scrollTop();
+    var oldChannelHeight = this.channelUl.height();
+    var channelOffsetTop = this.channelUl.offset().top;
+    
+    if (this.shouldBeMerged) {
+      this.previousTweetElement.find(".message-text").prepend(messageContainer.html());
       // not available if tweet is locally created i.e. users own tweet
-      //  filled by callback in send
-      if (this.id) {
-        this.replace_first_tweet_id_in_merge(this.id);
-      }
+      // filled by callback in send
+      this.id && this.replaceFirstTweetIdInMerge(this.id);
     } else {
       this.channelUl.prepend(this.listElement);
     }
+    
+    var newChannelHeight = this.channelUl.height();
     
     /**
      * Avoid user experience problems when user scrolls down to read a tweet while others are pushing
      * new tweets
      */
-    if (scrollPosition > 150) {
-      $(window).scrollTop(scrollPosition + this.listElement.outerHeight(true));
+    if (isCurrentChannel && scrollPosition > channelOffsetTop) {
+      $(window).scrollTop(scrollPosition + newChannelHeight - oldChannelHeight);
     }
   };
   
@@ -91,26 +89,49 @@ protonet.controls.Tweet = (function() {
     send: function() {
       var params = this.form.serialize();
       // Overwrite message, because we don't always want to send the textarea value
-      params += "&" + encodeURIComponent("tweet[message]=" + this.originalMessage);
+      params += "&" + $.param({ "tweet[message]": this.originalMessage });
       
       // send to server
       $.post(this.form.attr("action"), params, function(data){
         this.htmlId = this.listElement.attr("id");
         
-        if(!this.groupedTweet) {
+        if (this.shouldBeMerged) {
+          this.replaceFirstTweetIdInMerge(data);
+        } else {
           this.htmlId = this.htmlId.replace(ID_REG_EXP, data);
           this.listElement.attr("id", this.htmlId);
-        } else {
-          this.replace_first_tweet_id_in_merge(data);
         }
       }.bind(this));
     },
     
-    replace_first_tweet_id_in_merge: function(id) {
-      var wrapperId = this.lastTweet.attr("id");
+    replaceFirstTweetIdInMerge: function(id) {
+      var wrapperId = this.previousTweetElement.attr("id");
       var firstId = wrapperId.match(TWEET_REG_EXP)[1];
       var htmlId = wrapperId.replace("tweet-" + firstId, "tweet-" + id);
-      this.lastTweet.attr("id", htmlId);
+      this.previousTweetElement.attr("id", htmlId);
+    },
+    
+    isMergedTweet: function() {
+      if (this.previousTweetElement.length == 0) {
+        return false;
+      }
+      
+      var previousTweet = {
+        date: new Date(this.previousTweetElement.find(".message-date").attr("title")),
+        author: this.previousTweetElement.find(".message-author").html()
+      };
+      
+      var timeDifference = this.messageDate - previousTweet.date;
+      var sameAuthor = previousTweet.author == this.author;
+      var previousTweetHappenedInLastHalfHour = timeDifference < HALF_HOUR;
+      var isMergedTweet = previousTweetHappenedInLastHalfHour && sameAuthor && !this.textExtension;
+      
+      return isMergedTweet;
+    },
+    
+    getTemplate: function() {
+      template = template || $($("#message-template").html());
+      return template.clone();
     }
   };
   

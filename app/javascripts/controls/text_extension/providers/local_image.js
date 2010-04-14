@@ -1,3 +1,4 @@
+//= require "../../../utils/parse_url.js"
 // protonet.controls.TextExtension.Renderer($('#text-extension-preview'), {"type":"fooo"}, new protonet.controls.TextExtension.providers.LocalImage('bla'))
 
 
@@ -18,27 +19,28 @@ protonet.controls.TextExtension.providers.LocalImage.prototype = {
    * Matches:
    * http://global.protonet.com/xyz.jpg or gif or png
    */
-   
-  REG_EXP: new RegExp(protonet.config.base_url + "/.*\.(jpg|gif|png)", 'i'),
+  REG_EXP: /.*\.(jpe?g|gif|png)/i,
   
   match: function() {
-    return this.REG_EXP.test(this.url);
+    if (!this.url.toLowerCase().startsWith(protonet.config.base_url.toLowerCase())) {
+      return false;
+    }
+    var urlParts = protonet.utils.parseUrl(this.url);
+    return this.REG_EXP.test(urlParts.filename);
   },
   
   loadData: function(onSuccessCallback, onFailureCallback) {
     
-    this.data.photos = [
-    { title: this.title_from_url(this.url),
-      thumbnail: {width: 75, height: 75, source: this.url},
-      url:this.url,
-      preview: {source: this.url, height: 200, width: 200}
+    this.data.photos = [{ 
+      title: this.titleFromUrl(this.url),
+      url:this.url
     }];
     
     onSuccessCallback(this.data);
   },
   
-  title_from_url: function(url) {
-    return url.match(/.*\/.*%2F(.*)$/)[1] || 'untitled';
+  titleFromUrl: function(url) {
+    return protonet.utils.parseUrl(url).filename || 'untitled';
   },
 
   setData: function(data) {
@@ -58,31 +60,31 @@ protonet.controls.TextExtension.providers.LocalImage.prototype = {
   getMedia: function() {
     var container = $("<div />"), anchor, img, thumbnail, preview;
     $.each(this.data.photos, function(i, photo) {
-      // TODO remove this "src" after some time, it's only here for backward compatibility reasons
-      thumbnail = (photo.thumbnail.source);
+      var thumbnailSize = {
+        width: protonet.controls.TextExtension.config.IMAGE_WIDTH,
+        height: protonet.controls.TextExtension.config.IMAGE_HEIGHT
+      };
+      thumbnail = protonet.media.Proxy.getImageUrl(protonet.config.base_url + photo.url, thumbnailSize);
       
       img = $("<img />", {
         src: thumbnail,
         title: photo.title,
-        width: photo.thumbnail.width,
-        height: photo.thumbnail.height
+        width: thumbnailSize.width,
+        height: thumbnailSize.height
       });
       
       anchor = $("<a />", {
         href: photo.url,
         target: "_blank"
       }).css({
-        width: photo.thumbnail.width.px(),
-        height: photo.thumbnail.height.px()
+        width: protonet.controls.TextExtension.config.IMAGE_WIDTH.px(),
+        height: protonet.controls.TextExtension.config.IMAGE_HEIGHT.px()
       }).append(img);
             
-      if (photo.preview) {
-        preview = photo.preview.source;
-        new protonet.effects.HoverResize(img, {
-          height: photo.preview.height,
-          width: photo.preview.width
-        }, preview);
-      }
+      new protonet.effects.HoverResize(img, {
+        height: 325,
+        width: 325
+      }, photo.url);
       
       container.append(anchor);
     }.bind(this));

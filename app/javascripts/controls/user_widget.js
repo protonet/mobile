@@ -33,9 +33,7 @@ protonet.controls.UserWidget = (function() {
         var online_user = online_users[i];
         var current_dom_object = this.user_objects[i];
         var css_class = this.cssClassForConnections(online_user && online_user.connections);
-        if (!current_dom_object.hasClass(css_class)) {
-          current_dom_object.attr("class", css_class);
-        }
+        current_dom_object.attr("class", css_class);
       }
       
       this.sortEntries();
@@ -56,12 +54,8 @@ protonet.controls.UserWidget = (function() {
     },
     
     "sortEntries": function() {
-      this.entries.each(function(i, entry) {
-        entry = $(entry);
-        if (entry.hasClass("online")) {
-          this.user_list.prepend(entry);
-        }
-      }.bind(this));
+      this.entries.filter(".api").prependTo(this.user_list);
+      this.entries.filter(".online").prependTo(this.user_list);
     },
     
     "updateWritingStatus": function(data) {

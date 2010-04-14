@@ -98,8 +98,8 @@
           <%= link_to c.name.capitalize, {:channel_id => c.id, :index => index}, {:title => c.description} %>
         </li>
       <% end %>
-      <li class="add">
-        <a href="/channels" title="Create a new channel">new channel</a>
+      <li class="browse">
+        <a href="/channels" title="browse more channels"><%= Channel.count - @channels.count %> channels, check them out!</a>
       </li>
     </ul>
   </div>

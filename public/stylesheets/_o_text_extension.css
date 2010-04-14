@@ -262,12 +262,12 @@
   background: #eee;
 }
 
-.text-extension-results.LocalImage .media a:nth-child(5n) img {
+.text-extension-results.LocalImage .media a:nth-child(4n) img {
   position: absolute;
   right: 5px; /* Ensure that resizing effect aligns right, to avoid overflow problems */
 }
 
-.text-extension-results.LocalImage .media a:nth-child(6n) {
+.text-extension-results.LocalImage .media a:nth-child(5n) {
   clear: left;
 }
 

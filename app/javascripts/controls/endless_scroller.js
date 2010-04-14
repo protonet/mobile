@@ -21,7 +21,7 @@ protonet.controls.EndlessScroller = (function() {
   EndlessScroller.prototype = {
     "_observe": function() {
       var channel = $("#messages-for-channel-" + this.channelId),
-          lastTweet = channel.children("li:last-child");
+          lastTweet = channel.children("li:last");
       lastTweet.bind("inview", function() {
         lastTweet.unbind("inview");
         this.loadOlderTweets(lastTweet, channel);

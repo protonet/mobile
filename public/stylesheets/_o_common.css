@@ -178,19 +178,19 @@ div, button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, 
 }
 
 
-#channel .add {
+#channel .browse {
   background: transparent none;
   border: 1px solid transparent;
 }
-#channel .add a {
+#channel .browse a {
   background: transparent none;
   border: 1px solid transparent;
   color: rgb(0, 0, 0);
 }
-#channel .add a:hover {
+#channel .browse a:hover {
   text-decoration: underline;
 }
-#channel .add a:before {
+#channel .browse a:before {
   content: "\002B\0020";
 }
 /* =CHANNEL OPTIONS
