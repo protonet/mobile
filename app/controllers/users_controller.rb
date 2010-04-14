@@ -59,14 +59,11 @@ class UsersController < ApplicationController
   end
 
   def list_channels
+    channels = current_user ? current_user.channels : [Channel.home]
     respond_to do |format|
       format.json do
-        if current_user
-          channels = current_user.channels.collect { |c| {:id => c.id, :name => c.name, :description => c.description}}
+          channels = channels.collect { |c| {:id => c.id, :name => c.name, :description => c.description}}
           render :json => {:channels => channels}
-        else
-          # TODO: remove hardcoded channel info, does it make sense to use Channel.find :first? what if it gets deleted later?
-          render :json => {:channels => [{:id => 1, :name => 'home', :description => 'your homebase'}]}
         end
       end
     end
