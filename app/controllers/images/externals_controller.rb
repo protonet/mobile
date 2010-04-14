@@ -31,10 +31,7 @@ class Images::ExternalsController < ApplicationController
     @width = params[:width] unless params[:width] == '0'
     @height = params[:height] unless params[:height] == '0'
 
-    # local file
-    # fixme: Srsly this screams for a better solution like a little teenage girl in the rollercoaster... (cblum)
-    # Next external url (like the one from another node) that contains "file_path" will just fail epicly
-    detect_local_file = /.+file_path=/i
+    detect_local_file = /.*#{Regexp.escape(request.env["SERVER_NAME"])}.+file_path=/i
     if params[:image_file_url] =~ detect_local_file
       file_path = params.delete(:image_file_url).gsub(detect_local_file, '')
       @external = Images::External.new(:image_file => File.new(configatron.user_file_path.to_s + URI.decode(file_path), "r"))
