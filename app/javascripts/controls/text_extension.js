@@ -1,6 +1,6 @@
 protonet.controls.TextExtension = {
   initialize: function() {
-    $(protonet.globals.notifications).bind("channel.changed", this.renderQueue.bind(this));
+    protonet.globals.notifications.bind("channel.changed", this.renderQueue.bind(this));
     
     $(this.renderQueue.bind(this));
   },

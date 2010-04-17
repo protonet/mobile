@@ -125,22 +125,39 @@ module JsDispatchingServer
     @queues ||= []
     amq = MQ.new
     @user.channels.each do |channel|
-      channel_queue = amq.queue("consumer-#{@key}-channel.a#{channel.id}", :auto_delete => true)
-      channel_queue.bind(amq.topic("channels"), :key => "channels.a#{channel.id}").subscribe do |msg|
-        message = JSON(msg)
-        sender_socket_id = message['socket_id']
-        message.merge!({:x_target => 'protonet.globals.communicationConsole.receiveMessage'})
-        if sender_socket_id && sender_socket_id.to_i != @key
-          message_json = message.to_json
-          log('sending data out: ' + message_json + ' ' + sender_socket_id)
-          send_data("#{message_json}\0")
-        end
-      end
-      @queues << channel_queue
+      @queues << bind_channel(amq, channel)
+      @queues << bind_files_for_channel(amq, channel)
       log("subscribing to channel #{channel.id}")
     end
     @subscribed = true
   end 
+  
+  def bind_channel(amq, channel)
+    queue = amq.queue("consumer-#{@key}-channel.a#{channel.id}", :auto_delete => true)
+    queue.bind(amq.topic("channels"), :key => "channels.a#{channel.id}").subscribe do |msg|
+      message = JSON(msg)
+      sender_socket_id = message['socket_id']
+      message.merge!({:x_target => 'protonet.globals.communicationConsole.receiveMessage'})
+      if sender_socket_id && sender_socket_id.to_i != @key
+        message_json = message.to_json
+        log('sending data out: ' + message_json + ' ' + sender_socket_id)
+        send_data("#{message_json}\0")
+      end
+    end
+    queue
+  end
+  
+  def bind_files_for_channel(amq, channel)
+    queue = amq.queue("consumer-#{@key}-files.channel_#{channel.id}", :auto_delete => true)
+    queue.bind(amq.topic("files"), :key => "files.channel_#{channel.id}").subscribe do |msg|
+      message = JSON(msg)
+      message.merge!({:x_target => 'protonet.globals.notifications.triggerNotification[0]'}) # jquery object
+      message_json = message.to_json
+      log('sending data out: ' + message_json)
+      send_data("#{message_json}\0")
+    end
+    queue
+  end
   
   def unbind_socket_from_queues
     @queues && @queues.each {|q| q.unsubscribe}

@@ -15,7 +15,7 @@ protonet.controls.FileWidget = function() {
   this.addPathBlob('');
   this.initUpload();
   this.initContextMenu();
-  $(protonet.globals.notifications).bind("channel.changed", function(e, id) {
+  protonet.globals.notifications.bind("channel.changed", function(e, id) {
     this.currentChannelId = id;
     this.current_path = "";
     this.removeDirectoriesAboveCurrent(1);
@@ -49,7 +49,7 @@ protonet.controls.FileWidget.prototype = {
   "gotoPath": function(path) {
     path = path || '';
     this.file_list.fadeTo(100, 0.2);
-    jQuery.getJSON('system/files', {"path": this.channelizePath(path)}, this.renderResponse.bind(this));
+    jQuery.getJSON('system/files', {"path": this.channelizePath(path), "channel_id": this.currentChannelId}, this.renderResponse.bind(this));
   },
   
   "observeBackButton": function() {
@@ -172,6 +172,7 @@ protonet.controls.FileWidget.prototype = {
           data: {
             directory_name:     new_folder_input.val(),
             file_path:          this.channelizePath(this.current_path),
+            channel_id:         this.currentChannelId,
             authenticity_token: protonet.config.authenticity_token
           },
           beforeSend: function() {

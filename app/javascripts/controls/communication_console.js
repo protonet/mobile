@@ -82,7 +82,7 @@ protonet.controls.CommunicationConsole.prototype = {
     var isAllowedToPlaySound = protonet.user.Config.get("sound");
     
     // Send general notification
-    $(protonet.globals.notifications).trigger("message.new", [message, channelId]);
+    protonet.globals.notifications.trigger("message.new", [message, channelId]);
     
     if (!protonet.utils.isWindowFocused() && isCurrentChannel) {
       // Show fancy animated text in browser title

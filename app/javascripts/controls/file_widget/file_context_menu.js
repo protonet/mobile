@@ -24,7 +24,7 @@ protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
     var fileName = el.text(),
         filePath = this.parent.getFilePathFor(fileName);
     
-    $.post('system/files/delete', {"file_path": filePath});
+    $.post('system/files/delete', {"file_path": filePath, "channel_id": this.parent.currentChannelId});
     el.remove();
     
     console.log('delete: ' + filePath);

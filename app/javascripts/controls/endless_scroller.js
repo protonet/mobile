@@ -8,7 +8,7 @@ protonet.controls.EndlessScroller = (function() {
     this.channelId = protonet.globals.channelSelector.getCurrentChannelId();
     this._observe();
     
-    $(protonet.globals.notifications).bind("channel.changed", function(e, newChannelId) {
+    protonet.globals.notifications.bind("channel.changed", function(e, newChannelId) {
       var oldChannel = $("#messages-for-channel-" + this.channelId);
       
       oldChannel.children().unbind("inview");
