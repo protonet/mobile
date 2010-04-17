@@ -112,7 +112,7 @@ protonet.dispatching.DispatchingSystem.prototype = {
         break;
       default:
         console.log('default handling: ' + message.x_target + '(message)');
-        eval(message.x_target)(message);
+        eval(message.x_target + '(message)');
     }
   },
 
