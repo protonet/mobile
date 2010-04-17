@@ -3,3 +3,8 @@
 // central pub sub point
 protonet.notifications.Central = function() {
 };
+protonet.notifications.Central.prototype = {
+  'triggerNotification': function(foo) {
+    console.log(foo);
+  }
+}

@@ -74,6 +74,7 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
     return this._uploadUrl +
       "?_rails_dashboard_session=" + encodeURIComponent(protonet.config.session_id) +
       "&authenticity_token=" + encodeURIComponent(this._token) +
+      "&channel_id=" + this.parent.currentChannelId + 
       "&file_path=" + encodeURIComponent(this.parent.channelizePath(this.parent.current_path));
   },
   

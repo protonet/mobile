@@ -4,7 +4,7 @@ protonet.controls.Fluid = function() {
   this.fluid = window.fluid;
   this.unreadMessages = 0;
   
-  $(protonet.globals.notifications).bind("message.new", function(e, message) {
+  protonet.globals.notifications.bind("message.new", function(e, message) {
     if (protonet.utils.isWindowFocused()) {
       return;
     }

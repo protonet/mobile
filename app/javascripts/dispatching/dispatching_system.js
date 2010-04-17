@@ -111,8 +111,8 @@ protonet.dispatching.DispatchingSystem.prototype = {
         $('#tweet_socket_id').val(message.socket_id);
         break;
       default:
-        // console.log('default handling: ' + message.x_target + '(message)');
-        eval(message.x_target + '(message)');
+        console.log('default handling: ' + message.x_target + '(message)');
+        eval(message.x_target)(message);
     }
   },
 

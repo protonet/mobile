@@ -33,7 +33,7 @@ protonet.controls.ChannelSelector = (function() {
           self.setCurrentChannelId(channelId);
           
           // trigger global notification
-          $(protonet.globals.notifications).trigger("channel.changed", channelId);
+          protonet.globals.notifications.trigger("channel.changed", channelId);
         });
         
         container.find(".active").toggleClass("active");
@@ -43,7 +43,7 @@ protonet.controls.ChannelSelector = (function() {
         event.preventDefault();
       });
       
-      $(protonet.globals.notifications).bind("message.new", function(e, message, channelId) {
+      protonet.globals.notifications.bind("message.new", function(e, message, channelId) {
         /**
          * Only show a little badge on the channel when it's not focused
          */

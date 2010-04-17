@@ -15,7 +15,9 @@ module System
     def create_directory
       if params[:directory_name]
         begin
-          FileUtils.mkdir(System::FileSystem.cleared_path("#{params["file_path"]}/#{params["directory_name"]}"))
+          full_directory_path = "#{params["file_path"]}/#{params["directory_name"]}"
+          FileUtils.mkdir(System::FileSystem.cleared_path(full_directory_path))
+          System::MessagingBus.topic('files').publish({:file => :directory_added, :path => full_directory_path}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
         rescue
           return head(409)
         else
@@ -28,7 +30,9 @@ module System
     
     def delete_directory
       if params[:directory_name]
-        FileUtils.rm_rf(System::FileSystem.cleared_path("#{params["file_path"]}/#{params["directory_name"]}"))
+        full_directory_path = "#{params["file_path"]}/#{params["directory_name"]}"
+        FileUtils.rm_rf(System::FileSystem.cleared_path(full_directory_path))
+        System::MessagingBus.topic('files').publish({:file => :directory_removed, :path => full_directory_path}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
         return head(:ok)
       else
         return head(:error)
@@ -43,12 +47,14 @@ module System
         # Fix file name encoding bug
         if request.env['HTTP_X_FIX_ENCODING'] == 'true'
           latin1_to_utf8 = Iconv.new("UTF8//TRANSLIT//IGNORE", "LATIN1")
-          filename = latin1_to_utf8.iconv(filename)
+          filename       = latin1_to_utf8.iconv(filename)
         end
         
+        full_file_path    = "#{params["file_path"]}/#{filename}"
         cleared_file_path = System::FileSystem.cleared_path("#{params["file_path"]}/#{filename}")
-        target_file = cleared_file_path
+        target_file       = cleared_file_path
         FileUtils.mv(params[:file].path, target_file)
+        System::MessagingBus.topic('files').publish({:file => :file_added, :path => full_file_path}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
         return head(:ok)
       else
         return head(:error)
@@ -68,6 +74,7 @@ module System
     def delete
       if params[:file_path]
         FileUtils.rm(System::FileSystem.cleared_path(params[:file_path]))
+        System::MessagingBus.topic('files').publish({:file => :file_removed, :path => params[:file_path]}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
         return head(:ok)
       else
         return head(:error)
