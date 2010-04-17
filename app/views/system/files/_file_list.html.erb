@@ -11,7 +11,7 @@
     <%- file_system.each do |type, items| -%>
       <%- items.each do |item| -%>
         <li class="<%= type %>">
-          <a href="/system/files/show?file_path=<%= CGI.escape('/' + item) %>" tabindex="-1" title="<%=h item %>"><%=h item %></a>
+          <a href="/system/files/show?file_path=<%= CGI.escape("/#{channel_id}/" + item) %>" tabindex="-1" title="<%=h item %>"><%=h item %></a>
         </li>
       <%- end -%>
     <%- end -%>
