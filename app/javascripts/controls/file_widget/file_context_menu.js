@@ -21,13 +21,15 @@ protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
   },
   
   "delete": function(el) {
-    var fileName = el.text(),
-        filePath = this.parent.getFilePathFor(fileName);
+    var fileName = el.text();
     
-    $.post('system/files/delete', {"file_path": filePath, "channel_id": this.parent.currentChannelId});
+    $.post('system/files/delete', {
+      "file_name" : fileName,
+      "file_path" : this.parent.fullPath(),
+      "channel_id": this.parent.currentChannelId});
     el.remove();
     
-    console.log('delete: ' + filePath);
+    console.log('delete: ' + this.parent.getFilePathFor(fileName));
   },
   
   "publish": function(el) {
