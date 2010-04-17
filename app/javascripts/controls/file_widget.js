@@ -11,13 +11,13 @@ protonet.controls.FileWidget = function() {
   
   this.observeBackButton();
   this.observeFolderCreateButton();
-  this.current_path = '';
+  this.currentPath = '';
   this.addPathBlob('');
   this.initUpload();
   this.initContextMenu();
   protonet.globals.notifications.bind("channel.changed", function(e, id) {
     this.currentChannelId = id;
-    this.current_path = "";
+    this.currentPath = "";
     this.removeDirectoriesAboveCurrent(1);
     this.gotoPath();
   }.bind(this));
@@ -44,6 +44,10 @@ protonet.controls.FileWidget.prototype = {
   
   "channelizePath": function(path) {
     return '/' + this.currentChannelId + path;
+  },
+  
+  "fullPath": function() {
+    return this.channelizePath(this.currentPath);
   },
   
   "gotoPath": function(path) {
@@ -92,22 +96,22 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "moveDown": function(path) {
-    this.current_path += "/" + path;
-    this.gotoPath(this.current_path);
+    this.currentPath += "/" + path;
+    this.gotoPath(this.currentPath);
     this.addPathBlob(path);
   },
   
   "moveUp": function() {
     // you can't move higher than root
-    if(this.current_path != '') {
-      this.current_path = this.removeDeepestDirectory(this.current_path);
-      this.gotoPath(this.current_path);
+    if(this.currentPath != '') {
+      this.currentPath = this.removeDeepestDirectory(this.currentPath);
+      this.gotoPath(this.currentPath);
       this.removePathBlob();
     }
   },
   
   "addPathBlob": function(blob) {
-    var path = this.current_path,
+    var path = this.currentPath,
         old_index = this.hierarchy_bar.children().size() + 1, // we'll be adding one a the end of this method
         blobHtml = protonet.utils.escapeHtml(blob + '/'),
         blobTitle = protonet.utils.escapeHtml('Go to folder "' + (blob || "/") + '"');
@@ -124,7 +128,7 @@ protonet.controls.FileWidget.prototype = {
     var new_index = this.hierarchy_bar.children().size();
     while(new_index > old_index) {
       this.removePathBlob();
-      this.current_path = this.removeDeepestDirectory(this.current_path);
+      this.currentPath = this.removeDeepestDirectory(this.currentPath);
       new_index--;
     }
   },
@@ -171,7 +175,7 @@ protonet.controls.FileWidget.prototype = {
           url: create_folder_url,
           data: {
             directory_name:     new_folder_input.val(),
-            file_path:          this.channelizePath(this.current_path),
+            file_path:          this.fullPath(),
             channel_id:         this.currentChannelId,
             authenticity_token: protonet.config.authenticity_token
           },
@@ -203,7 +207,7 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "getFilePathFor": function(fileName) {
-    return this.channelizePath(this.current_path) + '/' + fileName;
+    return this.channelizePath(this.currentPath) + '/' + fileName;
   },
   
   "getDownloadPathFor": function(fileName) {
