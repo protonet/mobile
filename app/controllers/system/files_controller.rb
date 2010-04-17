@@ -18,7 +18,7 @@ module System
           full_directory_path = "#{params["file_path"]}/#{params["directory_name"]}"
           FileUtils.mkdir(System::FileSystem.cleared_path(full_directory_path))
           System::MessagingBus.topic('files').publish({
-            :file_action    => :directory_added,
+            :trigger        => :directory_added,
             :path           => params["file_path"],
             :directory_name => params["directory_name"]}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
         rescue
@@ -36,7 +36,7 @@ module System
         full_directory_path = "#{params["file_path"]}/#{params["directory_name"]}"
         FileUtils.rm_rf(System::FileSystem.cleared_path(full_directory_path))
         System::MessagingBus.topic('files').publish({
-          :file_action    => :directory_removed,
+          :trigger        => :directory_removed,
           :path           => params["file_path"],
           :directory_name => params["directory_name"]}, :key => 'files.channel_' + params[:channel_id].to_s)
         return head(:ok)
@@ -61,7 +61,7 @@ module System
         target_file       = cleared_file_path
         FileUtils.mv(params[:file].path, target_file)
         System::MessagingBus.topic('files').publish({
-          :file_action  => :file_added,
+          :trigger      => :file_added,
           :path         => params["file_path"],
           :filename     => filename}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
         return head(:ok)
@@ -85,7 +85,7 @@ module System
         full_path = "#{params["file_path"]}/#{params["file_name"]}"
         FileUtils.rm(System::FileSystem.cleared_path(full_path))
         System::MessagingBus.topic('files').publish({
-          :file_action => :file_removed,
+          :trigger      => :file_removed,
           :path         => params["file_path"],
           :filename     => params["file_name"]}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
         return head(:ok)
