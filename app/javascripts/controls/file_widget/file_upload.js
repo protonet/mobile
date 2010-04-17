@@ -241,6 +241,9 @@ protonet.controls.FileWidget.prototype.FileUpload.prototype = {
       this.__html5_uploadFile();
     } else {
       this._input.removeAttr("disabled");
+      // since we're listening to the change event of the input value to trigger uploads
+      // we'll need to clear the value when we're done
+      this._input.val('');
       this.__uploadCompleted();
     }
   },
