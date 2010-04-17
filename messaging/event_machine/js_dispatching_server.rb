@@ -151,7 +151,7 @@ module JsDispatchingServer
     queue = amq.queue("consumer-#{@key}-files.channel_#{channel.id}", :auto_delete => true)
     queue.bind(amq.topic("files"), :key => "files.channel_#{channel.id}").subscribe do |msg|
       message = JSON(msg)
-      message.merge!({:x_target => 'protonet.globals.notifications.triggerNotification[0]'}) # jquery object
+      message.merge!({:x_target => 'protonet.globals.notifications[0].triggerNotification'}) # jquery object
       message_json = message.to_json
       log('sending data out: ' + message_json)
       send_data("#{message_json}\0")
