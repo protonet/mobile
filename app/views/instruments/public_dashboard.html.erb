@@ -75,7 +75,7 @@
   <%- end -%>
   <%= render :partial => 'users/user_list', :locals => {:users => []} %>
   
-  <%= render :partial => 'system/files/file_list', :locals => {:file_system => System::FileSystem.all("/" + @active_channel.id.to_s)} %>
+  <%= render :partial => 'system/files/file_list', :locals => {:file_system => System::FileSystem.all("/" + @active_channel.id.to_s), :channel_id => @active_channel.id} %>
 </div>
 
 
