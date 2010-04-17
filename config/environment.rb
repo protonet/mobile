@@ -51,7 +51,8 @@ Rails::Initializer.run do |config|
   # config.i18n.default_locale = :de
   
   config.cache_store = :mem_cache_store
-    
+  Mime::Type.register "application/pdf", :pdf, [], ['pdf']
+
 end
 
 ActiveSupport::JSON.backend = 'JSONGem'
