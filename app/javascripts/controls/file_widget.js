@@ -21,6 +21,14 @@ protonet.controls.FileWidget = function() {
     this.removeDirectoriesAboveCurrent(1);
     this.gotoPath();
   }.bind(this));
+  protonet.globals.notifications.bind('file_added', function(e, msg){
+
+    if(msg.path == this.fullPath()) {
+      if(!$("//a[title='" + msg.file_name + "']", $('#file-list'))[0]) {
+        $('#file-list ul').append(this.createElementFor({ type: "file", name: msg.file_name }));
+      }
+    }
+  }.bind(this));
 };
 
 protonet.controls.FileWidget.prototype = {
