@@ -63,7 +63,7 @@ module System
         System::MessagingBus.topic('files').publish({
           :trigger      => :file_added,
           :path         => params["file_path"],
-          :filename     => filename}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
+          :file_name     => filename}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
         return head(:ok)
       else
         return head(:error)
@@ -87,7 +87,7 @@ module System
         System::MessagingBus.topic('files').publish({
           :trigger      => :file_removed,
           :path         => params["file_path"],
-          :filename     => params["file_name"]}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
+          :file_name     => params["file_name"]}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
         return head(:ok)
       else
         return head(:error)
