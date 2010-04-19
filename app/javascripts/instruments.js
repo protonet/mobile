@@ -28,7 +28,6 @@ $(function() {
   protonet.globals.dispatcher           = new protonet.dispatching.DispatchingSystem();
 });
 
-
 // Initialize text extensions
 $(function() {
   protonet.controls.TextExtension.initialize();
@@ -37,7 +36,7 @@ $(function() {
 
 // Initialize file stuff
 $(function() {
-  protonet.globals.fileWidget = new protonet.controls.FileWidget();
+  // protonet.globals.fileWidget = new protonet.controls.FileWidget();
 });
 
 
@@ -48,7 +47,7 @@ $(function() {
 
 // Initialize user widget
 $(function() {
-  protonet.globals.userWidget = new protonet.controls.UserWidget();
+  // protonet.globals.userWidget = new protonet.controls.UserWidget();
 });
 
 
@@ -61,17 +60,17 @@ $(function() {
 });
 
 // Frickin' stunning cloud animation (makes your squirrel run in circles!!)
-// $(function() {
-//   protonet.globals.clouds = new protonet.effects.Clouds($("#cloud-container"), {
-//     minStartPosition: -20,
-//     maxStartPosition: 90,
-//     minSize:          20,
-//     maxSize:          70,
-//     minSpeed:         1,
-//     maxSpeed:         2,
-//     amount:           15
-//   });
-// });
+$(function() {
+  protonet.globals.clouds = new protonet.effects.Clouds($("#cloud-container"), {
+    minStartPosition: -20,
+    maxStartPosition: 90,
+    minSize:          10,
+    maxSize:          60,
+    minSpeed:         1,
+    maxSpeed:         2,
+    amount:           20
+  });
+});
 
 // Initialize fluid if the app is running in a fluid container
 $(function() {

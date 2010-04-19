@@ -126,7 +126,7 @@ protonet.effects.Clouds.prototype = {
   },
   
   _startAnimation: function() {
-    this._interval = setInterval(this._moveClouds.bind(this), 100);
+    this._interval = setInterval(this._moveClouds.bind(this), 120);
   },
   
   _moveClouds: function() {

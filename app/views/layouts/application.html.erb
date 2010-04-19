@@ -25,6 +25,7 @@
     //]]></script>
   </head>
   <body>
+    <div id="cloud-container"><!-- container for fluffy clouds (call it "the sky") --></div>
     <%- unless flash.empty? -%>
       <div class="message">
         <%= "<p class=\"notice\"><span>#{flash[:notice]}</span></p>" if flash[:notice] %>
@@ -32,7 +33,7 @@
         <%= "<p class=\"warning\"><span>#{flash[:warning]}</span></p>" if flash[:warning] %>
       </div>
     <%- end -%>
-
+    
     <%- if current_user.stranger? -%>
       <section id="login">
         <h1>Welcome guest</h1>

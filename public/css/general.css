@@ -113,4 +113,14 @@ aside {
   width: 260px;
 }
 
+#cloud-container {
+  position: absolute;
+  overflow: hidden;
+  height: 450px;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  margin: -20px 0 0;
+}
+
 /* ============================================================== GENERAL = */
