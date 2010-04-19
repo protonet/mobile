@@ -123,16 +123,17 @@ module JsDispatchingServer
 
   def bind_socket_to_user_queues
     @queues ||= []
-    amq = MQ.new
     @user.channels.each do |channel|
-      @queues << bind_channel(amq, channel)
-      @queues << bind_files_for_channel(amq, channel)
+      @queues << bind_channel(channel)
+      @queues << bind_files_for_channel(channel)
+      @queues << bind_users
       log("subscribing to channel #{channel.id}")
     end
     @subscribed = true
   end 
   
-  def bind_channel(amq, channel)
+  def bind_channel(channel)
+    amq = MQ.new
     queue = amq.queue("consumer-#{@key}-channel.a#{channel.id}", :auto_delete => true)
     queue.bind(amq.topic("channels"), :key => "channels.a#{channel.id}").subscribe do |msg|
       message = JSON(msg)
@@ -147,9 +148,23 @@ module JsDispatchingServer
     queue
   end
   
-  def bind_files_for_channel(amq, channel)
+  def bind_files_for_channel(channel)
+    amq = MQ.new
     queue = amq.queue("consumer-#{@key}-files.channel_#{channel.id}", :auto_delete => true)
     queue.bind(amq.topic("files"), :key => "files.channel_#{channel.id}").subscribe do |msg|
+      message = JSON(msg)
+      message.merge!({:x_target => 'protonet.globals.notifications[0].triggerNotification'}) # jquery object
+      message_json = message.to_json
+      log('sending data out: ' + message_json)
+      send_data("#{message_json}\0")
+    end
+    queue
+  end
+  
+  def bind_users
+    amq = MQ.new
+    queue = amq.queue("consumer-#{@key}-users", :auto_delete => true)
+    queue.bind(amq.topic("users"), :key => "users.#").subscribe do |msg|
       message = JSON(msg)
       message.merge!({:x_target => 'protonet.globals.notifications[0].triggerNotification'}) # jquery object
       message_json = message.to_json

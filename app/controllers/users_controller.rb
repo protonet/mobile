@@ -34,6 +34,12 @@ class UsersController < ApplicationController
       # button. Uncomment if you understand the tradeoffs.
       # reset session
       self.current_user = @user # !! now logged in
+      @user = User.first
+      System::MessagingBus.topic('users').publish({
+        :trigger        => 'user.added',
+        :user_id        => @user.id,
+        :user_name      => @user.display_name,
+        :avatar_url     => @user.active_avatar_url}.to_json, :key => 'users.new')
       redirect_back_or_default('/')
       flash[:notice] = "Thanks for signing up!  We're sending you an email with your activation code."
     else

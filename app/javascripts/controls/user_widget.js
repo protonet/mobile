@@ -13,16 +13,30 @@ protonet.controls.UserWidget = (function() {
     
     this.entries.each(function(i, entry){
       var user_id = entry.id.match(REG_EXP_ID)[1];
-      this.user_objects[user_id] = $(entry);
-      this.user_names.push(this.user_objects[user_id].children("span").html());
+      this.addUser(user_id, entry);
     }.bind(this));
     
     if (protonet.globals.inputConsole) {
       protonet.globals.inputConsole.initAutocompleter(this.user_names);
     }
+    
+    protonet.globals.notifications.bind('user.added', function(e, msg){
+      var newUserEntry = this.entries.first().clone();
+      newUserEntry.attr("id", 'user-list-user-' + msg.user_id);
+      newUserEntry.find('img').attr('src', msg.avatar_url);
+      newUserEntry.find('span').val(msg.user_name);
+      this.user_list.append(newUserEntry);
+      this.addUser(msg.user_id, newUserEntry)
+    }.bind(this));
+    
   };
   
   UserWidget.prototype = {
+    "addUser": function(user_id, element) {
+      this.user_objects[user_id] = $(element);
+      this.user_names.push(this.user_objects[user_id].children("span").html());      
+    },
+    
     // note to self: a more performant version would be:
     // send an integer identifier (update 102923)
     // if I received (update - 1) just do an incremental udpate
