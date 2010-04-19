@@ -1,5 +1,6 @@
 //= require "user/config.js"
 //= require "user/browser.js"
+//= require "effects/clouds.js"
 //= require "notifications/notifications.js"
 //= require "dispatching/dispatching_system.js"
 //= require "controls/communication_console.js"
@@ -58,6 +59,19 @@ $(function() {
     protonet.controls.PrettyDate.update();
   }, 30000);
 });
+
+// Frickin' stunning cloud animation (makes your squirrel run in circles!!)
+// $(function() {
+//   protonet.globals.clouds = new protonet.effects.Clouds($("#cloud-container"), {
+//     minStartPosition: -20,
+//     maxStartPosition: 90,
+//     minSize:          20,
+//     maxSize:          70,
+//     minSpeed:         1,
+//     maxSpeed:         2,
+//     amount:           15
+//   });
+// });
 
 // Initialize fluid if the app is running in a fluid container
 $(function() {
