@@ -24,7 +24,7 @@ protonet.controls.UserWidget = (function() {
       var newUserEntry = this.entries.first().clone();
       newUserEntry.attr("id", 'user-list-user-' + msg.user_id);
       newUserEntry.find('img').attr('src', msg.avatar_url);
-      newUserEntry.find('span').val(msg.user_name);
+      newUserEntry.find('span').html(msg.user_name);
       this.user_list.append(newUserEntry);
       this.addUser(msg.user_id, newUserEntry)
     }.bind(this));
