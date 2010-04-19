@@ -85,6 +85,15 @@ div, button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, 
   font: normal normal normal 1em "lucida sans", tahoma, verdana, sans-serif;
 }
 
+#cloud-container {
+  position: absolute;
+  overflow: hidden;
+  height: 450px;
+  left: 0;
+  right: 0;
+  z-index: -1;
+}
+
 .header {
   background: transparent url(/images/bkg_header.png) scroll repeat-x 0 0;
   height: 69px;
