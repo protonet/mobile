@@ -2,7 +2,7 @@
 //= require "../utils/parse_url.js"
 
 protonet.controls.FileWidget = function() {
-  this.wrapper = $("#file-list");
+  this.wrapper          = $("#file-list");
   this.file_list        = this.wrapper.find('ul.root');
   this.hierarchy_bar    = this.wrapper.find('#file-navigation .hierarchy');
   this.search_input     = this.wrapper.find('#file-navigation input');
@@ -21,11 +21,10 @@ protonet.controls.FileWidget = function() {
     this.removeDirectoriesAboveCurrent(1);
     this.gotoPath();
   }.bind(this));
-  protonet.globals.notifications.bind('file_added', function(e, msg){
-
-    if(msg.path == this.fullPath()) {
-      if(!$("//a[title='" + msg.file_name + "']", $('#file-list'))[0]) {
-        $('#file-list ul').append(this.createElementFor({ type: "file", name: msg.file_name }));
+  protonet.globals.notifications.bind("file.added", function(e, msg){
+    if (msg.path == this.fullPath()) {
+      if (!this.wrapper.select(".file a[title='" + msg.file_name + "']")[0]) {
+        this.file_list.append(this.createElementFor({ type: "file", name: msg.file_name }));
       }
     }
   }.bind(this));
