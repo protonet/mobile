@@ -37,6 +37,14 @@ protonet.user.Config = {
     }
   },
   
+  store: function() {
+    
+  },
+  
+  load: function() {
+    
+  },
+  
   _renderConfigs: function() {
     var container = $("#mini-menu .option-links");
     $.each(this.configs, function(key, config) {
