@@ -26,7 +26,8 @@ protonet.controls.UserWidget = (function() {
       newUserEntry.find('img').attr('src', msg.avatar_url);
       newUserEntry.find('span').html(msg.user_name);
       this.user_list.append(newUserEntry);
-      this.addUser(msg.user_id, newUserEntry)
+      this.addUser(msg.user_id, newUserEntry[0]);
+      this.entries = this.container.find("li"); // recalculate
     }.bind(this));
     
   };

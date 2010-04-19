@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   named_scope :registered, :conditions => {:temporary_identifier => nil}
 
   after_create :create_ldap_user if configatron.ldap.active == true
-  after_create :listen_to_home
+  after_create :listen_to_home, :send_create_notification
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   #
@@ -137,6 +137,15 @@ class User < ActiveRecord::Base
     Ldap::User.create_for_user(self) unless stranger?
   end
   
+  def send_create_notification
+    unless stranger?
+      System::MessagingBus.topic('users').publish({
+        :trigger        => 'user.added',
+        :user_id        => id,
+        :user_name      => display_name,
+        :avatar_url     => active_avatar_url}.to_json, :key => 'users.new')
+    end
+  end
 
   def password_required_with_logged_out_user?
     skip_validation ? false : password_required_without_logged_out_user?
