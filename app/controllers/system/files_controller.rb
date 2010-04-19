@@ -18,7 +18,7 @@ module System
           full_directory_path = "#{params["file_path"]}/#{params["directory_name"]}"
           FileUtils.mkdir(System::FileSystem.cleared_path(full_directory_path))
           System::MessagingBus.topic('files').publish({
-            :trigger        => :directory_added,
+            :trigger        => 'directory.added',
             :path           => params["file_path"],
             :directory_name => params["directory_name"]}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
         rescue
@@ -36,9 +36,9 @@ module System
         full_directory_path = "#{params["file_path"]}/#{params["directory_name"]}"
         FileUtils.rm_rf(System::FileSystem.cleared_path(full_directory_path))
         System::MessagingBus.topic('files').publish({
-          :trigger        => :directory_removed,
+          :trigger        => 'directory.removed',
           :path           => params["file_path"],
-          :directory_name => params["directory_name"]}, :key => 'files.channel_' + params[:channel_id].to_s)
+          :directory_name => params["directory_name"]}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
         return head(:ok)
       else
         return head(:error)
@@ -61,7 +61,7 @@ module System
         target_file       = cleared_file_path
         FileUtils.mv(params[:file].path, target_file)
         System::MessagingBus.topic('files').publish({
-          :trigger      => :file_added,
+          :trigger      => 'file.added',
           :path         => params["file_path"],
           :file_name     => filename}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
         return head(:ok)
@@ -85,7 +85,7 @@ module System
         full_path = "#{params["file_path"]}/#{params["file_name"]}"
         FileUtils.rm(System::FileSystem.cleared_path(full_path))
         System::MessagingBus.topic('files').publish({
-          :trigger      => :file_removed,
+          :trigger      => 'file.removed',
           :path         => params["file_path"],
           :file_name     => params["file_name"]}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
         return head(:ok)

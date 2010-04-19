@@ -21,12 +21,28 @@ protonet.controls.FileWidget = function() {
     this.removeDirectoriesAboveCurrent(1);
     this.gotoPath();
   }.bind(this));
-  protonet.globals.notifications.bind("file.added", function(e, msg){
-    if (msg.path == this.fullPath()) {
-      if (!this.wrapper.select(".file a[title='" + msg.file_name + "']")[0]) {
-        this.file_list.append(this.createElementFor({ type: "file", name: msg.file_name }));
+  protonet.globals.notifications.bind('file.added file.removed directory.added directory.removed', function(e, msg){
+    if(msg.path == this.fullPath()) {
+      switch(e.type + '.' + e.handleObj.namespace) {
+        case 'file.added':
+          if(!this.wrapper.find(".file a[title='" + msg.file_name + "']")[0]) {
+            $('#file-list ul').append(this.createElementFor({ type: "file", name: msg.file_name }));
+          }
+          break;
+        case 'file.removed':
+          this.wrapper.find(".file a[title='" + msg.file_name + "']").remove();
+          break;
+        case 'directory.added':
+          if(!this.wrapper.find(".directory a[title='" + msg.directory_name + "']")[0]) {
+            $('#file-list ul').append(this.createElementFor({ type: "directory", name: msg.directory_name }));
+          }
+          break;
+        case 'directory.removed':
+          this.wrapper.find(".directory a[title='" + msg.directory_name + "']").remove();
+          break;
       }
-    }
+    };
+
   }.bind(this));
 };
 

@@ -9,6 +9,3 @@ protonet.notifications.Central.prototype = {
     this.self.trigger(message.trigger, message);
   }
 };
-
-// bind with
-// protonet.globals.notifications.bind('file_added', function(e, msg){console.log(msg)})

@@ -35,7 +35,7 @@ protonet.controls.FileWidget.prototype.FolderContextMenu.prototype = {
     $.post('system/files/delete_directory', {
       file_path: this.parent.fullPath(),
       directory_name: folderName,
-      channel_id: this.currentChannelId
+      channel_id: this.parent.currentChannelId
     });
     el.remove();
   }
