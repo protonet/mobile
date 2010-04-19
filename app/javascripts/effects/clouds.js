@@ -1,18 +1,35 @@
 //= require "../utils/get_random_number_in_range.js"
 
+/**
+ * Cloud Animation
+ * Creates and animates a number of clouds in a given container
+ *
+ * @param {Element} container jQuery reference to the container element
+ * @param {Object} [config] See defaultConfig for detailed documentation
+ *
+ * @example
+ *    new protonet.effects.Clouds($("body"), {
+ *      amount: 10,
+ *      minStartPosition: 0,
+ *      maxStartPosition: 50
+ *    });
+ */
 protonet.effects.Clouds = function(container, config) {
   this.container = container;
+  this.containerSize = {
+    width: container.width(),
+    height: container.height()
+  };
   this.config = $.extend({}, this.defaultConfig, config);
   this.clouds = $();
-  
-  this._getContainerInfo();
-  this._createSky();
   
   this._preload(function() {
     var i = this.config.amount;
     while (i--) {
-      this._createCloud();
+      this.clouds = this.clouds.add(this._createCloud());
     }
+    this.clouds.appendTo(this.container);
+    this._startAnimation();
   }.bind(this));
 };
 
@@ -22,59 +39,40 @@ protonet.effects.Clouds.prototype = {
    */
   defaultConfig: {
     amount:           10,                   // Number of how many clouds should be shown
-    speed:            5,                    // Number between 1-10
-    minSize:          50,                   // Min size of clouds in percent (relative to the natural size)
+    minSpeed:         1,                    // Min speed of clouds
+    maxSpeed:         10,                   // Max speed of clouds
+    minSize:          10,                   // Min size of clouds in percent (relative to the natural size)
     maxSize:          100,                  // Max size of clouds in percent (relative to the natural size)
-    minStartPosition: -20,                  // Min start position of clouds in percent (relative to the container width)
-    maxStartPosition: 80,                   // Max start position of clouds in percent (relative to the container width)
-    skyHeight:        450,                  // Height of the area where the clouds should be displayed
+    minStartPosition: 0,                    // Min start position of clouds in percent (relative to the container width)
+    maxStartPosition: 100,                  // Max start position of clouds in percent (relative to the container width)
     image:            "/images/cloud.png",  // Url to the cloud image
     insertMethod:     "prepend"             // jQuery method for inserting the sky element into the given container
   },
   
-  _createCloud: function() {
-    var cloudElement = $("<img />", $.extend({
+  _createCloud: function(fromStart) {
+    var cloudElement = $("<img />", {
       src: this.config.image
-    }, this.config.imageSize));
+    });
+    
+    var randomPosition = this._getRandomPosition(),
+        randomSize = this._getRandomSize();
+    
+    if (fromStart) {
+      randomPosition.left = Math.round(this.containerSize.width / 100 * this.config.minStartPosition);
+    }
+    
+    if (randomSize.height + randomPosition.top > this.containerSize.height) {
+      randomPosition.top -= randomSize.height;
+    }
     
     cloudElement
-      .attr(this._getRandomSize())
+      .attr(randomSize)
       .css({ position: "absolute" })
-      .css(this._getRandomPosition());
+      .css({ top: randomPosition.top.px(), left: randomPosition.left.px() });
     
-    this.clouds = this.clouds.add(cloudElement);
-  },
-  
-  /**
-   * Creates a scaffold for where the clouds will be animated in
-   * Unfortunately we need two elements for that:
-   * One that is absolutely positioned in the background of the container element
-   * The other one gets inserted into the first one and receives position: relative; to enable absolute
-   * positioning of clouds within it 
-   */
-  _createSky: function() {
-    this.sky = $("<div />").css({
-      height:   this.config.skyHeight.px(),
-      position: "absolute",
-      top:      0,
-      left:     0,
-      width:    this.containerInfo.width.px()
-    }).addClass("sky");
+    cloudElement.data("speed", protonet.utils.getRandomNumberInRange(this.config.minSpeed, this.config.maxSpeed));
     
-    this.skyInner = $("<div />").css({
-      height:   this.config.skyHeight.px(),
-      position: "relative",
-      overflow: "hidden"
-    }).addClass("sky-inner");
-    
-    this.sky.append(this.skyInner);
-    this.container[this.config.insertMethod](this.sky);
-  },
-  
-  _getContainerInfo: function() {
-    this.containerInfo = {
-      width: this.container.width()
-    };
+    return cloudElement;
   },
   
   /**
@@ -100,10 +98,9 @@ protonet.effects.Clouds.prototype = {
    * @return {Object} An object containing width/height properties
    */
   _getRandomSize: function() {
-    var randomPercent = protonet.utils.getRandomNumberInRange(this.config.minSize, this.config.maxSize);
-    
-    var width = Math.round(this.config.imageSize.width / 100 * randomPercent);
-    var height = Math.round(this.config.imageSize.height / 100 * randomPercent);
+    var randomPercent = protonet.utils.getRandomNumberInRange(this.config.minSize, this.config.maxSize),
+        width = this.config.imageSize.width / 100 * randomPercent,
+        height = this.config.imageSize.height / 100 * randomPercent;
     
     return {
       width: width,
@@ -117,15 +114,36 @@ protonet.effects.Clouds.prototype = {
    * @return {Object} An object containing top/left css properties
    */
   _getRandomPosition: function() {
-    var randomPercentX = protonet.utils.getRandomNumberInRange(this.config.minStartPosition, this.config.maxStartPosition);
-    var randomPercentY = protonet.utils.getRandomNumberInRange(this.config.minStartPosition, this.config.maxStartPosition);
-    
-    var x = Math.round(this.containerInfo.width / 100 * randomPercentX);
-    var y = Math.round(this.config.skyHeight / 100 * randomPercentY);
+    var randomPercentX = protonet.utils.getRandomNumberInRange(this.config.minStartPosition, this.config.maxStartPosition),
+        randomPercentY = protonet.utils.getRandomNumberInRange(this.config.minStartPosition, this.config.maxStartPosition),
+        left = this.containerSize.width / 100 * randomPercentX,
+        top = this.containerSize.height / 100 * randomPercentY;
     
     return {
-      left: x.px(),
-      top:  y.px()
+      left: left,
+      top:  top
     };
+  },
+  
+  _startAnimation: function() {
+    this._interval = setInterval(this._moveClouds.bind(this), 100);
+  },
+  
+  _moveClouds: function() {
+    this.containerSize.width = this.container.width();
+    
+    this.clouds = this.clouds.map(function(i, cloud) {
+      cloud = $(cloud);
+      
+      var speed = cloud.data("speed"),
+          posLeft = parseInt(cloud.css("left"), 10);
+      
+      if (posLeft > this.containerSize.width) {
+        cloud.remove();
+        return this._createCloud(true).appendTo(this.container);
+      } else {
+        return cloud.css("left", (posLeft + speed).px());
+      }
+    }.bind(this));
   }
 };
