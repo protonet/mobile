@@ -12,6 +12,11 @@ protonet.controls.InlineAutocompleter = function(input, data, options) {
   this.data = this._prepareData(data);
   
   this._observe();
+  
+  protonet.globals.notifications.bind('user.added', function(e, msg){
+    this.addData(["@" + msg.user_name]);
+  }.bind(this));
+  
 };
 
 protonet.controls.InlineAutocompleter.prototype = {
