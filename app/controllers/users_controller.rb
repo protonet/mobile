@@ -34,7 +34,6 @@ class UsersController < ApplicationController
       # button. Uncomment if you understand the tradeoffs.
       # reset session
       self.current_user = @user # !! now logged in
-      @user = User.first
       System::MessagingBus.topic('users').publish({
         :trigger        => 'user.added',
         :user_id        => @user.id,
