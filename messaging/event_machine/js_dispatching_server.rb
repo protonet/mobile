@@ -38,6 +38,8 @@ module JsDispatchingServer
         bind_socket_to_system_queue
         bind_socket_to_user_queues
         add_to_online_users
+      else
+        send_reload_request
       end
     elsif @user && data.is_a?(Hash)
       case data["operation"]
@@ -64,6 +66,11 @@ module JsDispatchingServer
     else
       log("could not authenticate #{auth_data.inspect}")
     end
+  end
+  
+  def send_reload_request
+    data = {:x_target => "document.location.reload"}.to_json
+    send_data(data + "\0")
   end
   
   def unbind
