@@ -114,7 +114,7 @@ aside {
 }
 
 #cloud-container {
-  position: absolute;
+  position: fixed;
   overflow: hidden;
   height: 450px;
   left: 0;
