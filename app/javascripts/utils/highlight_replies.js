@@ -4,7 +4,8 @@ protonet.utils.highlightReplies = (function() {
   
   return function(str) {
     return str.replace(REG_EXP, function(match, $1, $2) {
-      return $1 + "@" + '<span class="reply">' + $2 + '</span>';
+      // protonet.globals.userWidget.
+      return $1 + "@" + '<span class="reply ' + $2 + '">' + $2 + '</span>';
     });
   };
 })();
