@@ -67,8 +67,8 @@ $(function() {
     minSize:          10,
     maxSize:          60,
     minSpeed:         1,
-    maxSpeed:         2,
-    amount:           20
+    maxSpeed:         1.5,
+    amount:           15
   });
 });
 

@@ -67,8 +67,11 @@ protonet.effects.Clouds.prototype = {
     
     cloudElement
       .attr(randomSize)
-      .css({ position: "absolute" })
-      .css({ top: randomPosition.top.px(), left: randomPosition.left.px() });
+      .css({
+        position: "absolute",
+        top: randomPosition.top.px(),
+        left: randomPosition.left.px()
+      });
     
     cloudElement.data("speed", protonet.utils.getRandomNumberInRange(this.config.minSpeed, this.config.maxSpeed));
     
@@ -126,7 +129,7 @@ protonet.effects.Clouds.prototype = {
   },
   
   _startAnimation: function() {
-    this._interval = setInterval(this._moveClouds.bind(this), 120);
+    this._interval = setInterval(this._moveClouds.bind(this), 150);
   },
   
   _moveClouds: function() {
@@ -136,7 +139,7 @@ protonet.effects.Clouds.prototype = {
       cloud = $(cloud);
       
       var speed = cloud.data("speed"),
-          posLeft = parseInt(cloud.css("left"), 10);
+          posLeft = parseFloat(cloud.css("left"), 10);
       
       if (posLeft > this.containerSize.width) {
         cloud.remove();
