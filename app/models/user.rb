@@ -146,6 +146,17 @@ class User < ActiveRecord::Base
         :avatar_url     => active_avatar_url}.to_json, :key => 'users.new')
     end
   end
+  
+  def subscribe(channel)
+    channels << channel
+    send_subscribe_notification(channel) if save
+  end
+  
+  def send_subscribe_notification(channel)
+    System::MessagingBus.topic('channels').publish({
+      :trigger        => 'channel.subscribed',
+      :user_id        => id}.to_json, :key => "channels.a#{channel.id}")
+  end
 
   def password_required_with_logged_out_user?
     skip_validation ? false : password_required_without_logged_out_user?
