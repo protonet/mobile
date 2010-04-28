@@ -34,11 +34,13 @@ class ChannelsController < ApplicationController
   
   def destroy
     channel = Channel.find(params[:id])
-    success = channel && channel.destroy
-    if success && channel.errors.empty?
-      flash[:notice] = "Successfully deleted channel '#{channel.name}'"
-    else
-      flash[:error] = "Could not delete channel '#{channel.name}'"
+    if(channel && channel.owned_by(current_user)) 
+      success = channel.destroy
+      if success && channel.errors.empty?
+        flash[:notice] = "Successfully deleted channel '#{channel.name}'"
+      else
+        flash[:error] = "Could not delete channel '#{channel.name}'"
+      end
     end
     redirect_to :action => 'index'
   end
