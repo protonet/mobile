@@ -1,0 +1,10 @@
+<h3><%= channel.name %></h3>
+<p id="channel-listener">subscribed <%= channel_listen_control(channel) %></p>
+<p>Channel owner: <%= channel.owner.display_name %></p>
+
+<h4>Channel subscribers:</h4>
+<ul>
+  <% channel.users.registered.each do |user| %>
+  <li><%= user.display_name %></li>
+  <% end %>
+</ul>

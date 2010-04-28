@@ -1,13 +1,17 @@
 class ChannelsController < ApplicationController
   
-  # before_filter :login_required
+  before_filter :login_required
   
   def index
     @channels = Channel.all
   end
   
+  def show
+    render :partial => "channel_details", :locals => {:channel => Channel.find(params[:id])}
+  end
+  
   def create
-    channel = Channel.new(params[:channel])
+    channel = Channel.new(params[:channel].merge(:owner => current_user))
     success = channel && channel.save
     if success && channel.errors.empty?
       flash[:notice] = "Successfully created channel '#{params[:channel][:name]}'"
