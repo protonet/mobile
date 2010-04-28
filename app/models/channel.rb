@@ -19,6 +19,10 @@ class Channel < ActiveRecord::Base
     end
   end
   
+  def owned_by(user)
+    owner == user
+  end
+  
   def create_folder
     FileUtils.mkdir(System::FileSystem.cleared_path("/#{id.to_s}"))
   end

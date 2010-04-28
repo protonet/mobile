@@ -10,19 +10,19 @@ class ListensController < ApplicationController
     else
       flash[:error] = "could not subscribe to channel with id #{params[:channel_id].to_s}"
     end
-    redirect_to :controller => 'channels'
+    redirect_to :controller => 'channels', :anchor => channel.id
   end
   
   def destroy
-    if listen = begin Listen.find(params[:id])
-      rescue ActiveRecord::RecordNotFound
-        nil
-      end
-      channel = listen.channel
+    listen = Listen.find(params[:id])
+    channel = listen.channel
+    if listen.user == current_user || channel.owner == current_user
       listen.destroy
       flash[:notice] = "you stopped listening to #{channel.name}"
+    else
+      flash[:notice] = "you have no right to this operation"
     end
-    redirect_to :controller => 'channels', :action => 'index'
+    redirect_to :controller => 'channels', :action => 'index', :anchor => channel.id
   end
   
 end

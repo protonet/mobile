@@ -222,3 +222,9 @@ protected
     record
   end
 end
+
+
+# test: destroy listens if the user has been deleted
+# test: nullify ownership on channels but don't delete them
+# test: destroy avatars on user deletion
+# test: handle tweet stuff when deleting user

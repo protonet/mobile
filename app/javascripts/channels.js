@@ -9,5 +9,9 @@ $(function() {
     $("#channels ul li.clicked").toggleClass("clicked");
     $(this).toggleClass("clicked");
   });
-  $("#channels li:first").click();
+  if(location.hash) {
+    $("#channel-" + location.hash.substring(1)).click();
+  } else {
+    $("#channels li:first").click();
+  }
 });

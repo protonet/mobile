@@ -20,9 +20,9 @@ class User < ActiveRecord::Base
   attr_accessible :login, :email, :name, :password, :password_confirmation
 
   has_many  :tweets
-  has_many  :listens
+  has_many  :listens, :dependent => :destroy
   has_many  :channels, :through => :listens
-  has_many  :owned_channels, :class_name => 'Channel', :foreign_key => :owner_id
+  has_many  :owned_channels, :class_name => 'Channel', :foreign_key => :owner_id, :dependent => :nullify
   has_many  :avatars, :class_name => 'Images::Avatar', :dependent => :destroy
   
   named_scope :registered, :conditions => {:temporary_identifier => nil}
