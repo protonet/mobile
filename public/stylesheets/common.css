@@ -1354,3 +1354,47 @@ h2 {
   height: 500px;
   float:left;
 }
+
+/* = Channels-details
+--------------------------------------------------------------------------- */
+
+#channels-details h3 {
+  font-size: 1.4em;
+  font-weight: bold;
+  margin: 0 0 0.1em;
+  display: inline;
+}
+#channels-details h4 {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 0.1em 0 0.3em;
+}
+#channels-details #channel-owner {
+  color: rgb(107, 107, 107);
+  font-style: italic;
+  padding: 0 0 0.2em;
+}
+#channel-description {
+ display: inline;
+}
+#channel-listener {
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+  background: rgb(255, 255, 255) url(/images/bkg_message.png) repeat-x scroll left bottom;
+  border-radius: 0.5em;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  color: rgb(0, 0, 0);
+  font-size: 1.2em;
+  float: right;
+  margin: 0 0 0.5em;
+  padding: 1em 0.6em;
+  text-decoration: none;
+  cursor: pointer;
+}
+#channel-subscribers li{
+  margin: 0.2em 0;
+}
+#channel-subscribers img{
+  vertical-align: middle;
+}
+

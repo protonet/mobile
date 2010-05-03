@@ -1,18 +1,19 @@
-<h3><%= channel.name %></h3>
-<p id="channel-listener">subscribed <%= channel_listen_control(channel) %></p>
-<br>
-<% if channel.owned_by(current_user) %>
-  <p>more controls:</p>
-  <span class="destroy"><%= link_to('delete channel', channel_path, :method => :delete) %></span>
-  <br><br>
-<% end %>
-<p>Channel owner: <%= channel.owner.display_name %></p>
-<br>
+<h3><%= channel.name %></h3> <p id="channel-description"><%= channel.description %></p>
+<p id="channel-listener""><%= channel_listen_control(channel) %></p>
+<p id="channel-owner">(Owner: <%= channel.owner.display_name %>)</p>
 <h4>Channel subscribers:</h4>
-<ul>
+<ul id="channel-subscribers">
   <% channel.listens.all(:include => :user).each do |listen| %>
     <% if !listen.user.stranger? && user = listen.user %>
-      <li><%= user.display_name %><%= " | " + link_to('remove listener', listen_path(listen), :method => :delete) if channel.owner == current_user %></li>
+      <li><img src="<%= user.active_avatar_url || '/images/userpicture-mini.jpg' %>" width="20" height="20" alt="Userpicture Mini" /> <span><%= user.display_name %></span>
+<%= " | " + link_to('remove listener', listen_path(listen), :method => :delete) if channel.owner == current_user %></li>
     <% end %>
   <% end %>
 </ul>
+
+<% if channel.owned_by(current_user) %>
+  <h4>Channel Options:</h4>
+  <span class="destroy">
+    <%= link_to('delete channel', channel_path, :method => :delete) %>
+  </span>
+<% end %>
