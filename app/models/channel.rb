@@ -8,9 +8,9 @@ class Channel < ActiveRecord::Base
   has_many  :listens
   has_many  :users, :through    => :listens
   
-  after_create :create_folder
+  after_create :create_folder, :subscribe_owner
 
-  
+
   def self.home
     begin
       find(1)
@@ -19,10 +19,14 @@ class Channel < ActiveRecord::Base
     end
   end
   
+  def subscribe_owner
+    owner && owner.subscribe(self)
+  end
+
   def owned_by(user)
     owner == user
   end
-  
+
   def create_folder
     FileUtils.mkdir(System::FileSystem.cleared_path("/#{id.to_s}"))
   end
