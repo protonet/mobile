@@ -18,7 +18,7 @@ class ChannelsController < ApplicationController
     else
       flash[:error] = "Could not create channel '#{params[:channel][:name]}'"
     end
-    redirect_to :action => 'index'
+    redirect_to :action => 'index', :anchor => channel.id
   end
   
   def update
@@ -29,7 +29,7 @@ class ChannelsController < ApplicationController
     else
       flash[:error] = "Could not update channel '#{params[:channel][:name]}'"
     end
-    redirect_to :action => 'index'
+    redirect_to :action => 'index', :anchor => channel.id
   end
   
   def destroy
