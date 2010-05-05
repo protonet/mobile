@@ -181,6 +181,7 @@ div, button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, 
 }
 #channel li.active a {
   background: rgb(173, 173, 173) url() no-repeat scroll center -3px;
+  border: 1px solid #FDAB54;
 }
 #channel li.targeted a {
   background: rgb(173, 173, 173) url(/images/img_marker_down.png) no-repeat scroll center -3px;
