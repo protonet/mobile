@@ -162,6 +162,8 @@ module JsDispatchingServer
     queue.bind(amq.topic("channels"), :key => "channels.#{channel.id}").subscribe do |msg|
       message = JSON(msg)
       sender_socket_id = message['socket_id']
+      # TODO the next line and this method need refactoring
+      queue.unsubscribe if message['trigger'] =="channel.unsubscribe"
       message['x_target'] || message.merge!({:x_target => 'protonet.globals.communicationConsole.receiveMessage'})
       if !sender_socket_id || sender_socket_id.to_i != @key
         message_json = message.to_json
