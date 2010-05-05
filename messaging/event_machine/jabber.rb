@@ -39,12 +39,12 @@ EM.run do
   channel_queue = amq.queue("consumer-jabber-bridge", :auto_delete => true)
   channel_queue2 = amq.queue("consumer-jabber-bridge2", :auto_delete => true)
 
-  channel_queue.bind(amq.topic("channels"), :key => "channels.a#{4}").subscribe do |msg|
+  channel_queue.bind(amq.topic("channels"), :key => "channels.#{4}").subscribe do |msg|
     message = JSON(msg)
     askrails.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"].match(/\{x\}/)
   end
 
-  channel_queue2.bind(amq.topic("channels"), :key => "channels.a#{16}").subscribe do |msg|
+  channel_queue2.bind(amq.topic("channels"), :key => "channels.#{16}").subscribe do |msg|
     message = JSON(msg)
     cp.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"].match(/\{x\}/)
   end

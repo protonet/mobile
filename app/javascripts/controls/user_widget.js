@@ -22,6 +22,36 @@ protonet.controls.UserWidget = (function() {
     }
     
     protonet.globals.notifications.bind('user.added', function(e, msg){
+      this.addUserFromMessage(msg);
+      this.filterChannelUsers(protonet.globals.channelSelector.getCurrentChannelId());
+    }.bind(this));
+    
+    protonet.globals.notifications.bind('channel.subscribe channel.unsubscribe', function(e, msg){
+      switch(e.handleObj.namespace) {
+        case 'subscribe':
+          this.channel_users[msg.channel_id].push(msg.user_id);
+          break;
+        case 'unsubscribe':
+          this.channel_users[msg.channel_id].splice(this.channel_users[msg.channel_id].indexOf(msg.user_id), 1);
+          break;
+      }
+      this.filterChannelUsers(protonet.globals.channelSelector.getCurrentChannelId());
+    }.bind(this));
+    
+    protonet.globals.notifications.bind('channel.update_subscriptions', function(e, msg){
+      for(var i in msg.data) {
+        this.channel_users[i] = msg.data[i];
+      };
+      this.filterChannelUsers(protonet.globals.channelSelector.getCurrentChannelId());
+    }.bind(this));
+        
+    protonet.globals.notifications.bind("channel.changed", function(e, id) {
+      this.filterChannelUsers(id);
+    }.bind(this));
+  };
+  
+  UserWidget.prototype = {
+    "addUserFromMessage": function(msg) {
       var newUserEntry = this.entries.first().clone();
       newUserEntry.attr("id", 'user-list-user-' + msg.user_id);
       newUserEntry.find('img').attr('src', msg.avatar_url);
@@ -29,22 +59,8 @@ protonet.controls.UserWidget = (function() {
       this.user_list.append(newUserEntry);
       this.addUser(msg.user_id, newUserEntry[0]);
       this.entries = this.container.find("li"); // recalculate
-    }.bind(this));
+    },
     
-    protonet.globals.notifications.bind('channel.update_users', function(e, msg){
-      for(var i in msg.data) {
-        this.channel_users[i] = msg.data[i];
-      };
-      console.log(this.channel_users);
-      this.filterChannelUsers(protonet.globals.channelSelector.getCurrentChannelId());
-    }.bind(this));
-    
-    protonet.globals.notifications.bind("channel.changed", function(e, id) {
-      this.filterChannelUsers(id);
-    }.bind(this));
-  };
-  
-  UserWidget.prototype = {
     "addUser": function(user_id, element) {
       this.user_objects[user_id] = $(element);
       this.user_names.push(this.user_objects[user_id].children("span").html());      
@@ -68,13 +84,19 @@ protonet.controls.UserWidget = (function() {
     },
     
     "filterChannelUsers": function(channel_id) {
-      for(var user_id in this.user_objects) {
-        if($.inArray(parseInt(user_id, 10), this.channel_users[channel_id]) >= 0) {
+      if(protonet.user.Config.get("always_show_all_users_in_channels")) {
+        for(user_id in this.user_objects) {
           this.user_objects[user_id].show();
-        } else {
-          this.user_objects[user_id].hide();
+        }
+      } else {
+        for(user_id in this.user_objects) {
+          if($.inArray(parseInt(user_id, 10), this.channel_users[channel_id]) >= 0) {
+            this.user_objects[user_id].show();
+          } else {
+            this.user_objects[user_id].hide();
+          };
         };
-      };
+      }
     },
 
     "cssClassForConnections": function(sockets) {

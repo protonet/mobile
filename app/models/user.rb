@@ -140,23 +140,34 @@ class User < ActiveRecord::Base
   
   def send_create_notification
     unless stranger?
-      System::MessagingBus.topic('users').publish({
+      System::MessagingBus.topic('system').publish({
         :trigger        => 'user.added',
         :user_id        => id,
         :user_name      => display_name,
-        :avatar_url     => active_avatar_url}.to_json, :key => 'users.new')
+        :avatar_url     => active_avatar_url
+        }.to_json, :key => 'system.users.new')
     end
   end
   
   def subscribe(channel)
     channels << channel
-    send_subscribe_notification(channel) if save
+    send_channel_notification(channel, :subscribe) if save
   end
   
-  def send_subscribe_notification(channel)
+  def unsubscribe(channel)
+    channels.delete(channel)
+    send_channel_notification(channel, :unsubscribe) if save
+  end
+  
+  def send_channel_notification(channel, type)
     System::MessagingBus.topic('channels').publish({
-      :trigger        => 'channel.subscribed',
-      :user_id        => id}.to_json, :key => "channels.a#{channel.id}")
+      :trigger        => "channel.#{type}",
+      :channel_id     => channel.id,
+      :user_id        => id,
+      :user_name      => display_name,
+      :avatar_url     => active_avatar_url,
+      :x_target       => 'protonet.globals.notifications[0].triggerNotification'
+      }.to_json, :key => "channels.#{channel.id}")
   end
 
   def password_required_with_logged_out_user?

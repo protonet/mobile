@@ -88,8 +88,7 @@ module JsDispatchingServer
     @@online_users[@user.id]["connections"] ||= []
     @@online_users[@user.id]["connections"]  << [@key, @type]
     data = {:x_target => "protonet.globals.userWidget.update", :online_users => @@online_users}.to_json
-    send_and_publish('system','system.user', data)
-    log(@@online_users.inspect)
+    send_and_publish('system','system.users', data)
   end
 
   def remove_from_online_users
@@ -97,8 +96,7 @@ module JsDispatchingServer
     @@online_users[@user.id]["connections"] = @@online_users[@user.id]["connections"].reject {|socket_id, _| socket_id == @key}
     @@online_users.delete(@user.id) if @@online_users[@user.id]["connections"].empty?
     data = {:x_target => "protonet.globals.userWidget.update", :online_users => @@online_users}.to_json
-    send_and_publish('system','system.user', data)
-    log(@@online_users.inspect)
+    send_and_publish('system','system.users', data)
   end
   
   def fill_channel_users
@@ -114,13 +112,13 @@ module JsDispatchingServer
     @user.channels.each do |channel|
       filtered_channel_users[channel.id] = @@channel_users[channel.id]
     end
-    data = {:x_target => 'protonet.globals.notifications[0].triggerNotification', :trigger => 'channel.update_users', :data => filtered_channel_users}.to_json
+    data = {:x_target => 'protonet.globals.notifications[0].triggerNotification', :trigger => 'channel.update_subscriptions', :data => filtered_channel_users}.to_json
     send_data(data + "\0")
   end
   
   def update_user_status(status)
     data = {:x_target => "protonet.globals.userWidget.updateWritingStatus", :data => {:user_id => @user.id, :status => status}}.to_json
-    send_and_publish('system','system.user', data)
+    send_and_publish('system','system.users', data)
   end
 
   def send_ping_answer
@@ -152,22 +150,22 @@ module JsDispatchingServer
     @user.channels.each do |channel|
       @queues << bind_channel(channel)
       @queues << bind_files_for_channel(channel)
-      @queues << bind_users
       log("subscribing to channel #{channel.id}")
     end
+    @queues << bind_user
     @subscribed = true
   end
 
   def bind_channel(channel)
     amq = MQ.new
-    queue = amq.queue("consumer-#{@key}-channel.a#{channel.id}", :auto_delete => true)
-    queue.bind(amq.topic("channels"), :key => "channels.a#{channel.id}").subscribe do |msg|
+    queue = amq.queue("consumer-#{@key}-channel.#{channel.id}", :auto_delete => true)
+    queue.bind(amq.topic("channels"), :key => "channels.#{channel.id}").subscribe do |msg|
       message = JSON(msg)
       sender_socket_id = message['socket_id']
-      message[:x_target] || message.merge!({:x_target => 'protonet.globals.communicationConsole.receiveMessage'})
-      if sender_socket_id && sender_socket_id.to_i != @key
+      message['x_target'] || message.merge!({:x_target => 'protonet.globals.communicationConsole.receiveMessage'})
+      if !sender_socket_id || sender_socket_id.to_i != @key
         message_json = message.to_json
-        log('sending data out: ' + message_json + ' ' + sender_socket_id)
+        log('sending data out: ' + message_json + ' ' + sender_socket_id.to_s)
         send_data("#{message_json}\0")
       end
     end
@@ -187,10 +185,10 @@ module JsDispatchingServer
     queue
   end
 
-  def bind_users
+  def bind_user
     amq = MQ.new
-    queue = amq.queue("consumer-#{@key}-users", :auto_delete => true)
-    queue.bind(amq.topic("users"), :key => "users.#").subscribe do |msg|
+    queue = amq.queue("consumer-#{@key}-user", :auto_delete => true)
+    queue.bind(amq.topic("users"), :key => "users.#{@user.id}").subscribe do |msg|
       message = JSON(msg)
       message.merge!({:x_target => 'protonet.globals.notifications[0].triggerNotification'}) # jquery object
       message_json = message.to_json

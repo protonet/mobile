@@ -17,7 +17,7 @@ class ListensController < ApplicationController
     listen = Listen.find(params[:id])
     channel = listen.channel
     if listen.user == current_user || channel.owner == current_user
-      listen.destroy
+      listen.user.unsubscribe(channel)
       flash[:notice] = "you stopped listening to #{channel.name}"
     else
       flash[:notice] = "you have no right to this operation"
