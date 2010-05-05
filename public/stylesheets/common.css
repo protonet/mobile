@@ -1303,6 +1303,10 @@ h2 {
   float: left;
   width:  350px;
 }
+#channels ul {
+  max-height: 500px;
+  overflow: auto;
+}
 #channels li {
   -moz-border-radius: 0.5em;
   -webkit-border-radius: 0.5em;
@@ -1316,6 +1320,7 @@ h2 {
   padding: 1em 0.6em;
   text-decoration: none;
   cursor: pointer;
+  width: 310px;
 }
 #channels li.clicked {
   background: none;
@@ -1392,10 +1397,22 @@ h2 {
   text-decoration: none;
   cursor: pointer;
 }
+#channel-subscribers {
+  background: rgb(255, 255, 255);
+  border: 0.1em solid rgb(212, 212, 212);
+  height: 200px;
+  width: 400px;
+  overflow: auto;
+  padding: 0.3em;
+}
 #channel-subscribers li{
   margin: 0.2em 0;
 }
 #channel-subscribers img{
   vertical-align: middle;
 }
+.channel-remove-listner {
+  float: right;
+} 
+
 
