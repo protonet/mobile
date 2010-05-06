@@ -150,11 +150,13 @@ class User < ActiveRecord::Base
   end
   
   def subscribe(channel)
+    return if channels.include?(channel)
     channels << channel
     send_channel_notification(channel, :subscribe) if save
   end
   
   def unsubscribe(channel)
+    return unless channels.include?(channel)
     channels.delete(channel)
     send_channel_notification(channel, :unsubscribe) if save
   end

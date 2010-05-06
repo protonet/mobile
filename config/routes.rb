@@ -7,9 +7,14 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :channels do |channels|
     channels.resources :tweets
   end
+  
   map.resources   :tweets
+
+  map.listen_to_channel  'listens/create', :controller => 'listens', :action => 'create'  
   map.resources   :listens
+  
   map.resources   :assets
+  
   map.resources   :networks do |networks|
     networks.map '/map', :controller => 'networks', :action => 'map'
   end

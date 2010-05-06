@@ -2,15 +2,28 @@ class ListensController < ApplicationController
   
   before_filter :login_required
   
+  def index
+    redirect_to listen_to_channel_path(:channel_name => params[:channel_name]) if params[:channel_name]
+  end
+  
+  #TODO REFACTOR, too many if elses
   def create
-    channel = Channel.find(params[:channel_id])
+    channel = if params[:channel_id]
+      Channel.find(params[:channel_id])
+    elsif params[:channel_name]
+      Channel.find_by_name(params[:channel_name])
+    end
     if channel
       current_user.subscribe(channel)
       flash[:notice] = "you started listening to #{channel.name}"
     else
-      flash[:error] = "could not subscribe to channel with id #{params[:channel_id].to_s}"
+      flash[:error] = "could not subscribe to channel with identifier #{(params[:channel_name] || params[:channel_id]).to_s}"
     end
-    redirect_to :controller => 'channels', :anchor => channel.id
+    if params[:channel_name]
+      redirect_to :controller => 'instruments', :anchor => channel.try(:name)
+    else
+      redirect_to :controller => 'channels', :anchor => channel.try(:id)
+    end
   end
   
   def destroy

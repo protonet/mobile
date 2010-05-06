@@ -1304,7 +1304,7 @@ h2 {
   width:  350px;
 }
 #channels ul {
-  max-height: 500px;
+  max-height: 540px;
   overflow: auto;
 }
 #channels li {

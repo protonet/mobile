@@ -18,9 +18,8 @@ protonet.controls.ChannelSelector = (function() {
   
   ChannelSelector.prototype = {
     _observe: function() {
-      var self = this;
       container.find(".channel a").click(function(event) {
-        var anchor = $(this),
+        var anchor = $(event.currentTarget),
             href = anchor.attr("href"),
             // get the index of the element
             index = parseInt(href.match(REG_EXP_ELEMENT_INDEX)[1], 10),
@@ -30,18 +29,19 @@ protonet.controls.ChannelSelector = (function() {
         feedHolder.animate({
           left: index * -channelWidth
         }, "fast", function() {
-          self.setCurrentChannelId(channelId);
+          this.setCurrentChannelId(channelId);
+          this.setCurrentChannelLocationHash(anchor.attr("title"));
           
           // trigger global notification
           protonet.globals.notifications.trigger("channel.changed", channelId);
-        });
+        }.bind(this));
         
         container.find(".active").toggleClass("active");
         anchor.parent("li").toggleClass("active");
         anchor.find(".notification").remove();
         
         event.preventDefault();
-      });
+      }.bind(this));
       
       protonet.globals.notifications.bind("message.new", function(e, message, channelId) {
         /**
@@ -68,6 +68,10 @@ protonet.controls.ChannelSelector = (function() {
     
     setCurrentChannelId: function(id) {
       channelInput.val(id);
+    },
+    
+    setCurrentChannelLocationHash: function(name) {
+      location.hash = name;
     }
   };
   
