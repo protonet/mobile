@@ -49,6 +49,8 @@ module JsDispatchingServer
         update_user_status($1)
       when /^ping$/
         send_ping_answer
+      when /^work$/
+        send_work_request(data)
       end
     else
       # play echoserver if request could not be understood
@@ -124,6 +126,12 @@ module JsDispatchingServer
   def send_ping_answer
     data = {:x_target => "protonet.globals.dispatcher.pingSocketCallback"}.to_json
     send_data(data + "\0")
+  end
+
+  def send_work_request(data)
+    data.merge!({:user_id => @user.id})
+    amq = MQ.new
+    amq.topic('system').publish(data.to_json, :key => 'worker.#')
   end
 
   def send_and_publish(topic, key, data)
