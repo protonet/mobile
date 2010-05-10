@@ -1,4 +1,5 @@
 class ListensController < ApplicationController
+  include ERB::Util
   
   before_filter :login_required
   
@@ -20,7 +21,7 @@ class ListensController < ApplicationController
       flash[:error] = "could not subscribe to channel with identifier #{(params[:channel_name] || params[:channel_id]).to_s}"
     end
     if params[:channel_name]
-      redirect_to :controller => 'instruments', :anchor => channel.try(:name)
+      redirect_to :controller => 'instruments', :anchor => ("channel_name=" + u(channel.name) if channel.try(:name))
     else
       redirect_to :controller => 'channels', :anchor => channel.try(:id)
     end

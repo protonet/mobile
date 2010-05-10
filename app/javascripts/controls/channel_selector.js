@@ -30,7 +30,7 @@ protonet.controls.ChannelSelector = (function() {
           left: index * -channelWidth
         }, "fast", function() {
           this.setCurrentChannelId(channelId);
-          this.setCurrentChannelLocationHash(anchor.attr("title"));
+          this.setCurrentChannelLocationHash("channel_name=" + anchor.attr("title"));
           
           // trigger global notification
           protonet.globals.notifications.trigger("channel.changed", channelId);

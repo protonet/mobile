@@ -82,9 +82,9 @@ $(function() {
 
 // Initialize channel switch
 $(function() {
-  if(location.hash) {
-    var channelName = location.hash.substring(1);
-    var channelLink = $("#channel a[title=" + channelName + "]");
+  if(unescape(unescape(location.hash.match(/channel_name=(.*)/)))) {
+    var channelName = unescape(unescape(location.hash)).match(/channel_name=(.*)/)[1];
+    var channelLink = $("#channel a[title=" + escape(channelName) + "]");
     if(channelLink.length == 1) {
       channelLink.click();
     } else {

@@ -24,7 +24,7 @@
     <ul>
       <% @channels.each_with_index do |c, index| %>
         <li id="channel-<%= c.id %>" class="channel <%= 'active' if c == @active_channel %>">
-          <%= link_to c.name.capitalize, {:channel_id => c.id, :index => index}, {:title => c.name} %>
+          <%= link_to c.name.capitalize, {:channel_id => c.id, :index => index}, {:title => u(c.name)} %>
         </li>
       <% end %>
       <li class="browse">
