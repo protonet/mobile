@@ -6,6 +6,8 @@ require 'xmpp4r'
 require 'xmpp4r-simple'
 require 'xmpp4r/muc/helper/simplemucclient'
 
+reconnection_attemps = 0
+
 def user_from_nickname(nick)
   nick.downcase!
   {
@@ -24,7 +26,7 @@ end
 
 configatron.messaging_bus_active = true
 
-jabber = Jabber::Simple.new("xe.bot@im.xing.com", 'vv7/äÖ5!')
+jabber = Jabber::Simple.new("xe.bot@im.xing.com", 'vv7/äÖ5!', "Available(#{reconnection_attemps})")
 
 askrails = Jabber::MUC::SimpleMUCClient.new(jabber.client)
 askrails.join("askrails@conference.im.xing.com/robot")
@@ -59,6 +61,13 @@ EM.run do
   end
 
   EM::PeriodicTimer.new(1) do
+
+    jabber.on_exception do
+      sleep 5
+      reconnection_attemps += 1
+      puts "reconnected #{reconnection_attemps} times"
+      jabber.reconnect
+    end
 
     cp.on_message do |time,user_name,msg|
       user_name = user_from_nickname(user_name)
