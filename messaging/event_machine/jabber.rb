@@ -26,7 +26,7 @@ end
 
 configatron.messaging_bus_active = true
 
-jabber = Jabber::Simple.new("xe.bot@im.xing.com", 'vv7/äÖ5!', "Available(#{reconnection_attemps})")
+jabber = Jabber::Simple.new("xe.bot@im.xing.com", 'vv7/äÖ5!')
 
 askrails = Jabber::MUC::SimpleMUCClient.new(jabber.client)
 askrails.join("askrails@conference.im.xing.com/robot")
@@ -62,7 +62,7 @@ EM.run do
 
   EM::PeriodicTimer.new(1) do
 
-    jabber.on_exception do
+    jabber.client.on_exception do
       sleep 5
       reconnection_attemps += 1
       puts "reconnected #{reconnection_attemps} times"
