@@ -99,7 +99,7 @@ EM.run do
       end
     end
 
-    content_discovery..on_message do |time,user_name,msg|
+    content_discovery.on_message do |time,user_name,msg|
       user_name = user_from_nickname(user_name)
       if(!time && !msg.match(/\{p\}/)) && !msg.match(/\{x\}/)
         begin
