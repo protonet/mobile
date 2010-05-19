@@ -19,12 +19,21 @@ protonet.controls.InputConsole.prototype = {
       return "@" + userName;
     });
     
-    new protonet.controls.InlineAutocompleter(this.input_console, userNames, {
+    var autoCompleter = new protonet.controls.InlineAutocompleter(this.input_console, userNames, {
       maxChars: 2
+    });
+    
+    protonet.globals.notifications.bind("user.added", function(e, msg){
+      autoCompleter.addData(["@" + msg.user_name]);
     });
   },
   
   "initEvents": function() {
+    // focus input after channel switch
+    protonet.globals.notifications.bind("channel.changed", function() {
+      this.input_console.focus();
+    }.bind(this));
+    
     // bind keydown handling for special key catching
     this.input_console.keydown(this.keyDown.bind(this));
     
@@ -77,7 +86,6 @@ protonet.controls.InputConsole.prototype = {
       this.recheck = false;
       if (!this.writing) {
         this.sendStartedWritingNotification();
-        // console.log("writing");
         this.writing = true;
       }
       
