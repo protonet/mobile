@@ -1,3 +1,5 @@
+//= require "../utils/add_slashes"
+
 protonet.controls.ChannelSelector = (function() {
   var container,
       channelWidth,
@@ -14,7 +16,7 @@ protonet.controls.ChannelSelector = (function() {
     channelWidth = channelWidth || $("#feed-holder").find("ul:first").outerWidth(true);
 
     this.channels = container.find("li.channel a").map(function(e){
-      return unescape($(this).attr("title"));
+      return $(this).attr("title");
     });
     
     this._observe();
@@ -37,7 +39,7 @@ protonet.controls.ChannelSelector = (function() {
           left: index * -channelWidth
         }, "fast", function() {
           this.setCurrentChannelId(channelId);
-          this.setCurrentChannelLocationHash("channel_name=" + anchor.attr("title"));
+          this.setCurrentChannelLocationHash(anchor.attr("title"));
           
           // trigger global notification
           protonet.globals.notifications.trigger("channel.changed", channelId);
@@ -52,7 +54,7 @@ protonet.controls.ChannelSelector = (function() {
       
       protonet.globals.notifications.bind("message.new", function(e, message, channelId) {
         /**
-         * Only show a little badge on the channel when it's not focused
+         * Show a little badge on the channel when it's not focused
          */
         if (channelId != this.getCurrentChannelId()) {
           this.notify(channelId);
@@ -62,16 +64,16 @@ protonet.controls.ChannelSelector = (function() {
 
     _observeInStreamMentions: function() {
       $("span.channel").live("click", function(e){
-        location.hash = "channel_name=" + $(e.currentTarget).html();
+        location.hash = "channel_name=" + encodeURIComponent($(e.currentTarget).text());
         this._switchToAnchoredChannel();
       }.bind(this));
     },
 
     _switchToAnchoredChannel: function() {
-      var match = unescape(unescape(location.hash)).match(/channel_name=(.*)/);
+      var match = location.hash.match(/channel_name=(.+)/);
       if (match) {
-        var channelName = match[1];
-        var channelLink = $("#channel a[title=" + escape(channelName) + "]");
+        var channelName = decodeURIComponent(match[1]);
+        var channelLink = $("#channel a[title='" + protonet.utils.addSlashes(channelName) + "']");
         if(channelLink.length == 1) {
           channelLink.click();
         } else {
@@ -105,7 +107,7 @@ protonet.controls.ChannelSelector = (function() {
     },
     
     setCurrentChannelLocationHash: function(name) {
-      location.hash = name;
+      location.hash = "channel_name=" + encodeURIComponent(name);
     }
   };
   
