@@ -63,7 +63,7 @@ EM.run do
   EM::PeriodicTimer.new(1) do
 
     jabber.client.on_exception do
-      sleep 5
+      sleep 60
       reconnection_attemps += 1
       puts "reconnected #{reconnection_attemps} times"
       jabber.reconnect
