@@ -1,0 +1,155 @@
+--- 
+dependencies: 
+  faker: 
+    group: 
+    - :test
+    version: ">= 0"
+  ruby-debug: 
+    group: 
+    - :default
+    version: ">= 0"
+  rails: 
+    group: 
+    - :default
+    version: = 2.3.5
+  ruby-net-ldap: 
+    group: 
+    - :default
+    version: ">= 0"
+  sprockets: 
+    group: 
+    - :default
+    version: ">= 0"
+  sqlite3-ruby: 
+    group: 
+    - :default
+    version: ">= 0"
+  jeremymcanally-context: 
+    group: 
+    - :test
+    version: ">= 0"
+  rack: 
+    group: 
+    - :default
+    version: ">= 0"
+  mocha: 
+    group: 
+    - :test
+    version: ">= 0"
+  passenger: 
+    group: 
+    - :production
+    version: ">= 0"
+  json: 
+    group: 
+    - :default
+    version: ">= 0"
+  eventmachine: 
+    group: 
+    - :default
+    version: ">= 0"
+  configatron: 
+    group: 
+    - :default
+    version: ">= 0"
+  capistrano-ext: 
+    group: 
+    - :default
+    version: ">= 0"
+  random_data: 
+    group: 
+    - :test
+    version: ">= 0"
+  rmagick: 
+    group: 
+    - :default
+    version: ">= 0"
+  tmm1-amqp: 
+    group: 
+    - :default
+    version: ">= 0"
+  daemons: 
+    group: 
+    - :default
+    version: ">= 0"
+  capistrano: 
+    group: 
+    - :default
+    version: ">= 0"
+specs: 
+- rake: 
+    version: 0.8.7
+- activesupport: 
+    version: 2.3.5
+- rack: 
+    version: 1.0.1
+- actionpack: 
+    version: 2.3.5
+- actionmailer: 
+    version: 2.3.5
+- activerecord: 
+    version: 2.3.5
+- activeresource: 
+    version: 2.3.5
+- highline: 
+    version: 1.5.2
+- net-ssh: 
+    version: 2.0.22
+- net-scp: 
+    version: 1.0.2
+- net-sftp: 
+    version: 2.0.4
+- net-ssh-gateway: 
+    version: 1.0.1
+- capistrano: 
+    version: 2.5.18
+- capistrano-ext: 
+    version: 1.2.1
+- columnize: 
+    version: 0.3.1
+- yamler: 
+    version: 0.1.0
+- configatron: 
+    version: 2.6.3
+- daemons: 
+    version: 1.0.10
+- eventmachine: 
+    version: 0.12.10
+- faker: 
+    version: 0.3.1
+- fastthread: 
+    version: 1.0.7
+- jeremymcanally-context: 
+    version: 0.5.5
+- json: 
+    version: 1.4.3
+- linecache: 
+    version: "0.43"
+- mocha: 
+    version: 0.9.8
+- passenger: 
+    version: 2.2.11
+- rails: 
+    version: 2.3.5
+- random_data: 
+    version: 1.5.1
+- rmagick: 
+    version: 2.13.1
+- ruby-debug-base: 
+    version: 0.10.3
+- ruby-debug: 
+    version: 0.10.3
+- ruby-net-ldap: 
+    version: 0.0.4
+- sprockets: 
+    version: 1.0.2
+- sqlite3-ruby: 
+    version: 1.2.5
+- tmm1-amqp: 
+    version: 0.6.4
+hash: 1405d3470ea032e11c1309dac8af5fb4b60c3868
+sources: 
+- Rubygems: 
+    uri: http://gemcutter.org
+- Rubygems: 
+    uri: http://gems.github.com
