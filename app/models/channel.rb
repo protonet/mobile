@@ -19,6 +19,10 @@ class Channel < ActiveRecord::Base
     end
   end
   
+  def self.names
+    all(:select => :name).map {|c| c.name.downcase }
+  end
+  
   def subscribe_owner
     owner && owner.subscribe(self)
   end

@@ -80,23 +80,6 @@ $(function() {
   }
 });
 
-// Initialize channel switch
-$(function() {
-  if(unescape(unescape(location.hash.match(/channel_name=(.*)/)))) {
-    var channelName = unescape(unescape(location.hash)).match(/channel_name=(.*)/)[1];
-    var channelLink = $("#channel a[title=" + escape(channelName) + "]");
-    if(channelLink.length == 1) {
-      channelLink.click();
-    } else {
-      var channelSubscriptionForm = $('<form method="post" style="display:none;" action="/listens/?channel_name=' + channelName + '" />');
-      channelSubscriptionForm.append($('<input type="text" name="authenticity_token" value="' + protonet.config.authenticity_token + '">'));
-      channelSubscriptionForm.append($('<input type="submit" name="button" id="button" value="Submit">'));
-      $('body').append(channelSubscriptionForm);
-      channelSubscriptionForm.submit();
-    }
-  }
-});
-
 // Initialize password stuff
 $(function() {
   var registration_password_field = $("#new-user-password");

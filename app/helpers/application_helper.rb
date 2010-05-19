@@ -28,7 +28,7 @@ module ApplicationHelper
   
   def highlight_replies(str)
     str.gsub(/(\s|^)@([^@\s$"')]+)/) {|s|
-      $1 + "@" + '<span class="reply">' + $2 + '</span>';
+      "#{$1}@<span class='reply#{" channel" if Channel.names.include?($2)}'>#{$2}</span>"
     }
   end
   

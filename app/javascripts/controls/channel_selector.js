@@ -12,11 +12,18 @@ protonet.controls.ChannelSelector = (function() {
     container = container || $("#channel");
     feedHolder = feedHolder || $("#feed-holder");
     channelWidth = channelWidth || $("#feed-holder").find("ul:first").outerWidth(true);
+
+    this.channels = container.find("li.channel a").map(function(e){
+      return unescape($(this).attr("title"));
+    });
     
     this._observe();
+    this._observeInStreamMentions();
+    this._switchToAnchoredChannel();
   }
   
   ChannelSelector.prototype = {
+
     _observe: function() {
       container.find(".channel a").click(function(event) {
         var anchor = $(event.currentTarget),
@@ -52,7 +59,34 @@ protonet.controls.ChannelSelector = (function() {
         }
       }.bind(this));
     },
-    
+
+    _observeInStreamMentions: function() {
+      $("span.channel").live("click", function(e){
+        location.hash = "channel_name=" + $(e.currentTarget).html();
+        this._switchToAnchoredChannel();
+      }.bind(this));
+    },
+
+    _switchToAnchoredChannel: function() {
+      var match = unescape(unescape(location.hash)).match(/channel_name=(.*)/);
+      if (match) {
+        var channelName = match[1];
+        var channelLink = $("#channel a[title=" + escape(channelName) + "]");
+        if(channelLink.length == 1) {
+          channelLink.click();
+        } else {
+          var channelSubscriptionForm = $("<form />", {
+            method: "post",
+            action: "/listens/?channel_name=" + channelName
+          }).hide();
+          channelSubscriptionForm.append($('<input type="text" name="authenticity_token" value="' + protonet.config.authenticity_token + '">'));
+          channelSubscriptionForm.append($('<input type="submit" name="button" id="button" value="Submit">'));
+          $('body').append(channelSubscriptionForm);
+          channelSubscriptionForm.submit();
+        }
+      }
+    },
+
     notify: function(channelId) {
       var anchor = $("#channel-" + channelId).find("a"),
           notificationElement = anchor.find(".notification");
