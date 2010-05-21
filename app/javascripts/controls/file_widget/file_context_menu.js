@@ -17,7 +17,7 @@ protonet.controls.FileWidget.prototype.FileContextMenu.prototype = {
   },
   
   "download": function(el) {
-    location.href = el.attr("href");
+    window.open(el.attr("href"));
   },
   
   "delete": function(el) {
