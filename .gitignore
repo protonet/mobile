@@ -16,3 +16,4 @@ public/externals/*
 public/images/externals/*
 mkmf.log
 db/schema.rb
+node/screenshots/*
