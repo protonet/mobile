@@ -47,7 +47,7 @@ EM.run do
   channel_queue = amq.queue("consumer-jabber-bridge", :auto_delete => true)
   channel_queue2 = amq.queue("consumer-jabber-bridge2", :auto_delete => true)
   channel_content_discovery = amq.queue("consumer-jabber-bridge3", :auto_delete => true)
-  channel_content_discovery = amq.queue("consumer-jabber-bridge3", :auto_delete => true)
+  events_queue = amq.queue("consumer-jabber-bridge4", :auto_delete => true)
 
   channel_queue.bind(amq.topic("channels"), :key => "channels.#{4}").subscribe do |msg|
     message = JSON(msg)
@@ -64,7 +64,7 @@ EM.run do
     content_discovery.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"].match(/\{x\}/)
   end
 
-  events.bind(amq.topic("channels"), :key => "channels.#{22}").subscribe do |msg|
+  events_queue.bind(amq.topic("channels"), :key => "channels.#{22}").subscribe do |msg|
     message = JSON(msg)
     events.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"].match(/\{x\}/)
   end
