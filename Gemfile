@@ -13,6 +13,7 @@ gem "daemons"
 gem "ruby-net-ldap"
 gem "rmagick"
 gem "rack"
+gem "fleximage"
 gem "capistrano"
 gem "capistrano-ext"
 

@@ -26,10 +26,8 @@ Rails::Initializer.run do |config|
   config.gem "tmm1-amqp", :lib => "mq"
   config.gem "json"
   config.gem "sprockets"
-  # config.gem "bj"
-  # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
+  config.gem 'fleximage'
   config.gem "sqlite3-ruby", :lib => "sqlite3"
-  # config.gem "aws-s3", :lib => "aws/s3"
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named

@@ -8,11 +8,15 @@ dependencies:
     group: 
     - :default
     version: ">= 0"
+  ruby-net-ldap: 
+    group: 
+    - :default
+    version: ">= 0"
   rails: 
     group: 
     - :default
     version: = 2.3.5
-  ruby-net-ldap: 
+  sqlite3-ruby: 
     group: 
     - :default
     version: ">= 0"
@@ -20,13 +24,13 @@ dependencies:
     group: 
     - :default
     version: ">= 0"
-  sqlite3-ruby: 
-    group: 
-    - :default
-    version: ">= 0"
   jeremymcanally-context: 
     group: 
     - :test
+    version: ">= 0"
+  fleximage: 
+    group: 
+    - :default
     version: ">= 0"
   rack: 
     group: 
@@ -40,7 +44,7 @@ dependencies:
     group: 
     - :production
     version: ">= 0"
-  json: 
+  configatron: 
     group: 
     - :default
     version: ">= 0"
@@ -48,7 +52,7 @@ dependencies:
     group: 
     - :default
     version: ">= 0"
-  configatron: 
+  json: 
     group: 
     - :default
     version: ">= 0"
@@ -60,11 +64,11 @@ dependencies:
     group: 
     - :test
     version: ">= 0"
-  rmagick: 
+  tmm1-amqp: 
     group: 
     - :default
     version: ">= 0"
-  tmm1-amqp: 
+  rmagick: 
     group: 
     - :default
     version: ">= 0"
@@ -91,6 +95,14 @@ specs:
     version: 2.3.5
 - activeresource: 
     version: 2.3.5
+- builder: 
+    version: 2.1.2
+- mime-types: 
+    version: "1.16"
+- xml-simple: 
+    version: 1.0.12
+- aws-s3: 
+    version: 0.6.2
 - highline: 
     version: 1.5.2
 - net-ssh: 
@@ -119,6 +131,10 @@ specs:
     version: 0.3.1
 - fastthread: 
     version: 1.0.7
+- rmagick: 
+    version: 2.13.1
+- fleximage: 
+    version: 1.0.4
 - jeremymcanally-context: 
     version: 0.5.5
 - json: 
@@ -128,13 +144,11 @@ specs:
 - mocha: 
     version: 0.9.8
 - passenger: 
-    version: 2.2.11
+    version: 2.2.12
 - rails: 
     version: 2.3.5
 - random_data: 
     version: 1.5.1
-- rmagick: 
-    version: 2.13.1
 - ruby-debug-base: 
     version: 0.10.3
 - ruby-debug: 
@@ -147,7 +161,7 @@ specs:
     version: 1.2.5
 - tmm1-amqp: 
     version: 0.6.4
-hash: 1405d3470ea032e11c1309dac8af5fb4b60c3868
+hash: e8e5588843db7e3405c7b78177dbd3ca155e16d1
 sources: 
 - Rubygems: 
     uri: http://gemcutter.org
