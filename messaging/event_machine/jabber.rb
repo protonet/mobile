@@ -40,14 +40,17 @@ content_discovery.join("contentdiscovery@conference.im.xing.com/robot")
 events = Jabber::MUC::SimpleMUCClient.new(jabber.client)
 events.join("events@conference.im.xing.com/robot")
 
+frontend = Jabber::MUC::SimpleMUCClient.new(jabber.client)
+frontend.join("frontend@conference.im.xing.com/robot")
 
 EM.run do
 
   amq = MQ.new
-  channel_queue = amq.queue("consumer-jabber-bridge", :auto_delete => true)
-  channel_queue2 = amq.queue("consumer-jabber-bridge2", :auto_delete => true)
+  channel_queue             = amq.queue("consumer-jabber-bridge", :auto_delete => true)
+  channel_queue2            = amq.queue("consumer-jabber-bridge2", :auto_delete => true)
   channel_content_discovery = amq.queue("consumer-jabber-bridge3", :auto_delete => true)
-  events_queue = amq.queue("consumer-jabber-bridge4", :auto_delete => true)
+  events_queue              = amq.queue("consumer-jabber-bridge4", :auto_delete => true)
+  frontend_queue            = amq.queue("consumer-jabber-bridge5", :auto_delete => true)
 
   channel_queue.bind(amq.topic("channels"), :key => "channels.#{4}").subscribe do |msg|
     message = JSON(msg)
@@ -65,6 +68,11 @@ EM.run do
   end
 
   events_queue.bind(amq.topic("channels"), :key => "channels.#{22}").subscribe do |msg|
+    message = JSON(msg)
+    events.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"].match(/\{x\}/)
+  end
+
+  frontend_queue.bind(amq.topic("channels"), :key => "channels.#{20}").subscribe do |msg|
     message = JSON(msg)
     events.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"].match(/\{x\}/)
   end
@@ -129,6 +137,21 @@ EM.run do
         begin
           user = User.find_by_login(user_name)
           tweet = Tweet.new({:author => "#{user_name}{x}", :user => user, :channels => Channel.find([22]), :message => msg.to_s})
+          tweet.socket_id = '0'
+          tweet.save
+        rescue Exception => e
+          puts "BAM!"
+          puts e.inspect
+        end
+      end
+    end
+
+    frontend.on_message do |time,user_name,msg|
+      user_name = user_from_nickname(user_name)
+      if(!time && !msg.match(/\{p\}/)) && !msg.match(/\{x\}/)
+        begin
+          user = User.find_by_login(user_name)
+          tweet = Tweet.new({:author => "#{user_name}{x}", :user => user, :channels => Channel.find([20]), :message => msg.to_s})
           tweet.socket_id = '0'
           tweet.save
         rescue Exception => e
