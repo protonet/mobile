@@ -74,7 +74,7 @@ EM.run do
 
   frontend_queue.bind(amq.topic("channels"), :key => "channels.#{20}").subscribe do |msg|
     message = JSON(msg)
-    events.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"].match(/\{x\}/)
+    frontend.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"].match(/\{x\}/)
   end
 
   EM::PeriodicTimer.new(1) do
