@@ -31,7 +31,7 @@ ActionController::Routing::Routes.draw do |map|
   map.create_token_session 'sessions/create_token.:format', :controller => 'sessions', :action => 'create_token'
   
   map.delete_stranger_older_than_two_days 'users/delete_stranger_older_than_two_days', :controller => 'users', :action => 'delete_stranger_older_than_two_days'  
-  map.resources :users
+  map.resources :users, :has_one => 'setting'
 
   map.resource :session
   

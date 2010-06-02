@@ -71,7 +71,7 @@ dependencies:
   rmagick: 
     group: 
     - :default
-    version: ">= 0"
+    version: ">= 2.12.2"
   daemons: 
     group: 
     - :default
@@ -161,7 +161,7 @@ specs:
     version: 1.2.5
 - tmm1-amqp: 
     version: 0.6.4
-hash: e8e5588843db7e3405c7b78177dbd3ca155e16d1
+hash: 6a340ab624f68e0268bd9833a2a0c106c6cfa9b7
 sources: 
 - Rubygems: 
     uri: http://gemcutter.org
