@@ -1,6 +1,7 @@
 log/*.log
 tmp/**/*
 .DS_Store
+.gitignore
 doc/api
 doc/app
 *.pid

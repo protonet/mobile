@@ -27,6 +27,7 @@ Rails::Initializer.run do |config|
   config.gem "json"
   config.gem "sprockets"
   config.gem 'fleximage'
+
   config.gem "sqlite3-ruby", :lib => "sqlite3"
 
   # Only load the plugins named here, in the order given (default is alphabetical).
@@ -51,9 +52,9 @@ Rails::Initializer.run do |config|
   config.cache_store = :mem_cache_store
 end
 
-Mime::Type.register "application/pdf", :pdf, [], ['pdf']
-
 ActiveSupport::JSON.backend = 'JSONGem'
+
+require "#{RAILS_ROOT}/lib/fleximage_ext.rb"
 
 # this starts the eventmachine reactor in a new thread
 # since the Em.run block is blocking until stopped this will ensure
