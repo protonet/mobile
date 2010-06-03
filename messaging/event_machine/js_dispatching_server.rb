@@ -215,7 +215,7 @@ module JsDispatchingServer
   include FlashServer
 
   def log(text)
-    puts "connection #{@key && @key.inspect || 'uninitialized'}: #{text}"
+    puts "connection #{@key && @key.inspect || 'uninitialized'}: #{text}" if $DEBUG
   end
 
 end

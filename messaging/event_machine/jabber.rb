@@ -54,27 +54,27 @@ EM.run do
 
   channel_queue.bind(amq.topic("channels"), :key => "channels.#{4}").subscribe do |msg|
     message = JSON(msg)
-    askrails.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"].match(/\{x\}/)
+    askrails.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"] && message["author"].match(/\{x\}/)
   end
 
   channel_queue2.bind(amq.topic("channels"), :key => "channels.#{16}").subscribe do |msg|
     message = JSON(msg)
-    cp.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"].match(/\{x\}/)
+    cp.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"] && message["author"].match(/\{x\}/)
   end
 
   channel_content_discovery.bind(amq.topic("channels"), :key => "channels.#{21}").subscribe do |msg|
     message = JSON(msg)
-    content_discovery.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"].match(/\{x\}/)
+    content_discovery.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"] && message["author"].match(/\{x\}/)
   end
 
   events_queue.bind(amq.topic("channels"), :key => "channels.#{22}").subscribe do |msg|
     message = JSON(msg)
-    events.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"].match(/\{x\}/)
+    events.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"] && message["author"].match(/\{x\}/)
   end
 
   frontend_queue.bind(amq.topic("channels"), :key => "channels.#{20}").subscribe do |msg|
     message = JSON(msg)
-    frontend.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"].match(/\{x\}/)
+    frontend.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"] && message["author"].match(/\{x\}/)
   end
 
   EM::PeriodicTimer.new(1) do
