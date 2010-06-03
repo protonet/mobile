@@ -71,7 +71,7 @@ dependencies:
   rmagick: 
     group: 
     - :default
-    version: = 2.12.2
+    version: ">= 2.12.2"
   daemons: 
     group: 
     - :default
@@ -132,7 +132,7 @@ specs:
 - fastthread: 
     version: 1.0.7
 - rmagick: 
-    version: 2.12.2
+    version: 2.13.1
 - fleximage: 
     version: 1.0.4
 - jeremymcanally-context: 
@@ -161,7 +161,7 @@ specs:
     version: 1.2.5
 - tmm1-amqp: 
     version: 0.6.4
-hash: 1d348a3077c482323a52e220cf3d2f1b5284df80
+hash: 6a340ab624f68e0268bd9833a2a0c106c6cfa9b7
 sources: 
 - Rubygems: 
     uri: http://gemcutter.org
