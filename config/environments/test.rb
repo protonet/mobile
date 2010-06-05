@@ -27,5 +27,6 @@ config.action_mailer.delivery_method = :test
 # like if you have constraints or database-specific column types
 # config.active_record.schema_format = :sql
 
-configatron.dispatching_server = '127.0.0.1'
-
+configatron.user_file_path = RAILS_ROOT + "/../shared/user-files"
+configatron.images.avatars_path   = "public/avatars"
+configatron.images.externals_path = "public/externals"
