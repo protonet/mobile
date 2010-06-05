@@ -4,12 +4,15 @@ class UserTest < Test::Unit::TestCase
   
   context "Removing old temporary users also called strangers" do
     it "should remove all strangers created prior to 2 days ago" do
-      User.stranger('session_id1').update_attributes(:created_at => Time.now - 1.days)
-      User.stranger('session_id2').update_attributes(:created_at => Time.now - 2.days)
-      User.stranger('session_id3').update_attributes(:created_at => Time.now - 3.days)
-      assert User.all_strangers
-      # destroy all strangers
-      User.destroy_all({:temporary_identifier => 'IS NOT NULL'})
+      User.destroy_all
+      (2..4).each do |i|
+        user = User.stranger("session_id_#{i}")
+        User.update_all("updated_at = '#{(Time.now - i.days).to_s(:db)}'", "id = #{user.id}")
+      end
+      assert_equal 3, User.all_strangers.size
+      User.delete_strangers_older_than_two_days!
+      assert_equal 1, User.all_strangers.size
+      assert User.all_strangers.first.updated_at > Time.now - 2.days
     end
   end
   
@@ -50,41 +53,36 @@ class UserTest < Test::Unit::TestCase
     
     before do
       Ldap::User.stubs(:create_for_user)
+      @user = Factory.build(:user)
     end
       
     should "be possible" do
-      user = User.make
-      assert_not_nil user.communication_token
+      assert_not_nil @user.communication_token
     end
     
     should "validate a correct token" do
-      user = User.make
-      assert user.communication_token_valid?(user.communication_token)
+      assert @user.communication_token_valid?(@user.communication_token)
     end
     
     should "not validate an incorrect token" do
-      user = User.make
-      assert !user.communication_token_valid?('test')
+      assert !@user.communication_token_valid?('test')
     end
     
     should "not validate an expired token" do
-      user = User.make
-      token = user.communication_token
-      user.communication_token_expires_at = Time.now - 1.day
-      assert !user.communication_token_valid?(token)
+      token = @user.communication_token
+      @user.communication_token_expires_at = Time.now - 1.day
+      assert !@user.communication_token_valid?(token)
     end
 
     should "recreate a token if it is expired" do
-      user = User.make
-      token = user.communication_token
-      user.communication_token_expires_at = Time.now - 1.day
-      assert_not_equal token, user.communication_token
+      token = @user.communication_token
+      @user.communication_token_expires_at = Time.now - 1.day
+      assert_not_equal token, @user.communication_token
     end
 
     should "not recreate a token if it is not expired" do
-      user = User.make
-      token = user.communication_token
-      assert_equal token, user.communication_token
+      token = @user.communication_token
+      assert_equal token, @user.communication_token
     end
     
     context "for a stranger user" do
@@ -93,23 +91,14 @@ class UserTest < Test::Unit::TestCase
         user = User.stranger('foobarius')
         assert_not_nil user.communication_token
       end
-      
-      should "store the user in memcache using the given session id" do
-        flunk
-      end
-      
-      should "be validatable" do
-        flunk
-      end
-      
-    end
-
     
+    end
   end
   
   context "in general" do
-    it "should have a display name" do
-      flunk
+    it "should have his login as a display name if no name is set" do
+      user = Factory.build(:user, {:login => 'ali'})
+      assert_equal 'ali', user.display_name
     end
   end
   
@@ -152,7 +141,7 @@ class UserAuthAndCreationTest < ActiveSupport::TestCase
     end
     
     should "create the ldap user" do
-      user = User.make_unsaved
+      user = Factory.build(:user)
       Ldap::User.expects(:create_for_user).with(user)
       user.save
     end

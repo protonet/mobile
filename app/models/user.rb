@@ -30,6 +30,8 @@ class User < ActiveRecord::Base
   after_create :create_ldap_user if configatron.ldap.active == true
   after_create :listen_to_home, :send_create_notification
 
+  after_destroy :move_tweets_to_anonymous
+
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   #
   # uff.  this is really an authorization, not authentication routine.  
@@ -92,11 +94,12 @@ class User < ActiveRecord::Base
     u
   end
   
-  def self.all_strangers(conditions)
-    find(:all, :conditions => {:temporary_identifier => 'IS NOT NULL'}).each do |user|
-      # make all tweets of deleted users anonymous
-      user.tweets.each {|t| t.update_attribute(:user_id, 0)}
-    end
+  def self.all_strangers
+    all(:conditions => "temporary_identifier IS NOT NULL")
+  end
+  
+  def move_tweets_to_anonymous
+    tweets.each {|t| t.update_attribute(:user_id, 0)}
   end
 
   def self.delete_strangers_older_than_two_days!

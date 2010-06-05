@@ -16,10 +16,6 @@ gem "rack"
 gem "fleximage", :git => "git://github.com/dudemeister/fleximage.git"
 gem "capistrano"
 gem "capistrano-ext"
-gem "cucumber"
-gem "cucumber-rails"
-gem "capybara"
-gem "database_cleaner"
 
 group :production do
   gem "passenger"
@@ -31,4 +27,12 @@ group :test do
   gem "random_data"
   gem "mocha"
   gem "factory_girl"
+end
+
+group :cucumber do
+  gem "pickle"
+  gem "cucumber"
+  gem "cucumber-rails"
+  gem "capybara"
+  gem "database_cleaner"
 end

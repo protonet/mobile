@@ -1,14 +1,19 @@
-require 'faker'
-require 'random_data'
+# require 'faker'
+# require 'random_data'
+# 
+# Sham.login    { Random.firstname }
+# Sham.password { Random.alphanumeric(8) }
+# 
+# User.blueprint do
+#   login
+#   password
+#   password_confirmation { password }
+# end
 
-Sham.login    { Random.firstname }
-Sham.password { Random.alphanumeric(8) }
-
-User.blueprint do
-  login
-  password
-  password_confirmation { password }
+Factory.define :user do |u|
+  u.login { Random.firstname }
 end
+
 
 # @mm Kaffee?
 # 
