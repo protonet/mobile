@@ -73,7 +73,7 @@ if defined?(PhusionPassenger)
     end
 end
 
-unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(PhusionPassenger)
+unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(PhusionPassenger) || Rails.env == 'cucumber'
   # Checking all Subsystems
   puts "------------------------"
   puts "Checking all subsystems:"

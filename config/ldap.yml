@@ -19,3 +19,9 @@ production:
   base: dc=protonet,dc=info
   bind_dn: cn=admin,dc=protonet,dc=info
   password: dude$$09
+
+cucumber:
+  host: 127.0.0.1
+  base: dc=my-domain,dc=com
+  bind_dn: cn=Manager,dc=my-domain,dc=com
+  password: secret

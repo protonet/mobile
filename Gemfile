@@ -16,6 +16,10 @@ gem "rack"
 gem "fleximage"
 gem "capistrano"
 gem "capistrano-ext"
+gem "cucumber"
+gem "cucumber-rails"
+gem "capybara"
+gem "database_cleaner"
 
 group :production do
   gem "passenger"
