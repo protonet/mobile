@@ -106,7 +106,8 @@ protonet.controls.FileWidget.prototype = {
         anchor = $("<a />", {
           href: this.getDownloadPathFor(object.name),
           html: objectName,
-          title: objectName
+          title: objectName,
+          target: '_blank'
         });
     
     anchor.appendTo(li);
