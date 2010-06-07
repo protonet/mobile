@@ -30,9 +30,9 @@ group :test do
 end
 
 group :cucumber do
-  gem "pickle"
   gem "cucumber"
   gem "cucumber-rails"
   gem "capybara"
   gem "database_cleaner"
+  gem "pickle"
 end

@@ -11,9 +11,12 @@ Feature: Using the protonet dashboard
     And  I press "submit" within "#message-form"
     Then I should see "Hallo" within "#feed-holder ul li:first"
     
-  # Scenario: Writing a meep containing a channel name
-  #   Given there
-  #   Then I fill in "message" with "Hallo @!"
+  @javascript
+  Scenario: Writing a meep containing a channel name
+    Given a channel exists with name: "Cool-Channel"
+    Then I fill in "message" with "Hallo @cool-channel!"
+    And  I press "submit" within "#message-form"
+    Then I should see "cool-channel" within "#feed-holder ul li:first .reply.channel"
 
 # Scenario: First visit
 #   so you go the start page
