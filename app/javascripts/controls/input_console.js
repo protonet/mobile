@@ -6,26 +6,25 @@ protonet.controls.InputConsole = function(args) {
   this.form               = args.form;
   this.parent_widget      = args.parent_widget;
   this.writing            = false;
+  this.autoCompleter      = new protonet.controls.InlineAutocompleter(this.input_console, [], {
+    maxChars: 2
+  });
   
   this.initEvents();
 };
 
 protonet.controls.InputConsole.prototype = {
-  "initAutocompleter": function(userNames) {
-    /**
-     * TODO: Should be easy to build a logic for channel name auto completion
-     */
-    userNames = $.map(userNames, function(userName) {
-      return "@" + userName;
+  "initAutocompleter": function(entries) {
+    entries = $.map(entries, function(entry) {
+      return "@" + entry;
     });
-    
-    var autoCompleter = new protonet.controls.InlineAutocompleter(this.input_console, userNames, {
-      maxChars: 2
-    });
-    
+    this.autoCompleter.addData(entries);
+  },
+  
+  "bindAutocompleterToUserAddedEvents": function() {
     protonet.globals.notifications.bind("user.added", function(e, msg){
-      autoCompleter.addData(["@" + msg.user_name]);
-    });
+      this.autoCompleter.addData(["@" + msg.user_name]);
+    }.bind(this));
   },
   
   "initEvents": function() {

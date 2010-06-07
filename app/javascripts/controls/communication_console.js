@@ -12,15 +12,16 @@ protonet.controls.CommunicationConsole = function() {
   this.input_channel_id = $("#message_channel_id");
   
   // add sub views
-  protonet.globals.channelSelector = new protonet.controls.ChannelSelector({
-    "parent_widget": this,
-    "channel_input": this.input_channel_id
-  });
   protonet.globals.inputConsole = new protonet.controls.InputConsole({
     "input_console": this.input,
     "parent_widget": this,
     "form": this.form
   });
+  protonet.globals.channelSelector = new protonet.controls.ChannelSelector({
+    "parent_widget": this,
+    "channel_input": this.input_channel_id
+  });
+  
   
   protonet.globals.textExtensionInput = new protonet.controls.TextExtension.Input(this.input);
   

@@ -1,15 +1,19 @@
 class Channel < ActiveRecord::Base
 
   belongs_to   :owner, :class_name => "User"
-  
+
   has_many  :says
   has_many  :tweets, :through => :says
-  
+
   has_many  :listens
   has_many  :users, :through    => :listens
-  
-  after_create :create_folder
-  after_create :subscribe_owner, :if => lambda {|c| !c.home?}
+
+  validates_uniqueness_of   :name
+  validates_length_of       :name,     :maximum => 30
+
+  before_validation_on_create :normalize_name
+  after_create  :create_folder
+  after_create  :subscribe_owner, :if => lambda {|c| !c.home?}
 
 
   def self.home
@@ -24,6 +28,10 @@ class Channel < ActiveRecord::Base
   
   def self.names
     all(:select => :name).map {|c| c.name.downcase }
+  end
+  
+  def normalize_name
+    self.name = name.gsub(/[ ']/, '-')
   end
   
   def home?

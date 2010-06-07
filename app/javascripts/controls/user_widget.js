@@ -19,6 +19,7 @@ protonet.controls.UserWidget = (function() {
     
     if (protonet.globals.inputConsole) {
       protonet.globals.inputConsole.initAutocompleter(this.user_names);
+      protonet.globals.inputConsole.bindAutocompleterToUserAddedEvents();
     }
     
     protonet.globals.notifications.bind('user.added', function(e, msg){

@@ -16,7 +16,7 @@ class ChannelsController < ApplicationController
     if success && channel.errors.empty?
       flash[:notice] = "Successfully created channel '#{params[:channel][:name]}'"
     else
-      flash[:error] = "Could not create channel '#{params[:channel][:name]}'"
+      flash[:error] = "Could not create channel '#{params[:channel][:name]}', the reason is: #{channel.errors.map(&:inspect).join(' ')}"
     end
     redirect_to :action => 'index', :anchor => channel.id
   end

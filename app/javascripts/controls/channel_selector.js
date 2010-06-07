@@ -19,6 +19,10 @@ protonet.controls.ChannelSelector = (function() {
       return $(this).attr("title");
     });
     
+    if (protonet.globals.inputConsole) {
+      protonet.globals.inputConsole.initAutocompleter(this.channels);
+    }
+
     this._observe();
     this._observeInStreamMentions();
     this._switchToAnchoredChannel();
