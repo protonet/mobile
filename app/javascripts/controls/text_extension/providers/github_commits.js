@@ -90,25 +90,22 @@ protonet.controls.TextExtension.providers.GithubCommits.prototype = {
     var container = $("<div />"),
         data = this.data,
         fileUrl = "http://github.com/" + data.owner + "/" + data.repo + "/tree/" + data.tree;
-    
-    $.each(this.data.added, function(i, file) {
+    $.each($.makeArray(this.data.added), function(i, file) {
       this._appendEntry(container, file, "added");
     }.bind(this));
-    
-    $.each(this.data.modified, function(i, file) {
+    $.each($.makeArray(this.data.modified), function(i, file) {
       this._appendEntry(container, file, "modified");
     }.bind(this));
-    
-    $.each(this.data.removed, function(i, file) {
+    $.each($.makeArray(this.data.removed), function(i, file) {
       this._appendEntry(container, file, "removed");
     }.bind(this));
-    
     return container;
   },
   
   _appendEntry: function(container, file, type) {
     var data = this.data;
-    var fileUrl = ["http://github.com", data.owner, data.repo, "tree", data.commit, file.filename].join("/");
+    var fileName = file.filename || file;
+    var fileUrl = ["http://github.com", data.owner, data.repo, "tree", data.commit, fileName].join("/");
     
     var linkText = {
       "modified": "(show/hide changes)",
@@ -118,7 +115,7 @@ protonet.controls.TextExtension.providers.GithubCommits.prototype = {
     
     var strong = $("<strong />", {
       className: type,
-      html: protonet.utils.escapeHtml(file.filename)
+      html: protonet.utils.escapeHtml(fileName)
     }).appendTo(container);
     
     var link = $("<a />", {
