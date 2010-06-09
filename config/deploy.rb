@@ -33,7 +33,7 @@ namespace :deploy do
     # and restart monit
     run monit_command + " quit"
     sleep 1
-    run monit_command    
+    run monit_command
   end
 
   desc "set all the necessary symlinks"

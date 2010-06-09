@@ -1,4 +1,4 @@
-require 'rubygems'        # if you use RubyGems
+require 'rubygems'
 require 'daemons'
 
 shared_path = File.exists?("/var/www/protonet-dashboard/shared") ? "/var/www/protonet-dashboard/shared" : "/home/protonet/dashboard/shared"
