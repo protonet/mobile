@@ -1,6 +1,6 @@
 var sys  = require('sys');
 // var net  = require('net');
-var amqp = require('./../../node-amqp/amqp');
+var amqp = require('./modules/node-amqp/amqp');
 exec = require('child_process').exec;
 
 var connection = amqp.createConnection({ host: 'localhost' });
