@@ -2,6 +2,7 @@ log/*.log
 tmp/**/*
 .DS_Store
 .gitignore
+.bundle/*
 doc/api
 doc/app
 *.pid
