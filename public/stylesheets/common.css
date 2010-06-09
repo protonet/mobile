@@ -769,12 +769,17 @@ h2 {
 }
 
 .user-messages .reply.to-me {
-  color: red;
-  font-weight: bold;
+  padding:0 5px;
+  margin:1px;
+  background-color:#FDAB54;
+  color:white;
+  -moz-border-radius:10px;
+  -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+  -webkit-border-radius: 10px;
+  -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
 }
 
 .user-messages p.highlighted {
-  background-color: green;
 }
 
 
