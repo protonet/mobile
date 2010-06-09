@@ -11,7 +11,7 @@ protonet.controls.TextExtension.Input = function(input) {
   this.removeLink = this.container.find("a.remove");
   this._ignoreUrls = [];
   
-  this.regExp = /(\b(((https?|ftp):\/\/)|(www\.))[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi;
+  this.regExp = /(\b(((https?|ftp):\/\/)|(www\.))[-A-Z0-9+&@#\/%?=~_|!:,.;\[\]]*[-A-Z0-9+&@#\/%=~_|])/gi;
   
   this._initEvents();
 };
