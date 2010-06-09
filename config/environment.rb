@@ -54,6 +54,7 @@ end
 
 ActiveSupport::JSON.backend = 'JSONGem'
 
+require "rmagick"
 require "#{RAILS_ROOT}/lib/fleximage_ext.rb"
 
 # this starts the eventmachine reactor in a new thread
