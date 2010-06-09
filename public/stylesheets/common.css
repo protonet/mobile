@@ -780,6 +780,7 @@ h2 {
 }
 
 .user-messages p.highlighted {
+  padding: 1px 0;
 }
 
 
