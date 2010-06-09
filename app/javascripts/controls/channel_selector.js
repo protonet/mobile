@@ -16,11 +16,10 @@ protonet.controls.ChannelSelector = (function() {
     channelWidth = channelWidth || $("#feed-holder").find("ul:first").outerWidth(true);
 
     this.channelsDowncaseMapping = {};
-    this.channels = container.find("li.channel a").map(function(e){
-      var channelName = $(this).attr("title");
+    this.channels = protonet.globals.availableChannels.map(function(channelName){
       this.channelsDowncaseMapping[channelName.toLowerCase()] = channelName;
       return channelName;
-    });
+    }.bind(this));
     
     if (protonet.globals.inputConsole) {
       protonet.globals.inputConsole.initAutocompleter(this.channels);
@@ -72,7 +71,7 @@ protonet.controls.ChannelSelector = (function() {
     _observeInStreamMentions: function() {
       $("span.channel").live("click", function(e){
         var channelName = this.channelsDowncaseMapping[$(e.currentTarget).text().toLowerCase()];
-        location.hash = "channel_name=" + encodeURIComponent();
+        location.hash = "channel_name=" + encodeURIComponent(channelName);
         this._switchToAnchoredChannel();
       }.bind(this));
     },

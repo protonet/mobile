@@ -3,7 +3,7 @@ protonet.utils.highlightReplies = (function() {
   
   return function(str) {
     return str.replace(REG_EXP, function(match, $1, $2) {
-      if ($.inArray( $2, protonet.globals.channelSelector.channels) != -1) {
+      if (protonet.globals.channelSelector.channelsDowncaseMapping[$2] || ($.inArray( $2, protonet.globals.channelSelector.channels) != -1)) {
         return $1 + "@" + '<span class="reply channel">' + $2 + '</span>';
       } else if ($2.match(protonet.config.user_name)) {
         return $1 + "@" + '<span class="reply to-me">' + $2 + '</span>';

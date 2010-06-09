@@ -30,7 +30,8 @@
       };
 
       protonet.globals = {
-        textExtensions: []
+        textExtensions: [],
+        availableChannels: <%= Channel.all.map(&:name).to_json %>
       };
     //]]></script>
   </head>

@@ -14,6 +14,7 @@ Feature: Using the protonet dashboard
   @javascript
   Scenario: Writing a meep containing a channel name
     Given a channel exists with name: "Cool-Channel"
+    Given I go to the start page
     Then I fill in "message" with "Hallo @cool-channel!"
     And  I press "submit" within "#message-form"
     Then I should see "cool-channel" within "#feed-holder ul li:first .reply.channel"
