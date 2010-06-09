@@ -20,9 +20,9 @@ class User < ActiveRecord::Base
   attr_accessible :login, :email, :name, :password, :password_confirmation
 
   has_many  :tweets
-  has_many  :listens, :dependent => :destroy
+  has_many  :listens,  :dependent => :destroy
   has_many  :channels, :through => :listens
-  has_many  :owned_channels, :class_name => 'Channel', :foreign_key => :owner_id, :dependent => :nullify
+  has_many  :owned_channels, :class_name => 'Channel', :foreign_key => :owner_id
   has_many  :avatars, :class_name => 'Images::Avatar', :dependent => :destroy
   
   named_scope :registered, :conditions => {:temporary_identifier => nil}
@@ -31,6 +31,7 @@ class User < ActiveRecord::Base
   after_create :listen_to_home, :send_create_notification
 
   after_destroy :move_tweets_to_anonymous
+  after_destroy :move_owned_channels_to_anonymous
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   #
@@ -102,6 +103,10 @@ class User < ActiveRecord::Base
     tweets.each {|t| t.update_attribute(:user_id, 0)}
   end
 
+  def move_owned_channels_to_anonymous
+    owned_channels.each {|t| t.update_attribute(:owner_id, 0)}
+  end
+
   def self.delete_strangers_older_than_two_days!
     destroy_all(["temporary_identifier IS NOT NULL AND updated_at < ?", Time.now - 2.days]).each {|user| user.tweets.each {|t| t.update_attribute(:user_id, 0)}}
   end
@@ -164,6 +169,10 @@ class User < ActiveRecord::Base
     send_channel_notification(channel, :unsubscribe) if save
   end
   
+  def subscribed?(channel)
+    channels.include?(channel)
+  end
+
   def send_channel_notification(channel, type)
     System::MessagingBus.topic('channels').publish({
       :trigger        => "channel.#{type}",
