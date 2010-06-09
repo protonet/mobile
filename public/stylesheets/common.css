@@ -770,7 +770,9 @@ h2 {
   background: url("/images/bkg_lbutton.png") repeat-x scroll left bottom #9A9A9A;
   color:white;
   -moz-border-radius:10px;
+  -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
   -webkit-border-radius: 10px;
+  -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
 }
 
 .user-messages .reply.to-me {
