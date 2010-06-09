@@ -13,7 +13,7 @@ gem "daemons"
 gem "ruby-net-ldap"
 gem "rmagick", "2.12.2"
 gem "rack"
-gem "fleximage", :git => "git://github.com/dudemeister/fleximage.git"
+gem "fleximage"
 gem "capistrano"
 gem "capistrano-ext"
 
