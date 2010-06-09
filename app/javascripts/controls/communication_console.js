@@ -32,9 +32,16 @@ protonet.controls.CommunicationConsole = function() {
   // active informations
   this.active_feed_id = 1; // home
   this.feeds = protonet.config.feed_ids || {};
+
+  this.highlightReplies();
 };
 
 protonet.controls.CommunicationConsole.prototype = {
+  // this is just a proof of concept
+  "highlightReplies": function() {
+    $(".reply.to-me").each(function(i, e){$(e).parent().css("background-color", "green")});
+  },
+
   "sendTweetFromInput": function() {
     if (!this.input.val()) {
       return;
