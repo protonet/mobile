@@ -773,6 +773,11 @@ h2 {
   font-weight: bold;
 }
 
+.user-messages p.highlighted {
+  background-color: green;
+}
+
+
 .user-messages .message-usericon {
   background: transparent url(/images/icn_message_arrow.png) no-repeat scroll right 19px;
   display: block;

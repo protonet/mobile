@@ -39,7 +39,9 @@ protonet.controls.CommunicationConsole = function() {
 protonet.controls.CommunicationConsole.prototype = {
   // this is just a proof of concept
   "highlightReplies": function() {
-    $(".reply.to-me").each(function(i, e){$(e).parent().css("background-color", "green")});
+    $("p:not(.highlighted) .reply.to-me").each(function(i, e){
+      $(e).parent().addClass("highlighted");
+    });
   },
 
   "sendTweetFromInput": function() {
