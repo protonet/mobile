@@ -1349,6 +1349,12 @@ h2 {
   color: rgba(0, 0, 0, 0.5);
   font-weight: normal;
 }
+
+#channels .channel-indicator {
+  margin: 0.2em 0.5em 0 0;
+  float: right;
+}
+
 #channels a.create {
   display: block;
   font-size: 1.2em;
