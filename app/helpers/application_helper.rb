@@ -28,7 +28,13 @@ module ApplicationHelper
   
   def highlight_replies(str)
     str.gsub(/(\s|^)@([\w\.\-_@]+)/) {|s|
-      "#{$1}@<span class='reply#{" channel" if Channel.names.include?($2.downcase)}'>#{$2}</span>"
+      reply_type = case
+        when Channel.names.include?($2.downcase)
+          "channel"
+        when $2.downcase == current_user.login
+          "to-me"
+        end
+      "#{$1}@<span class='reply #{reply_type}'>#{$2}</span>"
     }
   end
   

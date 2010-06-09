@@ -121,7 +121,7 @@ div, button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, 
   visibility: hidden;
 }
 .reply {
-  color: #FDAB54;
+
 }
 
 
@@ -764,7 +764,13 @@ h2 {
 }
 
 .user-messages .reply.channel {
+  color: #FDAB54;
   cursor: pointer;
+}
+
+.user-messages .reply.to-me {
+  color: red;
+  font-weight: bold;
 }
 
 .user-messages .message-usericon {
