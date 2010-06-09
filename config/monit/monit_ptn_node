@@ -119,7 +119,7 @@ check process js_dispatching_control.rb with pidfile $shared_path$/pids/js_dispa
 check process jabber_control.rb with pidfile $shared_path$/pids/jabber_control.rb.pid
   start program = "/usr/bin/env RAILS_ENV=production /usr/local/bin/ruby $current_path$/messaging/jabber_control.rb start"
   stop program  = "/usr/bin/env RAILS_ENV=production /usr/local/bin/ruby $current_path$/messaging/jabber_control.rb stop"
-  if 10 restarts within 5 cycles then timeout
+  if 10 restarts within 10 cycles then timeout
 
 
 #  check process apache with pidfile /usr/local/apache/logs/httpd.pid
