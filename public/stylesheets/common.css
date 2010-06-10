@@ -756,7 +756,7 @@ h2 {
 .user-messages .message-text p {
   white-space: pre-wrap;
   overflow: hidden;
-  margin-bottom: 1px;
+  margin-bottom: 10px;
 }
 
 .user-messages .message-text p:last-child {
