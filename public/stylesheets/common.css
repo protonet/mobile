@@ -896,6 +896,11 @@ h2 {
   display: none;
 }
 
+#registration-form.standalone {
+  width: 290px;
+  margin: auto;
+}
+
 
 /* =LOGIN
 --------------------------------------------------------------------------- */
