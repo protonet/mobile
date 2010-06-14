@@ -1,3 +1,2 @@
 @external.operate do |image|
-  image.resize(@width + "x" + @height, :crop => true, :upsample => true) if @width && @height
 end
