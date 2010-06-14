@@ -2,7 +2,8 @@ class Tweet < ActiveRecord::Base
   
   belongs_to  :user
   has_many    :says
-  has_many    :channels, :through => :says
+  has_many    :channels,  :through => :says
+  has_one     :avatar,    :through => :user
   
   named_scope :recent, :order => "tweets.id DESC"
   validates_presence_of :message

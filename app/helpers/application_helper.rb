@@ -48,6 +48,10 @@ module ApplicationHelper
     message = auto_link_file_paths(message)
   end
   
+  def avatar_url(avatar)
+    avatar ? "/images/avatars/#{avatar.id}" : '/images/userpicture.jpg'
+  end
+  
   private
     def extract_file_name(path)
       match = path.match(/file_path=.*%2F(.*)/)

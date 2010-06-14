@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   has_many  :listens,  :dependent => :destroy
   has_many  :channels, :through => :listens
   has_many  :owned_channels, :class_name => 'Channel', :foreign_key => :owner_id
-  has_many  :avatars, :class_name => 'Images::Avatar', :dependent => :destroy
+  has_one   :avatar, :class_name => 'Images::Avatar', :dependent => :destroy
   
   named_scope :registered, :conditions => {:temporary_identifier => nil}
 
@@ -188,11 +188,7 @@ class User < ActiveRecord::Base
     skip_validation ? false : password_required_without_logged_out_user?
   end
   alias_method_chain :password_required?, :logged_out_user
-  
-  def avatar
-    avatars.last
-  end
-  
+
   def active_avatar_url
     avatar ? "/images/avatars/#{avatar.id}" : '/images/userpicture.jpg'
   end
