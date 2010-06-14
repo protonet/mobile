@@ -164,7 +164,13 @@ protonet.controls.InlineAutocompleter.prototype = {
     this.input.attr("selectionStart", position).attr("selectionEnd", position).focus();
   },
   
-  addData: function(data) {
-    this.data = this.data.concat(this._prepareData(data));
+  addData: function(data, options) {
+    if(options && options['prepend']) {
+      for(i in data) {
+        this.data.unshift(this._prepareData([data[i]])[0]);
+      }
+    } else {
+      this.data = this.data.concat(this._prepareData(data));
+    }
   }
 };

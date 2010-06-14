@@ -18,7 +18,7 @@ protonet.controls.UserWidget = (function() {
     }.bind(this));
     
     if (protonet.globals.inputConsole) {
-      protonet.globals.inputConsole.initAutocompleter(this.user_names);
+      protonet.globals.inputConsole.initAutocompleter(this.user_names, {'prepend': true});
       protonet.globals.inputConsole.bindAutocompleterToUserAddedEvents();
     }
     

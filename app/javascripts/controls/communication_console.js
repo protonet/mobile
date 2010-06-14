@@ -40,10 +40,7 @@ protonet.controls.CommunicationConsole.prototype = {
   // this is just a proof of concept
   // and needs to be cleaned up
   "highlightReplies": function() {
-    $("p:not(.highlighted) .reply.to-me").each(function(i, e){
-      $(e).parent().addClass("highlighted");
-    });
-    $("p:not(.highlighted) .reply.channel").each(function(i, e){
+    $("p:not(.highlighted) .reply").each(function(i, e){
       $(e).parent().addClass("highlighted");
     });
   },

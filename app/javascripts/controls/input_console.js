@@ -14,11 +14,11 @@ protonet.controls.InputConsole = function(args) {
 };
 
 protonet.controls.InputConsole.prototype = {
-  "initAutocompleter": function(entries) {
+  "initAutocompleter": function(entries, options) {
     entries = $.map(entries, function(entry) {
       return "@" + entry;
     });
-    this.autoCompleter.addData(entries);
+    this.autoCompleter.addData(entries, options);
   },
   
   "bindAutocompleterToUserAddedEvents": function() {

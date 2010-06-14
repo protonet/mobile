@@ -763,11 +763,20 @@ h2 {
   margin-bottom: 5px;
 }
 
+.user-messages .reply {
+  padding:0 5px;
+  margin:1px;
+  border: 1px solid #FDAB54;
+  -moz-border-radius:10px;
+  -webkit-border-radius: 10px;
+}
+
 .user-messages .reply.channel {
   cursor: pointer;
   padding:0 5px;
   margin:1px;
   background-color:#9A9A9A;
+  border: none;
   color:white;
   -moz-border-radius:10px;
   -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
@@ -779,6 +788,7 @@ h2 {
   padding:0 5px;
   margin:1px;
   background-color:#FDAB54;
+  border: none;
   color:white;
   -moz-border-radius:10px;
   -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
