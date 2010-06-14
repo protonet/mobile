@@ -45,7 +45,10 @@ class Images::ExternalsController < ApplicationController
     # global file
     elsif params[:image_file_url]
       begin
-        @external = Images::External.find_or_create_by_image_url(params[:image_file_url], @width, @height)
+        @external = Images::External.find_or_create_by_image_url(params[:image_file_url])
+        @external.operate do |image|
+          image.resize(@width + "x" + @height, :crop => true, :upsample => true) if @width && @height
+        end
       rescue OpenURI::HTTPError
         return head 404
       end
