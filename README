@@ -46,6 +46,9 @@ git submodule update
 # if you don't have bundler install it first:
 (sudo) gem install bundler
 
+# if you don't have imagemagick install it first:
+(sudo) port install imagemagick
+
 # install the needed gems:
 bundle install
 
@@ -58,6 +61,9 @@ sudo port install rabbitmq-server
 
 # if you have stopped it you can restart it by using:
 sudo rabbitmq-server
+
+# and start up the javascript dispatcher
+./messaging/event_machine/js_dispatching_server.rb
 
 === OTHER STUFF
 
