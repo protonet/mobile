@@ -100,22 +100,16 @@ protonet.controls.Tweet = (function() {
         url:      this.form.attr("action"),
         data:     params,
         success:  function(response) {
-          alert("success");
           if (this.shouldBeMerged) {
             this.replaceFirstTweetIdInMerge(response);
           } else {
-            this.htmlId = this.listElement.attr("id");
-            this.htmlId = this.htmlId.replace(ID_REG_EXP, response);
+            this.htmlId = this.listElement.attr("id").replace(ID_REG_EXP, response);
             this.listElement.attr("id", this.htmlId);
           }
-          
-          // Remove unsent messages after success
-          this.channelUl.find(".unsent").remove();
         }.bind(this),
         
         error:    function() {
           alert("Ooops, something went wrong. Your message hasn't been sent.");
-          this.listElement.addClass("unsent").css("opacity", 0.5);
         }.bind(this)
       });
     },
