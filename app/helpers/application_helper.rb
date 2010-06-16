@@ -26,7 +26,7 @@ module ApplicationHelper
       path = $1
       file_name = extract_file_name($1)
       
-      file_name ? ('<a href="' + path + '">' + truncate(file_name, 40) + '</a>') : s
+      file_name ? ('<a href="' + path + '">' + truncate(file_name, {:length => 40}) + '</a>') : s
     }
   end
   
@@ -44,8 +44,14 @@ module ApplicationHelper
   end
   
   def highlight_replies(str)
-    str.gsub(/(\s|^)@([^@\s$"')]+)/) {|s|
-      $1 + "@" + '<span class="reply">' + $2 + '</span>';
+    str.gsub(/(\s|^)@([\w\.\-_@]+)/) {|s|
+      reply_type = case
+        when Channel.names.include?($2.downcase)
+          "channel"
+        when $2.downcase == current_user.login
+          "to-me"
+        end
+      "#{$1}@<span class='reply #{reply_type}'>#{$2}</span>"
     }
   end
   
@@ -58,9 +64,13 @@ module ApplicationHelper
     message = nl2br(message)
     message = auto_link_file_paths(message)
   end
-  
+
   def stylesheets
     ["/css/reset", "/css/general", "/css/login", "/css/channels", "/css/meeps", "/css/text_extension"]
+  end
+
+  def avatar_url(avatar)
+    avatar ? "/images/avatars/#{avatar.id}" : '/images/userpicture.jpg'
   end
   
   private

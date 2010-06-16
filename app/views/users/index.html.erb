@@ -1,47 +1,17 @@
 <h2>Users</h2>
 
-<div class="users options">
+<div id="users" class="users options">
   <%= link_to "delete strangers older than 2 days", { :action => "delete_stranger_older_than_two_days" }, :class => "cleanup" %>
 
   <ul>
     <%- @users.each do |u| -%>
-      <li>
-        <div id="index-<%= u.id %>" class="index section">
-          <%= "#{h u.display_name}" %>
-          <span class="control">
-            <%- if current_user.id == u.id -%>
-              <span class="edit"><%= link_to 'edit', "#", :rel => "edit-#{u.id}" %> | </span>
-            <%- end -%>
-            <span class="show"><%= link_to 'show', "#", :rel => "show-#{u.id}" %></span>
-          </span>
-        </div>
-
-        <div id="edit-<%= u.id %>" class="edit section hidden">
-          <% form_for :user, :url => { :action => 'update' } do |f| -%>
-            <fieldset>
-              <%= f.hidden_field :id, { :value => u.id, :id => "user-id-#{u.id}" } %>
-              <%= f.text_field :name, { :value => u.name, :id => "user-name-#{u.id}", :title => "Name of the user…" } %>
-              <%= f.text_field :email, { :value => u.email, :id => "user-email-#{u.id}", :title => "E-Mail of the user…" } %>
-              <%= button "Save" %>
-            </fieldset>
-          <% end %>
-        </div>
-
-        <div id="show-<%= u.id %>" class="show section hidden">
-          <dl>
-            <dt>Avatar</dt>
-            <dd>
-              <%= image_tag u.active_avatar_url %>
-            </dd>
-
-            <dt>E-Mail</dt>
-            <dd><%= u.email %></dd>
-
-            <dt>Account created</dt>
-            <dd><%= u.created_at %></dd>
-          </dl>
+      <li id="user-<%= u.id %>">
+        <div class="index section">
+          <%= "<span>#{h u.display_name}</span>" %>
         </div>
       </li>
     <%- end -%>
   </ul>
+</div>
+<div id="users-details">
 </div>

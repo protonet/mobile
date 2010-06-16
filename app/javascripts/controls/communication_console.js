@@ -12,15 +12,16 @@ protonet.controls.CommunicationConsole = function() {
   this.input_channel_id = $("#message_channel_id");
   
   // add sub views
-  protonet.globals.channelSelector = new protonet.controls.ChannelSelector({
-    "parent_widget": this,
-    "channel_input": this.input_channel_id
-  });
   protonet.globals.inputConsole = new protonet.controls.InputConsole({
     "input_console": this.input,
     "parent_widget": this,
     "form": this.form
   });
+  protonet.globals.channelSelector = new protonet.controls.ChannelSelector({
+    "parent_widget": this,
+    "channel_input": this.input_channel_id
+  });
+  
   
   protonet.globals.textExtensionInput = new protonet.controls.TextExtension.Input(this.input);
   
@@ -31,9 +32,19 @@ protonet.controls.CommunicationConsole = function() {
   // active informations
   this.active_feed_id = 1; // home
   this.feeds = protonet.config.feed_ids || {};
+
+  this.highlightReplies();
 };
 
 protonet.controls.CommunicationConsole.prototype = {
+  // this is just a proof of concept
+  // and needs to be cleaned up
+  "highlightReplies": function() {
+    $("p:not(.highlighted) .reply").each(function(i, e){
+      $(e).parent().addClass("highlighted");
+    });
+  },
+
   "sendTweetFromInput": function() {
     if (!this.input.val()) {
       return;

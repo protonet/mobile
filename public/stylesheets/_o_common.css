@@ -121,7 +121,7 @@ div, button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, 
   visibility: hidden;
 }
 .reply {
-  color: #FDAB54;
+
 }
 
 
@@ -181,12 +181,11 @@ div, button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, 
 }
 #channel li.active a {
   background: rgb(173, 173, 173) url() no-repeat scroll center -3px;
+  border: 1px solid #FDAB54;
 }
 #channel li.targeted a {
   background: rgb(173, 173, 173) url(/images/img_marker_down.png) no-repeat scroll center -3px;
 }
-
-
 #channel .browse {
   background: transparent none;
   border: 1px solid transparent;
@@ -408,8 +407,6 @@ h2 {
   padding: 0.1em 0.2em;
   width: 341px;
 }
-/* =NETWORK-MONITOR
---------------------------------------------------------------------------- */
 #preferences-details {
   background: rgb(247, 247, 247);
   border: 0.1em solid rgb(212, 212, 212);
@@ -766,6 +763,44 @@ h2 {
   margin-bottom: 5px;
 }
 
+.user-messages .reply {
+  padding:0 5px;
+  margin:1px;
+  border: 1px solid #FDAB54;
+  -moz-border-radius:10px;
+  -webkit-border-radius: 10px;
+}
+
+.user-messages .reply.channel {
+  cursor: pointer;
+  padding:0 5px;
+  margin:1px;
+  background-color:#9A9A9A;
+  border: none;
+  color:white;
+  -moz-border-radius:10px;
+  -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  -webkit-border-radius: 10px;
+  -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.user-messages .reply.to-me {
+  padding:0 5px;
+  margin:1px;
+  background-color:#FDAB54;
+  border: none;
+  color:white;
+  -moz-border-radius:10px;
+  -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+  -webkit-border-radius: 10px;
+  -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.user-messages p.highlighted {
+  padding: 1px 0;
+}
+
+
 .user-messages .message-usericon {
   background: transparent url(/images/icn_message_arrow.png) no-repeat scroll right 19px;
   display: block;
@@ -869,6 +904,11 @@ h2 {
 }
 #registration-form label {
   display: none;
+}
+
+#registration-form.standalone {
+  width: 290px;
+  margin: auto;
 }
 
 
@@ -1159,7 +1199,8 @@ h2 {
   margin: 0 1em 1.5em;
   padding: 1em 1em 0.5em;
   vertical-align: top;
-  width: 550px;
+  width: 350px;
+  float: left;
 }
 .options li {
   margin: 0 0 0.5em;
@@ -1292,21 +1333,67 @@ h2 {
 
 /* =CHANNELS
 --------------------------------------------------------------------------- */
-.channels a.create {
+#channels h3 {
+  font-size: 1.4em;
+  font-weight: bold;
+  margin: 0 0 0.5em;
+}
+#channels {
+  background: rgb(247, 247, 247);
+  border: 0.1em solid rgb(212, 212, 212);
+  margin: 0 1em 1.5em;
+  padding: 1em 1em 0.5em;
+  float: left;
+  width:  350px;
+}
+#channels ul {
+  max-height: 540px;
+  overflow: auto;
+}
+#channels li {
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+  background: rgb(255, 255, 255) url(/images/bkg_message.png) repeat-x scroll left bottom;
+  border-radius: 0.5em;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  color: rgb(0, 0, 0);
+  font-size: 1.4em;
+  font-weight: bold;
+  margin: 0 0 0.5em;
+  padding: 1em 0.6em;
+  text-decoration: none;
+  cursor: pointer;
+  width: 310px;
+}
+#channels li.clicked,
+#users li.clicked div {
+  background: none;
+}
+#channels li span {
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: normal;
+}
+
+#channels .channel-indicator {
+  margin: 0.2em 0.5em 0 0;
+  float: right;
+}
+
+#channels a.create {
   display: block;
   font-size: 1.2em;
-  margin: 0 0 1em;
+  margin: 0 0 0.3em;
   text-align: right;
 }
-.channels div.create {
+#channels div.create {
   margin: 0 0 1em;
 }
 
-.channels .search {
+#channels .search {
   margin: 0 0 1em;
-  width: 540px;
+  width: 340px;
 }
-.channels .search input {
+#channels .search input {
   border: 1px solid rgba(0, 0, 0, 0.4);
   font-size: 1.8em;
   line-height: 1em;
@@ -1314,3 +1401,71 @@ h2 {
   padding: 0.1em 0.2em;
   width: 100%;
 }
+#channels-details,
+#users-details {
+  background: rgb(247, 247, 247);
+  border: 0.1em solid rgb(212, 212, 212);
+  margin: 0 1em 1.5em;
+  padding: 1em 1em 0.5em;
+  width: 540px;
+  height: 500px;
+  float:left;
+}
+
+/* = Channels-details
+--------------------------------------------------------------------------- */
+
+#channels-details h3,
+#users-details h3 {
+  font-size: 1.4em;
+  font-weight: bold;
+  margin: 0 0 0.1em;
+  display: inline;
+}
+#channels-details h4,
+#users-details h4 {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 0.1em 0 0.3em;
+}
+#channels-details #channel-owner {
+  color: rgb(107, 107, 107);
+  font-style: italic;
+  padding: 0 0 0.2em;
+}
+#channel-description {
+ display: inline;
+}
+#channel-listener {
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+  background: rgb(255, 255, 255) url(/images/bkg_message.png) repeat-x scroll left bottom;
+  border-radius: 0.5em;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  color: rgb(0, 0, 0);
+  font-size: 1.2em;
+  float: right;
+  margin: 0 0 0.5em;
+  padding: 1em 0.6em;
+  text-decoration: none;
+  cursor: pointer;
+}
+#channel-subscribers {
+  background: rgb(255, 255, 255);
+  border: 0.1em solid rgb(212, 212, 212);
+  height: 200px;
+  width: 400px;
+  overflow: auto;
+  padding: 0.3em;
+}
+#channel-subscribers li{
+  margin: 0.2em 0;
+}
+#channel-subscribers img{
+  vertical-align: middle;
+}
+.channel-remove-listner {
+  float: right;
+} 
+
+

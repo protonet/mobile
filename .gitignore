@@ -1,6 +1,8 @@
 log/*.log
 tmp/**/*
 .DS_Store
+.gitignore
+.bundle/*
 doc/api
 doc/app
 *.pid
@@ -16,3 +18,4 @@ public/externals/*
 public/images/externals/*
 mkmf.log
 db/schema.rb
+node/screenshots/*

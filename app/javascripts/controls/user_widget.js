@@ -10,6 +10,7 @@ protonet.controls.UserWidget = (function() {
     this.user_list = this.container.find("ul.root");
     this.user_names = [];
     this.user_objects = {};
+    this.channel_users = {};
     
     this.entries.each(function(i, entry){
       var user_id = entry.id.match(REG_EXP_ID)[1];
@@ -17,10 +18,41 @@ protonet.controls.UserWidget = (function() {
     }.bind(this));
     
     if (protonet.globals.inputConsole) {
-      protonet.globals.inputConsole.initAutocompleter(this.user_names);
+      protonet.globals.inputConsole.initAutocompleter(this.user_names, {'prepend': true});
+      protonet.globals.inputConsole.bindAutocompleterToUserAddedEvents();
     }
     
     protonet.globals.notifications.bind('user.added', function(e, msg){
+      this.addUserFromMessage(msg);
+      this.filterChannelUsers(protonet.globals.channelSelector.getCurrentChannelId());
+    }.bind(this));
+    
+    protonet.globals.notifications.bind('channel.subscribe channel.unsubscribe', function(e, msg){
+      switch(e.handleObj.namespace) {
+        case 'subscribe':
+          this.channel_users[msg.channel_id].push(msg.user_id);
+          break;
+        case 'unsubscribe':
+          this.channel_users[msg.channel_id].splice(this.channel_users[msg.channel_id].indexOf(msg.user_id), 1);
+          break;
+      }
+      this.filterChannelUsers(protonet.globals.channelSelector.getCurrentChannelId());
+    }.bind(this));
+    
+    protonet.globals.notifications.bind('channel.update_subscriptions', function(e, msg){
+      for(var i in msg.data) {
+        this.channel_users[i] = msg.data[i];
+      };
+      this.filterChannelUsers(protonet.globals.channelSelector.getCurrentChannelId());
+    }.bind(this));
+        
+    protonet.globals.notifications.bind("channel.changed", function(e, id) {
+      this.filterChannelUsers(id);
+    }.bind(this));
+  };
+  
+  UserWidget.prototype = {
+    "addUserFromMessage": function(msg) {
       var newUserEntry = this.entries.first().clone();
       newUserEntry.attr("id", 'user-list-user-' + msg.user_id);
       newUserEntry.find('img').attr('src', msg.avatar_url);
@@ -28,11 +60,8 @@ protonet.controls.UserWidget = (function() {
       this.user_list.append(newUserEntry);
       this.addUser(msg.user_id, newUserEntry[0]);
       this.entries = this.container.find("li"); // recalculate
-    }.bind(this));
+    },
     
-  };
-  
-  UserWidget.prototype = {
     "addUser": function(user_id, element) {
       this.user_objects[user_id] = $(element);
       this.user_names.push(this.user_objects[user_id].children("span").html());      
@@ -47,13 +76,30 @@ protonet.controls.UserWidget = (function() {
       for(var i in this.user_objects) {
         var online_user = online_users[i];
         var current_dom_object = this.user_objects[i];
-        var css_class = this.cssClassForConnections(online_user && online_user.connections);
-        current_dom_object.attr("class", css_class);
+        var connection_class = this.cssClassForConnections(online_user && online_user.connections);
+        // var channel_classes  = this.cssClassForChannels(online_user && online_user.channels);
+        current_dom_object.attr("class", connection_class);
       }
       
       this.sortEntries();
     },
     
+    "filterChannelUsers": function(channel_id) {
+      if(protonet.user.Config.get("always_show_all_users_in_channels")) {
+        for(user_id in this.user_objects) {
+          this.user_objects[user_id].show();
+        }
+      } else {
+        for(user_id in this.user_objects) {
+          if($.inArray(parseInt(user_id, 10), this.channel_users[channel_id]) >= 0) {
+            this.user_objects[user_id].show();
+          } else {
+            this.user_objects[user_id].hide();
+          };
+        };
+      }
+    },
+
     "cssClassForConnections": function(sockets) {
       if (!sockets) {
         return "offline";

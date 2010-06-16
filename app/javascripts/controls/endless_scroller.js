@@ -58,6 +58,7 @@ protonet.controls.EndlessScroller = (function() {
           setTimeout(function() {
             protonet.controls.TextExtension.renderQueue();
             protonet.controls.PrettyDate.update();
+            protonet.globals.communicationConsole.highlightReplies();
             if (showNotification) {
               protonet.globals.communicationConsole.notification(params.channel_id);
             }

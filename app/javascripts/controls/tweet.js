@@ -74,6 +74,9 @@ protonet.controls.Tweet = (function() {
       this.channelUl.prepend(this.listElement);
     }
     
+    // highlight my mentions
+    protonet.globals.communicationConsole.highlightReplies();
+
     var newChannelHeight = this.channelUl.height();
     
     /**

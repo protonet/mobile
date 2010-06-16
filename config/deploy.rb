@@ -33,7 +33,7 @@ namespace :deploy do
     # and restart monit
     run monit_command + " quit"
     sleep 1
-    run monit_command    
+    run monit_command
   end
 
   desc "set all the necessary symlinks"
@@ -60,7 +60,29 @@ namespace :passenger do
   end
 end
 
+namespace :bundler do
+  task :create_symlink, :roles => :app do
+    shared_dir = File.join(shared_path, 'bundle')
+    release_dir = File.join(current_release, '.bundle')
+    run("mkdir -p #{shared_dir} && ln -s #{shared_dir} #{release_dir}")
+  end
+  
+  task :bundle_new_release, :roles => :app do
+    bundler.create_symlink
+    run "cd #{release_path} && bundle install --without test --without cucumber"
+  end
+  
+  task :lock, :roles => :app do
+    run "cd #{current_release} && bundle lock;"
+  end
+  
+  task :unlock, :roles => :app do
+    run "cd #{current_release} && bundle unlock;"
+  end
+end
 
+# HOOKS
+after "deploy:update_code", "bundler:bundle_new_release"
 after "deploy:finalize_update", "deploy:copy_stage_config"
 after "deploy:finalize_update", "deploy:create_protonet_symlinks"
 after "deploy", "deploy:cleanup"

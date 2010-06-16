@@ -20,14 +20,18 @@ class User < ActiveRecord::Base
   attr_accessible :login, :email, :name, :password, :password_confirmation
 
   has_many  :tweets
-  has_many  :listens
+  has_many  :listens,  :dependent => :destroy
   has_many  :channels, :through => :listens
-  has_many  :avatars, :class_name => 'Images::Avatar', :dependent => :destroy
+  has_many  :owned_channels, :class_name => 'Channel', :foreign_key => :owner_id
+  has_one   :avatar, :class_name => 'Images::Avatar', :dependent => :destroy
   
   named_scope :registered, :conditions => {:temporary_identifier => nil}
 
   after_create :create_ldap_user if configatron.ldap.active == true
   after_create :listen_to_home, :send_create_notification
+
+  after_destroy :move_tweets_to_anonymous
+  after_destroy :move_owned_channels_to_anonymous
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   #
@@ -91,11 +95,16 @@ class User < ActiveRecord::Base
     u
   end
   
-  def self.all_strangers(conditions)
-    find(:all, :conditions => {:temporary_identifier => 'IS NOT NULL'}).each do |user|
-      # make all tweets of deleted users anonymous
-      user.tweets.each {|t| t.update_attribute(:user_id, 0)}
-    end
+  def self.all_strangers
+    all(:conditions => "temporary_identifier IS NOT NULL")
+  end
+  
+  def move_tweets_to_anonymous
+    tweets.each {|t| t.update_attribute(:user_id, 0)}
+  end
+
+  def move_owned_channels_to_anonymous
+    owned_channels.each {|t| t.update_attribute(:owner_id, 0)}
   end
 
   def self.delete_strangers_older_than_two_days!
@@ -139,23 +148,47 @@ class User < ActiveRecord::Base
   
   def send_create_notification
     unless stranger?
-      System::MessagingBus.topic('users').publish({
+      System::MessagingBus.topic('system').publish({
         :trigger        => 'user.added',
         :user_id        => id,
         :user_name      => display_name,
-        :avatar_url     => active_avatar_url}.to_json, :key => 'users.new')
+        :avatar_url     => active_avatar_url
+        }.to_json, :key => 'system.users.new')
     end
+  end
+  
+  def subscribe(channel)
+    return if channels.include?(channel)
+    channels << channel
+    send_channel_notification(channel, :subscribe) if save
+  end
+  
+  def unsubscribe(channel)
+    return unless channels.include?(channel)
+    channels.delete(channel)
+    send_channel_notification(channel, :unsubscribe) if save
+  end
+  
+  def subscribed?(channel)
+    channels.include?(channel)
+  end
+
+  def send_channel_notification(channel, type)
+    System::MessagingBus.topic('channels').publish({
+      :trigger        => "channel.#{type}",
+      :channel_id     => channel.id,
+      :user_id        => id,
+      :user_name      => display_name,
+      :avatar_url     => active_avatar_url,
+      :x_target       => 'protonet.globals.notifications[0].triggerNotification'
+      }.to_json, :key => "channels.#{channel.id}")
   end
 
   def password_required_with_logged_out_user?
     skip_validation ? false : password_required_without_logged_out_user?
   end
   alias_method_chain :password_required?, :logged_out_user
-  
-  def avatar
-    avatars.last
-  end
-  
+
   def active_avatar_url
     avatar ? "/images/avatars/#{avatar.id}" : '/images/userpicture.jpg'
   end

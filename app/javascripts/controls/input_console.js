@@ -6,25 +6,33 @@ protonet.controls.InputConsole = function(args) {
   this.form               = args.form;
   this.parent_widget      = args.parent_widget;
   this.writing            = false;
+  this.autoCompleter      = new protonet.controls.InlineAutocompleter(this.input_console, [], {
+    maxChars: 2
+  });
   
   this.initEvents();
 };
 
 protonet.controls.InputConsole.prototype = {
-  "initAutocompleter": function(userNames) {
-    /**
-     * TODO: Should be easy to build a logic for channel name auto completion
-     */
-    userNames = $.map(userNames, function(userName) {
-      return "@" + userName;
+  "initAutocompleter": function(entries, options) {
+    entries = $.map(entries, function(entry) {
+      return "@" + entry;
     });
-    
-    new protonet.controls.InlineAutocompleter(this.input_console, userNames, {
-      maxChars: 2
-    });
+    this.autoCompleter.addData(entries, options);
+  },
+  
+  "bindAutocompleterToUserAddedEvents": function() {
+    protonet.globals.notifications.bind("user.added", function(e, msg){
+      this.autoCompleter.addData(["@" + msg.user_name]);
+    }.bind(this));
   },
   
   "initEvents": function() {
+    // focus input after channel switch
+    protonet.globals.notifications.bind("channel.changed", function() {
+      this.input_console.focus();
+    }.bind(this));
+    
     // bind keydown handling for special key catching
     this.input_console.keydown(this.keyDown.bind(this));
     
@@ -77,7 +85,6 @@ protonet.controls.InputConsole.prototype = {
       this.recheck = false;
       if (!this.writing) {
         this.sendStartedWritingNotification();
-        // console.log("writing");
         this.writing = true;
       }
       

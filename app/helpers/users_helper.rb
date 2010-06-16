@@ -90,7 +90,4 @@ module UsersHelper
     end
   end
   
-  def avatar_url(user)
-    user.avatar ? images_avatar_path(user.avatar, :jpg) : "/images/userpicture.jpg"
-  end
 end

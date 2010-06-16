@@ -1,0 +1,26 @@
+<%- if current_user.stranger? && configatron.ldap.single_authentication != true -%>
+  <% form_for :user, :url => users_path, :html => {:id => "registration-form", :class => "#{form_class if defined?(form_class)}"} do |f| -%>
+    <fieldset>
+      <legend>
+        <strong>JOIN the (r)evolution</strong>
+        <span>no email, no credit card, just pure awesomeness!</span>
+      </legend>
+      <ul>
+        <li>
+          <%= label_tag "login" %>
+          <%= f.text_field "login", {:id => 'new-user-login', :title => 'user name'} %>
+        </li>
+        <li>
+          <%= label_tag "password" %>
+          <%= f.password_field "password", {:id => 'new-user-password'} %>
+          <%= f.hidden_field "password_confirmation", {:id => 'new-user-password-confirmation'} %>
+        </li>
+      </ul>
+    </fieldset>
+    <button type="submit" name="join">
+      <span>
+        <em>Join</em>
+      </span>
+    </button>
+  <%- end -%>
+<%- end -%>

@@ -34,18 +34,30 @@ class Images::ExternalsController < ApplicationController
     detect_local_file = /.*#{Regexp.escape(request.env["SERVER_NAME"])}.+file_path=/i
     if params[:image_file_url] =~ detect_local_file
       file_path = params.delete(:image_file_url).gsub(detect_local_file, '')
-      @external = Images::External.new(:image_file => File.new(configatron.user_file_path.to_s + URI.decode(file_path), "r"))
-      @external.save
+      file_path_for_storage = URI.decode(file_path) +  "&width=#{@width}&height=#{@height}"
+      unless @external = Images::External.find(:first, :conditions => {:image_url => file_path_for_storage})
+        @external = Images::External.new(:image_file => File.new(configatron.user_file_path.to_s + URI.decode(file_path), "r"), :image_url => URI.decode(file_path_for_storage))
+        @external.operate do |image|
+          image.resize(@width + "x" + @height, :crop => true, :upsample => true) if @width && @height
+        end
+        @external.save
+      end
     # global file
     elsif params[:image_file_url]
       begin
         @external = Images::External.find_or_create_by_image_url(params[:image_file_url])
+        @external.operate do |image|
+          image.resize(@width + "x" + @height, :crop => true, :upsample => true) if @width && @height
+        end
       rescue OpenURI::HTTPError
         return head 404
       end
     # by id
     elsif params[:id]
       @external = Images::External.find_by_id(params[:id])
+      @external.operate do |image|
+        image.resize(@width + "x" + @height, :crop => true, :upsample => true) if @width && @height
+      end
     end
 
     respond_to do |format|

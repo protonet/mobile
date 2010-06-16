@@ -3,8 +3,8 @@ role :app, "protonet-live"
 role :web, "protonet-live"
 role :db,  "protonet-live", :primary => true
 
-set :deploy_to, "/var/www/protonet-dashboard"
+set :deploy_to, "/home/jelveh/protonet-dashboard"
 set :use_sudo, false
 
-set :user, "www-data"
-set :runner, "www-data"
+set :user, "jelveh"
+set :runner, "jelveh"

@@ -106,7 +106,8 @@ protonet.controls.FileWidget.prototype = {
         anchor = $("<a />", {
           href: this.getDownloadPathFor(object.name),
           html: objectName,
-          title: objectName
+          title: objectName,
+          target: '_blank'
         });
     
     anchor.appendTo(li);
@@ -210,7 +211,8 @@ protonet.controls.FileWidget.prototype = {
           },
           success: function() {
             new_folder_input.unbind("keydown");
-            link.unbind("click", stop).html(new_folder_input.val());
+            var folder_name = new_folder_input.val();
+            link.unbind("click", stop).html(folder_name).attr("title", folder_name);
             this.initContextMenu();
           }.bind(this),
           error: function(transport) {

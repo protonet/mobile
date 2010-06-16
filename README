@@ -30,30 +30,48 @@ Protonet aims to create a new internet (let's call it internet 2.0 ;)), basicall
 
 It goes hand in hand with it's low-level part (also on github, called protonet-node-setup).
  
-
 == TECHNOLOGIES:
 
 Protonet-Dashboard runs on rails, sqlite3, rabbitmq, eventmachine (+amqp) and uses jQuery as its JS framework.
 
-== FEATURES AND TODOs:
 
-REVISION ONE! Featureset:
+=== INSTALL
 
-- dashboard:
-  - you can see one or more channels and get 
-
-
-
-== INSTALL
+== GENERAL
+git clone git@github.com:dudemeister/protonet-dashboard.git
+cd protonet-dashboard
 git submodule init
 git submodule update
 
-install the needed gems:
+# if you don't have bundler install it first:
+(sudo) gem install bundler
 
-gem sources -a http://gems.github.com
-sudo gem install jeremymcanally-context faker random_data mocha configatron sprockets ruby-debug eventmachine tmm1-amqp json sqlite3-ruby daemons ruby-net-ldap rmagick passenger rack capistrano capistrano-ext ruby-net-ldap --no-rdoc --no-ri
+# if you don't have imagemagick install it first:
+(sudo) port install imagemagick
 
+# install the needed gems:
+bundle install
+
+== MESSAGING
+
+Install our messaging broker:
+
+sudo port selfupdate
+sudo port install rabbitmq-server
+
+# if you have stopped it you can restart it by using:
+sudo rabbitmq-server
+
+# and start up the javascript dispatcher
+./messaging/event_machine/js_dispatching_server.rb
+
+=== OTHER STUFF
+
+These things are not needed if you just want to do some basic development:
+
+== LOCAL APACHE CONFIG
 setup apache for local development:
+
 sudo passenger-install-apache2-module
 sudo mate /etc/apache2/httpd.conf
 sudo mate /etc/apache2/other/protonet.conf
@@ -61,7 +79,6 @@ sudo apachectl graceful
 mate /etc/hosts
 tail -f log/development
 touch tmp/restart.txt
-
 
 # /etc/apache2/httpd.conf
 LoadModule passenger_module /Library/Ruby/Gems/1.8/gems/passenger-2.2.5/ext/apache2/mod_passenger.so
@@ -93,24 +110,11 @@ http://railscasts.com/episodes/122-passenger-in-development
 
 ATTENTION: you might need to install some other dependecies.
 
-== MESSAGING
-
-Install our messaging broker:
-
-sudo port selfupdate
-sudo port install rabbitmq-server
-
-if you have stopped it you can restart it by using:
-RABBITMQ_NODE_IP_ADDRESS="" RABBITMQ_NODE_PORT="" RABBITMQ_LOG_BASE="/tmp" RABBITMQ_MNESIA_DIR="/tmp/rabbitmq-rabbit-mnesia" RABBITMQ_NODE_ONLY=true RABBITMQ_SERVER_START_ARGS=" -s rabbit" ./messaging/rabbitmq/scripts/rabbitmq-server
-
-now to get an idea of the things we can do now, have a look at this post:
-http://hopper.squarespace.com/blog/2008/7/22/simple-amqp-library-for-ruby.html
-
-=== COMPILING THE SOCKET:
+== COMPILING THE SOCKET:
 
 TextMate -> Bundles -> ActionScript -> MTASC -> Build with MTASC
 
-=== FLASH SOCKET COMMUNICATION CAVEATS
+== FLASH SOCKET COMMUNICATION CAVEATS
 
 Awesome stuff is about to happen... since we are now using rabbitmq we need a way to send the correct policy to the requesting flash socket. this will be done by a very simple eventmachine server listening to the default policy communication port.
 
@@ -136,4 +140,3 @@ rootpw          {SSHA}KT2sBUCwRfLNE6cEMfAVR3TRXxs/SDhQ
 Make sure that /private/var/db/openldap/openldap-data/ exists, creating it if it does not.
 
 Run slapd: sudo /usr/libexec/slapd
-

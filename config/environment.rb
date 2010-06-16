@@ -1,7 +1,7 @@
 # Be sure to restart your server when you modify this file
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.3.2' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.5' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -26,10 +26,9 @@ Rails::Initializer.run do |config|
   config.gem "tmm1-amqp", :lib => "mq"
   config.gem "json"
   config.gem "sprockets"
-  # config.gem "bj"
-  # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
+  config.gem 'fleximage'
+
   config.gem "sqlite3-ruby", :lib => "sqlite3"
-  # config.gem "aws-s3", :lib => "aws/s3"
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
@@ -53,9 +52,9 @@ Rails::Initializer.run do |config|
   config.cache_store = :mem_cache_store
 end
 
-Mime::Type.register "application/pdf", :pdf, [], ['pdf']
-
 ActiveSupport::JSON.backend = 'JSONGem'
+
+require "#{RAILS_ROOT}/lib/fleximage_ext.rb"
 
 # this starts the eventmachine reactor in a new thread
 # since the Em.run block is blocking until stopped this will ensure
@@ -74,7 +73,7 @@ if defined?(PhusionPassenger)
     end
 end
 
-unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(PhusionPassenger)
+unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(PhusionPassenger) || Rails.env == 'cucumber' || Rails.env == 'test'
   # Checking all Subsystems
   puts "------------------------"
   puts "Checking all subsystems:"

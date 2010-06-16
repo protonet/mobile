@@ -5,9 +5,8 @@ protonet.controls.TextExtension = {
     $(this.renderQueue.bind(this));
   },
   
-  renderQueue: function() {
+  renderQueue: function(e, currentChannelId) {
     if (protonet.globals.textExtensions && protonet.globals.textExtensions.length) {
-      var currentChannelId = protonet.globals.channelSelector.getCurrentChannelId();
       protonet.globals.textExtensions = $.map(protonet.globals.textExtensions, function(extension) {
         if (extension.channel_id == currentChannelId) {
           var container = $("#" + extension.container_id + " > article:last .text-extension");

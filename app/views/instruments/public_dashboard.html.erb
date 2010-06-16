@@ -95,7 +95,7 @@
     <ul>
       <% @channels.each_with_index do |c, index| %>
         <li id="channel-<%= c.id %>" class="channel <%= 'active' if c == @active_channel %>">
-          <%= link_to c.name.capitalize, {:channel_id => c.id, :index => index}, {:title => c.description} %>
+          <%= link_to c.name.capitalize, {:channel_id => c.id, :index => index}, {:title => c.name} %>
         </li>
       <% end %>
       <li class="browse">
@@ -107,7 +107,7 @@
   <div id="feed-viewer">
     <div id="feed-holder" style="width:<%= @channels.size * 613 %>px; left: <%= @channels.index(@active_channel) * -613 %>px;">
       <% @channels.each do |c| %>
-        <%= render :partial => '/tweets/tweet_list_new', :locals => {:tweets => Tweet.find_tweets_older_than(c, Tweet.last.id + 1), :channel => c} %>
+        <%= render :partial => '/tweets/tweet_list', :locals => {:tweets => c.tweets.recent.all(:limit => 25, :include => [:avatar]), :channel => c} %>
       <% end %>
     </div>
   </div>
@@ -117,35 +117,8 @@
   <div id="navigation-link">
     <a href="#">SHOW NAVIGATION <span class="shortcut"></span></a>
   </div>
-  
-  <%- if current_user.stranger? && configatron.ldap.single_authentication != true -%>
-    <% form_for :user, :url => users_path, :html => {:id => "registration-form"} do |f| -%>
-      <fieldset>
-        <legend>
-          <strong>JOIN the (r)evolution</strong>
-          <span>no email, no credit card, just pure awesomeness!</span>
-        </legend>
-        <ul>
-          <li>
-            <%= label_tag "login" %>
-            <%= f.text_field "login", {:id => 'new-user-login', :title => 'user name'} %>
-          </li>
-          <li>
-            <%= label_tag "password" %>
-            <%= f.password_field "password", {:id => 'new-user-password'} %>
-            <%= f.hidden_field "password_confirmation", {:id => 'new-user-password-confirmation'} %>
-          </li>
-        </ul>
-      </fieldset>
-      <button type="submit" name="join">
-        <span>
-          <em>Join</em>
-        </span>
-      </button>
-    <%- end -%>
-  <%- end -%>
+  <%= render :partial => 'sessions/registration_box' %>
   <%= render :partial => 'users/user_list', :locals => {:users => []} %>
-  
   <%= render :partial => 'system/files/file_list', :locals => {:file_system => System::FileSystem.all("/" + @active_channel.id.to_s), :channel_id => @active_channel.id} %>
 </div>
 

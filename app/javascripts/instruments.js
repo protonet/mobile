@@ -10,8 +10,6 @@
 //= require "controls/user_widget.js"
 //= require "controls/pretty_date.js"
 //= require "controls/fluid.js"
-//= require "lib/jQuery.dPassword.js"
-
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
 
@@ -77,31 +75,4 @@ $(function() {
   if (protonet.user.Browser.SUPPORTS_FLUID()) {
     new protonet.controls.Fluid();
   }
-});
-
-// Initialize password stuff
-$(function() {
-  var registration_password_field = $("#new-user-password");
-  if (registration_password_field.length < 1) {
-    return;
-  }
-  
-  registration_password_field.dPassword({
-    "ICON_PATH": "images/lock.png",
-    "ICON_STYLES": {
-      display: "inline",
-      position: "absolute",
-      width: "16px", height: "16px",
-      margin: "2px 0 0 -25px",
-      overflow: "hidden", cursor: "pointer",
-      backgroundRepeat: "no-repeat"
-    }
-  });
-  new protonet.utils.InlineHint(registration_password_field, "password");
-  
-  // user creation copy the password field for the confirmation thing
-  var registration_password_confirmation_field = $('#new-user-password-confirmation');
-  $('#registration-form').submit(function(){
-    registration_password_confirmation_field.val(registration_password_field.val());
-  });
 });

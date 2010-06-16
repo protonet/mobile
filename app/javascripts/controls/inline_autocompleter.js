@@ -12,11 +12,6 @@ protonet.controls.InlineAutocompleter = function(input, data, options) {
   this.data = this._prepareData(data);
   
   this._observe();
-  
-  protonet.globals.notifications.bind('user.added', function(e, msg){
-    this.addData(["@" + msg.user_name]);
-  }.bind(this));
-  
 };
 
 protonet.controls.InlineAutocompleter.prototype = {
@@ -35,7 +30,8 @@ protonet.controls.InlineAutocompleter.prototype = {
   ],
   
   END_SELECTION_KEYS: [
-    9   // tab
+    9,   // tab
+    39   // right arrow
   ],
   
   _observe: function() {
@@ -45,6 +41,8 @@ protonet.controls.InlineAutocompleter.prototype = {
   },
   
   _keyUp: function(event) {
+    this._autoCompletionMode = false;
+    
     var pressedKey = event.which;
     var value = this.input.val();
     var caretPosition = this._getCaretPosition();
@@ -65,11 +63,21 @@ protonet.controls.InlineAutocompleter.prototype = {
   
   _keyDown: function(event) {
     var pressedKey = event.which;
-    if ($.inArray(pressedKey, this.END_SELECTION_KEYS) != -1 && this._getSelectedText()) {
-      var selectionEnd = this.input.attr("selectionEnd");
-      this._setCaretPosition(selectionEnd);
-      event.preventDefault();
+    if (!this._autoCompletionMode) {
+      return;
     }
+    
+    if ($.inArray(pressedKey, this.END_SELECTION_KEYS) == -1) {
+      return;
+    }
+    
+    var selectionEnd = this.input.attr("selectionEnd");
+    var newCaretPosition = selectionEnd + 1;
+    
+    this._insert(" ", selectionEnd);
+    
+    this._setCaretPosition(newCaretPosition);
+    event.preventDefault();
   },
   
   _findCompletions: function() {
@@ -107,6 +115,7 @@ protonet.controls.InlineAutocompleter.prototype = {
         continue;
       }
       
+      this._autoCompletionMode = true;
       this._insert(completion, caretPosition);
       break;
     }
@@ -155,7 +164,13 @@ protonet.controls.InlineAutocompleter.prototype = {
     this.input.attr("selectionStart", position).attr("selectionEnd", position).focus();
   },
   
-  addData: function(data) {
-    this.data = this.data.concat(this._prepareData(data));
+  addData: function(data, options) {
+    if(options && options['prepend']) {
+      for(i in data) {
+        this.data.unshift(this._prepareData([data[i]])[0]);
+      }
+    } else {
+      this.data = this.data.concat(this._prepareData(data));
+    }
   }
 };
