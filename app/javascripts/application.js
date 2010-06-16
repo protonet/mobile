@@ -4,6 +4,7 @@
 //= require "lib/swfobject-2.2.js"
 //= require "extensions.js"
 //= require "protonet.js"
+//= require "notifications/notifications.js"
 //= require "controls/navigation.js"
 //= require "utils/inline_hint.js"
 //= require "utils/notification_message.js"

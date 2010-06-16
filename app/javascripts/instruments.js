@@ -1,15 +1,15 @@
 //= require "user/config.js"
 //= require "user/browser.js"
 //= require "effects/clouds.js"
-//= require "notifications/notifications.js"
 //= require "dispatching/dispatching_system.js"
 //= require "controls/communication_console.js"
-//= require "controls/text_extension.js"
 //= require "controls/file_widget.js"
 //= require "controls/endless_scroller.js"
 //= require "controls/user_widget.js"
 //= require "controls/pretty_date.js"
 //= require "controls/fluid.js"
+//= require "text_extensions/main.js"
+//= require "lib/jQuery.dPassword.js"
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
 
@@ -21,17 +21,15 @@ $(function() {
 
 // Initialize communication stuff
 $(function() {
-  protonet.globals.notifications        = $(new protonet.notifications.Central());
   protonet.globals.communicationConsole = new protonet.controls.CommunicationConsole();
+  protonet.globals.channelSelector      = new protonet.controls.ChannelSelector();
   protonet.globals.dispatcher           = new protonet.dispatching.DispatchingSystem();
 });
 
-
 // Initialize text extensions
 $(function() {
-  protonet.controls.TextExtension.initialize();
+  protonet.text_extensions.initialize(protonet.globals.channelSelector.getCurrentChannelId());
 });
-
 
 // Initialize file stuff
 $(function() {
@@ -48,7 +46,6 @@ $(function() {
 $(function() {
   protonet.globals.userWidget = new protonet.controls.UserWidget();
 });
-
 
 // Initialize pretty dates ("2 minutes ago")
 $(function() {

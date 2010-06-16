@@ -3,46 +3,47 @@
 
 protonet.controls.FileWidget = function() {
   this.wrapper          = $("#file-list");
-  this.file_list        = this.wrapper.find('ul.root');
-  this.hierarchy_bar    = this.wrapper.find('#file-navigation .hierarchy');
-  this.search_input     = this.wrapper.find('#file-navigation input');
+  this.file_list        = this.wrapper.find("ul.root");
+  this.hierarchy_bar    = this.wrapper.find("#file-navigation .hierarchy");
+  
   // get channel id upon instantiation
   this.currentChannelId = protonet.globals.channelSelector.getCurrentChannelId();
   
   this.observeBackButton();
   this.observeFolderCreateButton();
-  this.currentPath = '';
-  this.addPathBlob('');
+  this.currentPath = "";
+  this.addPathBlob("");
   this.initUpload();
   this.initContextMenu();
-  protonet.globals.notifications.bind("channel.changed", function(e, id) {
+  
+  protonet.Notifications.bind("channel.changed", function(e, id) {
     this.currentChannelId = id;
     this.currentPath = "";
     this.removeDirectoriesAboveCurrent(1);
     this.gotoPath();
   }.bind(this));
-  protonet.globals.notifications.bind('file.added file.removed directory.added directory.removed', function(e, msg){
-    if(msg.path == this.fullPath()) {
-      switch(e.type + '.' + e.handleObj.namespace) {
-        case 'file.added':
+  
+  protonet.Notifications.bind("file.added file.removed directory.added directory.removed", function(e, msg){
+    if (msg.path == this.fullPath()) {
+      switch(e.type + "." + e.handleObj.namespace) {
+        case "file.added":
           if(!this.wrapper.find(".file a[title='" + msg.file_name + "']")[0]) {
-            $('#file-list ul').append(this.createElementFor({ type: "file", name: msg.file_name }));
+            this.file_list.append(this.createElementFor({ type: "file", name: msg.file_name }));
           }
           break;
-        case 'file.removed':
+        case "file.removed":
           this.wrapper.find(".file a[title='" + msg.file_name + "']").remove();
           break;
-        case 'directory.added':
+        case "directory.added":
           if(!this.wrapper.find(".directory a[title='" + msg.directory_name + "']")[0]) {
-            $('#file-list ul').append(this.createElementFor({ type: "directory", name: msg.directory_name }));
+            this.file_list.append(this.createElementFor({ type: "directory", name: msg.directory_name }));
           }
           break;
-        case 'directory.removed':
+        case "directory.removed":
           this.wrapper.find(".directory a[title='" + msg.directory_name + "']").remove();
           break;
       }
     };
-
   }.bind(this));
 };
 
@@ -76,7 +77,7 @@ protonet.controls.FileWidget.prototype = {
   "gotoPath": function(path) {
     path = path || '';
     this.file_list.fadeTo(100, 0.2);
-    jQuery.getJSON('system/files', {"path": this.channelizePath(path), "channel_id": this.currentChannelId}, this.renderResponse.bind(this));
+    jQuery.getJSON("system/files", {"path": this.channelizePath(path), "channel_id": this.currentChannelId}, this.renderResponse.bind(this));
   },
   
   "observeBackButton": function() {
@@ -137,7 +138,7 @@ protonet.controls.FileWidget.prototype = {
   "addPathBlob": function(blob) {
     var path = this.currentPath,
         old_index = this.hierarchy_bar.children().size() + 1, // we'll be adding one a the end of this method
-        blobHtml = protonet.utils.escapeHtml(blob + '/'),
+        blobHtml = protonet.utils.escapeHtml(blob + "/"),
         blobTitle = protonet.utils.escapeHtml('Go to folder "' + (blob || "/") + '"');
     object_to_add = $('<a />', { href: "#", title: blobTitle, html: blobHtml });
     object_to_add.click(function(event){
@@ -158,7 +159,7 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "removePathBlob": function() {
-    this.hierarchy_bar.find('a:last').remove();
+    this.hierarchy_bar.find("a:last").remove();
   },
   
   "removeDeepestDirectory": function(directory_string) {
@@ -166,7 +167,7 @@ protonet.controls.FileWidget.prototype = {
   },
   
   "observeFolderCreateButton": function() {
-    $('#new-folder-button').click(function(event){
+    $("#new-folder-button").click(function(event){
       this.addFolder();
       event.preventDefault();
     }.bind(this));
@@ -245,36 +246,36 @@ protonet.controls.FileWidget.prototype = {
    * Takes a single fileName or an array of fileNames as argument
    */
   "publish": function(fileNames) {
-    fileNames   = $.isArray(fileNames) ? fileNames : [fileNames];
-    var message           = {};
-    var publishedPhotos  = [];
+    fileNames   = $.makeArray(fileNames);
+    var message     = {},
+        images      = [],
+        imageNames  = [],
+        imageRegExp = /.+\.(jpe?g|gif|png)$/i,
+        messageText = ["Published the following file(s):"];
     
-    message.message = "Published the following file(s): \n";
-    message.message += $.map(fileNames, function(fileName) {
-      // fixme aj: redundant code this is available in local_image.js
+    $.each(fileNames, function(i, fileName) {
       var fileUrl = this.getDownloadPathFor(fileName);
-      if (fileName.match(/.*\.(jpg|gif|png)$/i)) {
-        publishedPhotos.push({ 
-          // aj fixme there's already a method in local_image.js that does this - ask tiff
-          title:      protonet.utils.parseUrl(fileUrl).filename || 'untitled',
-          url:        fileUrl
-        });
+      if (imageRegExp.test(fileName)) {
+        images.push(protonet.config.base_url + fileUrl);
+        imageNames.push(fileName);
       }
       
-      return "  - file:" + fileUrl;
+      messageText.push("  - file:" + fileUrl);
     }.bind(this)).join("\n");
     
-    if (publishedPhotos.length > 0) {
+    if (images.length) {
       message.text_extension = {
-        title:  "Images on this node",
-        type:   "LocalImage",
-        url:    this.getDownloadPathFor(fileNames[0]),
-        photos: publishedPhotos
+        title:        "Images on this node",
+        image:        images,
+        imageHref:    images,
+        imageTitle:   imageNames
       };
-      // aj fixme this doesn't belong here, but is necessary to be stored
-      $("#text-extension-input").val(JSON.stringify(message.text_extension));
+      
+      protonet.globals.textExtensionInput.setInput(message.text_extension);
     }
-    protonet.globals.communicationConsole.sendTweetFromMessage(message);
+    
+    message.message = messageText.join("\n");
+    protonet.globals.communicationConsole.sendMessage(message);
   }
 };
 

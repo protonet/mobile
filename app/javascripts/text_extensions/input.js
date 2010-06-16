@@ -1,11 +1,6 @@
-protonet.controls.TextExtension.Input = function(input) {
-  if (!input) {
-    throw new Error("TextExtension: Missing input element");
-  }
-  
+protonet.text_extensions.Input = function(input) {
   this.input = input;
-  this.sortedProviders = protonet.controls.TextExtension.config.SORTED_PROVIDERS;
-  this.providers = protonet.controls.TextExtension.providers;
+  this.providers = protonet.text_extensions.provider;
   this.container = $("#text-extension-preview");
   this.hiddenInput = $("#text-extension-input");
   this.removeLink = this.container.find("a.remove");
@@ -16,11 +11,12 @@ protonet.controls.TextExtension.Input = function(input) {
   this._initEvents();
 };
 
-protonet.controls.TextExtension.Input.prototype = {
+protonet.text_extensions.Input.prototype = {
   _initEvents: function() {
     this.input.bind("paste", this._paste.bind(this));
     this.input.bind("keyup", this._keyUp.bind(this));
     this.removeLink.bind("click", this._cancel.bind(this));
+    protonet.Notifications.bind("message.send", this._submitted.bind(this));
   },
   
   _paste: function() {
@@ -31,16 +27,22 @@ protonet.controls.TextExtension.Input.prototype = {
   
   _keyUp: function(event) {
     var isSpaceBar = event.keyCode == 32,
-        isLineBreak = event.shiftKey && event.keyCode == 13;
+        isLineBreak = event.shiftKey && event.keyCode == 13,
+        isEscape = event.keyCode == 27;
     
     if (isSpaceBar || isLineBreak) {
-      this._parse();
+      return this._parse();
+    }
+    
+    if (isEscape) {
+      return this._cancel();
     }
   },
   
   _cancel: function(event) {
-    event.preventDefault();
+    event && event.preventDefault();
     
+    this._cancelRequest = true;
     this._ignoreUrls.push(this.url);
     
     this.input.focus();
@@ -66,40 +68,38 @@ protonet.controls.TextExtension.Input.prototype = {
   
   _selectUrl: function(url) {
     this.url = url;
-    this.provider = this._getDataProvider(this.url);
-    if (this.provider && this.url) {
+    this._getDataProvider(this.url);
+    
+    if (this.provider) {
       this._show();
       this._request();
     }
   },
   
   _getDataProvider: function(url) {
-    var instance, i, providerLength = this.sortedProviders.length;
-    for (i=0; i<providerLength; i++) {
-      this.providerName = this.sortedProviders[i];
-      
-      if (!this.providers.hasOwnProperty(this.providerName)) {
-        continue;
+    $.each(this.providers, function(key, value) {
+      if (value.REG_EXP.test(url)) {
+        this.provider = value;
+        this.providerName = key;
+        return false;
       }
-      
-      instance = new this.providers[this.providerName](url, this);
-      if (instance.match()) {
-        return instance;
-      }
-    }
+    }.bind(this));
   },
   
   _request: function() {
-    this.provider.loadData(this._render.bind(this), this._ignoreUrlAndReset.bind(this));
+    this._cancelRequest = false;
+    this.provider.loadData(this.url, this._render.bind(this), this._ignoreUrlAndReset.bind(this));
   },
   
   _render: function(data) {
-    this.data = $.extend({}, data, { type: this.providerName });
-    this.renderer = new protonet.controls.TextExtension.Renderer(
-      this.container, this.data, this.provider
-    );
+    if (this._cancelRequest) {
+      return;
+    }
     
-    this.hiddenInput.val(JSON.stringify(this.data));
+    this.data = $.extend({}, data, { type: this.providerName, url: this.url });
+    this.renderer = new protonet.text_extensions.render(this.container, this.data);
+    
+    this.setInput(this.data);
     this.container.removeClass("loading-bar");
     this.expand();
   },
@@ -117,10 +117,7 @@ protonet.controls.TextExtension.Input.prototype = {
       height: this.renderer.resultsElement.outerHeight(true).px(),
       opacity: 100
     }, 200, function() {
-      this.container.css({
-        height: "auto",
-        overflow: ""
-      });
+      this.container.css({ height: "auto", overflow: "visible" });
     }.bind(this));
   },
   
@@ -145,8 +142,8 @@ protonet.controls.TextExtension.Input.prototype = {
     return url;
   },
   
-  submitted: function() {
-    this.provider && this.provider.cancel();
+  _submitted: function() {
+    this._cancelRequest = true;
     this._ignoreUrls = [];
     this.reset();
   },
@@ -156,13 +153,17 @@ protonet.controls.TextExtension.Input.prototype = {
     this.reset();
   },
   
+  setInput: function(value) {
+    this.hiddenInput.val(value && JSON.stringify(value));
+  },
+  
   reset: function() {
     this.container.stop();
     if (this.container.is(":visible")) {
       this._hide();
     }
     
-    this.hiddenInput.val("");
+    this.setInput("");
     
     delete this.data;
     delete this.url;

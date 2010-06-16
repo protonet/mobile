@@ -1,3 +1,4 @@
+//= require "../lib/webtoolkit.sha1.js"
 //= require "yql.js"
 
 protonet.data.SlideShare = (function() {
@@ -15,16 +16,15 @@ protonet.data.SlideShare = (function() {
           slideshow_url: slideShareUrl
         });
     
-    new protonet.data.YQL.Query("select * from xml where url='" + apiUrl + "'").execute(
-      function(response) {
-        var slideshow = response.Slideshow;
-        if (!slideshow) {
-          return onFailure(response);
-        }
-        onSuccess(slideshow);
-      },
-      onFailure
-    );
+    new protonet.data.YQL.Query(
+      "SELECT * FROM xml WHERE url='" + apiUrl + "'"
+    ).execute(function(response) {
+      var slideshow = response.Slideshow;
+      if (!slideshow) {
+        return onFailure(response);
+      }
+      onSuccess(slideshow);
+    }, onFailure);
   }
   
   return {

@@ -32,7 +32,7 @@ It goes hand in hand with it's low-level part (also on github, called protonet-n
  
 == TECHNOLOGIES:
 
-Protonet-Dashboard runs on rails, sqlite3, rabbitmq, eventmachine (+amqp) and uses jQuery as its JS framework.
+Protonet-Dashboard runs on rails, sqlite3, rabbitmq, eventmachine (+amqp), node.js and uses jQuery as its JS framework.
 
 
 === INSTALL
@@ -64,6 +64,23 @@ sudo rabbitmq-server
 
 # and start up the javascript dispatcher
 ./messaging/event_machine/js_dispatching_server.rb
+
+== NODE.JS
+
+Install node.js by downloading it from http://nodejs.org/#download (>= 0.1.90)
+then extract it and execute:
+
+./configure
+make
+(sudo) make install
+
+=== START THE SYSTEM
+
+# After installing all dependencies you can get the system running by doing these steps:
+
+sudo rabbitmq-server
+ruby messaging/event_machine/js_dispatching_server.rb
+node node/node.js
 
 === OTHER STUFF
 

@@ -46,7 +46,7 @@ protonet.controls.Tweet = (function() {
     
     if (this.textExtension) {
       if (isCurrentChannel) {
-        protonet.controls.TextExtension.render(messageContainer, this.textExtension);
+        protonet.text_extensions.render(messageContainer, this.textExtension);
       } else {
         // Put text extension in queue, so that it gets rendered when the channel is focused
         protonet.globals.textExtensions.push({
@@ -95,16 +95,29 @@ protonet.controls.Tweet = (function() {
       params += "&" + $.param({ "tweet[message]": this.originalMessage });
       
       // send to server
-      $.post(this.form.attr("action"), params, function(data){
-        this.htmlId = this.listElement.attr("id");
+      $.ajax({
+        type:     "POST",
+        url:      this.form.attr("action"),
+        data:     params,
+        success:  function(response) {
+          alert("success");
+          if (this.shouldBeMerged) {
+            this.replaceFirstTweetIdInMerge(response);
+          } else {
+            this.htmlId = this.listElement.attr("id");
+            this.htmlId = this.htmlId.replace(ID_REG_EXP, response);
+            this.listElement.attr("id", this.htmlId);
+          }
+          
+          // Remove unsent messages after success
+          this.channelUl.find(".unsent").remove();
+        }.bind(this),
         
-        if (this.shouldBeMerged) {
-          this.replaceFirstTweetIdInMerge(data);
-        } else {
-          this.htmlId = this.htmlId.replace(ID_REG_EXP, data);
-          this.listElement.attr("id", this.htmlId);
-        }
-      }.bind(this));
+        error:    function() {
+          alert("Ooops, something went wrong. Your message hasn't been sent.");
+          this.listElement.addClass("unsent").css("opacity", 0.5);
+        }.bind(this)
+      });
     },
     
     replaceFirstTweetIdInMerge: function(id) {

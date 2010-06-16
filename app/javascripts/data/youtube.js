@@ -1,6 +1,8 @@
 protonet.data.YouTube = {
-  TIMEOUT: 5000, // 5 seconds
-  URL: "http://gdata.youtube.com/feeds/api/videos/{id}?v=2&alt=json-in-script&format=5&callback=?",
+  TIMEOUT: 5000, // milliseconds
+  
+  // fields= minimizes the response to the relevant data (title, description, ...)
+  URL: "http://gdata.youtube.com/feeds/api/videos/{id}?v=2&alt=json-in-script&format=5&fields=media%3Agroup%2Cyt%3Anoembed&callback=?",
   
   getVideo: function(id, onSuccess, onFailure) {
     $.jsonp({

@@ -13,6 +13,8 @@ protonet.controls.PrettyDate = (function() {
     });
   }
   
+  protonet.Notifications.bind("messages.new", update);
+  
   return {
     initialize: initialize,
     update: update

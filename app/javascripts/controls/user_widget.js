@@ -22,12 +22,12 @@ protonet.controls.UserWidget = (function() {
       protonet.globals.inputConsole.bindAutocompleterToUserAddedEvents();
     }
     
-    protonet.globals.notifications.bind('user.added', function(e, msg){
+    protonet.Notifications.bind('user.added', function(e, msg){
       this.addUserFromMessage(msg);
       this.filterChannelUsers(protonet.globals.channelSelector.getCurrentChannelId());
     }.bind(this));
     
-    protonet.globals.notifications.bind('channel.subscribe channel.unsubscribe', function(e, msg){
+    protonet.Notifications.bind('channel.subscribe channel.unsubscribe', function(e, msg){
       switch(e.handleObj.namespace) {
         case 'subscribe':
           this.channel_users[msg.channel_id].push(msg.user_id);
@@ -39,14 +39,14 @@ protonet.controls.UserWidget = (function() {
       this.filterChannelUsers(protonet.globals.channelSelector.getCurrentChannelId());
     }.bind(this));
     
-    protonet.globals.notifications.bind('channel.update_subscriptions', function(e, msg){
+    protonet.Notifications.bind('channel.update_subscriptions', function(e, msg){
       for(var i in msg.data) {
         this.channel_users[i] = msg.data[i];
       };
       this.filterChannelUsers(protonet.globals.channelSelector.getCurrentChannelId());
     }.bind(this));
         
-    protonet.globals.notifications.bind("channel.changed", function(e, id) {
+    protonet.Notifications.bind("channel.changed", function(e, id) {
       this.filterChannelUsers(id);
     }.bind(this));
   };

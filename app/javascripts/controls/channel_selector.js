@@ -8,8 +8,8 @@ protonet.controls.ChannelSelector = (function() {
       REG_EXP_ELEMENT_INDEX = /index=(\d*)/,
       REG_EXP_CHANNEL_ID = /channel_id=(\d*)/;
   
-  function ChannelSelector(params) {
-    channelInput = params.channel_input;
+  function ChannelSelector() {
+    channelInput = channelInput || $("#message_channel_id");
     
     container = container || $("#channel");
     feedHolder = feedHolder || $("#feed-holder");
@@ -24,14 +24,12 @@ protonet.controls.ChannelSelector = (function() {
     if (protonet.globals.inputConsole) {
       protonet.globals.inputConsole.initAutocompleter(this.channels);
     }
-
     this._observe();
     this._observeInStreamMentions();
     this._switchToAnchoredChannel();
   }
   
   ChannelSelector.prototype = {
-
     _observe: function() {
       container.find(".channel a").click(function(event) {
         var anchor = $(event.currentTarget),
@@ -48,7 +46,7 @@ protonet.controls.ChannelSelector = (function() {
           this.setCurrentChannelLocationHash(anchor.attr("title"));
           
           // trigger global notification
-          protonet.globals.notifications.trigger("channel.changed", channelId);
+          protonet.Notifications.trigger("channel.changed", channelId);
         }.bind(this));
         
         container.find(".active").toggleClass("active");
@@ -58,7 +56,7 @@ protonet.controls.ChannelSelector = (function() {
         event.preventDefault();
       }.bind(this));
       
-      protonet.globals.notifications.bind("message.new", function(e, message, channelId) {
+      protonet.Notifications.bind("message.new", function(e, message, channelId) {
         /**
          * Show a little badge on the channel when it's not focused
          */

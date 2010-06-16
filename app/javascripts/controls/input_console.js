@@ -22,14 +22,14 @@ protonet.controls.InputConsole.prototype = {
   },
   
   "bindAutocompleterToUserAddedEvents": function() {
-    protonet.globals.notifications.bind("user.added", function(e, msg){
+    protonet.Notifications.bind("user.added", function(e, msg){
       this.autoCompleter.addData(["@" + msg.user_name]);
     }.bind(this));
   },
   
   "initEvents": function() {
     // focus input after channel switch
-    protonet.globals.notifications.bind("channel.changed", function() {
+    protonet.Notifications.bind("channel.changed", function() {
       this.input_console.focus();
     }.bind(this));
     

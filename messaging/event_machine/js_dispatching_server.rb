@@ -114,7 +114,7 @@ module JsDispatchingServer
     @user.channels.each do |channel|
       filtered_channel_users[channel.id] = @@channel_users[channel.id]
     end
-    data = {:x_target => 'protonet.globals.notifications[0].triggerNotification', :trigger => 'channel.update_subscriptions', :data => filtered_channel_users}.to_json
+    data = {:x_target => 'protonet.Notifications.triggerFromSocket', :trigger => 'channel.update_subscriptions', :data => filtered_channel_users}.to_json
     send_data(data + "\0")
   end
   
@@ -187,7 +187,7 @@ module JsDispatchingServer
     queue = amq.queue("consumer-#{@key}-files.channel_#{channel.id}", :auto_delete => true)
     queue.bind(amq.topic("files"), :key => "files.channel_#{channel.id}").subscribe do |msg|
       message = JSON(msg)
-      message.merge!({:x_target => 'protonet.globals.notifications[0].triggerNotification'}) # jquery object
+      message.merge!({:x_target => 'protonet.Notifications.triggerFromSocket'}) # jquery object
       message_json = message.to_json
       log('sending data out: ' + message_json)
       send_data("#{message_json}\0")
@@ -200,7 +200,7 @@ module JsDispatchingServer
     queue = amq.queue("consumer-#{@key}-user", :auto_delete => true)
     queue.bind(amq.topic("users"), :key => "users.#{@user.id}").subscribe do |msg|
       message = JSON(msg)
-      message.merge!({:x_target => 'protonet.globals.notifications[0].triggerNotification'}) # jquery object
+      message.merge!({:x_target => 'protonet.Notifications.triggerFromSocket'}) # jquery object
       message_json = message.to_json
       log('sending data out: ' + message_json)
       send_data("#{message_json}\0")
