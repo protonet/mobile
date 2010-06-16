@@ -1365,7 +1365,8 @@ h2 {
   cursor: pointer;
   width: 310px;
 }
-#channels li.clicked {
+#channels li.clicked,
+#users li.clicked div {
   background: none;
 }
 #channels li span {
@@ -1400,7 +1401,8 @@ h2 {
   padding: 0.1em 0.2em;
   width: 100%;
 }
-#channels-details {
+#channels-details,
+#users-details {
   background: rgb(247, 247, 247);
   border: 0.1em solid rgb(212, 212, 212);
   margin: 0 1em 1.5em;
@@ -1413,13 +1415,15 @@ h2 {
 /* = Channels-details
 --------------------------------------------------------------------------- */
 
-#channels-details h3 {
+#channels-details h3,
+#users-details h3 {
   font-size: 1.4em;
   font-weight: bold;
   margin: 0 0 0.1em;
   display: inline;
 }
-#channels-details h4 {
+#channels-details h4,
+#users-details h4 {
   font-size: 1.2em;
   font-weight: bold;
   margin: 0.1em 0 0.3em;
