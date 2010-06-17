@@ -265,7 +265,7 @@ protonet.controls.FileWidget.prototype = {
     
     if (images.length) {
       message.text_extension = {
-        title:        "Images on this node",
+        title:        "",
         image:        images,
         imageHref:    images,
         imageTitle:   imageNames

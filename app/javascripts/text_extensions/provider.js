@@ -4,6 +4,7 @@ protonet.text_extensions.provider = {};
 //= require "provider/local_image.js"
 //= require "provider/youtube.js"
 //= require "provider/maps.js"
+//= require "provider/facebook.js"
 //= require "provider/slideshare.js"
 //= require "provider/vimeo.js"
 //= require "provider/doodle.js"

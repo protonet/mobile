@@ -9,7 +9,7 @@ protonet.text_extensions.provider.LocalImage = {
     return new RegExp(escapedBaseUrl + ".+\.(jpe?g|gif|png)", "i");
   })(),
   
-  FILENAME_REG_EXP: /.+\/(.+\.(jpe?g|gif|png))/i,
+  FILENAME_REG_EXP: /file_path\=.*%2F(.+\.(jpe?g|gif|png))/i,
   
   loadData: function(url, onSuccess, onFailure) {
     var match = url.match(this.FILENAME_REG_EXP),
@@ -17,7 +17,7 @@ protonet.text_extensions.provider.LocalImage = {
     
     onSuccess({
       image: url,
-      title: imageName || "untitled"
+      title: decodeURIComponent(imageName || "untitled")
     });
   }
 };
