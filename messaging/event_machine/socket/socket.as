@@ -24,8 +24,8 @@ class Socket {
     ExternalInterface.call("protonet.globals.dispatcher.socketConnectCallback", status );
   }
   
-  static function connectSocket(ip:String) {
-    socket.connect(ip, 5000);
+  static function connectSocket(ip:String, port:Number) {
+    socket.connect(ip, port);
   }
   
   static function closeSocket() {

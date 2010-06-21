@@ -32,3 +32,7 @@ puts "Backend '#{System::Backend.backend_connection.info}' connected successfull
 configatron.user_file_path = RAILS_ROOT + "/../shared/user-files"
 configatron.images.avatars_path   = "public/avatars"
 configatron.images.externals_path = "public/externals"
+
+configatron.socket.port = 5002
+configatron.js_dispatching_active = true
+configatron.messaging_bus_active  = true

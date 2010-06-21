@@ -215,14 +215,14 @@ module JsDispatchingServer
   include FlashServer
 
   def log(text)
-    puts "connection #{@key && @key.inspect || 'uninitialized'}: #{text}" if $DEBUG
+    puts "connection #{@key && @key.inspect || 'uninitialized'}: #{text}" # if $DEBUG
   end
 
 end
 
 EventMachine::run do
   host = '0.0.0.0'
-  port = 5000
+  port = configatron.socket.port rescue 5000
   EventMachine.epoll if RUBY_PLATFORM =~ /linux/ #sky is the limit
   EventMachine::start_server(host, port, JsDispatchingServer)
   puts "Started JsDispatchingServer on #{host}:#{port}..."

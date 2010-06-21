@@ -56,11 +56,3 @@ Feature: Using the protonet dashboard
     And I go to the start page
     And I fill in "message" with "Hallo @dude"
     Then the message field should contain "Hallo @dudemeister"
-
-
-# Scenario: First visit
-#   so you go the start page
-#   
-#   
-#   
-# Scenario: inivted to a closed room

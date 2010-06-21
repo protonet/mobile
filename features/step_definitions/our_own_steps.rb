@@ -1,5 +1,6 @@
-Then /^I should wait$/ do
-  debugger
+Then /^wait$/ do
+  # debugger
+  sleep 10
   true
 end
 

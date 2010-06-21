@@ -89,7 +89,7 @@ unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(Phusio
   # checking on the js dispatching server
   require 'net/telnet'
   configatron.js_dispatching_active = begin
-    host = Net::Telnet.new({'Host' => '127.0.0.1', 'Port' => '5000'})
+    host = Net::Telnet.new({'Host' => '127.0.0.1', 'Port' => configatron.socket.port})
     host.close
     true
   rescue Errno::ECONNREFUSED

@@ -34,6 +34,7 @@ configatron.images.avatars_path   = "public/system/avatars"
 configatron.images.externals_path = "public/system/externals"
 
 configatron.ldap.active = false
+configatron.socket.port = 5000
 
 # checks for stage specific config files
 stage_config = "#{RAILS_ROOT}/config/environments/stage.rb"
