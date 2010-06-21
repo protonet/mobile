@@ -17,8 +17,12 @@ protonet.text_extensions.render.image = function(data, preventResizing) {
   
   if (!preventResizing) {
     var hoverImageSize = protonet.text_extensions.config.HOVER_IMAGE_SIZE;
-    var hoverSrc = protonet.media.Proxy.getImageUrl(data.image, hoverImageSize);
-    new protonet.effects.HoverResize(image, hoverImageSize, hoverSrc);
+    new protonet.effects.HoverResize(image, {
+      newSize:    hoverImageSize,
+      newSrc:     data.image,
+      proxy:      true,
+      keepRatio:  true
+    });
   }
   
   return anchor.append(image);

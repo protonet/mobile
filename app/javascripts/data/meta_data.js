@@ -10,6 +10,7 @@
  *  - title
  *  - microformats (hcard)
  *  - facebook/digg share standard
+ *  - open graph protocol
  *
  * Video Example:
  *    <link rel="video_src" href="http://www.example.com/player.swf?video_id=123456789"/>
@@ -20,6 +21,7 @@
  * More info:
  *    http://wiki.developers.facebook.com/index.php/Facebook_Share/Specifying_Meta_Tags
  *    http://microformats.org/wiki/hcard
+ *    http://opengraphprotocol.org/
  *
  */
 protonet.data.MetaData = {
@@ -46,10 +48,23 @@ protonet.data.MetaData = {
       data.image_src = protonet.utils.convertToAbsoluteUrl(response.img.src, url);
     }
     
+    var metaTags = $.makeArray(response.meta);
+    
     // handle meta elements
-    $.each($.makeArray(response.meta), function(i, metaTag) {
+    $.each(metaTags, function(i, metaTag) {
       if (typeof(metaTag.name) == "string" && typeof(metaTag.content) == "string") {
         data[metaTag.name.toLowerCase()] = $.trim(metaTag.content);
+      }
+    });
+    
+    // handle opengraph meta tags
+    $.each(metaTags, function(i, metaTag) {
+      if (String(metaTag.property).startsWith("og:") && typeof(metaTag.content) == "string") {
+        var key = metaTag.property.substr(3).toLowerCase();
+        if (key == "image") {
+          key = "image_src";
+        } 
+        data[key] = $.trim(metaTag.content);
       }
     });
     

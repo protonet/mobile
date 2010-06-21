@@ -1,11 +1,11 @@
 //= require "../../data/facebook.js"
 
-protonet.text_extensions.provider.FacebookProfile = {
+protonet.text_extensions.provider.Facebook = {
   REG_EXP: /facebook\.com.*((\/#\!\/)|(\/))(.+)/i,
   
-  PROFILE_REG_EXP: /profile\.php\?id\=(\d+)/i,
-  PAGE_REG_EXP: /pages\/.+?\/(\d+)/i,
-  GROUP_REG_EXP: /group\.php\?gid\=(\d+)/i,
+  PROFILE_REG_EXP:  /profile\.php\?id\=(\d+)/i,
+  PAGE_REG_EXP:     /pages\/.+?\/(\d+)/i,
+  GROUP_REG_EXP:    /group\.php\?gid\=(\d+)/i,
   FALLBACK_REG_EXP: /\/?([a-z0-9\.\-\_]+)($|#|\?)/i,
   
   loadData: function(url, onSuccess, onFailure) {
@@ -29,9 +29,18 @@ protonet.text_extensions.provider.FacebookProfile = {
     }
     
     protonet.data.Facebook.getOpenGraphData(id, function(data, apiUrl) {
+      var titleAppendix;
+      if (data.fan_count) {
+        titleAppendix = data.fan_count + " Fans";
+      } else if (data.category) {
+        titleAppendix = data.category;
+      } else if (data.location) {
+        titleAppendix = typeof(data.location) == "string" ? data.location : data.location.name;
+      }
+      
       onSuccess({
         title: data.name,
-        titleAppendix: data.category || data.location,
+        titleAppendix: titleAppendix,
         description: data.description || data.products,
         image: data.image || data.picture
       });
