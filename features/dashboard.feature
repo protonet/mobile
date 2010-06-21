@@ -51,8 +51,25 @@ Feature: Using the protonet dashboard
 
   @javascript
   Scenario: Writing a meep containing the beginning of a username should take precedence
-    Given a user exists with login: "dudemeister"
     And a channel exists with name: "duderino"
+    Given a user exists with login: "dudemeister"
     And I go to the start page
     And I fill in "message" with "Hallo @dude"
     Then the message field should contain "Hallo @dudemeister"
+
+  Scenario: Seeing my subscribed channels
+    Given a user exists with login: "dudemeister"
+    And a channel exists with name: "cool-channel"
+    And "dudemeister" is listening to "cool-channel"
+    And I am logged in as "dudemeister"
+    Then I should see "Cool-channel" within "#channel"
+    
+  @javascript
+    Scenario: Subscribing to a channel thru a meep mention
+    Given a channel exists with name: "cool-channel"
+    And a user exists with login: "dudemeister"
+    And I am logged in as "dudemeister"
+    And I fill in "message" with "@cool-channel"
+    And I press "submit" within "#message-form"
+    And I click on "cool-channel" within "#feed-holder ul li:first"
+    Then I should see "Cool-channel" within "#channel"

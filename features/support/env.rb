@@ -60,6 +60,6 @@ Capybara.default_wait_time = 5
 
 # multiuser support
 at_exit do
-  $browsers.each { |id, browser| browser[:driver].quit rescue nil }
+  $browsers && $browsers.each { |id, browser| browser[:driver].quit rescue nil }
 end
 

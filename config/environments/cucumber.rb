@@ -29,7 +29,7 @@ config.gem 'capybara',         :lib => false, :version => '>=0.3.5' unless File.
 System::Backend.backend_connection = BackendAdapters::DevelopmentMock.new
 puts "Backend '#{System::Backend.backend_connection.info}' connected successfully!"
 
-configatron.user_file_path = RAILS_ROOT + "/../shared/user-files"
+configatron.user_file_path = "/tmp"
 configatron.images.avatars_path   = "public/avatars"
 configatron.images.externals_path = "public/externals"
 

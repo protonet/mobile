@@ -22,3 +22,13 @@ Then /^the message field should contain "([^\"]*)"$/ do |value|
     assert_match(/#{value}/, field.value)
   end
 end
+
+Given /^"([^"]*)" is listening to "([^"]*)"$/ do |username, channelname|
+  User.find_by_login(username).subscribe(Channel.find_by_name(channelname))
+end
+
+Given /^I click on "([^"]*)" within "([^"]*)"$/ do |linktext, selector|
+  with_scope(selector) do
+    find(:xpath, "//a[contains(.,'#{linktext}')]").click
+  end
+end

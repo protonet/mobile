@@ -67,7 +67,7 @@ protonet.controls.ChannelSelector = (function() {
     },
 
     _observeInStreamMentions: function() {
-      $("span.channel").live("click", function(e){
+      $("a.reply.channel").live("click", function(e){
         var channelName = this.channelsDowncaseMapping[$(e.currentTarget).text().toLowerCase()];
         location.hash = "channel_name=" + encodeURIComponent(channelName);
         this._switchToAnchoredChannel();

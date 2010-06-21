@@ -28,7 +28,8 @@ class User < ActiveRecord::Base
   named_scope :registered, :conditions => {:temporary_identifier => nil}
 
   after_create :create_ldap_user if configatron.ldap.active == true
-  after_create :listen_to_home, :send_create_notification
+  after_create :send_create_notification
+  after_create :listen_to_home
 
   after_destroy :move_tweets_to_anonymous
   after_destroy :move_owned_channels_to_anonymous
