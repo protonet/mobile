@@ -29,6 +29,7 @@ protonet.controls.CommunicationConsole = function() {
   this.feeds = protonet.config.feed_ids || {};
   
   this.highlightReplies();
+  this.observe();
 };
 
 protonet.controls.CommunicationConsole.prototype = {
