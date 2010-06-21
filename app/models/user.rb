@@ -130,8 +130,7 @@ class User < ActiveRecord::Base
   
   def listen_to_home
     return if listening_to_home?
-    channels << Channel.home
-    save
+    subscribe(Channel.home)
   end
   
   def listening_to_home?
@@ -153,7 +152,8 @@ class User < ActiveRecord::Base
         :trigger        => 'user.added',
         :user_id        => id,
         :user_name      => display_name,
-        :avatar_url     => active_avatar_url
+        :avatar_url     => active_avatar_url,
+        :x_target       => 'protonet.Notifications.triggerFromSocket'
         }.to_json, :key => 'system.users.new')
     end
   end

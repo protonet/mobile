@@ -16,6 +16,14 @@ Given /^I am logged in as "([^"]*)"$/ do |username|
   end
 end
 
+Given /^I register as "([^"]*)"$/ do |username|
+  within("#registration-form") do
+    fill_in 'new-user-login',    :with => username
+    fill_in 'new-user-password', :with => '123456'
+    click('Join')
+  end
+end
+
 Then /^the message field should contain "([^\"]*)"$/ do |value|
   with_scope("#message-form") do
     field = find_field("tweet[message]")

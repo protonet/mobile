@@ -147,8 +147,11 @@ module JsDispatchingServer
     amq = MQ.new
     queue = amq.queue("system-queue-#{@key}", :auto_delete => true)
     queue.bind(amq.topic('system'), :key => 'system.#').subscribe do |msg|
-      send_data(msg + "\0")
+      message = JSON(msg)
+      message.merge!({:x_target => 'protonet.Notifications.triggerFromSocket'}) # jquery object
+      message_json = message.to_json
       log("got system message: #{msg.inspect}")
+      send_data("#{message_json}\0")
     end
     @queues << queue
   end
