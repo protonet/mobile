@@ -15,7 +15,7 @@ protonet.controls.Tweet = (function() {
     this.originalMessage  = args.message;
     this.message          = this.originalMessage;
     this.message          = protonet.utils.escapeHtml(this.message);
-    this.message          = protonet.utils.highlightReplies(this.message);
+    this.message          = protonet.utils.highlightReplies.highlightInStream(this.message);
     this.message          = protonet.utils.autoLink(this.message);
     this.message          = protonet.utils.nl2br(this.message);
     this.message          = protonet.utils.autoLinkFilePaths(this.message);
@@ -73,7 +73,7 @@ protonet.controls.Tweet = (function() {
     } else {
       this.channelUl.prepend(this.listElement);
     }
-    
+
     // highlight my mentions
     protonet.globals.communicationConsole.highlightReplies();
 
@@ -93,6 +93,18 @@ protonet.controls.Tweet = (function() {
       var params = this.form.serialize();
       // Overwrite message, because we don't always want to send the textarea value
       params += "&" + $.param({ "tweet[message]": this.originalMessage });
+      
+      // add tweet to other mentioned channels
+      this.mentionedChannelIds = protonet.utils.highlightReplies.recognizeAllChannels(this.originalMessage);
+      $.each(this.mentionedChannelIds, function(i){
+        var channel = $("#messages-for-channel-" + this.mentionedChannelIds[i]);
+        if(channel.length > 0) {
+          channel.prepend(this.listElement.clone());
+        }
+      }.bind(this));
+      if(this.mentionedChannelIds.length > 0){
+        params += "&" + $.param({ "mentioned_channel_ids": this.mentionedChannelIds });
+      };
       
       // send to server
       $.ajax({

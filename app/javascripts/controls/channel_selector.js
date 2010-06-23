@@ -16,9 +16,11 @@ protonet.controls.ChannelSelector = (function() {
     channelWidth = channelWidth || $("#feed-holder").find("ul:first").outerWidth(true);
 
     this.channelsDowncaseMapping = {};
-    this.channels = protonet.globals.availableChannels.map(function(channelName){
+    this.channelNameIdMapping    = {};
+    this.channels                = [];
+    $.each(protonet.globals.availableChannels, function(channelName, channelId){
       this.channelsDowncaseMapping[channelName.toLowerCase()] = channelName;
-      return channelName;
+      this.channels.push(channelName);
     }.bind(this));
     
     if (protonet.globals.inputConsole) {

@@ -23,11 +23,7 @@ protonet.controls.CommunicationConsole = function() {
   // make it a global user object
   this.user_config      = protonet.config;
   this.current_user_id  = protonet.config.user_id;
-  
-  // active informations
-  this.active_feed_id = 1; // home
-  this.feeds = protonet.config.feed_ids || {};
-  
+
   this.highlightReplies();
   this.observe();
 };

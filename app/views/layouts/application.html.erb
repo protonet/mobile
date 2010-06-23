@@ -32,7 +32,7 @@
       
       protonet.globals = {
         textExtensions: [],
-        availableChannels: <%= Channel.all.map {|channel| escape_javascript(channel.name) }.to_json %>
+        availableChannels: <%= channel_mapping = {}; Channel.all.each {|channel| channel_mapping[escape_javascript(channel.name)] = channel.id}; channel_mapping.to_json %>
       };
     //]]></script>
   </head>
