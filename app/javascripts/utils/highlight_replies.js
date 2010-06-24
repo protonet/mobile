@@ -6,7 +6,7 @@ protonet.utils.highlightReplies = (function() {
       recognition = recognizeItem($2);
       switch(recognition['type']) {
         case 'channel':
-          return $1 + "@" + '<a class="reply channel">' + $2 + '</a>';
+          return $1 + "@" + '<a class="reply channel"' + ' href="#channel_name=' + $2 + '">' + $2 + '</a>';
           break;
         case 'current-user':
           return $1 + "@" + '<span class="reply to-me">' + $2 + '</span>';
