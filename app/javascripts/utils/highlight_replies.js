@@ -18,7 +18,7 @@ protonet.utils.highlightReplies = (function() {
   }
   
   function recognizeItem(str) {
-    var originalChannelName = protonet.globals.channelSelector.channelsDowncaseMapping[str] || str;
+    var originalChannelName = protonet.globals.channelSelector.channelsDowncaseMapping[str.toLowerCase()];
     var channelId = protonet.globals.availableChannels[originalChannelName];
     if (channelId) {
       return {'type':'channel', 'id':channelId};
