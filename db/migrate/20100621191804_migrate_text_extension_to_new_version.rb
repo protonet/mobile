@@ -6,7 +6,6 @@ class MigrateTextExtensionToNewVersion < ActiveRecord::Migration
         (hash_values['image'] = hash_values['thumbnail'])
         t.update_attribute(:text_extension, hash_values.to_json)
       elsif(hash_values['type'] == 'YouTube' && !hash_values['videoId'])
-        hash_values['image'] = hash_values['url']
         youtube_id = hash_values['url'].match(/youtube\.com\/watch(\?|#\!)v\=([\w_-]*)/i) && $2
         hash_values['videoId'] = youtube_id
         hash_values['flash'] = "http://www.youtube.com/v/#{youtube_id}?playerapiid=ytplayer&autoplay=1&egm=0&hd=1&showinfo=0&rel=0"
