@@ -22,7 +22,7 @@ protonet.utils.highlightReplies = (function() {
     var channelId = protonet.globals.availableChannels[originalChannelName];
     if (channelId) {
       return {'type':'channel', 'id':channelId};
-    } else if (str.toLowerCase().match(protonet.config.user_name.toLowerCase())) {
+    } else if (str.toLowerCase() == protonet.config.user_name.toLowerCase()) {
       return {'type':'current-user'};
     } else {
       return {'type':'user'};
