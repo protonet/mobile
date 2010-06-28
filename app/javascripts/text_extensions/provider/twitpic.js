@@ -23,7 +23,7 @@ protonet.text_extensions.provider.Twitpic = {
       onSuccess({
         description: response.div && response.div.p,
         title: response.title,
-        thumbnail: protonet.data.TwitPic.getPhotoUrl(id)
+        image: protonet.data.TwitPic.getPhotoUrl(id)
       });
     }, onFailure);
   }
