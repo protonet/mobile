@@ -17,7 +17,7 @@ protonet.text_extensions.provider.Flickr = {
       onSuccess({
         title:        response.title,
         description:  response.description,
-        image:        response.thumbnail.source
+        image:        response.preview.source
       });
     }, onFailure);
   }

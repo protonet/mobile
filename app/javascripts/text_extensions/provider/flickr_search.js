@@ -33,7 +33,7 @@ protonet.text_extensions.provider.FlickrSearch = {
     
     protonet.data.Flickr.getPhotoSearch(query, sort, function(photos) {
       var images = $.map(photos, function(photo) {
-        return photo.thumbnail.source;
+        return photo.preview.source;
       });
       
       var imageHrefs = $.map(photos, function(photo) {
