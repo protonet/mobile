@@ -1,7 +1,8 @@
 protonet.dispatching.DispatchingSystem = function() {
-  this.server = protonet.config.dispatching_server;
-  this.user_auth_token = protonet.config.token;
-  this.user_id = protonet.config.user_id;
+  this.server       = protonet.config.dispatching_server;
+  this.server_port  = protonet.config.dispatching_server_port;
+  this.user_auth_token  = protonet.config.token;
+  this.user_id          = protonet.config.user_id;
   this.socketId = "flash_socket";
   this.createSocket();
 };
@@ -44,7 +45,7 @@ protonet.dispatching.DispatchingSystem.prototype = {
   },
     
   "connectSocket": function() {
-    this.socket.connectSocket(this.server);
+    this.socket.connectSocket(this.server, this.server_port);
   },
   
   "socketConnectCallback": function(status) {

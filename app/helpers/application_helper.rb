@@ -47,11 +47,12 @@ module ApplicationHelper
     str.gsub(/(\s|^)@([\w\.\-_@]+)/) {|s|
       reply_type = case
         when Channel.names.include?($2.downcase)
-          "channel"
+          "#{$1}@<a class='reply channel' href='#channel_name=#{$2.downcase}'>#{$2}</a>"
         when $2.downcase == current_user.login
-          "to-me"
-        end
-      "#{$1}@<span class='reply #{reply_type}'>#{$2}</span>"
+          "#{$1}@<span class='reply to-me'>#{$2}</span>"
+        else
+          "#{$1}@<span class='reply'>#{$2}</span>"
+      end
     }
   end
   

@@ -18,9 +18,9 @@
     <%- if t.text_extension? -%>
     <script type="text/javascript">//<![CDATA[
       protonet.globals.textExtensions.push({
-        channel_id: <%= channel.id.to_json %>,
-        container_id: <%= "tweet-#{first_id}-#{last_id}".to_json %>,
-        data: <%= t.text_extension %>
+        channel_id: <%= channel.id %>,
+        container_id: '<%= escape_javascript("tweet-#{first_id}-#{last_id}") %>',
+        data: <%= t.text_extension.gsub(/<\//, '<\/') %>
       });
     //]]></script>
     <%- end -%>

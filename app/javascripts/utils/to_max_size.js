@@ -1,5 +1,5 @@
 /**
- * Converts a object with width/height properties to a max size object
+ * Converts a object with width/height properties to a max size object by ensuring ratio
  *
  * protonet.utils.toMaxSize({ width: 20, height: 10 }, { width: 10, height: 10 });
  *  => { width: 10, height: 5 }

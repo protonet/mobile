@@ -1,5 +1,6 @@
-Then /^I should wait$/ do
-  debugger
+Then /^wait$/ do
+  # debugger
+  sleep 10
   true
 end
 
@@ -15,9 +16,27 @@ Given /^I am logged in as "([^"]*)"$/ do |username|
   end
 end
 
+Given /^I register as "([^"]*)"$/ do |username|
+  within("#registration-form") do
+    fill_in 'new-user-login',    :with => username
+    fill_in 'new-user-password', :with => '123456'
+    click('Join')
+  end
+end
+
 Then /^the message field should contain "([^\"]*)"$/ do |value|
   with_scope("#message-form") do
     field = find_field("tweet[message]")
     assert_match(/#{value}/, field.value)
+  end
+end
+
+Given /^"([^"]*)" is listening to "([^"]*)"$/ do |username, channelname|
+  User.find_by_login(username).subscribe(Channel.find_by_name(channelname))
+end
+
+Given /^I click on "([^"]*)" within "([^"]*)"$/ do |linktext, selector|
+  with_scope(selector) do
+    find(:xpath, "//a[contains(.,'#{linktext}')]").click
   end
 end

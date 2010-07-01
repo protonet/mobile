@@ -25,7 +25,9 @@ class TweetsController < ApplicationController
 
   def create
     author = current_user.display_name
-    channels = Channel.find(:all, :conditions => ["id in (?)", [params[:message_channel_id]] ])
+    channel_ids = params[:mentioned_channel_ids] ? 
+      ([params[:message_channel_id]] | params[:mentioned_channel_ids]) : [params[:message_channel_id]]
+    channels = Channel.find(:all, :conditions => ["id in (?)",  channel_ids])
     # current user is nil when not logged in, that's ok
     @tweet = Tweet.new(params[:tweet].merge({:author => author, :user => current_user, :channels => channels}))
     # saving, nothing else is done here for the moment

@@ -4,11 +4,11 @@ protonet.controls.EndlessScroller = (function() {
   var REG_EXP_CHANNEL_ID = /messages-for-channel-(\d*)/,
       REG_EXP_TWEET_INDEX = /tweet-(\d*)-(\d*)/;
   
-  function EndlessScroller(args) {
+  function EndlessScroller() {
     this.channelId = protonet.globals.channelSelector.getCurrentChannelId();
     this._observe();
     
-    protonet.globals.notifications.bind("channel.changed", function(e, newChannelId) {
+    protonet.Notifications.bind("channel.changed", function(e, newChannelId) {
       var oldChannel = $("#messages-for-channel-" + this.channelId);
       
       oldChannel.children().unbind("inview");
@@ -19,7 +19,7 @@ protonet.controls.EndlessScroller = (function() {
   };
   
   EndlessScroller.prototype = {
-    "_observe": function() {
+    _observe: function() {
       var channel = $("#messages-for-channel-" + this.channelId),
           lastTweet = channel.children("li:last");
       lastTweet.bind("inview", function() {
@@ -28,14 +28,14 @@ protonet.controls.EndlessScroller = (function() {
       }.bind(this));
     },
     
-    "loadOlderTweets": function(lastTweet, channel) {
+    loadOlderTweets: function(lastTweet, channel) {
       this._load(channel, {
         channel_id: this.channelId,
         last_id: lastTweet.attr("id").match(REG_EXP_TWEET_INDEX)[2]
       }, "append");
     },
     
-    "loadNotReceivedTweets": function() {
+    loadNotReceivedTweets: function() {
       var channels = $("#feed-viewer ul");
       channels.each(function(i, channel){
         channel = $(channel);
@@ -49,20 +49,18 @@ protonet.controls.EndlessScroller = (function() {
       }.bind(this));
     },
     
-    "_load": function(channel, params, method, showNotification) {
+    _load: function(channel, params, method, showNotification) {
       $.get("/tweets", params, function(data) {
         if ($.trim(data)) {
           channel[method](data);
 
           // Ok, let the browser breathe and then do the rest
           setTimeout(function() {
-            protonet.controls.TextExtension.renderQueue();
-            protonet.controls.PrettyDate.update();
-            protonet.globals.communicationConsole.highlightReplies();
+            protonet.Notifications.trigger("messages.new", params.channel_id, showNotification);
             if (showNotification) {
-              protonet.globals.communicationConsole.notification(params.channel_id);
+              protonet.Notifications.trigger("notification.new", params.channel_id);
             }
-          }, 100);
+          }, 200);
           this._observe();
         }
       }.bind(this));

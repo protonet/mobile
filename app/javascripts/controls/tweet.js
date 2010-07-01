@@ -15,7 +15,7 @@ protonet.controls.Tweet = (function() {
     this.originalMessage  = args.message;
     this.message          = this.originalMessage;
     this.message          = protonet.utils.escapeHtml(this.message);
-    this.message          = protonet.utils.highlightReplies(this.message);
+    this.message          = protonet.utils.highlightReplies.highlightInStream(this.message);
     this.message          = protonet.utils.autoLink(this.message);
     this.message          = protonet.utils.nl2br(this.message);
     this.message          = protonet.utils.autoLinkFilePaths(this.message);
@@ -46,7 +46,7 @@ protonet.controls.Tweet = (function() {
     
     if (this.textExtension) {
       if (isCurrentChannel) {
-        protonet.controls.TextExtension.render(messageContainer, this.textExtension);
+        protonet.text_extensions.render(messageContainer, this.textExtension);
       } else {
         // Put text extension in queue, so that it gets rendered when the channel is focused
         protonet.globals.textExtensions.push({
@@ -73,7 +73,7 @@ protonet.controls.Tweet = (function() {
     } else {
       this.channelUl.prepend(this.listElement);
     }
-    
+
     // highlight my mentions
     protonet.globals.communicationConsole.highlightReplies();
 
@@ -94,17 +94,36 @@ protonet.controls.Tweet = (function() {
       // Overwrite message, because we don't always want to send the textarea value
       params += "&" + $.param({ "tweet[message]": this.originalMessage });
       
-      // send to server
-      $.post(this.form.attr("action"), params, function(data){
-        this.htmlId = this.listElement.attr("id");
-        
-        if (this.shouldBeMerged) {
-          this.replaceFirstTweetIdInMerge(data);
-        } else {
-          this.htmlId = this.htmlId.replace(ID_REG_EXP, data);
-          this.listElement.attr("id", this.htmlId);
+      // add tweet to other mentioned channels
+      this.mentionedChannelIds = protonet.utils.highlightReplies.recognizeAllChannels(this.originalMessage);
+      $.each(this.mentionedChannelIds, function(i){
+        var channel = $("#messages-for-channel-" + this.mentionedChannelIds[i]);
+        if(channel.length > 0) {
+          channel.prepend(this.listElement.clone());
         }
       }.bind(this));
+      if(this.mentionedChannelIds.length > 0){
+        params += "&" + $.param({ "mentioned_channel_ids": this.mentionedChannelIds });
+      };
+      
+      // send to server
+      $.ajax({
+        type:     "POST",
+        url:      this.form.attr("action"),
+        data:     params,
+        success:  function(response) {
+          if (this.shouldBeMerged) {
+            this.replaceFirstTweetIdInMerge(response);
+          } else {
+            this.htmlId = this.listElement.attr("id").replace(ID_REG_EXP, response);
+            this.listElement.attr("id", this.htmlId);
+          }
+        }.bind(this),
+        
+        error:    function() {
+          alert("Ooops, something went wrong. Your message hasn't been sent.");
+        }.bind(this)
+      });
     },
     
     replaceFirstTweetIdInMerge: function(id) {

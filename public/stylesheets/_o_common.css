@@ -147,7 +147,7 @@ div, button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, 
 #channel li {
   -moz-border-radius: 0.3em;
   -webkit-border-radius: 0.3em;
-  background: rgb(154, 154, 154) url(/images/bkg_lbutton.png) repeat-x scroll left bottom;
+  background: rgb(128, 128, 128) url(/images/bkg_lbutton.png) repeat-x scroll left top;
   border-radius: 0.3em;
   border: 1px solid rgba(0, 0, 0, 0.4);
   float: left;
@@ -778,6 +778,7 @@ h2 {
   background-color:#9A9A9A;
   border: none;
   color:white;
+  text-decoration: none;
   -moz-border-radius:10px;
   -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
   -webkit-border-radius: 10px;

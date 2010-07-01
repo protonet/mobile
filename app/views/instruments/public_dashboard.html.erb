@@ -87,19 +87,19 @@
       </button>
     </div>
     <div id="text-extension-preview">
-      <a href="#" title="Remove" class="remove">x</a>
+      <a href="#" title="Remove (ESC)" class="remove">x</a>
     </div>
   <%- end -%>
   
   <div id="channel">
     <ul>
       <% @channels.each_with_index do |c, index| %>
-        <li id="channel-<%= c.id %>" class="channel <%= 'active' if c == @active_channel %>">
-          <%= link_to c.name.capitalize, {:channel_id => c.id, :index => index}, {:title => c.name} %>
+        <li data-channel-id="<%= c.id %>" data-channel-name="<%=h c.name %>" data-channel-index="<%= index %>" class="channel <%= 'active' if c == @active_channel %>">
+          <%= link_to c.name.capitalize, {:channel_id => c.id} %>
         </li>
       <% end %>
       <li class="browse">
-        <a href="/channels" title="browse more channels"><%= Channel.count - @channels.count %> channels, check them out!</a>
+        <a href="/channels" title="Browse more channels"><%= Channel.count - @channels.count %> channels, check them out!</a>
       </li>
     </ul>
   </div>

@@ -13,6 +13,7 @@ protonet.controls.InputConsole = function(args) {
   this.initEvents();
 };
 
+
 protonet.controls.InputConsole.prototype = {
   "initAutocompleter": function(entries, options) {
     entries = $.map(entries, function(entry) {
@@ -22,15 +23,19 @@ protonet.controls.InputConsole.prototype = {
   },
   
   "bindAutocompleterToUserAddedEvents": function() {
-    protonet.globals.notifications.bind("user.added", function(e, msg){
+    protonet.Notifications.bind("user.added", function(e, msg){
       this.autoCompleter.addData(["@" + msg.user_name]);
     }.bind(this));
   },
   
   "initEvents": function() {
     // focus input after channel switch
-    protonet.globals.notifications.bind("channel.changed", function() {
+    protonet.Notifications.bind("channel.changed", function() {
       this.input_console.focus();
+    }.bind(this));
+    
+    protonet.Notifications.bind("channel.initialized", function(event, channels) {
+      this.initAutocompleter(channels);
     }.bind(this));
     
     // bind keydown handling for special key catching

@@ -12,7 +12,7 @@ class Channel < ActiveRecord::Base
   validates_length_of       :name,     :maximum => 30
 
   before_validation_on_create :normalize_name
-  after_create  :create_folder
+  after_create  :create_folder,   :if => lambda {|c| !c.home?}
   after_create  :subscribe_owner, :if => lambda {|c| !c.home?}
 
 
@@ -22,7 +22,9 @@ class Channel < ActiveRecord::Base
     rescue ActiveRecord::RecordNotFound
       channel = Channel.new(:name => 'home', :description => 'your homebase - your node :)')
       channel.save && update_all("id = 1", "id = #{channel.id}")
-      find(1)
+      channel = find(1)
+      channel.create_folder
+      channel
     end
   end
   
