@@ -1,7 +1,8 @@
-var sys         = require("sys"),
-    amqp        = require('./modules/node-amqp/amqp'),
-    screenshot  = require("./tasks/screenshot"),
-    httpProxy   = require("./tasks/http_proxy");
+var sys = require("sys");
+
+
+/*----------------------------------- SOCKET TASKS -----------------------------------*/
+var amqp = require('./modules/node-amqp/amqp');
 
 connection = amqp.createConnection({ host: "localhost" });
 connection.addListener("ready", function() {
@@ -19,21 +20,38 @@ connection.addListener("ready", function() {
     };
     
     switch(message.task) {
-      case "screenshot":
-        screenshot.make(message.url, publish);
-        break;
-        
       // example, remove for production
       case "eval":
         publish(eval(message.javascript));
         break;
         
       case "http_proxy":
-        httpProxy.get(message.url, publish);
+        require("./tasks/http_proxy").get(message.url, publish);
         break;
     }
   });
 });
+
+
+
+
+
+/*----------------------------------- HTTP TASKS -----------------------------------*/
+var http      = require("http"),
+    parseUrl  = require("url").parse;
+
+http.createServer(function(request, response) {
+  var parsedUrl = parseUrl(request.url, true),
+      params    = parsedUrl.query,
+      task      = parsedUrl.pathname.replace(/\//g, "");
+  
+  switch(task) {
+    case "screenshot":
+      require("./tasks/screenshot").make(params, response);
+      break;
+  }
+}).listen(8124);
+
 
 sys.puts("started");
 
