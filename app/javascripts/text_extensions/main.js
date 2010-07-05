@@ -9,7 +9,7 @@ protonet.text_extensions = {
     if (protonet.globals.textExtensions && protonet.globals.textExtensions.length) {
       protonet.globals.textExtensions = $.map(protonet.globals.textExtensions, function(extension) {
         if (extension.channel_id == currentChannelId) {
-          var container = $("#" + extension.container_id + " > article:last .text-extension");
+          var container = $("#" + extension.container_id + " > article:last .text-extension-container");
           this.render(container, extension.data);
           return null; // to remove the element from the array
         } else {

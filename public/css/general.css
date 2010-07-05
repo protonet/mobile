@@ -5,6 +5,7 @@
       blue        hsl(230, 55%, 72%)
       grey        hsl(0, 0%, 70%)
       grey_dark   hsl(0, 0%, 40%)
+      grey_light  hsl(0, 0%, 90%)
       orange      hsl(20, 100%, 51%)
       white       hsl(0, 0%, 100%)
 =========================================================================== */
@@ -13,12 +14,14 @@ body {
   background: url(/img/background_top.png) repeat-x,
               url(/img/background_bottom.png) repeat-x left bottom,
               url(/img/background.png);
-  font: 14px/1.4em Verdana, sans-serif;
   margin: 20px auto;
   width: 940px;
   color: hsl(0, 0%, 0%);
 }
 
+body,
+select,
+textarea,
 input {
   font: 12px/1.4em Verdana, sans-serif;
 }
@@ -52,6 +55,10 @@ button:hover {
   background: -moz-linear-gradient(100% 100% 90deg, hsl(20, 100%, 51%), hsl(20, 100%, 71%));
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(hsl(20, 100%, 71%)), to(hsl(20, 100%, 51%)));
   outline: 1px solid hsl(20, 100%, 51%);
+}
+
+output {
+  display: block;
 }
 
 header {

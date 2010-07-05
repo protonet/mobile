@@ -6,12 +6,10 @@
   <%- end -%>
   <% message_hint = current_user.stranger? ? 'welcome stranger! talk to us...' : "go ahead @#{current_user.display_name}, I'm all yours..." %>
   <%- form_for :tweet, :url => tweets_path, :html => { :id => "message-form" } do |f| -%>
-    <fieldset>
-      <%= f.hidden_field("channel_id", :name => "message_channel_id", :value => @active_channel.id, :autocomplete => "off") %>
-      <%= f.hidden_field(:socket_id) %>
-      <%= f.hidden_field(:text_extension, :id => 'text-extension-input', :value => "", :autocomplete => "off") %>
-      <%= f.text_area(:message, :id => 'message', :title => message_hint) %>
-    </fieldset>
+    <%= f.hidden_field("channel_id", :name => "message_channel_id", :value => @active_channel.id, :autocomplete => "off") %>
+    <%= f.hidden_field(:socket_id) %>
+    <%= f.hidden_field(:text_extension, :id => 'text-extension-input', :value => "", :autocomplete => "off") %>
+    <%= f.text_area(:message, :id => 'message', :title => message_hint) %>
     <div id="text-extension-preview">
       <a href="#" title="Remove" class="remove">x</a>
     </div>
@@ -42,11 +40,10 @@
 
 <div id="templates">
   <div id="message-template">
-    <%#= render :partial => 'tweets/tweet',
-          :locals => {
-            :message => '', :avatar => '/images/userpicture.jpg',
-            :author => '', :created_at => '', :html_id => 'tweet-{id}-{id}'
-          } %>
+    <%#= render :partial => 'tweets/tweet', :locals => {
+          :message => '', :avatar => '/images/userpicture.jpg',
+          :author => '', :created_at => '', :html_id => 'tweet-{id}-{id}'
+    } %>
   </div>
 
   <div id="text-extension-template">

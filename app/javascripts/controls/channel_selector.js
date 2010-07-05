@@ -1,7 +1,7 @@
 //= require "../utils/add_slashes"
 
 protonet.controls.ChannelSelector = function() {
-  this.channelInput   = $("#message_channel_id");
+  this.channelInput   = $("#tweet_channel_id");
   this.container      = $("#channels");
   this.feedHolder     = $("#feed-holder");
   this.feedViewer     = $("#feed-viewer");

@@ -1,11 +1,21 @@
+/* =CONSOLE
+=========================================================================== */
+
 #message-form {
   margin: 15px 15px 20px;
   width: 620px;
 }
+
 #message-form textarea {
-  height: 100px;
-  width: 100%;
+  font-size: 16px;
+  height: 90px;
+  width: 608px;
+  padding: 5px;
+  margin: 0;
+  display: block; /* textareas are inline-block by default in webkit and inline in firefox */
+  resize: none;
 }
+
 button::-moz-focus-inner {
   padding: 0;
   border: 0 none;
