@@ -100,7 +100,7 @@ protonet.controls.ChannelSelector.prototype = {
   },
 
   notify: function(channelId) {
-    var anchor = $("#channel-" + channelId).find("a"),
+    var anchor = $("#channel [data-channel-id={id}] > a".replace("{id}", channelId)),
         notificationElement = anchor.find(".notification");
     if (notificationElement.length == 0) {
       notificationElement = $("<span />", { html: 0, className: "notification" }).appendTo(anchor);
