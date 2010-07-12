@@ -15,7 +15,27 @@ class InstrumentsController < ApplicationController
     @asset = Asset.new
     @active_channel = params[:channel_id] ? Channel.find(params[:channel_id]) : @channels.first
     
-    render 'public_dashboard'
+    respond_to do |format|
+      format.json do
+        ActiveRecord::Base.include_root_in_json = false;
+        render :json => @channels.map { |channel|
+          tweets = channel.tweets.recent.all(:limit => 25, :include => [:avatar])
+          tweets.map do |t|
+            begin
+              t.text_extension = JSON.parse(t.text_extension)
+            rescue
+              t.text_extension = nil
+            end
+            t
+          end
+          
+          { :id => channel.id, :meeps  => tweets }
+        }.to_json
+      end
+      format.html do
+        render 'public_dashboard'
+      end
+    end
   end
   
   private

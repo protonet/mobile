@@ -9,27 +9,6 @@ module ApplicationHelper
     )
   end
   
-  def nl2br(str)
-    str.gsub(/\n/, '<br />')
-  end
-  
-  def convert_to_rfc(str)
-    Time.at(str.to_i).rfc2822
-  end
-  
-  def convert_to_iso(str)
-    Time.at(str.to_i).iso8601
-  end
-  
-  def auto_link_file_paths(str)
-    str.gsub(/file:(.*?[^\<\s\,]+)/) {|s|
-      path = $1
-      file_name = extract_file_name($1)
-      
-      file_name ? ('<a href="' + path + '">' + truncate(file_name, {:length => 40}) + '</a>') : s
-    }
-  end
-  
   def greet_user(user_name)
     case
     when Time.now >= Time.parse("03:01") && Time.now < Time.parse("12:00")
@@ -41,29 +20,6 @@ module ApplicationHelper
     end
     #o + link_to(user_name, preferences_path) # not yet!
     o + user_name
-  end
-  
-  def highlight_replies(str)
-    str.gsub(/(\s|^)@([\w\.\-_@]+)/) {|s|
-      reply_type = case
-        when Channel.names.include?($2.downcase)
-          "#{$1}@<a class='reply channel' href='#channel_name=#{$2.downcase}'>#{$2}</a>"
-        when $2.downcase == current_user.login
-          "#{$1}@<span class='reply to-me'>#{$2}</span>"
-        else
-          "#{$1}@<span class='reply'>#{$2}</span>"
-      end
-    }
-  end
-  
-  def format_tweet(message)
-    message = h(message)
-    message = highlight_replies(message)
-    message = auto_link(message, :urls, :target => '_blank') { |url|
-      CGI.unescapeHTML(truncate(url, 55))
-    }
-    message = nl2br(message)
-    message = auto_link_file_paths(message)
   end
 
   def stylesheets

@@ -26,30 +26,20 @@
     <%= link_to "manage channels", "/channels", :class => "manage-channels" %>
   </div>
   <div id="feed-viewer">
-    <div id="feed-holder" style="width:<%= @channels.size * 650 %>px; left: <%= @channels.index(@active_channel) * -650 %>px;">
-      <%- @channels.each do |c| -%>
-        <%= render :partial => '/tweets/meep_list', :locals => { :tweets => Tweet.find_tweets_older_than(c, Tweet.last.id + 1), :channel => c } %>
-      <%- end -%>
-    </div>
+    <output id="feed-holder"></output>
   </div>
 </section>
 
 <aside id="side">
 </aside>
 
+<script type="protonet/template" id="meep-template">
+  <%= render :partial => 'tweets/meep' %>
+</script>
 
-<div id="templates">
-  <div id="message-template">
-    <%#= render :partial => 'tweets/tweet', :locals => {
-          :message => '', :avatar => '/images/userpicture.jpg',
-          :author => '', :created_at => '', :html_id => 'tweet-{id}-{id}'
-    } %>
-  </div>
-
-  <div id="text-extension-template">
-    <%= render :partial => 'tweets/text_extension' %>
-  </div>
-</div>
+<script type="protonet/template" id="text-extension-template">
+  <%= render :partial => 'tweets/text_extension' %>
+</script>
 
 <% if false %>
 

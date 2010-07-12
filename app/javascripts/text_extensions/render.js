@@ -1,6 +1,7 @@
 //= require "../utils/escape_html.js"
 //= require "../utils/strip_tags.js"
 //= require "../utils/parse_url.js"
+//= require "../utils/template.js"
 
 /**
  * Supported fields:
@@ -57,7 +58,7 @@ protonet.text_extensions.render = (function() {
   }
   
   return function(container, data) {
-    template = template || $($("#text-extension-template").html());
+    template = template || $($("#text-extension-template"));
     
     var results     = template.clone(),
         description = protonet.utils.escapeHtml(protonet.utils.stripTags(data.description || "")),

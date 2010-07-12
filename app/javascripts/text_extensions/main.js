@@ -1,8 +1,12 @@
 protonet.text_extensions = {
   initialize: function(currentChannelId) {
-    protonet.Notifications.bind("channel.changed messages.new", this.renderQueue.bind(this));
-    
-    $(this.renderQueue.bind(this, null, currentChannelId));
+    protonet.Notifications.bind("meep.render", function(e, meepData) {
+      if (!meepData.text_extension) {
+        return;
+      }
+      var container = $("li[data-meep-id=" + meepData.id + "] .text-extension-container");
+      this.render(container, meepData.text_extension);
+    }.bind(this));
   },
   
   renderQueue: function(e, currentChannelId) {

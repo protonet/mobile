@@ -1,23 +1,13 @@
-<li id="<%= "meeps-#{meeps.first.id}-#{meeps.last.id}" %>">
-  <%- meeps.each do |meep| -%>
-    <article>
-      <%= format_tweet(meep.message) %>
-      <%- if meep.text_extension? -%>
-        <output class="text-extension-container"></output>
-        <script type="text/javascript">//<![CDATA[
-          protonet.globals.textExtensions.push({
-            channel_id:   <%= channel_id.to_json %>,
-            container_id: <%= "meeps-#{meeps.first.id}-#{meeps.last.id}".to_json %>,
-            data:         <%= meep.text_extension.gsub(/<\//, '<\/') %>
-          });
-        //]]></script>
-      <%- end -%>
-      <p class="author">
-        <%=h author %> <time data-format="bygone" datetime="<%= convert_to_iso(meep.created_at) %>"><%= meep.created_at %></time>
-      </p>
-    </article>
-  <%- end -%>
+<li data-meep-id="#{id}" data-meep-author="#{author}" data-meep-created-at="#{created_at}">
+  <article>
+    #{message}
+    <output class="text-extension-container"></output>
+    <p class="author">
+      #{author}
+      <time datetime="#{created_at}" class="pretty-date">#{created_at}</time>
+    </p>
+  </article>
   <div class="avatar">
-    <img src="<%= avatar %>" width="36" height="36" alt="" />
+    <img src="#{avatar}" width="36" height="36" />
   </div>
 </li>
