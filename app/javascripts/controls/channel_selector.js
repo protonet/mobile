@@ -2,7 +2,7 @@
 
 protonet.controls.ChannelSelector = function() {
   this.channelInput   = $("#tweet_channel_id");
-  this.container      = $("#channels");
+  this.container      = $("#channel-selector");
   this.feedHolder     = $("#feed-holder");
   this.feedViewer     = $("#feed-viewer");
   this.channelWidth   = this.feedHolder.find("ul:first").outerWidth(true);

@@ -3,7 +3,7 @@
 //= require "effects/clouds.js"
 //= require "dispatching/dispatching_system.js"
 //= require "controls/communication_console.js"
-//= require "controls/meeps.js"
+//= require "controls/timeline.js"
 //= require "controls/file_widget.js"
 //= require "controls/endless_scroller.js"
 //= require "controls/user_widget.js"
@@ -23,15 +23,14 @@ $(function() {
 // Initialize communication stuff
 $(function() {
   protonet.globals.communicationConsole = new protonet.controls.CommunicationConsole();
-  protonet.globals.channelSelector      = new protonet.controls.ChannelSelector();
   protonet.globals.dispatcher           = new protonet.dispatching.DispatchingSystem();
   
-  protonet.controls.Meeps.initialize();
+  protonet.controls.Timeline.initialize();
 });
 
 // Initialize text extensions
 $(function() {
-  protonet.text_extensions.initialize(protonet.globals.channelSelector.getCurrentChannelId());
+  protonet.text_extensions.initialize(protonet.controls.Channels.selected);
 });
 
 // Initialize file stuff

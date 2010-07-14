@@ -14,6 +14,12 @@
   margin: 0;
   display: block; /* textareas are inline-block by default in webkit and inline in firefox */
   resize: none;
+  position: relative;
+  /*
+  * ensure that blue border, that is natively displayed in some browsers
+  * when textarea is focused, is on top of surrounding elements
+  */
+  z-index: 1;
 }
 
 button::-moz-focus-inner {

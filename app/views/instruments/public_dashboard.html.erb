@@ -4,7 +4,7 @@
       <%= "#{greet_user(current_user.display_name)}: #{link_to("logout", :controller => :sessions, :action => :destroy)}" %>
     </p>
   <%- end -%>
-  <% message_hint = current_user.stranger? ? 'welcome stranger! talk to us...' : "go ahead @#{current_user.display_name}, I'm all yours..." %>
+  <%- message_hint = current_user.stranger? ? 'welcome stranger! talk to us...' : "go ahead @#{current_user.display_name}, I'm all yours..." %>
   <%- form_for :tweet, :url => tweets_path, :html => { :id => "message-form" } do |f| -%>
     <%= f.hidden_field("channel_id", :name => "message_channel_id", :value => @active_channel.id, :autocomplete => "off") %>
     <%= f.hidden_field(:socket_id) %>
@@ -18,7 +18,7 @@
   <div id="channels">
     <ul>
       <%- @channels.each_with_index do |c, index| -%>
-        <li id="channel-<%= c.id %>" <%= active(c, @active_channel) %>>
+        <li data-channel-id="<%= c.id %>" <%= active(c, @active_channel) %>>
           <%= link_to c.name.capitalize, { :channel_id => c.id, :index => index }, { :title => c.description } %>
         </li>
       <%- end -%>

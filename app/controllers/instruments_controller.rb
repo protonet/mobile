@@ -17,20 +17,7 @@ class InstrumentsController < ApplicationController
     
     respond_to do |format|
       format.json do
-        ActiveRecord::Base.include_root_in_json = false;
-        render :json => @channels.map { |channel|
-          tweets = channel.tweets.recent.all(:limit => 25, :include => [:avatar])
-          tweets.map do |t|
-            begin
-              t.text_extension = JSON.parse(t.text_extension)
-            rescue
-              t.text_extension = nil
-            end
-            t
-          end
-          
-          { :id => channel.id, :meeps  => tweets }
-        }.to_json
+        get_meeps_as_json(@channels)
       end
       format.html do
         render 'public_dashboard'
@@ -43,5 +30,23 @@ class InstrumentsController < ApplicationController
       response.headers['Cache-Control'] = 'no-cache, no-store, max-age=0, must-revalidate'
       response.headers['Pragma'] = 'no-cache'
       response.headers['Expires'] = 'Fri, 01 Jan 1990 00:00:00 GMT'
+    end
+    
+    def get_meeps_as_json(channels)
+      ActiveRecord::Base.include_root_in_json = false;
+      render :json => channels.map { |channel|
+        tweets = channel.tweets.recent.all(:limit => 25, :include => [:avatar])
+        tweets = tweets.map do |t|
+          t.created_at = t.created_at
+          begin
+            t.text_extension = JSON.parse(t.text_extension)
+          rescue
+            t.text_extension = nil
+          end
+          t
+        end
+        
+        { :id => channel.id, :name => channel.name, :meeps  => tweets }
+      }.to_json
     end
 end

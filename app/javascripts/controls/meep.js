@@ -6,9 +6,10 @@
 //= require "../utils/highlight_replies.js"
 //= require "../utils/template.js"
 
-protonet.controls.Meep = function(meepData) {
-  this.meepData = meepData;
-  this.meepData.message = this.prepareMessage(this.meepData.message);
+protonet.controls.Meep = function(data) {
+  this.data = data;
+  this.id   = data.id;
+  this.data.message = this.prepareMessage(this.data.message);
 };
 
 protonet.controls.Meep.prototype = {
@@ -16,11 +17,12 @@ protonet.controls.Meep.prototype = {
    * Configuration
    */
   config: {
-    SHOULD_BE_MERGED_TIME: 1000 * 60 * 15 // 15 minutes
+    // Merge/combine meeps that were send in a particular timeframe
+    SHOULD_BE_MERGED_TIME: 1000 * 60 * 15
   },
   
   prepareMessage: function(message) {
-    $.each([ 
+    $.each([
       protonet.utils.escapeHtml,
       protonet.utils.highlightReplies.highlightInStream,
       protonet.utils.autoLink,
@@ -34,9 +36,10 @@ protonet.controls.Meep.prototype = {
   },
   
   render: function(channelList) {
-    var html = new protonet.utils.Template("meep-template", this.meepData).toString();
-    channelList.prepend(html);
+    var meepElement = new protonet.utils.Template("meep-template", this.data).toElement();
+    meepElement.data({ meep: this.data, instance: this });
+    channelList.prepend(meepElement);
     
-    protonet.Notifications.trigger("meep.render", this.meepData);
+    protonet.Notifications.trigger("meep.rendered", [meepElement, this.data, this]);
   }
 };
