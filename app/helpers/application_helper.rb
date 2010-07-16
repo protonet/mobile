@@ -11,11 +11,11 @@ module ApplicationHelper
   
   def greet_user(user_name)
     case
-    when Time.now >= Time.parse("03:01") && Time.now < Time.parse("12:00")
+    when Time.now >= Time.parse("00:00") && Time.now < Time.parse("12:00")
       o = "Good morning "
-    when Time.now >= Time.parse("12:01") && Time.now < Time.parse("18:00")
+    when Time.now >= Time.parse("12:00") && Time.now < Time.parse("18:00")
       o = "Good day "
-    when Time.now >= Time.parse("18:01")
+    when Time.now >= Time.parse("18:00")
       o = "Good evening "
     end
     #o + link_to(user_name, preferences_path) # not yet!

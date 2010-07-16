@@ -98,8 +98,8 @@
 .text-extension-results .media {
   margin: 0 10px 0 0;
   float: left;
+  display: block;
   position: relative;
-  line-height: 0;
 }
 
 .text-extension-results .media a {
@@ -225,7 +225,6 @@
 .text-extension-results.code .media,
 .text-extension-results.codes .media {
   float: none;
-  margin-bottom: 10px;
 }
 
 .text-extension-results.code .media pre,
