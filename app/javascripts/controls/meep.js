@@ -9,7 +9,8 @@
 protonet.controls.Meep = function(data) {
   this.data = data;
   this.id   = data.id;
-  this.data.message = this.prepareMessage(this.data.message);
+  
+  this.data = this._prepareData(this.data);
 };
 
 protonet.controls.Meep.prototype = {
@@ -21,7 +22,13 @@ protonet.controls.Meep.prototype = {
     SHOULD_BE_MERGED_TIME: 1000 * 60 * 15
   },
   
-  prepareMessage: function(message) {
+  _prepareData: function(data) {
+    data.message    = this._prepareMessage(data.message);
+    data.created_at = new Date().setISO8601(data.created_at).toString();
+    return data;
+  },
+  
+  _prepareMessage: function(message) {
     $.each([
       protonet.utils.escapeHtml,
       protonet.utils.highlightReplies.highlightInStream,
@@ -36,10 +43,21 @@ protonet.controls.Meep.prototype = {
   },
   
   render: function(channelList) {
-    var meepElement = new protonet.utils.Template("meep-template", this.data).toElement();
-    meepElement.data({ meep: this.data, instance: this });
-    channelList.prepend(meepElement);
+    this.element = new protonet.utils.Template("meep-template", this.data).toElement();
+    this.element.data({ meep: this.data, instance: this });
     
-    protonet.Notifications.trigger("meep.rendered", [meepElement, this.data, this]);
+    channelList.prepend(this.element);
+    
+    protonet.Notifications.trigger("meep.rendered", [this.element, this.data, this]);
+    
+    return this;
+  },
+  
+  send: function() {
+    $.post();
+    
+    protonet.Notifications.trigger("meep.sent", [this.element, this.data, this]);
+    
+    return this;
   }
 };

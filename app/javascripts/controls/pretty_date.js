@@ -1,31 +1,42 @@
 //= require "../utils/convert_to_pretty_date.js"
 
 protonet.controls.PrettyDate = (function() {
-  var SELECTOR  = ".pretty-date",
-      INTERVAL  = 30000,
-      dateObj   = new Date();
+  var SELECTOR        = "time",
+      ATTRIBUTE       = "datetime",
+      INTERVAL        = 30000,
+      elementRegistry = [];
   
   function initialize() {
     setInterval(function() {
-      update();
+      updateAll();
     }, INTERVAL);
     
     protonet.Notifications.bind("meep.rendered", function(e, meepElement) {
-      update(meepElement);
+      var timeElement = meepElement.find("time");
+      register(timeElement);
+      update(timeElement);
     });
-    
-    update();
   }
   
-  function update(container) {
-    $(SELECTOR, container).html(function() {
-      var date = dateObj.setISO8601($(this).attr("datetime"));
-      return protonet.utils.convertToPrettyDate(date);
+  function register(element) {
+    elementRegistry.push(element);
+  }
+  
+  function updateAll() {
+    $(elementRegistry).each(function(i, element) {
+      update(element);
     });
+  }
+  
+  function update(element) {
+    var prettyDate = protonet.utils.convertToPrettyDate(element.attr(ATTRIBUTE));
+    element.html(prettyDate);
   }
   
   return {
     initialize: initialize,
+    register:   register,
+    updateAll:  updateAll,
     update:     update
   };
 })();
