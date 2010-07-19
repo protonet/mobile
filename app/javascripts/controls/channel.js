@@ -9,7 +9,6 @@ protonet.controls.Channels.Channel = function(data, link, container, isSelected)
   this.subModules = {};
   
   this._observe();
-  this.render();
 };
 
 protonet.controls.Channels.Channel.prototype = {
@@ -31,6 +30,8 @@ protonet.controls.Channels.Channel.prototype = {
     }).appendTo(this.container).data({ channel: this.data, instance: this });
     
     this.renderMeeps(this.data.meeps);
+    
+    return this;
   },
   
   renderMeeps: function(meeps) {
@@ -43,9 +44,7 @@ protonet.controls.Channels.Channel.prototype = {
     meeps.reverse().chunk(function(meep) {
       this.subModules[meep.id] = new protonet.controls.Meep(meep).render(this.channelList);
     }.bind(this));
-  },
-  
-  slideTo: function() {
     
+    return this;
   }
 };

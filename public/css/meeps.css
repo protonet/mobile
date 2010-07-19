@@ -38,6 +38,7 @@ button::-moz-focus-inner {
 
 #feed-holder {
   position: relative;
+  width: 16000px;
 }
 
 .meeps {
@@ -80,8 +81,6 @@ button::-moz-focus-inner {
   border: 0;
   margin: 0 0 0 -25px;
   padding: 0 0 0 25px;
-  position: relative;
-  z-index: 1;
 }
 
 .meeps .avatar {

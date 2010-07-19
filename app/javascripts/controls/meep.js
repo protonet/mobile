@@ -24,7 +24,6 @@ protonet.controls.Meep.prototype = {
   
   _prepareData: function(data) {
     data.message    = this._prepareMessage(data.message);
-    data.created_at = new Date().setISO8601(data.created_at).toString();
     return data;
   },
   

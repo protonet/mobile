@@ -33,17 +33,11 @@ class InstrumentsController < ApplicationController
     end
     
     def get_meeps_as_json(channels)
-      ActiveRecord::Base.include_root_in_json = false;
       render :json => channels.map { |channel|
         tweets = channel.tweets.recent.all(:limit => 25, :include => [:avatar])
         tweets = tweets.map do |t|
-          t.created_at = t.created_at
-          begin
-            t.text_extension = JSON.parse(t.text_extension)
-          rescue
-            t.text_extension = nil
-          end
-          t
+          t.text_extension = JSON.parse(t.text_extension) rescue nil
+          t.attributes.merge({ :avatar => t.user.active_avatar_url })
         end
         
         { :id => channel.id, :name => channel.name, :meeps  => tweets }

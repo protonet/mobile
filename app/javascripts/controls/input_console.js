@@ -103,7 +103,6 @@ protonet.controls.InputConsole.prototype = {
       }.bind(this), 3000);
       
       setTimeout(function(){
-        // console.log('setting recheck');
         this.recheck = true;
       }.bind(this), 500);
       

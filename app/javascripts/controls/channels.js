@@ -2,10 +2,11 @@ protonet.controls.Channels = {
   subModules: {},
   
   initialize: function(data) {
-    this.container    = $("#feed-holder");
-    this.channelLinks = $("#channels li");
-    this.data         = data;
-    this.selected     = parseInt(this.channelLinks.filter(".active").attr("data-channel-id"), 10);
+    this.container        = $("#feed-holder");
+    // this.scrollContainer  = this.container.parent();
+    this.channelLinks     = $("#channels li");
+    this.data             = data;
+    this.selected         = parseInt(this.channelLinks.filter(".active").attr("data-channel-id"), 10);
     
     this._observe();
     this._renderChannelLists();
@@ -26,18 +27,20 @@ protonet.controls.Channels = {
     this.data.chunk(function(channelData) {
       var isSelected = this.selected == channelData,
           link       = this.channelLinks.filter("[data-channel-id=" + channelData.id + "]");
-      this.subModules[channelData.id] = new this.Channel(channelData, link, this.container, isSelected);
+      this.subModules[channelData.id] = new this.Channel(channelData, link, this.container, isSelected).render();
     }.bind(this));
   },
   
   select: function(id) {
     this.selected = id;
+    this.slideTo(id);
     
     protonet.Notifications.trigger("channel.changed", id);
   },
   
   slideTo: function(id) {
-    this.subModules[id].css("border", "1px red solid");
+    var channelList = this.subModules[id].channelList;
+    this.container.css("left", -channelList.position().left);
   },
   
   getDownCaseMapping: function() {
