@@ -13,7 +13,7 @@ protonet.controls.Channels.Channel = function(data, link, container, isSelected)
 
 protonet.controls.Channels.Channel.prototype = {
   _observe: function() {
-    protonet.Notifications.bind("meep.rendered", function(e, meepElement, meepData, instance) {
+    protonet.Notifications.bind("meep.sent", function(e, meepElement, meepData, instance) {
       this.subModules[meepData.id] = instance;
     }.bind(this));
     

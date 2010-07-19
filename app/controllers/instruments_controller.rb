@@ -37,7 +37,7 @@ class InstrumentsController < ApplicationController
         tweets = channel.tweets.recent.all(:limit => 25, :include => [:avatar])
         tweets = tweets.map do |t|
           t.text_extension = JSON.parse(t.text_extension) rescue nil
-          t.attributes.merge({ :avatar => t.user.active_avatar_url })
+          t.attributes.merge({ :avatar => t.user.active_avatar_url, :channel_id => channel.id })
         end
         
         { :id => channel.id, :name => channel.name, :meeps  => tweets }

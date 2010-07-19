@@ -17,6 +17,7 @@ protonet.controls.Timeline = {
   
   _initChannels: function(channelData) {
     this.data = channelData;
+    
     protonet.controls.Channels.initialize(channelData);
   }
 };

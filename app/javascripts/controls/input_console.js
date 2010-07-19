@@ -97,7 +97,6 @@ protonet.controls.InputConsole.prototype = {
       this.writeTimeout = setTimeout(function(){
         if (caretPosition == this.caretPosition) {
           this.sendStoppedWritingNotification();
-          // console.log("stopped writing");
           this.writing = false;
         }
       }.bind(this), 3000);

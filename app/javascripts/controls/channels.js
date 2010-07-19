@@ -3,10 +3,12 @@ protonet.controls.Channels = {
   
   initialize: function(data) {
     this.container        = $("#feed-holder");
-    // this.scrollContainer  = this.container.parent();
     this.channelLinks     = $("#channels li");
     this.data             = data;
     this.selected         = parseInt(this.channelLinks.filter(".active").attr("data-channel-id"), 10);
+    
+    protonet.text_extensions.initialize(this.selected);
+    protonet.controls.PrettyDate.initialize();
     
     this._observe();
     this._renderChannelLists();

@@ -28,11 +28,6 @@ $(function() {
   protonet.controls.Timeline.initialize();
 });
 
-// Initialize text extensions
-$(function() {
-  protonet.text_extensions.initialize(protonet.controls.Channels.selected);
-});
-
 // Initialize file stuff
 $(function() {
   // protonet.globals.fileWidget = new protonet.controls.FileWidget();
@@ -47,11 +42,6 @@ $(function() {
 // Initialize user widget
 $(function() {
   // protonet.globals.userWidget = new protonet.controls.UserWidget();
-});
-
-// Initialize pretty dates ("2 minutes ago")
-$(function() {
-  protonet.controls.PrettyDate.initialize();
 });
 
 // Frickin' stunning cloud animation (makes your squirrel run in circles!!)
