@@ -1,5 +1,15 @@
 //= require "channels.js"
 
+/**
+ * TODO (project: pre-timesquare):
+ *  - endless scrolling
+ *  - prevent scrolling when watching video in timeline
+ *  - meep merging
+ *  - grab selected channel from url
+ *  - meep sending via ajax/dispatcher
+ *  - channel notifications
+ *  - documentation
+ */
 protonet.controls.Timeline = {
   initialize: function() {
     this.load();
