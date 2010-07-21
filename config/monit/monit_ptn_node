@@ -112,13 +112,13 @@ allow protonet:admin     # user name and password for authentication.
 #    
 
 check process js_dispatching_control.rb with pidfile $shared_path$/pids/js_dispatching_server.rb.pid
-  start program = "/usr/bin/env PATH=/usr/local/bin:PATH HOME=$current_path$/../../ RAILS_ENV=production bundle exec ruby $current_path$/messaging/js_dispatching_control.rb start"
-  stop program  = "/usr/bin/env PATH=/usr/local/bin:PATH HOME=$current_path$/../../ RAILS_ENV=production bundle exec ruby $current_path$/messaging/js_dispatching_control.rb stop"
+  start program = "/usr/bin/env PATH=/usr/local/bin:$PATH HOME=$current_path$/../../ RAILS_ENV=production bundle exec ruby $current_path$/messaging/js_dispatching_control.rb start"
+  stop program  = "/usr/bin/env PATH=/usr/local/bin:$PATH HOME=$current_path$/../../ RAILS_ENV=production bundle exec ruby $current_path$/messaging/js_dispatching_control.rb stop"
   if 3 restarts within 5 cycles then timeout
 
 check process jabber_control.rb with pidfile $shared_path$/pids/jabber_control.rb.pid
-  start program = "/usr/bin/env PATH=/usr/local/bin:PATH HOME=$current_path$/../../ RAILS_ENV=production bundle exec ruby $current_path$/messaging/jabber_control.rb start"
-  stop program  = "/usr/bin/env PATH=/usr/local/bin:PATH HOME=$current_path$/../../ RAILS_ENV=production bundle exec ruby $current_path$/messaging/jabber_control.rb stop"
+  start program = "/usr/bin/env PATH=/usr/local/bin:$PATH HOME=$current_path$/../../ RAILS_ENV=production bundle exec ruby $current_path$/messaging/jabber_control.rb start"
+  stop program  = "/usr/bin/env PATH=/usr/local/bin:$PATH HOME=$current_path$/../../ RAILS_ENV=production bundle exec ruby $current_path$/messaging/jabber_control.rb stop"
   if 10 restarts within 10 cycles then timeout
 
 
