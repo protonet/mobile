@@ -24,6 +24,9 @@ class TweetsController < ApplicationController
   end
 
   def create
+    # monkey solution for exception, jelveh pls check
+    params[:tweet].delete(:avatar)
+    
     author = current_user.display_name
     channel_ids = params[:mentioned_channel_ids] ? 
       ([params[:message_channel_id]] | params[:mentioned_channel_ids]) : [params[:message_channel_id]]

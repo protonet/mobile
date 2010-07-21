@@ -5,21 +5,20 @@
 //= require "../utils/highlight_replies.js"
 //= require "../utils/template.js"
 //= require "../utils/parse_query_string.js"
-//= require "../utils/to_query_string.js"
 
 /**
  * @example
  *    // only render meep
- *    new protonet.controls.Meep({ message: "foo", author: "john.doe" }).render();
+ *    new protonet.timeline.Meep({ message: "foo", author: "john.doe" }).render("#container");
  *
  *    // render and post meep (to server)
- *    new protonet.controls.Meep({ message: "foo", author: "john.doe" }).render().post();
+ *    new protonet.timeline.Meep({ message: "foo", author: "john.doe" }).render("#container").post(callback);
  *    
  *    // render and post meep, based on a form element
  *    var myMeepForm = $("form.meep");
- *    new protonet.controls.Meep(myMeepForm).render().post();
+ *    new protonet.timeline.Meep(myMeepForm).render("#container").post(callback);
  */
-protonet.controls.Meep = function(dataOrForm) {
+protonet.timeline.Meep = function(dataOrForm) {
   var isFormElement = dataOrForm.jquery;
   if (isFormElement) {
     this.queryString = dataOrForm.serialize();
@@ -30,7 +29,7 @@ protonet.controls.Meep = function(dataOrForm) {
   }
 };
 
-protonet.controls.Meep.prototype = {
+protonet.timeline.Meep.prototype = {
   /**
    * Configuration
    */
@@ -67,10 +66,10 @@ protonet.controls.Meep.prototype = {
   },
   
   post: function(onSuccess, onFailure) {
-    $.post({
+    $.ajax({
       url:        this.config.POST_URL,
-      method:     "POST",
-      parameters: this.queryString || protonet.utils.toQueryString({ tweet: this.data }),
+      type:       "POST",
+      data:       this.queryString || $.param({ tweet: this.data }),
       success:    onSuccess,
       error:      onFailure
     });

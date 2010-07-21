@@ -1,8 +1,8 @@
-protonet.controls.Channels = {
+protonet.timeline.Channels = {
   subModules: {},
   
   initialize: function(data) {
-    this.container        = $("#feed-holder");
+    this.container        = $("#timeline");
     this.channelLinks     = $("#channels li");
     this.data             = data;
     this.selected         = parseInt(this.channelLinks.filter(".active").attr("data-channel-id"), 10);
@@ -23,26 +23,24 @@ protonet.controls.Channels = {
       event.preventDefault();
       event.stopPropagation();
     }.bind(this));
+    
+    protonet.Notifications.bind("channel.rendered", function(e, channelList, data, instance) {
+      this.subModules[data.id] = instance;
+    }.bind(this));
   },
   
   _renderChannelLists: function() {
     this.data.chunk(function(channelData) {
-      var isSelected = this.selected == channelData,
+      var isSelected = this.selected == channelData.id,
           link       = this.channelLinks.filter("[data-channel-id=" + channelData.id + "]");
-      this.subModules[channelData.id] = new this.Channel(channelData, link, this.container, isSelected).render();
+      new this.Channel(channelData, link, isSelected).render(this.container);
     }.bind(this));
   },
   
   select: function(id) {
     this.selected = id;
-    this.slideTo(id);
     
     protonet.Notifications.trigger("channel.changed", id);
-  },
-  
-  slideTo: function(id) {
-    var channelList = this.subModules[id].channelList;
-    this.container.css("left", -channelList.position().left);
   },
   
   getDownCaseMapping: function() {

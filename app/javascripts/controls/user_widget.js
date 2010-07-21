@@ -24,7 +24,7 @@ protonet.controls.UserWidget = (function() {
     
     protonet.Notifications.bind('user.added', function(e, msg){
       this.addUserFromMessage(msg);
-      this.filterChannelUsers(protonet.controls.Channels.selected);
+      this.filterChannelUsers(protonet.timeline.Channels.selected);
     }.bind(this));
     
     protonet.Notifications.bind('channel.subscribe channel.unsubscribe', function(e, msg){
@@ -36,14 +36,14 @@ protonet.controls.UserWidget = (function() {
           this.channel_users[msg.channel_id].splice(this.channel_users[msg.channel_id].indexOf(msg.user_id), 1);
           break;
       }
-      this.filterChannelUsers(protonet.controls.Channels.selected);
+      this.filterChannelUsers(protonet.timeline.Channels.selected);
     }.bind(this));
     
     protonet.Notifications.bind('channel.update_subscriptions', function(e, msg){
       for(var i in msg.data) {
         this.channel_users[i] = msg.data[i];
       };
-      this.filterChannelUsers(protonet.controls.Channels.selected);
+      this.filterChannelUsers(protonet.timeline.Channels.selected);
     }.bind(this));
         
     protonet.Notifications.bind("channel.changed", function(e, id) {

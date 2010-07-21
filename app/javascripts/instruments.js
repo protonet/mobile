@@ -3,13 +3,13 @@
 //= require "effects/clouds.js"
 //= require "dispatching/dispatching_system.js"
 //= require "controls/communication_console.js"
-//= require "controls/timeline.js"
 //= require "controls/file_widget.js"
 //= require "controls/endless_scroller.js"
 //= require "controls/user_widget.js"
 //= require "controls/pretty_date.js"
 //= require "controls/fluid.js"
-//= require "text_extensions/main.js"
+//= require "timeline/timeline.js"
+//= require "text_extensions/text_extensions.js"
 //= require "lib/jQuery.dPassword.js"
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
@@ -25,7 +25,7 @@ $(function() {
   protonet.globals.communicationConsole = new protonet.controls.CommunicationConsole();
   protonet.globals.dispatcher           = new protonet.dispatching.DispatchingSystem();
   
-  protonet.controls.Timeline.initialize();
+  protonet.timeline.initialize();
 });
 
 // Initialize file stuff
@@ -46,15 +46,15 @@ $(function() {
 
 // Frickin' stunning cloud animation (makes your squirrel run in circles!!)
 $(function() {
-  protonet.globals.clouds = new protonet.effects.Clouds($("#cloud-container"), {
-    minStartPosition: -20,
-    maxStartPosition: 90,
-    minSize:          10,
-    maxSize:          60,
-    minSpeed:         1,
-    maxSpeed:         1.5,
-    amount:           15
-  });
+  // protonet.globals.clouds = new protonet.effects.Clouds($("#cloud-container"), {
+  //   minStartPosition: -20,
+  //   maxStartPosition: 90,
+  //   minSize:          10,
+  //   maxSize:          60,
+  //   minSpeed:         1,
+  //   maxSpeed:         1.5,
+  //   amount:           15
+  // });
 });
 
 // Initialize fluid if the app is running in a fluid container

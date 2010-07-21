@@ -83,7 +83,7 @@ protonet.controls.CommunicationConsole.prototype = {
   },
   
   _notification: function(e, channelId, message) {
-    var currentChannelId = protonet.controls.Channels.selected;
+    var currentChannelId = protonet.timeline.Channels.selected;
     channelId = channelId || currentChannelId;
     var isCurrentChannel = channelId == currentChannelId;
     var isAllowedToPlaySound = protonet.user.Config.get("sound");

@@ -1,7 +1,6 @@
 //= require "meep.js"
 
-protonet.controls.Channels.Channel = function(data, link, container, isSelected) {
-  this.container  = container;
+protonet.timeline.Channels.Channel = function(data, link, isSelected) {
   this.link       = link;
   this.data       = data;
   this.$window    = $(window);
@@ -11,7 +10,7 @@ protonet.controls.Channels.Channel = function(data, link, container, isSelected)
   this._observe();
 };
 
-protonet.controls.Channels.Channel.prototype = {
+protonet.timeline.Channels.Channel.prototype = {
   _observe: function() {
     /**
      * Store new meep in data obj
@@ -29,8 +28,8 @@ protonet.controls.Channels.Channel.prototype = {
         return;
       }
       
-      var channelPositionTop = channel.offset().top,
-          scrollPositionTop  = $window.scrollTop();
+      var channelPositionTop = this.channelList.offset().top,
+          scrollPositionTop  = this.$window.scrollTop();
           offset             = 40;
       if (scrollPositionTop > (channelPositionTop + offset)) {
         var meepHeight = meepElement.outerHeight(true);
@@ -43,15 +42,29 @@ protonet.controls.Channels.Channel.prototype = {
      */
     protonet.Notifications.bind("channel.changed", function(e, channelId) {
       this.isSelected = channelId == this.data.id;
-      this.isSelected ? this.link.addClass("active") : this.link.removeClass("active");
+      this.toggle();
     }.bind(this));
   },
   
-  render: function() {
+  toggle: function() {
+    if (this.isSelected) {
+      this.channelList.show();
+      this.link.addClass("active");
+    } else {
+      this.channelList.hide();
+      this.link.removeClass("active");
+    }
+    
+    return this;
+  },
+  
+  render: function(container) {
     this.channelList = $("<ul />", {
       "class":            "meeps",
       "data-channel-id":  this.data.id
-    }).appendTo(this.container).data({ channel: this.data, instance: this });
+    }).appendTo(container).data({ channel: this.data, instance: this });
+    
+    this.toggle();
     
     this._renderMeeps(this.data.meeps);
     
@@ -66,7 +79,7 @@ protonet.controls.Channels.Channel.prototype = {
      * Chunking needed to avoid ui blocking while rendering
      */
     meeps.reverse().chunk(function(meep) {
-      new protonet.controls.Meep(meep).render(this.channelList);
+      new protonet.timeline.Meep(meep).render(this.channelList);
     }.bind(this), function() {
       protonet.Notifications.trigger("channel.rendered", [this.channelList, this.data, this]);
     }.bind(this));

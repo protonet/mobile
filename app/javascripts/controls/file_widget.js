@@ -7,7 +7,7 @@ protonet.controls.FileWidget = function() {
   this.hierarchy_bar    = this.wrapper.find("#file-navigation .hierarchy");
   
   // get channel id upon instantiation
-  this.currentChannelId = protonet.controls.Channels.selected;
+  this.currentChannelId = protonet.timeline.Channels.selected;
   
   this.observeBackButton();
   this.observeFolderCreateButton();

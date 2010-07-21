@@ -206,15 +206,6 @@
   background: hsl(0, 0%, 90%);
 }
 
-.text-extension-results.images .media a:nth-child(4n) img,
-.text-extension-results.images .media a:nth-child(4n-1) img {
-  right: 0;
-}
-
-.text-extension-results.images .media a:nth-child(4n+1) {
-  clear: left;
-}
-
 .text-extension-results.images .title {
   clear: both;
 }

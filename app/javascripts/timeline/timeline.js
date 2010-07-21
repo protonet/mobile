@@ -1,5 +1,3 @@
-//= require "channels.js"
-
 /**
  * TODO (project: pre-timesquare):
  *  - endless scrolling
@@ -11,7 +9,7 @@
  *  - documentation
  *  - remove slide logic/html
  */
-protonet.controls.Timeline = {
+protonet.timeline = {
   initialize: function() {
     this.load();
   },
@@ -29,6 +27,8 @@ protonet.controls.Timeline = {
   _initChannels: function(channelData) {
     this.data = channelData;
     
-    protonet.controls.Channels.initialize(channelData);
+    protonet.timeline.Channels.initialize(channelData);
   }
 };
+
+//= require "channels.js"

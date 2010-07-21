@@ -5,7 +5,7 @@ protonet.controls.EndlessScroller = (function() {
       REG_EXP_TWEET_INDEX = /tweet-(\d*)-(\d*)/;
   
   function EndlessScroller() {
-    this.channelId = protonet.controls.Channels.selected;
+    this.channelId = protonet.timeline.Channels.selected;
     this._observe();
     
     protonet.Notifications.bind("channel.changed", function(e, newChannelId) {
