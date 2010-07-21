@@ -16,6 +16,7 @@ gem "rack"
 gem "fleximage"
 gem "capistrano"
 gem "capistrano-ext"
+gem "bundler"
 
 group :production do
   gem "passenger"
