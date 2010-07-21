@@ -8,19 +8,19 @@ dependencies:
     group: 
     - :default
     version: ">= 0"
-  ruby-net-ldap: 
-    group: 
-    - :default
-    version: ">= 0"
   rails: 
     group: 
     - :default
     version: = 2.3.5
-  sqlite3-ruby: 
+  ruby-net-ldap: 
     group: 
     - :default
     version: ">= 0"
   sprockets: 
+    group: 
+    - :default
+    version: ">= 0"
+  sqlite3-ruby: 
     group: 
     - :default
     version: ">= 0"
@@ -48,11 +48,7 @@ dependencies:
     group: 
     - :production
     version: ">= 0"
-  configatron: 
-    group: 
-    - :default
-    version: ">= 0"
-  eventmachine: 
+  capistrano-ext: 
     group: 
     - :default
     version: ">= 0"
@@ -60,7 +56,11 @@ dependencies:
     group: 
     - :default
     version: ">= 0"
-  capistrano-ext: 
+  eventmachine: 
+    group: 
+    - :default
+    version: ">= 0"
+  configatron: 
     group: 
     - :default
     version: ">= 0"
@@ -76,14 +76,18 @@ dependencies:
     group: 
     - :cucumber
     version: ">= 0"
-  tmm1-amqp: 
-    group: 
-    - :default
-    version: ">= 0"
   rmagick: 
     group: 
     - :default
     version: = 2.12.2
+  tmm1-amqp: 
+    group: 
+    - :default
+    version: ">= 0"
+  bundler: 
+    group: 
+    - :default
+    version: ">= 0"
   pickle: 
     group: 
     - :cucumber
@@ -127,8 +131,10 @@ specs:
     version: 1.0.12
 - aws-s3: 
     version: 0.6.2
+- bundler: 
+    version: 0.9.25
 - highline: 
-    version: 1.5.2
+    version: 1.6.1
 - net-ssh: 
     version: 2.0.23
 - net-scp: 
@@ -138,7 +144,7 @@ specs:
 - net-ssh-gateway: 
     version: 1.0.1
 - capistrano: 
-    version: 2.5.18
+    version: 2.5.19
 - capistrano-ext: 
     version: 1.2.1
 - culerity: 
@@ -151,10 +157,12 @@ specs:
     version: 0.6.3
 - json_pure: 
     version: 1.4.3
+- rubyzip: 
+    version: 0.9.4
 - selenium-webdriver: 
-    version: 0.0.20
+    version: 0.0.26
 - capybara: 
-    version: 0.3.8
+    version: 0.3.9
 - columnize: 
     version: 0.3.1
 - yamler: 
@@ -166,21 +174,21 @@ specs:
 - trollop: 
     version: 1.16.2
 - gherkin: 
-    version: 1.0.30
+    version: 2.1.5
 - term-ansicolor: 
     version: 1.0.5
 - cucumber: 
-    version: 0.8.0
+    version: 0.8.5
 - cucumber-rails: 
     version: 0.3.2
 - daemons: 
-    version: 1.0.10
+    version: 1.1.0
 - database_cleaner: 
     version: 0.5.2
 - eventmachine: 
     version: 0.12.10
 - factory_girl: 
-    version: 1.2.4
+    version: 1.3.1
 - faker: 
     version: 0.3.1
 - fastthread: 
@@ -198,9 +206,9 @@ specs:
 - mocha: 
     version: 0.9.8
 - passenger: 
-    version: 2.2.14
+    version: 2.2.15
 - pickle: 
-    version: 0.2.11
+    version: 0.3.0
 - rails: 
     version: 2.3.5
 - random_data: 
@@ -214,10 +222,10 @@ specs:
 - sprockets: 
     version: 1.0.2
 - sqlite3-ruby: 
-    version: 1.3.0
+    version: 1.3.1
 - tmm1-amqp: 
     version: 0.6.4
-hash: d900934ece8821b059cae6612041a2e393529b6e
+hash: 28d95352e43bdabec6854b371dc3bd917d81d434
 sources: 
 - Rubygems: 
     uri: http://gemcutter.org
