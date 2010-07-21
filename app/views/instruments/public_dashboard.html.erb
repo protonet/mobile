@@ -8,6 +8,8 @@
   <%- form_for :tweet, :url => tweets_path, :html => { :id => "message-form" } do |f| -%>
     <%= f.hidden_field("channel_id", :name => "message_channel_id", :value => @active_channel.id, :autocomplete => "off") %>
     <%= f.hidden_field(:socket_id) %>
+    <%= f.hidden_field(:avatar, :value => current_user.active_avatar_url) %>
+    <%= f.hidden_field(:author, :value => current_user.display_name) %>
     <%= f.hidden_field(:text_extension, :id => 'text-extension-input', :value => "", :autocomplete => "off") %>
     <%= f.text_area(:message, :id => 'message', :title => message_hint) %>
     <div id="text-extension-preview">

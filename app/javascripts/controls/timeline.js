@@ -9,6 +9,7 @@
  *  - meep sending via ajax/dispatcher
  *  - channel notifications
  *  - documentation
+ *  - remove slide logic/html
  */
 protonet.controls.Timeline = {
   initialize: function() {
