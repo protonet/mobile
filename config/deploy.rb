@@ -82,6 +82,7 @@ namespace :bundler do
 end
 
 # HOOKS
+after "deploy:setup", "deploy:prepare"
 after "deploy:update_code", "bundler:bundle_new_release"
 after "deploy:finalize_update", "deploy:copy_stage_config"
 after "deploy:finalize_update", "deploy:create_protonet_symlinks"
