@@ -13,6 +13,7 @@ class InstrumentsController < ApplicationController
   def public_dashboard
     @channels = current_user.channels
     @asset = Asset.new
+    @home  = Channel.home # this needs refactoring isn't necessary here but needed on first start since otherwise the channel won't be there
     @active_channel = params[:channel_id] ? Channel.find(params[:channel_id]) : @channels.first
     
     render 'public_dashboard'
