@@ -1,9 +1,10 @@
 #!/bin/bash
 
 export RAILS_ENV=$1
-export HOME=$2
+export CURRENT_PATH=$2
+export HOME=$CURRENT_PATH/../..
 shift 2
-. $HOME/.bashrc
-. $HOME/.profile
-
+. $HOME/../.bashrc
+. $HOME/../.profile
+cd $CURRENT_PATH
 bundle exec ruby $@
