@@ -1,0 +1,7 @@
+#!/bin/bash
+
+export RAILS_ENV=$1
+export HOME=$2
+shift 2
+. ~/.profile
+exec "bundle exec ruby $@"

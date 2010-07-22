@@ -112,8 +112,8 @@ allow protonet:admin     # user name and password for authentication.
 #    
 
 check process js_dispatching_control.rb with pidfile $shared_path$/pids/js_dispatching_server.rb.pid
-  start program = "/usr/bin/env PATH=/usr/local/bin:$PATH HOME=$current_path$/../../ RAILS_ENV=production bundle exec ruby $current_path$/messaging/js_dispatching_control.rb start"
-  stop program  = "/usr/bin/env PATH=/usr/local/bin:$PATH HOME=$current_path$/../../ RAILS_ENV=production bundle exec ruby $current_path$/messaging/js_dispatching_control.rb stop"
+  start program = "$current_path$/script/monit_exec production $current_path$/../../ $current_path$/messaging/js_dispatching_control.rb start"
+  stop program  = "$current_path$/script/monit_exec production $current_path$/../../ $current_path$/messaging/js_dispatching_control.rb stop"
   if 3 restarts within 5 cycles then timeout
 
 check process jabber_control.rb with pidfile $shared_path$/pids/jabber_control.rb.pid
