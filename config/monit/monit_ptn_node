@@ -129,3 +129,7 @@ check process jabber_control.rb with pidfile $shared_path$/pids/jabber_control.r
    stop program  = "/etc/init.d/apache2 stop"
    if totalmem > 500.0 MB for 5 cycles then restart
    if children > 250 then restart
+
+ check process rabbitmq with pidfile /var/run/rabbitmq.pid
+   start program = "/etc/init.d/rabbitmq-server start"
+   stop program = "/etc/init.d/rabbitmq-server stop"
