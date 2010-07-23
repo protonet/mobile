@@ -1,6 +1,6 @@
 var events = require('events'),
     sys = require('sys'),
-    net = require('net'),  // requires ry/master@cc053e or later
+    net = require('net'),
     protocol = require('./amqp-definitions-0-8'),
     Buffer = require('buffer').Buffer,
     Promise = require('./promise').Promise;
@@ -138,7 +138,6 @@ function AMQPParser (version, type) {
   this.frameHeader.used = 0;
 }
 
-__data = null;
 
 // Everytime data is recieved on the socket, pass it to this function for
 // parsing.
@@ -146,7 +145,6 @@ AMQPParser.prototype.execute = function (data) {
   // This function only deals with dismantling and buffering the frames.
   // It delegats to other functions for parsing the frame-body.
   debug('execute: ' + data.toString());
-  __data = data;
   for (var i = 0; i < data.length; i++) {
     switch (this.state) {
       case 'frameHeader':
@@ -289,7 +287,7 @@ function parseSignedInteger (buffer) {
 
 
 function parseTable (buffer) {
-  var length = parseInt(buffer, 4);
+  var length = buffer.read + parseInt(buffer, 4);
   var table = {};
   while (buffer.read < length) {
     var field = parseShortString(buffer);
@@ -681,11 +679,12 @@ function Connection (options) {
 
   var self = this;
 
-
-  this.options = options || {};
+  this.setOptions(options);
 
   var state = 'handshake';
   var parser;
+
+  this._defaultExchange = null;
 
   self.addListener('connect', function () {
     // channel 0 is the control channel.
@@ -733,12 +732,14 @@ function Connection (options) {
   });
 
   self.addListener('end', function () {
+    self.end();
     // in order to allow reconnects, have to clear the
     // state.
     parser = null;
   });
 }
 sys.inherits(Connection, net.Stream);
+exports.Connection = Connection;
 
 
 var defaultOptions = { host: 'localhost'
@@ -750,11 +751,16 @@ var defaultOptions = { host: 'localhost'
 
 
 exports.createConnection = function (options) {
-  var o  = {};
-  mixin(o, defaultOptions, options);
-  var c = new Connection(o);
-  c.connect(o.port, o.host);
+  var c = new Connection();
+  c.setOptions(options);
+  c.reconnect();
   return c;
+};
+
+Connection.prototype.setOptions = function (options) {
+  var o  = {};
+  mixin(o, defaultOptions, options || {});
+  this.options = o;
 };
 
 Connection.prototype.reconnect = function () {
@@ -1009,7 +1015,7 @@ Connection.prototype._sendBody = function (channel, body, properties) {
 
     debug('sending json: ' + jsonBody);
 
-    mixin(properties, {contentType: 'text/json' });
+    properties = mixin({contentType: 'text/json' }, properties);
 
     sendHeader(this, channel, length, properties);
 
@@ -1034,10 +1040,20 @@ Connection.prototype._sendBody = function (channel, body, properties) {
 // - durable (boolean)
 // - exclusive (boolean)
 // - autoDelete (boolean, default true)
-Connection.prototype.queue = function (name, options) {
+Connection.prototype.queue = function (name /* , options, openCallback */) {
   if (this.queues[name]) return this.queues[name];
   var channel = this.channels.length;
-  var q = new Queue(this, channel, name, options);
+
+  var options, callback;
+  if (typeof arguments[1] == 'object') {
+    options = arguments[1];
+    callback = arguments[2];
+  } else {
+    callback = arguments[1];
+  }
+
+
+  var q = new Queue(this, channel, name, options, callback);
   this.channels.push(q);
   this.queues[name] = q;
   return q;
@@ -1062,6 +1078,12 @@ Connection.prototype.exchange = function (name, options) {
   this.channels.push(exchange);
   this.exchanges[name] = exchange;
   return exchange;
+};
+
+// Publishes a message to the amq.topic exchange.
+Connection.prototype.publish = function (routingKey, body) {
+  if (!this._defaultExchange) this._defaultExchange = this.exchange();
+  return this._defaultExchange.publish(routingKey, body);
 };
 
 
@@ -1164,21 +1186,30 @@ Channel.prototype._handleTaskReply = function (channel, method, args) {
 
 
 
-function Queue (connection, channel, name, options) {
+function Queue (connection, channel, name, options, callback) {
   Channel.call(this, connection, channel);
 
   this.name = name;
 
   this.options = { autoDelete: true };
   if (options) mixin(this.options, options);
+
+  this._openCallback = callback;
 }
 sys.inherits(Queue, Channel);
 
 
-Queue.prototype.subscribe = function (messageListener, options) {
-  this.addListener('message', messageListener);
+Queue.prototype.subscribeRaw = function (/* options, messageListener */) {
   var self = this;
-  options = options || {};
+
+  var messageListener = arguments[arguments.length-1];
+  this.addListener('rawMessage', messageListener);
+
+  var options = { };
+  if (typeof arguments[0] == 'object') {
+    mixin(options, arguments[0]);
+  }
+
   return this._taskPush(methods.basicConsumeOk, function () {
     self.connection._sendMethod(self.channel, methods.basicConsume,
         { ticket: 0
@@ -1194,7 +1225,7 @@ Queue.prototype.subscribe = function (messageListener, options) {
 };
 
 
-Queue.prototype.subscribeJSON = function (/* options, messageListener */) {
+Queue.prototype.subscribe = function (/* options, messageListener */) {
   var self = this;
 
   var messageListener = arguments[arguments.length-1];
@@ -1204,7 +1235,7 @@ Queue.prototype.subscribeJSON = function (/* options, messageListener */) {
     if (arguments[0].ack) options.ack = true;
   }
 
-  this.addListener('jsonMessage', messageListener);
+  this.addListener('message', messageListener);
 
   if (options.ack) {
     this._taskPush(methods.basicQosOk, function () {
@@ -1218,24 +1249,49 @@ Queue.prototype.subscribeJSON = function (/* options, messageListener */) {
   }
 
   // basic consume
-  return this.subscribe(function (m) {
-    // if (m.contentType != 'text/json') return;
-    var b = "";
+  var rawOptions = { noAck: !options.ack };
+  return this.subscribeRaw(rawOptions, function (m) {
+    var isJSON = (m.contentType == 'text/json') || (m.contentType == 'application/json');
+
+    var b;
+
+    if (isJSON) {
+      b = ""
+    } else {
+      b = new Buffer(m.size);
+      b.used = 0;
+    }
 
     self._lastMessage = m;
 
     m.addListener('data', function (d) {
-      b += d.toString();
+      if (isJSON) {
+        b += d.toString();
+      } else {
+        d.copy(b, b.used);
+        b.used += d.length;
+      }
     });
 
     m.addListener('end', function () {
-      var json = JSON.parse(b);
+      var json;
+      if (isJSON) {
+        json = JSON.parse(b);
+      } else {
+        json = { data: b, contentType: m.contentType };
+      }
+
       json._routingKey = m.routingKey;
-      self.emit('jsonMessage', json);
+      json._deliveryTag = m.deliveryTag;
+
+
+      self.emit('message', json);
       if (!options.ack) m.acknowledge();
     });
-  }, { noAck: !options.ack });
+  });
 };
+Queue.prototype.subscribeJSON = Queue.prototype.subscribe;
+
 
 /* Acknowledges the last message */
 Queue.prototype.shift = function () {
@@ -1245,8 +1301,24 @@ Queue.prototype.shift = function () {
 };
 
 
-Queue.prototype.bind = function (exchange, routingKey) {
+Queue.prototype.bind = function (/* [exchange,] routingKey */) {
   var self = this;
+
+  // The first argument, exchange is optional.
+  // If not supplied the connection will use the default 'amq.topic'
+  // exchange.
+ 
+  var exchange, routingKey;
+
+  if (arguments.length == 2) {
+    exchange = arguments[0];
+    routingKey = arguments[1];
+  } else {
+    exchange = 'amq.topic';   
+    routingKey = arguments[0];
+  }
+
+
   return this._taskPush(methods.queueBindOk, function () {
     var exchangeName = exchange instanceof Exchange ? exchange.name : exchange;
     self.connection._sendMethod(self.channel, methods.queueBind,
@@ -1297,6 +1369,11 @@ Queue.prototype._onMethod = function (channel, method, args) {
 
     case methods.queueDeclareOk:
       this.state = 'open';
+      if (this._openCallback) {
+        this._openCallback(args.messageCount, args.consumerCount);
+        this._openCallback = null;
+      }
+      // TODO this is legacy interface, remove me
       this.emit('open', args.messageCount, args.consumerCount);
       break;
 
@@ -1304,6 +1381,9 @@ Queue.prototype._onMethod = function (channel, method, args) {
       break;
 
     case methods.queueBindOk:
+      break;
+
+    case methods.basicQosOk:
       break;
 
     case methods.channelClose:
@@ -1334,7 +1414,7 @@ Queue.prototype._onContentHeader = function (channel, classInfo, weight, propert
   this.currentMessage.read = 0;
   this.currentMessage.size = size;
 
-  this.emit('message', this.currentMessage);
+  this.emit('rawMessage', this.currentMessage);
 };
 
 
@@ -1390,6 +1470,11 @@ Exchange.prototype._onMethod = function (channel, method, args) {
         sys.puts('Unhandled channel error: ' + args.replyText);
       }
       this.emit('close', e);
+      break;
+
+    case methods.basicReturn:
+      sys.puts("Warning: Uncaught basicReturn: "+JSON.stringify(args));
+      this.emit('basicReturn', args);
       break;
 
     default:
