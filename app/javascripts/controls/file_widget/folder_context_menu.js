@@ -21,6 +21,9 @@ protonet.controls.FileWidget.prototype.FolderContextMenu.prototype = {
     var self = this;
     this.folders.die("click").live("click", function(event) {
       event.preventDefault();
+    });
+    this.folders.die("dblclick").live("dblclick", function(event) {
+      event.preventDefault();
       self.open($(this));
     });
   },
