@@ -17,6 +17,7 @@ gem "fleximage", "1.0.4"
 gem "capistrano", "2.5.19"
 gem "capistrano-ext", "1.2.1"
 gem "bundler"
+gem "daemon_controller", "0.2.5"
 
 group :production do
   gem "passenger", "2.2.15"

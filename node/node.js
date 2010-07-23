@@ -1,10 +1,12 @@
 var sys = require("sys");
-
+var fs  = require("fs");
 
 /*----------------------------------- SOCKET TASKS -----------------------------------*/
 var amqp = require('./modules/node-amqp/amqp');
-
 connection = amqp.createConnection({ host: "localhost" });
+connection.addListener("error", function(){
+  console.log("error trying to reach the rabbit, please start your rabbitmq-server");
+});
 connection.addListener("ready", function() {
   var exchange      = connection.exchange("system"),
       userExchange  = connection.exchange("users"),
@@ -33,9 +35,6 @@ connection.addListener("ready", function() {
 });
 
 
-
-
-
 /*----------------------------------- HTTP TASKS -----------------------------------*/
 var http      = require("http"),
     parseUrl  = require("url").parse;
@@ -53,7 +52,24 @@ http.createServer(function(request, response) {
 }).listen(8124);
 
 
-sys.puts("started");
+/*----------------------------------- STARTUP STUFF -----------------------------------*/
+var tmp_file = 'tmp/pids/node.pid'
+fs.writeFile(tmp_file, process.pid.toString(), function (err) {
+  if (err) throw err;
+  console.log('Pid-file saved!');
+});
+sys.puts("started with pid: " + tmp_file);
+
+var stdin = process.openStdin();
+
+function shutdownTasks() {
+  console.log('Cleaning pid file.');
+  fs.unlinkSync(tmp_file);
+  process.exit(0);
+}
+process.addListener('SIGINT',  shutdownTasks);
+process.addListener('SIGKILL', shutdownTasks);
+process.addListener('SIGTERM', shutdownTasks);
 
 // how to use node background workers:
 // protonet.Notifications.bind('workdone', function(e, msg){ console.log(e, msg) })
