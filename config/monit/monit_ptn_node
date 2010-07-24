@@ -17,7 +17,7 @@
 ## Start monit in background (run as daemon) and check the services at 2-minute
 ## intervals.
 #
-set daemon  60
+set daemon  30
 #
 #
 ## Set syslog logging with the 'daemon' facility. If the FACILITY option is
@@ -114,6 +114,12 @@ allow protonet:admin     # user name and password for authentication.
 check process js_dispatching_control.rb with pidfile $shared_path$/pids/js_dispatching_server.rb.pid
   start program = "$current_path$/script/monit_exec production $current_path$ $current_path$/messaging/js_dispatching_control.rb start"
   stop program  = "$current_path$/script/monit_exec production $current_path$ $current_path$/messaging/js_dispatching_control.rb stop"
+  if 3 restarts within 5 cycles then timeout
+  if totalmem > 200.0 MB for 2 cycles then restart
+
+check process node.js with pidfile $shared_path$/pids/node.pid
+  start program = "node $current_path$/node/node.js"
+  stop program  = "kill `cat $shared_path$/pids/node.pid`"
   if 3 restarts within 5 cycles then timeout
   if totalmem > 200.0 MB for 2 cycles then restart
 
