@@ -15,4 +15,12 @@ class NetworksController < ApplicationController
     ], :name => network.name, :type => 'cloud'}
   end
   
+  def join
+    
+  end
+  
+  def leave
+    
+  end
+  
 end
