@@ -2,12 +2,15 @@ module System
   class FilesController < ApplicationController
   
     def index
+      @channels = current_user.channels
+      @active_channel = params[:channel_id] ? Channel.find(params[:channel_id]) : @channels.first
+      
       raw_files = FileSystem.all(params['path'])
       @files = raw_files.collect do |k,v|
         {:type => k, :name => v}
       end
       respond_to do |format|
-        format.html # new.html.erb
+        format.html
         format.js  { render :json => @files }
       end
     end
