@@ -40,8 +40,8 @@ button::-moz-focus-inner {
   -webkit-border-radius: 1em;
   background: -moz-linear-gradient(100% 100% 90deg, rgba(0, 0, 0, 0.1), transparent);
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.1)));
-  border-radius: 1em;
   border: 1px solid rgb(180, 180, 180);
+  border-radius: 1em;
   margin: 0 20px 15px 45px;
   padding: 10px;
   position: relative;
@@ -58,15 +58,16 @@ button::-moz-focus-inner {
 }
 
 .meeps article {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgb(180, 180, 180);
+  background: none;
   display: block;
   margin: 0 0 5px;
   padding: 0 0 5px;
 }
 
 .meeps article:nth-last-child(2) {
+  border-bottom: 0;
   background: url("/img/icn_message_arrow.png") no-repeat left bottom;
-  border: 0;
   margin: 0 0 0 -25px;
   padding: 0 0 0 25px;
 }

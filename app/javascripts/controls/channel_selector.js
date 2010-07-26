@@ -1,4 +1,4 @@
-//= require "../utils/add_slashes"
+//= require "../utils/add_slashes.js"
 
 protonet.controls.ChannelSelector = function() {
   this.channelInput   = $("#tweet_channel_id");

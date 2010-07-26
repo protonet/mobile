@@ -9,7 +9,10 @@ protonet.controls.PrettyDate = (function() {
   function initialize() {
     setInterval(updateAll, INTERVAL);
     
-    protonet.Notifications.bind("meep.rendered", function(e, meepElement) {
+    protonet.Notifications.bind("meep.rendered", function(e, meepElement, meepData, instance) {
+      if (instance.merged) {
+        return;
+      }
       var timeElement = meepElement.find("time");
       register(timeElement);
       update(timeElement);

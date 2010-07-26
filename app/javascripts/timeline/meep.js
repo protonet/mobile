@@ -17,9 +17,13 @@
  *    // render and post meep, based on a form element
  *    var myMeepForm = $("form.meep");
  *    new protonet.timeline.Meep(myMeepForm).render("#container").post(callback);
+ *
+ *    // merge with last meep and post
+ *    var meep = $("#meeps li:first");
+ *    new protonet.timeline.Meep({ message: "foo", author: "christopher.blum"}).mergeWith(meep).post(callback);
  */
 protonet.timeline.Meep = function(dataOrForm) {
-  var isFormElement = dataOrForm.jquery;
+  var isFormElement = dataOrForm.jquery && dataOrForm.attr;
   if (isFormElement) {
     this.queryString = dataOrForm.serialize();
     this.data = protonet.utils.parseQueryString(this.queryString).tweet;
@@ -56,13 +60,31 @@ protonet.timeline.Meep.prototype = {
   },
   
   render: function(channelList) {
+    this._render("meep-template", channelList);
+    return this;
+  },
+  
+  mergeWith: function(meepToMergeWith) {
+    this.merged = true;
+    
+    this._render("meep-to-merge-template", meepToMergeWith);
+    this.element = meepToMergeWith;
+    
+    return this;
+  },
+  
+  /**
+   * Private, please use public "render" or "mergeWith"
+   */
+  _render: function(template, container) {
     $.extend(this.data, { converted_message: this._convertMessage(this.data.message) });
     
-    this.element = new protonet.utils.Template("meep-template", this.data).toElement()
-      .data({ meep: this.data, instance: this }).prependTo(channelList);
+    this.element = new protonet.utils.Template(template, this.data)
+      .toElement()
+      .data({ meep: this.data, instance: this })
+      .prependTo(container);
     
     protonet.Notifications.trigger("meep.rendered", [this.element, this.data, this]);
-    return this;
   },
   
   post: function(onSuccess, onFailure) {
@@ -75,7 +97,6 @@ protonet.timeline.Meep.prototype = {
     });
     
     protonet.Notifications.trigger("meep.sent", [this.element, this.data, this]);
-    
     return this;
   }
 };
