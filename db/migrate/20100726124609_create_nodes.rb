@@ -7,6 +7,9 @@ class CreateNodes < ActiveRecord::Migration
 
       t.timestamps
     end
+
+    add_index :nodes, :name
+    add_index :nodes, :network_id
   end
 
   def self.down
