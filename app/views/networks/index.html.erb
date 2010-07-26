@@ -10,7 +10,8 @@
     <%- @networks.each do |n| -%>
       <li id="network-<%= n.id %>">
         <%= "#{n.name}" %>
-        <%= "<span class=\"control\">#{link_to('OFF', 'foo', :class => 'off', :method => :delete)}</span>" %>
+        <span class="control"><%= link_to('OFF', {:action => 'connect'}, :class => 'off') %></span>
+
       </li>
     <%- end -%>
   </ul>

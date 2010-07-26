@@ -1,18 +1,38 @@
 class NetworksController < ApplicationController
-  
+  #TODO: this needs some sort of per node authentication
+  # otherwise nodes may send leave messages for other nodes
+
   # before_filter :login_required
-  
+
   def index
     @networks = Network.all
   end
-  
+
   def map
     network = Network.first(params[:network_id])
-    render :json => {:nodes => [
-      {:name => "protonet-7.local", :type => 'edge', :clients => [{:name => 'foo'}, {:name => 'bar'}]},
-      {:name => "protonet-4.local", :type => 'edge'},
-      {:name => "protonet-main",    :type => 'supernode'}
-    ], :name => network.name, :type => 'cloud'}
+    nodes = Node.all.collect{|n| {:name => n.name, :type => n.type}}
+    render :json => {
+      :nodes => nodes + [:name => network.name, :type => 'supernode']
+    }
   end
-  
+
+  def join
+    # clients must send a keepalive join otherwise we drop the connection
+    # question if we store the nodes domain name does it mean a dns lookup which
+    # could potentially lockup the rails application?
+    Node.new(:name => request.remote_ip, :type => 'edge').save
+    head :ok
+  end
+
+  def leave
+    node = Node.find_by_name request.remote_ip
+    node.delete if node
+    head :ok
+  end
+
+  def connect
+    network = Network.first
+    Net::HTTP.get_print network.supernode, '/networks/join'
+    redirect_to networks_url
+  end
 end

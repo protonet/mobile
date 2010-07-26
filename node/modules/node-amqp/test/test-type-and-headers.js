@@ -1,7 +1,7 @@
 require('./harness');
-
+// test-type-and-headers.js
 var recvCount = 0;
-var body = "hello world";
+var body = "the devil is in the type, and also in the headers";
 
 connection.addListener('ready', function () {
   puts("connected to " + connection.serverProperties.product);
@@ -14,23 +14,20 @@ connection.addListener('ready', function () {
 
   q.subscribeRaw(function (m) {
     puts("--- Message (" + m.deliveryTag + ", '" + m.routingKey + "') ---");
-    puts("--- contentType: " + m.contentType);
+    puts("--- type: " + m.type);
+    puts("--- headers: " + JSON.stringify(m.headers));
 
     recvCount++;
 
-    assert.equal('text/plain', m.contentType);
-
-    var size = 0;
-    m.addListener('data', function (d) { size += d.length; });
-
-    m.addListener('end', function () {
-      assert.equal(body.length, size);
-      m.acknowledge();
-    });
+    assert.equal('typeProperty', m.type);
+    assert.equal('fooHeader', m.headers['foo']);
   })
   .addCallback(function () {
     puts("publishing message");
-    exchange.publish("message.text", body, {contentType: 'text/plain'});
+    exchange.publish("message.text", body, { 
+		headers: { foo: 'fooHeader' },
+		type: 'typeProperty', 
+	});
 
     setTimeout(function () {
       // wait one second to receive the message, then quit

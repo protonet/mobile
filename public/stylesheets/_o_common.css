@@ -120,9 +120,6 @@ div, button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, 
   position: absolute;
   visibility: hidden;
 }
-.reply {
-
-}
 
 
 /* =CHANNEL
@@ -669,7 +666,7 @@ h2 {
   padding: 0.1em 0.2em;
   width: 260px;
   background-color: white;
-  height: 16px;
+  min-height: 16px;
 }
 
 #file-list .hierarchy a {
@@ -764,20 +761,20 @@ h2 {
 }
 
 .user-messages .reply {
-  padding:0 5px;
-  margin:1px;
+  padding: 0 5px;
+  margin: 1px;
   border: 1px solid #FDAB54;
+  white-space: nowrap;
   -moz-border-radius:10px;
   -webkit-border-radius: 10px;
 }
 
 .user-messages .reply.channel {
   cursor: pointer;
-  padding:0 5px;
-  margin:1px;
-  background-color:#9A9A9A;
-  border: none;
-  color:white;
+  margin: 1px;
+  background-color: #9A9A9A;
+  border: 0;
+  color: #fff;
   text-decoration: none;
   -moz-border-radius:10px;
   -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
@@ -786,12 +783,11 @@ h2 {
 }
 
 .user-messages .reply.to-me {
-  padding:0 5px;
-  margin:1px;
-  background-color:#FDAB54;
+  margin: 1px;
+  background-color: #FDAB54;
   border: none;
-  color:white;
-  -moz-border-radius:10px;
+  color: #fff;
+  -moz-border-radius: 10px;
   -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
   -webkit-border-radius: 10px;
   -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);

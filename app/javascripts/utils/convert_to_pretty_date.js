@@ -49,7 +49,7 @@ protonet.utils.convertToPrettyDate = (function() {
     }
     
     if (difference < ONE_WEEK) {
-      return prepareOutput(DAYS_AGO, Math.floor(difference / ONE_DAY));
+      return prepareOutput(DAYS_AGO, Math.ceil(difference / ONE_DAY));
     }
     
     if (difference < ONE_MONTH) {

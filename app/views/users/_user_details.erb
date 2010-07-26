@@ -8,15 +8,23 @@
 <h4>Created</h4>
 <p><%= user.created_at %></p>
 
-<h4>Edit</h4>
-<div id="edit-<%= user.id %>" class="edit section">
-<% form_for user, :url => { :action => 'update' } do |f| -%>
-  <fieldset>
-    <%= f.hidden_field :id, { :value => user.id, :id => "user-id-#{user.id}" } %>
-    <%= f.text_field :name, { :value => user.name, :id => "user-name-#{user.id}", :title => "Name of the user…" } %>
-    <%= f.text_field :email, { :value => user.email, :id => "user-email-#{user.id}", :title => "E-Mail of the user…" } %>
-    <%= button "Save" %>
-  </fieldset>
+<h4>Admin?</h4>
+<p><%= if user.admin then "jep" else "nope" end %></p>
+
+<h4>Guest?</h4>
+<p><%= if user.guest then "gotcha" else "lord, no!" end %></p>
+
+<% if current_user.admin || user.id == session[:user_id] %>
+	<h4>Edit</h4>
+	<div id="edit-<%= user.id %>" class="edit section">
+	<% form_for user, :url => { :action => 'update' } do |f| -%>
+	  <fieldset>
+	    <%= f.hidden_field :id, { :value => user.id, :id => "user-id-#{user.id}" } %>
+	    <%= f.text_field :name, { :value => user.name, :id => "user-name-#{user.id}", :title => "Name of the user…" } %>
+	    <%= f.text_field :email, { :value => user.email, :id => "user-email-#{user.id}", :title => "E-Mail of the user…" } %>
+	    <%= button "Save" %>
+	  </fieldset>
+	<% end %>
+	</div>
 <% end %>
-</div>
 

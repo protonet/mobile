@@ -6,7 +6,7 @@ class CreateChannels < ActiveRecord::Migration
       t.timestamps
     end
     # create the default home channel
-    Channel.new(:id => 1, :name => 'home', :description => 'your homebase - your node :)').save
+    Channel.home
   end
 
   def self.down

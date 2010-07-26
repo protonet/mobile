@@ -56,10 +56,37 @@ ActiveSupport::JSON.backend = 'JSONGem'
 
 require "#{RAILS_ROOT}/lib/fleximage_ext.rb"
 
-# this starts the eventmachine reactor in a new thread
-# since the Em.run block is blocking until stopped this will ensure
-# that amqp communications are not blocking the app at any time
-Thread.new{ EM.run() } unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(PhusionPassenger)
+
+unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(PhusionPassenger)
+  # this starts the eventmachine reactor in a new thread
+  # since the Em.run block is blocking until stopped this will ensure
+  # that amqp communications are not blocking the app at any time
+  Thread.new{ EM.run() }
+  
+  # this starts up a new node.js instance
+  node = DaemonController.new(
+     :identifier    => 'node.js',
+     :start_command => 'node node/node.js',
+     :ping_command  => lambda { TCPSocket.new('localhost', 8124) },
+     :pid_file      => 'tmp/pids/node.pid',
+     :log_file      => 'log/node.log',
+     :timeout       => 25,
+     :daemonize_for_me => true
+  )
+  node.start
+  
+  # this starts up a new node.js instance
+  js_dispatching_server = DaemonController.new(
+     :identifier    => 'js_dispatching_server',
+     :start_command => 'ruby messaging/js_dispatching_control.rb start',
+     :stop_command  => 'ruby messaging/js_dispatching_control.rb stop',
+     :ping_command  => lambda { TCPSocket.new('localhost', configatron.socket.port) },
+     :pid_file      => 'tmp/pids/js_dispatching_server.rb.pid',
+     :log_file      => 'log/js_dispatching.log',
+     :timeout       => 25
+  )
+  js_dispatching_server.start
+end
 
 if defined?(PhusionPassenger)
     PhusionPassenger.on_event(:starting_worker_process) do |forked|
@@ -74,6 +101,7 @@ if defined?(PhusionPassenger)
 end
 
 unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(PhusionPassenger) || Rails.env == 'cucumber' || Rails.env == 'test'
+
   # Checking all Subsystems
   puts "------------------------"
   puts "Checking all subsystems:"
@@ -85,17 +113,26 @@ unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(Phusio
   configatron.messaging_bus_active = System::MessagingBus.active?
   puts "RABBIT MQ:      #{configatron.messaging_bus_active ? colored_on : colored_off}"
   
-  
+
   # checking on the js dispatching server
-  require 'net/telnet'
   configatron.js_dispatching_active = begin
-    host = Net::Telnet.new({'Host' => '127.0.0.1', 'Port' => configatron.socket.port})
+    host = TCPSocket.new('localhost', configatron.socket.port)
     host.close
     true
   rescue Errno::ECONNREFUSED
     false
   end
   puts "JS DISPATCHING: #{configatron.js_dispatching_active ? "#{colored_on}" : colored_off}"
+  
+  # checking on nodejs
+  configatron.nodejs_active = begin
+    host = TCPSocket.new('localhost', 8124)
+    host.close
+    true
+  rescue Errno::ECONNREFUSED
+    false
+  end
+  puts "NODE JS:        #{configatron.nodejs_active ? "#{colored_on}" : colored_off}"
   
   # checking ldap
   configatron.ldap.active = begin
@@ -105,4 +142,11 @@ unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(Phusio
   
   puts "                        "
   puts "------------------------"
+end
+
+at_exit do
+  puts "shutting down node..."
+  node.stop
+  puts "shutting down the dispatcher"
+  js_dispatching_server.stop
 end
