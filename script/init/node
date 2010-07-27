@@ -8,7 +8,7 @@ shift 1
 cd $CURRENT_PATH
 case $1 in
    start)
-      exec 2>&1 node node/node.js 1>log/node.log &
+      exec 2>&1 /usr/local/bin/node $CURRENT_PATH/node/node.js 1>$CURRENT_PATH/log/node.log &
       ;;
     stop)  
       kill `cat $CURRENT_PATH/tmp/pids/node.pid` ;;
