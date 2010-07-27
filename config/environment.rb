@@ -56,13 +56,18 @@ ActiveSupport::JSON.backend = 'JSONGem'
 
 require "#{RAILS_ROOT}/lib/fleximage_ext.rb"
 
-
 unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(PhusionPassenger)
   # this starts the eventmachine reactor in a new thread
   # since the Em.run block is blocking until stopped this will ensure
   # that amqp communications are not blocking the app at any time
   Thread.new{ EM.run() }
-  
+end
+
+
+################################# CHECK SYSTEMS IN INTERACTIVE (script/server) MODE #######################################
+
+if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER)
+
   # this starts up a new node.js instance
   node = DaemonController.new(
      :identifier    => 'node.js',
@@ -86,22 +91,7 @@ unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(Phusio
      :timeout       => 25
   )
   js_dispatching_server.start
-end
-
-if defined?(PhusionPassenger)
-    PhusionPassenger.on_event(:starting_worker_process) do |forked|
-      require "#{RAILS_ROOT}/lib/rack_ext.rb" # overwrite multipart parsing
-        if forked
-            # We're in smart spawning mode.
-            Thread.new{ EM.run() }
-        else
-            # We're in conservative spawning mode. We don't need to do anything.
-        end
-    end
-end
-
-unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(PhusionPassenger) || Rails.env == 'cucumber' || Rails.env == 'test'
-
+  
   # Checking all Subsystems
   puts "------------------------"
   puts "Checking all subsystems:"
@@ -142,11 +132,31 @@ unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(Phusio
   
   puts "                        "
   puts "------------------------"
+  
 end
 
+###########################################################################################################################
+
+if defined?(PhusionPassenger)
+    PhusionPassenger.on_event(:starting_worker_process) do |forked|
+      require "#{RAILS_ROOT}/lib/rack_ext.rb" # overwrite multipart parsing
+        if forked
+            # We're in smart spawning mode.
+            Thread.new{ EM.run() }
+        else
+            # We're in conservative spawning mode. We don't need to do anything.
+        end
+    end
+end
+
+
 at_exit do
-  puts "shutting down node..."
-  node.stop
-  puts "shutting down the dispatcher"
-  js_dispatching_server.stop
+  if defined?(node) && node
+    puts "shutting down node..."
+    node.stop
+  end
+  if defined?(js_dispatching_server) && js_dispatching_server
+    puts "shutting down the dispatcher"
+    js_dispatching_server.stop
+  end
 end
