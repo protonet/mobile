@@ -1,0 +1,18 @@
+#!/bin/bash
+
+export CURRENT_PATH=$1
+export HOME=$CURRENT_PATH/../..
+shift 1
+. $HOME/../.bashrc
+. $HOME/../.profile
+cd $CURRENT_PATH
+case $1 in
+   start)
+      exec 2>&1 node node/node.js 1>log/node.log &
+      ;;
+    stop)  
+      kill `cat $CURRENT_PATH/tmp/pids/node.pid` ;;
+    *)  
+      echo "usage: node rails-app-path {start|stop}" ;;
+esac
+exit 0
