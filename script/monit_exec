@@ -5,4 +5,5 @@ export HOME=$CURRENT_PATH/../..
 shift 1
 . $HOME/../.bashrc
 . $HOME/../.profile
-$@
+cd $CURRENT_PATH
+exec "$@"
