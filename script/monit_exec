@@ -2,7 +2,7 @@
 
 export CURRENT_PATH=$1
 export HOME=$CURRENT_PATH/../..
-shift 2
+shift 1
 . $HOME/../.bashrc
 . $HOME/../.profile
 $@
