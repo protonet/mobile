@@ -1,19 +1,9 @@
 === TODO (from February 23rd 2010) - Stuff that is needed before we can say we are awesome.
 * possibility to set default channel
 * private channels
-* show channel subscribers
 * direct message channel
 * new design
   ** possibility to resize boxes (user widget, etc.)
   ** ajax form validation
 * password forgotten logic (email?)
-* "proxy" for images that are loaded by text extension
-* enable possibility to start multiple upload instances (HTML5)
 * reply functionality
-* @username, @@channel (highlighting & linking)
-* mute button (turn sound off, requires user settings)
-* more text extension
-  ** web pics (urls that are ending with .jpg, .gif, .png)
-  ** tumblr
-  ** grooveshark (if possible)
-  ** gist/pastie (grab code via yql and display via own code highlighting plugin)
