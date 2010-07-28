@@ -2,7 +2,6 @@
 //= require "user/browser.js"
 //= require "effects/clouds.js"
 //= require "dispatching/dispatching_system.js"
-//= require "controls/communication_console.js"
 //= require "controls/file_widget.js"
 //= require "controls/endless_scroller.js"
 //= require "controls/user_widget.js"
@@ -22,8 +21,8 @@ $(function() {
 
 // Initialize communication stuff
 $(function() {
-  protonet.globals.communicationConsole = new protonet.controls.CommunicationConsole();
-  protonet.globals.dispatcher           = new protonet.dispatching.DispatchingSystem();
+  // protonet.globals.communicationConsole = new protonet.controls.CommunicationConsole();
+  // protonet.globals.dispatcher           = new protonet.dispatching.DispatchingSystem();
   
   protonet.timeline.initialize();
 });

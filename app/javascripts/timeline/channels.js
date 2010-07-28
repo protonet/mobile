@@ -21,7 +21,6 @@ protonet.timeline.Channels = {
       this.select(id);
       
       event.preventDefault();
-      event.stopPropagation();
     }.bind(this));
     
     protonet.Notifications.bind("channel.rendered", function(e, channelList, data, instance) {
@@ -34,6 +33,8 @@ protonet.timeline.Channels = {
       var isSelected = this.selected == channelData.id,
           link       = this.channelLinks.filter("[data-channel-id=" + channelData.id + "]");
       new this.Channel(channelData, link, isSelected).render(this.container);
+    }.bind(this), function() {
+      protonet.Notifications.trigger("channels.initialized", this.data);
     }.bind(this));
   },
   
@@ -43,6 +44,10 @@ protonet.timeline.Channels = {
     protonet.Notifications.trigger("channel.changed", id);
   },
   
+  /**
+   * TODO:
+   *    This should be handled via event notifications
+   */
   getDownCaseMapping: function() {
     var mapping = {};
     $(this.data).each(function(i, channelData) {

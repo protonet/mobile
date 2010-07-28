@@ -31,9 +31,7 @@
 protonet.timeline.Meep = function(dataOrForm) {
   var isFormElement = dataOrForm.jquery && dataOrForm.attr;
   if (isFormElement) {
-    this.queryString = dataOrForm.serialize();
-    this.data = protonet.utils.parseQueryString(this.queryString).tweet;
-    $.extend(this.data, { created_at: new Date().toString() });
+    this.data = this._parseForm(dataOrForm);
   } else {
     this.data = dataOrForm;
   }
@@ -46,6 +44,16 @@ protonet.timeline.Meep.prototype = {
   config: {
     // Url to post the meep to
     POST_URL:              "/tweets"
+  },
+  
+  _parseForm: function(form) {
+    this.queryString = form.serialize();
+    var data = protonet.utils.parseQueryString(this.queryString).tweet;
+    
+    return $.extend(data, {
+      created_at: new Date().toString(),
+      text_extension: data.text_extension && JSON.parse(data.text_extension)
+    });
   },
   
   _convertMessage: function(message) {

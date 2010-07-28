@@ -12,8 +12,13 @@
  *      "&test[foo][bar]=1"
  */
 protonet.utils.parseQueryString = (function() {
-  var REG_EXP_MODEL_NAME = /(.+?)\[(.+?)\]/;
-      REG_EXP_QUESTION_MARK = /.*?\?/;
+  var REG_EXP_MODEL_NAME    = /(.+?)\[(.+?)\]/,
+      REG_EXP_QUESTION_MARK = /.*?\?/,
+      PLUS                  = /\+/g; // Needed since jquery's $.param replaces all %20 by +
+  
+  function decode(str) {
+    return decodeURIComponent(str.replace(PLUS, "%20"));
+  }
   
   return function(str, separator) {
     separator = separator || "&";
@@ -27,8 +32,8 @@ protonet.utils.parseQueryString = (function() {
       }
       
       var splittedKeyValue  = keyValue.split("="),
-          key               = decodeURIComponent(splittedKeyValue[0]),
-          value             = decodeURIComponent(splittedKeyValue[1]),
+          key               = decode(splittedKeyValue[0]),
+          value             = decode(splittedKeyValue[1]),
           modelMatch        = key.match(REG_EXP_MODEL_NAME) || [],
           modelName         = modelMatch[1],
           modelKey          = modelMatch[2];

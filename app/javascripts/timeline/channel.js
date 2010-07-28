@@ -30,14 +30,14 @@ protonet.timeline.Channels.Channel.prototype = {
   
   _observe: function() {
     /**
-     * Render new meep when "meep.render" event is triggered
+     * Render new meep in selected channel
+     * when "meep.render" event is triggered
      */
-    protonet.Notifications.bind("meep.render", function(e, meepDataOrForm, channelId) {
-      if (channelId != this.data.id) {
+    protonet.Notifications.bind("meep.render", function(e, meepDataOrForm, post) {
+      if (!this.isSelected) {
         return;
       }
-      
-      this._renderMeep(meepDataOrForm, true);
+      this._renderMeep(meepDataOrForm, post);
     }.bind(this));
     
     /**
@@ -129,11 +129,11 @@ protonet.timeline.Channels.Channel.prototype = {
     var meep          = new protonet.timeline.Meep(meepDataOrForm),
         newMeepData   = meep.data,
         lastMeepData  = this.lastMeep && this.lastMeep.data;
-    
+        
     if (lastMeepData
         && newMeepData.author == lastMeepData.author
         && !newMeepData.text_extension 
-        && new Date(lastMeepData.created_at) - new Date(newMeepData.created_at) < this.MERGE_MEEPS_TIMEFRAME) {
+        && new Date(newMeepData.created_at) - new Date(lastMeepData.created_at) < this.MERGE_MEEPS_TIMEFRAME) {
       meep.mergeWith(this.lastMeep.element);
     } else {
       meep.render(this.channelList);

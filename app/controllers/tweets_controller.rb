@@ -25,11 +25,12 @@ class TweetsController < ApplicationController
 
   def create
     # monkey solution for exception, jelveh pls check
-    params[:tweet].delete(:avatar)
+    avatar = params[:tweet].delete(:avatar)
+    channel_id = params[:tweet].delete(:channel_id)
     
     author = current_user.display_name
     channel_ids = params[:mentioned_channel_ids] ? 
-      ([params[:message_channel_id]] | params[:mentioned_channel_ids]) : [params[:message_channel_id]]
+      ([channel_id] | params[:mentioned_channel_ids]) : [channel_id]
     channels = Channel.find(:all, :conditions => ["id in (?)",  channel_ids])
     # current user is nil when not logged in, that's ok
     @tweet = Tweet.new(params[:tweet].merge({:author => author, :user => current_user, :channels => channels}))

@@ -12,6 +12,7 @@
 protonet.timeline = {
   initialize: function() {
     this.load();
+    this._initInput();
   },
   
   /**
@@ -28,7 +29,12 @@ protonet.timeline = {
     this.data = channelData;
     
     protonet.timeline.Channels.initialize(channelData);
+  },
+  
+  _initInput: function() {
+    protonet.timeline.Input.initialize();
   }
 };
 
+//= require "input.js"
 //= require "channels.js"
