@@ -21,6 +21,12 @@
  *    // merge with last meep and post
  *    var meep = $("#meeps li:first");
  *    new protonet.timeline.Meep({ message: "foo", author: "christopher.blum"}).mergeWith(meep).post(callback);
+ *
+ * @events
+ *    meep.rendered - A new meep has been inserted into the DOM
+ *    meep.render   - Trigger this event with channelId and meep data or form if you want a new meep to be rendered
+ *    meep.sent     - A new meep has been sent to the server
+ *    meep.error    - Posting a new meep has been failed
  */
 protonet.timeline.Meep = function(dataOrForm) {
   var isFormElement = dataOrForm.jquery && dataOrForm.attr;
@@ -38,8 +44,6 @@ protonet.timeline.Meep.prototype = {
    * Configuration
    */
   config: {
-    // Merge/combine meeps that were send in a particular timeframe
-    SHOULD_BE_MERGED_TIME: 1000 * 60 * 15,
     // Url to post the meep to
     POST_URL:              "/tweets"
   },
@@ -87,16 +91,24 @@ protonet.timeline.Meep.prototype = {
     protonet.Notifications.trigger("meep.rendered", [this.element, this.data, this]);
   },
   
+  /**
+   * Send the meep to the server
+   */
   post: function(onSuccess, onFailure) {
     $.ajax({
       url:        this.config.POST_URL,
       type:       "POST",
-      data:       this.queryString || $.param({ tweet: this.data }),
-      success:    onSuccess,
-      error:      onFailure
+      data:       this.queryString || { tweet: this.data },
+      success:    function() {
+        (onSuccess || $.noop)();
+        protonet.Notifications.trigger("meep.sent", [this.element, this.data, this]);
+      }.bind(this),
+      error:      function() {
+        (onFailure || $.noop)();
+        protonet.Notifications.trigger("meep.error", [this.element, this.data, this]);
+      }.bind(this)
     });
     
-    protonet.Notifications.trigger("meep.sent", [this.element, this.data, this]);
     return this;
   }
 };

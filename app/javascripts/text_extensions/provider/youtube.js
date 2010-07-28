@@ -3,6 +3,10 @@
 
 /**
  * YouTube Provider
+ *
+ * TODO:
+ *  Use new embedding technique for embedding
+ *  YouTube videos to support HTML5 video
  */
 protonet.text_extensions.provider.YouTube = {
   /**

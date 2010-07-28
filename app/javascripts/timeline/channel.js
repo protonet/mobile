@@ -1,7 +1,21 @@
 //= require "meep.js"
 
+/**
+ * @example
+ *    // Render a new, unselected, channel into "#channel-container"
+ *    var channelData = { id: 1, name: "Ali Schmali", meeps: [{ ... }, { ... }, ...] };
+ *    new protonet.timeline.Channels.Channel(channelData, "#tab-link").render("#channel-container");
+ *
+ *    // Render a new, selected, channel into "#channel-container"
+ *    new protonet.timeline.Channels.Channel(channelData, "#tab-link", true).render("#channel-container");
+ *
+ *  @events
+ *    channel.changed   - Call this with the channel id if you want to switch the channel
+ *    channel.rendered  - Triggered when channel, including meeps, is completely rendered
+ *
+ */
 protonet.timeline.Channels.Channel = function(data, link, isSelected) {
-  this.link       = link;
+  this.link       = $(link);
   this.data       = data;
   this.$window    = $(window);
   this.isSelected = isSelected;
@@ -12,8 +26,19 @@ protonet.timeline.Channels.Channel = function(data, link, isSelected) {
 };
 
 protonet.timeline.Channels.Channel.prototype = {
+  MERGE_MEEPS_TIMEFRAME: 5 * 60 * 1000, // 5 minutes
+  
   _observe: function() {
-    protonet.Notifications.bind("meep.render", this._renderMeep.bind(this));
+    /**
+     * Render new meep when "meep.render" event is triggered
+     */
+    protonet.Notifications.bind("meep.render", function(e, meepDataOrForm, channelId) {
+      if (channelId != this.data.id) {
+        return;
+      }
+      
+      this._renderMeep(meepDataOrForm, true);
+    }.bind(this));
     
     /**
      * Store new meep in data obj
@@ -66,6 +91,9 @@ protonet.timeline.Channels.Channel.prototype = {
     return this;
   },
   
+  /**
+   * Renders the channel list and decided whether the list is visible or not
+   */
   render: function(container) {
     this.channelList = $("<ul />", {
       "class":            "meeps",
@@ -91,15 +119,28 @@ protonet.timeline.Channels.Channel.prototype = {
     }.bind(this));
   },
   
-  _renderMeep: function(meepDataOrForm) {
+  /**
+   * Merge last and new meep when ...
+   *  ... authors are the same
+   *  ... the time difference between both is less than MERGE_MEEPS_TIMEFRAME
+   *  ... the new meep hasn't got a text extension attached
+   */
+  _renderMeep: function(meepDataOrForm, post) {
     var meep          = new protonet.timeline.Meep(meepDataOrForm),
         newMeepData   = meep.data,
         lastMeepData  = this.lastMeep && this.lastMeep.data;
     
-    if (lastMeepData && newMeepData.author == lastMeepData.author && !newMeepData.text_extension) {
+    if (lastMeepData
+        && newMeepData.author == lastMeepData.author
+        && !newMeepData.text_extension 
+        && new Date(lastMeepData.created_at) - new Date(newMeepData.created_at) < this.MERGE_MEEPS_TIMEFRAME) {
       meep.mergeWith(this.lastMeep.element);
     } else {
       meep.render(this.channelList);
+    }
+    
+    if (post) {
+      meep.post();
     }
   }
 };
