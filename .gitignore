@@ -20,3 +20,4 @@ mkmf.log
 db/schema.rb
 node/screenshots/*
 node.pid.lock
+Gemfile.lock
