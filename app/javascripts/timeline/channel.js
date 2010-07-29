@@ -114,7 +114,9 @@ protonet.timeline.Channels.Channel.prototype = {
      *
      * Chunking needed to avoid ui blocking while rendering
      */
-    meepsData.reverse().chunk(this._renderMeep.bind(this), function() {
+    meepsData.reverse().chunk(function(meepData) {
+      this._renderMeep(meepData);
+    }.bind(this), function() {
       protonet.Notifications.trigger("channel.rendered", [this.channelList, this.data, this]);
     }.bind(this));
   },
