@@ -49,8 +49,11 @@ if (!Array.prototype.indexOf) {
     i || (i = 0);
     var length = this.length;
     if (i < 0) i = length + i;
-    for (; i < length; i++)
-      if (this[i] === item) return i;
+    for (; i < length; i++) {
+      if (this[i] === item) {
+        return i;
+      }
+    }
     return -1;
   };
 }

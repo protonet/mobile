@@ -64,9 +64,10 @@ protonet.timeline.Channels.Channel.prototype = {
       var channelPositionTop = this.channelList.offset().top,
           scrollPositionTop  = this.$window.scrollTop();
           offset             = 40;
+      
       if (scrollPositionTop > (channelPositionTop + offset)) {
         var meepHeight = meepElement.outerHeight(true);
-        $window.scrollTop(scrollPositionTop + meepHeight);
+        this.$window.scrollTop(scrollPositionTop + meepHeight);
       }
     }.bind(this));
     
