@@ -1286,7 +1286,6 @@ Queue.prototype.subscribe = function (/* options, messageListener */) {
 
 
       self.emit('message', json);
-      if (!options.ack) m.acknowledge();
     });
   });
 };
@@ -1443,18 +1442,24 @@ Exchange.prototype._onMethod = function (channel, method, args) {
 
   switch (method) {
     case methods.channelOpenOk:
-      this.connection._sendMethod(channel, methods.exchangeDeclare,
-          { ticket: 0
-          , exchange:   this.name
-          , type:       this.options.type || 'topic'
-          , passive:    this.options.passive    ? true : false
-          , durable:    this.options.durable    ? true : false
-          , autoDelete: this.options.autoDelete ? true : false
-          , internal:   this.options.internal   ? true : false
-          , nowait:     false
-          , "arguments": {}
-          });
-      this.state = 'declaring';
+      // Default exchanges don't need to be declared
+      if (/^amq\./.test(this.name)) {
+        this.state = 'open';
+        this.emit('open');
+      } else {
+        this.connection._sendMethod(channel, methods.exchangeDeclare,
+            { ticket: 0
+            , exchange:   this.name
+            , type:       this.options.type || 'topic'
+            , passive:    this.options.passive    ? true : false
+            , durable:    this.options.durable    ? true : false
+            , autoDelete: this.options.autoDelete ? true : false
+            , internal:   this.options.internal   ? true : false
+            , nowait:     false
+            , "arguments": {}
+            });
+        this.state = 'declaring';
+      }
       break;
 
     case methods.exchangeDeclareOk:
