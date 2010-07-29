@@ -90,8 +90,8 @@ protonet.timeline.Input = {
       return;
     }
     
-    protonet.Notifications.trigger("meep.render", [this.form]);
-    protonet.Notifications.trigger("input.submitted", [this.form, true]);
+    protonet.Notifications.trigger("meep.render", [this.form, true]);
+    protonet.Notifications.trigger("input.submitted", [this.form]);
     
     this.input.val("");
   }
