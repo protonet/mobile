@@ -78,7 +78,7 @@ if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FR
      :timeout       => 25,
      :daemonize_for_me => true
   )
-  node.start
+  node.start unless node.running?
   
   # this starts up a new node.js instance
   js_dispatching_server = DaemonController.new(
@@ -90,7 +90,7 @@ if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FR
      :log_file      => 'log/js_dispatching.log',
      :timeout       => 25
   )
-  js_dispatching_server.start
+  js_dispatching_server.start unless js_dispatching_server.running?
   
   # Checking all Subsystems
   puts "------------------------"
