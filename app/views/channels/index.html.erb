@@ -9,7 +9,7 @@
 
   <ul>
     <%- @channels.each do |c| -%>
-      <% if (current_user.subscribed? c) || c.public then %>
+      <% if (current_user.subscribed? c) || c.public? %>
       <li id="channel-<%= c.id %>">
         <% if current_user.subscribed? c %>
           <img src="/images/bullet_green.png" width="16" height="16" alt="" class="channel-indicator" />
