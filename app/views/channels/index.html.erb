@@ -9,9 +9,9 @@
 
   <ul>
     <%- @channels.each do |c| -%>
-      <% if (current_user.subscribed? c) || c.public? %>
+      <% if subscribed = current_user.subscribed?(c) || c.public? %>
       <li id="channel-<%= c.id %>">
-        <% if current_user.subscribed? c %>
+        <% if subscribed %>
           <img src="/images/bullet_green.png" width="16" height="16" alt="" class="channel-indicator" />
         <% end %>
         <%= "#{h c.name} <span>(#{h c.description})</span>" %>
