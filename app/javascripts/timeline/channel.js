@@ -1,4 +1,5 @@
 //= require "meep.js"
+//= require "../lib/jquery.inview.js"
 
 /**
  * @example
@@ -26,7 +27,10 @@ protonet.timeline.Channels.Channel = function(data, link, isSelected) {
 };
 
 protonet.timeline.Channels.Channel.prototype = {
-  MERGE_MEEPS_TIMEFRAME: 5 * 60 * 1000, // 5 minutes
+  config: {
+    MERGE_MEEPS_TIMEFRAME: 5 * 60 * 1000, // 5 minutes
+    FETCH_MEEPS_URL: "/tweets"
+  },
   
   _observe: function() {
     /**
@@ -37,7 +41,8 @@ protonet.timeline.Channels.Channel.prototype = {
       if (!this.isSelected) {
         return;
       }
-      this._renderMeep(meepDataOrForm, post);
+      
+      this._renderMeep(meepDataOrForm, this.channelList, post);
     }.bind(this));
     
     /**
@@ -48,7 +53,7 @@ protonet.timeline.Channels.Channel.prototype = {
         return;
       }
       
-      this.lastMeep = instance;
+      this.latestMeep = instance;
       this.subModules[meepData.id] = instance;
     }.bind(this));
     
@@ -78,6 +83,17 @@ protonet.timeline.Channels.Channel.prototype = {
       this.isSelected = channelId == this.data.id;
       this.toggle();
     }.bind(this));
+    
+    /**
+     * Init endless scroller when meeps are rendered
+     */
+    protonet.Notifications.bind("channel.rendered channel.rendered_more", function(e, channelList, data, instance) {
+      if (instance != this) {
+        return;
+      }
+      
+      this._initEndlessScroller();
+    }.bind(this));
   },
   
   toggle: function() {
@@ -93,7 +109,7 @@ protonet.timeline.Channels.Channel.prototype = {
   },
   
   /**
-   * Renders the channel list and decided whether the list is visible or not
+   * Renders the channel list and decides whether the list is visible or not
    */
   render: function(container) {
     this.channelList = $("<ul />", {
@@ -103,12 +119,17 @@ protonet.timeline.Channels.Channel.prototype = {
     
     this.toggle();
     
-    this._renderMeeps(this.data.meeps);
+    this._renderMeeps(this.data.meeps, this.channelList, function() {
+      protonet.Notifications.trigger("channel.rendered", [this.channelList, this.data, this]);
+    }.bind(this));
     
     return this;
   },
   
-  _renderMeeps: function(meepsData) {
+  /**
+   * Render meeps non-blocking into the given dom element
+   */
+  _renderMeeps: function(meepsData, channelList, callback) {
     /**
      * Reverse meeps since we have to render them from top to bottom
      * in order to ensure that meep-merging works
@@ -116,34 +137,89 @@ protonet.timeline.Channels.Channel.prototype = {
      * Chunking needed to avoid ui blocking while rendering
      */
     meepsData.reverse().chunk(function(meepData) {
-      this._renderMeep(meepData);
-    }.bind(this), function() {
-      protonet.Notifications.trigger("channel.rendered", [this.channelList, this.data, this]);
+      this._renderMeep(meepData, channelList);
+    }.bind(this), callback);
+  },
+  
+  /**
+   * Call this method if you want to
+   * render older meeps into the channel list
+   */
+  _renderMoreMeeps: function(meepsData) {
+    var tempContainer = $("<ul />");
+    this._renderMeeps(meepsData, tempContainer, function() {
+      this.channelList.append(tempContainer.children());
+      protonet.Notifications.trigger("channel.rendered_more", [this.channelList, this.data, this]);
     }.bind(this));
   },
   
   /**
-   * Merge last and new meep when ...
-   *  ... authors are the same
-   *  ... the time difference between both is less than MERGE_MEEPS_TIMEFRAME
-   *  ... the new meep hasn't got a text extension attached
+   * Renders a meep into the given channelList
+   * If you want the meep to be sent to the server
+   * pass post = true
    */
-  _renderMeep: function(meepDataOrForm, post) {
-    var meep          = new protonet.timeline.Meep(meepDataOrForm),
-        newMeepData   = meep.data,
-        lastMeepData  = this.lastMeep && this.lastMeep.data;
+  _renderMeep: function(meepDataOrForm, channelList, post) {
+    var meep              = new protonet.timeline.Meep(meepDataOrForm),
+        newMeepData       = meep.data,
+        previousMeep      = this.latestMeep,
+        previousMeepData  = previousMeep && previousMeep.data;
         
-    if (lastMeepData
-        && newMeepData.author == lastMeepData.author
-        && !newMeepData.text_extension 
-        && new Date(newMeepData.created_at) - new Date(lastMeepData.created_at) < this.MERGE_MEEPS_TIMEFRAME) {
-      meep.mergeWith(this.lastMeep.element);
+    if (previousMeepData && this._shouldBeMerged(previousMeepData, newMeepData)) {
+      meep.mergeWith(previousMeep.element);
     } else {
-      meep.render(this.channelList);
+      meep.render(channelList);
     }
     
     if (post) {
       meep.post();
     }
+  },
+  
+  /**
+   * Load meeps for channel
+   */
+  _loadMeeps: function(parameters, callback) {
+    $.extend(parameters, { channel_id: this.data.id });
+    $.ajax({
+      url:  this.config.FETCH_MEEPS_URL,
+      type: "get",
+      data: parameters,
+      success: function(response) {
+        if (!response || !response.length) {
+          return;
+        }
+        
+        (callback || $.noop)(response);
+      }
+    });
+  },
+  
+  /**
+   * Provide this method with two meep data objects
+   * and it will tell you whether they should be merged
+   *
+   * Merge previous and new meep when ...
+   *  ... authors are the same
+   *  ... the time difference between both is less than MERGE_MEEPS_TIMEFRAME
+   *  ... the new meep hasn't got a text extension attached
+   */
+  _shouldBeMerged: function(previousMeepData, newMeepData) {
+    return !newMeepData.text_extension &&
+      newMeepData.author == previousMeepData.author &&
+      new Date(newMeepData.created_at) - new Date(previousMeepData.created_at) < this.config.MERGE_MEEPS_TIMEFRAME;
+  },
+  
+  /**
+   * Load more meeps when last meep in list is visible
+   * in the browser's viewport
+   */
+  _initEndlessScroller: function() {
+    var lastMeepInList = this.channelList.children(":last");
+    
+    lastMeepInList.bind("inview", function(event) {
+      lastMeepInList.unbind("inview");
+      var lastMeepId = lastMeepInList.data("meep").id;
+      this._loadMeeps({ last_id: lastMeepId }, this._renderMoreMeeps.bind(this));
+    }.bind(this));
   }
 };

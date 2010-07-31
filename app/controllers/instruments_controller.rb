@@ -34,13 +34,9 @@ class InstrumentsController < ApplicationController
     
     def get_meeps_as_json(channels)
       render :json => channels.map { |channel|
-        tweets = channel.tweets.recent.all(:limit => 25, :include => [:avatar])
-        tweets = tweets.map do |t|
-          t.text_extension = JSON.parse(t.text_extension) rescue nil
-          t.attributes.merge({ :avatar => t.user.active_avatar_url, :channel_id => channel.id })
-        end
+        meeps = channel.tweets.recent.all(:limit => 25, :include => [:avatar])
         
-        { :id => channel.id, :name => channel.name, :meeps  => tweets }
+        { :id => channel.id, :name => channel.name, :meeps  => Tweet.prepare_for_frontend(channel, meeps) }
       }.to_json
     end
 end

@@ -1,14 +1,17 @@
 class TweetsController < ApplicationController
   
   def index
-    @no_wrap = true
     channel = Channel.find(:first, :conditions => {:id => params[:channel_id]})
-    if    params[:last_id]
-      tweets  = (channel ? Tweet.find_tweets_older_than(params[:last_id]) : [])
-    elsif params[:first_id]
-      tweets  = (channel ? channel.tweets.all(:conditions => ["tweets.id > ?", params[:first_id]], :order => "tweets.id DESC") : [])
+    
+    if    params[:last_id] && channel
+      meeps = channel.tweets.all(:conditions => ["tweets.id < ?", params[:last_id]], :order => "tweets.id DESC", :limit => 25, :include => [:avatar])
+    elsif params[:first_id] && channel
+      meeps  = channel.tweets.all(:conditions => ["tweets.id > ?", params[:first_id]], :order => "tweets.id DESC", :limit => 100, :include => [:avatar])
+    else
+      meeps  = []
     end
-    render :partial => 'tweet_list', :locals => {:tweets => tweets, :channel => channel || 0}
+    
+    render :json => Tweet.prepare_for_frontend(channel, meeps)
   end
 
   def new
