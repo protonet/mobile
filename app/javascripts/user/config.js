@@ -1,6 +1,5 @@
 /**
  * Global User Configuration
- * TODO: Merge with protonet.config
  */
 protonet.user.Config = {
   configs: {
@@ -38,11 +37,11 @@ protonet.user.Config = {
   },
   
   store: function() {
-    
+    // TODO!
   },
   
   load: function() {
-    
+    // TODO!
   },
   
   _renderConfigs: function() {

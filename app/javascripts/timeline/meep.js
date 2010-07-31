@@ -103,15 +103,24 @@ protonet.timeline.Meep.prototype = {
    * Send the meep to the server
    */
   post: function(onSuccess, onFailure) {
+    var status = this.element.find(".status").show().html(protonet.t("MEEP_SENDING"));
+    
     $.ajax({
       url:        this.config.POST_URL,
       type:       "POST",
       data:       this.queryString || { tweet: this.data },
       success:    function() {
+        status.html(protonet.t("MEEP_SENT")).delay(1000).fadeOut();
+        
         (onSuccess || $.noop)();
         protonet.Notifications.trigger("meep.sent", [this.element, this.data, this]);
       }.bind(this),
       error:      function() {
+        alert(protonet.t("MEEP_ERROR_LONG"));
+        
+        status.html(protonet.t("MEEP_ERROR"));
+        this.element.find("article").addClass("error");
+        
         (onFailure || $.noop)();
         protonet.Notifications.trigger("meep.error", [this.element, this.data, this]);
       }.bind(this)

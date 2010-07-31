@@ -12,3 +12,4 @@ protonet.effects          = protonet.effects          || {};
 protonet.dispatching      = protonet.dispatching      || {};
 protonet.text_extensions  = protonet.text_extensions  || {};
 protonet.timeline         = protonet.timeline         || {};
+protonet.translations     = protonet.translations     || {};

@@ -1,21 +1,17 @@
-//= require "user/config.js"
-//= require "user/browser.js"
+//= require "timeline/timeline.js"
+//= require "text_extensions/text_extensions.js"
 //= require "effects/clouds.js"
 //= require "dispatching/dispatching_system.js"
 //= require "controls/file_widget.js"
-//= require "controls/endless_scroller.js"
 //= require "controls/user_widget.js"
 //= require "controls/pretty_date.js"
 //= require "controls/fluid.js"
-//= require "timeline/timeline.js"
-//= require "text_extensions/text_extensions.js"
 //= require "lib/jQuery.dPassword.js"
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
-
-// Initialize configuration stuff
 $(function() {
-  protonet.user.Config.initialize();
+  protonet.user.initialize();
+  protonet.timeline.initialize();
 });
 
 
@@ -24,18 +20,11 @@ $(function() {
   // protonet.globals.communicationConsole = new protonet.controls.CommunicationConsole();
   // protonet.globals.dispatcher           = new protonet.dispatching.DispatchingSystem();
   
-  protonet.timeline.initialize();
 });
 
 // Initialize file stuff
 $(function() {
   // protonet.globals.fileWidget = new protonet.controls.FileWidget();
-});
-
-
-// Initialize endless scrolling
-$(function() {
-  protonet.globals.endlessScroller = new protonet.controls.EndlessScroller();
 });
 
 // Initialize user widget
