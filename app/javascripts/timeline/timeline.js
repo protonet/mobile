@@ -11,17 +11,35 @@
  */
 protonet.timeline = {
   initialize: function() {
-    this.load();
+    this.loadingIndicator = $("#timeline-loading-indicator");
+    
+    this._observe();
     this._initInput();
+    this.load();
+  },
+  
+  _observe: function() {
+    protonet.Notifications.bind("timeline.loading_start", function() {
+      this.loadingIndicator.show();
+    }.bind(this));
+    
+    protonet.Notifications.bind("timeline.loading_end", function() {
+      this.loadingIndicator.hide();
+    }.bind(this));
   },
   
   /**
    * TODO: Add failure handling to ajax request
    */
   load: function() {
+    protonet.Notifications.trigger("timeline.loading_start");
+    
     $.ajax({
       url: "/",
-      success: this._initChannels.bind(this)
+      success: this._initChannels.bind(this),
+      complete: function() {
+        protonet.Notifications.trigger("timeline.loading_end");
+      }
     });
   },
   

@@ -8,9 +8,10 @@
  */
 protonet.timeline.Input = {
   initialize: function() {
-    this.form   = $("#message-form");
-    this.input  = this.form.find("#message");
-    this.typing = false;
+    this.form           = $("#message-form");
+    this.input          = this.form.find("#message");
+    this.channelIdInput = this.form.find("#tweet_channel_id");
+    this.typing         = false;
     
     this._initAutocompleter();
     this._initTextExtension();
@@ -59,8 +60,9 @@ protonet.timeline.Input = {
     /**
      * Focus input after channel switch
      */
-    protonet.Notifications.bind("channel.changed", function() {
+    protonet.Notifications.bind("channel.changed", function(e, channelId) {
       this.input.focus();
+      this.channelIdInput.val(channelId);
     }.bind(this));
     
     /**

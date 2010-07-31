@@ -1,6 +1,4 @@
 protonet.timeline.Channels = {
-  subModules: {},
-  
   initialize: function(data) {
     this.container        = $("#timeline");
     this.channelLinks     = $("#channels li");
@@ -21,10 +19,6 @@ protonet.timeline.Channels = {
       this.select(id);
       
       event.preventDefault();
-    }.bind(this));
-    
-    protonet.Notifications.bind("channel.rendered", function(e, channelList, data, instance) {
-      this.subModules[data.id] = instance;
     }.bind(this));
   },
   

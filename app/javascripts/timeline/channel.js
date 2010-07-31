@@ -11,8 +11,9 @@
  *    new protonet.timeline.Channels.Channel(channelData, "#tab-link", true).render("#channel-container");
  *
  *  @events
- *    channel.changed   - Call this with the channel id if you want to switch the channel
- *    channel.rendered  - Triggered when channel, including meeps, is completely rendered
+ *    channel.changed       - Call this with the channel id if you want to switch the channel
+ *    channel.rendered      - Triggered when channel, including meeps, is completely rendered
+ *    channel.rendered_more - Triggered when a bunch of new meeps are rendered into the channel (due to endless scrolling, etc.)
  *
  */
 protonet.timeline.Channels.Channel = function(data, link, isSelected) {
@@ -179,6 +180,8 @@ protonet.timeline.Channels.Channel.prototype = {
    * Load meeps for channel
    */
   _loadMeeps: function(parameters, callback) {
+    protonet.Notifications.trigger("timeline.loading_start");
+    
     $.extend(parameters, { channel_id: this.data.id });
     $.ajax({
       url:  this.config.FETCH_MEEPS_URL,
@@ -190,6 +193,9 @@ protonet.timeline.Channels.Channel.prototype = {
         }
         
         (callback || $.noop)(response);
+      },
+      complete: function() {
+        protonet.Notifications.trigger("timeline.loading_end");
       }
     });
   },
@@ -214,7 +220,7 @@ protonet.timeline.Channels.Channel.prototype = {
    * in the browser's viewport
    */
   _initEndlessScroller: function() {
-    var lastMeepInList = this.channelList.children(":last");
+    var lastMeepInList = this.channelList.children(":last").addClass("separator");
     
     lastMeepInList.bind("inview", function(event) {
       lastMeepInList.unbind("inview");
