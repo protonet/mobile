@@ -22,7 +22,8 @@ protonet.timeline.Input = {
   
   _initAutocompleter: function() {
     this.autoCompleter = new protonet.controls.InlineAutocompleter(this.input, [], {
-      maxChars: 2
+      maxChars: 2,
+      prefix:   "@"
     });
   },
   
@@ -35,27 +36,22 @@ protonet.timeline.Input = {
      * Add users to Autocompleter when loaded
      */
     protonet.Notifications.bind("users.initialized", function(e, userNames) {
-      userNames = $.map(userNames, function(userName) {
-        return "@" + userName;
-      });
-      this.autoCompleter.addData(userNames);
+      this.autoCompleter.addData(userNames, true);
     }.bind(this));
     
     /**
      * Add channel names to autocompleter when initialized
      */
     protonet.Notifications.bind("channels.initialized", function(e, channels) {
-      channelNames = $.map(channels, function(channel) {
-        return "@" + channel.name;
-      });
+      var channelNames = $.map(channels, function(channel) { return channel.name; });
       this.autoCompleter.addData(channelNames);
     }.bind(this));
     
     /**
      * Add newly registered user to auto completer
      */
-    protonet.Notifications.bind("user.added", function(e, obj){
-      this.autoCompleter.addData(["@" + obj.user_name]);
+    protonet.Notifications.bind("user.added", function(e, user){
+      this.autoCompleter.addData(user.user_name, true);
     }.bind(this));
     
     /**
@@ -74,7 +70,7 @@ protonet.timeline.Input = {
      * pressing the shiftKey while hitting the enter key.
      */
     this.form.submit(this.submit.bind(this));
-    this.input.keydown(function() {
+    this.input.keydown(function(event) {
       if (event.keyCode != 13 || event.shiftKey) {
         return;
       }

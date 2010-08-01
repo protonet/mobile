@@ -6,138 +6,27 @@
  * @param {Array} data Data that should be auto completed
  * @param {Object} options Optional configurations (see _defaultOptions for more information)
  */
+ 
 protonet.controls.InlineAutocompleter = function(input, data, options) {
   this.input = input;
   this.options = $.extend({}, this._defaultOptions, options);
   this.data = this._prepareData(data);
+  
+  this.autocompletionMode = false;
+  this.currentSuggestions = [];
   
   this._observe();
 };
 
 protonet.controls.InlineAutocompleter.prototype = {
   _defaultOptions: {
-    maxChars: 1,    // which string length should be used for auto completion
-    lowerCase: true // match in lower case mode
-  },
-  
-  IGNORE_KEYS: [
-    8,  // backspace
-    9,  // tab
-    13, // return
-    39, // right arrow
-    37, // left arrow
-    46  // delete
-  ],
-  
-  END_SELECTION_KEYS: [
-    9,   // tab
-    39   // right arrow
-  ],
-  
-  _observe: function() {
-    this.input
-      .keyup(this._keyUp.bind(this))
-      .keydown(this._keyDown.bind(this));
-  },
-  
-  _keyUp: function(event) {
-    this._autoCompletionMode = false;
-    
-    var pressedKey = event.which;
-    var value = this.input.val();
-    var caretPosition = this._getCaretPosition();
-    var currentInputCharacter = value.substring(caretPosition - 1, caretPosition).toLowerCase();
-    var currentEventCharacter = String.fromCharCode(pressedKey).toLowerCase();
-    
-    // Ok, let's check if the event character equals the last character in the input
-    if (currentInputCharacter !== currentEventCharacter) {
-      return;
-    }
-    
-    if ($.inArray(pressedKey, this.IGNORE_KEYS) != -1) {
-      return;
-    }
-    
-    this._findCompletions();
-  },
-  
-  _keyDown: function(event) {
-    var pressedKey = event.which;
-    if (!this._autoCompletionMode) {
-      return;
-    }
-    
-    if ($.inArray(pressedKey, this.END_SELECTION_KEYS) == -1) {
-      return;
-    }
-    
-    var selectionEnd = this.input.attr("selectionEnd");
-    var newCaretPosition = selectionEnd + 1;
-    
-    this._insert(" ", selectionEnd);
-    
-    this._setCaretPosition(newCaretPosition);
-    event.preventDefault();
-  },
-  
-  _findCompletions: function() {
-    var caretPosition = this._getCaretPosition();
-    var value = this.input.val();
-    var valueUntilCaret = value.substring(0, caretPosition);
-    var valueFromCaret = value.substring(caretPosition);
-    var lastWhiteSpace = Math.max(
-      valueUntilCaret.lastIndexOf(" "),
-      valueUntilCaret.lastIndexOf("\n"),
-      // we also handle opening parenthesis and brackets as "white space"
-      valueUntilCaret.lastIndexOf("("),
-      valueUntilCaret.lastIndexOf("[")
-    ) + 1;
-    var prefix = valueUntilCaret.substring(lastWhiteSpace, caretPosition);
-    prefix = this.options.lowerCase ? prefix.toLowerCase() : prefix;
-    
-    if (prefix.length < this.options.maxChars) {
-      return;
-    }
-    
-    var i = 0;
-    var dataLength = this.data.length;
-    var entry;
-    
-    for (i=0; i<dataLength; i++) {
-      entry = this.data[i];
-      if (!entry.startsWith(prefix)) {
-        continue;
-      }
-      
-      var completion = entry.substring(prefix.length);
-      var isAlreadyCompleted = valueFromCaret.startsWith(completion);
-      if (isAlreadyCompleted) {
-        continue;
-      }
-      
-      this._autoCompletionMode = true;
-      this._insert(completion, caretPosition);
-      break;
-    }
-  },
-  
-  _insert: function(str, position) {
-    var oldValue = this.input.val();
-    var newValue = oldValue.substring(0, position) + str + oldValue.substring(position);
-    this.input.val(newValue);
-    this._markText(position, position + str.length);
-  },
-  
-  _markText: function(from, to) {
-    this.input.attr("selectionStart", from).attr("selectionEnd", to).focus();
-  },
-  
-  _getSelectedText: function() {
-    return this.input.val().substring(this.input.attr("selectionStart"), this.input.attr("selectionEnd"));
+    maxChars:       1,              // which string length should be used for auto completion
+    lowerCase:      true,           // match in lower case mode
+    prefix:         "",             // only match when string starts with prefix
+    matchingChars:  /[\w_\-\.]/i  // only execute completion look up when one of these chars has been pressed
   },
   
   _prepareData: function(data) {
-    // trim entries, remove empty entries
     return $.map(data, function(entry) {
       if (typeof(entry) != "string") {
         return null;
@@ -152,25 +41,154 @@ protonet.controls.InlineAutocompleter.prototype = {
         entry = entry.toLowerCase();
       }
       
+      if (this.options.prefix) {
+        entry = this.options.prefix + entry;
+      }
+      
       return entry;
     }.bind(this));
   },
   
-  _getCaretPosition: function() {
-    return this.input.attr("selectionStart");
+  _observe: function() {
+    /** 
+     * keypress is only fired when an actual character has been entered
+     * (doesn't fire for shift, alt, cmd, ctrl, arrow keys, ...)
+     */
+    // this.input.keypress(this._keypress.bind(this));
+    this.input.keyup(this._keyup.bind(this)).keydown(this._keydown.bind(this));
   },
   
-  _setCaretPosition: function(position) {
-    this.input.attr("selectionStart", position).attr("selectionEnd", position).focus();
-  },
-  
-  addData: function(data, options) {
-    if(options && options['prepend']) {
-      for(i in data) {
-        this.data.unshift(this._prepareData([data[i]])[0]);
-      }
-    } else {
-      this.data = this.data.concat(this._prepareData(data));
+  _keyup: function(event) {
+    if (this.ignoreKeyUp) {
+      return;
     }
+    
+    this.autocompletionMode = false;
+    
+    var pressedKey              = event.which,
+        enteredCharacter        = String.fromCharCode(pressedKey),
+        value                   = this.input.val(),
+        caretPosition           = this.input.attr("selectionStart"),
+        valueUntilCaret         = value.substring(0, caretPosition),
+        valueFromCaret          = value.substring(caretPosition),
+        lastWhiteSpace          = Math.max(
+          valueUntilCaret.lastIndexOf(" "),
+          valueUntilCaret.lastIndexOf("\n"),
+          valueUntilCaret.lastIndexOf("\t"),
+          // we also handle opening parenthesis and brackets as "white space"
+          valueUntilCaret.lastIndexOf("("),
+          valueUntilCaret.lastIndexOf("["),
+          valueUntilCaret.lastIndexOf("{")
+        ),
+        currentlyTypedWordStart = lastWhiteSpace + 1,
+        currentlyTypedWordEnd   = caretPosition,
+        currentlyTypedWord      = valueUntilCaret.substring(currentlyTypedWordStart, currentlyTypedWordEnd);
+    
+    if (currentlyTypedWord.length < this.options.maxChars) {
+      return;
+    }
+    
+    if (!enteredCharacter.match(this.options.matchingChars)) {
+      return;
+    }
+    
+    this.currentSuggestions = this.getSuggestions(currentlyTypedWord);
+    this.currentSuggestionIndex = 0;
+    
+    if (!this.currentSuggestions.length) {
+      return;
+    }
+    
+    var currentSuggestion = this.currentSuggestions[this.currentSuggestionIndex];
+        newValue          = value.substr(0, currentlyTypedWordStart)
+          + currentlyTypedWord
+          + this.currentSuggestions[this.currentSuggestionIndex]
+          + value.substr(currentlyTypedWordEnd);
+    this.input.val(newValue);
+    
+    this._markText(currentlyTypedWordEnd, currentlyTypedWordEnd + currentSuggestion.length);
+    
+    this.autocompletionMode = true;
+  },
+  
+  _keydown: function(event) {
+    this.ignoreKeyUp = false;
+    if (!this.autocompletionMode) {
+      return;
+    }
+    
+    switch(event.which) {
+      case 40: // key down
+        this.currentSuggestionIndex++;
+        if (this.currentSuggestionIndex >= this.currentSuggestions.length) {
+          this.currentSuggestionIndex = 0;
+        }
+        break;
+      case 38: // key up
+        this.currentSuggestionIndex--;
+        if (this.currentSuggestionIndex < 0) {
+          this.currentSuggestionIndex = this.currentSuggestions.length - 1;
+        }
+        break;
+      case 9:  // tab
+      case 39: // right arrow
+        var value         = this.input.val(),
+            selectionEnd  = this.input.attr("selectionEnd"),
+            newValue      = value.substr(0, selectionEnd) + " " + value.substr(selectionEnd);
+        this.input.val(newValue).attr("selectionEnd", selectionEnd + 1);
+        event.preventDefault();
+      default:
+        return;
+    }
+    
+    this._replaceMarkedTextWith(this.currentSuggestions[this.currentSuggestionIndex]);
+    this.ignoreKeyUp = true;
+    event.preventDefault();
+  },
+  
+  _markText: function(from, to) {
+    this.input.attr("selectionStart", from).attr("selectionEnd", to).focus();
+  },
+  
+  _replaceMarkedTextWith: function(str) {
+    var selectionStart = this.input.attr("selectionStart"),
+        selectionEnd   = this.input.attr("selectionEnd"),
+        value          = this.input.val(),
+        newValue       = value.substr(0, selectionStart) + str + value.substr(selectionEnd);
+    
+    this.input.val(newValue);
+    this._markText(selectionStart, selectionStart + str.length);
+  },
+  
+  //-------------------- PUBLIC -------------------\\
+  addData: function(dataToAdd, hasPriority) {
+    dataToAdd = this._prepareData($.makeArray(dataToAdd));
+    if (hasPriority) {
+      this.data = dataToAdd.concat(this.data);
+    } else {
+      this.data = this.data.concat(dataToAdd);
+    }
+  },
+  
+  getSuggestions: function(str) {
+    str = this.options.lowerCase ? str.toLowerCase() : str;
+    
+    if (this.options.prefix && !str.startsWith(this.options.prefix)) {
+      return [];
+    }
+    
+    var strLength   = str.length,
+        suggestions = [],
+        i           = 0,
+        dataLength  = this.data.length,
+        potentialSuggestion;
+        
+    for (i=0; i<dataLength; i++) {
+      potentialSuggestion = this.data[i];
+      if (potentialSuggestion.startsWith(str) && str != potentialSuggestion) {
+        suggestions.push(potentialSuggestion.substr(strLength));
+      }
+    }
+    return suggestions;
   }
 };

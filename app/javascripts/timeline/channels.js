@@ -1,3 +1,7 @@
+/**
+ * @events
+ *    channels.initialized - Called when all channels are initialized and rendered
+ */
 protonet.timeline.Channels = {
   initialize: function(data) {
     this.container        = $("#timeline");
@@ -28,7 +32,7 @@ protonet.timeline.Channels = {
           link       = this.channelLinks.filter("[data-channel-id=" + channelData.id + "]");
       new this.Channel(channelData, link, isSelected).render(this.container);
     }.bind(this), function() {
-      protonet.Notifications.trigger("channels.initialized", this.data);
+      protonet.Notifications.trigger("channels.initialized", [this.data]);
     }.bind(this));
   },
   

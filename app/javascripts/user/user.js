@@ -22,6 +22,7 @@ protonet.user = {
         element.addClass("own");
       }
     }.bind(this));
+    
   }
 };
 
