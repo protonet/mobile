@@ -16,7 +16,7 @@ protonet.controls.FileWidget = function() {
   this.initUpload();
   this.initContextMenu();
   
-  protonet.Notifications.bind("channel.changed", function(e, id) {
+  protonet.Notifications.bind("channel.change", function(e, id) {
     this.currentChannelId = id;
     this.currentPath = "";
     this.removeDirectoriesAboveCurrent(1);

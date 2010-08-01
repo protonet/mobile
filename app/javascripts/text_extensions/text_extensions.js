@@ -17,7 +17,7 @@ protonet.text_extensions = {
       this.render(output, meepData.text_extension);
     }.bind(this));
     
-    protonet.Notifications.bind("channel.changed", function(e, channelId) {
+    protonet.Notifications.bind("channel.change", function(e, channelId) {
       this.currentChannelId = channelId;
       this.renderQueue(channelId);
     }.bind(this));

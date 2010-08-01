@@ -46,7 +46,7 @@ protonet.controls.UserWidget = (function() {
       this.filterChannelUsers(protonet.timeline.Channels.selected);
     }.bind(this));
         
-    protonet.Notifications.bind("channel.changed", function(e, id) {
+    protonet.Notifications.bind("channel.change", function(e, id) {
       this.filterChannelUsers(id);
     }.bind(this));
   };

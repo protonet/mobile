@@ -11,7 +11,7 @@
  *    new protonet.timeline.Channels.Channel(channelData, "#tab-link", true).render("#channel-container");
  *
  *  @events
- *    channel.changed       - Call this with the channel id if you want to switch the channel
+ *    channel.change        - Call this with the channel id if you want to switch the channel
  *    channel.rendered      - Triggered when channel, including meeps, is completely rendered
  *    channel.rendered_more - Triggered when a bunch of new meeps are rendered into the channel (due to endless scrolling, etc.)
  *
@@ -80,7 +80,7 @@ protonet.timeline.Channels.Channel.prototype = {
     /**
      * Set tab to active and store state
      */
-    protonet.Notifications.bind("channel.changed", function(e, channelId) {
+    protonet.Notifications.bind("channel.change", function(e, channelId) {
       this.isSelected = channelId == this.data.id;
       this.toggle();
     }.bind(this));

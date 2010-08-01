@@ -2,6 +2,7 @@
  * @events
  *    channels.data_available - Called when data is available and the class itself is initialized and ready
  *    channels.rendered       - Called when all channels are rendered
+ *    channel.change          - Invoked when user wants to switch to another channel (eg. by clicking on a channel link)
  */
 protonet.timeline.Channels = {
   initialize: function(data) {
@@ -27,9 +28,16 @@ protonet.timeline.Channels = {
     $(document).delegate("li[data-channel-id], a[data-channel-id]", "click",  function(event) {
        var id = $(event.currentTarget).attr("data-channel-id");
        
-       this.select(id);
+       protonet.Notifications.trigger("channel.change", id);
        
        event.preventDefault();
+    }.bind(this));
+    
+    /**
+     * Track selected channel
+     */
+    protonet.Notifications.bind("channel.change", function(e, id) {
+      this.selected = id;
     }.bind(this));
   },
   
@@ -41,12 +49,6 @@ protonet.timeline.Channels = {
     }.bind(this), function() {
       protonet.Notifications.trigger("channels.rendered", [this.data]);
     }.bind(this));
-  },
-  
-  select: function(id) {
-    this.selected = id;
-    
-    protonet.Notifications.trigger("channel.changed", id);
   }
 };
 

@@ -58,7 +58,7 @@ protonet.timeline.Input = {
      * Focus input after channel switch
      * and update hidden channel id
      */
-    protonet.Notifications.bind("channel.changed", function(e, channelId) {
+    protonet.Notifications.bind("channel.change", function(e, channelId) {
       // Avoid scrolling up when switching between channels
       this.input.focus();
       this.channelIdInput.val(channelId);
