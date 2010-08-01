@@ -34,7 +34,7 @@ protonet.utils.Template.prototype = {
   },
   
   toString: function() {
-    return this.html;
+    return $.trim(this.html);
   },
   
   toElement: function() {

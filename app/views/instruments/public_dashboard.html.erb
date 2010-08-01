@@ -21,7 +21,7 @@
     <ul>
       <%- @channels.each_with_index do |c, index| -%>
         <li data-channel-id="<%= c.id %>" <%= active(c, @active_channel) %>>
-          <%= link_to c.name.capitalize, { :channel_id => c.id, :index => index }, { :title => c.description } %>
+          <%= link_to c.name.capitalize, { :channel_id => c.id }, { :title => c.description } %>
         </li>
       <%- end -%>
     </ul>
@@ -44,6 +44,10 @@
 
 <script type="protonet/template" id="text-extension-template">
   <%= render :partial => 'meeps/text_extension' %>
+</script>
+
+<script type="protonet/template" id="channel-reply-template">
+  <%= render :partial => 'meeps/channel_reply' %>
 </script>
 
 <% if false %>
