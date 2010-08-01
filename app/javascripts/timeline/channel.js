@@ -164,7 +164,7 @@ protonet.timeline.Channels.Channel.prototype = {
         newMeepData       = meep.data,
         previousMeep      = this.latestMeep,
         previousMeepData  = previousMeep && previousMeep.data;
-    console.log(this.latestMeep, previousMeepData, newMeepData);
+    
     if (previousMeepData && this._shouldBeMerged(previousMeepData, newMeepData)) {
       meep.mergeWith(previousMeep.element);
     } else {
