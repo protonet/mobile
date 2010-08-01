@@ -11,6 +11,7 @@ protonet.timeline.Input = {
     this.form           = $("#message-form");
     this.input          = this.form.find("#message");
     this.channelIdInput = this.form.find("#tweet_channel_id");
+    this.$window        = $(window);
     this.typing         = false;
     
     this._initAutocompleter();
@@ -61,7 +62,8 @@ protonet.timeline.Input = {
      * Focus input after channel switch
      */
     protonet.Notifications.bind("channel.changed", function(e, channelId) {
-      this.input.focus();
+      // Avoid scrolling up when switching between channels
+      this.focus();
       this.channelIdInput.val(channelId);
     }.bind(this));
     
@@ -96,5 +98,18 @@ protonet.timeline.Input = {
     protonet.Notifications.trigger("input.submitted", [this.form]);
     
     this.input.val("");
+  },
+  
+  /**
+   * Focusing the input field when scrolled the input
+   * out of the viewport causes the page to be scrolled
+   * to the input which is sometimes really annoying
+   * We simply store the original scroll position and 
+   * apply it after the input has been focused
+   */
+  focus: function() {
+    var oldScrollTop = this.$window.scrollTop();
+    this.input.focus();
+    this.$window.scrollTop(oldScrollTop);
   }
 };
