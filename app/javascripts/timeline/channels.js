@@ -47,18 +47,6 @@ protonet.timeline.Channels = {
     this.selected = id;
     
     protonet.Notifications.trigger("channel.changed", id);
-  },
-  
-  /**
-   * TODO:
-   *    This should be handled via event notifications
-   */
-  getDownCaseMapping: function() {
-    var mapping = {};
-    $(this.data).each(function(i, channelData) {
-      mapping[channelData.name.toLowerCase()] = channelData.name;
-    });
-    return mapping;
   }
 };
 
