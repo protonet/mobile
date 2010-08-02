@@ -23,8 +23,17 @@ protonet.controls.InlineAutocompleter.prototype = {
     maxChars:       1,              // which string length should be used for auto completion
     lowerCase:      true,           // match in lower case mode
     prefix:         "",             // only match when string starts with prefix
-    matchingChars:  /[\w_\-\.]/i  // only execute completion look up when one of these chars has been pressed
+    matchingChars:  /[\w_\-\.]/i    // only execute completion look up when one of these chars has been pressed
   },
+  
+  IGNORE_KEYS: [
+    16, // SHIFT
+    17, // CTRL
+    18, // ALT
+    91, // CMD
+    38, // KEY UP
+    40  // Guess what... KEY DOWN
+  ],
   
   _prepareData: function(data) {
     return $.map(data, function(entry) {
@@ -50,25 +59,23 @@ protonet.controls.InlineAutocompleter.prototype = {
   },
   
   _observe: function() {
-    /** 
-     * keypress is only fired when an actual character has been entered
-     * (doesn't fire for shift, alt, cmd, ctrl, arrow keys, ...)
-     */
-    // this.input.keypress(this._keypress.bind(this));
     this.input.keyup(this._keyup.bind(this)).keydown(this._keydown.bind(this));
   },
   
   _keyup: function(event) {
-    if (this.ignoreKeyUp) {
+    /**
+     * Completely ignore special characters like (shift, ctrl, ...)
+     */
+    if ($.inArray(event.which, this.IGNORE_KEYS) != -1) {
       return;
     }
     
     this.autocompletionMode = false;
     
-    var pressedKey              = event.which,
-        enteredCharacter        = String.fromCharCode(pressedKey),
+    var enteredCharacter        = String.fromCharCode(event.which),
         value                   = this.input.val(),
         caretPosition           = this.input.attr("selectionStart"),
+        characterBeforeCaret    = value.substring(caretPosition - 1, caretPosition),
         valueUntilCaret         = value.substring(0, caretPosition),
         valueFromCaret          = value.substring(caretPosition),
         lastWhiteSpace          = Math.max(
@@ -99,16 +106,23 @@ protonet.controls.InlineAutocompleter.prototype = {
       return;
     }
     
-    var currentSuggestion = this.currentSuggestions[this.currentSuggestionIndex];
-        newValue          = value.substr(0, currentlyTypedWordStart)
-          + currentlyTypedWord
-          + this.currentSuggestions[this.currentSuggestionIndex]
-          + value.substr(currentlyTypedWordEnd);
-    this.input.val(newValue);
-    
-    this._markText(currentlyTypedWordEnd, currentlyTypedWordEnd + currentSuggestion.length);
-    
     this.autocompletionMode = true;
+    
+    /**
+     * Check whether typed character is the same as the one in front of the caret
+     * People who type really fast experience this bug
+     * (also known as the "andreas.gehret bug")
+     */
+    if (enteredCharacter.toLowerCase() == characterBeforeCaret.toLowerCase()) {
+      var currentSuggestion = this.currentSuggestions[this.currentSuggestionIndex];
+          newValue          = value.substr(0, currentlyTypedWordStart)
+            + currentlyTypedWord
+            + this.currentSuggestions[this.currentSuggestionIndex]
+            + value.substr(currentlyTypedWordEnd);
+      
+      this.input.val(newValue);
+      this._markText(currentlyTypedWordEnd, currentlyTypedWordEnd + currentSuggestion.length);
+    }
   },
   
   _keydown: function(event) {
