@@ -6,6 +6,7 @@
  *    channels.data_available - Called when data is available and the class itself is initialized and ready
  *    channels.initialized    - Called when all channels are initialized and the data is available
  *    channel.change          - Invoked when user wants to switch to another channel (eg. by clicking on a channel link)
+ *    channel.subscribe       - Call this when you want to subscribe a new channel by id
  */
 protonet.timeline.Channels = {
   initialize: function(data) {
