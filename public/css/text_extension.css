@@ -73,6 +73,7 @@
 }
 
 .text-extension-results .title {
+  color: #000;
   display: block;
   font-weight: bold;
   margin: 0 0 2px 0;
@@ -80,6 +81,7 @@
 }
 
 .text-extension-results .title:hover {
+  color: #000;
   text-decoration: underline;
 }
 
