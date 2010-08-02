@@ -21,7 +21,6 @@ protonet.timeline.Channel = function(data, link) {
   this.data       = data;
   this.$window    = $(window);
   this.latestMeep = null;
-  this.subModules = {};
   
   this._observe();
 };
@@ -54,7 +53,6 @@ protonet.timeline.Channel.prototype = {
       }
       
       this.latestMeep = instance;
-      this.subModules[meepData.id] = instance;
     }.bind(this));
     
     /**
@@ -85,7 +83,7 @@ protonet.timeline.Channel.prototype = {
     }.bind(this));
     
     /**
-     * Init endless scroller when meeps are rendered
+     * Init endless scroller and no meeps hint after meeps are rendered
      */
     protonet.Notifications.bind("channel.rendered channel.rendered_more", function(e, channelList, data, instance) {
       if (instance != this) {
@@ -93,6 +91,7 @@ protonet.timeline.Channel.prototype = {
       }
       
       this._initEndlessScroller();
+      this._initNoMeepsHint();
     }.bind(this));
   },
   
@@ -115,9 +114,7 @@ protonet.timeline.Channel.prototype = {
     this.channelList = $("<ul />", {
       "class":            "meeps",
       "data-channel-id":  this.data.id
-    }).appendTo(container).data({ channel: this.data, instance: this });
-    
-    this.toggle();
+    }).hide().appendTo(container).data({ channel: this.data, instance: this });
     
     this._renderMeeps(this.data.meeps, this.channelList, function() {
       protonet.Notifications.trigger("channel.rendered", [this.channelList, this.data, this]);
@@ -225,6 +222,36 @@ protonet.timeline.Channel.prototype = {
       lastMeepInList.unbind("inview");
       var lastMeepId = lastMeepInList.data("meep").id;
       this._loadMeeps({ last_id: lastMeepId }, this._renderMoreMeeps.bind(this));
+    }.bind(this));
+  },
+  
+  /**
+   * Show small text hint when
+   * channel has no meeps yet
+   */
+  _initNoMeepsHint: function() {
+    if (this.data.meeps.length) {
+      return;
+    }
+    
+    var noMeepsHint = $("<div />", {
+      "class": "no-meeps-available"
+    }).hide().html(protonet.t("NO_MEEPS_AVAILABLE")).insertAfter(this.channelList);
+    
+    protonet.Notifications.bind("channel.change", function(e, id) {
+      if (this.data.id == id && !this.data.meeps.length) {
+        noMeepsHint.show();
+      } else {
+        noMeepsHint.hide();
+      }
+    }.bind(this));
+    
+    protonet.Notifications.bind("meep.rendered", function(e, meepElement, meepData) {
+      if (meepData.channel_id != this.data.id) {
+        return;
+      }
+      
+      noMeepsHint.remove();
     }.bind(this));
   }
 };
