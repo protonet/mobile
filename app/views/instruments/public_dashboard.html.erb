@@ -20,8 +20,8 @@
   <div id="channels">
     <ul>
       <%- @channels.each_with_index do |c, index| -%>
-        <li data-channel-id="<%= c.id %>" <%= active(c, @active_channel) %>>
-          <%= link_to c.name.capitalize, { :channel_id => c.id }, { :title => c.description } %>
+        <li>
+          <%= link_to c.name.capitalize, { :channel_id => c.id }, { :title => c.description, 'data-channel-id' => c.id } %>
         </li>
       <%- end -%>
     </ul>

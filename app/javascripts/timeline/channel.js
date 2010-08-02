@@ -16,18 +16,17 @@
  *    channel.rendered_more - Triggered when a bunch of new meeps are rendered into the channel (due to endless scrolling, etc.)
  *
  */
-protonet.timeline.Channels.Channel = function(data, link, isSelected) {
+protonet.timeline.Channel = function(data, link) {
   this.link       = $(link);
   this.data       = data;
   this.$window    = $(window);
-  this.isSelected = isSelected;
-  this.lastMeep   = null;
+  this.latestMeep = null;
   this.subModules = {};
   
   this._observe();
 };
 
-protonet.timeline.Channels.Channel.prototype = {
+protonet.timeline.Channel.prototype = {
   config: {
     MERGE_MEEPS_TIMEFRAME: 2 * 60 * 1000, // 2 minutes
     FETCH_MEEPS_URL: "/tweets"

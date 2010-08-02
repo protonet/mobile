@@ -17,7 +17,7 @@ protonet.utils.parseQueryString = (function() {
       PLUS                  = /\+/g; // Needed since jquery's $.param replaces all %20 by +
   
   function decode(str) {
-    return decodeURIComponent(str.replace(PLUS, "%20"));
+    return decodeURIComponent((str || "").replace(PLUS, "%20"));
   }
   
   return function(str, separator) {

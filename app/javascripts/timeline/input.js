@@ -42,9 +42,10 @@ protonet.timeline.Input = {
     /**
      * Add channel names to autocompleter when initialized
      */
-    protonet.Notifications.bind("channels.data_available", function(e, channels) {
-      var channelNames = $.map(channels, function(channel) { return channel.name; });
-      this.autoCompleter.addData(channelNames);
+    protonet.Notifications.bind("channels.data_available", function(e, channelData, availableChannels) {
+      var availableChannelNames = [];
+      $.each(availableChannels, function(key, value) { availableChannelNames.push(key); });
+      this.autoCompleter.addData(availableChannelNames);
     }.bind(this));
     
     /**
@@ -59,7 +60,6 @@ protonet.timeline.Input = {
      * and update hidden channel id
      */
     protonet.Notifications.bind("channel.change", function(e, channelId) {
-      // Avoid scrolling up when switching between channels
       this.input.focus();
       this.channelIdInput.val(channelId);
     }.bind(this));

@@ -3,7 +3,7 @@
 
 #channels {
   border-bottom: 1px solid rgb(140, 140, 140);
-  margin: 0 10px 20px;
+  margin: 0 15px 20px;
   padding: 0 110px 0 15px;
   position: relative;
 }
@@ -15,7 +15,7 @@
 }
 
 #channels li {
-  margin-top: 3px;
+  margin-top: 5px;
   display: inline-block;
   vertical-align: bottom;
   position: relative;
@@ -38,7 +38,7 @@
   text-decoration: none;
 }
 
-#channels .active a {
+#channels .active {
   background: rgb(255, 255, 255);
   border-bottom: 1px solid rgb(255, 255, 255);
   color: rgb(115, 139, 255);

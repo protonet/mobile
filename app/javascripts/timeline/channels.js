@@ -1,3 +1,6 @@
+//= require "../utils/parse_query_string.js"
+//= require "channel.js"
+
 /**
  * @events
  *    channels.data_available - Called when data is available and the class itself is initialized and ready
@@ -6,12 +9,13 @@
  */
 protonet.timeline.Channels = {
   initialize: function(data) {
-    this.container        = $("#timeline");
-    this.channelLinks     = $("#channels li");
-    this.data             = data;
-    this.selected         = parseInt(this.channelLinks.filter(".active").attr("data-channel-id"), 10);
+    this.container          = $("#timeline");
+    this.channelLinks       = $("#channels li>a");
+    this.data               = data || [];
+    this.availableChannels  = protonet.config.availableChannels || {};
+    this.installedChannels  = $.map(this.data, function(channel) { return channel.name; });
     
-    protonet.Notifications.trigger("channels.data_available", [this.data]);
+    protonet.Notifications.trigger("channels.data_available", [this.data, this.availableChannels, this.installedChannels]);
     
     protonet.text_extensions.initialize(this.selected);
     protonet.controls.PrettyDate.initialize();
@@ -25,7 +29,7 @@ protonet.timeline.Channels = {
      * Observe click on elements with data attribute
      * such as tab links and in-timeline channel replies
      */
-    $(document).delegate("li[data-channel-id], a[data-channel-id]", "click",  function(event) {
+    $(document).delegate("a[data-channel-id]", "click",  function(event) {
        var id = $(event.currentTarget).attr("data-channel-id");
        
        protonet.Notifications.trigger("channel.change", id);
@@ -36,20 +40,51 @@ protonet.timeline.Channels = {
     /**
      * Track selected channel
      */
-    protonet.Notifications.bind("channel.change", function(e, id) {
+    protonet.Notifications.bind("channel.change", function(e, id, avoidHashChange) {
       this.selected = id;
+      if (!avoidHashChange) {
+        location.hash = "channel_id=" + id;
+      }
     }.bind(this));
+    
+    /**
+     * Select initial channel when channels are rendered/initialized
+     */
+    protonet.Notifications.bind("channels.rendered", function(e) {
+      this._selectInitialChannel();
+    }.bind(this));
+    
+    /**
+     * Ajax history to enable forward and backward
+     * buttons in browser to switch between channels
+     */
+    $(window).bind("hashchange", function() {
+      var hashParams = protonet.utils.parseQueryString(location.hash.slice(1)),
+          channelId  = parseInt(hashParams.channel_id, 10);
+      if (channelId && channelId != this.selected) {
+        protonet.Notifications.trigger("channel.change", [channelId, true]);
+      }
+    });
   },
   
   _renderChannelLists: function() {
     this.data.chunk(function(channelData) {
-      var isSelected = this.selected == channelData.id,
-          link       = this.channelLinks.filter("[data-channel-id=" + channelData.id + "]");
-      new this.Channel(channelData, link, isSelected).render(this.container);
+      var link       = this.channelLinks.filter("[data-channel-id=" + channelData.id + "]");
+      new protonet.timeline.Channel(channelData, link).render(this.container);
     }.bind(this), function() {
       protonet.Notifications.trigger("channels.rendered", [this.data]);
     }.bind(this));
+  },
+  
+  _selectInitialChannel: function() {
+    var hashParams    = protonet.utils.parseQueryString(location.hash.slice(1)),
+        queryParams   = protonet.utils.parseQueryString(location.search.slice(1)),
+        urlChannelId  =  parseInt(hashParams.channel_id || queryParams.channel_id, 10);
+    
+    if (urlChannelId) {
+      protonet.Notifications.trigger("channel.change", [urlChannelId, true]);
+    } else if (this.data.length) {
+      protonet.Notifications.trigger("channel.change", [this.data[0].id, true]);
+    }
   }
 };
-
-//= require "channel.js"
