@@ -4,7 +4,7 @@
 /**
  * @events
  *    channels.data_available - Called when data is available and the class itself is initialized and ready
- *    channels.rendered       - Called when all channels are rendered
+ *    channels.initialized    - Called when all channels are initialized and the data is available
  *    channel.change          - Invoked when user wants to switch to another channel (eg. by clicking on a channel link)
  */
 protonet.timeline.Channels = {
@@ -13,9 +13,9 @@ protonet.timeline.Channels = {
     this.channelLinks       = $("#channels li>a");
     this.data               = data || [];
     this.availableChannels  = protonet.config.availableChannels || {};
-    this.installedChannels  = $.map(this.data, function(channel) { return channel.name; });
+    this.subscribedChannels = $.map(this.data, function(channel) { return channel.id; });
     
-    protonet.Notifications.trigger("channels.data_available", [this.data, this.availableChannels, this.installedChannels]);
+    protonet.Notifications.trigger("channels.data_available", [this.data, this.availableChannels, this.subscribedChannels]);
     
     protonet.text_extensions.initialize(this.selected);
     protonet.controls.PrettyDate.initialize();
@@ -30,18 +30,30 @@ protonet.timeline.Channels = {
      * such as tab links and in-timeline channel replies
      */
     $(document).delegate("a[data-channel-id]", "click",  function(event) {
-       var id = $(event.currentTarget).attr("data-channel-id");
+       var id = parseInt($(event.currentTarget).attr("data-channel-id"), 10);
+       if (!id) {
+         return;
+       }
        
        protonet.Notifications.trigger("channel.change", id);
-       
        event.preventDefault();
     }.bind(this));
     
     /**
      * Track selected channel
+     * Sometimes we have to prevent the hash from changing
+     * to avoid creating new browser history entries
+     *
+     * If the desired channel is not already subs
      */
     protonet.Notifications.bind("channel.change", function(e, id, avoidHashChange) {
+      if ($.inArray(id, this.subscribedChannels) == -1) {
+        protonet.Notifications.trigger("channel.subscribe", id);
+        return;
+      }
+      
       this.selected = id;
+      
       if (!avoidHashChange) {
         location.hash = "channel_id=" + id;
       }
@@ -50,9 +62,22 @@ protonet.timeline.Channels = {
     /**
      * Select initial channel when channels are rendered/initialized
      */
-    protonet.Notifications.bind("channels.rendered", function(e) {
+    protonet.Notifications.bind("channels.initialized", function() {
       this._selectInitialChannel();
     }.bind(this));
+    
+    /**
+     * Subscribe a new channel by id
+     */
+    protonet.Notifications.bind("channel.subscribe", function(e, id) {
+      $("<form />", {
+        method: "post",
+        action: "/listens/?channel_id=" + id
+      }).hide().append($("<input />", {
+        name: "authenticity_token",
+        value: protonet.config.authenticity_token
+      })).appendTo("body").submit();
+    });
     
     /**
      * Ajax history to enable forward and backward
@@ -72,7 +97,7 @@ protonet.timeline.Channels = {
       var link       = this.channelLinks.filter("[data-channel-id=" + channelData.id + "]");
       new protonet.timeline.Channel(channelData, link).render(this.container);
     }.bind(this), function() {
-      protonet.Notifications.trigger("channels.rendered", [this.data]);
+      protonet.Notifications.trigger("channels.initialized", [this.data]);
     }.bind(this));
   },
   

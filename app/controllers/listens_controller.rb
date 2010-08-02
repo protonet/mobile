@@ -7,24 +7,17 @@ class ListensController < ApplicationController
     redirect_to listen_to_channel_path(:channel_name => params[:channel_name]) if params[:channel_name]
   end
   
-  #TODO REFACTOR, too many if elses
   def create
-    channel = if params[:channel_id]
-      Channel.find(params[:channel_id])
-    elsif params[:channel_name]
-      Channel.find_by_name(params[:channel_name])
-    end
+    channel = Channel.find(params[:channel_id])
+    
     if channel
       current_user.subscribe(channel)
-      flash[:notice] = "you started listening to #{channel.name}"
+      flash[:notice] = "you started listening to '#{h(channel.name)}'"
     else
-      flash[:error] = "could not subscribe to channel with identifier #{(params[:channel_name] || params[:channel_id]).to_s}"
+      flash[:error] = "could not subscribe to channel with identifier '#{params[:channel_id].to_s}'"
     end
-    if params[:channel_name]
-      redirect_to "/#{("#channel_name=" + channel.name if channel.try(:name))}"
-    else
-      redirect_to :controller => 'channels', :anchor => channel.try(:id)
-    end
+    
+    redirect_to :controller => 'channels', :anchor => channel.try(:id)
   end
   
   def destroy
@@ -32,7 +25,7 @@ class ListensController < ApplicationController
     channel = listen.channel
     if listen.user == current_user || channel.owner == current_user
       listen.user.unsubscribe(channel)
-      flash[:notice] = "you stopped listening to #{channel.name}"
+      flash[:notice] = "you stopped listening to '#{h(channel.name)}'"
     else
       flash[:notice] = "you have no right to this operation"
     end
