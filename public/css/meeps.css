@@ -129,4 +129,25 @@ button::-moz-focus-inner {
   color: rgb(180, 180, 180);
 }
 
+.smilie {
+  display: inline-block;
+  vertical-align: bottom;
+  background: url(/img/spr_smilies.png) no-repeat;
+}
+
+.smilie.grin {
+  background-position: 0 0;
+}
+
+.smilie.lol {
+  background-position: -19px 0;
+}
+
+.smilie.sad {
+  background-position: -38px 0;
+}
+
+.smilie.blink {
+  background-position: -57px 0;
+}
 /* ================================================================ MEEPS = */

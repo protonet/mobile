@@ -186,7 +186,7 @@
 /* =LINK TEXT EXTENSION
 --------------------------------------------------------------------------- */
 .text-extension-results.Link .media img {
-  background: hsl(0, 0%, 100%) url(/images/screenshot_fetching.gif) center center no-repeat;
+  background: hsl(0, 0%, 100%) url(/img/screenshot_fetching.gif) center center no-repeat;
 }
 
 /* =IMAGES TEXT EXTENSIONS
