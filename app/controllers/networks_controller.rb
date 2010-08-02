@@ -7,6 +7,16 @@ class NetworksController < ApplicationController
   def index
     @networks = Network.all
   end
+  
+  def create
+    network = Network.new(params[:network])
+    if network.save && network.errors.empty?
+      flash[:notice] = "Successfully created network '#{params[:network][:name]}'"
+    else
+      flash[:error] = "Could not create network '#{params[:network][:name]}', the reason is: #{network.errors.map(&:inspect).join(' ')}"
+    end
+    redirect_to :action => 'index', :anchor => network.id
+  end
 
   def map
     network = Network.first(params[:network_id])

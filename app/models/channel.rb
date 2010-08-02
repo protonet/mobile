@@ -1,6 +1,7 @@
 class Channel < ActiveRecord::Base
 
-  belongs_to   :owner, :class_name => "User"
+  belongs_to  :owner, :class_name => "User"
+  belongs_to  :network
 
   has_many  :says
   has_many  :tweets, :through => :says
@@ -15,6 +16,7 @@ class Channel < ActiveRecord::Base
   after_create  :create_folder,   :if => lambda {|c| !c.home?}
   after_create  :subscribe_owner, :if => lambda {|c| !c.home?}
 
+  named_scope :public, :conditions => {:public => true}
 
   def self.home
     begin

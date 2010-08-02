@@ -293,6 +293,17 @@ h2 {
 #network a.on {
   background-position: 0 -31px;
 }
+#network a.create {
+  background: none;
+  display: block;
+  font-size: 1.2em;
+  margin: 0 0 0.3em;
+  text-align: right;
+  width: auto;
+}
+#network div.create {
+  margin: 0 0 1em;
+}
 #network-search {
   margin-bottom: 1em;
 }
@@ -1347,7 +1358,13 @@ h2 {
   max-height: 540px;
   overflow: auto;
 }
-#channels li {
+#channels li.network p {
+  border-bottom:1px solid #D4D4D4;
+  margin-bottom:6px;
+  padding:2px;
+  text-align:right;
+}
+#channels li.channel {
   -moz-border-radius: 0.5em;
   -webkit-border-radius: 0.5em;
   background: rgb(255, 255, 255) url(/images/bkg_message.png) repeat-x scroll left bottom;
@@ -1360,13 +1377,13 @@ h2 {
   padding: 1em 0.6em;
   text-decoration: none;
   cursor: pointer;
-  width: 310px;
+  width: 330px;
 }
-#channels li.clicked,
+#channels li.channel.clicked,
 #users li.clicked div {
   background: none;
 }
-#channels li span {
+#channels li.channel span {
   color: rgba(0, 0, 0, 0.5);
   font-weight: normal;
 }

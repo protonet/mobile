@@ -15,6 +15,12 @@ $("#network li").click(function(event){
   );
 });
 
+$(function() {
+  var input = $("a[rel]");
+  protonet.utils.toggleElement(input);
+});
+
+
 function drawNetwork(data) {
   // {:nodes => [
   //   {:name => "protonet-7.local", :type => 'edge', :clients => [{:name => 'foo'}, {:name => 'bar'}]},
