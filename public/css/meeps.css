@@ -129,6 +129,7 @@ button::-moz-focus-inner {
   color: rgb(180, 180, 180);
 }
 
+/* Smilies */
 .smilie {
   display: inline-block;
   vertical-align: bottom;

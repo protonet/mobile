@@ -68,9 +68,7 @@ protonet.timeline.Channels = {
     /**
      * Select initial channel when channels are rendered/initialized
      */
-    protonet.Notifications.bind("channels.initialized", function() {
-      this._selectInitialChannel();
-    }.bind(this));
+    protonet.Notifications.bind("channels.initialized", this._selectChannel.bind(this));
     
     /**
      * Subscribe a new channel by id
@@ -89,13 +87,7 @@ protonet.timeline.Channels = {
      * Ajax history to enable forward and backward
      * buttons in browser to switch between channels
      */
-    $(window).bind("hashchange", function() {
-      var hashParams = protonet.utils.parseQueryString(location.hash.slice(1)),
-          channelId  = parseInt(hashParams.channel_id, 10);
-      if (channelId && channelId != this.selected) {
-        protonet.Notifications.trigger("channel.change", [channelId, true]);
-      }
-    });
+    $(window).bind("hashchange", this._selectChannel.bind(this));
   },
   
   _renderChannelLists: function() {
@@ -112,15 +104,14 @@ protonet.timeline.Channels = {
    * If no url params are given, we simply choose
    * the first channel in the data array
    */
-  _selectInitialChannel: function() {
-    var hashParams    = protonet.utils.parseQueryString(location.hash.slice(1)),
-        queryParams   = protonet.utils.parseQueryString(location.search.slice(1)),
-        urlChannelId  =  parseInt(hashParams.channel_id || queryParams.channel_id, 10);
+  _selectChannel: function() {
+    var hashParams        = protonet.utils.parseQueryString(location.hash.slice(1)),
+        queryParams       = protonet.utils.parseQueryString(location.search.slice(1)),
+        urlChannelId      = parseInt(hashParams.channel_id || queryParams.channel_id, 10),
+        selectedChannelId = urlChannelId || (this.data[0] ? this.data[0].id : null);
     
-    if (urlChannelId) {
-      protonet.Notifications.trigger("channel.change", [urlChannelId, true]);
-    } else if (this.data.length) {
-      protonet.Notifications.trigger("channel.change", [this.data[0].id, true]);
+    if (selectedChannelId && this.selected != selectedChannelId) {
+      protonet.Notifications.trigger("channel.change", [selectedChannelId, true]);
     }
   }
 };

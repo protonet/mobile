@@ -1,19 +1,27 @@
 //= require "escape_for_reg_exp.js"
 //= require "template.js"
 
+
+/**
+ * Replaces text smilies with images :-)
+ *
+ * @example
+ *    protonet.utils.smilify("hey what's up, dudes! :-)");
+ *      => 'hey what's up, dudes! <img src="..." class="grin">'
+ */
 protonet.utils.smilify = (function() {
   /**
    * Map smilies to corresponding css classes
    */
   var SMILIE_MAPPING = {
     ":-)":  "grin",
-    ":)":   "grin",
+    ":)" :  "grin",
     ":-(":  "sad",
-    ":(":   "sad",
+    ":(" :  "sad",
     ":-D":  "lol",
-    ":D":   "lol",
+    ":D" :  "lol",
     ";-)":  "blink",
-    ";)":   "blink"
+    ";)" :  "blink"
   };
   
   var REG_EXP_TEMPLATE = "(^|[\\s(]){smilie}($|[\\s!?.)])";
@@ -28,7 +36,8 @@ protonet.utils.smilify = (function() {
     for (var i in COMPILED_REG_EXPS) {
       str = str.replace(COMPILED_REG_EXPS[i], function(original, $1, $2) {
         return $1 + new protonet.utils.Template("smilie-template", {
-          type: SMILIE_MAPPING[i]
+          type:     SMILIE_MAPPING[i],
+          original: i
         }) + $2;
       });
     }
