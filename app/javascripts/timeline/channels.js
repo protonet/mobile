@@ -45,7 +45,12 @@ protonet.timeline.Channels = {
      * Sometimes we have to prevent the hash from changing
      * to avoid creating new browser history entries
      *
-     * If the desired channel is not already subs
+     * If the desired channel is not already subscribed this
+     * will fire the channel.subscribe event
+     * 
+     * Caution: Be sure that the passed id is always of typeof "number"
+     * otherwise the comparsion with the already subscribed channel ids will
+     * fail
      */
     protonet.Notifications.bind("channel.change", function(e, id, avoidHashChange) {
       if ($.inArray(id, this.subscribedChannels) == -1) {
