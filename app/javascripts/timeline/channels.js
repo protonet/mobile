@@ -76,6 +76,11 @@ protonet.timeline.Channels = {
     }.bind(this));
   },
   
+  /**
+   * Select channel based on url params
+   * If no url params are given, we simply choose
+   * the first channel in the data array
+   */
   _selectInitialChannel: function() {
     var hashParams    = protonet.utils.parseQueryString(location.hash.slice(1)),
         queryParams   = protonet.utils.parseQueryString(location.search.slice(1)),
