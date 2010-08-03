@@ -14,7 +14,7 @@ protonet.timeline = {
     this.loadingIndicator = $("#timeline-loading-indicator");
     
     this._observe();
-    this._initInput();
+    this._initForm();
     this.load();
   },
   
@@ -49,10 +49,10 @@ protonet.timeline = {
     protonet.timeline.Channels.initialize(channelData);
   },
   
-  _initInput: function() {
-    protonet.timeline.Input.initialize();
+  _initForm: function() {
+    protonet.timeline.Form.initialize();
   }
 };
 
-//= require "input.js"
+//= require "form.js"
 //= require "channels.js"

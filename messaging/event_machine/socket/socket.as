@@ -8,7 +8,7 @@ class Socket {
   }
 
   static function sendData(data:String) {
-    ExternalInterface.call("protonet.globals.dispatcher.sentCallback", socket.send(unescape(data)) );
+    socket.send(unescape(data));
   }
 
   static function onReceive(data:String) {
@@ -17,11 +17,11 @@ class Socket {
      * http://www.digitalmachina.com/archives/2009/03/11/externalinterface-error-when-parameters-contain-special-characters/
      */
     data = data.split("\\").join("\\\\");
-    ExternalInterface.call("protonet.globals.dispatcher.messageReceived", data );
+    ExternalInterface.call("protonet.Notifications.trigger", "socket.receive", data);
   }
   
   static function onConnect(status:Boolean) {
-    ExternalInterface.call("protonet.globals.dispatcher.socketConnectCallback", status );
+    ExternalInterface.call("protonet.Notifications.trigger", "socket.connected", status);
   }
   
   static function connectSocket(ip:String, port:Number) {
@@ -33,7 +33,6 @@ class Socket {
   }
 
   static function main() {
-    
     socket = new XMLSocket();
     socket.onData = onReceive;
     socket.onConnect = onConnect;
@@ -43,7 +42,6 @@ class Socket {
     ExternalInterface.addCallback("connectSocket", null, connectSocket);
     ExternalInterface.addCallback("closeSocket", null, closeSocket);
     
-    ExternalInterface.call("protonet.globals.dispatcher.socketReadyCallback");
-    
+    ExternalInterface.call("protonet.Notifications.trigger", "socket.initialized");
   }
 }

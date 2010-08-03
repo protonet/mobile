@@ -6,11 +6,12 @@
  *    input.submitted - Indicates that the input has been submitted
  *    meep.render     - Causes a new meep to render and to post
  */
-protonet.timeline.Input = {
+protonet.timeline.Form = {
   initialize: function() {
     this.form           = $("#message-form");
     this.input          = this.form.find("#message");
     this.channelIdInput = this.form.find("#tweet_channel_id");
+    this.socketIdInput  = this.form.find("#tweet_socket_id");
     this.$window        = $(window);
     this.typing         = false;
     
@@ -62,6 +63,13 @@ protonet.timeline.Input = {
     protonet.Notifications.bind("channel.change", function(e, channelId) {
       this.input.focus();
       this.channelIdInput.val(channelId);
+    }.bind(this));
+    
+    /**
+     * Update socket id
+     */
+    protonet.Notifications.bind("socket.update_id", function(e, socketId) {
+      this.socketIdInput.val(socketId);
     }.bind(this));
     
     /**

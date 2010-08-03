@@ -1,7 +1,7 @@
+//= require "dispatcher/dispatcher.js"
 //= require "timeline/timeline.js"
 //= require "text_extensions/text_extensions.js"
 //= require "effects/clouds.js"
-//= require "dispatching/dispatching_system.js"
 //= require "controls/file_widget.js"
 //= require "controls/user_widget.js"
 //= require "controls/pretty_date.js"
@@ -10,6 +10,7 @@
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
 $(function() {
+  protonet.dispatcher.initialize();
   protonet.user.initialize();
   protonet.timeline.initialize();
 });
