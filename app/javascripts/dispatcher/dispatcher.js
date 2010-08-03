@@ -125,9 +125,8 @@ protonet.dispatcher = {
   },
 
   messageReceived: function(data) {
-    // console.log(raw_data + " received.");
     // FIXME: Handle this in the flash socket
-    if ($.trim(raw_data).startsWith("<?xml")) {
+    if ($.trim(data).startsWith("<?xml")) {
       return;
     }
     
