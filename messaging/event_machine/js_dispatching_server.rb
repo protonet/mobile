@@ -148,7 +148,7 @@ module JsDispatchingServer
     queue = amq.queue("system-queue-#{@key}", :auto_delete => true)
     queue.bind(amq.topic('system'), :key => 'system.#').subscribe do |msg|
       message = JSON(msg)
-      message.merge!({:x_target => 'protonet.Notifications.triggerFromSocket'}) # jquery object
+      message['x_target'] || message.merge!({:x_target => 'protonet.Notifications.triggerFromSocket'}) # jquery object
       message_json = message.to_json
       log("got system message: #{msg.inspect}")
       send_data("#{message_json}\0")
@@ -190,7 +190,7 @@ module JsDispatchingServer
     queue = amq.queue("consumer-#{@key}-files.channel_#{channel.id}", :auto_delete => true)
     queue.bind(amq.topic("files"), :key => "files.channel_#{channel.id}").subscribe do |msg|
       message = JSON(msg)
-      message.merge!({:x_target => 'protonet.Notifications.triggerFromSocket'}) # jquery object
+      message['x_target'] || message.merge!({:x_target => 'protonet.Notifications.triggerFromSocket'}) # jquery object
       message_json = message.to_json
       log('sending data out: ' + message_json)
       send_data("#{message_json}\0")
@@ -203,7 +203,7 @@ module JsDispatchingServer
     queue = amq.queue("consumer-#{@key}-user", :auto_delete => true)
     queue.bind(amq.topic("users"), :key => "users.#{@user.id}").subscribe do |msg|
       message = JSON(msg)
-      message.merge!({:x_target => 'protonet.Notifications.triggerFromSocket'}) # jquery object
+      message['x_target'] || message.merge!({:x_target => 'protonet.Notifications.triggerFromSocket'}) # jquery object
       message_json = message.to_json
       log('sending data out: ' + message_json)
       send_data("#{message_json}\0")
