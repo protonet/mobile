@@ -157,11 +157,9 @@ protonet.timeline.Channel.prototype = {
    */
   _renderMeep: function(meepDataOrForm, channelList, post) {
     var meep              = new protonet.timeline.Meep(meepDataOrForm),
-        newMeepData       = meep.data,
-        previousMeep      = this.latestMeep,
-        previousMeepData  = previousMeep && previousMeep.data;
+        previousMeep      = this.latestMeep;
     
-    if (previousMeepData && this._shouldBeMerged(previousMeepData, newMeepData)) {
+    if (previousMeep && this._shouldBeMerged(previousMeep, meep)) {
       meep.mergeWith(previousMeep.element);
     } else {
       meep.render(channelList);
@@ -201,12 +199,16 @@ protonet.timeline.Channel.prototype = {
    * and it will tell you whether they should be merged
    *
    * Merge previous and new meep when ...
+   *  ... the previous meep is not errorneous
    *  ... authors are the same
    *  ... the time difference between both is less than MERGE_MEEPS_TIMEFRAME
    *  ... the new meep hasn't got a text extension attached
    */
-  _shouldBeMerged: function(previousMeepData, newMeepData) {
-    return !newMeepData.text_extension &&
+  _shouldBeMerged: function(previousMeep, newMeep) {
+    var newMeepData       = newMeep.data,
+        previousMeepData  = previousMeep.data;
+    
+    return !previousMeep.error && !newMeepData.text_extension &&
       newMeepData.author == previousMeepData.author &&
       new Date(newMeepData.created_at) - new Date(previousMeepData.created_at) < this.config.MERGE_MEEPS_TIMEFRAME;
   },

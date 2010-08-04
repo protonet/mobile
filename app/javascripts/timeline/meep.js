@@ -123,6 +123,8 @@ protonet.timeline.Meep.prototype = {
         status.html(protonet.t("MEEP_ERROR"));
         this.element.find("article").addClass("error");
         
+        this.error = true;
+        
         (onFailure || $.noop)();
         protonet.Notifications.trigger("meep.error", [this.element, this.data, this]);
       }.bind(this)
