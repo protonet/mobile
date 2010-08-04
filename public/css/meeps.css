@@ -70,6 +70,10 @@ button::-moz-focus-inner {
   background-image: url("/img/icn_own_message_arrow.png");
 }
 
+.meeps article p {
+  white-space: pre-wrap;
+}
+
 .meeps .avatar {
   -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -150,5 +154,10 @@ button::-moz-focus-inner {
 
 .smilie.blink {
   background-position: -57px 0;
+}
+
+.heart {
+  color: red;
+  text-shadow: 1px 1px 1px #999;
 }
 /* ================================================================ MEEPS = */

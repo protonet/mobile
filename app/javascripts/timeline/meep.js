@@ -3,6 +3,7 @@
 //= require "../utils/escape_html.js"
 //= require "../utils/nl2br.js"
 //= require "../utils/smilify.js"
+//= require "../utils/heartify.js"
 //= require "../utils/highlight_channel_replies.js"
 //= require "../utils/template.js"
 //= require "../utils/parse_query_string.js"
@@ -62,6 +63,7 @@ protonet.timeline.Meep.prototype = {
       // Order of functions is essential!
       protonet.utils.escapeHtml,
       protonet.utils.smilify,
+      protonet.utils.heartify,
       protonet.utils.highlightChannelReplies,
       protonet.utils.autoLink,
       protonet.utils.nl2br,
