@@ -9,7 +9,7 @@ protonet.dispatcher = {
     this.server           = protonet.config.dispatching_server;
     this.server_port      = protonet.config.dispatching_server_port;
     this.user_auth_token  = protonet.config.token;
-    this.user_id          = protonet.config.user_id;
+    this.userId           = protonet.config.user_id;
     this.socketId         = "flash-socket";
 
     this._observe();
@@ -117,7 +117,7 @@ protonet.dispatcher = {
     protonet.Notifications.trigger("socket.send", JSON.stringify({
       operation: "authenticate",
       payload: {
-        user_id:  this.user_id,
+        user_id:  this.userId,
         token:    this.user_auth_token,
         type:     "web"
       }
@@ -143,10 +143,7 @@ protonet.dispatcher = {
     }
   },
 
-  sendMessage: function(data, delimit) {
-    if (delimit) {
-      data = data + "\0";
-    }
+  sendMessage: function(data) {
     this.socket.sendData(data);
   }
 };
