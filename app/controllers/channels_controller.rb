@@ -1,13 +1,38 @@
 class ChannelsController < ApplicationController
   
-  before_filter :login_required
+  # before_filter :login_required
   
   def index
-    @channels = Channel.all
+    respond_to do |format|
+      format.json do
+        network_id  = params[:network_id].to_i
+
+        channels = if network_id != 1 # non-local network
+          network = Network.find(network_id)
+          # using 1 since we want the channels local to the node
+          call = Net::HTTP.get_response(URI.parse(network.supernode + "/networks/1/channels.json"))
+          JSON.parse(call.body)
+        else
+          Channel.public.all
+        end
+        render :json => channels
+      end
+      format.html do
+        @channels = Channel.all
+        @networks = Network.all
+      end
+    end
   end
   
   def show
-    render :partial => "channel_details", :locals => {:channel => Channel.find(params[:id])}
+    respond_to do |format|
+      format.json do
+        render :text => 'json'
+      end
+      format.html do
+        render :partial => "channel_details", :locals => {:channel => Channel.find(params[:id])}
+      end
+    end
   end
   
   def create

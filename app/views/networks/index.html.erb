@@ -15,6 +15,19 @@
       </li>
     <%- end -%>
   </ul>
+  <%= link_to 'create a network', "#", :class => "create", :rel => "create" %>
+  
+  <div id="create" class="create section hidden">
+    <%- form_for :network, :url => networks_path, :action => 'post' do |f| -%>
+      <fieldset>
+        <%= f.text_field :name, { :title => 'Name of the network…' } %>
+        <%= f.text_field :description, { :title => 'Description of the network…' } %>
+        <%= f.text_field :supernode, { :title => 'What is the address of this nodes management…' } %>
+        <%= button 'Create' %>
+      </fieldset>
+    <%- end -%>
+  </div>
+  
 </div>
 <div id="network-monitor-wrapper">
   <div id="network-monitor">

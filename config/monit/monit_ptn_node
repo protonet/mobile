@@ -123,20 +123,18 @@ check process node.js with pidfile $shared_path$/pids/node.pid
   if 3 restarts within 5 cycles then timeout
   if totalmem > 200.0 MB for 2 cycles then restart
 
-check process jabber_control.rb with pidfile $shared_path$/pids/jabber_control.rb.pid
+check process jabber.rb with pidfile $shared_path$/pids/jabber.rb.pid
   start program = "$current_path$/script/monit_bundle_exec production $current_path$ $current_path$/messaging/jabber_control.rb start"
   stop program  = "$current_path$/script/monit_bundle_exec production $current_path$ $current_path$/messaging/jabber_control.rb stop"
   if 10 restarts within 10 cycles then timeout
   if totalmem > 200.0 MB for 2 cycles then restart
 
-# restart doesn't work because of sudo rights
  check process apache2 with pidfile /var/run/apache2.pid
-   start program = "sudo /etc/init.d/apache2 start"
-   stop program  = "sudo /etc/init.d/apache2 stop"
+   start program = "/usr/bin/sudo /etc/init.d/apache2 start"
+   stop program  = "/usr/bin/sudo /etc/init.d/apache2 stop"
    if totalmem > 500.0 MB for 5 cycles then restart
    if children > 250 then restart
 
-# restart doesn't work because of sudo rights
  check process rabbitmq with pidfile /var/run/rabbitmq.pid
-   start program = "sudo /etc/init.d/rabbitmq-server start"
-   stop program = "sudo /etc/init.d/rabbitmq-server stop"
+   start program = "/usr/bin/sudo /etc/init.d/rabbitmq-server start"
+   stop program = "/usr/bin/sudo /etc/init.d/rabbitmq-server stop"

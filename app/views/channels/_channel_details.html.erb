@@ -10,9 +10,9 @@
     <% end %>
   <% end %>
 </ul>
-
+<br>
 <h4>Channel Type:</h4>
-<%= if channel.public? then "public" else "private" end %>
+<%= channel.public? ? "public" : "private" %>
 
 <% if channel.owned_by(current_user) %>
   <h4>Edit Channel Type:</h4>
@@ -32,3 +32,6 @@
     <%= link_to('delete channel', channel_path, :method => :delete) %>
   </span>
 <% end %>
+
+<h4>The channel this network belongs to:</h4>
+<%= link_to(channel.network.name, networks_path) %> (<%= channel.network.description %>)

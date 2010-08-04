@@ -17,6 +17,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources   :networks do |networks|
     networks.map '/map', :controller => 'networks', :action => 'map'
+    networks.resources :channels
   end
   
   map.preferences '/preferences', :controller => 'preferences', :action => 'index'
