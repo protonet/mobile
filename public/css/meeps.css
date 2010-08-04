@@ -119,7 +119,7 @@ button::-moz-focus-inner {
 #timeline-loading-indicator {
   display: none;
   height: 48px;
-  background: url(/img/icn_loading_big.gif) center center no-repeat; /* TODO: Check for a better loading graphic ajaxload.info */
+  background: url(/img/icn_loading_big.gif) center center no-repeat;
   margin-bottom: 6px;
 }
 
