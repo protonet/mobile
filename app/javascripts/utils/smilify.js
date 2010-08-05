@@ -13,34 +13,39 @@ protonet.utils.smilify = (function() {
   /**
    * Map smilies to corresponding css classes
    */
-  var SMILIE_MAPPING = {
-    ":-)":  "grin",
-    ":)" :  "grin",
-    ":-(":  "sad",
-    ":(" :  "sad",
-    ":-D":  "lol",
-    ":D" :  "lol",
-    ";-)":  "blink",
-    ";)" :  "blink"
-  };
+  var SMILIES = [
+    { shortcuts: [":-D", ":D"], className: "laugh" },
+    { shortcuts: [":-)", ":)"], className: "grin" },
+    { shortcuts: [":-O", ":O", ":-o", ":o"], className: "amazed" },
+    { shortcuts: [":-(", ":("], className: "sad" },
+    { shortcuts: [":'-(", ":'("], className: "cry" },
+    { shortcuts: [">:O", ">:-O", ":@", ">:-(", ">:("], className: "angry" },
+    { shortcuts: [":-P", ":P"], className: "tongue" },
+    { shortcuts: ["B-)", "B)", "8-)", "8)"], className: "glasses" },
+    { shortcuts: [";-)", ";)"], className: "wink" },
+    { shortcuts: [":-/", ":/"], className: "struggled" }
+  ];
   
-  var REG_EXP_TEMPLATE = "(^|[\\s(]){smilie}($|[\\s!?.)])";
+  var REG_EXP_TEMPLATE = "(^|[\\s(])({smilie})(?=$|[\\s!?.)])";
   
-  var COMPILED_REG_EXPS = {};
-  for (var i in SMILIE_MAPPING) {
-    var regExp = REG_EXP_TEMPLATE.replace("{smilie}", protonet.utils.escapeForRegExp(i));
-    COMPILED_REG_EXPS[i] = new RegExp(regExp, "g");
-  }
+  $.each(SMILIES, function(i, smilie) {
+    smilie.regExps = $.map(smilie.shortcuts, function(shortcut) {
+      var regExpStr = REG_EXP_TEMPLATE.replace("{smilie}", protonet.utils.escapeForRegExp(shortcut));
+      return new RegExp(regExpStr, "g");
+    });
+  });
   
   return function(str) {
-    for (var i in COMPILED_REG_EXPS) {
-      str = str.replace(COMPILED_REG_EXPS[i], function(original, $1, $2) {
-        return $1 + new protonet.utils.Template("smilie-template", {
-          type:     SMILIE_MAPPING[i],
-          original: i
-        }) + $2;
+    $.each(SMILIES, function(i, smilie) {
+      $.each(smilie.regExps, function(i, regExp) {
+        str = str.replace(regExp, function(original, $1, $2) {
+          return $1 + new protonet.utils.Template("smilie-template", {
+            type:     smilie.className,
+            shortcut: $2
+          });
+        });
       });
-    }
+    });
     return str;
   };
 })();

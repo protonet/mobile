@@ -137,23 +137,47 @@ button::-moz-focus-inner {
 .smilie {
   display: inline-block;
   vertical-align: bottom;
-  background: url(/img/spr_smilies.png) no-repeat;
+  background: url(/img/spr_smilies_r2.png) no-repeat;
 }
 
-.smilie.grin {
+.smilie.laugh {
   background-position: 0 0;
 }
 
-.smilie.lol {
-  background-position: -19px 0;
+.smilie.amazed {
+  background-position: -28px 0;
 }
 
 .smilie.sad {
-  background-position: -38px 0;
+  background-position: -56px 0;
 }
 
-.smilie.blink {
-  background-position: -57px 0;
+.smilie.angry {
+  background-position: -84px 0;
+}
+
+.smilie.cry {
+  background-position: -112px 0;
+}
+
+.smilie.tongue {
+  background-position: -140px 0;
+}
+
+.smilie.glasses {
+  background-position: -169px 0;
+}
+
+.smilie.wink {
+  background-position: -197px 0;
+}
+
+.smilie.struggled {
+  background-position: -225px 0;
+}
+
+.smilie.grin {
+  background-position: -253px 0;
 }
 
 .heart {
