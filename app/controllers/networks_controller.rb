@@ -9,7 +9,7 @@ class NetworksController < ApplicationController
   end
   
   def show
-    render :text => Network.find(params[:id]).name
+    render :text => Network.find(params[:id]).attributes.to_a.join("<br>")
   end
   
   def create

@@ -241,14 +241,14 @@ var e11 = new Edge(n1, n8);
 var w = 520;
 var h = 570;
 var NetworkGraph = new Graph(
-	[n1, n2, n3, n4, n5, n6, n7, n8],
-	[e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11],
-	w, h
+ [n1, n2, n3, n4, n5, n6, n7, n8],
+ [e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11],
+ w, h
 );
 var paper = Raphael("network-monitor", w, h);
 
 var redrawn = 0;
-var ourInterval = setInterval("redraw()", 50);
+// var ourInterval = setInterval("redraw()", 50);
 
 function redraw() {
 	if (redrawn < 100) {
@@ -272,7 +272,7 @@ $(function() {
     networkId = this.id.match(/network-(.*)/)[1];
     $.getJSON("/networks/"+networkId+"/map", 
       function(data){
-        drawNetwork(data);
+        
       }
     );
     $("#network-details").load("/networks/" + networkId);
@@ -302,4 +302,3 @@ $(function() {
 $(function() {
   $("#network li:first").click()
 });
-*/

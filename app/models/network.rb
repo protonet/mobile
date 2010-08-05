@@ -10,6 +10,7 @@ class Network < ActiveRecord::Base
   end
   
   def couple
+    response = Net::HTTP.get_print(supernode, '/networks/1/join')
     
   end
   
