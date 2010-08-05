@@ -29,13 +29,14 @@ class Channel < ActiveRecord::Base
       channel
     end
   end
-  
+
   def self.names
     all(:select => :name).map {|c| c.name.downcase }
   end
   
   def normalize_name
-    self.name = name.gsub(/[ ']/, '-')
+    self.name = clean_diactritic_marks(name)
+    self.name = name.gsub(/\W/, '-')
   end
   
   def home?
@@ -57,6 +58,11 @@ class Channel < ActiveRecord::Base
     rescue Errno::EEXIST
       logger.warn("A path for the #{name} already exists at #{path}") and return true
     end
+  end
+  
+  private
+  def clean_diactritic_marks(string)
+    ActiveSupport::Multibyte::Chars.new(string).mb_chars.normalize(:kd).gsub(/[^\x00-\x7F]/n,'').to_s
   end
 
 end

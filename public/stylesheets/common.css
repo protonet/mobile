@@ -273,6 +273,9 @@ h2 {
   color: rgba(0, 0, 0, 0.5);
   font-weight: normal;
 }
+#network li.clicked {
+  background: none;
+}
 #network .control {
   float: right;
 }
@@ -287,10 +290,10 @@ h2 {
   top: -5px;
   width: 82px;
 }
-#network a.off {
+#network a.on {
   background-position: 0 0;
 }
-#network a.on {
+#network a.off {
   background-position: 0 -31px;
 }
 #network a.create {
@@ -331,12 +334,23 @@ h2 {
  -moz-border-radius: 0.5em;
  -webkit-border-radius: 0.5em;
  width: 520px;
- height: 570px;
+ height: 300px;
  opacity:0.95;
  background-color: #141414;
  padding: 1em 1em 0.5em;
  border: 0.1em solid #FDAB54;
 }
+#network-details {
+  vertical-align: top;
+  background: rgb(247, 247, 247);
+  border: 0.1em solid rgb(212, 212, 212);
+  display: inline-block;
+  height: 220px;
+  margin: 0 0 1em;
+  padding: 1em 1em 0.5em;
+  width: 520px;
+}
+
 /* =PREFERENCES
 --------------------------------------------------------------------------- */
 h2 {
