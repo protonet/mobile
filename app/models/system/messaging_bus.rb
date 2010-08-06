@@ -21,6 +21,7 @@ module System
       def active?
         @mq ||= MQ.new
         rabbit_mq_running = false
+        @mq.queue('testqueue').delete
         @mq.queue('testqueue').subscribe{ |msg|
           rabbit_mq_running = true
         }
