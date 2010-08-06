@@ -56,6 +56,9 @@ ActiveSupport::JSON.backend = 'JSONGem'
 
 require "#{RAILS_ROOT}/lib/fleximage_ext.rb"
 
+require 'mq'
+AMQP.settings[:vhost] = configatron.amqp.vhost.nil? ? '/' : configatron.amqp.vhost
+
 unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(PhusionPassenger)
   # this starts the eventmachine reactor in a new thread
   # since the Em.run block is blocking until stopped this will ensure
@@ -160,5 +163,3 @@ at_exit do
     js_dispatching_server.stop
   end
 end
-
-AMQP.settings[:vhost] = configatron.amqp.vhost.nil? ? '/' : configatron.amqp.vhost
