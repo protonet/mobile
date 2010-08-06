@@ -79,8 +79,8 @@ make
 # After installing all dependencies you can get the system running by doing these steps:
 
 sudo rabbitmq-server
-ruby messaging/event_machine/js_dispatching_server.rb
-node node/node.js
+# script server will start (and shutdown) the js dispatcher and node.js automatically
+script/server
 
 === OTHER STUFF
 

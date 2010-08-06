@@ -6,7 +6,6 @@ class ChannelsController < ApplicationController
     respond_to do |format|
       format.json do
         network_id  = params[:network_id].to_i
-
         channels = if network_id != 1 # non-local network
           network = Network.find(network_id)
           # using 1 since we want the channels local to the node
@@ -18,7 +17,6 @@ class ChannelsController < ApplicationController
         render :json => channels
       end
       format.html do
-        @channels = Channel.all
         @networks = Network.all
       end
     end
