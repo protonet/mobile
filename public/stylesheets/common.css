@@ -198,6 +198,10 @@ div, button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, 
 #channel .browse a:before {
   content: "\002B\0020";
 }
+#channel .global {
+  background: green none;
+  background-color: green;
+}
 /* =CHANNEL OPTIONS
 --------------------------------------------------------------------------- */
 h2 {
@@ -1376,6 +1380,7 @@ h2 {
 #channels li.network p {
   border-bottom:1px solid #D4D4D4;
   margin-bottom:6px;
+  margin-right: 8px;
   padding:2px;
   text-align:right;
 }
@@ -1392,7 +1397,7 @@ h2 {
   padding: 1em 0.6em;
   text-decoration: none;
   cursor: pointer;
-  width: 330px;
+  width: 309px;
 }
 #channels li.channel.clicked,
 #users li.clicked div {

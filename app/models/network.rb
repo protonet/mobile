@@ -10,12 +10,14 @@ class Network < ActiveRecord::Base
   end
   
   def couple
-    response = Net::HTTP.get_print(supernode, '/networks/1/join')
-    key = response.key
-    channels = response.channels
+    response = Net::HTTP.get(URI.parse("#{supernode}/networks/1/join"))
+    response = JSON.parse(response)
+    self.key = response['key']
+    channels = response['channels']
     channels.each do |channel|
-      Channel.new(channel.attributes.merge({:network_id => self.id})).save
+      Channel.new(channel.merge({:network_id => self.id, :owner_id => 0})).save
     end
+    save
   end
   
   def decouple

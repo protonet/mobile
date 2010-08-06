@@ -6,13 +6,14 @@ class Channel < ActiveRecord::Base
   has_many  :says
   has_many  :tweets, :through => :says
 
-  has_many  :listens
-  has_many  :users, :through    => :listens
+  has_many  :listens, :dependent => :destroy
+  has_many  :users,   :through   => :listens
 
-  validates_uniqueness_of   :name
+  validates_uniqueness_of   :name, :uuid
   validates_length_of       :name,     :maximum => 30
 
   before_validation_on_create :normalize_name
+  after_create  :generate_uuid,   :if => lambda {|c| c.uuid.blank? }
   after_create  :create_folder,   :if => lambda {|c| !c.home?}
   after_create  :subscribe_owner, :if => lambda {|c| !c.home?}
 
@@ -58,6 +59,11 @@ class Channel < ActiveRecord::Base
     rescue Errno::EEXIST
       logger.warn("A path for the #{name} already exists at #{path}") and return true
     end
+  end
+  
+  def generate_uuid
+    raise RuntimeError if uuid
+    self.update_attribute(:uuid, UUID.create.to_s)
   end
   
   private

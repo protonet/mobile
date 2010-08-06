@@ -26,7 +26,6 @@ connection.addListener("ready", function() {
       case "eval":
         publish(eval(message.javascript));
         break;
-        
       case "http_proxy":
         require("./tasks/http_proxy").get(message.url, publish);
         break;

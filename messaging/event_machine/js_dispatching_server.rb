@@ -34,12 +34,22 @@ module JsDispatchingServer
     if data.is_a?(Hash) && data["operation"] == "authenticate"
       log("auth json: #{data["payload"].inspect}")
       if json_authenticate(data["payload"]) && !@subscribed
-        # type of socket 'web' or 'api'
+        # type of socket 'web', 'node' or 'api'
         @type = data["payload"]["type"] || 'api'
+        @subscribed = true # don't resubscribe
         bind_socket_to_system_queue
-        bind_socket_to_user_queues
-        add_to_online_users
-        send_channel_subscriptions
+        if @type == 'node' # special handling if you're a node
+          @queues ||= []
+          Channel.public.each do |channel|
+            @queues << bind_channel(channel)
+            @queues << bind_files_for_channel(channel)
+            log("subscribing to channel #{channel.id}")
+          end
+        else # and you're a user for the rest of the cases
+          bind_socket_to_user_queues
+          add_to_online_users
+          send_channel_subscriptions
+        end
       else
         send_reload_request
       end
@@ -60,16 +70,22 @@ module JsDispatchingServer
 
   def json_authenticate(auth_data)
     return false if auth_data.nil?
-    return false if auth_data["user_id"] == 0
-    potential_user = User.find(auth_data["user_id"]) rescue nil
-
-    @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data["token"])
-    if @user
-      log("authenticated #{potential_user.display_name}")
-      send_data("#{{"x_target" => "socket_id", "socket_id" => "#{@key}"}.to_json}\0")
-    else
-      log("could not authenticate #{auth_data.inspect}")
+    
+    if auth_data["user_id"]  # it's a user
+      return false if auth_data["user_id"] == 0
+      potential_user = User.find(auth_data["user_id"]) rescue nil
+      @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data["token"])
+      if @user
+        log("authenticated #{potential_user.display_name}")
+        send_data("#{{"x_target" => "socket_id", "socket_id" => "#{@key}"}.to_json}\0")
+      else
+        log("could not authenticate #{auth_data.inspect}")
+      end
+    elsif auth_data["node_uuid"]
+      @node = Network.find(auth_data["node_uuid"])
     end
+    
+    
   end
   
   def send_reload_request
