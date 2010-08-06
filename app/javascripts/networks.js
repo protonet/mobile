@@ -51,7 +51,7 @@ Vertex.prototype.inverse = function() {
 var Node = function(number) {
 	this.number   = number;
 	this.position = new Vertex(Math.random() * 10, Math.random() * 10);
-	this.disp     = new Vertex(1, 1);
+	this.disp     = new Vertex(0, 0);
 	this.mass     = 500.0;
 	//console.log('create node '+this.toSource());
 };
@@ -91,7 +91,7 @@ var Graph = function(nodes, edges, w, h) {
 	this.height = h;
 	this.temperature = w * 100.0;
 	this.area = w * h;
-	this.optimalSpringLength = Math.sqrt(this.area / this.nodes.length) * 1.5;
+	this.optimalSpringLength = Math.sqrt(this.area / this.nodes.length) * 3;
 };
 
 Graph.prototype.log = function() {
@@ -150,6 +150,7 @@ Graph.prototype.renderToCanvas = function(paper, w, h) {
 
 					var delta = node.position.diff( otherNode.position );
 					var d = delta.len();
+					if (d == 0) d = 0.1;
 					
 					node.disp = 
 						node.disp.sum(
@@ -169,6 +170,7 @@ Graph.prototype.renderToCanvas = function(paper, w, h) {
 
 			var delta = v.position.diff(u.position);
 			var d = delta.len();
+			if (d == 0) d = 0.1;
 			
 			v.disp =
 				v.disp.diff(
@@ -194,6 +196,17 @@ Graph.prototype.renderToCanvas = function(paper, w, h) {
 						this.min(node.disp)
 					)
 				);
+				
+			// don't let them escape the canvas
+			if (node.position.x < 0) node.position.x = w / 2;
+			if (node.position.x > w) node.position.x = w / 2;
+			if (node.position.y < 0) node.position.y = h / 2;
+			if (node.position.y > h) node.position.y = h / 2;
+			
+			if (isNaN(node.position.x) || Math.abs(node.position.x) == Infinity) 
+				node.position.x = w / 2;
+			if (isNaN(node.position.y) || Math.abs(node.position.y) == Infinity) 
+				node.position.y = h / 2;
 		}
 	
 		this.cool();
@@ -229,14 +242,14 @@ var n8 = new Node(8);
 var e1 = new Edge(n1, n2);
 var e2 = new Edge(n2, n3);
 var e3 = new Edge(n3, n4);
-var e4 = new Edge(n4, n1);
-var e5 = new Edge(n2, n5);
-var e6 = new Edge(n3, n4);
-var e7 = new Edge(n4, n1);
-var e8 = new Edge(n4, n6);
-var e9 = new Edge(n6, n7);
-var e10 = new Edge(n6, n2);
-var e11 = new Edge(n1, n8);
+var e4 = new Edge(n4, n5);
+var e5 = new Edge(n5, n6);
+var e6 = new Edge(n6, n7);
+var e7 = new Edge(n7, n8);
+var e8 = new Edge(n8, n1);
+var e9 = new Edge(n8, n2);
+var e10 = new Edge(n8, n3);
+var e11 = new Edge(n8, n4);
 
 var w = 520;
 var h = 570;
@@ -253,7 +266,7 @@ var ourInterval = setInterval("redraw()", 50);
 function redraw() {
 	if (redrawn < 100) {
 		paper.clear();
-		//NetworkGraph.log();
+		NetworkGraph.log();
 		NetworkGraph.renderToCanvas(paper, w, h);
 	} else {
 		clearInterval(ourInterval);		
