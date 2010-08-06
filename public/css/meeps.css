@@ -138,6 +138,9 @@ button::-moz-focus-inner {
   display: inline-block;
   vertical-align: bottom;
   background: url(/img/spr_smilies_r2.png) no-repeat;
+  width: 28px;
+  height: 23px;
+  text-indent: -9999px;
 }
 
 .smilie.laugh {
@@ -183,5 +186,14 @@ button::-moz-focus-inner {
 .heart {
   color: red;
   text-shadow: 1px 1px 1px #999;
+}
+
+/* Socket */
+#flash-socket {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  right: 0;
+  top: 0;
 }
 /* ================================================================ MEEPS = */

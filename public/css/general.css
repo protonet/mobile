@@ -130,4 +130,16 @@ aside {
   margin: -20px 0 0;
 }
 
+pre {
+  margin: 5px 0;
+  max-height: 200px;
+  overflow: auto;
+  display: block;
+  font-size: 12px;
+  background-color: hsl(0, 0%, 100%);
+  padding: 1px;
+  border: 1px solid hsl(0, 0%, 40%);
+  font-family: Courier New, Courier;
+}
+
 /* ============================================================== GENERAL = */

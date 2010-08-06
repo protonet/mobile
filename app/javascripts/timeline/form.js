@@ -3,7 +3,7 @@
 
 /**
  * @events
- *    input.submitted - Indicates that the input has been submitted
+ *    form.submitted - Indicates that the input has been submitted
  *    meep.render     - Causes a new meep to render and to post
  */
 protonet.timeline.Form = {
@@ -68,8 +68,8 @@ protonet.timeline.Form = {
     /**
      * Update socket id
      */
-    protonet.Notifications.bind("socket.update_id", function(e, socketId) {
-      this.socketIdInput.val(socketId);
+    protonet.Notifications.bind("socket.update_id", function(e, data) {
+      this.socketIdInput.val(data.socket_id);
     }.bind(this));
     
     /**
@@ -100,7 +100,7 @@ protonet.timeline.Form = {
     }
     
     protonet.Notifications.trigger("meep.render", [this.form, true]);
-    protonet.Notifications.trigger("input.submitted", [this.form]);
+    protonet.Notifications.trigger("form.submitted", [this.form]);
     
     this.input.val("");
   }

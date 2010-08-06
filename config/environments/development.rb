@@ -30,3 +30,6 @@ configatron.user_file_path = RAILS_ROOT + "/../shared/user-files"
 configatron.images.avatars_path   = "public/avatars"
 configatron.images.externals_path = "public/externals"
 configatron.socket.port = 5000
+
+# Log all js event notifications
+configatron.log_event_notifications = true

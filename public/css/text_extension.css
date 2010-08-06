@@ -223,14 +223,6 @@
 .text-extension-results.code .media pre,
 .text-extension-results.codes .media pre {
   width: 558px;
-  max-height: 200px;
-  overflow: auto;
-  margin: 5px 0;
-  font-size: 12px;
-  background-color: hsl(0, 0%, 100%);
-  padding: 1px;
-  border: 1px solid hsl(0, 0%, 40%);
-  font-family: Courier New, Courier;
 }
 
 #text-extension-preview .text-extension-results.code .media pre,

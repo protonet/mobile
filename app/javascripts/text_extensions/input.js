@@ -16,7 +16,7 @@ protonet.text_extensions.Input.prototype = {
     this.input.bind("paste", this._paste.bind(this));
     this.input.bind("keyup", this._keyUp.bind(this));
     this.removeLink.bind("click", this._cancel.bind(this));
-    protonet.Notifications.bind("input.submitted", this._submitted.bind(this));
+    protonet.Notifications.bind("form.submitted", this._submitted.bind(this));
   },
   
   _paste: function() {

@@ -21,7 +21,7 @@
         authenticity_token:       "<%= form_authenticity_token %>",
         server:                   "<%= request.env['SERVER_SOFTWARE'] && request.env['SERVER_SOFTWARE'].match(/^\w*/)[0] %>",
         availableChannels:        <%= get_channel_mapping_as_json %>,
-        debugMode:                true
+        debugMode:                <%= configatron.log_event_notifications.to_json %>
       };
     //]]></script>
   </head>
@@ -88,9 +88,7 @@
 
     <%= yield %>
 
-    <footer>
-      none
-    </footer>
+    <footer></footer>
     
     <%= sprockets_include_tag(:default) %>    
     <%= sprockets_include_tag(controller_name.to_sym) %>

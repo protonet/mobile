@@ -29,12 +29,6 @@ $(function() {
   new protonet.utils.NotificationMessage();
 });
 
-
-// initialize stunning Navigation
-$(function() {
-  protonet.controls.Navigation.initialize();
-});
-
 // Initialize password stuff for registration forms wherever they may appear
 $(function() {
   var registration_password_field = $("#new-user-password");

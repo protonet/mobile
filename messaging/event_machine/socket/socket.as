@@ -2,15 +2,10 @@
 import flash.external.ExternalInterface;
 class Socket {
   static var socket:XMLSocket;
-
-  static function test(data:String) {
-    ExternalInterface.call("protonet.globals.dispatcher.test", data);
-  }
-
   static function sendData(data:String) {
     socket.send(unescape(data));
   }
-
+  
   static function onReceive(data:String) {
     /*
      * Fix for ExternalInterface Error When Parameters Contain Special Characters (stupid Adobe)
@@ -37,7 +32,6 @@ class Socket {
     socket.onData = onReceive;
     socket.onConnect = onConnect;
     
-    ExternalInterface.addCallback("test", null, test);
     ExternalInterface.addCallback("sendData", null, sendData);
     ExternalInterface.addCallback("connectSocket", null, connectSocket);
     ExternalInterface.addCallback("closeSocket", null, closeSocket);

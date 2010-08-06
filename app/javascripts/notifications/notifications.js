@@ -4,8 +4,7 @@
  * central pub sub point
  */
 protonet.Notifications = (function() {
-  var HOST_ELEMENT = $(document.documentElement),
-      DEBUG_MODE   = protonet.config.debugMode;
+  var HOST_ELEMENT = $(document.documentElement);
   
   function bind(event, handler) {
     HOST_ELEMENT.bind(event, handler);
@@ -18,7 +17,7 @@ protonet.Notifications = (function() {
   }
   
   function trigger(event, data) {
-    if (DEBUG_MODE) {
+    if (protonet.config.debugMode) {
       console.log(event, data);
     }
     
@@ -26,14 +25,9 @@ protonet.Notifications = (function() {
     return this;
   }
   
-  function triggerFromSocket(message) {
-    return trigger(message.trigger, message);
-  }
-  
   return {
     bind:               bind,
     unbind:             unbind,
-    trigger:            trigger,
-    triggerFromSocket:  triggerFromSocket
+    trigger:            trigger
   };
 })();

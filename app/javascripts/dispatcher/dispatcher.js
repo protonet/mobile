@@ -5,24 +5,29 @@ protonet.dispatcher = {
     SOCKET_RECONNECT: 5000
   },
   
+  SOCKET_ID: "flash-socket",
+  
   initialize: function() {
     this.server           = protonet.config.dispatching_server;
-    this.server_port      = protonet.config.dispatching_server_port;
-    this.user_auth_token  = protonet.config.token;
+    this.serverPort       = protonet.config.dispatching_server_port;
+    this.userAuthToken    = protonet.config.token;
     this.userId           = protonet.config.user_id;
-    this.socketId         = "flash-socket";
-
+    
     this._observe();
     this.createSocket();
   },
   
   _observe: function() {
     protonet.Notifications.bind("socket.initialized", function(e) {
-      this.socketReadyCallback();
+      this.createSocketCallback();
     }.bind(this));
     
     protonet.Notifications.bind("socket.connected", function(e, status) {
       this.socketConnectCallback(status);
+    }.bind(this));
+    
+    protonet.Notifications.bind("socket.disconnected", function(e) {
+      this.reconnectSocket();
     }.bind(this));
     
     protonet.Notifications.bind("socket.send", function(e, data) {
@@ -36,12 +41,16 @@ protonet.dispatcher = {
     protonet.Notifications.bind("socket.check", function() {
       this.socketCheck();
     }.bind(this));
+    
+    protonet.Notifications.bind("socket.ping_received", function() {
+      this.pingSocketCallback();
+    }.bind(this));
   },
   
   createSocket: function() {
     var container   = $("<div />", { id: "socket-container" }).appendTo("body"),
-        attributes  = { id: this.socketId },
-        params      = { allowscriptaccess: "sameDomain" };
+        attributes  = { id: this.SOCKET_ID },
+        params      = { allowscriptaccess: "sameDomain", wmode: "transparent" };
     
     swfobject.embedSWF(
       "/flash/socket.swf?" + new Date().getTime(),
@@ -51,24 +60,20 @@ protonet.dispatcher = {
     );
   },
   
-  socketReadyCallback: function() {
-    this.socket = swfobject.getObjectById(this.socketId);
+  createSocketCallback: function() {
+    this.socket = swfobject.getObjectById(this.SOCKET_ID);
     this.connectSocket();
     $(window).bind({
-      unload: function() {
-        this.socket.closeSocket();
-      }.bind(this),
-      focus: function() {
-        this.reconnectSocketIfNotConnected();
-      }.bind(this)
+      unload: function() { this.socket.closeSocket(); }.bind(this),
+      focus: function() { this.reconnectSocketIfNotConnected(); }.bind(this)
     });
   },
     
   connectSocket: function() {
-    this.socket.connectSocket(this.server, this.server_port);
+    this.socket.connectSocket(this.server, this.serverPort);
   },
   
-  socketConnectCallback: function(status) {
+  connectSocketCallback: function(status) {
     if (status) {
       this.startSocketCheck();
       this.authenticateUser();
@@ -87,22 +92,25 @@ protonet.dispatcher = {
     }, this.timeouts.SOCKET_CHECK);
   },
   
-  reconnectSocketIfNotConnected: function() {
-    if ((new Date() - this.socket_active) > this.timeouts.SOCKET_OFFLINE && !this.socket_reconnecting) {
-      console.log("socket offline");
-      this.socket_reconnecting = true;
-      setTimeout(function() {
-        this.socket_reconnecting = false;
-      }.bind(this), this.timeouts.SOCKET_OFFLINE);
-      this.socket.closeSocket();
-      // protonet.globals.endlessScroller.loadNotReceivedTweets();
-      this.connectSocket();
-    }
-  },
-  
   socketCheck: function() {
     this.reconnectSocketIfNotConnected();
     this.pingSocket();
+  },
+  
+  reconnectSocketIfNotConnected: function() {
+    if ((new Date() - this.socketActive) > this.timeouts.SOCKET_OFFLINE && !this.socketReconnecting) {
+      protonet.Notifications.trigger("socket.disconnected");
+    }
+  },
+  
+  reconnectSocket: function() {
+    this.socketReconnecting = true;
+    setTimeout(function() {
+      this.socketReconnecting = false;
+    }.bind(this), this.timeouts.SOCKET_OFFLINE);
+    this.socket.closeSocket();
+    // protonet.globals.endlessScroller.loadNotReceivedTweets();
+    this.connectSocket();
   },
   
   pingSocket: function() {
@@ -110,7 +118,7 @@ protonet.dispatcher = {
   },
   
   pingSocketCallback: function(message) {
-    this.socket_active = new Date();
+    this.socketActive = new Date();
   },
 
   authenticateUser: function() {
@@ -118,28 +126,26 @@ protonet.dispatcher = {
       operation: "authenticate",
       payload: {
         user_id:  this.userId,
-        token:    this.user_auth_token,
+        token:    this.userAuthToken,
         type:     "web"
       }
     }));
   },
 
-  messageReceived: function(data) {
-    // FIXME: Handle this in the flash socket
-    if ($.trim(data).startsWith("<?xml")) {
+  receiveMessage: function(rawData) {
+    /**
+     * Policy XML message
+     * FIXME: Handle this in the flash socket
+     */
+    if ($.trim(rawData).startsWith("<?xml")) {
       return;
     }
     
-    var message = JSON.parse(data);
-    
-    switch(message.x_target) {
-      // special case: on initial successful connection this sets the socket_id
-      // to the message form
-      case "socket_id":
-        protonet.Notifications.trigger("socket.update_id", message.socket_id);
-        break;
-      default:
-        eval(message.x_target + '(message)');
+    var data = JSON.parse(rawData);
+    if (data.trigger) {
+      protonet.Notifications.trigger(data.trigger, [data]);
+    } else if (data.x_target) {
+      eval(message.x_target + '(data)');
     }
   },
 

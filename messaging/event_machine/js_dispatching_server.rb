@@ -66,7 +66,7 @@ module JsDispatchingServer
     @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data["token"])
     if @user
       log("authenticated #{potential_user.display_name}")
-      send_data("#{{"x_target" => "socket_id", "socket_id" => "#{@key}"}.to_json}\0")
+      send_data("#{{"trigger" => "socket.update_id", "socket_id" => "#{@key}"}.to_json}\0")
     else
       log("could not authenticate #{auth_data.inspect}")
     end
@@ -114,7 +114,7 @@ module JsDispatchingServer
     @user.channels.each do |channel|
       filtered_channel_users[channel.id] = @@channel_users[channel.id]
     end
-    data = {:x_target => 'protonet.Notifications.triggerFromSocket', :trigger => 'channel.update_subscriptions', :data => filtered_channel_users}.to_json
+    data = {:trigger => 'channel.update_subscriptions', :data => filtered_channel_users}.to_json
     send_data(data + "\0")
   end
   
@@ -147,11 +147,8 @@ module JsDispatchingServer
     amq = MQ.new
     queue = amq.queue("system-queue-#{@key}", :auto_delete => true)
     queue.bind(amq.topic('system'), :key => 'system.#').subscribe do |msg|
-      message = JSON(msg)
-      message.merge!({:x_target => 'protonet.Notifications.triggerFromSocket'}) # jquery object
-      message_json = message.to_json
       log("got system message: #{msg.inspect}")
-      send_data("#{message_json}\0")
+      send_data("#{msg}\0")
     end
     @queues << queue
   end
@@ -189,11 +186,8 @@ module JsDispatchingServer
     amq = MQ.new
     queue = amq.queue("consumer-#{@key}-files.channel_#{channel.id}", :auto_delete => true)
     queue.bind(amq.topic("files"), :key => "files.channel_#{channel.id}").subscribe do |msg|
-      message = JSON(msg)
-      message.merge!({:x_target => 'protonet.Notifications.triggerFromSocket'}) # jquery object
-      message_json = message.to_json
-      log('sending data out: ' + message_json)
-      send_data("#{message_json}\0")
+      log('sending data out: ' + msg)
+      send_data("#{msg}\0")
     end
     queue
   end
@@ -202,11 +196,8 @@ module JsDispatchingServer
     amq = MQ.new
     queue = amq.queue("consumer-#{@key}-user", :auto_delete => true)
     queue.bind(amq.topic("users"), :key => "users.#{@user.id}").subscribe do |msg|
-      message = JSON(msg)
-      message.merge!({:x_target => 'protonet.Notifications.triggerFromSocket'}) # jquery object
-      message_json = message.to_json
-      log('sending data out: ' + message_json)
-      send_data("#{message_json}\0")
+      log('sending data out: ' + msg)
+      send_data("#{msg}\0")
     end
     queue
   end
