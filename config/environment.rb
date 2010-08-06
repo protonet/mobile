@@ -160,3 +160,5 @@ at_exit do
     js_dispatching_server.stop
   end
 end
+
+AMQP.settings[:vhost] = configatron.amqp.vhost.nil? ? '/' : configatron.amqp.vhost

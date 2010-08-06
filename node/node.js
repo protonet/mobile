@@ -3,7 +3,7 @@ var fs  = require("fs");
 
 /*----------------------------------- SOCKET TASKS -----------------------------------*/
 var amqp = require('./modules/node-amqp/amqp');
-connection = amqp.createConnection({ host: "localhost" });
+connection = amqp.createConnection({ host: "localhost", vhost: "/" });
 connection.addListener("error", function(){
   console.log("error trying to reach the rabbit, please start your rabbitmq-server");
 });
