@@ -22,8 +22,9 @@ class Tweet < ActiveRecord::Base
       System::MessagingBus.topic('channels').publish(self.attributes.merge({
         :socket_id => socket_id,
         :channel_id => channel.id,
+        :channel_uuid => channel.uuid,
         :user_icon_url => user.active_avatar_url
-        }).to_json, :key => 'channels.' + channel.id.to_s)
+        }).to_json, :key => 'channels.' + channel.uuid)
     end
   end
   

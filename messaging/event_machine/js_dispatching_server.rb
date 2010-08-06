@@ -186,7 +186,7 @@ module JsDispatchingServer
   def bind_channel(channel)
     amq = MQ.new
     queue = amq.queue("consumer-#{@key}-channel.#{channel.id}", :auto_delete => true)
-    queue.bind(amq.topic("channels"), :key => "channels.#{channel.id}").subscribe do |msg|
+    queue.bind(amq.topic("channels"), :key => "channels.#{channel.uuid}").subscribe do |msg|
       message = JSON(msg)
       sender_socket_id = message['socket_id']
       # TODO the next line and this method need refactoring
