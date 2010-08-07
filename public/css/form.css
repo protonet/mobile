@@ -25,7 +25,11 @@
 }
 
 #textarea-wrapper input {
-  background: #aaa url(/img/return.png) center center no-repeat;
+/*  background: #aaa url(/img/return.png) center center no-repeat;*/
+  background: url(/img/return.png) center center no-repeat,
+              -moz-linear-gradient(100% 100% 90deg, rgba(170, 170, 170, 0.7), rgba(170, 170, 170, 1));
+  background: url(/img/return.png) center center no-repeat,
+              -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(170, 170, 170, 1)), to(rgba(170, 170, 170, 0.7)));
   cursor: pointer;
   position: absolute;
   right: 2px;

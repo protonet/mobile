@@ -15,6 +15,7 @@ body {
 }
 
 body {
+  overflow: scroll;
   background: url(/img/background_top.png) repeat-x,
               url(/img/background_bottom.png) repeat-x left bottom,
               url(/img/background.png) fixed;

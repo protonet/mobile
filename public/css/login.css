@@ -15,7 +15,7 @@
 }
 
 #login .form {
-  border-right: #999;
+  border-right: 1px solid #999;
   display: inline-block;
   padding: 2px 0;
   vertical-align: top;
