@@ -23,11 +23,11 @@ module ApplicationHelper
   end
 
   def stylesheets
-    ["/css/reset", "/css/general", "/css/login", "/css/channels", "/css/meeps", "/css/text_extension"]
+    ['/css/reset', '/css/general', '/css/login', '/css/channels', '/css/meeps', '/css/form', '/css/text_extension']
   end
 
   def avatar_url(avatar)
-    avatar ? "/images/avatars/#{avatar.id}" : '/images/userpicture.jpg'
+    avatar ? "/images/avatars/#{avatar.id}" : '/img/user_picture.png'
   end
   
   private

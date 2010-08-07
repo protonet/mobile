@@ -13,6 +13,7 @@ protonet.controls.PrettyDate = (function() {
       if (instance.merged) {
         return;
       }
+      
       var timeElement = meepElement.find("time");
       register(timeElement);
       update(timeElement);

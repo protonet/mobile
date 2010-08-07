@@ -189,6 +189,6 @@ class User < ActiveRecord::Base
   alias_method_chain :password_required?, :logged_out_user
 
   def active_avatar_url
-    avatar ? "/images/avatars/#{avatar.id}" : '/images/userpicture.jpg'
+    avatar ? "/images/avatars/#{avatar.id}" : '/img/user_picture.png'
   end
 end

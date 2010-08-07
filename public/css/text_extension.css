@@ -1,45 +1,32 @@
 /* =TEXT EXTENSION
 =========================================================================== */
 #text-extension-preview {
-  background-color: rgb(255, 255, 255) !important;
   height: 0px;
   clear: both;
   opacity: 0;
   display: none;
   position: relative;
-  border: 1px solid hsl(0, 0%, 40%);
-  border-top: 0;
-}
-
-#text-extension-preview .text-extension-results h4 {
-  display: block;
+  margin-top: 6px;
+  border: 1px dotted #999;
+  padding: 4px 50px 4px 4px;
 }
 
 #text-extension-preview .remove {
   position: absolute;
   display: block;
-  width: 13px;
-  height: 13px;
-  top: 3px;
-  color: hsl(0, 0%, 100%);
-  line-height: 13px;
-  text-align: center;
-  right: 5px;
-  background: hsl(0, 0%, 40%);
-  z-index: 1;
+  line-height: 9px;
+  top: 4px;
+  right: 4px;
+  font-size: 9px;
   text-decoration: none;
 }
 
-#text-extension-preview .remove:hover {
-  background: hsl(0, 0%, 70%);
+#text-extension-preview .remove strong {
+  color: #666;
 }
 
 #text-extension-preview.loading-bar {
   background: url(/images/loading_bar.gif) no-repeat center center;
-}
-
-#text-extension-preview .text-extension-results output {
-  margin: 4px;
 }
 
 .text-extension-results {
@@ -54,14 +41,10 @@
 .text-extension-results h4 {
   display: none;
   padding: 3px 5px;
-  color: hsl(0, 0%, 0%);;
-  border-bottom: 1px solid hsl(0, 0%, 40%);
-  background-color: hsl(0, 0%, 90%);
+  color: #000;
+  border-bottom: 1px solid #666;
+  background-color: #ccc;
   position: relative;
-}
-
-.text-extension-results output {
-  display: block;
 }
 
 .text-extension-results output:after {
@@ -86,13 +69,13 @@
 }
 
 .text-extension-results .description {
-  color: hsl(0, 0%, 40%);
+  color: #666;
   min-width: 200px;
   text-decoration: none;
 }
 
 .text-extension-results .domain {
-  color: hsl(0, 0%, 70%);
+  color: #999;
   display: block;
   margin: 0 0 2px 0;
 }
@@ -111,29 +94,29 @@
 }
 
 .text-extension-results .media img {
-  background: hsl(0, 0%, 70%);;
+  background: #999;
 }
 
 .text-extension-results .media a:hover img {
-  -webkit-box-shadow: 0 0 20px hsl(0, 0%, 40%);
-  -moz-box-shadow: 0 0 20px hsl(0, 0%, 40%);
-  box-shadow: 0 0 20px hsl(0, 0%, 40%);
+  -webkit-box-shadow: 0 0 10px #666;
+  -moz-box-shadow: 0 0 10px #666;
+  box-shadow: 0 0 10px #666;
 }
 
 .meeps .text-extension-results {
-  margin: 8px 0 2px;
+  margin: 8px 0 6px;
 }
 
 /* =IFRAME (Doodle, Maps...)
 --------------------------------------------------------------------------- */
 .text-extension-results .media iframe {
-  border: 1px solid hsl(0, 0%, 40%);
-  width: 560px;
+  border: 1px solid #999;
+  width: 561px;
   height: 200px;
 }
 
 #text-extension-preview .text-extension-results .media iframe {
-  width: 608px;
+  width: 530px;
 }
 
 /* =VIDEO/FLASH TEXT EXTENSION (YouTube, Slideshare, ...)
@@ -145,7 +128,7 @@
 }
 
 #text-extension-preview .text-extension-results.flash object {
-  width: 590px;
+  width: 530px;
   height: 280px;
 }
 
@@ -153,8 +136,8 @@
   content: "\25BA";
   font-family: Arial;
   font-size: 20px;
-  color: hsl(0, 0%, 100%);
-  background: hsl(0, 0%, 0%);
+  color: #fff;
+  background: #000;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -170,9 +153,9 @@
   -moz-border-radius: 20px;
   -webkit-border-radius: 20px;
   border: 1px solid #ccc;
-  box-shadow: 0 0 2px 2px hsl(0, 0%, 40%);
-  -webkit-box-shadow: 0 0 2px 2px hsl(0, 0%, 40%);
-  -moz-box-shadow: 0 0 2px 2px hsl(0, 0%, 40%);
+  box-shadow: 0 0 2px 2px #666;
+  -webkit-box-shadow: 0 0 2px 2px #666;
+  -moz-box-shadow: 0 0 2px 2px #666;
 }
 
 .text-extension-results.flash .media a:hover:after {
@@ -186,7 +169,7 @@
 /* =LINK TEXT EXTENSION
 --------------------------------------------------------------------------- */
 .text-extension-results.Link .media img {
-  background: hsl(0, 0%, 100%) url(/img/screenshot_fetching.gif) center center no-repeat;
+  background: #fff url(/img/screenshot_fetching.gif) center center no-repeat;
 }
 
 /* =IMAGES TEXT EXTENSIONS
@@ -205,7 +188,7 @@
 }
 
 .text-extension-results.images img:hover {
-  background: hsl(0, 0%, 90%);
+  background: #ccc;
 }
 
 .text-extension-results.images .title {
@@ -218,16 +201,6 @@
 .text-extension-results.codes .media {
   float: none;
   margin-bottom: 4px;
-}
-
-.text-extension-results.code .media pre,
-.text-extension-results.codes .media pre {
-  width: 558px;
-}
-
-#text-extension-preview .text-extension-results.code .media pre,
-#text-extension-preview .text-extension-results.codes .media pre {
-  width: 606px;
 }
 
 .text-extension-results.code .media strong,

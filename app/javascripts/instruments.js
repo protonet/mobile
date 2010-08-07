@@ -6,7 +6,6 @@
 //= require "controls/user_widget.js"
 //= require "controls/pretty_date.js"
 //= require "controls/fluid.js"
-//= require "lib/jQuery.dPassword.js"
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
 $(function() {
@@ -35,20 +34,20 @@ $(function() {
 
 // Frickin' stunning cloud animation (makes your squirrel run in circles!!)
 $(function() {
-  // protonet.globals.clouds = new protonet.effects.Clouds($("#cloud-container"), {
+  // new protonet.effects.Clouds($("#cloud-container"), {
   //   minStartPosition: -20,
   //   maxStartPosition: 90,
   //   minSize:          10,
   //   maxSize:          60,
-  //   minSpeed:         1,
-  //   maxSpeed:         1.5,
+  //   minSpeed:         0.2,
+  //   maxSpeed:         0.6,
   //   amount:           15
   // });
 });
 
 // Initialize fluid if the app is running in a fluid container
-$(function() {
-  if (protonet.user.Browser.SUPPORTS_FLUID()) {
-    new protonet.controls.Fluid();
-  }
-});
+// $(function() {
+//   if (protonet.user.Browser.SUPPORTS_FLUID()) {
+//     new protonet.controls.Fluid();
+//   }
+// });

@@ -11,11 +11,16 @@
     <%= f.hidden_field(:avatar, :value => current_user.active_avatar_url) %>
     <%= f.hidden_field(:author, :value => current_user.display_name) %>
     <%= f.hidden_field(:text_extension, :id => 'text-extension-input', :value => "", :autocomplete => "off") %>
-    <%= f.text_area(:message, :id => 'message', :title => message_hint) %>
-    <div id="text-extension-preview">
-      <a href="#" title="Remove" class="remove">x</a>
+    <div id="textarea-wrapper">
+      <%= f.text_area(:message, :id => 'message', :title => message_hint) %>
+      <input type="submit" value="" title="Send message [ENTER]">
+      <output id="text-extension-preview">
+        <a href="#" title="Delete attachment [ESC]" class="hint remove">remove <strong>x</strong></a>
+      </output>
     </div>
-    <button type="submit" name="commit">submit</button>
+    <div class="avatar">
+      <img src="<%= current_user.active_avatar_url %>" width="36" height="36" title="That's you!">
+    </div>
   <%- end -%>
   <div id="channels">
     <ul>
@@ -115,7 +120,7 @@
 <%# Templates for JavaScript %>
 <div id="templates">
   <div id="message-template">
-    <%= render :partial => 'tweets/tweet', :locals => {:message => '', :avatar => '/images/userpicture.jpg',
+    <%= render :partial => 'tweets/tweet', :locals => {:message => '', :avatar => '/img/user_picture.png',
                                                        :author => '', :created_at => '',
                                                        :html_id => 'tweet-{id}-{id}'} %>
   </div>

@@ -1,22 +1,26 @@
 /* =GENERAL
 
     COLORS:
-      black       hsl(0, 0%, 0%)
-      blue        hsl(230, 55%, 72%)
-      grey        hsl(0, 0%, 70%)
-      grey_dark   hsl(0, 0%, 40%)
-      grey_light  hsl(0, 0%, 90%)
-      orange      hsl(20, 100%, 51%)
-      white       hsl(0, 0%, 100%)
+      black       #000 rgb(0, 0, 0)
+      blue        #487bff rgb(72, 123, 255)
+      grey        #999
+      grey_dark   #666
+      grey_light  #ccc
+      orange      #ff7f31 rgb(255, 140, 71)
+      white       #fff rgb(255, 255, 255)
 =========================================================================== */
+html,
+body {
+  min-height: 100%;
+}
 
 body {
   background: url(/img/background_top.png) repeat-x,
               url(/img/background_bottom.png) repeat-x left bottom,
-              url(/img/background.png);
+              url(/img/background.png) fixed;
   margin: 20px auto;
   width: 940px;
-  color: hsl(0, 0%, 0%);
+  color: #000;
 }
 
 body,
@@ -27,34 +31,35 @@ input {
 }
 
 a {
-  color: hsl(0, 0%, 0%);
+  color: #000;
 }
 
 a:hover {
-  color: hsl(230, 55%, 72%);
+  color: rgb(72, 123, 255);
 }
 
 button {
-  -moz-border-radius: 0.5em;
-  -moz-outline-radius: 0.5em;
-  -webkit-border-radius: 0.5em;
-  -webkit-outline-radius: 0.5em; /* does not exist (yet) */
-  background: hsl(20, 100%, 71%);
-  background: -moz-linear-gradient(100% 100% 90deg, hsl(20, 100%, 61%), hsl(20, 100%, 71%));
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(hsl(20, 100%, 71%)), to(hsl(20, 100%, 61%)));
-  border-radius: 0.5em;
-  border: 1px solid hsl(0, 0%, 100%);
-  color: hsl(0, 0%, 100%);
-  outline-radius: 0.5em; /* does this exist? */
-  outline: 1px solid hsl(20, 100%, 61%);
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: rgb(255, 140, 71);
+  background: -moz-linear-gradient(100% 100% 90deg, rgba(255, 140, 71, 0.7), rgba(255, 140, 71, 1));
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 140, 71, 1)), to(rgba(255, 140, 71, 0.7)));
+  border: 1px solid #fff;
+  border-radius: 5px;
+  color: #fff;
   padding: 2px 15px;
+  -moz-box-shadow: 0 0 4px #666;
+  -webkit-box-shadow: 0 0 4px #666;
+  box-shadow: 0 0 4px #666;
 }
 
 button:hover {
-  background: hsl(20, 100%, 71%);
-  background: -moz-linear-gradient(100% 100% 90deg, hsl(20, 100%, 51%), hsl(20, 100%, 71%));
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(hsl(20, 100%, 71%)), to(hsl(20, 100%, 51%)));
-  outline: 1px solid hsl(20, 100%, 51%);
+  background: rgb(255, 140, 71);
+}
+
+button::-moz-focus-inner {
+  padding: 0;
+  border: 0 none;
 }
 
 output {
@@ -91,23 +96,18 @@ aside {
   vertical-align: top;
 }
 
-.hint,
-.inline-hint {
-  color: hsl(0, 0%, 70%);
+.hint {
+  color: #999;
 }
 
-.reply {
-  color: hsl(20, 100%, 51%);
+.inline-hint {
+  color: #ccc;
 }
 
 .greet-user {
   margin: -20px 20px 0;
-  color: hsl(0, 0%, 40%);
+  color: #666;
   text-align: right;
-}
-
-.greet-user a {
-  color: hsl(230, 55%, 72%);
 }
 
 #main {
@@ -136,9 +136,9 @@ pre {
   overflow: auto;
   display: block;
   font-size: 12px;
-  background-color: hsl(0, 0%, 100%);
-  padding: 1px;
-  border: 1px solid hsl(0, 0%, 40%);
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #ccc;
   font-family: Courier New, Courier;
 }
 

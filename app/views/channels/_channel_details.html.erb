@@ -5,7 +5,7 @@
 <ul id="channel-subscribers">
   <% channel.listens.all(:include => :user).each do |listen| %>
     <% if !listen.user.stranger? && user = listen.user %>
-      <li><img src="<%= user.active_avatar_url || '/images/userpicture-mini.jpg' %>" width="20" height="20" alt="Userpicture Mini" /> <span><%= user.display_name %></span>
+      <li><img src="<%= user.active_avatar_url || '/img/user_picture.png' %>" width="20" height="20" alt="Userpicture Mini" /> <span><%= user.display_name %></span>
 <%= link_to('remove listener', listen_path(listen), :method => :delete, :class => "channel-remove-listner") if channel.owner == current_user %></li>
     <% end %>
   <% end %>
