@@ -15,7 +15,7 @@ body {
 }
 
 body {
-  overflow: scroll;
+  overflow-y: scroll;
   background: url(/img/background_top.png) repeat-x,
               url(/img/background_bottom.png) repeat-x left bottom,
               url(/img/background.png) fixed;
@@ -78,12 +78,6 @@ header a {
   height: 121px;
   text-indent: -500em;
   width: 209px;
-}
-
-header.login {
-  background: url(/img/icn_login_arrow.png) no-repeat 220px 0;
-  padding-top: 20px;
-  position: relative;
 }
 
 section,

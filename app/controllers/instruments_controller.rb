@@ -12,8 +12,6 @@ class InstrumentsController < ApplicationController
   
   def public_dashboard
     @channels = current_user.channels
-    @asset = Asset.new
-    @active_channel = params[:channel_id] ? Channel.find(params[:channel_id]) : @channels.first
     
     respond_to do |format|
       format.json do
