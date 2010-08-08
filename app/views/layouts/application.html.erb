@@ -72,7 +72,9 @@
             <div>
               <%= label_tag :password, "password", :for => "login_password" %>
               <%= password_field_tag :password, nil, :title => "password", :id => "login_password" %>
-              <span class="forgot-password"><a href="" class="hint" title="shit happens!">forgot password?</a></span>
+            </div>
+            <div class="forgot-password">
+              <a href="" class="hint" title="shit happens!">forgot password?</a>
             </div>
             <div>
               <button type="submit" name="commit">login</button>

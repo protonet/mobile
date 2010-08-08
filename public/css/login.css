@@ -58,8 +58,7 @@ header.login {
 }
 
 #login .forgot-password {
-  display: block;
-  margin: 12px 0 0;
+  line-height: 26px;
 }
 
 #login .sign-up {
