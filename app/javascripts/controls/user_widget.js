@@ -27,7 +27,7 @@ protonet.controls.UserWidget = (function() {
       this.filterChannelUsers(protonet.timeline.Channels.selected);
     }.bind(this));
     
-    protonet.Notifications.bind('channel.subscribe channel.unsubscribe', function(e, msg){
+    protonet.Notifications.bind('channel.subscribed channel.unsubscribed', function(e, msg){
       switch(e.handleObj.namespace) {
         case 'subscribe':
           this.channel_users[msg.channel_id].push(msg.user_id);
