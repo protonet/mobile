@@ -4,6 +4,7 @@
       blue        #487bff   rgb(72, 123, 255) - MAIN COLOR, USE FOR LINKS AND CHANNEL HIGHLIGHTING
       orange      #ff7f31   rgb(255, 140, 71) - USE FOR HIGHLIGHTING USER STUFF (own meeps, user replies, buttons, ...)
       red/rosa    #e75c79   rgb(231, 92, 121) - USER FOR NOTIFICATIONS (flash messages, badges, ...)
+      green       #00cc00   rgb(0, 204, 0)
       black       #000      rgb(0, 0, 0)
       grey_dark   #666      rgb(102, 102, 102)
       grey        #999      rgb(153, 153, 153)
@@ -154,7 +155,7 @@ pre {
   right: 0;
   position: absolute;
   z-index: 2;
-  background: rgba(231, 92, 121, 0.7);
+  background: rgba(0, 204, 0, 0.6);
   color: #fff;
   padding: 8px;
   font-size: 16px;
