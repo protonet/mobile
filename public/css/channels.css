@@ -50,19 +50,6 @@
   line-height: 30px;
 }
 
-#channels .new-meeps {
-  -moz-border-radius: 3em;
-  -webkit-border-radius: 3em;
-  background: hsl(20, 100%, 51%);;
-  color: rgb(255, 255, 255);
-  cursor: default;
-  line-height: 1em;
-  padding: 2px 4px;
-  position: absolute;
-  right: -3px;
-  top: -3px;
-}
-
 #channels .manage-channels {
   bottom: 2px;
   color: rgb(180, 180, 180);
