@@ -60,14 +60,14 @@
 }
 
 #channels .badge {
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
   background: #e75c79;
   color: #fff;
   padding: 2px;
   font-size: 9px;
-  line-height: 9px;
+  line-height: 10px;
   position: absolute;
   top: -7px;
   right: 1px;

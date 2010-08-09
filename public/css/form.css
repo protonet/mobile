@@ -6,7 +6,7 @@
 #textarea-wrapper {
   border: 3px solid;
   border-color: #888 #ccc #ccc #888;
-  min-height: 86px;
+  min-height: 80px;
   padding: 2px;
   position: relative;
 }
@@ -18,7 +18,7 @@
   border: 0;
   display: block; /* textareas are inline-block by default in webkit and inline in firefox */
   resize: none;
-  height: 80px;
+  height: 74px;
   margin: 3px;
   width: 532px;
   background: transparent;
@@ -33,7 +33,7 @@
   position: absolute;
   right: 2px;
   top: 2px;
-  height: 86px;
+  height: 80px;
   width: 50px;
   margin: 0;
   padding: 0;
