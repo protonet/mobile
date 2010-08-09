@@ -1,4 +1,6 @@
 //= require "meep.js"
+//= require "../utils/browser_title.js"
+//= require "../utils/is_window_focused.js"
 //= require "../lib/jquery.inview.js"
 
 /**
@@ -58,10 +60,7 @@ protonet.timeline.Channel.prototype = {
       meepData.text_extension = meepData.text_extension && JSON.parse(meepData.text_extension);
       this._renderMeep(meepData, this.channelList);
       
-      if (!this.isSelected) {
-        this.unreadMeeps++;
-        this.toggleBadge();
-      }
+      this._notifications();
     }.bind(this));
     
     /**
@@ -296,5 +295,33 @@ protonet.timeline.Channel.prototype = {
       
       noMeepsHint.remove();
     }.bind(this));
+  },
+  
+  /**
+   * Do all kind of notifications when a new meep is received
+   *    - Animate browser title when page is not focused
+   *    - Play sound when page is not focused
+   *    - Show badge in channel link when page is not focused
+   */
+  _notifications: function() {
+    var isWindowFocused       = protonet.utils.isWindowFocused(),
+        isAllowedToPlaySound  = protonet.user.Config.get("sound");
+    
+    if (!isWindowFocused && this.isSelected) {
+      protonet.utils.BrowserTitle.set("+++ New messages", true, true);
+    }
+    
+    if (!isWindowFocused && this.isSelected && isAllowedToPlaySound) {
+      if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_OGG()) {
+        new Audio("/sounds/notification.ogg").play();
+      } else if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_MP3()) {
+        new Audio("/sounds/notification.mp3").play();
+      }
+    }
+    
+    if (!this.isSelected) {
+      this.unreadMeeps++;
+      this.toggleBadge();
+    }
   }
 };

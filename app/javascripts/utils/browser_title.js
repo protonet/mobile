@@ -1,6 +1,6 @@
-//= require "../utils/is_window_focused.js"
+//= require "is_window_focused.js"
 
-protonet.controls.BrowserTitle = (function() {
+protonet.utils.BrowserTitle = (function() {
   var restoredTitle,
       animation,
       autoRestore,
