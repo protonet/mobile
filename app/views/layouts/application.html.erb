@@ -85,11 +85,12 @@
     <%- end -%>
 
     <header<%= " class=\"login\"" if current_user.stranger? %>>
-      <a href="<%= root_path %>">protonet – it's yours</a>
+      <a href="<%= root_path %>" class="logo">protonet – it's yours</a>
+      <a href="<%= root_path %>" class="monster default">&lt; change character</a>
     </header>
-
+    
     <%= yield %>
-
+    
     <footer></footer>
     
     <%= sprockets_include_tag(:default) %>    

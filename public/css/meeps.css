@@ -156,6 +156,7 @@
 
 .heart {
   color: red;
+  cursor: default;
   text-shadow: 1px 1px 1px #999;
 }
 

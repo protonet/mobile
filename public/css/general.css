@@ -3,7 +3,7 @@
     COLORS:
       blue        #487bff   rgb(72, 123, 255) - MAIN COLOR, USE FOR LINKS AND CHANNEL HIGHLIGHTING
       orange      #ff7f31   rgb(255, 140, 71) - USE FOR HIGHLIGHTING USER STUFF (own meeps, user replies, buttons, ...)
-      red/rosa    #e75c79   rgb(231, 92, 121) - USER FOR NOTIFICATIONS (flash messages, badges, ...)
+      red/rosa    #e75c79   rgb(231, 92, 121) - USE FOR NOTIFICATIONS (flash messages, badges, ...)
       green       #00cc00   rgb(0, 204, 0)
       black       #000      rgb(0, 0, 0)
       grey_dark   #666      rgb(102, 102, 102)
@@ -11,6 +11,16 @@
       grey_light  #ccc      rgb(204, 204, 204)
       white       #fff      rgb(255, 255, 255)
 =========================================================================== */
+@font-face {
+  font-family: "Univers Light Condensed";
+  src: url("/css/fonts/Univers Light Condensed.ttf");
+}
+
+@font-face {
+  font-family: "Univers LT 47 CondensedLt";
+  src: url("/css/fonts/Univers LT 47 Condensed Light.ttf");
+}
+
 html,
 body {
   min-height: 100%;
@@ -70,18 +80,63 @@ output {
 }
 
 header {
+  position: relative;
   display: block;
-  margin: 0 -10px -30px;
+  height: 90px;
 }
 
-header a {
-  background: url(/img/protonet.png) no-repeat;
-  display: block;
-  height: 121px;
-  text-indent: -500em;
-  width: 209px;
+header .logo {
+  top: bottom: 0;
+  left: -13px;
+  position: absolute;
+  background: url(/img/logo.png) no-repeat;
+  height: 125px;
+  text-indent: -9999px;
+  width: 225px;
 }
 
+header .monster {
+  position: absolute;
+  bottom: -4px;
+  left: 136px;
+  width: 70px;
+  height: 72px;
+  font-size: 9px;
+  background: url(/img/spr_monsters.png) no-repeat;
+  color: #487bff;
+  text-decoration: none;
+  white-space: nowrap;
+  line-height: 42px;
+  text-indent: -9999px;
+}
+
+header .monster:hover {
+  text-indent: 66px;
+}
+
+header .monster.default {
+  background-position: 2px bottom;
+}
+
+header .monster.business {
+  background-position: -74px bottom;
+}
+
+header .monster.female {
+  background-position: -147px bottom;
+}
+
+header .hearts {
+  position: absolute;
+  color: #e75c79;
+  font-size: 13px;
+  text-shadow: 1px 1px 1px #999;
+  width: 70px;
+  left: 136px;
+  top: 50px;
+  text-align: center;
+}
+  
 section,
 aside {
   -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);

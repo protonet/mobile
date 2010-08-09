@@ -9,6 +9,7 @@
 //= require "translations/translations.js"
 //= require "utils/inline_hint.js"
 //= require "ui/flash_message.js"
+//= require "ui/logo.js"
 //= require "utils/toggle_element.js"
 //= require "lib/jQuery.dPassword.js"
 
@@ -26,4 +27,8 @@ $(function() {
 // add notification message neatification
 $(function() {
   protonet.ui.FlashMessage.initialize();
+});
+
+$(function() {
+  protonet.ui.Logo.initialize();
 });
