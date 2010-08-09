@@ -3,8 +3,8 @@
 
 /**
  * @events
- *    form.submitted - Indicates that the input has been submitted
- *    meep.render     - Causes a new meep to render and to post
+ *    form.submitted          - Indicates that the input has been submitted
+ *    meep.render_from_form   - Causes a new meep to render and to post
  */
 protonet.timeline.Form = {
   initialize: function() {
@@ -99,7 +99,7 @@ protonet.timeline.Form = {
       return;
     }
     
-    protonet.Notifications.trigger("meep.render", [this.form, true]);
+    protonet.Notifications.trigger("meep.render_from_form", [this.form, true]);
     protonet.Notifications.trigger("form.submitted", [this.form]);
     
     this.input.val("");

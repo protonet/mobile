@@ -16,10 +16,11 @@ class Tweet < ActiveRecord::Base
   def send_to_queue
     channels.each do |channel|
       System::MessagingBus.topic('channels').publish(self.attributes.merge({
-        :socket_id => socket_id,
-        :channel_id => channel.id,
-        :user_icon_url => user.active_avatar_url
-        }).to_json, :key => 'channels.' + channel.id.to_s)
+        :socket_id      => socket_id,
+        :channel_id     => channel.id,
+        :avatar         => user.active_avatar_url,
+        :trigger        => 'meep.receive'
+      }).to_json, :key => 'channels.' + channel.id.to_s)
     end
   end
   

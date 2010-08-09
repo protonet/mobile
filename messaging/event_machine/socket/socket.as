@@ -1,9 +1,11 @@
-
 import flash.external.ExternalInterface;
+
 class Socket {
   static var socket:XMLSocket;
+  
   static function sendData(data:String) {
-    socket.send(unescape(data));
+    // "data" was wrapped by an unescape before
+    socket.send(data);
   }
   
   static function onReceive(data:String) {
@@ -26,7 +28,7 @@ class Socket {
   static function closeSocket() {
     socket.close();
   }
-
+  
   static function main() {
     socket = new XMLSocket();
     socket.onData = onReceive;

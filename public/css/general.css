@@ -1,13 +1,14 @@
 /* =GENERAL
 
     COLORS:
-      black       #000 rgb(0, 0, 0)
-      blue        #487bff rgb(72, 123, 255)
-      grey        #999
-      grey_dark   #666
-      grey_light  #ccc
-      orange      #ff7f31 rgb(255, 140, 71)
-      white       #fff rgb(255, 255, 255)
+      blue        #487bff   rgb(72, 123, 255)
+      orange      #ff7f31   rgb(255, 140, 71)
+      red/rosa    #e75c79   rgb(231, 92, 121)
+      black       #000      rgb(0, 0, 0)
+      grey_dark   #666      rgb(102, 102, 102)
+      grey        #999      rgb(153, 153, 153)
+      grey_light  #ccc      rgb(204, 204, 204)
+      white       #fff      rgb(255, 255, 255)
 =========================================================================== */
 html,
 body {
@@ -40,13 +41,13 @@ a:hover {
 }
 
 button {
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
   background: rgb(255, 140, 71);
   background: -moz-linear-gradient(100% 100% 90deg, rgba(255, 140, 71, 0.7), rgba(255, 140, 71, 1));
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 140, 71, 1)), to(rgba(255, 140, 71, 0.7)));
   border: 1px solid #fff;
-  border-radius: 5px;
+  border-radius: 4px;
   color: #fff;
   padding: 2px 15px;
   -moz-box-shadow: 0 0 4px #666;
@@ -89,6 +90,15 @@ aside {
   display: inline-block;
   min-height: 500px;
   vertical-align: top;
+}
+
+input[type=text],
+input[type=password] {
+  border: 1px solid;
+  border-color: #666 #ccc #ccc #666;
+  padding: 2px 4px;
+  width: 200px;
+  height: 18px;
 }
 
 .hint {

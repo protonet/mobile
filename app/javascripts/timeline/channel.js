@@ -28,20 +28,33 @@ protonet.timeline.Channel = function(data, link) {
 protonet.timeline.Channel.prototype = {
   config: {
     MERGE_MEEPS_TIMEFRAME: 2 * 60 * 1000, // 2 minutes
-    FETCH_MEEPS_URL: "/tweets"
+    FETCH_MEEPS_URL:       "/tweets"
   },
   
   _observe: function() {
     /**
      * Render new meep in selected channel
-     * when "meep.render" event is triggered
+     * when event is triggered
      */
-    protonet.Notifications.bind("meep.render", function(e, meepDataOrForm, post) {
+    protonet.Notifications.bind("meep.render_from_form", function(e, form, post) {
       if (!this.isSelected) {
         return;
       }
       
-      this._renderMeep(meepDataOrForm, this.channelList, post);
+      this._renderMeep(form, this.channelList, post);
+    }.bind(this));
+    
+    /**
+     * Render meeps when received
+     */
+    protonet.Notifications.bind("meep.receive", function(e, meepData) {
+      if (meepData.channel_id != this.data.id) {
+        return;
+      }
+      
+      // TODO: parsing the text_extension json should be done on the server side
+      meepData.text_extension = meepData.text_extension && JSON.parse(meepData.text_extension);
+      this._renderMeep(meepData, this.channelList);
     }.bind(this));
     
     /**

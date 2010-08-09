@@ -37,14 +37,6 @@ header.login {
   display: none;
 }
 
-#login .form input[type=text],
-#login .form input[type=password] {
-  border: 1px solid;
-  border-color: #666 #ccc #ccc #666;
-  padding: 2px 4px;
-  width: 200px;
-}
-
 #login .form div {
   margin-bottom: 10px;
 }
@@ -58,7 +50,7 @@ header.login {
 }
 
 #login .forgot-password {
-  line-height: 26px;
+  line-height: 24px;
 }
 
 #login .sign-up {

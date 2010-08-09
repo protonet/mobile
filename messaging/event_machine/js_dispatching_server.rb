@@ -24,18 +24,18 @@ module JsDispatchingServer
     data = begin
       JSON.parse(data.chomp("\000"))
     rescue JSON::ParserError
-      log("JSON PARSE ERROR! was this intended?")
+      log('JSON PARSE ERROR! was this intended?')
       data
     end
     handle_received_json(data)
   end
 
   def handle_received_json(data)
-    if data.is_a?(Hash) && data["operation"] == "authenticate"
+    if data.is_a?(Hash) && data['operation'] == 'authenticate'
       log("auth json: #{data["payload"].inspect}")
       if json_authenticate(data["payload"]) && !@subscribed
         # type of socket 'web' or 'api'
-        @type = data["payload"]["type"] || 'api'
+        @type = data['payload']['type'] || 'api'
         bind_socket_to_system_queue
         bind_socket_to_user_queues
         add_to_online_users
@@ -60,9 +60,9 @@ module JsDispatchingServer
 
   def json_authenticate(auth_data)
     return false if auth_data.nil?
-    return false if auth_data["user_id"] == 0
-    potential_user = User.find(auth_data["user_id"]) rescue nil
-
+    return false if auth_data['user_id'] == 0
+    potential_user = User.find(auth_data['user_id']) rescue nil
+    
     @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data["token"])
     if @user
       log("authenticated #{potential_user.display_name}")
@@ -73,7 +73,7 @@ module JsDispatchingServer
   end
   
   def send_reload_request
-    data = {:x_target => "document.location.reload"}.to_json
+    data = {:x_target => 'document.location.reload'}.to_json
     send_data(data + "\0")
   end
   
@@ -172,7 +172,6 @@ module JsDispatchingServer
       sender_socket_id = message['socket_id']
       # TODO the next line and this method need refactoring
       queue.unsubscribe if message['trigger'] =="channel.unsubscribe"
-      message['x_target'] || message.merge!({:x_target => 'protonet.globals.communicationConsole.receiveMessage'})
       if !sender_socket_id || sender_socket_id.to_i != @key
         message_json = message.to_json
         log('sending data out: ' + message_json + ' ' + sender_socket_id.to_s)

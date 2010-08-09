@@ -43,8 +43,6 @@ class TweetsController < ApplicationController
       format.js  { render :text => @tweet.id }
       format.html { redirect_to :controller => :instruments, :channel_id => channels.first.id }
     end
-    
-    # 
   end
   
 end

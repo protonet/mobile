@@ -23,7 +23,7 @@ protonet.dispatcher = {
     }.bind(this));
     
     protonet.Notifications.bind("socket.connected", function(e, status) {
-      this.socketConnectCallback(status);
+      this.connectSocketCallback(status);
     }.bind(this));
     
     protonet.Notifications.bind("socket.disconnected", function(e) {
@@ -31,11 +31,11 @@ protonet.dispatcher = {
     }.bind(this));
     
     protonet.Notifications.bind("socket.send", function(e, data) {
-      this.sendMessage(data);
+      this.sendData(data);
     }.bind(this));
     
     protonet.Notifications.bind("socket.receive", function(e, data) {
-      this.messageReceived(data);
+      this.receiveData(data);
     }.bind(this));
     
     protonet.Notifications.bind("socket.check", function() {
@@ -132,7 +132,7 @@ protonet.dispatcher = {
     }));
   },
 
-  receiveMessage: function(rawData) {
+  receiveData: function(rawData) {
     /**
      * Policy XML message
      * FIXME: Handle this in the flash socket
@@ -145,11 +145,11 @@ protonet.dispatcher = {
     if (data.trigger) {
       protonet.Notifications.trigger(data.trigger, [data]);
     } else if (data.x_target) {
-      eval(message.x_target + '(data)');
+      eval(data.x_target + '(data)');
     }
   },
 
-  sendMessage: function(data) {
+  sendData: function(data) {
     this.socket.sendData(data);
   }
 };
