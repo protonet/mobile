@@ -169,8 +169,18 @@
 }
 
 /* Channel/User replies */
-
-.reply {
-  color: #ff7f31;
+.reply.channel {
+  background: rgba(72, 123, 255, 0.8);
+  color: #fff;
+  padding: 1px 4px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  text-decoration: none;
 }
+
+.reply.channel:hover {
+  background: rgba(72, 123, 255, 1);
+}
+
 /* ================================================================ MEEPS = */

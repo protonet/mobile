@@ -1,9 +1,9 @@
 /* =GENERAL
 
     COLORS:
-      blue        #487bff   rgb(72, 123, 255)
-      orange      #ff7f31   rgb(255, 140, 71)
-      red/rosa    #e75c79   rgb(231, 92, 121)
+      blue        #487bff   rgb(72, 123, 255) - MAIN COLOR, USE FOR LINKS AND CHANNEL HIGHLIGHTING
+      orange      #ff7f31   rgb(255, 140, 71) - USE FOR HIGHLIGHTING USER STUFF (own meeps, user replies, buttons, ...)
+      red/rosa    #e75c79   rgb(231, 92, 121) - USER FOR NOTIFICATIONS (flash messages, badges, ...)
       black       #000      rgb(0, 0, 0)
       grey_dark   #666      rgb(102, 102, 102)
       grey        #999      rgb(153, 153, 153)

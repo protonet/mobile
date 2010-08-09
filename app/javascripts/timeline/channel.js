@@ -119,7 +119,7 @@ protonet.timeline.Channel.prototype = {
    * should be displayed, based on the number
    * of unread meeps
    */
-  toggleBadge: function() {
+  _toggleBadge: function() {
     if (!this.badge) {
       this.badge = $("<span />", {
         className: "badge",
@@ -134,6 +134,9 @@ protonet.timeline.Channel.prototype = {
     }
   },
   
+  /**
+   * Decide whether the channel should be shown or hidden
+   */
   toggle: function() {
     if (this.isSelected) {
       this.unreadMeeps = 0;
@@ -144,7 +147,7 @@ protonet.timeline.Channel.prototype = {
       this.link.removeClass("active");
     }
     
-    this.toggleBadge();
+    this._toggleBadge();
   },
   
   /**
@@ -321,7 +324,7 @@ protonet.timeline.Channel.prototype = {
     
     if (!this.isSelected) {
       this.unreadMeeps++;
-      this.toggleBadge();
+      this._toggleBadge();
     }
   }
 };
