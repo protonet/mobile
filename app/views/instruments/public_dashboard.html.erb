@@ -4,8 +4,10 @@
       <fieldset>
         <% message_hint = current_user.stranger? ? 'welcome stranger! talk to us...' : "go ahead @#{current_user.display_name} I'm all yours..."%>
         <%= f.text_area(:message, :id => 'message', :title => message_hint) %>
-        <%= f.hidden_field('channel_id', :id => "message_channel_id", :name => 'message_channel_id',
-                                         :value => @active_channel.id, :autocomplete => 'off') %>
+        <%= f.hidden_field('channel_id',  :id => "message_channel_id", :name => 'message_channel_id',
+                                          :value => @active_channel.id, :autocomplete => 'off') %>
+       <%= f.hidden_field('channel_uuid', :id => "message_channel_uuid", :name => 'message_channel_uuid',
+                                          :value => @active_channel.uuid, :autocomplete => 'off') %>
         <%= f.hidden_field(:socket_id) %>
         <%= f.hidden_field(:text_extension, :id => 'text-extension-input', :value => '', :autocomplete => 'off') %>
       </fieldset>
