@@ -17,10 +17,12 @@
  *
  */
 protonet.timeline.Channel = function(data, link) {
-  this.link       = $(link);
-  this.data       = data;
-  this.$window    = $(window);
-  this.latestMeep = null;
+  this.link         = $(link);
+  this.data         = data;
+  this.$window      = $(window);
+  this.latestMeep   = null;
+  
+  this.unreadMeeps  = 0;
   
   this._observe();
 };
@@ -45,7 +47,7 @@ protonet.timeline.Channel.prototype = {
     }.bind(this));
     
     /**
-     * Render meeps when received
+     * Render meep when received
      */
     protonet.Notifications.bind("meep.receive", function(e, meepData) {
       if (meepData.channel_id != this.data.id) {
@@ -55,6 +57,11 @@ protonet.timeline.Channel.prototype = {
       // TODO: parsing the text_extension json should be done on the server side
       meepData.text_extension = meepData.text_extension && JSON.parse(meepData.text_extension);
       this._renderMeep(meepData, this.channelList);
+      
+      if (!this.isSelected) {
+        this.unreadMeeps++;
+        this.toggleBadge();
+      }
     }.bind(this));
     
     /**
@@ -108,8 +115,29 @@ protonet.timeline.Channel.prototype = {
     }.bind(this));
   },
   
+  /**
+   * Decides whether or not a small badge
+   * should be displayed, based on the number
+   * of unread meeps
+   */
+  toggleBadge: function() {
+    if (!this.badge) {
+      this.badge = $("<span />", {
+        className: "badge",
+        text:      0
+      }).appendTo(this.link);
+    }
+    
+    if (this.unreadMeeps > 0) {
+      this.badge.text(this.unreadMeeps).show();
+    } else {
+      this.badge.hide();
+    }
+  },
+  
   toggle: function() {
     if (this.isSelected) {
+      this.unreadMeeps = 0;
       this.channelList.show();
       this.link.addClass("active");
     } else {
@@ -117,7 +145,7 @@ protonet.timeline.Channel.prototype = {
       this.link.removeClass("active");
     }
     
-    return this;
+    this.toggleBadge();
   },
   
   /**
@@ -250,7 +278,7 @@ protonet.timeline.Channel.prototype = {
     }
     
     var noMeepsHint = $("<div />", {
-      "class": "no-meeps-available"
+      className: "no-meeps-available"
     }).hide().html(protonet.t("NO_MEEPS_AVAILABLE")).insertAfter(this.channelList);
     
     protonet.Notifications.bind("channel.change", function(e, id) {
