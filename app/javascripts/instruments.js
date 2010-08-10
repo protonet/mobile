@@ -33,15 +33,14 @@ $(function() {
 
 // Frickin' stunning cloud animation (makes your squirrel run in circles!!)
 $(function() {
-  // new protonet.effects.Clouds($("#cloud-container"), {
-  //   minStartPosition: -20,
-  //   maxStartPosition: 90,
-  //   minSize:          10,
-  //   maxSize:          60,
-  //   minSpeed:         0.2,
-  //   maxSpeed:         0.6,
-  //   amount:           15
-  // });
+  new protonet.effects.Clouds($("#cloud-container"), {
+    minStartPosition: -20,
+    maxStartPosition: 90,
+    minSize:          10,
+    maxSize:          50,
+    amount:           20,
+    animated:         false
+  });
 });
 
 // Initialize fluid if the app is running in a fluid container

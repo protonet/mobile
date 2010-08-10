@@ -29,7 +29,9 @@ protonet.effects.Clouds = function(container, config) {
       this.clouds = this.clouds.add(this._createCloud());
     }
     this.clouds.appendTo(this.container);
-    this._startAnimation();
+    if (this.config.animated) {
+      this._startAnimation();
+    }
   }.bind(this));
 };
 
@@ -45,8 +47,9 @@ protonet.effects.Clouds.prototype = {
     maxSize:          100,                  // Max size of clouds in percent (relative to the natural size)
     minStartPosition: 0,                    // Min start position of clouds in percent (relative to the container width)
     maxStartPosition: 100,                  // Max start position of clouds in percent (relative to the container width)
-    image:            "/images/cloud.png",  // Url to the cloud image
-    insertMethod:     "prepend"             // jQuery method for inserting the sky element into the given container
+    image:            "/img/cloud.png",     // Url to the cloud image
+    insertMethod:     "prepend",            // jQuery method for inserting the sky element into the given container
+    animated:         true
   },
   
   _createCloud: function(fromStart) {

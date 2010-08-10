@@ -108,6 +108,7 @@ aside {
   right: 0;
   z-index: -1;
   margin: -20px 0 0;
+  opacity: 0.5;
 }
 
 input[type=text],
@@ -232,7 +233,7 @@ header .hearts {
 #user-navigation  {
   position: absolute;
   right: 0;
-  top: -16px;
+  top: -14px;
   font-size: 10px;
 }
 
@@ -240,7 +241,7 @@ header .hearts {
   float: left;
   line-height: 13px;
   vertical-align: middle;
-  padding: 0 5px 1px;
+  padding: 0 6px 1px;
   border-right: 1px solid #999;
 }
 
@@ -262,7 +263,7 @@ header .hearts {
   text-decoration: none;
   color: inherit;
   position: relative;
-  padding-right: 25px;
+  padding-right: 26px;
   display: block;
 }
 
@@ -291,7 +292,7 @@ header .hearts {
   position: absolute;
   z-index: 1;
   background: #fff;
-  margin: 1px 0 0 -6px;
+  margin: 1px 0 0 -7px;
   min-width: 80px;
   border: 1px solid #999;
   border-top: 0;
@@ -300,7 +301,7 @@ header .hearts {
 #user-navigation .settings li {
   cursor: pointer;
   color: #999;
-  padding: 3px 5px;
+  padding: 3px 6px;
   border-top: 1px solid #ccc;
 }
 
