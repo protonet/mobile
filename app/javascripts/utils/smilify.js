@@ -36,6 +36,10 @@ protonet.utils.smilify = (function() {
   });
   
   return function(str) {
+    if (!protonet.user.Config.get("smilies")) {
+      return str;
+    }
+    
     $.each(SMILIES, function(i, smilie) {
       $.each(smilie.regExps, function(i, regExp) {
         str = str.replace(regExp, function(original, $1, $2) {

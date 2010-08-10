@@ -9,8 +9,17 @@ protonet.user.Config = {
     sound: {
       type: "boolean",
       labels: {
-        "true": "turn sound off",
-        "false": "turn sound on"
+        "true":   "sound <span class=\"on\">on</span>",
+        "false":  "sound <span class=\"off\">off</span>"
+      },
+      defaultValue: true
+    },
+    
+    smilies: {
+      type: "boolean",
+      labels: {
+        "true":  "smilies <span class=\"on\">on</span>",
+        "false": "smilies <span class=\"off\">off</span>"
       },
       defaultValue: true
     }
@@ -45,10 +54,15 @@ protonet.user.Config = {
   },
   
   _renderConfigs: function() {
-    var container = $("#mini-menu .option-links");
+    var container = $("#user-navigation .settings");
+        list = $("<ul />");
     $.each(this.configs, function(key, config) {
-      this._getElement(key, config).appendTo(container);
+      this._getElement(key, config).appendTo(list);
     }.bind(this));
+    
+    container
+      .append(list)
+      .click(function(event) { event.preventDefault(); });
   },
   
   _getElement: function(key, config) {
@@ -59,16 +73,18 @@ protonet.user.Config = {
   },
   
   _getBooleanElement: function(key, config) {
-    var anchor = $("<a />", {
-      href: "#" + key,
-      html: config.labels[String(this.get(key))],
-      click: function(event) {
+    var value = String(this.get(key));
+    var item = $("<li />", {
+      html:       config.labels[value],
+      className:  value,
+      click:      function(event) {
         event.preventDefault();
-        var newValue = !this.get(key);
+        var oldValue = this.get(key),
+            newValue = !oldValue;
         this.set(key, newValue);
-        anchor.html(config.labels[String(newValue)]);
+        item.removeClass(String(oldValue)).addClass(String(newValue)).html(config.labels[String(newValue)]);
       }.bind(this)
     });
-    return anchor;
+    return item;
   }
 };

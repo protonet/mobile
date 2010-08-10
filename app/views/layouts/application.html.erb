@@ -28,11 +28,9 @@
   <body>
     <div id="cloud-container"><!-- container for fluffy clouds (call it "the sky") --></div>
     <%- unless flash.empty? -%>
-      <div class="flash-message">
-        <%= "<p class=\"notice\"><span>#{flash[:notice]}</span></p>" if flash[:notice] %>
-        <%= "<p class=\"error\"><span>#{flash[:error]}</span></p>" if flash[:error] %>
-        <%= "<p class=\"warning\"><span>#{flash[:warning]}</span></p>" if flash[:warning] %>
-      </div>
+      <%= "<div class=\"flash-message notice\"><p>#{flash[:notice]}</p></div>" if flash[:notice] %>
+      <%= "<div class=\"flash-message error\"><p>#{flash[:error]}</p></div>" if flash[:error] %>
+      <%= "<div class=\"flash-message warning\"><p>#{flash[:warning]}</p></div>" if flash[:warning] %>
     <%- end -%>
     
     <%- if current_user.stranger? -%>
@@ -54,7 +52,7 @@
             <div>
               <%= f.label :signup_contact, "social media profile or email" %>
               <%= f.text_field :signup_contact, :title => "social media profile or email" %>
-              <span class="hint">(e.g. http://www.facebook.com/hal.jordan)</span>
+              <span class="hint">(eg. http://www.facebook.com/john.doe)</span>
             </div>
             <div>
               <button type="submit" name="join">sign up</button>
@@ -87,6 +85,25 @@
     <header<%= " class=\"login\"" if current_user.stranger? %>>
       <a href="<%= root_path %>" class="logo">protonet – it's yours</a>
       <a href="<%= root_path %>" class="monster default">change character</a>
+      <%- unless current_user.stranger? -%>
+        <ul id="user-navigation">
+          <li class="welcome">
+            <a href="<%= preferences_path %>">
+              <strong><%=h current_user.display_name %></strong>
+              <img src="<%= current_user.active_avatar_url %>" width="16" height="16">
+            </a>
+          </li>
+          <li class="account">
+            <%= link_to("account", preferences_path) %>
+          </li>
+          <li class="settings">
+            <a href="#">settings</a>
+          </li>
+          <li class="logout">
+            <%= link_to("logout", :controller => :sessions, :action => :destroy) %>
+          </li>
+        </ul>
+      <%- end -%>
     </header>
     
     <%= yield %>

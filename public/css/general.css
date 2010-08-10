@@ -31,7 +31,7 @@ body {
   background: url(/img/background_top.png) repeat-x,
               url(/img/background_bottom.png) repeat-x left bottom,
               url(/img/background.png) fixed;
-  margin: 20px auto;
+  margin: 0 auto;
   width: 940px;
   color: #000;
 }
@@ -79,7 +79,97 @@ output {
   display: block;
 }
 
+section,
+aside {
+  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  background: rgb(255, 255, 255);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  display: inline-block;
+  min-height: 500px;
+  vertical-align: top;
+}
+
+#main {
+  width: 650px;
+  margin: 0 20px 0 0;
+  position: relative;
+}
+
+#side {
+  width: 260px;
+}
+
+#cloud-container {
+  position: fixed;
+  overflow: hidden;
+  height: 450px;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  margin: -20px 0 0;
+}
+
+input[type=text],
+input[type=password] {
+  border: 1px solid;
+  border-color: #666 #ccc #ccc #666;
+  padding: 2px 4px;
+  width: 200px;
+  height: 18px;
+}
+
+.hint {
+  color: #999;
+}
+
+.inline-hint {
+  color: #ccc;
+}
+
+pre {
+  margin: 5px 0;
+  max-height: 200px;
+  overflow: auto;
+  display: block;
+  font-size: 12px;
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #ccc;
+  font-family: Courier New, Courier;
+}
+
+.flash-message {
+  top: -50px;
+  left: 0;
+  right: 0;
+  position: fixed;
+  z-index: 2;
+  color: #fff;
+  padding: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.flash-message > p {
+  width: 950px;
+  margin: 0 auto;
+}
+
+.flash-message.notice {
+  background: rgba(0, 204, 0, 0.6);
+}
+
+.flash-message.warning,
+.flash-message.error {
+  background: rgba(231, 92, 121, 0.7);
+}
+
+
+/* =HEADER
+=========================================================================== */
 header {
+  margin: 20px 0 0;
   position: relative;
   display: block;
   height: 90px;
@@ -136,90 +226,88 @@ header .hearts {
   top: 50px;
   text-align: center;
 }
-  
-section,
-aside {
-  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  background: rgb(255, 255, 255);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  display: inline-block;
-  min-height: 500px;
-  vertical-align: top;
+
+/* =USER NAVIGATION
+=========================================================================== */
+#user-navigation  {
+  position: absolute;
+  right: 0;
+  top: -16px;
+  font-size: 10px;
 }
 
-input[type=text],
-input[type=password] {
-  border: 1px solid;
-  border-color: #666 #ccc #ccc #666;
-  padding: 2px 4px;
-  width: 200px;
-  height: 18px;
+#user-navigation > li {
+  float: left;
+  line-height: 13px;
+  vertical-align: middle;
+  padding: 0 5px 1px;
+  border-right: 1px solid #999;
 }
 
-.hint {
-  color: #999;
+#user-navigation > li:last-child,
+#user-navigation > li:first-child {
+  border: 0;
 }
 
-.inline-hint {
-  color: #ccc;
+#user-navigation > li > a {
+  color: #487bff;
 }
 
-.greet-user {
-  margin: -20px 20px 0;
+#user-navigation .welcome {
+  padding-right: 0;
   color: #666;
-  line-height: 20px;
-  text-align: right;
 }
 
-#main {
-  width: 650px;
-  margin: 0 20px 0 0;
+#user-navigation .welcome a {
+  text-decoration: none;
+  color: inherit;
   position: relative;
-}
-
-#side {
-  width: 260px;
-}
-
-#cloud-container {
-  position: fixed;
-  overflow: hidden;
-  height: 450px;
-  left: 0;
-  right: 0;
-  z-index: -1;
-  margin: -20px 0 0;
-}
-
-pre {
-  margin: 5px 0;
-  max-height: 200px;
-  overflow: auto;
+  padding-right: 25px;
   display: block;
-  font-size: 12px;
-  background-color: #fff;
-  padding: 5px;
-  border: 1px solid #ccc;
-  font-family: Courier New, Courier;
 }
 
-.flash-message {
-  top: -50px;
-  left: 0;
+#user-navigation .welcome img {
+  border: 2px solid #fff;
+  position: absolute;
   right: 0;
-  position: fixed;
-  z-index: 2;
-  background: rgba(0, 204, 0, 0.6);
-  color: #fff;
-  padding: 8px;
-  font-size: 16px;
+  top: -3px;
+}
+
+#user-navigation > .settings:hover {
+  background: #fff;
+}
+
+#user-navigation .settings:hover a {
+  text-decoration: none;
+}
+
+#user-navigation .settings:active ul,
+#user-navigation .settings:hover ul {
+  display: block;
+}
+
+#user-navigation .settings ul {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  background: #fff;
+  margin: 1px 0 0 -6px;
+  min-width: 80px;
+  border: 1px solid #999;
+  border-top: 0;
+}
+
+#user-navigation .settings li {
   cursor: pointer;
+  color: #999;
+  padding: 3px 5px;
+  border-top: 1px solid #ccc;
 }
 
-.flash-message > p {
-  width: 950px;
-  margin: 0 auto;
+#user-navigation .settings .on {
+  color: #00cc00;
 }
 
-/* ============================================================== GENERAL = */
+#user-navigation .settings .off {
+  color: #e75c79;
+}

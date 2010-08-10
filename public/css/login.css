@@ -2,15 +2,15 @@
 =========================================================================== */
 header.login {
   background: url(/img/icn_login_arrow_r2.png) no-repeat 220px 0;
-  padding-top: 20px;
   position: relative;
+  padding-top: 20px;
 }
 
 #login {
   min-height: 100px;
-  padding: 6px 20px 20px;
-  width: 900px;
-  margin: -20px 0 0;
+  padding: 6px 20px 20px 30px;
+  width: 890px;
+  margin: 0 0 -20px;
 }
 
 #login h1 {
@@ -24,7 +24,7 @@ header.login {
   display: inline-block;
   padding: 2px 0;
   vertical-align: top;
-  width: 437px;
+  width: 432px;
 }
 
 #login .form legend {

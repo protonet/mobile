@@ -15,6 +15,10 @@
 
 //---------------------------- INITIALIZE APPLICATION ----------------------------
 
+$(function() {
+  protonet.user.initialize();
+});
+
 // add inline hints
 $(function() {
   $("input:text[title], input:password[title], textarea[title]").each(function() {
@@ -22,7 +26,6 @@ $(function() {
     new protonet.utils.InlineHint(input, input.attr("title"));
   });
 });
-
 
 // add notification message neatification
 $(function() {

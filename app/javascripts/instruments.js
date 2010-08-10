@@ -10,7 +10,6 @@
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
 $(function() {
   protonet.dispatcher.initialize();
-  protonet.user.initialize();
   protonet.timeline.initialize();
 });
 
