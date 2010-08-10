@@ -1,6 +1,7 @@
 var sys = require("sys");
 var net = require("net");
-
+var http = require('http');
+var querystring = require('querystring');
 
 var amqp = require('./modules/node-amqp/amqp');
 amqp = amqp.createConnection({ host: "localhost", vhost: "/" });
@@ -14,10 +15,19 @@ amqp.addListener("ready", function() {
   var channelsQueue     = amqp.queue("node-to-node-channels");
   
   channelsQueue.bind(channelsExchange, "channels.#");
-  channelsQueue.subscribeJSON(function(message) {
-    message.channel_id = remoteChannelUuidToId[message.channel_uuid];
-    if(!message.forwarded && message.channel_id) {
-      sys.puts("received local message, forwarding to remote");
+  channelsQueue.subscribe(function(message) {
+    if(true || message['x_target'] && message.x_target == "protonet.globals.communicationConsole.receiveMessage") {
+      message = JSON.parse(message.data.toString('utf-8'));
+      // sys.puts(sys.inspect(message));
+      message.channel_id = remoteChannelUuidToId[message.channel_uuid];
+      if(message.forwarded != 1 && message.channel_id) {
+        sys.puts("received LOCAL message, forwarding to remote");
+        var remoteNode = http.createClient(3001, 'localhost');
+        var request = remoteNode.request('POST', '/tweets',
+          {'host': 'localhost'});
+        request.write(querystring.stringify({"message_channel_id":message.channel_id, "tweet": {"text_extension":message.text_extension, "message": message.message}}));
+        request.end();
+      }
     }
   });
   
@@ -25,7 +35,6 @@ amqp.addListener("ready", function() {
 
 // get channels in a mapping format from local
 var localChannelUuidToId = {};
-var http = require('http');
 var localNode = http.createClient(3000, 'localhost');
 var request = localNode.request('GET', '/networks/2/channels.json',
   {'host': 'localhost'});
@@ -41,7 +50,6 @@ request.on('response', function (response) {
 });
 
 var remoteChannelUuidToId = {};
-var http = require('http');
 var remoteNode = http.createClient(3001, 'localhost');
 var request = remoteNode.request('GET', '/networks/1/channels.json',
   {'host': 'localhost'});
@@ -80,10 +88,10 @@ socket.addListener("data", function(data){
     console.log('received TEXT message');
     // translate channel_id to the local id
     message.channel_id = localChannelUuidToId[message.channel_uuid];
-    message.fowarded   = 1;
+    message.forwarded   = 1;
     if(message.channel_id) {
-      channelsExchange.publish("channels." + message.channel_uuid, message);
-      console.log('forwarded TEXT message to local')
+      channelsExchange.publish("channels." + message.channel_uuid, JSON.stringify(message));
+      console.log('received REMOTE message, forwarding to local')
     }
   } else {
     console.log('received some OTHER kinda message');

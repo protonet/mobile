@@ -3,6 +3,7 @@ class CreateChannels < ActiveRecord::Migration
     create_table :channels do |t|
       t.string  :name
       t.text    :description
+      t.string  :uuid
       t.timestamps
     end
     # create the default home channel
