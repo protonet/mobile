@@ -194,7 +194,7 @@ header .monster {
   height: 72px;
   font-size: 9px;
   background: url(/img/spr_monsters.png) no-repeat;
-  color: #487bff;
+  color: #999;
   text-decoration: none;
   white-space: nowrap;
   line-height: 42px;
