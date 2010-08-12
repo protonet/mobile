@@ -118,7 +118,7 @@ Graph.prototype.log = function() {
 }
 
 Graph.prototype.cool = function() {
-	this.temperature = this.temperature - 0.9; /* linear */
+	this.temperature = this.temperature - 0.8; /* linear */
 }
 
 Graph.prototype.min = function(v) {
@@ -149,8 +149,8 @@ Graph.prototype.renderToCanvas = function(paper, w, h) {
 				if (node.number != otherNode.number) {
 
 					var delta = node.position.diff( otherNode.position );
+					if (delta.len() == 0) delta = new Vertex(0.1,0.1);
 					var d = delta.len();
-					if (d == 0) d = 0.1;
 					
 					node.disp = 
 						node.disp.sum(
@@ -169,8 +169,8 @@ Graph.prototype.renderToCanvas = function(paper, w, h) {
 			var v = edge.toNode;
 
 			var delta = v.position.diff(u.position);
+			if (delta.len() == 0) delta = new Vertex(0.1,0.1);
 			var d = delta.len();
-			if (d == 0) d = 0.1;
 			
 			v.disp =
 				v.disp.diff(
@@ -203,14 +203,31 @@ Graph.prototype.renderToCanvas = function(paper, w, h) {
 			if (node.position.y < 0) node.position.y = h / 2;
 			if (node.position.y > h) node.position.y = h / 2;
 			
+			/*
 			if (isNaN(node.position.x) || Math.abs(node.position.x) == Infinity) 
 				node.position.x = w / 2;
 			if (isNaN(node.position.y) || Math.abs(node.position.y) == Infinity) 
 				node.position.y = h / 2;
+			*/
 		}
 	
 		this.cool();
 	}
+
+	// check: no nodes should be placed at the same position!
+	for (var n = 0; n < this.nodes.length; n++) {
+		var node = this.nodes[n];
+		for (var m = 0; m < this.nodes.length; m++) {
+			var otherNode = this.nodes[m];
+			if (node.number != otherNode.number) {	
+				if (Math.floor(node.position.x) == Math.floor(otherNode.position.x) &&
+					Math.floor(node.position.y) == Math.floor(otherNode.position.y)) {
+				
+					otherNode.position.x += Math.random(10);
+				}
+			}
+		}
+	};	
 
 	var group = paper.set();
 	// draw edges
@@ -251,8 +268,8 @@ var e9 = new Edge(n8, n2);
 var e10 = new Edge(n8, n3);
 var e11 = new Edge(n8, n4);
 
-var w = 520;
-var h = 570;
+var w = $($("#network-monitor")[0]).width();
+var h = $($("#network-monitor")[0]).height();
 var NetworkGraph = new Graph(
  [n1, n2, n3, n4, n5, n6, n7, n8],
  [e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11],
@@ -261,19 +278,20 @@ var NetworkGraph = new Graph(
 var paper = Raphael("network-monitor", w, h);
 
 var redrawn = 0;
-// var ourInterval = setInterval("redraw()", 50);
+//NetworkGraph.log();	
+var ourInterval = setInterval("redraw()", 50);
 
 function redraw() {
 	if (redrawn < 100) {
 		paper.clear();
-		NetworkGraph.log();
+		//NetworkGraph.log();
 		NetworkGraph.renderToCanvas(paper, w, h);
 	} else {
-		clearInterval(ourInterval);		
+		//clearInterval(ourInterval);
+		//NetworkGraph.log();	
 	}
 	redrawn++;
 }
-
 
 $(function() {
   var input = $("a[rel]");
@@ -315,3 +333,5 @@ $(function() {
 $(function() {
   $("#network li:first").click()
 });
+
+
