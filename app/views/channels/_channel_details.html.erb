@@ -5,30 +5,48 @@
 <ul id="channel-subscribers">
   <% channel.listens.all(:include => :user).each do |listen| %>
     <% if !listen.user.stranger? && user = listen.user %>
-      <li><img src="<%= user.active_avatar_url || '/images/userpicture-mini.jpg' %>" width="20" height="20" alt="Userpicture Mini" /> <span><%= user.display_name %></span>
-<%= link_to('remove listener', listen_path(listen), :method => :delete, :class => "channel-remove-listner") if channel.owner == current_user %></li>
+      <li>
+		<img src="<%= user.active_avatar_url || '/images/userpicture-mini.jpg' %>" width="20" height="20" alt="Userpicture Mini" /> 
+		<span><%= user.display_name %><% if channel.owned_by(listen.user) %> (owner)<% end %></span>
+		<% if channel.owned_by(current_user) %>
+			<% if !channel.owned_by(listen.user) %>
+				<%= link_to('remove listener', listen_path(listen), :method => :delete, :class => "channel-remove-listner") %>
+			<% end %>
+			<% if !channel.public? && !listen.verified? && !channel.owned_by(listen.user) %>
+				(<%= link_to('verify listener', listen_accept_path(listen), :method => :post, :class => "channel-verify-listner") %>)
+			<% end %>
+		<% end %>
+		</li>
     <% end %>
   <% end %>
 </ul>
 <br>
-<h4>Channel Type:</h4>
-<%= channel.public? ? "public" : "private" %>
+<h4>Channel Options:</h4>
+<p>
+	<%= channel.public? ? "public (everyone can subscribe)" : "private (every subscription has to be verified by owner)" %>
+</p>
+<p>
+	<%= channel.local? ? "local (channel is visible only from directly connected clients)" : "global (channel is visible from all clients)" %>
+</p>
 
 <% if channel.owned_by(current_user) %>
-  <h4>Edit Channel Type:</h4>
+  <h4>Edit Channel Options:</h4>
   <div id="edit-<%= channel.id %>" class="edit section">
    <% form_for channel, :url => { :action => 'update' } do |f| -%>
      <fieldset>
        <%= f.hidden_field :id, { :value => channel.id, :id => "channel-id-#{channel.id}" } %>
-       <%= f.label :public, "Channel is public?" %>
+       <%= f.label :public, "Everyone can subscribe to channel without verification?" %>
        <%= f.check_box :public, { :id => "channel-public-#{channel.public}" } %>
+	   <br/>
+       <%= f.label :public, "Channel can only seen by clients connected directly to my node?" %>
        <%= f.check_box :local, { :id => "channel-local-#{channel.local}" } %>
+	   <br/>
        <%= button "Save" %>
      </fieldset>
    <% end %>
    </div>
 
-  <h4>Channel Options:</h4>
+  <h4>Actions:</h4>
   <span class="destroy">
     <%= link_to('delete channel', channel_path, :method => :delete) %>
   </span>

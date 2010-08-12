@@ -38,5 +38,17 @@ class ListensController < ApplicationController
     end
     redirect_to :controller => 'channels', :action => 'index', :anchor => channel.id
   end
-  
+
+  def accept
+    listen = Listen.find(params[:listen_id])
+    channel = listen.channel
+    if current_user == channel.owner
+      listen.verified = true
+      flash[:notice] = "you allowed user #{listen.user.name} to listen to channel #{channel.name}" if listen.save
+    else
+      flash[:notice] = "only the channel owner can accept subscription request!"
+    end
+    redirect_to :controller => 'channels', :action => 'index', :anchor => channel.id
+  end
+
 end

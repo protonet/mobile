@@ -11,7 +11,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources   :tweets
 
   map.listen_to_channel  'listens/create', :controller => 'listens', :action => 'create'  
-  map.resources   :listens
+  map.resources   :listens do |listen|
+    listen.accept '/accept', :controller => 'listens', :action => 'accept'
+  end
   
   map.resources   :assets
   
