@@ -1373,7 +1373,7 @@ h2 {
   float: left;
   width:  350px;
 }
-#channels ul {
+#channels ul.channel-list {
   max-height: 540px;
   overflow: auto;
 }
