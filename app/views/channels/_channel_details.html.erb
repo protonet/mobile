@@ -22,6 +22,7 @@
        <%= f.hidden_field :id, { :value => channel.id, :id => "channel-id-#{channel.id}" } %>
        <%= f.label :public, "Channel is public?" %>
        <%= f.check_box :public, { :id => "channel-public-#{channel.public}" } %>
+       <%= f.check_box :local, { :id => "channel-local-#{channel.local}" } %>
        <%= button "Save" %>
      </fieldset>
    <% end %>

@@ -1,4 +1,5 @@
 class Channel < ActiveRecord::Base
+  include FlagShihTzu
 
   belongs_to  :owner, :class_name => "User"
   belongs_to  :network
@@ -17,7 +18,16 @@ class Channel < ActiveRecord::Base
   after_create  :create_folder,   :if => lambda {|c| !c.home?}
   after_create  :subscribe_owner, :if => lambda {|c| !c.home?}
 
-  named_scope :public, :conditions => {:public => true}
+  #named_scope :public, :conditions => {:public => true}
+
+  # privacy
+  #   public  = everyone can subscribe and listen to channel immedietly
+  #   private = everyone can subscribe and listen to channel after owner's verification
+  # visibility
+  #   local  = channel is listed only in clients directly connected to the node
+  #   global = channel is listed in all clients connected to the node (also via other nodes!)
+  has_flags 1 => :public,
+            2 => :local
 
   def self.home
     begin
