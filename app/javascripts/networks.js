@@ -315,13 +315,14 @@ $(function() {
   } else {
     $("#network li:first").click();
   }
-  $("#network .control a").click(function(){
+  $("#network .control a").click(function(e){
     $.ajax({
       url: this.href,
       data: {},
       success: function(data) {
-        
-      },
+        $(e.currentTarget).removeClass("off");
+        $(e.currentTarget).addClass("on");
+     },
       error: function() {
         console.log('error')
       }
