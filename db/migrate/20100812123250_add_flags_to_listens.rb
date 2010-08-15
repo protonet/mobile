@@ -3,7 +3,7 @@ class AddFlagsToListens < ActiveRecord::Migration
     add_column :listens, :flags, :integer, :default => 0
     Listen.reset_column_information
     Listen.all.each do |listen|
-      listen.verified = true
+      listen.update_attribute(:flags, 1)
     end
   end
 
