@@ -24,10 +24,10 @@ class Channel < ActiveRecord::Base
   #   public  = everyone can subscribe and listen to channel immedietly
   #   private = everyone can subscribe and listen to channel after owner's verification
   # visibility
-  #   local  = channel is listed only in clients directly connected to the node
   #   global = channel is listed in all clients connected to the node (also via other nodes!)
+  #   local  = channel is listed only in clients directly connected to the node
   has_flags 1 => :public,
-            2 => :local
+            2 => :global
 
   def self.home
     begin
