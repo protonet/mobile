@@ -27,7 +27,7 @@
   <%= channel.public? ? "public (users can subscribe without verification)" : "private (every subscription has to be verified by owner)" %>
 </p>
 <p>
-  <%= channel.local? ? "local (channel is visible only from directly connected clients)" : "global (channel is visible from external nodes and clients)" %>
+  <%= channel.global? ? "global (channel is visible from external nodes and clients)" : "local (channel is visible only from directly connected clients)" %>
 </p>
 <% else %>
   <h4>Edit Channel Options:</h4>
