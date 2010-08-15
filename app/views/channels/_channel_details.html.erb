@@ -36,10 +36,10 @@
      <fieldset>
        <%= f.hidden_field :id, { :value => channel.id, :id => "channel-id-#{channel.id}" } %>
        <%= f.label :public, "public (users can subscribe without verification)?" %>
-       <%= f.check_box :public, { :id => "channel-public-#{channel.public}" } %>
+       <%= f.check_box :public %>
      <br/>
        <%= f.label :global, "global (channel is visible from external nodes and clients)" %>
-       <%= f.check_box :global, { :id => "channel-local-#{channel.local}" } %>
+       <%= f.check_box :global %>
      <br/>
        <%= button "Save" %>
      </fieldset>
