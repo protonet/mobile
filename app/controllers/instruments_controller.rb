@@ -11,7 +11,7 @@ class InstrumentsController < ApplicationController
   end
   
   def public_dashboard
-    @channels = current_user.channels
+    @channels = current_user.verified_channels
     @asset = Asset.new
     @active_channel = params[:channel_id] ? Channel.find(params[:channel_id]) : @channels.first
     

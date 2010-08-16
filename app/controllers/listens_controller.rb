@@ -16,11 +16,13 @@ class ListensController < ApplicationController
     end
     if channel
       current_user.subscribe(channel)
-      flash[:notice] = "you started listening to #{channel.name}"
+      flash[:notice] = "you started listening to #{channel.name}#{' (pending verification)' if !channel.public?}"
     else
       flash[:error] = "could not subscribe to channel with identifier #{(params[:channel_name] || params[:channel_id]).to_s}"
     end
-    if params[:channel_name]
+    if params[:channel_name] && (channel && !channel.public?)
+      redirect_to "/"
+    elsif params[:channel_name]
       redirect_to "/#{("#channel_name=" + channel.name if channel.try(:name))}"
     else
       redirect_to :controller => 'channels', :anchor => channel.try(:id)

@@ -127,7 +127,7 @@ module JsDispatchingServer
   def send_channel_subscriptions
     fill_channel_users
     filtered_channel_users = {}
-    @user.channels.each do |channel|
+    @user.verified_channels.each do |channel|
       filtered_channel_users[channel.id] = @@channel_users[channel.id]
     end
     data = {:x_target => 'protonet.Notifications.triggerFromSocket', :trigger => 'channel.update_subscriptions', :data => filtered_channel_users}.to_json
@@ -174,7 +174,7 @@ module JsDispatchingServer
 
   def bind_socket_to_user_queues
     @queues ||= []
-    @user.channels.each do |channel|
+    @user.verified_channels.each do |channel|
       @queues << bind_channel(channel)
       @queues << bind_files_for_channel(channel)
       log("subscribing to channel #{channel.id}")

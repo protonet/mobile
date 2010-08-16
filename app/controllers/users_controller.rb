@@ -62,7 +62,7 @@ class UsersController < ApplicationController
   end
 
   def list_channels
-    channels = current_user ? current_user.channels : [Channel.home]
+    channels = current_user ? current_user.verified_channels : [Channel.home]
     respond_to do |format|
       format.json do
         channels = channels.collect { |c| {:id => c.id, :name => c.name, :description => c.description}}
