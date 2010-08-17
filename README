@@ -59,12 +59,6 @@ Install our messaging broker:
 sudo port selfupdate
 sudo port install rabbitmq-server
 
-# if you have stopped it you can restart it by using:
-sudo rabbitmq-server
-
-# and start up the javascript dispatcher
-./messaging/event_machine/js_dispatching_server.rb
-
 == NODE.JS
 
 Install node.js by downloading it from http://nodejs.org/#download (>= 0.1.90)
@@ -77,13 +71,16 @@ make
 === START THE SYSTEM
 
 # After installing all dependencies you can get the system running by doing these steps:
-
+# start the messaging broker
 sudo rabbitmq-server
-# script server will start (and shutdown) the js dispatcher and node.js automatically
+
+# and start the rails server (it will start and shutdown the js dispatcher and node.js automatically)
 script/server
 
-=== OTHER STUFF
+# goto http://localhost:3000 and enjoy the ride!
 
+
+=== OTHER STUFF
 These things are not needed if you just want to do some basic development:
 
 == LOCAL APACHE CONFIG
