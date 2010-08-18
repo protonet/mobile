@@ -23,7 +23,6 @@ protonet.controls.UserWidget = (function() {
     }
     
     protonet.Notifications.bind('user.added', function(e, msg){
-      debugger;
       this.addUserFromMessage(msg);
       this.filterChannelUsers(protonet.globals.channelSelector.getCurrentChannelId());
     }.bind(this));

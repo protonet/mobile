@@ -1,6 +1,6 @@
 class AddChannelUuidToChannels < ActiveRecord::Migration
   def self.up
-    unless Channel.new.respond_to?(:uuid)
+    unless Channel.column_names.include?("uuid")
       add_column :channels, :uuid, :string
       Channel.reset_column_information
       Channel.all.each do |channel|

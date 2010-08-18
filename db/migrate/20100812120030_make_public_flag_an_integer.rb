@@ -1,6 +1,6 @@
 class MakePublicFlagAnInteger < ActiveRecord::Migration
   def self.up
-    unless Channel.new.respond_to?(:flags)
+    unless Channel.column_names.include?("flags")
       add_column :channels, :flags, :integer, :default => 1 # public = false and local = true
       Channel.reset_column_information
       Channel.all.each do |channel|
