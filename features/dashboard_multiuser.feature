@@ -29,6 +29,6 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
       And I go to the startpage
       And I register as "justadded"
     Given I am using the first browser
-      Then I should see "justadded" within "#user-list ul.root"
+      Then I should see /justadded/ within "#user-list ul.root"
       And I fill in "message" with "Hallo @just"
       Then the message field should contain "Hallo @justadded"
