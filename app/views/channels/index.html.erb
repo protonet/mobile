@@ -13,14 +13,12 @@
       <p><%= n.name %></p>
       <ul>
         <%- n.channels.each do |c| -%>
-          <% if (subscribed = current_user.subscribed?(c)) || c.public? %>
           <li id="channel-<%= c.id %>" class="channel">
-            <% if subscribed %>
+            <% if current_user.subscribed?(c) %>
               <img src="/images/bullet_green.png" width="16" height="16" alt="" class="channel-indicator" />
             <% end %>
             <%= "#{h c.name} <span>(#{h c.description})</span>" %>
          </li>
-         <%- end -%>
        <%- end -%>
       </ul>
     </li>

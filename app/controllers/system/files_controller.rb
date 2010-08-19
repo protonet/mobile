@@ -2,7 +2,7 @@ module System
   class FilesController < ApplicationController
   
     def index
-      @channels = current_user.channels
+      @channels = current_user.verified_channels
       @active_channel = params[:channel_id] ? Channel.find(params[:channel_id]) : @channels.first
       
       raw_files = FileSystem.all(params['path'])

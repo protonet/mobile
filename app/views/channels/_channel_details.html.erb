@@ -21,25 +21,25 @@
   <% end %>
 </ul>
 <br>
+<% unless channel.owned_by(current_user) %>
 <h4>Channel Options:</h4>
 <p>
-  <%= channel.public? ? "public (everyone can subscribe)" : "private (every subscription has to be verified by owner)" %>
+  <%= channel.public? ? "public (users can subscribe without verification)" : "private (every subscription has to be verified by owner)" %>
 </p>
 <p>
-  <%= channel.local? ? "local (channel is visible only from directly connected clients)" : "global (channel is visible from all clients)" %>
+  <%= channel.global? ? "global (channel is visible from external nodes and clients)" : "local (channel is visible only from directly connected clients)" %>
 </p>
-
-<% if channel.owned_by(current_user) %>
+<% else %>
   <h4>Edit Channel Options:</h4>
   <div id="edit-<%= channel.id %>" class="edit section">
    <% form_for channel, :url => { :action => 'update' } do |f| -%>
      <fieldset>
        <%= f.hidden_field :id, { :value => channel.id, :id => "channel-id-#{channel.id}" } %>
-       <%= f.label :public, "Everyone can subscribe to channel without verification?" %>
-       <%= f.check_box :public, { :id => "channel-public-#{channel.public}" } %>
+       <%= f.label :public, "public (users can subscribe without verification)?" %>
+       <%= f.check_box :public %>
      <br/>
-       <%= f.label :public, "Channel can only seen by clients connected directly to my node?" %>
-       <%= f.check_box :local, { :id => "channel-local-#{channel.local}" } %>
+       <%= f.label :global, "global (channel is visible from external nodes and clients)" %>
+       <%= f.check_box :global %>
      <br/>
        <%= button "Save" %>
      </fieldset>

@@ -1,19 +1,17 @@
 class MakePublicFlagAnInteger < ActiveRecord::Migration
   def self.up
-    add_column :channels, :flags, :integer, :default => 1
-    Channel.reset_column_information
-    Channel.all.each do |channel|
-      channel.flags = 0 unless channel.public?
+    unless Channel.column_names.include?("flags")
+      add_column :channels, :flags, :integer, :default => 1 # public = false and local = true
+      Channel.reset_column_information
+      Channel.all.each do |channel|
+        channel.update_attribute(:flags, 1) if channel.public?
+      end
     end
     remove_column :channels, :public
   end
 
   def self.down
     add_column :channels, :public, :boolean, :default => 1
-    Channel.reset_column_information
-    Channel.all.each do |channel|
-      channel.public = channel.public?
-    end
     remove_column :channels, :flags
   end
 end

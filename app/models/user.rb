@@ -21,8 +21,8 @@ class User < ActiveRecord::Base
 
   has_many  :tweets
   has_many  :listens,  :dependent => :destroy
-  has_many  :channels, :through => :listens
-  has_many  :owned_channels, :class_name => 'Channel', :foreign_key => :owner_id
+  has_many  :channels,          :through => :listens
+  has_many  :owned_channels,    :class_name => 'Channel', :foreign_key => :owner_id
   has_one   :avatar, :class_name => 'Images::Avatar', :dependent => :destroy
   
   named_scope :registered, :conditions => {:temporary_identifier => nil}
@@ -126,6 +126,10 @@ class User < ActiveRecord::Base
   
   def display_name
     name.blank? ? login : name
+  end
+  
+  def verified_channels
+    channels.all(:conditions => ['listens.flags = 1'])
   end
   
   def listen_to_home
