@@ -6,7 +6,7 @@
   // ...
 }*/
 
-/* ------------------------------------------------- */
+//* ------------------------------------------------- */
 /* Vertex class */
 
 var Vertex = function(x, y) {
@@ -14,7 +14,9 @@ var Vertex = function(x, y) {
   this.y = y;
 };
 
-Vertex.prototype.sum = 
+Vertex.prototype.sum = function(v) {
+  return new Vertex(this.x + v.x, this.y + v.y);
+};
 
 Vertex.prototype.diff = function(v) {
   return new Vertex(this.x - v.x, this.y - v.y);
@@ -72,7 +74,12 @@ Node.prototype.render = function(paper) {
   var bb = title.getBBox();
   var w = bb.width + 16;
   var h = bb.height + 10;
-  var box = paper.rect(this.position.x - (w / 2), this.position.y - (h / 2), w, h, 5);
+  var box;
+  if (this.info.type == 'node')
+    box = paper.rect(this.position.x - (w / 2), this.position.y - (h / 2), w, h, 5);
+  else
+    box = paper.circle(this.position.x, this.position.y, w / 2);
+  
   if (this.info.supernode) {
     box.attr("fill", "#080");
   } else {
@@ -126,13 +133,11 @@ var Edge = function(fromNode, toNode) {
 };
 
 Edge.prototype.render = function(paper) {
-  
   var line = paper.path(
      "M" + this.fromNode.position.x + "," + this.fromNode.position.y + 
     " L" + this.toNode.position.x   + "," + this.toNode.position.y);
   line.attr("fill", "blue");
   line.attr("stroke", "white");
-  
   return line;  
 }
 
@@ -140,19 +145,19 @@ Edge.prototype.render = function(paper) {
 /* Graph class */
 
 var Graph = function(target_id, maxIterations) {
+  this.nodes = new Array();
+  this.edges = new Array();
 
+  this.iters         = 0;
+  this.maxIterations = maxIterations;
+  
   this.w = $($('#'+target_id)[0]).width();
   this.h = $($('#'+target_id)[0]).height();
   this.paper = Raphael(target_id, this.w, this.h);
-  
-  this.iters         = 0;
-  this.maxIterations = maxIterations;
 
-  this.nodes = new Array();
-  this.edges = new Array();
   this.temperature = this.w * 100.0;
   this.area = this.w * this.h;
-  this.optimalSpringLength = this.calcOptimalSpringLength();
+  this.optimalSpringLength = Math.sqrt(this.area / this.nodes.length) * 3;
   
   this.highestNodeNumber = 0;
 };
@@ -172,18 +177,6 @@ Graph.prototype.getUniqueNodeNumber = function(online_users) {
 
 Graph.prototype.updateFromAsyncInfo = function(online_users) {
   //console.log(online_users);
-  /*
-  {
-    6:{
-      name:"toki", 
-      connections: [ [355893, "web"] ]
-    }, 
-    4:{
-      name:"ali", 
-      connections: [ [305726, "web"] ] 
-    }
-  }
-  */
   // find local node (the one the clients are connected to)
   var localnode;
   for (var i = 0; i < this.nodes.length; i++) {
@@ -195,12 +188,13 @@ Graph.prototype.updateFromAsyncInfo = function(online_users) {
     // add clients to node
     for (var key in online_users) {
         online_users[key].id = key;
+        online_users[key].type = 'client';
         var node = new Node(this.getUniqueNodeNumber(), online_users[key]);
-        //this.addNode(node);
-        //this.addEdge(new Edge(node, localnode), false);
+        this.addNode(node);
+        this.addEdge(new Edge(node, localnode), false);
     }
     //this.log();
-    //this.restart();
+    this.restart();
   }
 };
 
@@ -247,8 +241,9 @@ Graph.prototype.edgeExists = function(fromNode, toNode) {
 };
 
 Graph.prototype.initFromNetworksInfo = function(networks) {
-  /*var nodes = new Array();
+  var nodes = new Array();
   for (var i = 0; i < networks.length; i++) {
+    networks[i].type = 'node';
     var node = new Node(i, networks[i]);
     this.addNode(node);
     nodes.push(node);
@@ -258,32 +253,7 @@ Graph.prototype.initFromNetworksInfo = function(networks) {
     for (var j = 0; j < nodes.length; j++) {
       this.addEdge(new Edge(nodes[i], nodes[j]), false);
     }
-  }*/
-  
-  var n1 = new Node(1, {name:"n1"});
-  var n2 = new Node(2, {name:"n2"});
-  var n3 = new Node(3, {name:"n3"});
-  var n4 = new Node(4, {name:"n4"});
-  var n5 = new Node(5, {name:"n5"});
-  var n6 = new Node(6, {name:"n6"});
-  this.addNode(n1);
-  this.addNode(n2);
-  this.addNode(n3);
-  this.addNode(n4);
-  this.addNode(n5);
-  this.addNode(n6);
-  this.addEdge(new Edge(n1, n2));
-  this.addEdge(new Edge(n2, n3));
-  this.addEdge(new Edge(n3, n4));
-  this.addEdge(new Edge(n4, n1));
-  this.addEdge(new Edge(n2, n3));
-  this.addEdge(new Edge(n4, n5));
-  this.addEdge(new Edge(n2, n6));
-  this.addEdge(new Edge(n2, n4));
-  this.addEdge(new Edge(n5, n6));
-  this.addEdge(new Edge(n5, n1));
-  
-  //console.log(this.optimalSpringLength);
+  }
 };
 
 Graph.prototype.log = function() {
@@ -292,7 +262,7 @@ Graph.prototype.log = function() {
   for (var i = 0; i < this.nodes.length; i++) {
     var node = this.nodes[i];
     nodes.push([
-      node.number+': '+Math.round(node.position.x)+"/"+Math.round(node.position.y)+', '+Math.round(node.disp.len())
+      Math.round(node.position.x)+"/"+Math.round(node.position.y)
     ]);
   }
   for (var i = 0; i < this.edges.length; i++) {
@@ -327,15 +297,13 @@ Graph.prototype.render = function() {
     return false;
 
   this.iters++;
-  this.paper.clear();  
-  //var delta_t = 1000.0 / 50.0; // starts 50 times within 1000 ms
+
+  var delta_t = 1000.0 / 50.0; // starts 50 times within 1000 ms
   
-  console.log("-----");
-  console.log(this.iters);
+  //console.log("-----");
   if (this.temperature > 0.0)
   {
-    //console.log(this.nodes.toSource());
-    this.log();
+    this.paper.clear();
     
     // calculate repulsive forces
     for (var n = 0; n < this.nodes.length; n++) {
@@ -384,7 +352,6 @@ Graph.prototype.render = function() {
         );                
     }
 
-    // move nodes according to their forces
     for (var n = 0; n < this.nodes.length; n++) {
       var node = this.nodes[n];
       
@@ -419,7 +386,7 @@ Graph.prototype.render = function() {
       var otherNode = this.nodes[m];
       if (node.number != otherNode.number) {  
         if (Math.floor(node.position.x) == Math.floor(otherNode.position.x) &&
-            Math.floor(node.position.y) == Math.floor(otherNode.position.y)) {
+          Math.floor(node.position.y) == Math.floor(otherNode.position.y)) {
         
           otherNode.position.x += Math.random(10);
         }
@@ -441,5 +408,6 @@ Graph.prototype.render = function() {
   group.translate(-bbox.x, -bbox.y);
   group.translate(
     (this.w - bbox.width) / 2.0,
-    (this.h - bbox.height) / 2.0);    
+    (this.h - bbox.height) / 2.0);
 };
+
