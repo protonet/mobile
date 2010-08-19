@@ -1,4 +1,7 @@
 <h2>Networks</h2>
+<% javascript_tag do %>
+  var networks = <%= @networks.to_json %>;
+<% end %>
 <div id="network" style="float:left;">
   <form id="network-search" action="/network/search">
     <fieldset>

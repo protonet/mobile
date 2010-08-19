@@ -48,8 +48,9 @@ Vertex.prototype.inverse = function() {
 /* ------------------------------------------------- */
 /* Graph Node class */
 
-var Node = function(number) {
+var Node = function(number, info) {
   this.number   = number;
+  this.info     = info;
   this.position = new Vertex(Math.random() * 10, Math.random() * 10);
   this.disp     = new Vertex(0, 0);
   this.mass     = 500.0;
@@ -57,11 +58,70 @@ var Node = function(number) {
 };
 
 Node.prototype.renderToCanvas = function(paper) {
-  var circle = paper.circle(this.position.x, this.position.y, 10);
-  circle.attr("fill", "red");
-  circle.attr("stroke", "white");
-  circle.attr("opacity", 0.5);
-  return circle;
+  var visual = paper.set();
+  
+  var title = paper.text(this.position.x, this.position.y, this.info.name);
+  title.attr({fill: 'white'});
+  //var bb = title.getBBox();
+  //title.translate(-bb.x + this.position.x + 15, -bb.y + this.position.y - (bb.height / 2));
+  visual.push(title);
+
+  var bb = title.getBBox();
+  var w = bb.width + 16;
+  var h = bb.height + 10;
+  var box = paper.rect(this.position.x - (w / 2), this.position.y - (h / 2), w, h, 5);
+  if (this.info.supernode) {
+    box.attr("fill", "#080");
+  } else {
+    box.attr("fill", "#800");
+  }
+  box.attr("stroke", "white");
+  box.attr("opacity", 1);
+  box.n = this;
+  visual.push(box);
+  
+    // on mouse drauf Farbe aendern
+    box.mouseover(function() {
+      if (this.n.info.supernode)
+        this.attr({fill: "#0c0"});
+      else
+        this.attr({fill: "#c00"});
+    });
+    box.mouseout(function() {
+      if (this.n.info.supernode)
+        this.attr({fill: "#080"});
+      else
+        this.attr({fill: "#800"});
+    });
+  
+    title.n = this;
+    title.b = box;
+    title.mouseover(function() {
+      if (this.n.info.supernode)
+        this.b.attr({fill: "#0c0"});
+      else
+        this.b.attr({fill: "#c00"});
+    });
+    title.mouseout(function() {
+      if (this.n.info.supernode)
+        this.b.attr({fill: "#080"});
+      else
+        this.b.attr({fill: "#800"});
+    });
+  
+  title.toFront(); 
+  
+  // define anchors for edges
+  /*
+  this.anchor = {
+    top:    new Vertex(this.position.x, this.position.y - (h / 2)),
+    right:  new Vertex(this.position.x + (w / 2), this.position.y),
+    bottom: new Vertex(this.position.x, this.position.y + (h / 2)),
+    left:   new Vertex(this.position.x - (w / 2), this.position.y)
+  };
+  */
+
+  return visual;
 }
 
 /* ------------------------------------------------- */
@@ -73,11 +133,13 @@ var Edge = function(fromNode, toNode) {
 };
 
 Edge.prototype.renderToCanvas = function(paper) {
+  
   var line = paper.path(
      "M" + this.fromNode.position.x + "," + this.fromNode.position.y + 
     " L" + this.toNode.position.x   + "," + this.toNode.position.y);
   line.attr("fill", "blue");
   line.attr("stroke", "white");
+  
   return line;  
 }
 
@@ -246,6 +308,9 @@ Graph.prototype.renderToCanvas = function(paper, w, h) {
     (h - bbox.height) / 2.0);
 };
 
+//console.log(networks.toSource());
+
+/*
 // make graph and render it
 var n1 = new Node(1);
 var n2 = new Node(2);
@@ -268,13 +333,56 @@ var e9 = new Edge(n8, n2);
 var e10 = new Edge(n8, n3);
 var e11 = new Edge(n8, n4);
 
-var w = $($("#network-monitor")[0]).width();
-var h = $($("#network-monitor")[0]).height();
 var NetworkGraph = new Graph(
  [n1, n2, n3, n4, n5, n6, n7, n8],
  [e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11],
  w, h
 );
+*/
+
+/*
+name:"local", 
+created_at:"2010-06-14T18:25:42Z", 
+updated_at:"2010-08-12T09:04:32Z", 
+last_data_exchanged:null, 
+coupled:null, 
+id:1, 
+description:"your local node", 
+supernode:null, 
+key:null
+*/
+
+var nodes = new Array();
+for (var i = 0; i < networks.length; i++) {
+  nodes.push(new Node(i, networks[i]));
+}
+var edges = new Array();
+for (var i = 0; i < nodes.length; i++) {
+  for (var j = 0; j < nodes.length; j++) {
+    if (!edge_exists(edges, nodes[i], nodes[j])) {
+      edges.push(new Edge(nodes[i], nodes[j]));
+    }
+  }
+}
+function edge_exists(edges, node1, node2) {
+  if (node1.number == node2.number)
+    return true;
+  for (var i = 0; i < edges.length; i++) {
+    var from = edges[i].fromNode;
+    var to   = edges[i].toNode;
+    if ((from.number == node1.number && to.number == node2.number) ||
+        (from.number == node2.number && to.number == node1.number))
+          return true;
+  }
+  return false;
+}
+
+//console.log(edges.toSource());
+//console.log(edges.length);
+
+var w = $($("#network-monitor")[0]).width();
+var h = $($("#network-monitor")[0]).height();
+var NetworkGraph = new Graph(nodes, edges, w, h);
 var paper = Raphael("network-monitor", w, h);
 
 var redrawn = 0;
