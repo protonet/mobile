@@ -242,6 +242,10 @@ pre .dec { color: #606; }
   background: transparent url(/images/github_file_modes.png) no-repeat 0 0;
 }
 
+.text-extension-results.GithubCommit .media strong a {
+  font-weight: normal;
+}
+
 .text-extension-results.GithubCommit .media div.added strong {
   background-position: 0 0;
 }
