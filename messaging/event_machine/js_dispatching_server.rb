@@ -105,7 +105,7 @@ module JsDispatchingServer
     @@online_users[@user.id]["name"] ||= @user.display_name
     @@online_users[@user.id]["connections"] ||= []
     @@online_users[@user.id]["connections"]  << [@key, @type]
-    data = {:x_target => "protonet.globals.userWidget.update", :online_users => @@online_users}.to_json
+    data = {:x_target => "protonet.Notifications.triggerFromSocket", :online_users => @@online_users, :trigger => 'user.update_online_states'}.to_json
     send_and_publish('system','system.users', data)
   end
 
@@ -113,14 +113,14 @@ module JsDispatchingServer
     return unless @user
     @@online_users[@user.id]["connections"] = @@online_users[@user.id]["connections"].reject {|socket_id, _| socket_id == @key}
     @@online_users.delete(@user.id) if @@online_users[@user.id]["connections"].empty?
-    data = {:x_target => "protonet.globals.userWidget.update", :online_users => @@online_users}.to_json
+    data = {:x_target => "protonet.Notifications.triggerFromSocket", :online_users => @@online_users, :trigger => 'user.update_online_states'}.to_json
     send_and_publish('system','system.users', data)
   end
   
   def fill_channel_users
     @@channel_users = {}
     Channel.all.each do |channel|
-      @@channel_users[channel.id] = channel.users.collect {|u| u.id}
+      @@channel_users[channel.id] = channel.users(true).collect {|u| u.id}
     end
   end
   
