@@ -2,9 +2,9 @@ require 'digest/sha1'
 require 'net/ldap' if configatron.ldap.single_authentication == true
 
 class User < ActiveRecord::Base
-  include Authentication
-  include Authentication::ByPassword
-  include Authentication::ByCookieToken
+  include ::Authentication
+  include ::Authentication::ByPassword
+  include ::Authentication::ByCookieToken
 
   validates_presence_of     :login,    :unless => :skip_validation
   validates_length_of       :login,    :within => 3..40, :unless => :skip_validation
@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
   has_many  :channels,          :through => :listens
   has_many  :owned_channels,    :class_name => 'Channel', :foreign_key => :owner_id
   has_one   :avatar, :class_name => 'Images::Avatar', :dependent => :destroy
-  
+
   named_scope :registered, :conditions => {:temporary_identifier => nil}
 
   after_create :create_ldap_user if configatron.ldap.active == true
@@ -36,7 +36,7 @@ class User < ActiveRecord::Base
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   #
-  # uff.  this is really an authorization, not authentication routine.  
+  # uff.  this is really an authorization, not authentication routine.
   # We really need a Dispatch Chain here or something.
   # This will also let us return a human error message.
   #
@@ -47,7 +47,7 @@ class User < ActiveRecord::Base
     u = find_by_login(login.downcase) # need to get the salt
     u && u.authenticated?(password) ? u : nil
   end
-  
+
   def self.ldap_authenticate(login, password)
     # try to authenticate against the LDAP server
     ldap = Net::LDAP.new
@@ -64,29 +64,29 @@ class User < ActiveRecord::Base
       end
     end
   end
-  
+
   def generate_new_communication_token
     self.communication_token = self.class.make_token
     self.communication_token_expires_at = Time.now + 5.day
     save
     # todo: propagate
   end
-  
+
   def communication_token
     generate_new_communication_token unless communication_token_expires_at && communication_token_expires_at > Time.now
     read_attribute(:communication_token)
   end
-    
+
   def communication_token_valid?(token)
     token && token == read_attribute(:communication_token) && communication_token_expires_at > DateTime.now
   end
-  
+
   def reset_password(new_password)
     self.password               = new_password
     self.password_confirmation  = new_password
     save
   end
-  
+
   # create a user with a session id
   def self.stranger(session_id)
     u = find_or_create_by_temporary_identifier(session_id)  do |u|
@@ -95,11 +95,11 @@ class User < ActiveRecord::Base
     end
     u
   end
-  
+
   def self.all_strangers
     all(:conditions => "temporary_identifier IS NOT NULL")
   end
-  
+
   def move_tweets_to_anonymous
     tweets.each {|t| t.update_attribute(:user_id, 0)}
   end
@@ -111,7 +111,7 @@ class User < ActiveRecord::Base
   def self.delete_strangers_older_than_two_days!
     destroy_all(["temporary_identifier IS NOT NULL AND updated_at < ?", Time.now - 2.days]).each {|user| user.tweets.each {|t| t.update_attribute(:user_id, 0)}}
   end
-  
+
   def stranger?
     !temporary_identifier.blank?
   end
@@ -123,33 +123,33 @@ class User < ActiveRecord::Base
   def email=(value)
     write_attribute :email, (value ? value.downcase : nil)
   end
-  
+
   def display_name
     name.blank? ? login : name
   end
-  
+
   def verified_channels
     channels.all(:conditions => ['listens.flags = 1'])
   end
-  
+
   def listen_to_home
     return if listening_to_home?
     subscribe(Channel.home)
   end
-  
+
   def listening_to_home?
     channels.try(:include?, Channel.home)
   end
-  
+
   # skip validation if the user is a logged out (stranger) user
   def skip_validation
     stranger?
   end
-  
+
   def create_ldap_user
     Ldap::User.create_for_user(self) unless stranger?
   end
-  
+
   def send_create_notification
     unless stranger?
       System::MessagingBus.topic('system').publish({
@@ -161,19 +161,19 @@ class User < ActiveRecord::Base
         }.to_json, :key => 'system.users.new')
     end
   end
-  
+
   def subscribe(channel)
     return if channels.include?(channel)
     channels << channel
     send_channel_notification(channel, :subscribe) if save
   end
-  
+
   def unsubscribe(channel)
     return unless channels.include?(channel)
     channels.delete(channel)
     send_channel_notification(channel, :unsubscribe) if save
   end
-  
+
   def subscribed?(channel)
     channels.include?(channel)
   end
