@@ -49,6 +49,10 @@ protonet.controls.UserWidget = (function() {
     protonet.Notifications.bind("channel.changed", function(e, id) {
       this.filterChannelUsers(id);
     }.bind(this));
+    
+    protonet.Notifications.bind("user.update_online_states", function(e, msg){
+      this.update(msg);
+    }.bind(this));
   };
   
   UserWidget.prototype = {
