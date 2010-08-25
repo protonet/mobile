@@ -1,6 +1,15 @@
+<div id="search-box" style="margin: 10px">
+  <% form_tag search_path, :method => 'post' do -%>
+    <%= select_tag :channel_id, options_for_select([['All', 0]] + @channels.map{|c| [c.name, c.id]}) %>
+    <%= text_field_tag :search_term, @search_term, :size => '30' %>
+    <%= submit_tag 'search' %>
+  <% end -%>
+</div>
 <div class="main">
+
   <%- form_for :tweet, :url => tweets_path, :html => { :id => "message-form" } do |f| -%>
     <div id="text-input">
+
       <fieldset>
         <% message_hint = current_user.stranger? ? 'welcome stranger! talk to us...' : "go ahead @#{current_user.display_name} I'm all yours..."%>
         <%= f.text_area(:message, :id => 'message', :title => message_hint) %>
@@ -21,9 +30,9 @@
       <a href="#" title="Remove (ESC)" class="remove">x</a>
     </div>
   <%- end -%>
-  
+
   <%= render :partial => 'channels/channel_selector', :locals => {:channels => @channels, :active_channel => @active_channel} %>
-  
+
   <div id="feed-viewer">
     <div id="feed-holder" style="width:<%= @channels.size * 613 %>px; left: <%= @channels.index(@active_channel) * -613 %>px;">
       <% @channels.each do |c| %>
@@ -50,7 +59,7 @@
                                                        :author => '', :created_at => '',
                                                        :html_id => 'tweet-{id}-{id}'} %>
   </div>
-  
+
   <div id="text-extension-template">
     <%= render :partial => 'tweets/text_extension' %>
   </div>

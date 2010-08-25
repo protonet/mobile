@@ -1,9 +1,9 @@
 class Tweet < ActiveRecord::Base
 
   searchable do
+    integer :channel_ids, :references => Channel, :multiple => true
     text :message
   end
-
 
   belongs_to  :user
   has_many    :says

@@ -1,1 +1,11 @@
-search form and stuff
+<% @search.each_hit_with_result do |hit, tweet| -%>
+<div class="search-result" style="border: 1px solid black; width: 500px; padding: 5px; margin: 5px 0 0 20px">
+  <span style="display:block; padding: 3px 0 3px 0; font-weight: bolder; font-size: 14px;"> Channel/s:
+    <% tweet.channels.each do |c| -%>
+      <%= c.name %>
+    <% end -%>
+  </span>
+  <%= tweet.message %>
+</div>
+<% end -%>
+
