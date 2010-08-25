@@ -2,23 +2,19 @@ require File.dirname(__FILE__) + '/modules/flash_server.rb'
 
 # awesome stuff happening here
 class ClientConnection < FlashServer
-  attr_accessor :tracker
+  attr_accessor :key, :type, :tracker, :queues
   
   def initialize tracker
     super()
     
     @tracker = tracker
-  end
-  
-  def post_init
-    super
-    
-    @key ||= rand(1000000)
     @tracker.add_conn self
     
-    log('connected')
+    @queues = []
+    
+    @key ||= rand(1000000)
   end
-
+  
   def receive_json(data)
     if data.is_a?(Hash) && data["operation"] == "authenticate"
       log("auth json: #{data["payload"].inspect}")
@@ -30,8 +26,8 @@ class ClientConnection < FlashServer
         if @type == 'node' # special handling if you're a node
           @queues ||= []
           Channel.public.each do |channel|
-            @queues << bind_channel(channel)
-            @queues << bind_files_for_channel(channel)
+            bind_channel(channel)
+            bind_files_for_channel(channel)
             log("subscribing to channel #{channel.id}")
           end
         else # and you're a user for the rest of the cases
@@ -46,14 +42,14 @@ class ClientConnection < FlashServer
       case data["operation"]
       when /^user\.(.*)/
         update_user_status($1)
-      when /^ping$/
+      when 'ping'
         send_ping_answer
-      when /^work$/
+      when 'work'
         send_work_request(data)
       end
     else
       # play echoserver if request could not be understood
-      send_data(data)
+      send_json(data)
     end
   end
 
@@ -99,7 +95,7 @@ class ClientConnection < FlashServer
   end
   
   def refresh_users
-    send_and_publish 'system', 'system.users',
+    send_and_publish 'system', 'users',
       :x_target => "protonet.Notifications.triggerFromSocket",
       :online_users => @tracker.online_users,
       :trigger => 'user.update_online_states'
@@ -125,7 +121,7 @@ class ClientConnection < FlashServer
   end
   
   def update_user_status(status)
-    send_and_publish 'system', 'system.users',
+    send_and_publish 'system', 'users',
       :x_target => "protonet.globals.userWidget.updateWritingStatus",
       :data => {:user_id => @user.id, :status => status}
   end
@@ -135,80 +131,90 @@ class ClientConnection < FlashServer
   end
 
   def send_work_request(data)
-    data.merge!({:user_id => @user.id})
-    MQ.new.topic('system').publish(data.to_json, :key => 'worker.#')
+    data[:user_id] = @user.id
+    publish 'system', '#', data
+  end
+
+  def publish(topic, key, data)
+    MQ.new.topic(topic).publish(data.to_json, :key => "#{topic}.#{key}")
   end
 
   def send_and_publish(topic, key, data)
-    MQ.new.topic(topic).publish(data.to_json, :key => key)
+    publish topic, key, data
+    
     # due to some weird behaviour when calling publish
     # we need to send the data directly to the current socket
     send_json data
   end
 
   def bind_socket_to_system_queue
-    @queues ||= []
-    amq = MQ.new
-    queue = amq.queue("system-queue-#{@key}", :auto_delete => true)
-    queue.bind(amq.topic('system'), :key => 'system.#').subscribe do |msg|
-      message = JSON(msg)
-      message['x_target'] || message.merge!({:x_target => 'protonet.Notifications.triggerFromSocket'}) # jquery object
-      log("got system message: #{msg.inspect}")
-      send_json message
+    bind 'system', '#' do |json|
+      log("got system message: #{json.inspect}")
+      
+      json['x_target'] ||= 'protonet.Notifications.triggerFromSocket' # jquery object
+      send_json json
     end
-    @queues << queue
   end
 
   def bind_socket_to_user_queues
-    @queues ||= []
     @user.verified_channels.each do |channel|
-      @queues << bind_channel(channel)
-      @queues << bind_files_for_channel(channel)
+      bind_channel(channel)
+      bind_files_for_channel(channel)
       log("subscribing to channel #{channel.id}")
     end
-    @queues << bind_user
+    
+    bind_user
     @subscribed = true
   end
 
   def bind_channel(channel)
-    amq = MQ.new
-    queue = amq.queue("consumer-#{@key}-channel.#{channel.id}", :auto_delete => true)
-    queue.bind(amq.topic("channels"), :key => "channels.#{channel.uuid}").subscribe do |msg|
-      message = JSON(msg)
-      sender_socket_id = message['socket_id']
+    bind 'channels', channel.uuid do |json|
+      sender_socket_id = json['socket_id']
       # TODO the next line and this method need refactoring
-      queue.unsubscribe if message['trigger'] == "channel.unsubscribe"
-      message['x_target'] || message.merge!({:x_target => 'protonet.globals.communicationConsole.receiveMessage'})
-      if !sender_socket_id || sender_socket_id.to_i != @key
-        send_json message
-      end
+      # TODO handle unsubscribing in the first place
+      #queue.unsubscribe if json['trigger'] == "channel.unsubscribe"
+      json['x_target'] ||= 'protonet.globals.communicationConsole.receiveMessage'
+      send_json json if !sender_socket_id || sender_socket_id.to_i != @key
     end
-    queue
   end
 
   def bind_files_for_channel(channel)
-    amq = MQ.new
-    queue = amq.queue("consumer-#{@key}-files.channel_#{channel.id}", :auto_delete => true)
-    queue.bind(amq.topic("files"), :key => "files.channel_#{channel.id}").subscribe do |msg|
-      message = JSON(msg)
-      message['x_target'] || message.merge!({:x_target => 'protonet.Notifications.triggerFromSocket'}) # jquery object
-      send_json message
+    bind 'files', "channel.#{channel.id}" do |json|
+      json['x_target'] ||= 'protonet.Notifications.triggerFromSocket' # jquery object
+      send_json json
     end
-    queue
   end
 
   def bind_user
-    amq = MQ.new
-    queue = amq.queue("consumer-#{@key}-user", :auto_delete => true)
-    queue.bind(amq.topic("users"), :key => "users.#{@user.id}").subscribe do |msg|
-      message = JSON(msg)
-      message['x_target'] || message.merge!({:x_target => 'protonet.Notifications.triggerFromSocket'}) # jquery object
-      send_json message
+    bind 'users', @user.id do |json|
+      json['x_target'] ||= 'protonet.Notifications.triggerFromSocket' # jquery object
+      send_json json
     end
+  end
+  
+  def bind topic, key, &handler
+    key = "#{topic}.#{key}"
+    
+    @amq ||= MQ.new # TODO: will this work?
+    queue = @amq.queue "consumer-#{@key}-#{key}", :auto_delete => true
+    
+    queue.bind(@amq.topic(topic), :key => key).subscribe do |packet|
+      begin
+        handler.call JSON.parse(packet)
+      rescue JSON::ParserError
+        log "JSON parsing error from rabbitmq packet"
+      end
+    end
+    
+    @queues << queue
     queue
   end
   
   def unbind_socket_from_queues
     @queues && @queues.each {|q| q.unsubscribe}
+  end
+  
+  def to_s
+    @key
   end
 end

@@ -15,14 +15,14 @@ class ClientTracker
   end
   
   def add_user user, conn
-    @online_users[user.id]['name'] ||= @user.display_name
+    @online_users[user.id]['name'] ||= user.display_name
     @online_users[user.id]['connections'] ||= []
-    @online_users[user.id]['connections'] << [conn.key, conn]
+    @online_users[user.id]['connections'] << [conn.key, conn.type]
   end
   def remove_user user, conn
     return unless user
     
-    @online_users[@user.id]["connections"].reject! {|key, type| type == conn}
+    @online_users[@user.id]["connections"].reject! {|key, type| key == conn.key}
     @online_users.delete(@user.id) if @online_users[@user.id]["connections"].empty?
   end
 end
