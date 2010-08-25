@@ -1,7 +1,10 @@
 require File.dirname(__FILE__) + '/modules/flash_server.rb'
+require File.dirname(__FILE__) + '/modules/rabbitmq.rb'
 
 # awesome stuff happening here
 class ClientConnection < FlashServer
+  include RabbitMQ
+  
   attr_accessor :key, :type, :tracker, :queues
   
   def initialize tracker
@@ -81,7 +84,7 @@ class ClientConnection < FlashServer
     log("connection closed")
     @tracker.remove_conn self
     remove_from_online_users # TODO: remove_conn should be do this
-    unbind_socket_from_queues
+    unbind_queues
   end
 
   def add_to_online_users
@@ -135,10 +138,6 @@ class ClientConnection < FlashServer
     publish 'system', '#', data
   end
 
-  def publish(topic, key, data)
-    MQ.new.topic(topic).publish(data.to_json, :key => "#{topic}.#{key}")
-  end
-
   def send_and_publish(topic, key, data)
     publish topic, key, data
     
@@ -179,7 +178,7 @@ class ClientConnection < FlashServer
   end
 
   def bind_files_for_channel(channel)
-    bind 'files', "channel.#{channel.id}" do |json|
+    bind 'files', 'channel', channel.uuid do |json|
       json['x_target'] ||= 'protonet.Notifications.triggerFromSocket' # jquery object
       send_json json
     end
@@ -192,29 +191,6 @@ class ClientConnection < FlashServer
     end
   end
   
-  def bind topic, key, &handler
-    key = "#{topic}.#{key}"
-    
-    @amq ||= MQ.new # TODO: will this work?
-    queue = @amq.queue "consumer-#{@key}-#{key}", :auto_delete => true
-    
-    queue.bind(@amq.topic(topic), :key => key).subscribe do |packet|
-      begin
-        handler.call JSON.parse(packet)
-      rescue JSON::ParserError
-        log "JSON parsing error from rabbitmq packet"
-      end
-    end
-    
-    @queues << queue
-    queue
-  end
-  
-  def unbind_socket_from_queues
-    @queues && @queues.each {|q| q.unsubscribe}
-  end
-  
-  def to_s
-    @key
-  end
+  def queue_id; "consumer-#{@key}"; end
+  def to_s; @key; end
 end

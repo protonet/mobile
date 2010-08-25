@@ -1,8 +1,11 @@
 require 'uri'
 
 require File.join(File.dirname(__FILE__), 'flash_connection')
+require File.dirname(__FILE__) + '/modules/rabbitmq.rb'
 
 class NodeConnection < FlashConnection
+  include RabbitMQ
+  
   attr_accessor :network
   
   def self.connect network
@@ -33,26 +36,18 @@ class NodeConnection < FlashConnection
     log "Received JSON: #{json.inspect}"
     
     if json['x_target'] == 'protonet.globals.communicationConsole.receiveMessage' then
-      publish 'channels', "channels.#{json['channel_uuid']}", json.to_json
+      publish 'channels', json['channel_uuid'], json
     end
   end
   
   def bind_channel channel
-    log "bound to #{channel.id}"
-    amq = MQ.new
-    queue = amq.queue("node-#{@network.key}-channel.#{channel.id}", :auto_delete => true)
-    queue.bind(amq.topic("channels"), :key => "channels.#{channel.uuid}").subscribe do |msg|
-      message = JSON.parse(msg)
-      # remote servers won't take messages over sockets yet
+    bind 'channels', channel.uuid do |json|
+      # remote nodes won't take messages over sockets yet
       #send_json message
     end
+    log "bound to #{channel.id}"
   end
 
-  def publish topic, key, data
-    MQ.new.topic(topic).publish(data, :key => key)
-  end
-
-  def to_s
-    "node connection #{@network.key || 'uncoupled'}"
-  end
+  def queue_id; "node-#{@network.key}"; end
+  def to_s; "node connection #{@network.key || 'uncoupled'}"; end
 end
