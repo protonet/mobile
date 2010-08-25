@@ -52,8 +52,11 @@ class NodeConnection < FlashConnection
   
   def bind_channel channel
     bind 'channels', channel.uuid do |json|
-      # remote nodes won't take messages over sockets yet
-      #send_json message
+      if json['network_id'] == 1
+        json.delete 'network_id'
+        json['action'] = 'tweet'
+        send_json json
+      end
     end
     log "bound to #{channel.id}"
   end

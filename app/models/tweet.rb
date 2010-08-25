@@ -21,14 +21,13 @@ class Tweet < ActiveRecord::Base
   end
   
   def send_to_queue
-    return if remote?
-    
     channels.each do |channel|
       System::MessagingBus.topic('channels').publish(self.attributes.merge({
         :socket_id => socket_id,
         :channel_id => channel.id,
         :channel_uuid => channel.uuid,
-        :user_icon_url => user.active_avatar_url
+        :user_icon_url => user.active_avatar_url,
+        :network_id => network_id
         }).to_json, :key => 'channels.' + channel.uuid)
     end
   end

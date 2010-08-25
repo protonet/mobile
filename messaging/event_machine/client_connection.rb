@@ -43,14 +43,40 @@ class ClientConnection < FlashServer
         send_reload_request
       end
       
-    elsif @user && data.is_a?(Hash)
+    elsif (@user || node?) && data.is_a?(Hash)
       case data["operation"]
-      when /^user\.(.*)/
-        update_user_status($1)
-      when 'ping'
-        send_ping_answer
-      when 'work'
-        send_work_request(data)
+        
+        when /^user\.(.*)/
+          update_user_status($1)
+          
+        when 'ping'
+          send_ping_answer
+          
+        when 'work'
+          send_work_request(data)
+        
+        when 'tweet'
+          channel = Channel.find_by_uuid(data['channel_uuid'])
+          
+          # TODO: Use a helper or *something*
+          
+          if node?
+            tweet = Tweet.create :user_id => 0,
+              :author => data['author'],
+              :message => data['message'],
+              :text_extension => data['text_extension'],
+              :network_id => 2, # TODO: un-hardcode
+              :channels => [channel]
+              
+          else
+            tweet = Tweet.create :user_id => @user.id,
+              :author => @user.display_name,
+              :message => data['message'],
+              :text_extension => data['text_extension'],
+              :network_id => 1,
+              :channels => [channel]
+          end
+          
       end
       
     else
