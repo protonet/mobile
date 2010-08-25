@@ -1,6 +1,8 @@
 require 'uri'
 
-class NodeConnection < EventMachine::Connection
+require File.join(File.dirname(__FILE__), 'flash_connection')
+
+class NodeConnection < FlashConnection
   attr_accessor :network
   
   def self.connect network
@@ -12,10 +14,9 @@ class NodeConnection < EventMachine::Connection
   end
   
   def initialize network
-    @network = network
-    @buffer = ''
+    super()
     
-    set_comm_inactivity_timeout 60
+    @network = network
   end
   
   def post_init
@@ -24,35 +25,18 @@ class NodeConnection < EventMachine::Connection
     bind_channel Channel.find_by_id(23)
     
     send_json :operation => 'authenticate', :payload => {:type => 'node', :node_uuid => 2}
+  rescue => ex
+    p ex, ex.backtrace
   end
   
   def receive_json json
-    p json
+    log "Received JSON: #{json.inspect}"
     
     if json['x_target'] == 'protonet.globals.communicationConsole.receiveMessage' then
       publish 'channels', "channels.#{json['channel_uuid']}", json.to_json
     end
   end
   
-  def send_json json
-    send_data json.to_json + "\0"
-  end
-  
-  def receive_data data
-    @buffer += data
-    
-    while @buffer.include? "\0"
-      packet = @buffer[0, @buffer.index("\0")]
-      @buffer = @buffer[(@buffer.index("\0")+1)..-1]
-      
-      begin
-        receive_json JSON.parse(packet)
-      rescue JSON::ParserError
-        log "JSON parsing error"
-      end
-    end
-  end
-
   def bind_channel channel
     log "bound to #{channel.id}"
     amq = MQ.new
@@ -68,7 +52,7 @@ class NodeConnection < EventMachine::Connection
     MQ.new.topic(topic).publish(data, :key => key)
   end
 
-  def log text
-    puts "node connection #{@network.key || 'uncoupled'}: #{text}" # if $DEBUG
+  def to_s
+    "node connection #{@network.key || 'uncoupled'}"
   end
 end
