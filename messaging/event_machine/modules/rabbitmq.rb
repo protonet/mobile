@@ -1,5 +1,5 @@
 module RabbitMQ
-  def amq;    MQ.new; end # @amq ||= 
+  def amq;    @amq ||= MQ.new; end
   def queues; @queues ||= [];  end
   
   def bind topic, *keys, &handler

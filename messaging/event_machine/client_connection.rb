@@ -15,7 +15,7 @@ class ClientConnection < FlashServer
     
     @queues = []
     
-    @key ||= rand(1000000)
+    @key = rand(1000000)
   end
   
   def receive_json(data)
@@ -26,7 +26,8 @@ class ClientConnection < FlashServer
         @type = data["payload"]["type"] || 'api'
         @subscribed = true # don't resubscribe
         bind_socket_to_system_queue
-        if @type == 'node' # special handling if you're a node
+        
+        if node? # special handling if you're a node
           @queues ||= []
           Channel.public.each do |channel|
             bind_channel(channel)
@@ -41,6 +42,7 @@ class ClientConnection < FlashServer
       else
         send_reload_request
       end
+      
     elsif @user && data.is_a?(Hash)
       case data["operation"]
       when /^user\.(.*)/
@@ -50,6 +52,7 @@ class ClientConnection < FlashServer
       when 'work'
         send_work_request(data)
       end
+      
     else
       # play echoserver if request could not be understood
       send_json(data)
@@ -72,8 +75,6 @@ class ClientConnection < FlashServer
     elsif auth_data["node_uuid"]
       @node = Network.find(auth_data["node_uuid"])
     end
-    
-    
   end
   
   def send_reload_request
@@ -190,6 +191,10 @@ class ClientConnection < FlashServer
       send_json json
     end
   end
+  
+  def web?;  @type == 'web';  end
+  def api?;  @type == 'api';  end
+  def node?; @type == 'node'; end
   
   def queue_id; "consumer-#{@key}"; end
   def to_s; @key; end
