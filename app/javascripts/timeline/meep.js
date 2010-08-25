@@ -97,12 +97,23 @@ protonet.timeline.Meep.prototype = {
    * Private, please use public "render" or "mergeWith"
    */
   _render: function(template, container) {
-    $.extend(this.data, { converted_message: this._convertMessage(this.data.message) });
+    var replyFromChannelTemplate, templateData;
     
-    this.element = new protonet.utils.Template(template, this.data)
+    if (this.data.reply_from_channel_id) {
+      replyFromChannelTemplate = new protonet.utils.Template("reply-from-channel", this.data).toString();
+    }
+    
+    templateData = $.extend({}, this.data, {
+      converted_message: this._convertMessage(this.data.message),
+      reply_from_channel: replyFromChannelTemplate || ""
+    });
+    
+    this.element = new protonet.utils.Template(template, templateData)
       .toElement()
       .data({ meep: this.data, instance: this })
       .prependTo(container);
+    
+
     
     protonet.Notifications.trigger("meep.rendered", [this.element, this.data, this]);
   },

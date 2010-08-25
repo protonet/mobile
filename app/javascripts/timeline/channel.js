@@ -111,7 +111,8 @@ protonet.timeline.Channel.prototype = {
       }
       
       var newMeepData = $.extend({}, meepData, {
-        reply_from: protonet.timeline.Channels.getChannelName(meepData.channel_id),
+        reply_from_channel_id: meepData.channel_id,
+        reply_from_channel_name: protonet.timeline.Channels.getChannelName(meepData.channel_id),
         channel_id: this.data.id
       });
       
