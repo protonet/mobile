@@ -5,20 +5,16 @@ class FlashConnection < EventMachine::Connection
     @buffer = ''
     
     set_comm_inactivity_timeout 60
-  rescue => ex
-    p ex, ex.backtrace
   end
   
   def post_init
     log "connected" # " to remote network ##{@network.id}"
     #send_json :operation => 'authenticate', :payload => {:type => 'node', :node_uuid => 2}
-  rescue => ex
-    p ex, ex.backtrace
   end
   
   def receive_json json
     log "Received JSON: #{json.inspect}"
-    #~ 
+    
     if json['x_target'] == 'protonet.globals.communicationConsole.receiveMessage' then
       publish 'channels', "channels.#{json['channel_uuid']}", json.to_json
     end

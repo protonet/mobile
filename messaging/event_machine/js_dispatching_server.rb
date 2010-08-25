@@ -1,37 +1,29 @@
 #!/usr/bin/env ruby
+
 # this is here to make sure environment.rb doens't recreate the EventMachine Loop
 RUN_FROM_DISPATCHER = true
+
 require File.dirname(__FILE__) + '/../../config/environment'
 require File.dirname(__FILE__) + '/modules/flash_server.rb'
 require File.dirname(__FILE__) + '/node_connection.rb'
 
 # awesome stuff happening here
-module JsDispatchingServer
+class JsDispatchingServer < FlashServer
 
   @@online_users  = {}
   @@channel_users = {}
   @@open_sockets  = []
 
   def post_init
-    self.set_comm_inactivity_timeout(60)
+    super
+    
     @key ||= rand(1000000)
     @@open_sockets << self
     log('post-init')
     log('opened')
   end
 
-  def receive_data(data)
-    log("received: #{data}")
-    data = begin
-      JSON.parse(data.chomp("\000"))
-    rescue JSON::ParserError
-      log("JSON PARSE ERROR! was this intended?")
-      data
-    end
-    handle_received_json(data)
-  end
-
-  def handle_received_json(data)
+  def receive_json(data)
     if data.is_a?(Hash) && data["operation"] == "authenticate"
       log("auth json: #{data["payload"].inspect}")
       if json_authenticate(data["payload"]) && !@subscribed
@@ -231,13 +223,6 @@ module JsDispatchingServer
   def unbind_socket_from_queues
     @queues && @queues.each {|q| q.unsubscribe}
   end
-
-  include FlashServer
-
-  def log(text)
-    puts "connection #{@key && @key.inspect || 'uninitialized'}: #{text}" # if $DEBUG
-  end
-
 end
 
 EventMachine::run do
