@@ -32,6 +32,8 @@ ActionController::Routing::Routes.draw do |map|
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.register '/register', :controller => 'users', :action => 'create'
   map.signup '/signup', :controller => 'users', :action => 'new'
+  
+  map.search '/search', :controller => 'search', :action => 'index'
 
   map.destroy_channel 'channels/:id/destroy', :controller => 'channels', :action => 'destroy'
   
