@@ -14,13 +14,15 @@ class Tweet < ActiveRecord::Base
   def local?;  network_id == 1; end
   def remote?; network_id != 1; end
   
-  after_create :send_to_queue if Rails.env == 'production' || configatron.messaging_bus_active == true unless remote?
+  after_create :send_to_queue if Rails.env == 'production' || configatron.messaging_bus_active == true
   
   def text_extension?
     !text_extension.blank?
   end
   
   def send_to_queue
+    return if remote?
+    
     channels.each do |channel|
       System::MessagingBus.topic('channels').publish(self.attributes.merge({
         :socket_id => socket_id,
