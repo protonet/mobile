@@ -36,6 +36,7 @@ class NodeConnection < FlashConnection
     log "Received JSON: #{json.inspect}"
     
     if json['x_target'] == 'protonet.globals.communicationConsole.receiveMessage' then
+      json['channel_id'] = Channel.find_by_uuid(json['channel_uuid']).id
       publish 'channels', json['channel_uuid'], json
     end
   end
