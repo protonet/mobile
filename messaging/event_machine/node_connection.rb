@@ -12,7 +12,11 @@ class NodeConnection < FlashConnection
     uri = URI.parse network.supernode
     
     EventMachine.next_tick do
-      EventMachine.connect uri.host, 5000, NodeConnection, network
+      conn = EventMachine.connect uri.host, 5000, NodeConnection, network
+      
+      EventMachine.add_periodic_timer 30 do
+        conn.send_json :operation => 'ping'
+      end
     end
   end
   
