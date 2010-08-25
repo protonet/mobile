@@ -1,5 +1,5 @@
 class Tweet < ActiveRecord::Base
-  
+  belongs_to  :network
   belongs_to  :user
   has_many    :says
   has_many    :channels,  :through => :says
@@ -10,6 +10,10 @@ class Tweet < ActiveRecord::Base
   
   attr_accessor :socket_id
   # validate_existence_of :channel
+  
+  def local?
+    network_id == 1
+  end
   
   after_create :send_to_queue if Rails.env == 'production' || configatron.messaging_bus_active == true
   
