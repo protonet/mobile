@@ -2,7 +2,7 @@
  * Just some easter egg stuff :-)
  */
 protonet.ui.Logo = {
-  monsters:       ["default", "business", "female"],
+  monsters:       ["default", "business", "female", "surfer"],
   monstersIndex:  0,
   
   initialize: function() {

@@ -74,6 +74,8 @@ protonet.timeline.Meep.prototype = {
       message = method(message);
     });
     
+    this.channelReplies = protonet.utils.highlightChannelReplies.result;
+    
     return message;
   },
   
@@ -116,7 +118,11 @@ protonet.timeline.Meep.prototype = {
       type:       "POST",
       data:       this.queryString || { tweet: this.data },
       success:    function() {
-        status.html(protonet.t("MEEP_SENT")).delay(1000).fadeOut();
+        if (status.is(":visible")) {
+          status.html(protonet.t("MEEP_SENT")).filter(":visible").delay(1000).fadeOut();
+        } else {
+          status.hide();
+        }
         
         (onSuccess || $.noop)();
         protonet.Notifications.trigger("meep.sent", [this.element, this.data, this]);

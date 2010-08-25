@@ -145,7 +145,7 @@ protonet.dispatcher = {
     if (data.trigger) {
       protonet.Notifications.trigger(data.trigger, [data]);
     } else if (data.x_target) {
-      eval(data.x_target + '(data)');
+      eval(data.x_target + "(data)");
     }
   },
 

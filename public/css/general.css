@@ -190,7 +190,7 @@ header .monster {
   position: absolute;
   bottom: -4px;
   left: 136px;
-  width: 70px;
+  width: 73px;
   height: 72px;
   font-size: 9px;
   background: url(/img/spr_monsters.png) no-repeat;
@@ -215,6 +215,10 @@ header .monster.business {
 
 header .monster.female {
   background-position: -147px bottom;
+}
+
+header .monster.surfer {
+  background-position: -217px bottom;
 }
 
 header .hearts {

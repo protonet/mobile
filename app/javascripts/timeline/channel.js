@@ -94,6 +94,31 @@ protonet.timeline.Channel.prototype = {
     }.bind(this));
     
     /**
+     * Render meep in this channel if it contains a channel reply
+     */
+    protonet.Notifications.bind("meep.sent", function(e, meepElement, meepData, instance) {
+      if (meepData.channel_id == this.data.id) {
+        return;
+      }
+      
+      // Already a reply, avoid non-ending loop
+      if (meepData.reply_from) {
+        return;
+      }
+      
+      if ($.inArray(this.data.id, instance.channelReplies) == -1) {
+        return;
+      }
+      
+      var newMeepData = $.extend({}, meepData, {
+        reply_from: protonet.timeline.Channels.getChannelName(meepData.channel_id),
+        channel_id: this.data.id
+      });
+      
+      this._renderMeep(newMeepData, this.channelList, true);
+    }.bind(this));
+    
+    /**
      * Set tab to active and store state
      */
     protonet.Notifications.bind("channel.change", function(e, channelId) {

@@ -113,5 +113,15 @@ protonet.timeline.Channels = {
     if (selectedChannelId && this.selected != selectedChannelId) {
       protonet.Notifications.trigger("channel.change", [selectedChannelId, true]);
     }
+  },
+  
+  getChannelName: function(id) {
+    var i = this.data.length;
+    while(i--) {
+      var channelData = this.data[i];
+      if (channelData.id === id) {
+        return channelData.name;
+      }
+    }
   }
 };

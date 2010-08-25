@@ -31,4 +31,8 @@ class Tweet < ActiveRecord::Base
     end
   end
   
+  def self.valid_attributes
+    column_names + ['socket_id']
+  end
+  
 end

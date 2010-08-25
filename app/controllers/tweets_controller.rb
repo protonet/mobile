@@ -27,9 +27,8 @@ class TweetsController < ApplicationController
   end
 
   def create
-    # monkey solution for exception, jelveh pls check
-    avatar = params[:tweet].delete(:avatar)
     channel_id = params[:tweet].delete(:channel_id)
+    params[:tweet].reject! {|k,v| !Tweet.valid_attributes.include?(k)}
     
     author = current_user.display_name
     channel_ids = params[:mentioned_channel_ids] ? 
