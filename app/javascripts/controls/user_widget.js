@@ -6,11 +6,12 @@ protonet.controls.UserWidget = (function() {
   
   function UserWidget(args) {
     this.container = $("#user-list");
-    this.entries = this.container.find("li");
+    this.updateEntries();
     this.user_list = this.container.find("ul.root");
     this.user_names = [];
     this.user_objects = {};
     this.channel_users = {};
+    this.temporaryUsers = {};
     
     this.entries.each(function(i, entry){
       var user_id = entry.id.match(REG_EXP_ID)[1];
@@ -57,18 +58,36 @@ protonet.controls.UserWidget = (function() {
   
   UserWidget.prototype = {
     "addUserFromMessage": function(msg) {
-      var newUserEntry = this.entries.first().clone();
-      newUserEntry.attr("id", 'user-list-user-' + msg.user_id);
-      newUserEntry.find('img').attr('src', msg.avatar_url);
-      newUserEntry.find('span').html(msg.user_name);
-      this.user_list.append(newUserEntry);
-      this.addUser(msg.user_id, newUserEntry[0]);
+      this.addUser(msg.user_id, this.addUserElement(msg.user_id, msg.avatar_url, msg.user_name));
       this.entries = this.container.find("li"); // recalculate
+    },
+    
+    "addUserElement": function(userId, avatarUrl, userName) {
+      var newUserEntry = this.entries.first().clone();
+      newUserEntry.attr("id", 'user-list-user-' + userId);
+      newUserEntry.find('img').attr('src', avatarUrl);
+      newUserEntry.find('span').html(userName);
+      this.user_list.append(newUserEntry);
+      return newUserEntry;
     },
     
     "addUser": function(user_id, element) {
       this.user_objects[user_id] = $(element);
       this.user_names.push(this.user_objects[user_id].children("span").html());      
+      this.updateEntries();
+    },
+    
+    "removeUser": function(user_id) {
+      var userName = this.user_objects[user_id].children("span").html();
+      delete this.temporaryUsers[user_id];
+      this.user_objects[user_id].remove();
+      delete this.user_objects[user_id];
+      this.user_names.splice (jQuery.inArray(userName, this.user_names),1);
+      this.updateEntries();
+    },
+    
+    "updateEntries": function() {
+      this.entries = this.container.find("li");
     },
     
     // note to self: a more performant version would be:
@@ -77,12 +96,24 @@ protonet.controls.UserWidget = (function() {
     // this would ensure data integrity and be very fast ;)
     "update": function(data) {
       var online_users = data.online_users;
-      for(var i in this.user_objects) {
-        var online_user = online_users[i];
+      var online_user;
+      for(var i in online_users) {
+        online_user            = online_users[i];
+        var connection_class   = this.cssClassForConnections(online_user && online_user.connections);
         var current_dom_object = this.user_objects[i];
-        var connection_class = this.cssClassForConnections(online_user && online_user.connections);
-        // var channel_classes  = this.cssClassForChannels(online_user && online_user.channels);
+        if(!current_dom_object) {
+          current_dom_object = this.addUserElement(i, "/images/userpicture.jpg", online_user["name"]);
+          this.addUser(i, current_dom_object);
+          this.temporaryUsers[i] = current_dom_object;
+        }
         current_dom_object.attr("class", connection_class);
+      }
+
+      for(i in this.temporaryUsers) {
+        online_user = online_users[i];
+        if(!online_user && online_user != 0) {
+          this.removeUser(i);
+        }
       }
       
       this.sortEntries();
