@@ -3,6 +3,7 @@
 RUN_FROM_DISPATCHER = true
 require File.dirname(__FILE__) + '/../../config/environment'
 require File.dirname(__FILE__) + '/modules/flash_server.rb'
+require File.dirname(__FILE__) + '/node_connection.rb'
 
 # awesome stuff happening here
 module JsDispatchingServer
@@ -246,4 +247,8 @@ EventMachine::run do
   EventMachine::start_server(host, port, JsDispatchingServer)
   puts "Started JsDispatchingServer on #{host}:#{port}..."
   puts $$
+  
+  Network.all(:conditions => {:coupled => true}).each do |network|
+    NodeConnection.connect network
+  end
 end
