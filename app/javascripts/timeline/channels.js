@@ -119,7 +119,7 @@ protonet.timeline.Channels = {
     var i = this.data.length;
     while(i--) {
       var channelData = this.data[i];
-      if (channelData.id === id) {
+      if (channelData.id == id) {
         return channelData.name;
       }
     }

@@ -111,8 +111,7 @@ protonet.timeline.Channel.prototype = {
       }
       
       var newMeepData = $.extend({}, meepData, {
-        reply_from_channel_id: meepData.channel_id,
-        reply_from_channel_name: protonet.timeline.Channels.getChannelName(meepData.channel_id),
+        reply_from: meepData.channel_id,
         channel_id: this.data.id
       });
       
@@ -268,6 +267,7 @@ protonet.timeline.Channel.prototype = {
    * and it will tell you whether they should be merged
    *
    * Merge previous and new meep when ...
+   *  ... new meep came from a different channel as reply
    *  ... the previous meep is not errorneous
    *  ... authors are the same
    *  ... the time difference between both is less than MERGE_MEEPS_TIMEFRAME
@@ -277,7 +277,9 @@ protonet.timeline.Channel.prototype = {
     var newMeepData       = newMeep.data,
         previousMeepData  = previousMeep.data;
     
-    return !previousMeep.error && !newMeepData.text_extension &&
+    return !newMeepData.reply_from &&
+      !previousMeep.error &&
+      !newMeepData.text_extension &&
       newMeepData.author == previousMeepData.author &&
       new Date(newMeepData.created_at) - new Date(previousMeepData.created_at) < this.config.MERGE_MEEPS_TIMEFRAME;
   },

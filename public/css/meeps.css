@@ -185,4 +185,12 @@
   background: rgba(72, 123, 255, 1);
 }
 
+.reply-from-channel a {
+  color: rgba(72, 123, 255, 0.8);
+}
+
+.reply-from-channel a:hover {
+  color: rgba(72, 123, 255, 1);
+}
+
 /* ================================================================ MEEPS = */

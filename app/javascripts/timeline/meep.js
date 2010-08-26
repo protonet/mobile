@@ -99,13 +99,16 @@ protonet.timeline.Meep.prototype = {
   _render: function(template, container) {
     var replyFromChannelTemplate, templateData;
     
-    if (this.data.reply_from_channel_id) {
-      replyFromChannelTemplate = new protonet.utils.Template("reply-from-channel", this.data).toString();
+    if (this.data.reply_from) {
+      replyFromChannelTemplate = new protonet.utils.Template("reply-from-channel-template", {
+        channel_id: this.data.reply_from,
+        channel_name: protonet.timeline.Channels.getChannelName(this.data.reply_from)
+      }).toString();
     }
     
     templateData = $.extend({}, this.data, {
       converted_message: this._convertMessage(this.data.message),
-      reply_from_channel: replyFromChannelTemplate || ""
+      reply_from: replyFromChannelTemplate || ""
     });
     
     this.element = new protonet.utils.Template(template, templateData)
