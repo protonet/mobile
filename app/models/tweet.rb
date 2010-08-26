@@ -3,6 +3,7 @@ class Tweet < ActiveRecord::Base
   searchable do
     integer :channel_ids, :references => Channel, :multiple => true
     text :message
+    text :text_extension
   end
 
   belongs_to  :network
