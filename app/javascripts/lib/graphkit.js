@@ -322,11 +322,40 @@ function deg_to_rad(x) {
   return (3.1415 * x / 180.0);
 }
 
-Graph.prototype.render = function() {
-  if (this.iters > this.maxIterations)
-    return false;
-
-  this.iters++;
+Graph.prototype.layout = function() {
+  
+  // special case: one node
+  if (this.nodes.length == 1) {
+    var node = this.nodes[0];
+    node.position.x = this.w / 2;
+    node.position.y = this.h / 2;
+    return true;
+  }
+  
+  // determine amount of nodes (not clients!)
+  var num_normal_nodes = 0;
+  for (var n = 0; n < this.nodes.length; n++) {
+    var node = this.nodes[n];
+    if (node.info.type != 'client')
+      num_normal_nodes++;
+  }
+  // special case: less than 5 (non-client) nodes
+  if (num_normal_nodes < 5) {
+    // circular layout
+    var radius = this.w / 6;
+    var angle  = 360.0 / num_normal_nodes;
+    var count  = 0;
+    for (var n = 0; n < this.nodes.length; n++) {
+      var node = this.nodes[n];
+      if (node.info.type != 'client') {
+        node.position.x = this.w / 2 + Math.sin(deg_to_rad(45 + angle * count)) * radius;
+        node.position.y = this.h / 2 + Math.cos(deg_to_rad(45 + angle * count)) * radius;       
+        count++;
+      }
+    }
+    this.layout_clients();
+    return true;
+  }
 
   var delta_t = 1000.0 / 50.0; // starts 50 times within 1000 ms
   
@@ -407,41 +436,7 @@ Graph.prototype.render = function() {
       }
     }
     
-    // layout client nodes circular around each node
-    for (var n = 0; n < this.nodes.length; n++) {
-      var node = this.nodes[n];
-      if (node.info.type != 'client') {
-        // find client node connected to this one
-        var clients = new Array();
-        for (var e = 0; e < this.edges.length; e++) {
-          var edge = this.edges[e];
-          var u = edge.fromNode;
-          var v = edge.toNode;
-          if ((u.number == node.number && v.info.type == 'client') ||
-              (v.number == node.number && u.info.type == 'client')) {
-            
-            if (u.number == node.number)
-              clients.push(v);
-            else
-              clients.push(u);
-          }
-        }
-        
-        // position clients circular around node
-        if (clients.length > 0) {
-          var radius = 30.0 + (clients.length * 5.0);
-          var angle  = 360.0 / clients.length;
-          //console.log(angle);
-          for (var c = 0; c < clients.length; c++) {
-            var client = clients[c];
-            client.info.angle = (c > Math.floor(clients.length / 2) ? 270 : 90) - angle * c;
-            client.position.x = node.position.x + Math.sin(deg_to_rad(angle * c)) * radius;
-            client.position.y = node.position.y + Math.cos(deg_to_rad(angle * c)) * radius;
-          }
-        }
-      }
-    }
-  
+    this.layout_clients();
     this.cool();
   }
 
@@ -458,22 +453,69 @@ Graph.prototype.render = function() {
         }
       }
     }
-  };  
+  }; 
+  return true; 
+};
 
-  var group = this.paper.set();
-  // draw edges
-  for (var i = 0; i < this.edges.length; i++) {
-    group.push(this.edges[i].render(this.paper));
+Graph.prototype.layout_clients = function() {
+  // layout client nodes circular around each node
+  for (var n = 0; n < this.nodes.length; n++) {
+    var node = this.nodes[n];
+    if (node.info.type != 'client') {
+      // find client node connected to this one
+      var clients = new Array();
+      for (var e = 0; e < this.edges.length; e++) {
+        var edge = this.edges[e];
+        var u = edge.fromNode;
+        var v = edge.toNode;
+        if ((u.number == node.number && v.info.type == 'client') ||
+            (v.number == node.number && u.info.type == 'client')) {
+          
+          if (u.number == node.number)
+            clients.push(v);
+          else
+            clients.push(u);
+        }
+      }
+      
+      // position clients circular around node
+      if (clients.length > 0) {
+        var radius = 30.0 + (clients.length * 5.0);
+        var angle  = 360.0 / clients.length;
+        //console.log(angle);
+        for (var c = 0; c < clients.length; c++) {
+          var client = clients[c];
+          client.info.angle = (c > Math.floor(clients.length / 2) ? 270 : 90) - angle * c;
+          client.position.x = node.position.x + Math.sin(deg_to_rad(angle * c)) * radius;
+          client.position.y = node.position.y + Math.cos(deg_to_rad(angle * c)) * radius;
+        }
+      }
+    }
+  }  
+};
+
+Graph.prototype.render = function() {
+  if (this.iters > this.maxIterations)
+    return false;
+  this.iters++;
+  
+  if (this.layout()) {
+    this.paper.clear();
+    var group = this.paper.set();
+    // draw edges
+    for (var i = 0; i < this.edges.length; i++) {
+      group.push(this.edges[i].render(this.paper));
+    }
+    // draw nodes
+    for (var i = 0; i < this.nodes.length; i++) {
+      group.push(this.nodes[i].render(this.paper));
+    }
+    // center graph to canvas
+    var bbox = group.getBBox();  
+    group.translate(-bbox.x, -bbox.y);
+    group.translate(
+      (this.w - bbox.width) / 2.0,
+      (this.h - bbox.height) / 2.0);
   }
-  // draw nodes
-  for (var i = 0; i < this.nodes.length; i++) {
-    group.push(this.nodes[i].render(this.paper));
-  }
-  // center graph to canvas
-  var bbox = group.getBBox();  
-  group.translate(-bbox.x, -bbox.y);
-  group.translate(
-    (this.w - bbox.width) / 2.0,
-    (this.h - bbox.height) / 2.0);
 };
 
