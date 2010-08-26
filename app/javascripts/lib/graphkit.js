@@ -68,7 +68,7 @@ Node.prototype.render = function(paper) {
   var title = paper.text(this.position.x, this.position.y, this.info.name);
   title.attr({fill: 'white', "font-size":11});
   if (this.info.type == 'client') {
-    title.attr({'font-size':9});
+    title.attr({'font-size':10});
   }
   //var bb = title.getBBox();
   //title.translate(-bb.x + this.position.x + 15, -bb.y + this.position.y - (bb.height / 2));
@@ -324,34 +324,34 @@ function deg_to_rad(x) {
 
 Graph.prototype.layout = function() {
   
-  // special case: one node
-  if (this.nodes.length == 1) {
-    var node = this.nodes[0];
-    node.position.x = this.w / 2;
-    node.position.y = this.h / 2;
-    return true;
-  }
-  
   // determine amount of nodes (not clients!)
-  var num_normal_nodes = 0;
+  var normal_nodes = new Array();
   for (var n = 0; n < this.nodes.length; n++) {
     var node = this.nodes[n];
     if (node.info.type != 'client')
-      num_normal_nodes++;
+      normal_nodes.push(node);
   }
+
+  // special case: one node
+  if (normal_nodes.length == 1) {
+    var node = normal_nodes[0];
+    node.position.x = this.w / 2;
+    node.position.y = this.h / 2;
+    this.layout_clients();
+    return true;
+  }
+  
   // special case: less than 5 (non-client) nodes
-  if (num_normal_nodes < 5) {
+  if (normal_nodes.length < 5) {
     // circular layout
-    var radius = this.w / 6;
-    var angle  = 360.0 / num_normal_nodes;
+    var radius = Math.min(this.w, this.h) / 5;
+    var angle  = 360.0 / normal_nodes.length;
     var count  = 0;
-    for (var n = 0; n < this.nodes.length; n++) {
-      var node = this.nodes[n];
-      if (node.info.type != 'client') {
-        node.position.x = this.w / 2 + Math.sin(deg_to_rad(45 + angle * count)) * radius;
-        node.position.y = this.h / 2 + Math.cos(deg_to_rad(45 + angle * count)) * radius;       
-        count++;
-      }
+    for (var n = 0; n < normal_nodes.length; n++) {
+      var node = normal_nodes[n];
+      node.position.x = this.w / 2 + Math.sin(deg_to_rad(45 + angle * count)) * radius;
+      node.position.y = this.h / 2 + Math.cos(deg_to_rad(45 + angle * count)) * radius;       
+      count++;
     }
     this.layout_clients();
     return true;
