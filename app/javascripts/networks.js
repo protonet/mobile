@@ -30,51 +30,21 @@ $(function() {
   // make graph and render it
   NetworkGraph = new Graph("network-monitor", 50);
   NetworkGraph.initFromNetworksInfo(networks);
+  
+  /*
+  NetworkGraph.updateFromAsyncInfo({
+    "1":{name:"client #1", supernode:null},
+    "2":{name:"client #2", supernode:null},
+    "3":{name:"client #3", supernode:null},
+    "4":{name:"client #4", supernode:null},
+    "5":{name:"client #5", supernode:null},
+  });
+  */
+  
   protonet.Notifications.bind('user.update_online_states', function(e, msg) {
     NetworkGraph.updateFromAsyncInfo(msg.online_users);
   }.bind(this));
   ourInterval = setInterval("NetworkGraph.render()", 50);
-
-  /*var n1 = new Node(1);
-  var n2 = new Node(2);
-  var n3 = new Node(3);
-  var n4 = new Node(4);
-  var n5 = new Node(5);
-  var n6 = new Node(6);
-  var n7 = new Node(7);
-  var n8 = new Node(8);
-
-  var e1 = new Edge(n1, n2);
-  var e2 = new Edge(n2, n3);
-  var e3 = new Edge(n3, n4);
-  var e4 = new Edge(n4, n5);
-  var e5 = new Edge(n5, n6);
-  var e6 = new Edge(n6, n7);
-  var e7 = new Edge(n7, n8);
-  var e8 = new Edge(n8, n1);
-  var e9 = new Edge(n8, n2);
-  var e10 = new Edge(n8, n3);
-  var e11 = new Edge(n8, n4);*/
-  
-  /*NetworkGraph.addNode(n1);
-  NetworkGraph.addNode(n2);
-  NetworkGraph.addNode(n3);
-  NetworkGraph.addNode(n4);
-  NetworkGraph.addNode(n5);
-  NetworkGraph.addNode(n6);
-  NetworkGraph.addNode(n7);
-  NetworkGraph.addNode(n8);
-  NetworkGraph.addEdge(e1, false);
-  NetworkGraph.addEdge(e2, false);
-  NetworkGraph.addEdge(e3, false);
-  NetworkGraph.addEdge(e4, false);
-  NetworkGraph.addEdge(e5, false);
-  NetworkGraph.addEdge(e6, false);
-  NetworkGraph.addEdge(e7, false);
-  NetworkGraph.addEdge(e8, false);
-  NetworkGraph.addEdge(e9, false);
-  NetworkGraph.addEdge(e10, false);
-  NetworkGraph.addEdge(e11, false);*/  
 });
 
 /////////////////////////////////

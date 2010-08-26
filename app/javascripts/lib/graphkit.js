@@ -66,7 +66,10 @@ Node.prototype.render = function(paper) {
   var visual = paper.set();
   
   var title = paper.text(this.position.x, this.position.y, this.info.name);
-  title.attr({fill: 'white'});
+  title.attr({fill: 'white', "font-size":11});
+  if (this.info.type == 'client') {
+    title.attr({'font-size':9});
+  }
   //var bb = title.getBBox();
   //title.translate(-bb.x + this.position.x + 15, -bb.y + this.position.y - (bb.height / 2));
   visual.push(title);
@@ -75,51 +78,51 @@ Node.prototype.render = function(paper) {
   var w = bb.width + 16;
   var h = bb.height + 10;
   var box;
-  if (this.info.type == 'node')
-    box = paper.rect(this.position.x - (w / 2), this.position.y - (h / 2), w, h, 5);
-  else
-    box = paper.circle(this.position.x, this.position.y, w / 2);
-  
-  if (this.info.supernode) {
-    box.attr("fill", "#080");
+  if (this.info.type == 'client') {
+    //box = paper.circle(this.position.x, this.position.y, w / 2);
+    box = paper.rect(this.position.x - (w / 2), this.position.y - (h / 2), w, h, h / 2);
   } else {
-    box.attr("fill", "#800");
+    box = paper.rect(this.position.x - (w / 2), this.position.y - (h / 2), w, h, 5);
   }
-  box.attr("stroke", "white");
-  box.attr("opacity", 1);
+  
+  var colors = {
+    node:      {normal:"#ff7400", hover:"#ff9640"},
+    supernode: {normal:"#f00", hover:"#ff4040"},
+    client:    {normal:"#cd0074", hover:"#e6399b"}
+  };
+
+  box.attr({
+    fill: $(colors).attr(this.info.type).normal,
+    stroke: "white",
+    opacity: 1,
+    "stroke-width": 3
+  });
   box.n = this;
   visual.push(box);
   
-    // on mouse drauf Farbe aendern
-    box.mouseover(function() {
-      if (this.n.info.supernode)
-        this.attr({fill: "#0c0"});
-      else
-        this.attr({fill: "#c00"});
-    });
-    box.mouseout(function() {
-      if (this.n.info.supernode)
-        this.attr({fill: "#080"});
-      else
-        this.attr({fill: "#800"});
-    });
-  
-    title.n = this;
-    title.b = box;
-    title.mouseover(function() {
-      if (this.n.info.supernode)
-        this.b.attr({fill: "#0c0"});
-      else
-        this.b.attr({fill: "#c00"});
-    });
-    title.mouseout(function() {
-      if (this.n.info.supernode)
-        this.b.attr({fill: "#080"});
-      else
-        this.b.attr({fill: "#800"});
-    });
+  // on mouse drauf Farbe aendern
+  box.mouseover(function() {
+    this.attr({fill: $(colors).attr(this.n.info.type).hover});
+  });
+  box.mouseout(function() {
+    this.attr({fill: $(colors).attr(this.n.info.type).normal});
+  });
+
+  title.n = this;
+  title.b = box;
+  title.mouseover(function() {
+    this.b.attr({fill: $(colors).attr(this.b.n.info.type).hover});
+  });
+  title.mouseout(function() {
+    this.b.attr({fill: $(colors).attr(this.b.n.info.type).normal});
+  });
   
   title.toFront(); 
+  
+  // rotate if client
+  if (this.info.type == 'client') {
+    visual.rotate(this.info.angle, false);
+  }
 
   return visual;
 }
@@ -137,7 +140,9 @@ Edge.prototype.render = function(paper) {
      "M" + this.fromNode.position.x + "," + this.fromNode.position.y + 
     " L" + this.toNode.position.x   + "," + this.toNode.position.y);
   line.attr("fill", "blue");
-  line.attr("stroke", "white");
+  line.attr("stroke", "#666");
+  if (this.fromNode.info.type != 'client' && this.toNode.info.type != 'client')
+    line.attr("stroke-width", 2);
   return line;  
 }
 
@@ -157,7 +162,7 @@ var Graph = function(target_id, maxIterations) {
 
   this.temperature = this.w * 100.0;
   this.area = this.w * this.h;
-  this.optimalSpringLength = Math.sqrt(this.area / this.nodes.length) * 3;
+  this.optimalSpringLength = Math.sqrt(this.area / this.nodes.length) * 5;
   
   this.highestNodeNumber = 0;
 };
@@ -199,7 +204,7 @@ Graph.prototype.updateFromAsyncInfo = function(online_users) {
 };
 
 Graph.prototype.calcOptimalSpringLength = function() {
-  return (Math.sqrt(this.area / this.nodes.length) * 3.0);
+  return (Math.sqrt(this.area / this.nodes.length) * 5.0);
 };
 
 Graph.prototype.restart = function() {
@@ -241,9 +246,27 @@ Graph.prototype.edgeExists = function(fromNode, toNode) {
 };
 
 Graph.prototype.initFromNetworksInfo = function(networks) {
+
+  // test with one node
+  //this.addNode(new Node(1, {name:"one"}));
+  //return true;
+
+  // test with two nodes
+  /*
+  var n1 = new Node(1, {name:"one"});
+  var n2 = new Node(2, {name:"two"});
+  this.addNode(n1);
+  this.addNode(n2);
+  this.addEdge(new Edge(n1, n2));
+  return true;
+  */
+  
   var nodes = new Array();
   for (var i = 0; i < networks.length; i++) {
-    networks[i].type = 'node';
+    if (networks[i].supernode)
+      networks[i].type = 'supernode';
+    else
+      networks[i].type = 'node';
     var node = new Node(i, networks[i]);
     this.addNode(node);
     nodes.push(node);
@@ -292,6 +315,13 @@ Graph.prototype.force_repulse = function(x) {
   return (this.optimalSpringLength * this.optimalSpringLength) / x;
 }
 
+function rad_to_deg(x) {
+  return (180.0 / 3.1415 * x);
+}
+function deg_to_rad(x) {
+  return (3.1415 * x / 180.0);
+}
+
 Graph.prototype.render = function() {
   if (this.iters > this.maxIterations)
     return false;
@@ -316,7 +346,7 @@ Graph.prototype.render = function() {
           var delta = node.position.diff( otherNode.position );
           if (delta.len() == 0) delta = new Vertex(0.1,0.1);
           var d = delta.len();
-          
+    
           node.disp = 
             node.disp.sum(
               delta.quot(d).prod( 
@@ -336,44 +366,82 @@ Graph.prototype.render = function() {
       var delta = v.position.diff(u.position);
       if (delta.len() == 0) delta = new Vertex(0.1,0.1);
       var d = delta.len();
-      
+    
       v.disp =
         v.disp.diff(
           delta.quot(d).prod(
             this.force_attract(d)
           )
         );
-  
+
       u.disp = 
         u.disp.sum(
           delta.quot(d).prod(
             this.force_attract(d)
           )
-        );                
+        );  
     }
 
     for (var n = 0; n < this.nodes.length; n++) {
       var node = this.nodes[n];
-      
-      node.position = 
-        node.position.sum(
-          node.disp.quot(node.disp.len()).prod(
-            this.min(node.disp)
-          )
-        );
+      if (node.info.type != 'client') {
+        node.position = 
+          node.position.sum(
+            node.disp.quot(node.disp.len()).prod(
+              this.min(node.disp)
+            )
+          );
         
-      // don't let them escape the canvas
-      if (node.position.x < 0)      node.position.x = this.w / 2;
-      if (node.position.x > this.w) node.position.x = this.w / 2;
-      if (node.position.y < 0)      node.position.y = this.h / 2;
-      if (node.position.y > this.h) node.position.y = this.h / 2;
+        // don't let them escape the canvas
+        if (node.position.x < 0)      node.position.x = this.w / 2;
+        if (node.position.x > this.w) node.position.x = this.w / 2;
+        if (node.position.y < 0)      node.position.y = this.h / 2;
+        if (node.position.y > this.h) node.position.y = this.h / 2;
       
-      /*
-      if (isNaN(node.position.x) || Math.abs(node.position.x) == Infinity) 
-        node.position.x = w / 2;
-      if (isNaN(node.position.y) || Math.abs(node.position.y) == Infinity) 
-        node.position.y = h / 2;
-      */
+        /*
+        if (isNaN(node.position.x) || Math.abs(node.position.x) == Infinity) 
+          node.position.x = w / 2;
+        if (isNaN(node.position.y) || Math.abs(node.position.y) == Infinity) 
+          node.position.y = h / 2;
+        */
+      }
+    }
+    
+    // layout client nodes circular around each node
+    for (var n = 0; n < this.nodes.length; n++) {
+      var node = this.nodes[n];
+      if (node.info.type != 'client') {
+        // find client node connected to this one
+        var clients = new Array();
+        for (var e = 0; e < this.edges.length; e++) {
+          var edge = this.edges[e];
+          var u = edge.fromNode;
+          var v = edge.toNode;
+          if ((u.number == node.number && v.info.type == 'client') ||
+              (v.number == node.number && u.info.type == 'client')) {
+            
+            if (u.number == node.number)
+              clients.push(v);
+            else
+              clients.push(u);
+          }
+        }
+        
+        // position clients circular around node
+        if (clients.length > 0) {
+          var radius = 60.0;
+          var angle  = 360.0 / clients.length;
+          //console.log(angle);
+          for (var c = 0; c < clients.length; c++) {
+            var client = clients[c];
+            var r = radius;
+            //if (c % 2) r -= 20.0;
+            client.info.angle = (c > clients.length / 2 ? 270 : 90) - angle * c;
+            client.position.x = node.position.x + Math.sin(deg_to_rad(180 + angle * c)) * r;
+            client.position.y = node.position.y + Math.cos(deg_to_rad(180 + angle * c)) * r;
+          }
+        }
+      }
     }
   
     this.cool();

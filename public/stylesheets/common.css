@@ -340,9 +340,9 @@ h2 {
  width: 520px;
  height: 300px;
  opacity:0.95;
- background-color: #141414;
+ background-color: #fff; #141414;
  padding: 1em 1em 0.5em;
- border: 0.1em solid #FDAB54;
+ xborder: 0.1em solid #FDAB54;
 }
 #network-details {
   vertical-align: top;
