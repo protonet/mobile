@@ -5,6 +5,7 @@ class Tweet < ActiveRecord::Base
     text :message
   end
 
+  belongs_to  :network
   belongs_to  :user
   has_many    :says
   has_many    :channels,  :through => :says
@@ -15,6 +16,9 @@ class Tweet < ActiveRecord::Base
 
   attr_accessor :socket_id
   # validate_existence_of :channel
+
+  def local?;  network_id == 1; end
+  def remote?; network_id != 1; end
 
   after_create :send_to_queue if Rails.env == 'production' || configatron.messaging_bus_active == true
 
@@ -28,9 +32,9 @@ class Tweet < ActiveRecord::Base
         :socket_id => socket_id,
         :channel_id => channel.id,
         :channel_uuid => channel.uuid,
-        :user_icon_url => user.active_avatar_url
+        :user_icon_url => user.active_avatar_url,
+        :network_id => network_id
         }).to_json, :key => 'channels.' + channel.uuid)
     end
   end
-
 end

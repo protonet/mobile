@@ -1,30 +1,24 @@
-# this is the module to handle policy talk with flash sockets
-module FlashServer
-  
+require File.join(File.dirname(__FILE__), '..', 'flash_connection')
+
+# this is the class to handle policy talk with flash sockets
+class FlashServer < FlashConnection
   @policy_sent = false
   
-  def self.included(base)
-    base.class_eval do
-      alias :receive_data_without_policy_handler :receive_data
-      alias :receive_data :receive_data_with_policy_handler
-    end
-  end
-  
-  def receive_data_with_policy_handler(data)
+  def receive_data data
     # log("policy server receiving: #{data}")
     messages = data.split("\0")
     unless @policy_sent
       @policy_sent = true
       log(messages.inspect)
-      return receive_data_without_policy_handler(messages[1]) if messages[1]
+      return super(messages[1]) if messages[1]
       return send_swf_policy if messages[0].match(/policy-file-request/)
     end
     # log("doing nothing, handing data over to dispatcher")
-    receive_data_without_policy_handler(data)
+    super
   end
   
-  # this is a flash security policy thing that needs to be sent on the first request to
-  # this server
+  # this is a flash security policy thing that needs to be sent on
+  # the first request to the server
   def send_swf_policy
     log("sending policy")
     policy = <<-EOS
@@ -35,10 +29,5 @@ module FlashServer
     </cross-domain-policy>\0
     EOS
     send_data(policy)
-  end    
-
-  def log(text)
-    puts "#{self.class.to_s}: #{text}"
   end
-
 end
