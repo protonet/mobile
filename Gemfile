@@ -20,6 +20,7 @@ gem "bundler"
 gem "daemon_controller", "0.2.5"
 gem "xmpp4r", "0.5"
 gem "xmpp4r-simple", "0.8.8"
+gem "sunspot_rails"
 
 group :production do
   gem "passenger", "2.2.15"
