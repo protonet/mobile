@@ -116,8 +116,6 @@ protonet.timeline.Meep.prototype = {
       .data({ meep: this.data, instance: this })
       .prependTo(container);
     
-
-    
     protonet.Notifications.trigger("meep.rendered", [this.element, this.data, this]);
   },
   
@@ -133,7 +131,7 @@ protonet.timeline.Meep.prototype = {
       data:       this.queryString || { tweet: this.data },
       success:    function() {
         if (status.is(":visible")) {
-          status.html(protonet.t("MEEP_SENT")).filter(":visible").delay(1000).fadeOut();
+          status.html(protonet.t("MEEP_SENT")).delay(1000).fadeOut();
         } else {
           status.hide();
         }
