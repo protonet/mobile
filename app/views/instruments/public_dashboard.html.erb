@@ -1,12 +1,4 @@
-<div id="search-box" style="margin: 10px">
-  <% form_tag search_path, :method => 'post' do -%>
-    <%= select_tag :channel_id, options_for_select([['All', 0]] + @channels.map{|c| [c.name, c.id]}) %>
-    <%= text_field_tag :search_term, @search_term, :size => '30' %>
-    <%= submit_tag 'search' %>
-  <% end -%>
-</div>
 <div class="main">
-
   <%- form_for :tweet, :url => tweets_path, :html => { :id => "message-form" } do |f| -%>
     <div id="text-input">
 
