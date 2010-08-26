@@ -105,7 +105,7 @@ if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FR
      :log_file      => "log/sunspot-solr-#{Rails.env}.log",
      :timeout       => 25
   )
-  js_dispatching_server.start unless js_dispatching_server.running?
+  solr_server.start unless solr_server.running?
 
   # Checking all Subsystems
   puts "------------------------"
@@ -184,4 +184,8 @@ at_exit do
     puts "shutting down the dispatcher"
     js_dispatching_server.stop
   end
+  if defined?(solr_server) && solr_server
+     puts "shutting down the solr server"
+     solr_server.stop
+ end
 end
