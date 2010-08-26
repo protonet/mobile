@@ -123,7 +123,7 @@ Node.prototype.render = function(paper) {
   if (this.info.type == 'client') {
     visual.rotate(this.info.angle, false);
   }
-
+  
   return visual;
 }
 
@@ -429,16 +429,14 @@ Graph.prototype.render = function() {
         
         // position clients circular around node
         if (clients.length > 0) {
-          var radius = 60.0;
+          var radius = 30.0 + (clients.length * 5.0);
           var angle  = 360.0 / clients.length;
           //console.log(angle);
           for (var c = 0; c < clients.length; c++) {
             var client = clients[c];
-            var r = radius;
-            //if (c % 2) r -= 20.0;
-            client.info.angle = (c > clients.length / 2 ? 270 : 90) - angle * c;
-            client.position.x = node.position.x + Math.sin(deg_to_rad(180 + angle * c)) * r;
-            client.position.y = node.position.y + Math.cos(deg_to_rad(180 + angle * c)) * r;
+            client.info.angle = (c > Math.floor(clients.length / 2) ? 270 : 90) - angle * c;
+            client.position.x = node.position.x + Math.sin(deg_to_rad(angle * c)) * radius;
+            client.position.y = node.position.y + Math.cos(deg_to_rad(angle * c)) * radius;
           }
         }
       }
