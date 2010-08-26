@@ -1,50 +1,10 @@
-//= require "lib/raphael-min.js"
-//= require "lib/graphkit.js"
 //= require "lib/jquery-ui-1.7.2.custom.min.js"
 //= require "dispatching/dispatching_system.js"
-
-var NetworkGraph;
-var ourInterval;
+//= require "networkmonitor.js"
 
 // Initialize communication stuff
 $(function() {
   protonet.globals.dispatcher = new protonet.dispatching.DispatchingSystem();
-});
-
-///////////////////////////////////////////////////////////////////
-
-//console.log(networks.toSource());
-/*
-  name:"local", 
-  created_at:"2010-06-14T18:25:42Z", 
-  updated_at:"2010-08-12T09:04:32Z", 
-  last_data_exchanged:null, 
-  coupled:null, 
-  id:1, 
-  description:"your local node", 
-  supernode:null, 
-  key:null
-*/
-
-$(function() {
-  // make graph and render it
-  NetworkGraph = new Graph("network-monitor", 50);
-  NetworkGraph.initFromNetworksInfo(networks);
-  
-  /*
-  NetworkGraph.updateFromAsyncInfo({
-    "1":{name:"client #1", supernode:null},
-    "2":{name:"client #2", supernode:null},
-    "3":{name:"client #3", supernode:null},
-    "4":{name:"client #4", supernode:null},
-    "5":{name:"client #5", supernode:null},
-  });
-  */
-  
-  protonet.Notifications.bind('user.update_online_states', function(e, msg) {
-    NetworkGraph.updateFromAsyncInfo(msg.online_users);
-  }.bind(this));
-  ourInterval = setInterval("NetworkGraph.render()", 50);
 });
 
 /////////////////////////////////

@@ -62,28 +62,33 @@ var Node = function(number, info) {
   //console.log('create node '+this.toSource());
 };
 
-Node.prototype.render = function(paper) {
+Node.prototype.render = function(paper, small) {
   var visual = paper.set();
-  
-  var title = paper.text(this.position.x, this.position.y, this.info.name);
-  title.attr({fill: 'white', "font-size":11});
-  if (this.info.type == 'client') {
-    title.attr({'font-size':10});
-  }
-  //var bb = title.getBBox();
-  //title.translate(-bb.x + this.position.x + 15, -bb.y + this.position.y - (bb.height / 2));
-  visual.push(title);
 
-  var bb = title.getBBox();
-  var w = bb.width + 16;
-  var h = bb.height + 10;
-  var box;
-  if (this.info.type == 'client') {
-    //box = paper.circle(this.position.x, this.position.y, w / 2);
-    box = paper.rect(this.position.x - (w / 2), this.position.y - (h / 2), w, h, h / 2);
-  } else {
-    box = paper.rect(this.position.x - (w / 2), this.position.y - (h / 2), w, h, 5);
+  var is_small = small && this.info.type == 'client';
+
+  if (!is_small) {    
+    var name = this.info.name;
+    if (name.length > 10)
+      name = name.substr(0,5)+'...'+name.substr(name.length-7,5);
+  
+    var title = paper.text(this.position.x, this.position.y, name);
+    title.attr({fill: 'white', "font-size":11});
+    if (this.info.type == 'client') {
+      title.attr({'font-size':10});
+    }
+    visual.push(title);
   }
+  
+  var bb = (!is_small ? title.getBBox() : {x:0,y:0,width:20,height:20});
+  var w = bb.width + 16;
+  var h = bb.height + 12;
+  var box;
+  var borderradius = (this.info.type == 'client' ? h/2 : 5);
+  if (is_small)
+    box = paper.circle(this.position.x, this.position.y, 10);
+  else
+    box = paper.rect(this.position.x - (w / 2), this.position.y - (h / 2), w, h, borderradius);
   
   var colors = {
     node:      {normal:"#ff7400", hover:"#ff9640"},
@@ -108,19 +113,28 @@ Node.prototype.render = function(paper) {
     this.attr({fill: $(colors).attr(this.n.info.type).normal});
   });
 
-  title.n = this;
-  title.b = box;
-  title.mouseover(function() {
-    this.b.attr({fill: $(colors).attr(this.b.n.info.type).hover});
-  });
-  title.mouseout(function() {
-    this.b.attr({fill: $(colors).attr(this.b.n.info.type).normal});
-  });
+  if (!is_small) {
+    title.n = this;
+    title.b = box;
+    title.mouseover(function() {
+      this.b.attr({fill: $(colors).attr(this.b.n.info.type).hover});
+    });
+    title.mouseout(function() {
+      this.b.attr({fill: $(colors).attr(this.b.n.info.type).normal});
+    });
   
-  title.toFront(); 
+    title.toFront(); 
+  }
   
   // rotate if client
   if (this.info.type == 'client') {
+    // move visual so that it does not overlap local-node
+    // vector from local-node to this client-node
+    var dir  = this.position.diff(this.info.nodepos);
+    var diff = dir.scale(visual.getBBox().width / 2 - 6);
+    visual.translate(diff.x, diff.y);
+
+    //visual.rotate(this.info.angle, );
     visual.rotate(this.info.angle, false);
   }
   
@@ -149,9 +163,11 @@ Edge.prototype.render = function(paper) {
 /* ------------------------------------------------- */
 /* Graph class */
 
-var Graph = function(target_id, maxIterations) {
+var Graph = function(target_id, maxIterations, small) {
   this.nodes = new Array();
   this.edges = new Array();
+
+  this.small = small; // true for a more compact design
 
   this.iters         = 0;
   this.maxIterations = maxIterations;
@@ -167,6 +183,15 @@ var Graph = function(target_id, maxIterations) {
   this.highestNodeNumber = 0;
 };
 
+Graph.prototype.nodeExists = function(info) {
+  for (var i = 0; i < this.nodes.length; i++) {
+    //console.log([this.nodes[i].info.name, info.name]);
+    if (this.nodes[i].info.id == info.id)
+      return true;
+  }
+  return false;
+};
+
 Graph.prototype.nodeNumberIsUsed = function(number) {
   for (var i = 0; i < this.nodes.length; i++) {
     if (this.nodes[i].number == number)
@@ -180,23 +205,77 @@ Graph.prototype.getUniqueNodeNumber = function(online_users) {
   return this.highestNodeNumber;
 };
 
+Graph.prototype.deleteEdgesAtNode = function(node) {
+  var edges = new Array();
+  for (var e = 0; e < this.edges.length; e++) {
+    var from = this.edges[e].fromNode;
+    var to   = this.edges[e].toNode;
+    if (from.number != node.number && to.number != node.number)
+      edges.push(this.edges[n]);
+  }
+  this.edges = edges; 
+};
+
+Graph.prototype.deleteNode = function(node) {
+  var nodes = new Array();
+  for (var n = 0; n < this.nodes.length; n++) {
+    if (this.nodes[n].number != node.number)
+      nodes.push(this.nodes[n]);
+  }
+  this.nodes = nodes;
+};
+
+Graph.prototype.deleteClientNodesExcluding = function(online_users) {
+  for (var n = 0; n < this.nodes.length; n++) {
+    var node = this.nodes[n];
+    if (node.info.type == 'client') {
+      // try to find node in online_users
+      found = false;
+      for (var key in online_users) {
+        if (key == node.info.id)
+          found = true;
+      }
+      if (!found) {
+        this.deleteEdgesAtNode(node);
+        this.deleteNode(node);
+      }
+    }
+  }
+};
+
 Graph.prototype.updateFromAsyncInfo = function(online_users) {
-  //console.log(online_users);
+
+  online_users["11"] = {name:"client", supernode:null};
+  online_users["12"] = {name:"mr.x", supernode:null};
+  online_users["13"] = {name:"superman", supernode:null};
+  online_users["14"] = {name:"superwoman", supernode:null};
+  online_users["15"] = {name:"mrs.x", supernode:null};
+
+  for (var key in online_users) {
+    online_users[key].id = key;
+    online_users[key].type = 'client';
+  }
+  this.deleteClientNodesExcluding(online_users);
+  
+  //console.log(online_users.toSource());
   // find local node (the one the clients are connected to)
   var localnode;
   for (var i = 0; i < this.nodes.length; i++) {
     // WIE KANN ICH DEN LOKALEN KNOTEN ERKENNEN?
     if (this.nodes[i].info.name == 'local')
+    //if (this.nodes[i].info.id == 1)
       localnode = this.nodes[i];
   }
+  //console.log(localnode.toSource());
   if (localnode) {
     // add clients to node
     for (var key in online_users) {
-        online_users[key].id = key;
-        online_users[key].type = 'client';
-        var node = new Node(this.getUniqueNodeNumber(), online_users[key]);
+      var info = online_users[key];
+      if (!this.nodeExists(info)) {
+        var node = new Node(this.getUniqueNodeNumber(), info);
         this.addNode(node);
         this.addEdge(new Edge(node, localnode), false);
+      }
     }
     //this.log();
     this.restart();
@@ -344,7 +423,7 @@ Graph.prototype.layout = function() {
   // special case: less than 5 (non-client) nodes
   if (normal_nodes.length < 5) {
     // circular layout
-    var radius = Math.min(this.w, this.h) / 5;
+    var radius = Math.min(this.w, this.h) / 4;
     var angle  = 360.0 / normal_nodes.length;
     var count  = 0;
     for (var n = 0; n < normal_nodes.length; n++) {
@@ -480,7 +559,7 @@ Graph.prototype.layout_clients = function() {
       
       // position clients circular around node
       if (clients.length > 0) {
-        var radius = 30.0 + (clients.length * 5.0);
+        var radius = (this.small ? 5.0 : 10.0) + (clients.length * 5.0);
         var angle  = 360.0 / clients.length;
         //console.log(angle);
         for (var c = 0; c < clients.length; c++) {
@@ -488,6 +567,7 @@ Graph.prototype.layout_clients = function() {
           client.info.angle = (c > Math.floor(clients.length / 2) ? 270 : 90) - angle * c;
           client.position.x = node.position.x + Math.sin(deg_to_rad(angle * c)) * radius;
           client.position.y = node.position.y + Math.cos(deg_to_rad(angle * c)) * radius;
+          client.info.nodepos = node.position;
         }
       }
     }
@@ -508,7 +588,7 @@ Graph.prototype.render = function() {
     }
     // draw nodes
     for (var i = 0; i < this.nodes.length; i++) {
-      group.push(this.nodes[i].render(this.paper));
+      group.push(this.nodes[i].render(this.paper, this.small));
     }
     // center graph to canvas
     var bbox = group.getBBox();  
