@@ -40,8 +40,12 @@ class NodeConnection < FlashConnection
     log "Received JSON: #{json.inspect}"
     
     if json['x_target'] == 'protonet.globals.communicationConsole.receiveMessage' then
+      # TODO: when using node UUIDs, this check needs to be against the current node I think
+      return if json['network_id'] == 2
+      
       channel = Channel.find_by_uuid(json['channel_uuid'])
       json['channel_id'] = channel.id
+      json['network_id'] = @network.id
       
       tweet = Tweet.create :user_id => 0,
         :author => json['author'],
