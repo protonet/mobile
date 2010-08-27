@@ -58,7 +58,7 @@ class NodeConnection < FlashConnection
     bind 'channels', channel.uuid do |json|
       if json['network_id'] == 1
         json.delete 'network_id'
-        json['action'] = 'tweet'
+        json['operation'] = 'tweet'
         send_json json
       end
     end
