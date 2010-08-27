@@ -98,12 +98,12 @@ if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FR
   # this starts up a new sunspot and solr instance
   solr_server = DaemonController.new(
      :identifier    => 'solr_server',
-     :start_command => 'rake sunspot:solr:start ',
-     :stop_command  => 'rake sunspot:solr:stop',
+     :start_command => "sunspot-solr start -p 8983 -s solr --pid-dir=tmp/pids -d solr/data",
+     :stop_command  => "sunspot-solr stop  -p 8983 -s solr --pid-dir=tmp/pids -d solr/data",
      :ping_command  => lambda { TCPSocket.new('localhost', 8983) },
-     :pid_file      => "tmp/pids/sunspot-solr-#{Rails.env}.pid",
+     :pid_file      => "tmp/pids/sunspot-solr.pid",
      :log_file      => "log/sunspot-solr-#{Rails.env}.log",
-     :timeout       => 25
+     :timeout       => 60
   )
   solr_server.start unless solr_server.running?
 
@@ -111,50 +111,25 @@ if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FR
   puts "------------------------"
   puts "Checking all subsystems:"
   puts "                        "
-
+  
   colored_on  = "\e[1m\e[32m[ ON]\e[0m"
   colored_off = "\e[1m\e[31m[OFF]\e[0m"
+  
   # checking the messaging bus
   configatron.messaging_bus_active = System::MessagingBus.active?
   puts "RABBIT MQ:      #{configatron.messaging_bus_active ? colored_on : colored_off}"
 
-
-  # checking on the js dispatching server
-  configatron.js_dispatching_active = begin
-    host = TCPSocket.new('localhost', configatron.socket.port)
-    host.close
-    true
-  rescue Errno::ECONNREFUSED
-    false
-  end
+  configatron.js_dispatching_active = js_dispatching_server.running?
   puts "JS DISPATCHING: #{configatron.js_dispatching_active ? "#{colored_on}" : colored_off}"
-
-  # checking on nodejs
-  configatron.nodejs_active = begin
-    host = TCPSocket.new('localhost', 8124)
-    host.close
-    true
-  rescue Errno::ECONNREFUSED
-    false
-  end
+  configatron.nodejs_active = node.running?
   puts "NODE JS:        #{configatron.nodejs_active ? "#{colored_on}" : colored_off}"
-
-  # checking on sunspot/solr
-  configatron.sunspot_active = begin
-    host = TCPSocket.new('localhost', 8983)
-    host.close
-    true
-  rescue Errno::ECONNREFUSED
-    false
-  end
+  configatron.sunspot_active = solr_server.running?
   puts "SUNSPOT/SOLR:   #{configatron.sunspot_active ? "#{colored_on}" : colored_off}"
 
-  # checking ldap
   configatron.ldap.active = begin
     false
   end
   puts "LDAP:           #{configatron.ldap.active ? colored_on : colored_off}"
-
   puts "                        "
   puts "------------------------"
 
