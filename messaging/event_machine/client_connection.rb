@@ -56,7 +56,8 @@ class ClientConnection < FlashServer
           send_work_request(data)
         
         when 'tweet'
-          channel = Channel.find_by_uuid(data['channel_uuid'])
+          channel = Channel.find_by_uuid(data['channel_uuid']) if data.has_key? 'channel_uuid'
+          channel = Channel.find_by_id(data['channel_id']) if data.has_key? 'channel_id'
           
           # TODO: Use a helper or *something*
           
