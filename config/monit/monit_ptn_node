@@ -140,12 +140,10 @@ check process node.js with pidfile $shared_path$/pids/node.pid
   if 3 restarts within 5 cycles then timeout
   if totalmem > 200.0 MB for 2 cycles then restart
 
-check process solr with pidfile $shared_path$/pids/solr.pid
+check process solr with pidfile $shared_path$/pids/sunspot-solr.pid
   start program = "$current_path$/script/init/solr $current_path$ start"
   stop program  = "$current_path$/script/init/solr $current_path$ stop"
   if 3 restarts within 5 cycles then timeout
-  if totalmem > 200.0 MB for 2 cycles then restart
-
 
  check process apache2 with pidfile /var/run/apache2.pid
    start program = "/usr/bin/sudo /etc/init.d/apache2 start"
