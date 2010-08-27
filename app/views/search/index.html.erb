@@ -9,9 +9,3 @@
 <div id="search-results">
 </div>
 
-<% if @search_results -%>
-  <% @search_results.each_hit_with_result do |hit, tweet| -%>
-    <%= render :partial => "search_result", :locals => {:hit => hit, :tweet => tweet} %>
-  <% end -%>
-<% end -%>
-

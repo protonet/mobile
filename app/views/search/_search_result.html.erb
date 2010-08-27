@@ -1,9 +1,9 @@
-<div class="search-result" style="border: 1px solid black; width: 500px; padding: 5px; margin: 5px 0 0 20px">
-  <span style="display:block; padding: 3px 0 3px 0; font-weight: bolder; font-size: 14px;">
-    Channel/s:
-    <% tweet.channels.each do |c| -%>
-      <%= c.name %>
-    <% end -%>
-  </span>
-  <%= tweet.message %>
+<% c = tweet.channels.first-%>
+<div id="feed-viewer">
+  <div id="feed-holder" style="width:613px;">
+    <%= render :partial => '/tweets/tweet_list',
+      :locals => {:tweets => tweet.from_minutes_before(5,c.id) + [tweet] + tweet.from_minutes_after(5,c.id),
+      :channel => c} %>
+  </div>
 </div>
+

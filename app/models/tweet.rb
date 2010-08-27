@@ -38,4 +38,34 @@ class Tweet < ActiveRecord::Base
         }).to_json, :key => 'channels.' + channel.uuid)
     end
   end
+
+  def from_minutes_before(mins, channel_id)
+    from_minutes({
+      :user_id    => user_id,
+      :from       => (created_at - (mins + 1).minutes),
+      :to         => created_at,
+      :tweet_id   => id,
+      :channel_id => channel_id
+    })
+  end
+
+  def from_minutes_after(mins, channel_id)
+    from_minutes({
+      :user_id    => user_id,
+      :from       => created_at,
+      :to         => (created_at + (mins + 1).minutes),
+      :tweet_id   => id,
+      :channel_id => channel_id
+    })
+  end
+
+  private
+
+  def from_minutes(opts)
+    Tweet.all(:include => [:says],
+      :conditions => ["user_id = ? AND tweets.created_at >= ? AND tweets.created_at <= ? AND tweets.id <> ? AND says.channel_id = ?",
+      opts[:user_id], opts[:from],opts[:to], opts[:tweet_id], opts[:channel_id]]
+    )
+  end
 end
+
