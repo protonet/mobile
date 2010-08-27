@@ -65,7 +65,7 @@ class UsersController < ApplicationController
     channels = current_user ? current_user.verified_channels : [Channel.home]
     respond_to do |format|
       format.json do
-        channels = channels.collect { |c| {:id => c.id, :name => c.name, :description => c.description}}
+        channels = channels.collect { |c| {:id => c.id, :name => c.name, :description => c.description, :uuid => c.uuid}}
         render :json => {:channels => channels}
       end
     end
