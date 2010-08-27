@@ -9,10 +9,10 @@ shift 1
 cd $CURRENT_PATH
 case $1 in
    start)
-      bundle exec sunspot-solr start -p 8983 -s $CURRENT_PATH/solr --pid-dir=$CURRENT_PATH/tmp/pids -d $CURRENT_PATH/../.shared/system/solr/data
+      bundle exec sunspot-solr start -p 8983 -s $CURRENT_PATH/solr --pid-dir=$CURRENT_PATH/tmp/pids -d $CURRENT_PATH/../shared/system/solr/data
       ;;
     stop)
-      bundle exec sunspot-solr stop  -p 8983 -s $CURRENT_PATH/solr --pid-dir=$CURRENT_PATH/tmp/pids -d $CURRENT_PATH/../.shared/system/solr/data
+      bundle exec sunspot-solr stop  -p 8983 -s $CURRENT_PATH/solr --pid-dir=$CURRENT_PATH/tmp/pids -d $CURRENT_PATH/../shared/system/solr/data
       ;;
     *)  
       echo "usage: solr {working directory} {start|stop}" ;;
