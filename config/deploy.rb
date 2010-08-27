@@ -1,5 +1,5 @@
 set :application, "dashboard"
-set :repository,  "git@github.com:dudemeister/protonet-dashboard.git"
+set :repository,  "git@github.com:protonet/dashboard.git"
 
 # deploy paths are set in the stage definitions
 set :deploy_via, :copy
