@@ -68,7 +68,7 @@ class ChannelsController < ApplicationController
   def list
     respond_to do |format|
       format.json do
-        channels = Channel.all.collect { |c| {:id => c.id, :name => c.name, :description => c.description}}
+        channels = Channel.all.collect { |c| {:id => c.id, :name => c.name, :description => c.description, :uuid => c.uuid}}
         render :json => {:channels => channels}
       end
     end

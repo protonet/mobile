@@ -48,7 +48,7 @@ Rails::Initializer.run do |config|
   # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
   # config.i18n.default_locale = :de
-  
+
   config.cache_store = :mem_cache_store
 end
 
@@ -82,7 +82,7 @@ if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FR
      :daemonize_for_me => true
   )
   node.start unless node.running?
-  
+
   # this starts up a new node.js instance
   js_dispatching_server = DaemonController.new(
      :identifier    => 'js_dispatching_server',
@@ -94,18 +94,30 @@ if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FR
      :timeout       => 25
   )
   js_dispatching_server.start unless js_dispatching_server.running?
-  
+
+  # this starts up a new sunspot and solr instance
+  solr_server = DaemonController.new(
+     :identifier    => 'solr_server',
+     :start_command => 'rake sunspot:solr:start ',
+     :stop_command  => 'rake sunspot:solr:stop',
+     :ping_command  => lambda { TCPSocket.new('localhost', 8983) },
+     :pid_file      => "tmp/pids/sunspot-solr-#{Rails.env}.pid",
+     :log_file      => "log/sunspot-solr-#{Rails.env}.log",
+     :timeout       => 25
+  )
+  solr_server.start unless solr_server.running?
+
   # Checking all Subsystems
   puts "------------------------"
   puts "Checking all subsystems:"
   puts "                        "
-  
+
   colored_on  = "\e[1m\e[32m[ ON]\e[0m"
   colored_off = "\e[1m\e[31m[OFF]\e[0m"
   # checking the messaging bus
   configatron.messaging_bus_active = System::MessagingBus.active?
   puts "RABBIT MQ:      #{configatron.messaging_bus_active ? colored_on : colored_off}"
-  
+
 
   # checking on the js dispatching server
   configatron.js_dispatching_active = begin
@@ -116,7 +128,7 @@ if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FR
     false
   end
   puts "JS DISPATCHING: #{configatron.js_dispatching_active ? "#{colored_on}" : colored_off}"
-  
+
   # checking on nodejs
   configatron.nodejs_active = begin
     host = TCPSocket.new('localhost', 8124)
@@ -126,16 +138,26 @@ if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FR
     false
   end
   puts "NODE JS:        #{configatron.nodejs_active ? "#{colored_on}" : colored_off}"
-  
+
+  # checking on sunspot/solr
+  configatron.sunspot_active = begin
+    host = TCPSocket.new('localhost', 8983)
+    host.close
+    true
+  rescue Errno::ECONNREFUSED
+    false
+  end
+  puts "SUNSPOT/SOLR:   #{configatron.sunspot_active ? "#{colored_on}" : colored_off}"
+
   # checking ldap
   configatron.ldap.active = begin
     false
   end
   puts "LDAP:           #{configatron.ldap.active ? colored_on : colored_off}"
-  
+
   puts "                        "
   puts "------------------------"
-  
+
 end
 
 ###########################################################################################################################
@@ -162,4 +184,8 @@ at_exit do
     puts "shutting down the dispatcher"
     js_dispatching_server.stop
   end
+  if defined?(solr_server) && solr_server
+     puts "shutting down the solr server"
+     solr_server.stop
+ end
 end

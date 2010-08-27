@@ -1,4 +1,5 @@
 log/*.log
+log/*.lck
 tmp/**/*
 .DS_Store
 .gitignore
@@ -21,3 +22,5 @@ db/schema.rb
 node/screenshots/*
 node.pid.lock
 Gemfile.lock
+solr/data
+

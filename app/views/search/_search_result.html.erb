@@ -1,0 +1,9 @@
+<% c = tweet.channels.first-%>
+<div id="feed-viewer">
+  <div id="feed-holder" style="width:613px;">
+    <%= render :partial => '/tweets/tweet_list',
+      :locals => {:tweets => tweet.from_minutes_before(5,c.id) + [tweet] + tweet.from_minutes_after(5,c.id),
+      :channel => c} %>
+  </div>
+</div>
+
