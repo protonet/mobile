@@ -3,7 +3,10 @@
 <%
   tweet = hit.instance
   c = tweet.channels.first
-  tweet.message = hit.highlights(:message).first.format { |phrase| search_highligh_tag(phrase) }
+  highlights = hit.highlights(:message)
+  if highlights && !highlights.empty?
+    tweet.message = highlights.first.format { |phrase| search_highligh_tag(phrase) }
+  end
 -%>
 
 <div id="feed-viewer">
