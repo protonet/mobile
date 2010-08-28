@@ -2,6 +2,9 @@ class Network < ActiveRecord::Base
   has_many :channels
   has_many :tweets
   
+  validates_uniqueness_of :uuid
+  after_create  :generate_uuid,   :if => lambda {|c| c.uuid.blank? }
+  
   def local?
     id == 1
   end
@@ -27,6 +30,11 @@ class Network < ActiveRecord::Base
   
   def get_channels
     
+  end
+
+  def generate_uuid
+    raise RuntimeError if uuid
+    self.update_attribute(:uuid, UUID.create.to_s)
   end
   
 end
