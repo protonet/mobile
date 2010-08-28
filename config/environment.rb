@@ -111,18 +111,20 @@ if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FR
   puts "------------------------"
   puts "Checking all subsystems:"
   puts "                        "
-  
+
   colored_on  = "\e[1m\e[32m[ ON]\e[0m"
   colored_off = "\e[1m\e[31m[OFF]\e[0m"
-  
+
   # checking the messaging bus
   configatron.messaging_bus_active = System::MessagingBus.active?
   puts "RABBIT MQ:      #{configatron.messaging_bus_active ? colored_on : colored_off}"
 
   configatron.js_dispatching_active = js_dispatching_server.running?
   puts "JS DISPATCHING: #{configatron.js_dispatching_active ? "#{colored_on}" : colored_off}"
+
   configatron.nodejs_active = node.running?
   puts "NODE JS:        #{configatron.nodejs_active ? "#{colored_on}" : colored_off}"
+
   configatron.sunspot_active = solr_server.running?
   puts "SUNSPOT/SOLR:   #{configatron.sunspot_active ? "#{colored_on}" : colored_off}"
 

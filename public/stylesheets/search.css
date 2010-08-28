@@ -1,0 +1,45 @@
+#search-box {
+  margin-left: 100px;
+  margin-right: auto;
+  padding: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 500px;
+}
+
+#search-box input[name='search_term'] {
+  width: 300px;
+  font-size: 16px;
+}
+
+#search-box select[name='channel_id'] {
+  font-size: 16px;
+}
+
+#search-box select[type='submit'] {
+  size: 16px;
+}
+
+span.highlight {
+  background-color: #fbf828;
+}
+
+.pagination {
+  margin-left: 230px;
+  margin-right: auto;
+  padding: 5px;
+  width: 400px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.pagination .current {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ea8e30;
+}
+
+.pagination a, .prev_page, .next_page {
+  padding:3px;
+  font-size: 16px;
+}

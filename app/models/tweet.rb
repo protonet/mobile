@@ -2,8 +2,10 @@ class Tweet < ActiveRecord::Base
 
   searchable do
     integer :channel_ids, :references => Channel, :multiple => true
-    text :message
+    text :message, :stored => true
     text :text_extension
+    time :created_at
+    time :updated_at
   end
 
   belongs_to  :network
@@ -64,7 +66,8 @@ class Tweet < ActiveRecord::Base
   def from_minutes(opts)
     Tweet.all(:include => [:says],
       :conditions => ["user_id = ? AND tweets.created_at >= ? AND tweets.created_at <= ? AND tweets.id <> ? AND says.channel_id = ?",
-      opts[:user_id], opts[:from],opts[:to], opts[:tweet_id], opts[:channel_id]]
+      opts[:user_id], opts[:from],opts[:to], opts[:tweet_id], opts[:channel_id]],
+      :order => 'tweets.created_at DESC'
     )
   end
 end

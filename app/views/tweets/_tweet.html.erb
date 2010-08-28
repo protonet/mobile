@@ -6,6 +6,9 @@
   <div class="message-text">
 <% end %>
     <span class="message-info">
+      <% if @search_results -%>
+      <span class="message-channels"><%= channel_names %></span>
+      <% end -%>
       <span class="message-author"><%= author %></span>
       <span class="message-date pretty-date" <%= "title=\"#{convert_to_rfc(created_at)}\"" unless created_at.blank? %>><%= created_at %></span>
     </span>

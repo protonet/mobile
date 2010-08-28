@@ -3,8 +3,12 @@
   <%- tweets.each_with_index do |t, i| -%>
     <% show_wrapper_start, show_wrapper_end, first_id, last_id = calculate_wrappers(tweets, t, i) %>
     <%= render :partial => '/tweets/tweet', :locals => {:message => t.message, :avatar => avatar_url(t.avatar),
-                                                        :author => t.author, :created_at => t.created_at,
-                                                        :html_id => "tweet-#{t.id}-#{last_id}", :show_wrapper_start => show_wrapper_start, :show_wrapper_end => show_wrapper_end } %>
+      :author => t.author, :created_at => t.created_at,
+      :html_id => "tweet-#{t.id}-#{last_id}",
+      :show_wrapper_start => show_wrapper_start,
+      :show_wrapper_end => show_wrapper_end,
+      :channel_names => t.channels.map{|c| c.name}.join(",")
+    } %>
     <%- if t.text_extension? -%>
     <script type="text/javascript">//<![CDATA[
       protonet.globals.textExtensions.push({
