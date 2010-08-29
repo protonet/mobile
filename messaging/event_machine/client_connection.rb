@@ -66,7 +66,7 @@ class ClientConnection < FlashServer
               :author => data['author'],
               :message => data['message'],
               :text_extension => data['text_extension'],
-              :network_id => 2, # TODO: un-hardcode
+              :network_id => @node.id, # TODO: un-hardcode
               :channels => [channel]
               
           else
@@ -100,7 +100,7 @@ class ClientConnection < FlashServer
         log("could not authenticate #{auth_data.inspect}")
       end
     elsif auth_data["node_uuid"]
-      @node = Network.find(auth_data["node_uuid"])
+      @node = Network.find_by_uuid(auth_data["node_uuid"])
     end
   end
   

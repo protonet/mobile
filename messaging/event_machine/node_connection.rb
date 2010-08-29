@@ -27,25 +27,31 @@ class NodeConnection < FlashConnection
   end
   
   def post_init
-    log "connected to remote network ##{@network.id}"
+    log "connected to remote network ##{@network.uuid}"
     
-    bind_channel Channel.find_by_id(23)
+    Channel.global.each do |chan|
+      bind_channel chan
+    end
     
-    send_json :operation => 'authenticate', :payload => {:type => 'node', :node_uuid => 2}
+    send_json :operation => 'authenticate', :payload => {:type => 'node', :node_uuid => Network.find(1).uuid}
   rescue => ex
     p ex, ex.backtrace
   end
+  
+  def unbind
+    @network.coupled = false
+    @network.save
   
   def receive_json json
     log "Received JSON: #{json.inspect}"
     
     if json['x_target'] == 'protonet.globals.communicationConsole.receiveMessage' then
       # TODO: when using node UUIDs, this check needs to be against the current node I think
-      return if json['network_id'] == 2
+      return if json['network_uuid'] == Network.find(1).uuid
       
       channel = Channel.find_by_uuid(json['channel_uuid'])
       json['channel_id'] = channel.id
-      json['network_id'] = @network.id
+      json['network_uuid'] = @network.uuid
       
       tweet = Tweet.create :user_id => 0,
         :author => json['author'],
@@ -60,8 +66,7 @@ class NodeConnection < FlashConnection
   
   def bind_channel channel
     bind 'channels', channel.uuid do |json|
-      if json['network_id'] == 1
-        json.delete 'network_id'
+      if json['network_uuid'] == Network.find(1).uuid
         json['operation'] = 'tweet'
         send_json json
       end

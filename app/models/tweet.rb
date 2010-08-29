@@ -36,7 +36,7 @@ class Tweet < ActiveRecord::Base
         :channel_id => channel.id,
         :channel_uuid => channel.uuid,
         :user_icon_url => user.active_avatar_url,
-        :network_id => network_id
+        :network_uuid => network.uuid
         }).to_json, :key => 'channels.' + channel.uuid)
     end
   end
