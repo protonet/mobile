@@ -89,7 +89,7 @@ module JsDispatchingServer
     @@online_users[@user.id]["name"] ||= @user.display_name
     @@online_users[@user.id]["connections"] ||= []
     @@online_users[@user.id]["connections"]  << [@key, @type]
-    data = {:x_target => "protonet.globals.userWidget.update", :online_users => @@online_users}.to_json
+    data = {:trigger => "users.update_status", :online_users => @@online_users}.to_json
     send_and_publish('system','system.users', data)
   end
 
@@ -97,7 +97,7 @@ module JsDispatchingServer
     return unless @user
     @@online_users[@user.id]["connections"] = @@online_users[@user.id]["connections"].reject {|socket_id, _| socket_id == @key}
     @@online_users.delete(@user.id) if @@online_users[@user.id]["connections"].empty?
-    data = {:x_target => "protonet.globals.userWidget.update", :online_users => @@online_users}.to_json
+    data = {:trigger => "users.update_status", :online_users => @@online_users}.to_json
     send_and_publish('system','system.users', data)
   end
   
@@ -119,12 +119,12 @@ module JsDispatchingServer
   end
   
   def update_user_status(status)
-    data = {:x_target => "protonet.globals.userWidget.updateWritingStatus", :data => {:user_id => @user.id, :status => status}}.to_json
-    send_and_publish('system','system.users', data)
+    data = {:trigger => 'user.typing', :data => {:user_id => @user.id, :status => status}}.to_json
+    send_and_publish('system', 'system.users', data)
   end
 
   def send_ping_answer
-    data = {:x_target => "protonet.globals.dispatcher.pingSocketCallback"}.to_json
+    data = {:trigger => 'socket.ping_received'}.to_json
     send_data(data + "\0")
   end
 
@@ -171,7 +171,7 @@ module JsDispatchingServer
       message = JSON(msg)
       sender_socket_id = message['socket_id']
       # TODO the next line and this method need refactoring
-      queue.unsubscribe if message['trigger'] =="channel.unsubscribe"
+      queue.unsubscribe if message['trigger'] =="user.unsubscribed_channel"
       if !sender_socket_id || sender_socket_id.to_i != @key
         message_json = message.to_json
         log('sending data out: ' + message_json + ' ' + sender_socket_id.to_s)

@@ -18,33 +18,34 @@ protonet.dispatcher = {
   },
   
   _observe: function() {
-    protonet.Notifications.bind("socket.initialized", function(e) {
-      this.createSocketCallback();
-    }.bind(this));
+    protonet.Notifications
+      .bind("socket.initialized", function() {
+        this.createSocketCallback();
+      }.bind(this))
     
-    protonet.Notifications.bind("socket.connected", function(e, status) {
-      this.connectSocketCallback(status);
-    }.bind(this));
+      .bind("socket.connected", function(e, status) {
+        this.connectSocketCallback(status);
+      }.bind(this))
     
-    protonet.Notifications.bind("socket.disconnected", function(e) {
-      this.reconnectSocket();
-    }.bind(this));
+      .bind("socket.disconnected", function() {
+        this.reconnectSocket();
+      }.bind(this))
     
-    protonet.Notifications.bind("socket.send", function(e, data) {
-      this.sendData(data);
-    }.bind(this));
+      .bind("socket.send", function(e, data) {
+        this.sendData(data);
+      }.bind(this))
     
-    protonet.Notifications.bind("socket.receive", function(e, data) {
-      this.receiveData(data);
-    }.bind(this));
+      .bind("socket.receive", function(e, data) {
+        this.receiveData(data);
+      }.bind(this))
     
-    protonet.Notifications.bind("socket.check", function() {
-      this.socketCheck();
-    }.bind(this));
+      .bind("socket.check", function() {
+        this.socketCheck();
+      }.bind(this))
     
-    protonet.Notifications.bind("socket.ping_received", function() {
-      this.pingSocketCallback();
-    }.bind(this));
+      .bind("socket.ping_received", function() {
+        this.pingSocketCallback();
+      }.bind(this));
   },
   
   createSocket: function() {

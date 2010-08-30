@@ -11,6 +11,8 @@
 $(function() {
   protonet.dispatcher.initialize();
   protonet.timeline.initialize();
+  
+  new protonet.controls.UserWidget();
 });
 
 

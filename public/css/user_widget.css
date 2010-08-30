@@ -1,0 +1,75 @@
+#user-widget {
+  border: 1px rgba(72, 123, 255, 0.8) solid;
+  padding: 1px;
+}
+
+#user-widget h3 {
+  color: #fff;
+  font-weight: normal;
+  padding: 0 7px;
+  font-size: 13px;
+  line-height: 25px;
+  background: rgba(72, 123, 255, 0.65);
+  background: -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 1), rgba(72, 123, 255, 0.6));
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.6)), to(rgba(72, 123, 255, 1)));
+}
+
+#user-widget output {
+  display: inline;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+#user-widget li {
+  background: url(../img/spr_user_status.png) no-repeat;
+  padding-left: 26px;
+  line-height: 22px;
+  margin: 0 0 1px;
+  white-space: nowrap;
+}
+
+#user-widget li.offline,
+#user-widget li {
+  background-position: 4px -18px;
+  color: #999;
+}
+
+#user-widget li.online {
+  background-position: 4px 2px;
+  color: #000;
+}
+
+#user-widget li.typing {
+  background-position: 5px -43px;
+}
+
+#user-widget li.myself {
+  font-weight: bold;
+}
+
+#user-widget li:hover,
+#user-widget li:focus {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+#user-widget ul {
+  overflow: auto;
+  height: 170px;
+  min-height: 50px;
+  max-height: 500px;
+  padding: 4px 0 3px;
+  margin: 1px 0;
+}
+
+#user-widget .resize {
+  display: block;
+  font-size: 7px;
+  line-height: 10px;
+  height: 10px;
+  text-align: center;
+  background: #f0f0f0;
+  cursor: row-resize;
+}
+
+#user-widget .resize:after {
+  content: ":::::::::::::::::";
+}

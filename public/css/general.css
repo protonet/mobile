@@ -97,7 +97,8 @@ aside {
 }
 
 #side {
-  width: 260px;
+  width: 220px;
+  padding: 20px;
 }
 
 #cloud-container {

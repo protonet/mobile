@@ -160,13 +160,13 @@ class User < ActiveRecord::Base
   def subscribe(channel)
     return if channels.include?(channel)
     channels << channel
-    send_channel_notification(channel, :subscribed) if save
+    send_channel_notification(channel, :subscribed_channel) if save
   end
   
   def unsubscribe(channel)
     return unless channels.include?(channel)
     channels.delete(channel)
-    send_channel_notification(channel, :unsubscribed) if save
+    send_channel_notification(channel, :unsubscribed_channel) if save
   end
   
   def subscribed?(channel)
@@ -175,7 +175,7 @@ class User < ActiveRecord::Base
 
   def send_channel_notification(channel, type)
     System::MessagingBus.topic('channels').publish({
-      :trigger        => "channel.#{type}",
+      :trigger        => "user.#{type}",
       :channel_id     => channel.id,
       :user_id        => id,
       :user_name      => display_name,

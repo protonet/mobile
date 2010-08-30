@@ -1,4 +1,48 @@
-protonet.controls.UserWidget = (function() {
+//= require "../ui/resizer.js"
+
+protonet.controls.UserWidget = function() {
+  this.container = $("#user-widget");
+  this.list = this.container.find("ul");
+  this.resizer = this.container.find(".resizer");
+  
+  new protonet.ui.Resizer(this.list, this.resizer);
+  
+  this._observe();
+};
+
+protonet.controls.UserWidget.prototype = {
+  _observe: function() {
+    protonet.Notifications
+      .bind("user.added", function(e, data) {
+        
+      })
+      
+      .bind("user.typing", function() {
+        
+      })
+      
+      .bind("user.subscribed_channel", function(e, data) {
+        
+      })
+      
+      .bind("user.unsubscribed_channel", function(e, data) {
+        
+      })
+      
+      .bind("users.update_status", function(e, data) {
+        
+      })
+      
+      .bind("channels.update_subscriptions", function(e, data) {
+        
+      });
+  }
+  
+  
+};
+
+
+protonet.controls.UserWidgetOld = (function() {
   var REG_EXP_ID = /user-list-user-(.*)/,
       CONNECTION_CLASSES = {
         "web": "online"

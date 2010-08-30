@@ -1,0 +1,11 @@
+<% users = User.registered.all -%>
+<div id="user-widget">
+  <h3>Users <output class="count">(0/<%= users.size %>)</output></h3>
+  <ul>
+    <!-- tabindex="-1" ensures that the element is focusable via css -->
+    <% users.each do |user| -%>
+      <li tabindex="-1" data-user-id="<%= user.id %>" <%= 'class="myself typing"' if user.id == current_user.id %>><%=h user.display_name %></li>
+    <% end -%>
+  </ul>
+  <div class="resize"></div>
+</div>
