@@ -8,7 +8,7 @@ class NodeConnection < FlashConnection
   
   attr_accessor :network
   
-  def self.connect network
+  def self.connect(network)
     uri = URI.parse network.supernode
     
     EventMachine.next_tick do
@@ -20,8 +20,8 @@ class NodeConnection < FlashConnection
     end
   end
   
-  def initialize network
-    super()
+  def initialize(network)
+    super
     
     @network = network
   end
@@ -41,8 +41,9 @@ class NodeConnection < FlashConnection
   def unbind
     @network.coupled = false
     @network.save
+  end
   
-  def receive_json json
+  def receive_json(json)
     log "Received JSON: #{json.inspect}"
     
     if json['x_target'] == 'protonet.globals.communicationConsole.receiveMessage' then
@@ -64,8 +65,8 @@ class NodeConnection < FlashConnection
     end
   end
   
-  def bind_channel channel
-    bind 'channels', channel.uuid do |json|
+  def bind_channel(channel)
+    bind('channels', channel.uuid) do |json|
       if json['network_uuid'] == Network.find(1).uuid
         json['operation'] = 'tweet'
         send_json json
@@ -74,6 +75,12 @@ class NodeConnection < FlashConnection
     log "bound to #{channel.id}"
   end
 
-  def queue_id; "node-#{@network.key}"; end
-  def to_s; "node connection #{@network.key || 'uncoupled'}"; end
+  def queue_id
+    "node-#{@network.key}"
+  end
+  
+  def to_s 
+    "node connection #{@network.key || 'uncoupled'}"
+  end
+  
 end
