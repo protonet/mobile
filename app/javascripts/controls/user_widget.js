@@ -3,7 +3,7 @@
 protonet.controls.UserWidget = function() {
   this.container = $("#user-widget");
   this.list = this.container.find("ul");
-  this.resizer = this.container.find(".resizer");
+  this.resizer = this.container.find(".resize");
   
   new protonet.ui.Resizer(this.list, this.resizer);
   
