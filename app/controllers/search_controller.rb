@@ -10,11 +10,11 @@ class SearchController < ApplicationController
           search_channel_ids = current_user.verified_channels.map{|c| c.id}
 
           if search_term.present?
-            @search_results = Tweet.search do
-              if channel_id = params[:channel_id] && search_channel_ids.include?(channel_id.to_i)
-                search_channel_ids = [channel_id]
-              end
+            if (channel_id = params[:channel_id]) && search_channel_ids.include?(channel_id.to_i)
+              search_channel_ids = [channel_id.to_i]
+            end
 
+            @search_results = Tweet.search do
               with(:channel_ids, search_channel_ids)
               keywords(search_term, :highlight => true)
               order_by(:created_at, :desc)
