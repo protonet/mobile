@@ -1,0 +1,20 @@
+#!/bin/bash
+
+export CURRENT_PATH=$1
+export SHARED=$CURRENT_PATH/..
+export HOME=$CURRENT_PATH/../..
+shift 1
+. $HOME/../.bashrc
+. $HOME/../.profile
+cd $CURRENT_PATH
+case $1 in
+   start)
+      monit -c $SHARED/system/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid
+      ;;
+    stop)  
+      monit -c $SHARED/system/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid quit
+      ;;
+    *)  
+      echo "usage: app_monit rails-app-path {start|stop}" ;;
+esac
+exit 0
