@@ -56,10 +56,13 @@ class ClientConnection < FlashServer
           send_work_request(data)
         
         when 'test'
-          log 'Got a test: ' + data.inspect
+          log "Pulling channel list off #{data['supernode']}"
+          network = Network.new :supernode => data['supernode']
+          channels = network.get_channels
+          
           send_json :x_target => 'protonet.Notifications.triggerFromSocket',
                     :trigger  => 'network.fetch_channels',
-                    :channels => Channel.all
+                    :channels => channels
         
         when 'tweet'
           channel = Channel.find_by_uuid(data['channel_uuid']) if data.has_key? 'channel_uuid'

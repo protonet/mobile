@@ -28,8 +28,18 @@ class Network < ActiveRecord::Base
     
   end
   
+  # TODO: abstract into doRequest (for authing)
   def get_channels
+    uri = URI.parse supernode
     
+    Net::HTTP.start(uri.host, uri.port) do |http|
+      req = Net::HTTP::Get.new '/networks/1/join'
+      req.basic_auth uri.user, uri.password if uri.userinfo
+      response = http.request(req)
+      
+      response = JSON.parse(response.body)
+      response['channels']
+    end
   end
 
   def generate_uuid
