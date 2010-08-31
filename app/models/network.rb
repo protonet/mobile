@@ -14,8 +14,7 @@ class Network < ActiveRecord::Base
   end
   
   def couple
-    response = Net::HTTP.get(URI.parse("#{supernode}/networks/1/join"))
-    response = JSON.parse(response)
+    response = do_get '/networks/1/join'
     self.key = response['key']
     channels = response['channels']
     channels.each do |channel|
@@ -28,17 +27,20 @@ class Network < ActiveRecord::Base
     
   end
   
-  # TODO: abstract into doRequest (for authing)
   def get_channels
+    do_get('/networks/1/channels')['channels'] # remote URL needs to be better somehow
+  end
+  
+  # Only use to GET JSON data.
+  def do_get path
     uri = URI.parse supernode
     
     Net::HTTP.start(uri.host, uri.port) do |http|
-      req = Net::HTTP::Get.new '/networks/1/join'
+      req = Net::HTTP::Get.new path
       req.basic_auth uri.user, uri.password if uri.userinfo
       response = http.request(req)
       
-      response = JSON.parse(response.body)
-      response['channels']
+      JSON.parse response.body
     end
   end
 

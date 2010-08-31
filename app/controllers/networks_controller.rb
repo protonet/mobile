@@ -42,25 +42,22 @@ class NetworksController < ApplicationController
   end
 
   # externally available
+  def channels
+    render :json => {:channels => Channel.global.all}
+  end
+
   def join
     # clients must send a keepalive join otherwise we drop the connection
     # question if we store the nodes domain name does it mean a dns lookup which
     # could potentially lockup the rails application?
     key = ActiveSupport::SecureRandom.base64(10)
     # Node.new(:name => request.remote_ip, :type => 'edge', :key => key).save
-    render :json => {:channels => Channel.public.all, :key => key}
+    render :json => {:channels => Channel.global.all, :key => key}
   end
 
   def leave
     node = Node.find_by_name request.remote_ip
     node.delete if node
     head :ok
-  end
-
-
-  def connect
-    network = Network.first
-    Net::HTTP.get_print network.supernode, '/networks/join'
-    redirect_to networks_url
   end
 end
