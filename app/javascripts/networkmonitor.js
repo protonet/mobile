@@ -19,6 +19,16 @@ var ourInterval;
   key:null
 */
 
+/*
+function asyncupdate() {
+  console.log("async update");
+  NetworkGraph.updateFromAsyncInfo({
+    "20":{name:"new1"},
+    "21":{name:"new2"}
+  });  
+}
+*/
+
 $(function() {
   if ($("network-monitor")) {
     // make graph and render it
@@ -28,6 +38,7 @@ $(function() {
       NetworkGraph.updateFromAsyncInfo(msg.online_users);
     }.bind(this));
     ourInterval = setInterval("NetworkGraph.render()", 100);
+    //setTimeout("asyncupdate()", 2000);
   }
 });
 
