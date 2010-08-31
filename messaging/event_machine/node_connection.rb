@@ -21,7 +21,7 @@ class NodeConnection < FlashConnection
   end
   
   def initialize(network)
-    super
+    super()
     
     @network = network
   end
