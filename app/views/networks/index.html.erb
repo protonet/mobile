@@ -12,18 +12,17 @@
   <ul>
     <%- @networks.each do |n| -%>
       <li id="network-<%= n.id %>">
-        <%= "#{n.name}" %>
-        <% unless n.local? %>
+        <%= n.name %>
+        <%- unless n.local? -%>
           <span class="control"><%= link_to('OFF', {:action => (n.coupled? ? 'decouple' : 'couple'), :network_id => n.id}, :class => n.coupled? ? 'on' : 'off') %></span>
-        <% end %>
-
+        <%- end -%>
       </li>
     <%- end -%>
   </ul>
   <%= link_to 'add a network', "#", :class => "create", :rel => "create" %>
   
   <div id="create" class="create section hidden">
-    <%- form_for :network, :url => networks_path, :action => 'post' do |f| -%>
+    <%- form_for :network, :url => networks_path, :action => 'post', :html => { :id => "new-network-form" } do |f| -%>
       <fieldset>
         <%= f.text_field :name, { :title => 'Name of the network…' } %>
         <%= f.text_field :description, { :title => 'Description of the network…' } %>

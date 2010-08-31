@@ -21,7 +21,7 @@ module RabbitMQ
 
   def publish topic, key, data
     key = key.join('.') if key.is_a? Array
-    log "Publishing rabbitmq packet to #{key}"
+    log "Publishing rabbitmq packet to #{topic}.#{key}"
     amq.topic(topic).publish data.to_json, :key => "#{topic}.#{key}"
   end
   

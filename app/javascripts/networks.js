@@ -17,11 +17,6 @@ $(function() {
 $(function() {
   $("#network li").click(function(event){
     networkId = this.id.match(/network-(.*)/)[1];
-    $.getJSON("/networks/"+networkId+"/map", 
-      function(data){
-        
-      }
-    );
     $("#network-details").load("/networks/" + networkId);
     $("#network li.clicked").toggleClass("clicked");
     $(this).toggleClass("clicked");
@@ -45,10 +40,34 @@ $(function() {
     });
     return false;
   });
+  
+  $('#new-network-form').submit(function(event){
+    protonet.globals.dispatcher.sendJSON({
+      "operation": "test",
+      "name": $("#network_name").attr("value"),
+      "description": $("#network_description").attr("value"),
+      "supernode": $("#network_supernode").attr("value")
+    })
+    
+    $("#network-details").html("Loading channel list...");
+    $("#create").slideUp("medium");
+    
+    event.stopPropagation();
+    event.preventDefault();
+  })
+  
+  protonet.Notifications.bind('network.fetch_channels', function(e, msg) {
+    var html = "<h3>Please select channels to couple from remote node.</h3>";
+    html += "<ul id='channel-picker'>";
+    
+    var chans = msg.channels;
+    for (var i=0; i<chans.length; i++) {
+      var chan = chans[i];
+      
+      html += "<li><input type='checkbox' id='channel_" + chan.uuid + "' name='channel_uuid' value='" + chan.uuid + "' />";
+      html += "<label for='channel_" + chan.uuid + "'>" + chan.name + "</label></li>";
+    }
+    
+    $("#network-details").html(html + "</ul>");
+  });
 });
-
-$(function() {
-  $("#network li:first").click()
-});
-
-

@@ -113,7 +113,7 @@ protonet.dispatching.DispatchingSystem.prototype = {
         break;
       default:
         console.log('default handling: ' + message.x_target + '(message)');
-        eval(message.x_target + '(message)');
+        eval(message.x_target + '(message)'); // TODO: don't eval :(
     }
   },
 
@@ -123,6 +123,11 @@ protonet.dispatching.DispatchingSystem.prototype = {
       data = data + "\0";
     }
     this.socket.sendData(data);
+  },
+
+  "sendJSON": function(data) {
+    // console.log('Trying to send: ' + JSON.stringify(data));
+    this.socket.sendData(JSON.stringify(data) + "\0");
   },
 
   "test": function(args) {
