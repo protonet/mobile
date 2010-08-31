@@ -6,13 +6,13 @@ require File.dirname(__FILE__) + '/modules/rabbitmq.rb'
 class NodeConnection < FlashConnection
   include RabbitMQ
   
-  attr_accessor :network
+  attr_accessor :network, :tracker
   
-  def self.connect(network)
+  def self.connect(network, tracker)
     uri = URI.parse network.supernode
     
     EventMachine.next_tick do
-      conn = EventMachine.connect uri.host, 5000, NodeConnection, network
+      conn = EventMachine.connect uri.host, 5000, NodeConnection, network, tracker
       
       EventMachine.add_periodic_timer 30 do
         conn.send_json :operation => 'ping'
@@ -20,27 +20,30 @@ class NodeConnection < FlashConnection
     end
   end
   
-  def initialize(network)
+  def initialize(network, tracker)
     super()
     
     @network = network
+    @tracker = tracker
   end
   
   def post_init
-    log "connected to remote network ##{@network.uuid}"
+    log "connected to remote network #{@network.uuid}"
     
     Channel.global.each do |chan|
       bind_channel chan
     end
     
-    send_json :operation => 'authenticate', :payload => {:type => 'node', :node_uuid => Network.find(1).uuid}
+    # TODO: do stuff with the real UUIDs
+    send_json :operation => 'authenticate', :payload => {:type => 'node', :node_uuid => 2}
+    #send_json :operation => 'authenticate', :payload => {:type => 'node', :node_uuid => Network.find(1).uuid}
   rescue => ex
     p ex, ex.backtrace
   end
   
   def unbind
-    @network.coupled = false
-    @network.save
+    #@network.coupled = false
+    #@network.save
   end
   
   def receive_json(json)
@@ -62,6 +65,15 @@ class NodeConnection < FlashConnection
         :channels => [channel]
       
       publish 'channels', json['channel_uuid'], json
+      
+    elsif json['trigger'] == 'user.update_online_states' then
+      @tracker.update_remote_users json['online_users']
+      
+      # TODO: abstract this out
+      publish 'system', 'users',
+        :x_target => "protonet.Notifications.triggerFromSocket",
+        :online_users => @tracker.global_users,
+        :trigger => 'user.update_online_states'
     end
   end
   
@@ -78,9 +90,7 @@ class NodeConnection < FlashConnection
   def queue_id
     "node-#{@network.key}"
   end
-  
   def to_s 
     "node connection #{@network.key || 'uncoupled'}"
   end
-  
 end

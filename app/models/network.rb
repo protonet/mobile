@@ -10,7 +10,7 @@ class Network < ActiveRecord::Base
   end
   
   def coupled?
-    false
+    coupled
   end
   
   def couple

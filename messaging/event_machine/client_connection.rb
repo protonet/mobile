@@ -137,7 +137,7 @@ class ClientConnection < FlashServer
   def refresh_users
     send_and_publish 'system', 'users',
       :x_target => "protonet.Notifications.triggerFromSocket",
-      :online_users => @tracker.online_users,
+      :online_users => @tracker.global_users,
       :trigger => 'user.update_online_states'
   end
   
