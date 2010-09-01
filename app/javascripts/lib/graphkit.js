@@ -244,12 +244,13 @@ Graph.prototype.deleteClientNodesExcluding = function(online_users) {
 };
 
 Graph.prototype.updateFromAsyncInfo = function(online_users) {
-
+/*
   online_users["11"] = {name:"client", supernode:null};
   online_users["12"] = {name:"mr.x", supernode:null};
   online_users["13"] = {name:"superman", supernode:null};
   online_users["14"] = {name:"superwoman", supernode:null};
   online_users["15"] = {name:"mrs.x", supernode:null};
+*/
 
   for (var key in online_users) {
     online_users[key].id = key;
@@ -258,28 +259,23 @@ Graph.prototype.updateFromAsyncInfo = function(online_users) {
   this.deleteClientNodesExcluding(online_users);
   
   //console.log(online_users.toSource());
-  // find local node (the one the clients are connected to)
-  var localnode;
+  
+  var by_uuid = {};
   for (var i = 0; i < this.nodes.length; i++) {
-    // WIE KANN ICH DEN LOKALEN KNOTEN ERKENNEN?
-    if (this.nodes[i].info.name == 'local')
-    //if (this.nodes[i].info.id == 1)
-      localnode = this.nodes[i];
+    by_uuid[this.nodes[i].info.uuid] = this.nodes[i];
   }
-  //console.log(localnode.toSource());
-  if (localnode) {
-    // add clients to node
-    for (var key in online_users) {
-      var info = online_users[key];
-      if (!this.nodeExists(info)) {
-        var node = new Node(this.getUniqueNodeNumber(), info);
-        this.addNode(node);
-        this.addEdge(new Edge(node, localnode), false);
-      }
+  
+  for (var key in online_users) {
+    var info = online_users[key];
+    var net_node = by_uuid[info['network_uuid']];
+    if (net_node && !this.nodeExists(info)) {
+      var node = new Node(this.getUniqueNodeNumber(), info);
+      this.addNode(node);
+      this.addEdge(new Edge(node, net_node), false);
     }
-    //this.log();
-    this.restart();
   }
+  //this.log();
+  this.restart();
 };
 
 Graph.prototype.calcOptimalSpringLength = function() {

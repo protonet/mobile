@@ -28,20 +28,22 @@ class Network < ActiveRecord::Base
   end
   
   def get_channels
-    do_get('/networks/1/channels')['channels'] # remote URL needs to be better somehow
+    do_get('/networks/1/join')['channels'] # remote URL needs to be better somehow
   end
   
   # Only use to GET JSON data.
   def do_get path
     uri = URI.parse supernode
+    json = nil
     
     Net::HTTP.start(uri.host, uri.port) do |http|
       req = Net::HTTP::Get.new path
       req.basic_auth uri.user, uri.password if uri.userinfo
       response = http.request(req)
       
-      JSON.parse response.body
+      json = JSON.parse response.body
     end
+    json
   end
 
   def generate_uuid
