@@ -8,8 +8,12 @@ class FlashConnection < EventMachine::Connection
   end
   
   def post_init
-    log "connected" # " to remote network ##{@network.id}"
-    #send_json :operation => 'authenticate', :payload => {:type => 'node', :node_uuid => 2}
+    log "connected"
+  end
+  
+  # JSON packets
+  def send_json json
+    send_data json.to_json + "\0"
   end
   
   def receive_json json
@@ -20,10 +24,18 @@ class FlashConnection < EventMachine::Connection
     end
   end
   
-  def send_json json
-    send_data json.to_json + "\0"
+  # Null-terminated lines
+  def send_line line
+    send_data line + "\0"
   end
   
+  def receive_line line
+    receive_json JSON.parse(line)
+  rescue JSON::ParserError
+    log "JSON parsing error"
+  end
+  
+  # Raw bytes
   def receive_data data
     @buffer += data
     
@@ -31,15 +43,12 @@ class FlashConnection < EventMachine::Connection
       packet = @buffer[0, @buffer.index("\0")]
       @buffer = @buffer[(@buffer.index("\0")+1)..-1]
       
-      begin
-        receive_json JSON.parse(packet)
-      rescue JSON::ParserError
-        log "JSON parsing error"
-      end
+      receive_line packet
     end
   rescue => ex
     p ex, ex.backtrace
   end
+
 
   def log text
     puts "#{self}: #{text}" # if $DEBUG
