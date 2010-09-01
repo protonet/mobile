@@ -36,7 +36,9 @@ protonet.timeline.Form = {
     /**
      * Add users to Autocompleter when loaded
      */
-    protonet.Notifications.bind("users.initialized", function(e, userNames) {
+    protonet.Notifications.bind("users.data_available", function(e, userData) {
+      var userNames = [];
+      $.each(userData, function(key, value) { userNames.push(value.name); });
       this.autoCompleter.addData(userNames, true);
     }.bind(this));
     

@@ -6,6 +6,7 @@
 //= require "../utils/heartify.js"
 //= require "../utils/codify.js"
 //= require "../utils/highlight_channel_replies.js"
+//= require "../utils/highlight_user_replies.js"
 //= require "../utils/template.js"
 //= require "../utils/parse_query_string.js"
 
@@ -67,6 +68,7 @@ protonet.timeline.Meep.prototype = {
       protonet.utils.smilify,
       protonet.utils.heartify,
       protonet.utils.highlightChannelReplies,
+      protonet.utils.highlightUserReplies,
       protonet.utils.autoLink,
       protonet.utils.nl2br,
       protonet.utils.autoLinkFilePaths
@@ -74,6 +76,7 @@ protonet.timeline.Meep.prototype = {
       message = method(message);
     });
     
+    this.userReplies = protonet.utils.highlightChannelReplies.result
     this.channelReplies = protonet.utils.highlightChannelReplies.result;
     
     return message;

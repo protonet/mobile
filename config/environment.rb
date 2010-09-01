@@ -9,6 +9,9 @@ require File.join(File.dirname(__FILE__), 'boot')
 # for app wide configurations
 require "configatron"
 
+configatron.log_event_notifications = false
+configatron.avoid_caching = false
+
 #  hack this needs to be removed
 require "#{RAILS_ROOT}/lib/rack_ext.rb" if defined?(Rack) && !defined?(PhusionPassenger)
 

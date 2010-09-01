@@ -4,6 +4,18 @@ protonet.controls.UserWidget = function() {
   this.container = $("#user-widget");
   this.list = this.container.find("ul");
   this.resizer = this.container.find(".resize");
+  this.userData = {};
+  
+  this.list.find("li").each(function(i, li) {
+    li = $(li);
+    this.userData[+li.attr("data-user-id")] = {
+      element: li,
+      name: li.text(),
+      isViewer: li.hasClass("myself")
+    };
+  }.bind(this));
+  
+  protonet.Notifications.trigger("users.data_available", this.userData);
   
   new protonet.ui.Resizer(this.list, this.resizer);
   
@@ -30,15 +42,53 @@ protonet.controls.UserWidget.prototype = {
       })
       
       .bind("users.update_status", function(e, data) {
-        
-      })
+        this.updateUsers(data.online_users);
+      }.bind(this))
       
       .bind("channels.update_subscriptions", function(e, data) {
         
       });
+  },
+  
+  /**
+   * Gets something like this:
+   *   {
+   *       "200": {
+   *           "name": "tiff",
+   *           "connections": [[408344, "web"], [147121, "web"]]
+   *       },
+   *       "306": {
+   *           "name": "stranger_number_66f9a8b65c",
+   *           "connections": [[691946, "web"]]
+   *       }
+   *   },
+   *
+   * Note: strangers will only be shown when they are online
+   *
+   * TODO: they are not visible in the user widget when initially rendered
+   *  which means that we have to insert them into the dom tree by ourselves
+   *  eg. by firing "user.added"
+   */
+  updateUsers: function(onlineUsers) {
+    for (var userId in this.userData) {
+      var user = this.userData[userId],
+          onlineUser = onlineUsers[userId];
+      
+      user.isOnline = !!onlineUser;
+      user.isOnline ? user.element.addClass("online") : user.element.removeClass("online");
+      
+      // TODO: add logic for when user is per via api connected, we need an icon herefore, btw.
+    }
+    
+    this.sortEntries();
+  },
+  
+  sortEntries: function() {
+    this.list
+      .find(".online").prependTo(this.list).end()
+      .find(".api").prependTo(this.list).end()
+      .find(".writing").prependTo(this.list).end();
   }
-  
-  
 };
 
 

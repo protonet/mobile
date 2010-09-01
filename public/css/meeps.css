@@ -171,9 +171,8 @@
 }
 
 /* Channel/User replies */
-.reply.channel {
-  background: rgba(72, 123, 255, 0.8);
-  color: #fff;
+.reply {
+  color: #fff !important;
   padding: 1px 4px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -181,8 +180,20 @@
   text-decoration: none;
 }
 
+.reply.channel {
+  background: rgba(72, 123, 255, 0.8);
+}
+
 .reply.channel:hover {
   background: rgba(72, 123, 255, 1);
+}
+
+.reply.user {
+  background: rgba(255, 140, 71, 0.8);
+}
+
+.reply.user:hover {
+  background: rgba(255, 140, 71, 1);
 }
 
 .reply-from-channel a {
