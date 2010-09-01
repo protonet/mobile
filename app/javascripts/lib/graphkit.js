@@ -398,6 +398,7 @@ function deg_to_rad(x) {
 }
 
 Graph.prototype.layout = function() {
+  //console.log(this.iters+" layout...");
   
   // determine amount of nodes (not clients!)
   var normal_nodes = new Array();
@@ -413,6 +414,7 @@ Graph.prototype.layout = function() {
     node.position.x = this.w / 2;
     node.position.y = this.h / 2;
     this.layout_clients();
+    this.iters = this.maxIterations + 1;
     return true;
   }
   
@@ -429,6 +431,7 @@ Graph.prototype.layout = function() {
       count++;
     }
     this.layout_clients();
+    this.iters = this.maxIterations + 1;
     return true;
   }
 
