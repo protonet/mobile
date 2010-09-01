@@ -5,6 +5,7 @@ class CreateNetworks < ActiveRecord::Migration
       t.string      :description
       t.string      :key
       t.string      :supernode
+      t.string      :uuid
       t.timestamps
     end
     
