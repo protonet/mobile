@@ -1,5 +1,19 @@
 <% javascript_tag do %>
   var networks = <%= Network.all.to_json %>;
 <% end %>
-<div id="network-monitor"></div>
+<div id="file-list">
+  <div id="network-monitor"></div>
+  <div style="height:20px">
+	  <div id="upload-controls">
+	    &nbsp;
+	  </div>
+	  <div id="folder-controls">
+	    <a href="/networks">go to detailed view</a>
+	  </div>
+	  <div class="clear"></div>
+  </div>
+</div>
+
+<%= render :partial => 'system/files/file_list_context_menu' %>
+
 

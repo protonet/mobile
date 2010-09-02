@@ -23,9 +23,12 @@ var ourInterval;
 function asyncupdate() {
   console.log("async update");
   NetworkGraph.updateFromAsyncInfo({
-    "20":{name:"new1"},
-    "21":{name:"new2"}
-  });  
+    "20":{name:"new"},
+    "21":{name:"abcd"},
+    "22":{name:"stranger"},
+    "23":{name:"abcdef"},
+    "24":{name:"abcdefg"}
+  });
 }
 */
 
@@ -37,7 +40,7 @@ $(function() {
     protonet.Notifications.bind('user.update_online_states', function(e, msg) {
       NetworkGraph.updateFromAsyncInfo(msg.online_users);
     }.bind(this));
-    ourInterval = setInterval("NetworkGraph.render()", 100);
+    ourInterval = setInterval("NetworkGraph.render()", 50);
     //setTimeout("asyncupdate()", 2000);
   }
 });

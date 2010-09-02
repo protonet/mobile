@@ -10,6 +10,7 @@
 //= require "controls/fluid.js"
 //= require "text_extensions/main.js"
 //= require "lib/jQuery.dPassword.js"
+//= require "networkmonitor.js"
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
 
