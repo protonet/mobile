@@ -51,95 +51,136 @@ Vertex.prototype.inverse = function() {
 };
 
 /* ------------------------------------------------- */
+/* ID Generator class */
+
+var IDGenerator = {
+  last: 0,
+  genId: function() {
+    this.last++;
+    return this.last;
+  }
+}
+
+/* ------------------------------------------------- */
 /* Graph Node class */
 
 var Node = function(number, info) {
-  this.number   = number;
-  this.info     = info;
+  if (info) {
+    this.number = number;
+    this.info   = info;
+  } else {
+    this.number = IDGenerator.genId();
+    this.info   = number;
+  }
+  
+  if (!this.info.type)
+    this.info.type = 'node';
+
   this.position = new Vertex(Math.random() * 10, Math.random() * 10);
   this.disp     = new Vertex(0, 0);
   this.mass     = 500.0;
   //console.log('create node '+this.toSource());
+  this.added = false;
 };
 
 Node.prototype.render = function(paper, small) {
-  var visual = paper.set();
+  if (!this.visual) {
+    // create the initial visual
+    this.paper  = paper;
+    this.visual = paper.set();
 
-  var is_small = small && this.info.type == 'client';
-
-  if (!is_small) {    
+    var is_small = small && (this.info.type == 'client' || this.info.type == 'node');
+    
     var name = this.info.name;
-    if (name.length > 10)
-      name = name.substr(0,5)+'...'+name.substr(name.length-7,5);
-  
-    var title = paper.text(this.position.x, this.position.y, name);
-    title.attr({fill: 'white', "font-size":11});
-    if (this.info.type == 'client') {
-      title.attr({'font-size':10});
+    //console.log(name);
+    var is_stranger = this.info.name.match(/^stranger/);
+    if (!is_small) {
+      if (name.length > 10)
+        name = name.substr(0,5)+'...'+name.substr(name.length-7,5);
+
+      if (is_stranger)
+        name = '?';
+
+      var title = this.paper.text(this.position.x, this.position.y, name);
+      title.attr({fill: 'white', "font-size":11});
+      if (this.info.type == 'client') {
+        title.attr({'font-size':10});
+      }
+      if (is_stranger)
+        title.attr({fill: "grey"});
+      this.visual.push(title);
     }
-    visual.push(title);
-  }
-  
-  var bb = (!is_small ? title.getBBox() : {x:0,y:0,width:20,height:20});
-  var w = bb.width + 16;
-  var h = bb.height + 12;
-  var box;
-  var borderradius = (this.info.type == 'client' ? h/2 : 5);
-  if (is_small)
-    box = paper.circle(this.position.x, this.position.y, 10);
-  else
-    box = paper.rect(this.position.x - (w / 2), this.position.y - (h / 2), w, h, borderradius);
-  
-  var colors = {
-    node:      {normal:"#ff7400", hover:"#ff9640"},
-    supernode: {normal:"#f00", hover:"#ff4040"},
-    client:    {normal:"#cd0074", hover:"#e6399b"}
-  };
 
-  box.attr({
-    fill: $(colors).attr(this.info.type).normal,
-    stroke: "white",
-    opacity: 1,
-    "stroke-width": 3
-  });
-  box.n = this;
-  visual.push(box);
-  
-  // on mouse drauf Farbe aendern
-  box.mouseover(function() {
-    this.attr({fill: $(colors).attr(this.n.info.type).hover});
-  });
-  box.mouseout(function() {
-    this.attr({fill: $(colors).attr(this.n.info.type).normal});
-  });
+    var bb = (!is_small ? title.getBBox() : {x:0, y:0, width:6, height:4});
+    var w = bb.width + 16;
+    var h = bb.height + 12;
+    var box;
+    var borderradius = (this.info.type == 'client' ? h/2 : 5);
+    if (is_small && this.info.type == 'client') {
+      box = this.paper.circle(this.position.x, this.position.y, 5);
+    } else {
+      box = this.paper.rect(this.position.x - (w / 2), this.position.y - (h / 2), w, h, borderradius);
+    }
 
-  if (!is_small) {
-    title.n = this;
-    title.b = box;
-    title.mouseover(function() {
-      this.b.attr({fill: $(colors).attr(this.b.n.info.type).hover});
+    var colors = {
+      node:      {normal:"#ff7400", hover:"#ff9640"},
+      supernode: {normal:"#f00", hover:"#ff4040"},
+      client:    {normal:"#cd0074", hover:"#e6399b"}
+    };
+
+    box.attr({
+      fill: $(colors).attr(this.info.type).normal,
+      //stroke: "white",
+      opacity: 1,
+      "stroke-width": 0 //(is_small ? 1 : 3)
     });
-    title.mouseout(function() {
-      this.b.attr({fill: $(colors).attr(this.b.n.info.type).normal});
+    if (is_stranger)
+      box.attr({fill: "white", stroke: "grey", "stroke-width": 1});
+
+    box.n = this;
+    this.visual.push(box);
+
+    // on mouse drauf Farbe aendern
+    box.mouseover(function() {
+      this.attr({fill: $(colors).attr(this.n.info.type).hover});
     });
-  
-    title.toFront(); 
+    box.mouseout(function() {
+      this.attr({fill: $(colors).attr(this.n.info.type).normal});
+    });
+
+    if (!is_small) {
+      title.n = this;
+      title.b = box;
+      title.mouseover(function() {
+        this.b.attr({fill: $(colors).attr(this.b.n.info.type).hover});
+      });
+      title.mouseout(function() {
+        this.b.attr({fill: $(colors).attr(this.b.n.info.type).normal});
+      });
+
+      title.toFront();
+    }
   }
-  
+   
   // rotate if client
   if (this.info.type == 'client') {
     // move visual so that it does not overlap local-node
     // vector from local-node to this client-node
     var dir  = this.position.diff(this.info.nodepos);
-    var diff = dir.scale(visual.getBBox().width / 2 - 6);
-    visual.translate(diff.x, diff.y);
+    var diff = dir.scale(this.visual.getBBox().width / 2 - 6);
+    this.visual.translate(diff.x, diff.y);
 
     //visual.rotate(this.info.angle, );
-    visual.rotate(this.info.angle, false);
+    //console.log("rotate "+this.info.angle);
+    this.visual.rotate(this.info.angle, false);
   }
+
+  // update the position of the visual
+  var bb = this.visual.getBBox();
+  this.visual.translate(-bb.x + this.position.x - bb.width/2, -bb.y + this.position.y - bb.height/2);
   
-  return visual;
-}
+  return this.visual;
+};
 
 /* ------------------------------------------------- */
 /* Graph Edge class */
@@ -147,17 +188,37 @@ Node.prototype.render = function(paper, small) {
 var Edge = function(fromNode, toNode) {
   this.fromNode = fromNode;
   this.toNode = toNode;
+  this.added = false;
 };
 
 Edge.prototype.render = function(paper) {
-  var line = paper.path(
-     "M" + this.fromNode.position.x + "," + this.fromNode.position.y + 
+  if (!this.visual) {
+    this.paper = paper;
+    this.visual = this.paper.path("M0,0 L1,1");
+    this.visual.attr("fill", "blue");
+    this.visual.attr("stroke", "#666");
+    if (this.fromNode.info.type != 'client' && this.toNode.info.type != 'client')
+      this.visual.attr("stroke-width", 2);
+  }
+  this.visual.attr("path",
+    "M" + this.fromNode.position.x + "," + this.fromNode.position.y + 
     " L" + this.toNode.position.x   + "," + this.toNode.position.y);
-  line.attr("fill", "blue");
-  line.attr("stroke", "#666");
-  if (this.fromNode.info.type != 'client' && this.toNode.info.type != 'client')
-    line.attr("stroke-width", 2);
-  return line;  
+  
+  this.visual.toBack();
+  return this.visual;
+}
+
+/* ------------------------------------------------- */
+
+function calcOptimalSpringLength(area, num_nodes, is_small) {
+  return (Math.sqrt(area / num_nodes) * (is_small ? 3.5 : 5.0));
+};
+
+function rad_to_deg(x) {
+  return (180.0 / 3.1415 * x);
+}
+function deg_to_rad(x) {
+  return (3.1415 * x / 180.0);
 }
 
 /* ------------------------------------------------- */
@@ -166,6 +227,8 @@ Edge.prototype.render = function(paper) {
 var Graph = function(target_id, maxIterations, small) {
   this.nodes = new Array();
   this.edges = new Array();
+  
+  this.queue = new Array();
 
   this.small = small; // true for a more compact design
 
@@ -178,7 +241,7 @@ var Graph = function(target_id, maxIterations, small) {
 
   this.temperature = this.w * 100.0;
   this.area = this.w * this.h;
-  this.optimalSpringLength = Math.sqrt(this.area / this.nodes.length) * 5;
+  this.optimalSpringLength = calcOptimalSpringLength(this.area, this.nodes.length, this.small);
   
   this.highestNodeNumber = 0;
 };
@@ -251,13 +314,13 @@ Graph.prototype.updateFromAsyncInfo = function(online_users) {
   online_users["14"] = {name:"superwoman", supernode:null};
   online_users["15"] = {name:"mrs.x", supernode:null};
 */
+  //console.time("timing async");
 
   for (var key in online_users) {
     online_users[key].id = key;
     online_users[key].type = 'client';
   }
   this.deleteClientNodesExcluding(online_users);
-  
   //console.log(online_users.toSource());
   
   var by_uuid = {};
@@ -268,18 +331,18 @@ Graph.prototype.updateFromAsyncInfo = function(online_users) {
   for (var key in online_users) {
     var info = online_users[key];
     var net_node = by_uuid[info['network_uuid']];
-    if (net_node && !this.nodeExists(info)) {
+    //console.time("timing async2");
+    if (net_node /* && !this.nodeExists(info) */) {
       var node = new Node(this.getUniqueNodeNumber(), info);
-      this.addNode(node);
-      this.addEdge(new Edge(node, net_node), false);
+      var edge = new Edge(node, net_node);
+      this.queue.push(node);
+      this.queue.push(edge);
     }
+    //console.timeEnd("timing async2");
   }
   //this.log();
   this.restart();
-};
-
-Graph.prototype.calcOptimalSpringLength = function() {
-  return (Math.sqrt(this.area / this.nodes.length) * 5.0);
+  //console.timeEnd("timing async");
 };
 
 Graph.prototype.restart = function() {
@@ -291,15 +354,16 @@ Graph.prototype.addNode = function(node) {
   // check if node has not been added before
   for (var i = 0; i < this.nodes.length; i++) {
     if (this.nodes[i].number == node.number)
-      return false;
+      return node;
   }
   this.nodes.push(node);
   
   if (node.number > this.highestNodeNumber)
     this.highestNodeNumber = node.number;
     
-  this.optimalSpringLength = this.calcOptimalSpringLength();
-  return true;
+  this.optimalSpringLength = calcOptimalSpringLength(this.area, this.nodes.length, this.small);
+
+  return node;
 };
 
 Graph.prototype.addEdge = function(edge, dublicateOk) {
@@ -320,21 +384,105 @@ Graph.prototype.edgeExists = function(fromNode, toNode) {
   return false;
 };
 
-Graph.prototype.initFromNetworksInfo = function(networks) {
+Graph.prototype.testOneNode = function() {
+  this.addNode(new Node(1, {name:"one",type:"supernode"}));
+  return true;
+}
 
-  // test with one node
-  //this.addNode(new Node(1, {name:"one"}));
-  //return true;
-
-  // test with two nodes
-  /*
-  var n1 = new Node(1, {name:"one"});
-  var n2 = new Node(2, {name:"two"});
-  this.addNode(n1);
-  this.addNode(n2);
+Graph.prototype.testTwoNodes = function() {
+  var n1 = this.addNode(new Node({name:"one",type:'supernode'}));
+  var n2 = this.addNode(new Node({name:"two"}));
   this.addEdge(new Edge(n1, n2));
   return true;
-  */
+}
+
+Graph.prototype.testThreeNodes = function() {
+  var n1 = this.addNode(new Node({name:"one",type:'supernode'}));
+  var n2 = this.addNode(new Node({name:"stranger"}));
+  var n3 = this.addNode(new Node({name:"three"}));
+  this.addEdge(new Edge(n1, n2));
+  this.addEdge(new Edge(n1, n3));
+  return true;
+}
+
+Graph.prototype.testFourNodes = function() {
+  var n1 = this.addNode(new Node({name:"one",type:'supernode'}));
+  var n2 = this.addNode(new Node({name:"stranger"}));
+  var n3 = this.addNode(new Node({name:"three"}));
+  var n4 = this.addNode(new Node({name:"four"}));
+  this.addEdge(new Edge(n1, n2));
+  this.addEdge(new Edge(n1, n3));
+  this.addEdge(new Edge(n1, n4));
+  this.addEdge(new Edge(n2, n3));
+  return true;
+}
+
+Graph.prototype.testFiveNodes = function() {
+  var n1 = this.addNode(new Node({name:"one",type:'supernode'}));
+  var n2 = this.addNode(new Node({name:"stranger"}));
+  var n3 = this.addNode(new Node({name:"three"}));
+  var n4 = this.addNode(new Node({name:"four"}));
+  var n5 = this.addNode(new Node({name:"five"}));
+  this.addEdge(new Edge(n1, n2));
+  this.addEdge(new Edge(n1, n3));
+  this.addEdge(new Edge(n1, n4));
+  this.addEdge(new Edge(n2, n3));
+  this.addEdge(new Edge(n2, n5));
+  return true;
+}
+
+Graph.prototype.testSixNodes = function() {
+  var n1 = this.addNode(new Node({name:"one",type:'supernode'}));
+  var n2 = this.addNode(new Node({name:"stranger"}));
+  var n3 = this.addNode(new Node({name:"three"}));
+  var n4 = this.addNode(new Node({name:"four"}));
+  var n5 = this.addNode(new Node({name:"five"}));
+  var n6 = this.addNode(new Node({name:"six"}));
+  this.addEdge(new Edge(n1, n2));
+  this.addEdge(new Edge(n1, n3));
+  this.addEdge(new Edge(n1, n4));
+  this.addEdge(new Edge(n2, n3));
+  this.addEdge(new Edge(n2, n5));
+  this.addEdge(new Edge(n5, n6));
+  return true;
+}
+
+// 6 nodes around a central one
+// connected in a ring and to the central one
+Graph.prototype.testComplex01 = function() {
+  var n1 = this.addNode(new Node({name:"one",type:'supernode'}));
+  var n2 = this.addNode(new Node({name:"stranger"}));
+  var n3 = this.addNode(new Node({name:"three"}));
+  var n4 = this.addNode(new Node({name:"four"}));
+  var n5 = this.addNode(new Node({name:"five"}));
+  var n6 = this.addNode(new Node({name:"six"}));
+  var n7 = this.addNode(new Node({name:"seven"}));
+  // ring
+  this.addEdge(new Edge(n2, n3));
+  this.addEdge(new Edge(n3, n4));
+  this.addEdge(new Edge(n4, n5));
+  this.addEdge(new Edge(n5, n6));
+  this.addEdge(new Edge(n6, n7));
+  this.addEdge(new Edge(n7, n2));
+  // connection to center
+  this.addEdge(new Edge(n1, n2));
+  this.addEdge(new Edge(n1, n3));
+  this.addEdge(new Edge(n1, n4));
+  this.addEdge(new Edge(n1, n5));
+  this.addEdge(new Edge(n1, n6));
+  this.addEdge(new Edge(n1, n7));
+  return true;
+}
+
+Graph.prototype.initFromNetworksInfo = function(networks) {
+
+  //return this.testOneNode();
+  //return this.testTwoNodes();
+  //return this.testThreeNodes();
+  //return this.testFourNodes();
+  //return this.testFiveNodes();
+  //return this.testSixNodes();
+  //return this.testComplex01();
   
   var nodes = new Array();
   for (var i = 0; i < networks.length; i++) {
@@ -375,7 +523,7 @@ Graph.prototype.log = function() {
 }
 
 Graph.prototype.cool = function() {
-  this.temperature = this.temperature - 0.8; /* linear */
+  this.temperature = this.temperature - 0.5; /* linear */
 }
 
 Graph.prototype.min = function(v) {
@@ -390,16 +538,31 @@ Graph.prototype.force_repulse = function(x) {
   return (this.optimalSpringLength * this.optimalSpringLength) / x;
 }
 
-function rad_to_deg(x) {
-  return (180.0 / 3.1415 * x);
+Graph.prototype.numConnectedClients = function(node) {
+  var n = 0;
+  for (var e = 0; e < this.edges.length; e++) {
+    var edge = this.edges[e];
+    var u = edge.fromNode;
+    var v = edge.toNode;
+    if ((u.number == node.number && v.info.type == 'client') ||
+        (v.number == node.number && u.info.type == 'client'))
+      n++;
+  }
+  return n;
 }
-function deg_to_rad(x) {
-  return (3.1415 * x / 180.0);
+
+Graph.prototype.processQueue = function() {
+  if (this.queue.length) {
+    this.addNode(this.queue.shift());
+    this.addEdge(this.queue.shift(), false);
+    this.restart();
+  }
 }
 
 Graph.prototype.layout = function() {
   //console.log(this.iters+" layout...");
-  
+  //console.time("timing layout");
+
   // determine amount of nodes (not clients!)
   var normal_nodes = new Array();
   for (var n = 0; n < this.nodes.length; n++) {
@@ -437,29 +600,32 @@ Graph.prototype.layout = function() {
 
   var delta_t = 1000.0 / 50.0; // starts 50 times within 1000 ms
   
-  //console.log("-----");
   if (this.temperature > 0.0)
   {
-    this.paper.clear();
-    
     // calculate repulsive forces
     for (var n = 0; n < this.nodes.length; n++) {
       var node = this.nodes[n];
-      node.disp = new Vertex(0, 0);
-      for (var m = 0; m < this.nodes.length; m++) {
-        var otherNode = this.nodes[m];
-        if (node.number != otherNode.number) {
+      if (node.info.type != 'client') {
+        node.disp = new Vertex(0, 0);
+        for (var m = 0; m < this.nodes.length; m++) {
+          var otherNode = this.nodes[m];
+          if (node.number != otherNode.number &&
+              otherNode.info.type != 'client') {
 
-          var delta = node.position.diff( otherNode.position );
-          if (delta.len() == 0) delta = new Vertex(0.1,0.1);
-          var d = delta.len();
+            var delta = node.position.diff( otherNode.position );
+            if (delta.len() == 0) delta = new Vertex(0.1,0.1);
+            var d = delta.len();
     
-          node.disp = 
-            node.disp.sum(
-              delta.quot(d).prod( 
-                this.force_repulse(d * node.mass)
-              )
-            );
+            // the node gains mass when it "carries" a bunch of clients (it needs more space)
+            var mass = node.mass / ((this.numConnectedClients(node) + 1) * 2.5);
+    
+            node.disp = 
+              node.disp.sum(
+                delta.quot(d).prod( 
+                  this.force_repulse(d * mass)
+                )
+              );
+          }
         }
       }
     }
@@ -469,29 +635,37 @@ Graph.prototype.layout = function() {
       var edge = this.edges[e];
       var u = edge.fromNode;
       var v = edge.toNode;
+      
+      if (u.info.type != 'client' && v.info.type != 'client') {
+        var delta = v.position.diff(u.position);
+        if (delta.len() == 0) delta = new Vertex(0.1,0.1);
+        var d = delta.len();
 
-      var delta = v.position.diff(u.position);
-      if (delta.len() == 0) delta = new Vertex(0.1,0.1);
-      var d = delta.len();
-    
-      v.disp =
-        v.disp.diff(
-          delta.quot(d).prod(
-            this.force_attract(d)
-          )
-        );
+        var rand = new Vertex(Math.random(), Math.random());
 
-      u.disp = 
-        u.disp.sum(
-          delta.quot(d).prod(
-            this.force_attract(d)
-          )
-        );  
+        v.disp =
+          v.disp.diff(
+            delta.quot(d).prod(
+              this.force_attract(d)
+            )
+          );
+
+        u.disp = 
+          u.disp.sum(
+            delta.quot(d).prod(
+              this.force_attract(d)
+            )
+          );
+      }
     }
-
+    
+    // apply forces
     for (var n = 0; n < this.nodes.length; n++) {
       var node = this.nodes[n];
       if (node.info.type != 'client') {
+        var optLen = calcOptimalSpringLength(this.area, this.nodes.length) / 3.0;
+        node.disp = node.disp.scale(node.disp.len() > optLen ? optLen : node.disp.len());
+        
         node.position = 
           node.position.sum(
             node.disp.quot(node.disp.len()).prod(
@@ -500,10 +674,10 @@ Graph.prototype.layout = function() {
           );
         
         // don't let them escape the canvas
-        if (node.position.x < 0)      node.position.x = this.w / 2;
-        if (node.position.x > this.w) node.position.x = this.w / 2;
-        if (node.position.y < 0)      node.position.y = this.h / 2;
-        if (node.position.y > this.h) node.position.y = this.h / 2;
+        if (node.position.x < 10) node.position.x = 10;
+        if (node.position.x > this.w - 10) node.position.x = this.w - 10;
+        if (node.position.y < 10) node.position.y = 10;
+        if (node.position.y > this.h - 10) node.position.y = this.h - 10;
       
         /*
         if (isNaN(node.position.x) || Math.abs(node.position.x) == Infinity) 
@@ -517,21 +691,7 @@ Graph.prototype.layout = function() {
     this.layout_clients();
     this.cool();
   }
-
-  // check: no nodes should be placed at the same position!
-  for (var n = 0; n < this.nodes.length; n++) {
-    var node = this.nodes[n];
-    for (var m = 0; m < this.nodes.length; m++) {
-      var otherNode = this.nodes[m];
-      if (node.number != otherNode.number) {  
-        if (Math.floor(node.position.x) == Math.floor(otherNode.position.x) &&
-          Math.floor(node.position.y) == Math.floor(otherNode.position.y)) {
-        
-          otherNode.position.x += Math.random(10);
-        }
-      }
-    }
-  }; 
+  //console.timeEnd("timing layout");
   return true; 
 };
 
@@ -558,7 +718,7 @@ Graph.prototype.layout_clients = function() {
       
       // position clients circular around node
       if (clients.length > 0) {
-        var radius = (this.small ? 5.0 : 10.0) + (clients.length * 5.0);
+        var radius = (this.small ? 5.0 : 30.0) + (clients.length * (this.small ? 4.0 : 5.0));
         var angle  = 360.0 / clients.length;
         //console.log(angle);
         for (var c = 0; c < clients.length; c++) {
@@ -574,27 +734,39 @@ Graph.prototype.layout_clients = function() {
 };
 
 Graph.prototype.render = function() {
+  //console.time("timing render");
+
+  this.processQueue();
+
   if (this.iters > this.maxIterations)
     return false;
   this.iters++;
-  
+
   if (this.layout()) {
-    this.paper.clear();
-    var group = this.paper.set();
+    if (!this.visual)
+      this.visual = this.paper.set();
+    
     // draw edges
     for (var i = 0; i < this.edges.length; i++) {
-      group.push(this.edges[i].render(this.paper));
+      var visual = this.edges[i].render(this.paper);
+      if (this.edges[i].added == false) {
+        this.visual.push(visual);
+        this.edges[i].added = true;
+      }
     }
     // draw nodes
     for (var i = 0; i < this.nodes.length; i++) {
-      group.push(this.nodes[i].render(this.paper, this.small));
+      var visual = this.nodes[i].render(this.paper, this.small);
+      if (this.nodes[i].added == false) {
+        this.visual.push(visual);
+        this.nodes[i].added = true;
+      }
     }
+
     // center graph to canvas
-    var bbox = group.getBBox();  
-    group.translate(-bbox.x, -bbox.y);
-    group.translate(
-      (this.w - bbox.width) / 2.0,
-      (this.h - bbox.height) / 2.0);
+    var bb = this.visual.getBBox();
+    this.visual.translate(-bb.x + (this.w - bb.width) / 2.0, -bb.y + (this.h - bb.height) / 2.0);
   }
+  //console.timeEnd("timing render");
 };
 
