@@ -91,7 +91,7 @@ if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FR
      :ping_command  => lambda { TCPSocket.new('localhost', configatron.socket.port) },
      :pid_file      => 'tmp/pids/js_dispatching_server.rb.pid',
      :log_file      => 'log/js_dispatching.log',
-     :timeout       => 25
+     :timeout       => 45
   )
   js_dispatching_server.start unless js_dispatching_server.running?
 
@@ -128,9 +128,7 @@ if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FR
   configatron.sunspot_active = solr_server.running?
   puts "SUNSPOT/SOLR:   #{configatron.sunspot_active ? "#{colored_on}" : colored_off}"
 
-  configatron.ldap.active = begin
-    false
-  end
+  configatron.ldap.active = false
   puts "LDAP:           #{configatron.ldap.active ? colored_on : colored_off}"
   puts "                        "
   puts "------------------------"

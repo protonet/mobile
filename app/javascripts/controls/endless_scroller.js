@@ -36,7 +36,7 @@ protonet.controls.EndlessScroller = (function() {
     },
     
     loadNotReceivedTweets: function() {
-      var channels = $("#feed-viewer ul");
+      var channels = $(".feed-viewer ul");
       channels.each(function(i, channel){
         channel = $(channel);
         var firstTweet = channel.children("li:first-child");
