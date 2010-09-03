@@ -43,3 +43,27 @@ span.highlight {
   padding:3px;
   font-size: 16px;
 }
+
+.search-border {
+  margin-left: 200px;
+  border: 1px solid #b3b3b3;
+  width: 300px;
+  height: 1px;
+  background-color: #b3b3b3;
+}
+
+.pos-num {
+  margin: 0 0 10px 100px;
+  font-size: 14px;
+  display: block;
+  border: 2px solid #b3b3b3;
+  width: 20px;
+  text-align: center;
+  padding: 3px;
+}
+
+.more-tweets {
+  margin: 0 0 10px 450px;
+  font-size: 11px;
+  display: block;
+}

@@ -1,10 +1,9 @@
 class SearchController < ApplicationController
+  before_filter :load_channels
+
   def index
     respond_to do |format|
-      format.html do
-        @channels = current_user.verified_channels
-      end
-
+      format.html {}
       format.js do
         if search_term = params[:search_term]
           search_channel_ids = current_user.verified_channels.map{|c| c.id}
@@ -33,6 +32,38 @@ class SearchController < ApplicationController
         end
       end
     end
+  end
+
+  def more_tweets
+    respond_to do |format|
+      format.js do
+        @search_results = true
+        channel = Channel.find(params[:channel_id])
+        channel = nil if !@channels.map(&:id).include?(channel.id)
+        tweet = channel.tweets.find params[:tweet_id]
+        later = params[:later].to_i
+        earlier = params[:earlier].to_i
+        channel_id = channel.id
+        tweets = tweet.from_minutes_after(later,channel_id) + [tweet] + tweet.from_minutes_before(earlier,channel_id)
+    #     highlights = hit.highlights(:message)
+    #   if highlights && !highlights.empty?
+    #     tweet.message = highlights.first.format { |phrase| search_highligh_tag(phrase) }
+    #   end
+        render :partial => 'search/search_result',
+          :locals => {
+            :tweet    => tweet,
+            :tweets    => tweets,
+            :channel   => channel,
+            :pos       => params[:pos],
+            :more_time => later,
+            :less_time => earlier
+          }
+      end
+    end
+  end
+
+  def load_channels
+    @channels = current_user.verified_channels
   end
 end
 

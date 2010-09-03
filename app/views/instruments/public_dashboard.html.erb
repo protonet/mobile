@@ -25,8 +25,8 @@
 
   <%= render :partial => 'channels/channel_selector', :locals => {:channels => @channels, :active_channel => @active_channel} %>
 
-  <div id="feed-viewer">
-    <div id="feed-holder" style="width:<%= @channels.size * 613 %>px; left: <%= @channels.index(@active_channel) * -613 %>px;">
+  <div class="feed-viewer">
+    <div class="feed-holder" style="width:<%= @channels.size * 613 %>px; left: <%= @channels.index(@active_channel) * -613 %>px;">
       <% @channels.each do |c| %>
         <%= render :partial => '/tweets/tweet_list', :locals => {:tweets => c.tweets.recent.all(:limit => 25, :include => [:avatar]), :channel => c} %>
       <% end %>

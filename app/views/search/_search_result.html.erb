@@ -1,0 +1,11 @@
+<div id="feed-viewer-<%= tweet.id %>" class="feed-viewer">
+  <span class="pos-num"><%= pos%></span>
+  <span class="more-tweets"><%= link_to("#{minutes_to_words(more_time + 10)} Later", more_tweets_path(tweet.id,channel.id,more_time + 10,less_time,pos)) %></span>
+  <div class="feed-holder" style="width:613px;">
+
+  <%= render :partial => '/tweets/tweet_list',
+    :locals => { :tweets => tweets, :channel => channel} %>
+  </div>
+  <span class="more-tweets"><%= link_to("#{minutes_to_words(less_time + 10)} Earlier", more_tweets_path(tweet.id,channel.id,more_time,less_time + 10,pos)) %></span>
+  <hr class="search-border">&nbsp;</div>
+</div>

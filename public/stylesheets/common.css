@@ -560,7 +560,7 @@ h2 {
 }
 /* =FEEDVIEWER (OUTER)
 --------------------------------------------------------------------------- */
-#feed-viewer {
+.feed-viewer {
   width: 613px;
   position: relative;
   clear: both;
@@ -569,7 +569,7 @@ h2 {
 
 /* =FEEDVIEWER (INNER)
 --------------------------------------------------------------------------- */
-#feed-holder {
+.feed-holder {
   position: relative;
 }
 

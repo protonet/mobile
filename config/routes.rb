@@ -34,6 +34,8 @@ ActionController::Routing::Routes.draw do |map|
   map.signup '/signup', :controller => 'users', :action => 'new'
 
   map.search '/search.:format', :controller => 'search', :action => 'index'
+  map.more_tweets '/more_tweets/:tweet_id/:channel_id/:later/:earlier/:pos.:format',
+    :controller => 'search', :action => 'more_tweets'
 
   map.destroy_channel 'channels/:id/destroy', :controller => 'channels', :action => 'destroy'
 
