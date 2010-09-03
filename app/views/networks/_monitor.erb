@@ -1,9 +1,9 @@
 <% javascript_tag do %>
   var networks = <%= Network.all.to_json %>;
 <% end %>
-<div>
+<div id="network-wrap">
   <div id="network-monitor"></div>
-  <div style="height:20px">
+  <div id="network-links">
     <a href="/networks">go to detailed view</a>
   </div>
 </div>
