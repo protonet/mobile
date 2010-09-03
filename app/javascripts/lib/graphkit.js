@@ -274,7 +274,9 @@ Graph.prototype.deleteEdgesAtNode = function(node) {
     var from = this.edges[e].fromNode;
     var to   = this.edges[e].toNode;
     if (from.number != node.number && to.number != node.number)
-      edges.push(this.edges[n]);
+      edges.push(this.edges[e]);
+    else
+      this.edges[e].visual.remove();
   }
   this.edges = edges; 
 };
@@ -284,6 +286,8 @@ Graph.prototype.deleteNode = function(node) {
   for (var n = 0; n < this.nodes.length; n++) {
     if (this.nodes[n].number != node.number)
       nodes.push(this.nodes[n]);
+    else
+      this.nodes[n].visual.remove();
   }
   this.nodes = nodes;
 };
@@ -307,6 +311,8 @@ Graph.prototype.deleteClientNodesExcluding = function(online_users) {
 };
 
 Graph.prototype.updateFromAsyncInfo = function(online_users) {
+  return 1; // for now async update does too much harm...
+  
 /*
   online_users["11"] = {name:"client", supernode:null};
   online_users["12"] = {name:"mr.x", supernode:null};
@@ -320,17 +326,18 @@ Graph.prototype.updateFromAsyncInfo = function(online_users) {
     online_users[key].id = key;
     online_users[key].type = 'client';
   }
-  this.deleteClientNodesExcluding(online_users);
+  //this.deleteClientNodesExcluding(online_users);
   //console.log(online_users.toSource());
   
   var by_uuid = {};
   for (var i = 0; i < this.nodes.length; i++) {
-    by_uuid[this.nodes[i].info.uuid] = this.nodes[i];
+    by_uuid[this.nodes[i].info.id] = this.nodes[i];
   }
   
+  this.log();
   for (var key in online_users) {
     var info = online_users[key];
-    var net_node = by_uuid[info['network_uuid']];
+    var net_node = by_uuid["1"]; //by_uuid[info['network_uuid']];
     //console.time("timing async2");
     if (net_node /* && !this.nodeExists(info) */) {
       var node = new Node(this.getUniqueNodeNumber(), info);
@@ -484,6 +491,8 @@ Graph.prototype.initFromNetworksInfo = function(networks) {
   //return this.testSixNodes();
   //return this.testComplex01();
   
+  //console.log(networks.toSource());
+  
   var nodes = new Array();
   for (var i = 0; i < networks.length; i++) {
     if (networks[i].supernode)
@@ -508,6 +517,7 @@ Graph.prototype.log = function() {
   for (var i = 0; i < this.nodes.length; i++) {
     var node = this.nodes[i];
     nodes.push([
+      node.number,
       Math.round(node.position.x)+"/"+Math.round(node.position.y)
     ]);
   }
