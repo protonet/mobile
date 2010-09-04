@@ -55,14 +55,94 @@ class ClientConnection < FlashServer
         when 'work'
           send_work_request(data)
         
-        when 'test'
+        when 'network.probe'
           log "Pulling channel list off #{data['supernode']}"
           network = Network.new :supernode => data['supernode']
+          
+          send_json :x_target  => 'protonet.Notifications.triggerFromSocket',
+                    :trigger   => 'network.probe',
+                    :supernode => data['supernode'],
+                    :channels  => network.get_channels
+        
+        when 'network.create'
+          log "Coupling with #{data['supernode']}"
+          
+          network = Network.new :name => data['name'],
+                                :description => data['description'],
+                                :supernode => data['supernode']
+          
+          send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
+                    :trigger     => 'network.creating',
+                    :message     => 'Probing remote nodes for UUIDs...'
+          
+          network.uuid = network.do_get("/networks", false).match(/"uuid":"([^"]+)"/).captures[0]
+          
+          #~ send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
+                    #~ :trigger     => 'network.creating',
+                    #~ :message     => 'Getting auth token from remote node...'
+          #~ 
+          #~ # TODO: Don't do this.
+          #~ auth_token = network.do_get('/networks', false).match(/type="hidden" value="([^"]+)" \/>/).captures[0]
+          #~ p auth_token
+          
+          send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
+                    :trigger     => 'network.creating',
+                    :message     => 'Creating entry for local node on remote node...'
+          
+          local = Network.find 1
+          #~ res = network.do_post '/networks', {
+            #~ 'network[uuid]' => local.uuid,
+            #~ 'network[name]' => local.name,
+            #~ 'network[description]' => local.description,
+            #~ 'network[supernode]' => 'http://home.danopia.net:3000/',
+            #~ 'authenticity_token' => auth_token}, false
+          res = network.do_get "/networks/create/1?network[uuid]=#{local.uuid}&network[name]=#{local.name}&network[description]=#{local.description}&network[supernode]=http://home.danopia.net:3000/", false
+          p res
+          
+          send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
+                    :trigger     => 'network.creating',
+                    :message     => 'Creating local entry for remote node...'
+          
+          network.save
+          
+          send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
+                    :trigger     => 'network.creating',
+                    :message     => 'Getting remote channel list...'
+
           channels = network.get_channels
           
-          send_json :x_target => 'protonet.Notifications.triggerFromSocket',
-                    :trigger  => 'network.fetch_channels',
-                    :channels => channels
+          send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
+                    :trigger     => 'network.creating',
+                    :message     => 'Importing channels...'
+          
+          uuids = data['channels']
+          channels.each do |chan|
+            next unless uuids.include? chan['uuid']
+            
+            send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
+                      :trigger     => 'network.creating',
+                      :message     => 'Importing channel: ' + chan['name']
+            
+            Channel.create :name => chan['name'],
+              :description => chan['description'],
+              :uuid => chan['uuid'],
+              :flags => chan['flags'],
+              :created_at => chan['created_at'],
+              :updated_at => chan['updated_at'],
+              :owner_id => 0,
+              :network_id => network.id
+          end
+          
+          send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
+                    :trigger     => 'network.creating',
+                    :message     => 'Done.'
+          
+          send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
+                    :trigger     => 'network.create',
+                    :name        => data['name'],
+                    :description => data['description'],
+                    :supernode   => data['supernode'],
+                    :channels    => channels
         
         when 'tweet'
           channel = Channel.find_by_uuid(data['channel_uuid']) if data.has_key? 'channel_uuid'

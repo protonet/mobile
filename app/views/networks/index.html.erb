@@ -3,7 +3,7 @@
   var networks = <%= @networks.to_json %>;
 <% end %>
 <div id="network" style="float:left;">
-  <form id="network-search" action="/network/search">
+  <form id="network-search" action="/network/search" method="post">
     <fieldset>
       <input type="text" value="<%= params[:description] %>" name="description" title="search for networks ..."/>
     </fieldset>

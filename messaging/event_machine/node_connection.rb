@@ -8,6 +8,14 @@ class NodeConnection < FlashConnection
   
   attr_accessor :network, :tracker
   
+  def self.negotiate(network, tracker)
+    EventMachine.defer proc {
+      # res = network.do_get "/networks/"
+    }, proc {
+      connect network, tracker
+    }
+  end
+  
   def self.connect(network, tracker)
     uri = URI.parse network.supernode
     

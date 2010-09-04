@@ -43,9 +43,7 @@ $(function() {
   
   $('#new-network-form').submit(function(event){
     protonet.globals.dispatcher.sendJSON({
-      "operation": "test",
-      "name": $("#network_name").attr("value"),
-      "description": $("#network_description").attr("value"),
+      "operation": "network.probe",
       "supernode": $("#network_supernode").attr("value")
     })
     
@@ -56,8 +54,9 @@ $(function() {
     event.preventDefault();
   })
   
-  protonet.Notifications.bind('network.fetch_channels', function(e, msg) {
+  protonet.Notifications.bind('network.probe', function(e, msg) {
     var html = "<h3>Please select channels to couple from remote node.</h3>";
+    html += "<form id='create-network-form'>";
     html += "<ul id='channel-picker'>";
     
     var chans = msg.channels;
@@ -68,6 +67,31 @@ $(function() {
       html += "<label for='channel_" + chan.uuid + "'>" + chan.name + "</label></li>";
     }
     
-    $("#network-details").html(html + "</ul>");
+    html += "</ul><input type='submit' value='Couple' /></form>";
+    form = $("#network-details").html(html).find('#create-network-form');
+    
+    form.submit(function(event){
+      var uuids = new Array();
+      $("input:checkbox[name=channel_uuid]:checked").each(
+        function(){ uuids.push(this.value); }
+      );
+      
+      protonet.globals.dispatcher.sendJSON({
+        "operation": "network.create",
+        "name": $("#network_name").attr("value"),
+        "description": $("#network_description").attr("value"),
+        "supernode": $("#network_supernode").attr("value"),
+        "channels": uuids
+      })
+      
+      $("#network-details").html("Waiting for local node...");
+      
+      event.stopPropagation();
+      event.preventDefault();
+    });
+  });
+  
+  protonet.Notifications.bind('network.creating', function(e, msg) {
+    $("#network-details").html(msg.message);
   });
 });

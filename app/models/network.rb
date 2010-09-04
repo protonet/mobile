@@ -3,7 +3,7 @@ class Network < ActiveRecord::Base
   has_many :tweets
   
   validates_uniqueness_of :uuid
-  after_create  :generate_uuid,   :if => lambda {|c| c.uuid.blank? }
+  after_create  :generate_uuid, :if => lambda {|c| c.uuid.blank? && local? }
   
   def local?
     id == 1
@@ -32,18 +32,29 @@ class Network < ActiveRecord::Base
   end
   
   # Only use to GET JSON data.
-  def do_get path
+  def do_get path, json=true
+    do_http Net::HTTP::Get, path, json
+  end
+  
+  # Only use to POST forms (and return JSON data).
+  def do_post path, data, json=true
+    do_http Net::HTTP::Post, path, json do |req|
+      req.set_form_data data
+    end
+  end
+  
+  # Only use to POST forms (and return JSON data).
+  def do_http klass, path, json=true, &blk
     uri = URI.parse supernode
-    json = nil
     
     Net::HTTP.start(uri.host, uri.port) do |http|
-      req = Net::HTTP::Get.new path
+      req = klass.new path
       req.basic_auth uri.user, uri.password if uri.userinfo
+      blk.call req if blk
       response = http.request(req)
       
-      json = JSON.parse response.body
+      json ? JSON.parse(response.body) : response.body
     end
-    json
   end
 
   def generate_uuid
