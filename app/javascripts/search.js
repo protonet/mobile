@@ -20,11 +20,9 @@ $(document).ready(function(){
     event.preventDefault();
     var container = $(this).parents(".feed-viewer");
     $.get(
-      event.target.href + '.js',
+      $(this).attr("href") + '.js',
       {},
-      function(data) {
-        container.html(data);
-      }
+      function(data) { container.html(data); }
     );
   });
 
