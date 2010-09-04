@@ -1,21 +1,23 @@
 //= require "../ui/resizer.js"
+//= require "../lib/jquery-ui-1.8.4.highlight-effect.min.js"
 
 protonet.controls.UserWidget = function() {
   this.container = $("#user-widget");
   this.list = this.container.find("ul");
   this.resizer = this.container.find(".resize");
-  this.userData = {};
+  this.onlineUsersCount = this.container.find("output.count");
+  this.usersData = {};
   
   this.list.find("li").each(function(i, li) {
     li = $(li);
-    this.userData[+li.attr("data-user-id")] = {
+    this.usersData[+li.attr("data-user-id")] = {
       element: li,
       name: li.text(),
       isViewer: li.hasClass("myself")
     };
   }.bind(this));
   
-  protonet.Notifications.trigger("users.data_available", this.userData);
+  protonet.Notifications.trigger("users.data_available", this.usersData);
   
   new protonet.ui.Resizer(this.list, this.resizer);
   
@@ -68,26 +70,47 @@ protonet.controls.UserWidget.prototype = {
    * TODO: they are not visible in the user widget when initially rendered
    *  which means that we have to insert them into the dom tree by ourselves
    *  eg. by firing "user.added"
+   *
+   * TODO: add logic for when user is per via api connected, we need an icon here for, btw.
    */
   updateUsers: function(onlineUsers) {
-    for (var userId in this.userData) {
-      var user = this.userData[userId],
+    for (var userId in this.usersData) {
+      var user = this.usersData[userId],
           onlineUser = onlineUsers[userId];
       
+      var hasBeenOnlineBefore = user.isOnline !== false;
       user.isOnline = !!onlineUser;
-      user.isOnline ? user.element.addClass("online") : user.element.removeClass("online");
+      if (user.isOnline && !hasBeenOnlineBefore) {
+        user.element
+          .addClass("new-online")
+          .css("backgroundColor", "#ffff99")
+          .animate({ "backgroundColor": "#ffffff" }, { duration: 1000 });
+      }
       
-      // TODO: add logic for when user is per via api connected, we need an icon herefore, btw.
+      user.isOnline ? user.element.addClass("online") : user.element.removeClass("online");
     }
-    
     this.sortEntries();
+    this.updateCount();
   },
   
   sortEntries: function() {
-    this.list
-      .find(".online").prependTo(this.list).end()
-      .find(".api").prependTo(this.list).end()
-      .find(".writing").prependTo(this.list).end();
+    this.list.find(".api").prependTo(this.list);
+    this.list.find(".online").prependTo(this.list);
+    this.list.find(".new-online").removeClass("new-online").prependTo(this.list);
+    this.list.find(".typing").prependTo(this.list);
+  },
+  
+  updateCount: function() {
+    var total = 0,
+        online = 0;
+    for (var i in this.usersData) {
+      total++;
+      if (this.usersData[i].isOnline) {
+        online++;
+      }
+    }
+    
+    this.onlineUsersCount.text("(" + online + "/" + total + ")");
   }
 };
 

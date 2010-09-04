@@ -20,7 +20,8 @@
 }
 
 #user-widget li {
-  background: url(../img/spr_user_status.png) no-repeat;
+  background-image: url(../img/spr_user_status.png);
+  background-repeat: no-repeat;
   padding-left: 26px;
   line-height: 22px;
   margin: 0 0 1px;

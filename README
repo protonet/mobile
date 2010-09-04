@@ -67,7 +67,7 @@ sudo rabbitmq-server
 
 == NODE.JS
 
-Install node.js by downloading it from http://nodejs.org/#download (>= 0.1.90)
+Install node.js by downloading it from http://nodejs.org/#download (>= 0.1.100)
 then extract it and execute:
 
 ./configure
