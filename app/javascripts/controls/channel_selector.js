@@ -3,8 +3,8 @@
 protonet.controls.ChannelSelector = function() {
   this.channelInput   = $("#message_channel_id");
   this.container      = $("#channel");
-  this.feedHolder     = $("#feed-holder");
-  this.feedViewer     = $("#feed-viewer");
+  this.feedHolder     = $(".feed-holder");
+  this.feedViewer     = $(".feed-viewer");
   this.channelWidth   = this.feedHolder.find("ul:first").outerWidth(true);
   
   this.channelsDowncaseMapping = {};
