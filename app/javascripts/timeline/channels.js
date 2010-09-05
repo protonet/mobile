@@ -115,12 +115,10 @@ protonet.timeline.Channels = {
     }
   },
   
-  getChannelName: function(id) {
-    var i = this.data.length;
-    while(i--) {
-      var channelData = this.data[i];
-      if (channelData.id == id) {
-        return channelData.name;
+  getChannelName: function(channelId) {
+    for (var channelName in this.availableChannels) {
+      if (this.availableChannels[channelName] == channelId) {
+        return channelName;
       }
     }
   }
