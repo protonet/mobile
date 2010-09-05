@@ -13,18 +13,23 @@ class Network < ActiveRecord::Base
     coupled
   end
   
-  def couple
-    fields = {:key => self.key}
+  def negotiate post=true
+    return do_get '/networks/negotiate.json' unless post
     
+    fields = {:key => self.key}
+  
     # stupid rails
     self.attributes.each_pair do |key, val|
       fields["network[#{key}]"] = val
     end
     
     res = do_post '/networks/negotiate.json', fields
-    
-    self.key = res['key']
-    self.save
+    update_attributes :key => res['key'] # saves
+    res
+  end
+  
+  def couple
+    negotiate
     
     System::MessagingBus.topic('networks').publish({
       :network_id => self.id,

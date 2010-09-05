@@ -91,7 +91,13 @@ $(function() {
     });
   });
   
+  // network creation in progress
   protonet.Notifications.bind('network.creating', function(e, msg) {
     $("#network-details").html(msg.message);
+  });
+  
+  // network creation complete
+  protonet.Notifications.bind('network.create', function(e, msg) {
+    $("#network-details").load("/networks/" + msg.id);
   });
 });

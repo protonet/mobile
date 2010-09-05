@@ -14,6 +14,7 @@ EventMachine::run do
   port = configatron.socket.port rescue 5000
   
   tracker = ClientTracker.new
+  NodeConnection.tracker = tracker
   
   EventMachine.epoll if RUBY_PLATFORM =~ /linux/ #sky is the limit
   EventMachine::start_server host, port, ClientConnection, tracker
@@ -22,6 +23,6 @@ EventMachine::run do
   puts $$
   
   Network.all(:conditions => {:coupled => true}).each do |network|
-    NodeConnection.connect network, tracker
+    NodeConnection.negotiate network, tracker
   end
 end

@@ -27,20 +27,30 @@ class ClientConnection < FlashServer
         @subscribed = true # don't resubscribe
         bind_socket_to_system_queue
         
-        if node? # special handling if you're a node
-          @queues ||= []
-          Channel.public.each do |channel|
-            bind_channel(channel)
-            bind_files_for_channel(channel)
-            log("subscribing to channel #{channel.id}")
-          end
-        else # and you're a user for the rest of the cases
+        if !node? # normal handling if you're not a node
           bind_socket_to_user_queues
           add_to_online_users
           send_channel_subscriptions
+          
+        elsif data['channels'] # List of certain channels?
+          data['channels'].each do |uuid|
+            channel = Channel.find_by_uuid uuid
+            
+            bind_channel(channel)
+            bind_files_for_channel(channel)
+            log("subscribing to channel #{channel.uuid}")
+          end
+          
+        else # No list. Auto-subscribe to all global channels
+          log 'subscribing to all global channels'
+          Channel.global.each do |channel|
+            bind_channel(channel)
+            bind_files_for_channel(channel)
+            log("subscribing to channel #{channel.uuid}")
+          end
         end
       else
-        send_reload_request
+        send_reload_request # invalid auth
       end
       
     elsif (@user || node?) && data.is_a?(Hash)
@@ -73,31 +83,9 @@ class ClientConnection < FlashServer
           
           send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
                     :trigger     => 'network.creating',
-                    :message     => 'Probing remote nodes for UUIDs...'
+                    :message     => 'Probing remote node...'
           
-          network.uuid = network.do_get("/networks", false).match(/"uuid":"([^"]+)"/).captures[0]
-          
-          #~ send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
-                    #~ :trigger     => 'network.creating',
-                    #~ :message     => 'Getting auth token from remote node...'
-          #~ 
-          #~ # TODO: Don't do this.
-          #~ auth_token = network.do_get('/networks', false).match(/type="hidden" value="([^"]+)" \/>/).captures[0]
-          #~ p auth_token
-          
-          send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
-                    :trigger     => 'network.creating',
-                    :message     => 'Creating entry for local node on remote node...'
-          
-          local = Network.find 1
-          #~ res = network.do_post '/networks', {
-            #~ 'network[uuid]' => local.uuid,
-            #~ 'network[name]' => local.name,
-            #~ 'network[description]' => local.description,
-            #~ 'network[supernode]' => 'http://home.danopia.net:3000/',
-            #~ 'authenticity_token' => auth_token}, false
-          res = network.do_get "/networks/create/1?network[uuid]=#{local.uuid}&network[name]=#{local.name}&network[description]=#{local.description}&network[supernode]=http://home.danopia.net:3000/", false
-          p res
+          info = network.negotiate
           
           send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
                     :trigger     => 'network.creating',
@@ -107,17 +95,10 @@ class ClientConnection < FlashServer
           
           send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
                     :trigger     => 'network.creating',
-                    :message     => 'Getting remote channel list...'
-
-          channels = network.get_channels
-          
-          send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
-                    :trigger     => 'network.creating',
                     :message     => 'Importing channels...'
           
-          uuids = data['channels']
-          channels.each do |chan|
-            next unless uuids.include? chan['uuid']
+          data['channels'].each do |uuid|
+            chan = info['channels'][uuid]
             
             send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
                       :trigger     => 'network.creating',
@@ -125,24 +106,24 @@ class ClientConnection < FlashServer
             
             Channel.create :name => chan['name'],
               :description => chan['description'],
-              :uuid => chan['uuid'],
-              :flags => chan['flags'],
-              :created_at => chan['created_at'],
-              :updated_at => chan['updated_at'],
+              :uuid => uuid,
               :owner_id => 0,
               :network_id => network.id
           end
           
           send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
                     :trigger     => 'network.creating',
-                    :message     => 'Done.'
+                    :message     => 'Initiating persistant connection...'
+
+          NodeConnection.connect network, @tracker, res['config']['socket_server_host'], res['config']['socket_server_port']
           
           send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
                     :trigger     => 'network.create',
+                    :id          => network.id,
                     :name        => data['name'],
                     :description => data['description'],
                     :supernode   => data['supernode'],
-                    :channels    => channels
+                    :channels    => data['channels']
         
         when 'tweet'
           channel = Channel.find_by_uuid(data['channel_uuid']) if data.has_key? 'channel_uuid'
@@ -182,14 +163,23 @@ class ClientConnection < FlashServer
       return false if auth_data["user_id"] == 0
       potential_user = User.find(auth_data["user_id"]) rescue nil
       @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data["token"])
+      
       if @user
-        log("authenticated #{potential_user.display_name}")
+        log("authenticated #{@user.display_name}")
         send_json :x_target => 'socket_id', :socket_id => @key
       else
         log("could not authenticate #{auth_data.inspect}")
       end
-    elsif auth_data["node_uuid"]
-      @node = Network.find_by_uuid(auth_data["node_uuid"])
+    elsif auth_data['uuid']
+      potential_node = Network.find_by_uuid(auth_data['uuid']) rescue nil
+      @node = potential_node if potential_node && potential_node.key == auth_data['key']
+      
+      if @node
+        log("authenticated node #{@node.name}")
+        send_json :x_target => 'authenticate', :key => @key
+      else
+        log("could not authenticate node #{auth_data.inspect}")
+      end
     end
   end
   

@@ -3,34 +3,43 @@ require 'uri'
 require File.join(File.dirname(__FILE__), 'flash_connection')
 require File.dirname(__FILE__) + '/modules/rabbitmq.rb'
 
+# TODO: move the non-instance stuff out of this ugly mess
+
 class NodeConnection < FlashConnection
   include RabbitMQ
   
   class << self
     include RabbitMQ
-  end
+    
+    def log message
+      puts message
+    end
+    
+    def tracker= tracker
+      @tracker = tracker
   
-  EM.next_tick do
-    bind 'networks', 'couple' do |json|
-      p json
+      bind 'networks', 'couple' do |json|
+        connect Network.find(json['network_id']), @tracker, json['server_host'], json['server_port']
+      end
     end
   end
   
   attr_accessor :network, :tracker
   
   def self.negotiate(network, tracker)
-    EventMachine.defer proc {
-      # res = network.do_get "/networks/"
-    }, proc {
-      connect network, tracker
-    }
+    EventMachine.defer do
+      network.couple
+    end
   end
   
-  def self.connect(network, tracker)
+  def self.connect(network, tracker, host=nil, port=nil)
     uri = URI.parse network.supernode
     
+    host ||= uri.host
+    port ||= 5000
+    
     EventMachine.next_tick do
-      conn = EventMachine.connect uri.host, 5000, NodeConnection, network, tracker
+      conn = EventMachine.connect host, port, NodeConnection, network, tracker
       
       EventMachine.add_periodic_timer 30 do
         conn.send_json :operation => 'ping'
@@ -52,9 +61,10 @@ class NodeConnection < FlashConnection
       bind_channel chan
     end
     
-    # TODO: do stuff with the real UUIDs
-    send_json :operation => 'authenticate', :payload => {:type => 'node', :node_uuid => 2}
-    #send_json :operation => 'authenticate', :payload => {:type => 'node', :node_uuid => Network.find(1).uuid}
+    # TODO: :node_uuid => :uuid, and send :key
+    send_json :operation => 'authenticate',
+              :payload => {:type => 'node', :node_uuid => Network.find(1).uuid},
+              :channels => Channel.all(:conditions => {:network_id => @network.id}).map(&:uuid)
   rescue => ex
     p ex, ex.backtrace
   end
