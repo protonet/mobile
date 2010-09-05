@@ -14,7 +14,14 @@ class Network < ActiveRecord::Base
   end
   
   def couple
-    res = do_post '/networks/negotiate.json', :key => self.key, :network => self
+    fields = {:key => self.key}
+    
+    # stupid rails
+    self.attributes.each_pair do |key, val|
+      fields["network[#{key}]"] = val
+    end
+    
+    res = do_post '/networks/negotiate.json', fields
     
     self.key = res['key']
     self.save
@@ -33,7 +40,7 @@ class Network < ActiveRecord::Base
   end
   
   def generate_key
-    this.key = ActiveSupport::SecureRandom.base64 32
+    self.key = ActiveSupport::SecureRandom.base64 32
   end
 
   def generate_uuid
