@@ -10,11 +10,11 @@ module Rabbit
     
     queue = amq.queue "#{queue_id}.#{key}", :auto_delete => true
     queue.bind(amq.topic(topic), :key => key).subscribe do |packet|
-      log "Received rabbitmq packet from #{key}"
+      log "Received rabbitmq packet from #{key}" if $DEBUG==1
       begin
         handler.call JSON.parse(packet)
       rescue JSON::ParserError
-        log "JSON parsing error from rabbitmq packet"
+        log "JSON parsing error from rabbitmq packet" if $DEBUG==1
       end
     end
     
@@ -24,7 +24,7 @@ module Rabbit
 
   def publish topic, key, data
     key = key.join('.') if key.is_a? Array
-    log "Publishing rabbitmq packet to #{topic}.#{key}"
+    log "Publishing rabbitmq packet to #{topic}.#{key}" if $DEBUG==1
     amq.topic(topic).publish data.to_json, :key => "#{topic}.#{key}"
   end
   

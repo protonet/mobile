@@ -1,4 +1,5 @@
 class Tweet < ActiveRecord::Base
+  include Rabbit
 
   searchable do
     integer :channel_ids, :references => Channel, :multiple => true
@@ -23,7 +24,7 @@ class Tweet < ActiveRecord::Base
   def local?;  network_id == 1; end
   def remote?; network_id != 1; end
 
-  after_create :send_to_queue if Rails.env == 'production' || configatron.messaging_bus_active == true
+  after_create :send_to_queue if Rails.env == 'production' || configatron.messaging_bus_active
 
   def text_extension?
     !text_extension.blank?
@@ -31,13 +32,13 @@ class Tweet < ActiveRecord::Base
 
   def send_to_queue
     channels.each do |channel|
-      System::MessagingBus.topic('channels').publish(self.attributes.merge({
+      publish 'channels', channel.uuid, self.attributes.merge({
         :socket_id => socket_id,
         :channel_id => channel.id,
         :channel_uuid => channel.uuid,
         :user_icon_url => user.active_avatar_url,
         :network_uuid => network.uuid
-        }).to_json, :key => 'channels.' + channel.uuid)
+      })
     end
   end
 

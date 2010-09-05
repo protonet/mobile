@@ -2,6 +2,8 @@ require 'digest/sha1'
 require 'net/ldap' if configatron.ldap.single_authentication == true
 
 class User < ActiveRecord::Base
+  include Rabbit
+  
   include ::Authentication
   include ::Authentication::ByPassword
   include ::Authentication::ByCookieToken
@@ -151,15 +153,14 @@ class User < ActiveRecord::Base
   end
 
   def send_create_notification
-    unless stranger?
-      System::MessagingBus.topic('system').publish({
-        :trigger        => 'user.added',
-        :user_id        => id,
-        :user_name      => display_name,
-        :avatar_url     => active_avatar_url,
-        :x_target       => 'protonet.Notifications.triggerFromSocket'
-        }.to_json, :key => 'system.users.new')
-    end
+    return if stranger?
+    
+    publish 'system', ['users', 'new'],
+      :trigger        => 'user.added',
+      :user_id        => id,
+      :user_name      => display_name,
+      :avatar_url     => active_avatar_url,
+      :x_target       => 'protonet.Notifications.triggerFromSocket'
   end
 
   def subscribe(channel)
@@ -179,14 +180,13 @@ class User < ActiveRecord::Base
   end
 
   def send_channel_notification(channel, type)
-    System::MessagingBus.topic('channels').publish({
+    publish 'channels', channel.uuid,
       :trigger        => "channel.#{type}",
       :channel_id     => channel.id,
       :user_id        => id,
       :user_name      => display_name,
       :avatar_url     => active_avatar_url,
       :x_target       => 'protonet.Notifications.triggerFromSocket'
-      }.to_json, :key => "channels.#{channel.id}")
   end
 
   def password_required_with_logged_out_user?

@@ -1,6 +1,7 @@
 module System
   class FilesController < ApplicationController
-  
+    include Rabbit
+    
     def index
       @channels = current_user.verified_channels
       @active_channel = params[:channel_id] ? Channel.find(params[:channel_id]) : @channels.first
@@ -20,10 +21,12 @@ module System
         begin
           full_directory_path = "#{params["file_path"]}/#{params["directory_name"]}"
           FileUtils.mkdir(System::FileSystem.cleared_path(full_directory_path))
-          System::MessagingBus.topic('files').publish({
+          
+          channel = Channel.find(params[:channel_id])
+          publish 'files', ['channel', channel.uuid],
             :trigger        => 'directory.added',
             :path           => params["file_path"],
-            :directory_name => params["directory_name"]}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
+            :directory_name => params["directory_name"]
         rescue
           return head(409)
         else
@@ -38,10 +41,12 @@ module System
       if params[:directory_name]
         full_directory_path = "#{params["file_path"]}/#{params["directory_name"]}"
         FileUtils.rm_rf(System::FileSystem.cleared_path(full_directory_path))
-        System::MessagingBus.topic('files').publish({
+          
+        channel = Channel.find(params[:channel_id])
+        publish 'files', ['channel', channel.uuid],
           :trigger        => 'directory.removed',
           :path           => params["file_path"],
-          :directory_name => params["directory_name"]}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
+          :directory_name => params["directory_name"]
         return head(:ok)
       else
         return head(:error)
@@ -63,10 +68,12 @@ module System
         cleared_file_path = System::FileSystem.cleared_path("#{params["file_path"]}/#{filename}")
         target_file       = cleared_file_path
         FileUtils.mv(params[:file].path, target_file)
-        System::MessagingBus.topic('files').publish({
+          
+        channel = Channel.find(params[:channel_id])
+        publish 'files', ['channel', channel.uuid],
           :trigger      => 'file.added',
           :path         => params["file_path"],
-          :file_name     => filename}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
+          :file_name     => filename
         return head(:ok)
       else
         return head(:error)
@@ -87,10 +94,12 @@ module System
       if params[:file_name]
         full_path = "#{params["file_path"]}/#{params["file_name"]}"
         FileUtils.rm(System::FileSystem.cleared_path(full_path))
-        System::MessagingBus.topic('files').publish({
+          
+        channel = Channel.find(params[:channel_id])
+        publish 'files', ['channel', channel.uuid],
           :trigger      => 'file.removed',
           :path         => params["file_path"],
-          :file_name     => params["file_name"]}.to_json, :key => 'files.channel_' + params[:channel_id].to_s)
+          :file_name     => params["file_name"]
         return head(:ok)
       else
         return head(:error)

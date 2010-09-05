@@ -1,4 +1,6 @@
 class Network < ActiveRecord::Base
+  include Rabbit
+  
   has_many :channels
   has_many :tweets
   
@@ -19,7 +21,7 @@ class Network < ActiveRecord::Base
     fields = {:key => self.key}
   
     # stupid rails
-    self.attributes.each_pair do |key, val|
+    Network.find(1).attributes.each_pair do |key, val|
       fields["network[#{key}]"] = val
     end
     
@@ -31,17 +33,15 @@ class Network < ActiveRecord::Base
   def couple
     res = negotiate
     
-    System::MessagingBus.topic('networks').publish({
+    publish 'networks', 'couple',
       :network_id => self.id,
       :server_host => res['config']['socket_server_host'],
       :server_port => res['config']['socket_server_port']
-    }.to_json, :key => 'networks.couple')
   end
   
   def decouple
-    System::MessagingBus.topic('networks').publish({
+    publish 'networks', 'decouple',
       :network_id => self.id
-    }.to_json, :key => 'networks.decouple')
   end
   
   def generate_key
@@ -54,7 +54,7 @@ class Network < ActiveRecord::Base
   end
   
   def get_channels
-    do_get('/networks/negotiate.json')['channels'] # remote URL needs to be better somehow
+    do_get('/networks/negotiate.json')['channels']
   end
   
   # Only use to GET JSON data.
