@@ -17,12 +17,14 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources   :assets
 
+  map.negotiate_network 'networks/negotiate.:format', :controller => 'networks', :action => 'negotiate'
   map.resources   :networks do |networks|
-    networks.map      '/map',       :controller => 'networks', :action => 'map'
-    networks.couple   '/couple',    :controller => 'networks', :action => 'couple'
-    networks.decouple '/decouple',  :controller => 'networks', :action => 'decouple'
-    networks.join     '/join',    :controller => 'networks', :action => 'join'
-    networks.leave    '/leave',   :controller => 'networks', :action => 'leave'
+    networks.map      'map',       :controller => 'networks', :action => 'map'
+    networks.couple   'couple',    :controller => 'networks', :action => 'couple'
+    networks.decouple 'decouple',  :controller => 'networks', :action => 'decouple'
+    networks.join     'join',    :controller => 'networks', :action => 'join'
+    networks.leave    'leave',   :controller => 'networks', :action => 'leave'
+    
     networks.resources :channels
   end
 

@@ -3,7 +3,7 @@ class Network < ActiveRecord::Base
   has_many :tweets
   
   validates_uniqueness_of :uuid
-  after_create  :generate_uuid, :if => lambda {|c| c.uuid.blank? && local? }
+  after_create :generate_uuid, :if => lambda {|c| c.uuid.blank? && local? }
   
   def local?
     id == 1
@@ -14,21 +14,35 @@ class Network < ActiveRecord::Base
   end
   
   def couple
-    response = do_get '/networks/1/join'
-    self.key = response['key']
-    channels = response['channels']
-    channels.each do |channel|
-      Channel.new(channel.merge({:network_id => self.id, :owner_id => 0})).save
-    end
-    save
+    res = do_post '/networks/negotiate.json', :key => self.key, :network => self
+    
+    self.key = res['key']
+    self.save
+    
+    System::MessagingBus.topic('networks').publish({
+      :network_id => self.id,
+      :server_host => res['config']['socket_server_host'],
+      :server_port => res['config']['socket_server_port']
+    }.to_json, :key => 'networks.couple')
   end
   
   def decouple
-    
+    System::MessagingBus.topic('networks').publish({
+      :network_id => self.id
+    }.to_json, :key => 'networks.decouple')
+  end
+  
+  def generate_key
+    this.key = ActiveSupport::SecureRandom.base64 32
+  end
+
+  def generate_uuid
+    raise RuntimeError if uuid
+    self.update_attribute(:uuid, UUID.create.to_s)
   end
   
   def get_channels
-    do_get('/networks/1/join')['channels'] # remote URL needs to be better somehow
+    do_get('/networks/negotiate.json')['channels'] # remote URL needs to be better somehow
   end
   
   # Only use to GET JSON data.
@@ -56,10 +70,4 @@ class Network < ActiveRecord::Base
       json ? JSON.parse(response.body) : response.body
     end
   end
-
-  def generate_uuid
-    raise RuntimeError if uuid
-    self.update_attribute(:uuid, UUID.create.to_s)
-  end
-  
 end

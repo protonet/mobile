@@ -6,6 +6,16 @@ require File.dirname(__FILE__) + '/modules/rabbitmq.rb'
 class NodeConnection < FlashConnection
   include RabbitMQ
   
+  class << self
+    include RabbitMQ
+  end
+  
+  EM.next_tick do
+    bind 'networks', 'couple' do |json|
+      p json
+    end
+  end
+  
   attr_accessor :network, :tracker
   
   def self.negotiate(network, tracker)

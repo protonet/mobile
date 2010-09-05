@@ -28,4 +28,8 @@ module RabbitMQ
   def unbind_queues
     queues.each {|q| q.unsubscribe }
   end
+  
+  def queue_id
+    "#{self.class}-#{self.object_id}"
+  end
 end
