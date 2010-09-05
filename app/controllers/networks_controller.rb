@@ -79,7 +79,6 @@ class NetworksController < ApplicationController
       
       # Give the node a random key (for the socket server handshake)
       res[:key] = node.generate_key
-      
       node.save
     end
     
