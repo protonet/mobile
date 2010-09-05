@@ -1,9 +1,8 @@
 require File.dirname(__FILE__) + '/modules/flash_server.rb'
-require File.dirname(__FILE__) + '/modules/rabbitmq.rb'
 
 # awesome stuff happening here
 class ClientConnection < FlashServer
-  include RabbitMQ
+  include Rabbit
   
   attr_accessor :key, :type, :tracker, :queues
   

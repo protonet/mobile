@@ -1,4 +1,7 @@
-module RabbitMQ
+# Module to make using AMQ prettier
+# Author: Daniel Danopia
+
+module Rabbit
   def amq;    @amq ||= MQ.new; end
   def queues; @queues ||= [];  end
   

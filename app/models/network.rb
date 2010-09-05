@@ -29,7 +29,7 @@ class Network < ActiveRecord::Base
   end
   
   def couple
-    negotiate
+    res = negotiate
     
     System::MessagingBus.topic('networks').publish({
       :network_id => self.id,

@@ -1,15 +1,14 @@
 require 'uri'
 
 require File.join(File.dirname(__FILE__), 'flash_connection')
-require File.dirname(__FILE__) + '/modules/rabbitmq.rb'
 
 # TODO: move the non-instance stuff out of this ugly mess
 
 class NodeConnection < FlashConnection
-  include RabbitMQ
+  include Rabbit
   
   class << self
-    include RabbitMQ
+    include Rabbit
     
     def log message
       puts message
