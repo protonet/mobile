@@ -70,7 +70,7 @@ class NetworksController < ApplicationController
       if !node
         node = Network.new params[:network]
         res[:result] = 'created'
-      elsif node.key && node.key == params[:key]
+      elsif !node.key || node.key == params[:key]
         node.attributes = params[:network] # like update_attributes but doesn't save
         res[:result] = 'updated'
       else
