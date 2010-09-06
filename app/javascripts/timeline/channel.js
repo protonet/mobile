@@ -24,7 +24,8 @@ protonet.timeline.Channel = function(data, link) {
   this.$window      = $(window);
   this.latestMeep   = null;
   
-  this.unreadMeeps  = 0;
+  this.unreadReplies = 0;
+  this.unreadMeeps   = 0;
   
   this._observe();
 };
@@ -58,9 +59,10 @@ protonet.timeline.Channel.prototype = {
       
       // TODO: parsing the text_extension json should be done on the server side
       meepData.text_extension = meepData.text_extension && JSON.parse(meepData.text_extension);
-      this._renderMeep(meepData, this.channelList);
+      var instance = this._renderMeep(meepData, this.channelList);
       
       this._notifications();
+      this._replyNotifications(meepData, instance);
     }.bind(this));
     
     /**
@@ -160,11 +162,31 @@ protonet.timeline.Channel.prototype = {
   },
   
   /**
+   * Decides whether or not a small badge
+   * should be displayed, based on the number
+   * of unread replies
+   */
+  _toggleReplyBadge: function() {
+    if (!this.replyBadge) {
+      this.replyBadge = $("<span />", {
+        className: "reply-badge",
+        text:      0
+      }).appendTo(this.link);
+    }
+    
+    if (this.unreadReplies > 0) {
+      this.replyBadge.text(this.unreadReplies).show();
+    } else {
+      this.replyBadge.hide();
+    }
+  },
+  
+  /**
    * Decide whether the channel should be shown or hidden
    */
   toggle: function() {
     if (this.isSelected) {
-      this.unreadMeeps = 0;
+      this.unreadReplies = this.unreadMeeps = 0;
       this.channelList.show();
       this.link.addClass("active");
     } else {
@@ -172,6 +194,7 @@ protonet.timeline.Channel.prototype = {
       this.link.removeClass("active");
     }
     
+    this._toggleReplyBadge();
     this._toggleBadge();
   },
   
@@ -236,6 +259,8 @@ protonet.timeline.Channel.prototype = {
     if (post) {
       meep.post();
     }
+    
+    return meep;
   },
   
   /**
@@ -291,8 +316,10 @@ protonet.timeline.Channel.prototype = {
   _initEndlessScroller: function() {
     var lastMeepInList = this.channelList.children(":last").addClass("separator");
     
-    lastMeepInList.bind("inview", function(event) {
-      lastMeepInList.unbind("inview");
+    lastMeepInList.one("inview", function(event, visible) {
+      if (!visible) {
+        return;
+      }
       var lastMeepId = lastMeepInList.data("meep").id;
       this._loadMeeps({ last_id: lastMeepId }, this._renderMoreMeeps.bind(this));
     }.bind(this));
@@ -354,5 +381,22 @@ protonet.timeline.Channel.prototype = {
       this.unreadMeeps++;
       this._toggleBadge();
     }
+  },
+  
+  /**
+   * Handle user replies
+   */
+  _replyNotifications: function(meepData, instance) {
+    if (this.isSelected) {
+      return;
+    }
+    
+    var userId = protonet.user.data.id;
+    if ($.inArray(userId, instance.userReplies) == -1) {
+      return;
+    }
+    
+    this.unreadReplies++;
+    this._toggleReplyBadge();
   }
 };

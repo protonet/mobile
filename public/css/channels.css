@@ -59,18 +59,27 @@
   text-decoration: none;
 }
 
-#channels .badge {
+#channels .badge,
+#channels .reply-badge {
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
   border-radius: 6px;
-  background: #e75c79;
   color: #fff;
-  padding: 2px;
+  padding: 1px 2px 2px;
   font-size: 9px;
-  line-height: 10px;
+  line-height: 9px;
   position: absolute;
-  top: -7px;
+  top: -5px;
+}
+
+#channels .badge {
+  background: #e75c79;
   right: 1px;
+}
+
+#channels .reply-badge {
+  background: #ff7f31;
+  right: 13px;
 }
 
 /* ==============================================================CHANNELS = */

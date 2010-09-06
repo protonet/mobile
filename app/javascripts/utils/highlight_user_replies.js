@@ -11,26 +11,33 @@
  */
 protonet.utils.highlightUserReplies = (function() {
   var REG_EXP         = /(\s|^)@([\w\.\-_@]+)/g,
-      userMapping  = {};
+      userMapping     = {},
+      viewer          = {};
+  
+  protonet.Notifications.bind("user.data_available", function(e, userData) {
+    viewer = userData;
+  });
   
   protonet.Notifications.bind("users.data_available", function(e, userData) {
     $.each(userData, function(userId, data) {
-      userMapping[data.name.toLowerCase()] = userId;
+      userMapping[data.name.toLowerCase()] = Number(userId);
     });
   });
   
   return function(str) {
     var result = arguments.callee.result = [];
     return str.replace(REG_EXP, function(original, $1, $2) {
-      var userId = userMapping[$2.toLowerCase()];
+      var userId = userMapping[$2.toLowerCase()],
+          isViewer = viewer.id == userId;
       if (!userId) {
         return original;
       }
       
       result.push(userId);
       return $1 + new protonet.utils.Template("user-reply-template", {
-        user_id:   userId,
-        user_name: $2
+        user_id:    userId,
+        user_name:  $2,
+        class_name: isViewer ? "myself" : ""
       });
     });
   };

@@ -115,7 +115,7 @@ protonet.dispatcher = {
   },
   
   pingSocket: function() {
-    protonet.Notifications.trigger("socket.send", JSON.stringify({ operation: "ping" }));
+    protonet.Notifications.trigger("socket.send", { operation: "ping" });
   },
   
   pingSocketCallback: function(message) {
@@ -123,14 +123,14 @@ protonet.dispatcher = {
   },
 
   authenticateUser: function() {
-    protonet.Notifications.trigger("socket.send", JSON.stringify({
+    protonet.Notifications.trigger("socket.send", {
       operation: "authenticate",
       payload: {
         user_id:  this.userId,
         token:    this.userAuthToken,
         type:     "web"
       }
-    }));
+    });
   },
 
   receiveData: function(rawData) {
@@ -151,6 +151,6 @@ protonet.dispatcher = {
   },
 
   sendData: function(data) {
-    this.socket.sendData(data);
+    this.socket.sendData(JSON.stringify(data));
   }
 };

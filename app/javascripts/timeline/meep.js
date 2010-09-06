@@ -76,7 +76,7 @@ protonet.timeline.Meep.prototype = {
       message = method(message);
     });
     
-    this.userReplies = protonet.utils.highlightChannelReplies.result
+    this.userReplies = protonet.utils.highlightUserReplies.result;
     this.channelReplies = protonet.utils.highlightChannelReplies.result;
     
     return message;

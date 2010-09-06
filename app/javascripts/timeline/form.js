@@ -74,6 +74,13 @@ protonet.timeline.Form = {
       this.socketIdInput.val(data.socket_id);
     }.bind(this));
     
+    
+    /**
+     * Typing state
+     */
+    this.input.keypress(this._typingStart.bind(this));
+    
+    
     /**
      * Fire global event when form is submitted
      * or the user hits the enter key in the input
@@ -101,9 +108,35 @@ protonet.timeline.Form = {
       return;
     }
     
+    this._typingEnd();
+    
     protonet.Notifications.trigger("meep.render_from_form", [this.form, true]);
     protonet.Notifications.trigger("form.submitted", [this.form]);
     
     this.input.val("");
+  },
+  
+  _typingEnd: function() {
+    if (this.typing) {
+      this.typing = false;
+      clearTimeout(this._typingTimeout);
+      protonet.Notifications.trigger("socket.send", {
+        operation: "user.typing_end",
+        payload: { user_id: protonet.user.data.id }
+      });
+    }
+  },
+  
+  _typingStart: function() {
+    if (!this.typing) {
+      this.typing = true;
+      protonet.Notifications.trigger("socket.send", {
+        operation: "user.typing",
+        payload: { user_id: protonet.user.data.id }
+      });
+    }
+    
+    clearTimeout(this._typingTimeout);
+    this._typingTimeout = setTimeout(this._typingEnd.bind(this), 2500);
   }
 };

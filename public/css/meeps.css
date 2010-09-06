@@ -189,10 +189,17 @@
 }
 
 .reply.user {
+  color: #000 !important;
+  border: 1px solid rgb(255, 140, 71);
+}
+
+.reply.user.myself {
+  color: #fff !important;
+  border: 0;
   background: rgba(255, 140, 71, 0.8);
 }
 
-.reply.user:hover {
+.reply.user.myself:hover {
   background: rgba(255, 140, 71, 1);
 }
 

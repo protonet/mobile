@@ -45,8 +45,8 @@ module JsDispatchingServer
       end
     elsif @user && data.is_a?(Hash)
       case data["operation"]
-      when /^user\.(.*)/
-        update_user_status($1)
+      when /^user\.typing/
+        update_user_typing_status(data["operation"])
       when /^ping$/
         send_ping_answer
       when /^work$/
@@ -118,9 +118,9 @@ module JsDispatchingServer
     send_data(data + "\0")
   end
   
-  def update_user_status(status)
-    data = {:trigger => 'user.typing', :data => {:user_id => @user.id, :status => status}}.to_json
-    send_and_publish('system', 'system.users', data)
+  def update_user_typing_status(operation)
+    data = {:trigger => operation, :user_id => @user.id}.to_json
+    send_and_publish('system','system.users', data)
   end
 
   def send_ping_answer
@@ -137,9 +137,6 @@ module JsDispatchingServer
   def send_and_publish(topic, key, data)
     amq = MQ.new
     amq.topic(topic).publish(data, :key => key)
-    # due to some weird behaviour when calling publish
-    # we need to send the data directly to the current socket
-    send_data(data + "\0")
   end
 
   def bind_socket_to_system_queue

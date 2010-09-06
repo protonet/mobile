@@ -5,6 +5,7 @@ protonet.controls.UserWidget = function() {
   this.container = $("#user-widget");
   this.list = this.container.find("ul");
   this.resizer = this.container.find(".resize");
+  
   this.onlineUsersCount = this.container.find("output.count");
   this.usersData = {};
   
@@ -31,9 +32,13 @@ protonet.controls.UserWidget.prototype = {
         
       })
       
-      .bind("user.typing", function() {
-        
-      })
+      .bind("user.typing", function(e, data) {
+        this._typingStart(data.user_id);
+      }.bind(this))
+      
+      .bind("user.typing_end", function(e, data) {
+        this._typingEnd(data.user_id);
+      }.bind(this))
       
       .bind("user.subscribed_channel", function(e, data) {
         
@@ -111,6 +116,20 @@ protonet.controls.UserWidget.prototype = {
     }
     
     this.onlineUsersCount.text("(" + online + "/" + total + ")");
+  },
+  
+  _typingStart: function(userId) {
+    var userData = this.usersData[userId];
+    if (userData.element) {
+      userData.element.prependTo(this.list).addClass("typing");
+    }
+  },
+  
+  _typingEnd: function(userId) {
+    var userData = this.usersData[userId];
+    if (userData.element) {
+      userData.element.removeClass("typing");
+    }
   }
 };
 
