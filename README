@@ -53,8 +53,7 @@ git submodule update
 bundle install
 
 # do the db
-rake db:schema:load
-rake db:seed
+rake db:setup
 
 == MESSAGING
 
