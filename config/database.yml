@@ -19,7 +19,7 @@ production:
   adapter: sqlite3
   database: db/shared/production.sqlite3
   pool: 5
-  timeout: 10000
+  timeout: 25000
 
 cucumber:
   <<: *test
