@@ -5,7 +5,7 @@ class Network < ActiveRecord::Base
   has_many :tweets
   
   validates_uniqueness_of :uuid
-  after_create :generate_uuid, :if => lambda {|c| c.uuid.blank? && local? }
+  after_create :generate_uuid, :if => lambda {|c| c.uuid.blank? && c.local? }
   
   def local?
     id == 1
