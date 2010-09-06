@@ -109,28 +109,29 @@ allow protonet:admin     # user name and password for authentication.
 #    if cpu usage (system) > 30% then alert
 #    if cpu usage (wait) > 20% then alert
 
-check process js_dispatching_control.rb with pidfile $shared_path$/pids/js_dispatching_server.rb.pid
-  start program = "$current_path$/script/monit_bundle_exec production $current_path$ ruby $current_path$/messaging/js_dispatching_control.rb start"
-  stop program  = "$current_path$/script/monit_bundle_exec production $current_path$ ruby $current_path$/messaging/js_dispatching_control.rb stop"
+check process js_dispatching_control.rb with pidfile <%= shared_path %>/pids/js_dispatching_server.rb.pid
+  start program = "<%= current_path %>/script/monit_bundle_exec production <%= current_path %> ruby <%= current_path %>/messaging/js_dispatching_control.rb start"
+  stop program  = "<%= current_path %>/script/monit_bundle_exec production <%= current_path %> ruby <%= current_path %>/messaging/js_dispatching_control.rb stop"
   if 3 restarts within 5 cycles then timeout
   if totalmem > 200.0 MB for 2 cycles then restart
 
-check process jabber.rb with pidfile $shared_path$/pids/jabber.rb.pid
-  start program = "$current_path$/script/monit_bundle_exec production $current_path$ ruby $current_path$/messaging/jabber_control.rb start"
-  stop program  = "$current_path$/script/monit_bundle_exec production $current_path$ ruby $current_path$/messaging/jabber_control.rb stop"
-  if 10 restarts within 10 cycles then timeout
-  if totalmem > 200.0 MB for 2 cycles then restart
+<% if jabber_bridge %>
+  check process jabber.rb with pidfile <%= shared_path %>/pids/jabber.rb.pid
+    start program = "<%= current_path %>/script/monit_bundle_exec production <%= current_path %> ruby <%= current_path %>/messaging/jabber_control.rb start"
+    stop program  = "<%= current_path %>/script/monit_bundle_exec production <%= current_path %> ruby <%= current_path %>/messaging/jabber_control.rb stop"
+    if 10 restarts within 10 cycles then timeout
+    if totalmem > 200.0 MB for 2 cycles then restart
+<% end %>
 
-
-check process node.js with pidfile $shared_path$/pids/node.pid
-  start program = "$current_path$/script/init/node $current_path$ start"
-  stop program  = "$current_path$/script/init/node $current_path$ stop"
+check process node.js with pidfile <%= shared_path %>/pids/node.pid
+  start program = "<%= current_path %>/script/init/node <%= current_path %> start"
+  stop program  = "<%= current_path %>/script/init/node <%= current_path %> stop"
   if 3 restarts within 5 cycles then timeout
   if totalmem > 200.0 MB for 2 cycles then restart
 
-check process solr with pidfile $shared_path$/pids/sunspot-solr.pid
-  start program = "$current_path$/script/init/solr $current_path$ start"
-  stop program  = "$current_path$/script/init/solr $current_path$ stop"
+check process solr with pidfile <%= shared_path %>/pids/sunspot-solr.pid
+  start program = "<%= current_path %>/script/init/solr <%= current_path %> start"
+  stop program  = "<%= current_path %>/script/init/solr <%= current_path %> stop"
   if 3 restarts within 5 cycles then timeout
 
  check process apache2 with pidfile /var/run/apache2.pid

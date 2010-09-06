@@ -28,8 +28,7 @@ namespace :deploy do
   desc "deploy monit configuration"
   task :monit, :roles => :app do
     monit_command = "monit -c #{shared_path}/system/monit_ptn_node -l #{shared_path}/log/monit.log -p #{shared_path}/pids/monit.pid"
-    monit_config_string = File.read("config/monit/monit_ptn_node").gsub(/\$shared_path\$/, shared_path).gsub(/\$current_path\$/, current_path)
-    top.upload(StringIO.new(monit_config_string), "#{shared_path}/system/monit_ptn_node")
+    top.upload(ERB.new(IO.read("config/monit/monit_ptn_node.erb")).result(binding), "#{shared_path}/system/monit_ptn_node")
     run "chmod 700 #{shared_path}/system/monit_ptn_node"
     # and restart monit
     run monit_command + " quit"

@@ -7,3 +7,5 @@ set :use_sudo, false
 
 set :user, "protonet"
 set :runner, "protonet"
+
+set :jabber_bridge, true
