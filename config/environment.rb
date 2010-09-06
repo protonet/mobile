@@ -27,6 +27,7 @@ Rails::Initializer.run do |config|
   config.gem "json"
   config.gem "sprockets"
   config.gem 'fleximage'
+  config.gem 'hoptoad_notifier' if RAILS_ENV="production"
 
   config.gem "sqlite3-ruby", :lib => "sqlite3"
 

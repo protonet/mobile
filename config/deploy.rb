@@ -89,3 +89,10 @@ after "deploy:finalize_update", "deploy:create_protonet_symlinks"
 after "deploy", "deploy:cleanup"
 after "deploy:start", "passenger:restart", "deploy:monit"
 after "deploy:restart", "passenger:restart", "deploy:monit"
+
+# HOPTOAD
+Dir[File.join(File.dirname(__FILE__), '..', 'vendor', 'gems', 'hoptoad_notifier-*')].each do |vendored_notifier|
+  $: << File.join(vendored_notifier, 'lib')
+end
+
+require 'hoptoad_notifier/capistrano'

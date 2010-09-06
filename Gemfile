@@ -22,6 +22,7 @@ gem "xmpp4r", "0.5"
 gem "xmpp4r-simple", "0.8.8"
 gem "sunspot_rails", :require => 'sunspot/rails'
 gem "will_paginate", "2.3.14"
+gem "hoptoad_notifier"
 
 group :production do
   gem "passenger", "2.2.15"
