@@ -52,6 +52,10 @@ git submodule update
 # install the needed gems:
 bundle install
 
+# do the db
+rake db:schema:load
+rake db:seed
+
 == MESSAGING
 
 Install our messaging broker:
