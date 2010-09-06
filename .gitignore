@@ -3,7 +3,7 @@ log/*.lck
 tmp/**/*
 .DS_Store
 .gitignore
-.bundle/*
+.bundle
 doc/api
 doc/app
 *.pid
@@ -23,4 +23,3 @@ node/screenshots/*
 node.pid.lock
 Gemfile.lock
 solr/data
-
