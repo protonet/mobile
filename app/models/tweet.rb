@@ -19,12 +19,15 @@ class Tweet < ActiveRecord::Base
   validates_presence_of :message
 
   attr_accessor :socket_id
-  # validate_existence_of :channel
-
-  def local?;  network_id == 1; end
-  def remote?; network_id != 1; end
-
   after_create :send_to_queue if Rails.env == 'production' || configatron.messaging_bus_active
+
+  def local?
+    network_id == 1
+  end
+  
+  def remote?
+    network_id != 1
+  end
 
   def text_extension?
     !text_extension.blank?
