@@ -17,10 +17,10 @@
   </div>
 
   <span class="more-tweets">
-    <%= link_to(image_tag("up_arrow.png"),
+    <%= link_to(image_tag("down_arrow.png"),
       more_tweets_path(tweet.id,channel.id,more_time,less_time + 10,pos)) %>
     <% if less_time > 10 -%>
-      <%= link_to(image_tag("down_arrow.png"),
+      <%= link_to(image_tag("up_arrow.png"),
         more_tweets_path(tweet.id,channel.id,more_time,less_time - 10,pos)) %>
     <% end -%>
 

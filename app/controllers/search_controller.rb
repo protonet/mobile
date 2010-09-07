@@ -45,10 +45,7 @@ class SearchController < ApplicationController
         earlier = params[:earlier].to_i
         channel_id = channel.id
         tweets = tweet.from_minutes_after(later,channel_id) + [tweet] + tweet.from_minutes_before(earlier,channel_id)
-    #     highlights = hit.highlights(:message)
-    #   if highlights && !highlights.empty?
-    #     tweet.message = highlights.first.format { |phrase| search_highligh_tag(phrase) }
-    #   end
+
         render :partial => 'search/search_result',
           :locals => {
             :tweet    => tweet,
