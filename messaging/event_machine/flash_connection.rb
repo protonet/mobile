@@ -51,7 +51,7 @@ class FlashConnection < EventMachine::Connection
 
 
   def log text
-    puts "#{self}: #{text}" # if $DEBUG
+    puts "#{self}: #{text}" if Rails.env != "production" || $DEBUG
   end
   
   def to_s
