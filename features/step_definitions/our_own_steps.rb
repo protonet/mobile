@@ -1,7 +1,10 @@
-Then /^wait$/ do
-  # debugger
-  sleep 10
+Then /^wait (\d+) seconds$/ do |seconds|
+  sleep seconds.to_i
   true
+end
+
+Then /^debug$/ do
+  debugger
 end
 
 Then /^I wait for the autocompletion$/ do
@@ -13,6 +16,7 @@ Given /^I am logged in as "([^"]*)"$/ do |username|
     fill_in 'login', :with => username
     fill_in 'password', :with => '123456'
     click('login')
+    sleep 1 # wait for socket
   end
 end
 

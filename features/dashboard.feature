@@ -72,4 +72,6 @@ Feature: Using the protonet dashboard
     And I fill in "message" with "@cool-channel"
     And I press "submit" within "#message-form"
     And I click on "cool-channel" within ".feed-holder ul li:first"
+    And wait 3 seconds
     Then I should see "Cool-channel" within "#channel"
+    

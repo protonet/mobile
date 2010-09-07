@@ -17,7 +17,7 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
       And I press "submit" within "#message-form"
     #dudemeister
     And I am using the first browser
-      Then I should see "Hallo!" within "#feed-holder ul li:first"
+      Then I should see "Hallo!" within ".feed-holder ul li:first"
       
   @javascript
   Scenario: Creating a user and seeing him in the userlist and the autocompletion
@@ -28,6 +28,7 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
     Given I am using the second browser
       And I go to the startpage
       And I register as "justadded"
+      And wait 1 seconds
     Given I am using the first browser
       Then I should see /justadded/ within "#user-list ul.root"
       And I fill in "message" with "Hallo @just"

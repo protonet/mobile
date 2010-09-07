@@ -16,6 +16,7 @@ require 'capybara/rails'
 require 'capybara/cucumber'
 require 'capybara/session'
 require 'cucumber/rails/capybara_javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
+
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd
 # prefer to use XPath just remove this line and adjust any selectors in your
@@ -57,6 +58,23 @@ if defined?(ActiveRecord::Base)
 end
 
 Capybara.default_wait_time = 2
+
+# multiuser hack
+# this solves the problem of closing the browser
+require 'selenium-webdriver'
+Selenium::WebDriver::Remote::Bridge
+module Selenium
+  module WebDriver
+    module Remote
+      class Bridge
+        def quit
+          execute :quit
+        rescue# *QUIT_ERRORS -> rescuing all errors
+        end
+      end
+    end
+  end
+end
 
 # multiuser support
 at_exit do
