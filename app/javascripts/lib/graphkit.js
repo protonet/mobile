@@ -64,14 +64,9 @@ var IDGenerator = {
 /* ------------------------------------------------- */
 /* Graph Node class */
 
-var Node = function(number, info) {
-  if (info) {
-    this.number = number;
-    this.info   = info;
-  } else {
-    this.number = IDGenerator.genId();
-    this.info   = number;
-  }
+var Node = function(info) {
+  this.number = IDGenerator.genId();
+  this.info = info;
   
   if (!this.info.type)
     this.info.type = 'node';
@@ -79,8 +74,9 @@ var Node = function(number, info) {
   this.position = new Vertex(Math.random() * 10, Math.random() * 10);
   this.disp     = new Vertex(0, 0);
   this.mass     = 500.0;
-  //console.log('create node '+this.toSource());
   this.added = false;
+  
+  this.active = true;
 };
 
 Node.prototype.render = function(paper, small) {
@@ -92,7 +88,6 @@ Node.prototype.render = function(paper, small) {
     var is_small = small && (this.info.type == 'client' || this.info.type == 'node');
     
     var name = this.info.name;
-    //console.log(name);
     var is_stranger = this.info.name.match(/^stranger/);
     if (!is_small) {
       if (name.length > 10)
@@ -170,8 +165,6 @@ Node.prototype.render = function(paper, small) {
     var diff = dir.scale(this.visual.getBBox().width / 2 - 6);
     this.visual.translate(diff.x, diff.y);
 
-    //visual.rotate(this.info.angle, );
-    //console.log("rotate "+this.info.angle);
     this.visual.rotate(this.info.angle, false);
   }
 
@@ -180,6 +173,16 @@ Node.prototype.render = function(paper, small) {
   this.visual.translate(-bb.x + this.position.x - bb.width/2, -bb.y + this.position.y - bb.height/2);
   
   return this.visual;
+};
+
+Node.prototype.deactivate = function() {
+  this.visual.hide();
+  this.active = false;
+};
+
+Node.prototype.activate = function() {
+  this.visual.show();
+  this.active = true;
 };
 
 /* ------------------------------------------------- */
@@ -208,11 +211,23 @@ Edge.prototype.render = function(paper) {
   return this.visual;
 }
 
+Edge.prototype.deactivate = function() {
+  this.visual.hide();
+};
+
+Edge.prototype.activate = function() {
+  this.visual.show();
+};
+
 /* ------------------------------------------------- */
 
 function calcOptimalSpringLength(area, num_nodes, is_small) {
   return (Math.sqrt(area / num_nodes) * (is_small ? 3.5 : 5.0));
-};
+}
+
+function calcInitialTemperature(width) {
+  return width * 100.0;
+}
 
 function rad_to_deg(x) {
   return (180.0 / 3.1415 * x);
@@ -239,16 +254,13 @@ var Graph = function(target_id, maxIterations, small) {
   this.h = $($('#'+target_id)[0]).height();
   this.paper = Raphael(target_id, this.w, this.h);
 
-  this.temperature = this.w * 100.0;
+  this.temperature = calcInitialTemperature(this.w);
   this.area = this.w * this.h;
   this.optimalSpringLength = calcOptimalSpringLength(this.area, this.nodes.length, this.small);
-  
-  this.highestNodeNumber = 0;
 };
 
 Graph.prototype.nodeExists = function(info) {
   for (var i = 0; i < this.nodes.length; i++) {
-    //console.log([this.nodes[i].info.name, info.name]);
     if (this.nodes[i].info.id == info.id)
       return true;
   }
@@ -263,33 +275,20 @@ Graph.prototype.nodeNumberIsUsed = function(number) {
   return false;
 };
 
-Graph.prototype.getUniqueNodeNumber = function(online_users) {
-  this.highestNodeNumber++;
-  return this.highestNodeNumber;
-};
-
 Graph.prototype.deleteEdgesAtNode = function(node) {
-  var edges = new Array();
   for (var e = 0; e < this.edges.length; e++) {
     var from = this.edges[e].fromNode;
     var to   = this.edges[e].toNode;
-    if (from.number != node.number && to.number != node.number)
-      edges.push(this.edges[e]);
-    else
-      this.edges[e].visual.remove();
+    if (from.number == node.number || to.number == node.number)
+      this.edges[e].deactivate();
   }
-  this.edges = edges; 
 };
 
 Graph.prototype.deleteNode = function(node) {
-  var nodes = new Array();
   for (var n = 0; n < this.nodes.length; n++) {
-    if (this.nodes[n].number != node.number)
-      nodes.push(this.nodes[n]);
-    else
-      this.nodes[n].visual.remove();
+    if (this.nodes[n].number == node.number)
+      this.nodes[n].deactivate();
   }
-  this.nodes = nodes;
 };
 
 Graph.prototype.deleteClientNodesExcluding = function(online_users) {
@@ -297,9 +296,9 @@ Graph.prototype.deleteClientNodesExcluding = function(online_users) {
     var node = this.nodes[n];
     if (node.info.type == 'client') {
       // try to find node in online_users
-      found = false;
+      var found = false;
       for (var key in online_users) {
-        if (key == node.info.id)
+        if (online_users[key].id == node.info.id)
           found = true;
       }
       if (!found) {
@@ -310,65 +309,76 @@ Graph.prototype.deleteClientNodesExcluding = function(online_users) {
   }
 };
 
+Graph.prototype.getNodeById = function(id) {
+  for (var n = 0; n < this.nodes.length; n++)
+    if (this.nodes[n].info.id == id)
+      return this.nodes[n];
+  return false;
+};
+
 Graph.prototype.updateFromAsyncInfo = function(online_users) {
-  return 1; // for now async update does too much harm...
-  
-/*
+  /*
   online_users["11"] = {name:"client", supernode:null};
   online_users["12"] = {name:"mr.x", supernode:null};
   online_users["13"] = {name:"superman", supernode:null};
   online_users["14"] = {name:"superwoman", supernode:null};
   online_users["15"] = {name:"mrs.x", supernode:null};
-*/
-  //console.time("timing async");
+  */
 
+  // add id to info
   for (var key in online_users) {
     online_users[key].id = key;
     online_users[key].type = 'client';
   }
-  //this.deleteClientNodesExcluding(online_users);
-  //console.log(online_users.toSource());
+  // delete all nodes (and edges to/from them) that are not
+  // inside the current online_users hash
+  this.deleteClientNodesExcluding(online_users);
   
   var by_uuid = {};
   for (var i = 0; i < this.nodes.length; i++) {
     by_uuid[this.nodes[i].info.id] = this.nodes[i];
   }
   
-  this.log();
   for (var key in online_users) {
     var info = online_users[key];
     var net_node = by_uuid["1"]; //by_uuid[info['network_uuid']];
-    //console.time("timing async2");
-    if (net_node /* && !this.nodeExists(info) */) {
-      var node = new Node(this.getUniqueNodeNumber(), info);
-      var edge = new Edge(node, net_node);
-      this.queue.push(node);
-      this.queue.push(edge);
+    if (net_node) {
+      if (this.nodeExists(info)) {
+        // find node (and connected edges) and activate
+        var node = this.getNodeById(info.id);
+        node.activate();
+        for (var e = 0; e < this.edges.length; e++) {
+          var u = this.edges[e].fromNode;
+          var v = this.edges[e].toNode;
+          if (u.active && v.active) {
+            if (u.number == node.number || v.number == node.number) {
+              this.edges[e].activate();
+            }
+          }
+        }
+      }
+      else {
+        var node = new Node(info);
+        var edge = new Edge(node, net_node);
+        this.queue.push(node);
+        this.queue.push(edge);
+      }
     }
-    //console.timeEnd("timing async2");
   }
-  //this.log();
   this.restart();
-  //console.timeEnd("timing async");
 };
 
 Graph.prototype.restart = function() {
-  this.temperature = this.w * 100.0;
+  this.temperature = calcInitialTemperature(this.w);
   this.iters = 0;
 };
 
 Graph.prototype.addNode = function(node) {
-  // check if node has not been added before
-  for (var i = 0; i < this.nodes.length; i++) {
-    if (this.nodes[i].number == node.number)
-      return node;
-  }
-  this.nodes.push(node);
-  
-  if (node.number > this.highestNodeNumber)
-    this.highestNodeNumber = node.number;
+  if (!this.nodeExists(node.info))
+    this.nodes.push(node);
     
-  this.optimalSpringLength = calcOptimalSpringLength(this.area, this.nodes.length, this.small);
+  this.optimalSpringLength = 
+    calcOptimalSpringLength(this.area, this.nodes.length, this.small);
 
   return node;
 };
@@ -392,7 +402,7 @@ Graph.prototype.edgeExists = function(fromNode, toNode) {
 };
 
 Graph.prototype.testOneNode = function() {
-  this.addNode(new Node(1, {name:"one",type:"supernode"}));
+  this.addNode(new Node({name:"one",type:"supernode"}));
   return true;
 }
 
@@ -491,15 +501,13 @@ Graph.prototype.initFromNetworksInfo = function(networks) {
   //return this.testSixNodes();
   //return this.testComplex01();
   
-  //console.log(networks.toSource());
-  
   var nodes = new Array();
   for (var i = 0; i < networks.length; i++) {
     if (networks[i].supernode)
       networks[i].type = 'supernode';
     else
       networks[i].type = 'node';
-    var node = new Node(i, networks[i]);
+    var node = new Node(networks[i]);
     this.addNode(node);
     nodes.push(node);
   }
@@ -570,14 +578,11 @@ Graph.prototype.processQueue = function() {
 }
 
 Graph.prototype.layout = function() {
-  //console.log(this.iters+" layout...");
-  //console.time("timing layout");
-
   // determine amount of nodes (not clients!)
   var normal_nodes = new Array();
   for (var n = 0; n < this.nodes.length; n++) {
     var node = this.nodes[n];
-    if (node.info.type != 'client')
+    if (node.info.type != 'client' && node.active)
       normal_nodes.push(node);
   }
 
@@ -599,9 +604,11 @@ Graph.prototype.layout = function() {
     var count  = 0;
     for (var n = 0; n < normal_nodes.length; n++) {
       var node = normal_nodes[n];
-      node.position.x = this.w / 2 + Math.sin(deg_to_rad(45 + angle * count)) * radius;
-      node.position.y = this.h / 2 + Math.cos(deg_to_rad(45 + angle * count)) * radius;       
-      count++;
+      if (node.active) {
+        node.position.x = this.w / 2 + Math.sin(deg_to_rad(45 + angle * count)) * radius;
+        node.position.y = this.h / 2 + Math.cos(deg_to_rad(45 + angle * count)) * radius;       
+        count++;
+      }
     }
     this.layout_clients();
     this.iters = this.maxIterations + 1;
@@ -615,12 +622,12 @@ Graph.prototype.layout = function() {
     // calculate repulsive forces
     for (var n = 0; n < this.nodes.length; n++) {
       var node = this.nodes[n];
-      if (node.info.type != 'client') {
+      if (node.info.type != 'client' && node.active) {
         node.disp = new Vertex(0, 0);
         for (var m = 0; m < this.nodes.length; m++) {
           var otherNode = this.nodes[m];
           if (node.number != otherNode.number &&
-              otherNode.info.type != 'client') {
+              otherNode.info.type != 'client' && otherNode.active) {
 
             var delta = node.position.diff( otherNode.position );
             if (delta.len() == 0) delta = new Vertex(0.1,0.1);
@@ -646,7 +653,8 @@ Graph.prototype.layout = function() {
       var u = edge.fromNode;
       var v = edge.toNode;
       
-      if (u.info.type != 'client' && v.info.type != 'client') {
+      if (u.active && v.active &&
+          u.info.type != 'client' && v.info.type != 'client') {
         var delta = v.position.diff(u.position);
         if (delta.len() == 0) delta = new Vertex(0.1,0.1);
         var d = delta.len();
@@ -672,7 +680,7 @@ Graph.prototype.layout = function() {
     // apply forces
     for (var n = 0; n < this.nodes.length; n++) {
       var node = this.nodes[n];
-      if (node.info.type != 'client') {
+      if (node.info.type != 'client' && node.active) {
         var optLen = calcOptimalSpringLength(this.area, this.nodes.length) / 3.0;
         node.disp = node.disp.scale(node.disp.len() > optLen ? optLen : node.disp.len());
         
@@ -701,7 +709,6 @@ Graph.prototype.layout = function() {
     this.layout_clients();
     this.cool();
   }
-  //console.timeEnd("timing layout");
   return true; 
 };
 
@@ -709,20 +716,22 @@ Graph.prototype.layout_clients = function() {
   // layout client nodes circular around each node
   for (var n = 0; n < this.nodes.length; n++) {
     var node = this.nodes[n];
-    if (node.info.type != 'client') {
+    if (node.info.type != 'client' && node.active) {
       // find client node connected to this one
       var clients = new Array();
       for (var e = 0; e < this.edges.length; e++) {
         var edge = this.edges[e];
         var u = edge.fromNode;
         var v = edge.toNode;
-        if ((u.number == node.number && v.info.type == 'client') ||
-            (v.number == node.number && u.info.type == 'client')) {
+        if (u.active && v.active) {
+          if ((u.number == node.number && v.info.type == 'client') ||
+              (v.number == node.number && u.info.type == 'client')) {
           
-          if (u.number == node.number)
-            clients.push(v);
-          else
-            clients.push(u);
+            if (u.number == node.number)
+              clients.push(v);
+            else
+              clients.push(u);
+          }
         }
       }
       
@@ -730,7 +739,6 @@ Graph.prototype.layout_clients = function() {
       if (clients.length > 0) {
         var radius = (this.small ? 5.0 : 30.0) + (clients.length * (this.small ? 4.0 : 5.0));
         var angle  = 360.0 / clients.length;
-        //console.log(angle);
         for (var c = 0; c < clients.length; c++) {
           var client = clients[c];
           client.info.angle = (c > Math.floor(clients.length / 2) ? 270 : 90) - angle * c;
@@ -744,8 +752,6 @@ Graph.prototype.layout_clients = function() {
 };
 
 Graph.prototype.render = function() {
-  //console.time("timing render");
-
   this.processQueue();
 
   if (this.iters > this.maxIterations)
@@ -777,6 +783,5 @@ Graph.prototype.render = function() {
     var bb = this.visual.getBBox();
     this.visual.translate(-bb.x + (this.w - bb.width) / 2.0, -bb.y + (this.h - bb.height) / 2.0);
   }
-  //console.timeEnd("timing render");
 };
 

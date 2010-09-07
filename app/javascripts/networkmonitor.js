@@ -23,25 +23,37 @@ var ourInterval;
 function asyncupdate1() {
   console.log("async update 1");
   NetworkGraph.updateFromAsyncInfo({
-    "20":{name:"new"},
-    "21":{name:"abcd"},
-    "22":{name:"stranger"},
-    "23":{name:"abcdef"},
-    "24":{name:"abcdefg"}
+    "20":{name:"#20"},
+    "21":{name:"#21"},
+    "22":{name:"#22"},
+    "23":{name:"#23"},
+    "24":{name:"#24"}
   });
 }
 function asyncupdate2() {
   console.log("async update 2");
   NetworkGraph.updateFromAsyncInfo({
-    "24":{name:"new-one"},
-    "25":{name:"abcdefg"}
+    "21":{name:"#21"},
+    "22":{name:"#22"},
+    "23":{name:"#23"}
   });
 }
 function asyncupdate3() {
   console.log("async update 3");
   NetworkGraph.updateFromAsyncInfo({
-    "25":{name:"new-one-2"},
-    "26":{name:"foobar"}
+    "20":{name:"#20"},
+    "20":{name:"#20"},
+    "24":{name:"#24"}
+  });
+}
+function asyncupdate4() {
+  console.log("async update 4");
+  NetworkGraph.updateFromAsyncInfo({
+    "20":{name:"#20"},
+    "21":{name:"#21"},
+    "22":{name:"#22"},
+    "23":{name:"#23"},
+    "24":{name:"#24"}
   });
 }
 */
@@ -58,6 +70,7 @@ $(function() {
     //setTimeout("asyncupdate1()", 1000);
     //setTimeout("asyncupdate2()", 2000);
     //setTimeout("asyncupdate3()", 3000);
+    //setTimeout("asyncupdate4()", 4000);
   }
 });
 
