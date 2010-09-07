@@ -107,7 +107,6 @@ ActiveRecord::Schema.define(:version => 20100906144216) do
     t.datetime "communication_token_expires_at"
     t.string   "temporary_identifier"
     t.boolean  "admin",                                         :default => false
-    t.text     "settings",                                      :default => "{}"
     t.boolean  "guest",                                         :default => true
   end
 

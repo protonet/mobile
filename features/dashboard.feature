@@ -9,7 +9,7 @@ Feature: Using the protonet dashboard
   Scenario: Writing a meep
     Then I fill in "message" with "Hallo!"
     And  I press "submit" within "#message-form"
-    Then I should see "Hallo" within "#feed-holder ul li:first"
+    Then I should see "Hallo" within ".feed-holder ul li:first"
 
   @javascript
   Scenario: Writing a meep containing a channel name
@@ -17,14 +17,14 @@ Feature: Using the protonet dashboard
     Given I go to the start page
     Then I fill in "message" with "Hallo @cool-channel!"
     And  I press "submit" within "#message-form"
-    Then I should see "cool-channel" within "#feed-holder ul li:first .reply.channel"
+    Then I should see "cool-channel" within ".feed-holder ul li:first .reply.channel"
 
   @javascript
   Scenario: Writing a meep containing an username
     Given a user exists with login: "dudemeister"
     Then I fill in "message" with "Hallo @dudemeister!"
     And  I press "submit" within "#message-form"
-    Then I should see "dudemeister" within "#feed-holder ul li:first .reply"
+    Then I should see "dudemeister" within ".feed-holder ul li:first .reply"
 
   @javascript
   Scenario: Writing a meep containing my username
@@ -33,7 +33,7 @@ Feature: Using the protonet dashboard
     And I go to the start page
     And I fill in "message" with "Hallo @dudemeister!"
     And  I press "submit" within "#message-form"
-    Then I should see "dudemeister" within "#feed-holder ul li:first .reply.to-me"
+    Then I should see "dudemeister" within ".feed-holder ul li:first .reply.to-me"
 
   @javascript
   Scenario: Writing a meep containing the beginning of a username
@@ -71,5 +71,5 @@ Feature: Using the protonet dashboard
     And I am logged in as "dudemeister"
     And I fill in "message" with "@cool-channel"
     And I press "submit" within "#message-form"
-    And I click on "cool-channel" within "#feed-holder ul li:first"
+    And I click on "cool-channel" within ".feed-holder ul li:first"
     Then I should see "Cool-channel" within "#channel"

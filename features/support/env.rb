@@ -56,7 +56,7 @@ if defined?(ActiveRecord::Base)
   end
 end
 
-Capybara.default_wait_time = 5
+Capybara.default_wait_time = 2
 
 # multiuser support
 at_exit do
