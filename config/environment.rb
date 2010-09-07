@@ -21,23 +21,9 @@ Rails::Initializer.run do |config|
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
   config.load_paths += %W( #{RAILS_ROOT}/app/middleware )
 
-  # Specify gems that this application depends on and have them installed with rake gems:install
-  config.gem "eventmachine"
-  config.gem "tmm1-amqp", :lib => "mq"
-  config.gem "json"
-  config.gem "sprockets"
-  config.gem 'fleximage'
-  config.gem 'hoptoad_notifier'
-
-  config.gem "sqlite3-ruby", :lib => "sqlite3"
-
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
-
-  # Skip frameworks you're not going to use. To use Rails without a database,
-  # you must remove the Active Record framework.
-  # config.frameworks -= [ :active_record, :active_resource, :action_mailer ]
 
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
@@ -55,6 +41,7 @@ end
 
 ActiveSupport::JSON.backend = 'JSONGem'
 
+# fleximage monkey patch
 require "#{RAILS_ROOT}/lib/fleximage_ext.rb"
 
 require 'mq'
