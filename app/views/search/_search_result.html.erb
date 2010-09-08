@@ -8,7 +8,7 @@
         more_tweets_path(tweet.id,channel.id,more_time - 10,less_time,pos)) %>
     <% end -%>
 
-    <%= "#{minutes_to_words(more_time)} Later" %>
+    <%= "#{minutes_to_words(more_time)} after" %>
   </span>
   <div class="feed-holder" style="width:613px;">
 
@@ -24,7 +24,7 @@
         more_tweets_path(tweet.id,channel.id,more_time,less_time - 10,pos)) %>
     <% end -%>
 
-    <%= "#{minutes_to_words(less_time)} Earlier" %>
+    <%= "#{minutes_to_words(less_time)} before" %>
   </span>
   <hr class="search-border">&nbsp;</div>
 </div>
