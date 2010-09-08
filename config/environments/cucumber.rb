@@ -33,6 +33,6 @@ configatron.user_file_path = "/tmp"
 configatron.images.avatars_path   = "public/avatars"
 configatron.images.externals_path = "public/externals"
 
-configatron.socket.port = 5002
+configatron.socket.port = 5001
 configatron.js_dispatching_active = true
 configatron.messaging_bus_active  = true
