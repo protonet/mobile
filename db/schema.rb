@@ -9,16 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100906144216) do
-
-  create_table "assets", :force => true do |t|
-    t.string   "filename"
-    t.string   "content_type"
-    t.integer  "size"
-    t.integer  "download_counter"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
+ActiveRecord::Schema.define(:version => 20100908131219) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"

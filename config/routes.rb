@@ -15,7 +15,6 @@ ActionController::Routing::Routes.draw do |map|
     listen.accept '/accept', :controller => 'listens', :action => 'accept'
   end
 
-  map.resources   :assets
 
   map.negotiate_network 'networks/negotiate.:format', :controller => 'networks', :action => 'negotiate'
   map.resources   :networks do |networks|
