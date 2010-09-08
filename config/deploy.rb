@@ -22,7 +22,6 @@ namespace :deploy do
     run "mkdir -p #{shared_path}/pids; chmod 770 #{shared_path}/pids"
     run "mkdir -p #{shared_path}/system"
     run "mkdir -p #{shared_path}/solr/data"
-    run "if [ ! -f #{shared_path}/db/production.sqlite ]; then touch #{shared_path}/db/production.sqlite3; chmod 770 #{shared_path}/db/production.sqlite3; fi"
   end
   
   desc "deploy monit configuration"
@@ -49,6 +48,10 @@ namespace :deploy do
   
   task :restart, :roles => :app do
     # do nothing
+  end
+  
+  task :setup_db do
+    run "cd #{current_release} && RAILS_ENV=production bundle exec rake db:setup"
   end
   
 end
@@ -83,6 +86,7 @@ end
 
 # HOOKS
 after "deploy:setup", "deploy:prepare"
+after "deploy:cold", "setup_db"
 after "deploy:update_code", "bundler:bundle_new_release"
 after "deploy:finalize_update", "deploy:copy_stage_config"
 after "deploy:finalize_update", "deploy:create_protonet_symlinks"
