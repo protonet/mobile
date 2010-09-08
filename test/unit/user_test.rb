@@ -29,7 +29,7 @@ class UserTest < Test::Unit::TestCase
     
     it "should set a name based on the given session id" do
       user = User.stranger('1234567890123')
-      assert_equal 'stranger_number_1234567890', user.name      
+      assert_equal 'stranger_1234567890', user.name      
     end
     
     it "should be recognizable as one" do

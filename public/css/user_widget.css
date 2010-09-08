@@ -29,6 +29,7 @@
 }
 
 #user-widget li {
+  overflow: hidden;
   background-position: 4px -18px;
   color: #999;
 }
@@ -48,7 +49,7 @@
 
 #user-widget li:hover,
 #user-widget li:focus {
-  background-color: rgba(0, 0, 0, 0.06);
+  background-color: rgba(0, 0, 0, 0.06) !important;
 }
 
 #user-widget ul {

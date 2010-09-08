@@ -12,9 +12,10 @@ protonet.controls.UserWidget = function() {
   this.list.find("li").each(function(i, li) {
     li = $(li);
     this.usersData[+li.attr("data-user-id")] = {
-      element: li,
-      name: li.text(),
-      isViewer: li.hasClass("myself")
+      element:    li,
+      name:       li.text(),
+      isViewer:   li.hasClass("myself"),
+      isStranger: false
     };
   }.bind(this));
   
@@ -79,12 +80,17 @@ protonet.controls.UserWidget.prototype = {
    * TODO: add logic for when user is per via api connected, we need an icon here for, btw.
    */
   updateUsers: function(onlineUsers) {
+    // Create users if they don't exist already
+    this.createUsers(onlineUsers);
+    
     for (var userId in this.usersData) {
       var user = this.usersData[userId],
           onlineUser = onlineUsers[userId];
       
       var hasBeenOnlineBefore = user.isOnline !== false;
       user.isOnline = !!onlineUser;
+      
+      // Highlight effect for users that just came online
       if (user.isOnline && !hasBeenOnlineBefore) {
         user.element
           .addClass("new-online")
@@ -92,10 +98,43 @@ protonet.controls.UserWidget.prototype = {
           .animate({ "backgroundColor": "#ffffff" }, { duration: 1000 });
       }
       
-      user.isOnline ? user.element.addClass("online") : user.element.removeClass("online");
+      user.isOnline ? user.element.addClass("online") : user.element.removeClass("online").removeClass("typing");
     }
+    
     this.sortEntries();
     this.updateCount();
+    this.cleanupStrangers();
+  },
+  
+  /**
+   * Expects something like 
+   *  { 101: { name: "tiff" }, 202: { name: "ali" } }
+   * as users parameters
+   */
+  createUsers: function(users) {
+    for (var userId in users) {
+      var user = users[userId],
+          alreadyExists = !!this.usersData[userId],
+          isViewer = protonet.user.data.name == user.name,
+          isStranger = user.name.startsWith("stranger_");
+      
+      if (!alreadyExists) {
+        this.usersData[userId] = {
+          isViewer:   isViewer,
+          isStranger: isStranger,
+          element:    this.createElement(userId, user.name, isViewer, isStranger)
+        };
+      }
+    }
+  },
+  
+  createElement: function(userId, userName, isViewer, isStranger) {
+    return $("<li />", {
+      "data-user-id": userId,
+      text:           userName,
+      title:          userName,
+      className:      [isViewer ? "myself" : "", isStranger ? "stranger" : ""].join(" ")
+    }).appendTo(this.list);
   },
   
   sortEntries: function() {
@@ -103,6 +142,10 @@ protonet.controls.UserWidget.prototype = {
     this.list.find(".online").prependTo(this.list);
     this.list.find(".new-online").removeClass("new-online").prependTo(this.list);
     this.list.find(".typing").prependTo(this.list);
+  },
+  
+  _cleanupStrangers: function() {
+    // TODO
   },
   
   updateCount: function() {
