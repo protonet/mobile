@@ -19,7 +19,7 @@ test: &test
   pool: 5
   username: root
   password: 
-  socket: /tmp/mysql.sock
+  socket: <%= ENV['TEST_DB_SOCKET'] || '/tmp/mysql.sock' %>
 
 production:
   adapter: mysql
@@ -29,7 +29,7 @@ production:
   pool: 5
   username: root
   password: 
-  socket: /tmp/mysql.sock
+  socket: /var/run/mysqld/mysqld.sock
 
 
 cucumber:
