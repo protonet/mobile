@@ -109,7 +109,7 @@ allow protonet:admin     # user name and password for authentication.
 #    if cpu usage (system) > 30% then alert
 #    if cpu usage (wait) > 20% then alert
 
-check process js_dispatching_control.rb with pidfile <%= shared_path %>/pids/js_dispatching_production.pid
+check process js_dispatching_control.rb with pidfile <%= shared_path %>/pids/js_dispatcher_production.pid
   start program = "<%= current_path %>/script/monit_bundle_exec production <%= current_path %> ruby <%= current_path %>/messaging/js_dispatching_control.rb start"
   stop program  = "<%= current_path %>/script/monit_bundle_exec production <%= current_path %> ruby <%= current_path %>/messaging/js_dispatching_control.rb stop"
   if 3 restarts within 5 cycles then timeout
