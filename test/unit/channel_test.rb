@@ -6,8 +6,8 @@ class ChannelTest < ActiveSupport::TestCase
     assert_equal 1, Channel.home.id
   end
   
-  test "name foo" do
-    puts clean_diactritic_marks("Alis's Bam bäm")
+  test "normalize_name should normalize names" do
+    assert_equal "alis-s-bam-bam", Channel.new(:name => "Alis's Bam bäm").normalize_name
   end
 
 end

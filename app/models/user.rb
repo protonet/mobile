@@ -115,7 +115,7 @@ class User < ActiveRecord::Base
   end
 
   def stranger?
-    !temporary_identifier.blank?
+    !temporary_identifier.blank? || id == 1
   end
 
   def login=(value)

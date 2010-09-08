@@ -47,7 +47,7 @@ class Channel < ActiveRecord::Base
   
   def normalize_name
     self.name = clean_diactritic_marks(name)
-    self.name = name.gsub(/\W/, '-')
+    self.name = name.gsub(/\W/, '-').downcase
   end
   
   def home?
