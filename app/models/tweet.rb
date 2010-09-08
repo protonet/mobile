@@ -14,6 +14,7 @@ class Tweet < ActiveRecord::Base
   after_create :send_to_queue if Rails.env == 'production' || configatron.messaging_bus_active == true
   
   def send_to_queue
+    self.text_extension = JSON.parse(text_extension)
     channels.each do |channel|
       System::MessagingBus.topic('channels').publish(self.attributes.merge({
         :socket_id      => socket_id,

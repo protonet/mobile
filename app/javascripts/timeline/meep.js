@@ -128,10 +128,16 @@ protonet.timeline.Meep.prototype = {
   post: function(onSuccess, onFailure) {
     var status = this.element.find(".status").show().html(protonet.t("MEEP_SENDING"));
     
+    this.queryString = this.queryString || $.param({
+      tweet: $.extend({}, this.data, {
+        text_extension: JSON.stringify(this.data.text_extension)
+      })
+    });
+    
     $.ajax({
       url:        this.config.POST_URL,
       type:       "POST",
-      data:       this.queryString || { tweet: this.data },
+      data:       this.queryString,
       success:    function() {
         if (status.is(":visible")) {
           status.html(protonet.t("MEEP_SENT")).delay(1000).fadeOut();

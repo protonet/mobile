@@ -57,8 +57,6 @@ protonet.timeline.Channel.prototype = {
         return;
       }
       
-      // TODO: parsing the text_extension json should be done on the server side
-      meepData.text_extension = meepData.text_extension && JSON.parse(meepData.text_extension);
       var instance = this._renderMeep(meepData, this.channelList);
       
       this._notifications();
