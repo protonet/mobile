@@ -38,8 +38,8 @@ Protonet-Dashboard runs on rails, sqlite3, rabbitmq, eventmachine (+amqp), node.
 === INSTALL
 
 == GENERAL
-git clone git@github.com:dudemeister/protonet-dashboard.git
-cd protonet-dashboard
+git clone git@github.com:protonet/dashboard.git
+cd dashboard
 git submodule init
 git submodule update
 
