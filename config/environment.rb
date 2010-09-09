@@ -77,8 +77,8 @@ if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FR
      :start_command => 'ruby messaging/js_dispatching_control.rb start',
      :stop_command  => 'ruby messaging/js_dispatching_control.rb stop',
      :ping_command  => lambda { TCPSocket.new('localhost', configatron.socket.port) },
-     :pid_file      => "tmp/pids/js_dispatcher_#{Rails.env}.pid",
-     :log_file      => "log/js_dispatcher_#{Rails.env}.output",
+     :pid_file      => "tmp/pids/js_dispatching_#{Rails.env}.pid",
+     :log_file      => "log/js_dispatching_#{Rails.env}.output",
      :timeout       => 45
   )
   js_dispatching_server.start unless js_dispatching_server.running?
