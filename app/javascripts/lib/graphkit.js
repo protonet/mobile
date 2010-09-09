@@ -66,6 +66,11 @@ var Node = function(info) {
 };
 
 Node.prototype = {
+  init: function(graph) {
+    this.graph = graph;
+    //console.log("init "+this.info.id+" ("+this.graph.area+")");
+  },
+  
   render: function(paper, small) {
     if (!this.visual) {
       // create the initial visual
@@ -158,6 +163,15 @@ Node.prototype = {
     // update the position of the visual
     var bb = this.visual.getBBox();
     this.visual.translate(-bb.x + this.position.x - bb.width/2, -bb.y + this.position.y - bb.height/2);
+    
+    // show visual on mouse-over
+    this.visual.n = this;
+    this.visual.mouseover(function() {
+      this.n.graph.showInfo(this.n);
+    });
+    this.visual.mouseout(function() {
+      this.n.graph.hideInfo(this.n);
+    });
   
     return this.visual;
   },
@@ -247,9 +261,86 @@ var Graph = function(target_id, maxIterations, small) {
   this.temperature = calcInitialTemperature(this.w);
   this.area = this.w * this.h;
   this.optimalSpringLength = calcOptimalSpringLength(this.area, this.nodes.length, this.small);
+  
+  // create info layer
+  this.infolayer = this.paper.rect(0,0,100,100, 10);
+  this.infolayer.attr({fill: "white", stroke: "#ccc", "stroke-width": 1});
+  this.infolayerline = this.paper.path("M0,0 L10,10");
+  this.infolayerline.attr({stroke: "#ccc", "stroke-width": 1});
+  this.infolayertext = this.paper.text(0,0,"hello");
+  this.infolayertext.attr({fill: "#333"});
+  this.hideInfo();
+  
+  // the vertex used for centering the whole graph on the canvas
+  this.centerVertex = new Vertex(0,0);
 };
 
 Graph.prototype = {
+
+  showInfo: function(node) {
+    var nodepos = node.position.sum(this.centerVertex);
+    
+    // load node info into info layer
+    this.infolayertext.attr({
+        text: 
+          //"id: "+node.info.id+"\n"+
+          "type: "+node.info.type+"\n"+
+          "name: "+node.info.name
+    });
+    //console.log("node #"+node.info.id);
+    
+    var bb = this.infolayertext.getBBox();
+    this.infolayer.attr({
+      width: bb.width + 20,
+      height: bb.height + 20
+    });
+    this.infolayer.attr({
+      x: nodepos.x + 30, 
+      y: nodepos.y - ((bb.height + 20) / 2)
+    });
+    this.infolayertext.attr({
+      x: nodepos.x + 30 + ((bb.width + 20) / 2), 
+      y: nodepos.y
+    });
+    this.infolayerline.attr({
+      path: "M"+nodepos.x+","+nodepos.y+" "+
+            "L"+(nodepos.x + 30)+","+nodepos.y
+    });
+
+    //this.infolayerline.toFront();
+    this.infolayer.toFront();
+    this.infolayertext.toFront();
+    
+    this.infolayerline.show();
+    this.infolayer.show();
+    this.infolayertext.show();
+    
+    // highlight connected edges
+    for (var e = 0; e < this.edges.length; e++) {
+      var edge = this.edges[e];
+      var u = edge.fromNode;
+      var v = edge.toNode;
+      if (u.active && v.active && (u.number == node.number || v.number == node.number)) {
+        edge.visual.attr({"stroke-width": 3});
+      }
+    }
+  },
+  
+  hideInfo: function(node) {
+    this.infolayertext.hide();
+    this.infolayer.hide();
+    this.infolayerline.hide();
+
+    // highlight connected edges
+    for (var e = 0; e < this.edges.length; e++) {
+      var edge = this.edges[e];
+      var u = edge.fromNode;
+      var v = edge.toNode;
+      if (u.active && v.active && (u.number == node.number || v.number == node.number)) {
+        edge.visual.attr({"stroke-width": 1});
+      }
+    }
+  },
   
   nodeExists: function(info) {
     for (var i = 0; i < this.nodes.length; i++) {
@@ -373,6 +464,7 @@ Graph.prototype = {
     this.optimalSpringLength = 
       calcOptimalSpringLength(this.area, this.nodes.length, this.small);
 
+    node.init(this);
     return node;
   },
 
@@ -400,31 +492,31 @@ Graph.prototype = {
   },
 
   testOneNode: function() {
-    this.addNode(new Node({name:"one",type:"supernode"}));
+    this.addNode(new Node({id:1, name:"one",type:"supernode"}));
     return true;
   },
 
   testTwoNodes: function() {
-    var n1 = this.addNode(new Node({name:"one",type:'supernode'}));
-    var n2 = this.addNode(new Node({name:"two"}));
+    var n1 = this.addNode(new Node({id:1, name:"one",type:'supernode'}));
+    var n2 = this.addNode(new Node({id:2, name:"two"}));
     this.addEdge(new Edge(n1, n2));
     return true;
   },
 
   testThreeNodes: function() {
-    var n1 = this.addNode(new Node({name:"one",type:'supernode'}));
-    var n2 = this.addNode(new Node({name:"stranger"}));
-    var n3 = this.addNode(new Node({name:"three"}));
+    var n1 = this.addNode(new Node({id:1, name:"one",type:'supernode'}));
+    var n2 = this.addNode(new Node({id:2, name:"stranger"}));
+    var n3 = this.addNode(new Node({id:3, name:"three"}));
     this.addEdge(new Edge(n1, n2));
     this.addEdge(new Edge(n1, n3));
     return true;
   },
 
   testFourNodes: function() {
-    var n1 = this.addNode(new Node({name:"one",type:'supernode'}));
-    var n2 = this.addNode(new Node({name:"stranger"}));
-    var n3 = this.addNode(new Node({name:"three"}));
-    var n4 = this.addNode(new Node({name:"four"}));
+    var n1 = this.addNode(new Node({id:1, name:"one",type:'supernode'}));
+    var n2 = this.addNode(new Node({id:2, name:"stranger"}));
+    var n3 = this.addNode(new Node({id:3, name:"three"}));
+    var n4 = this.addNode(new Node({id:4, name:"four"}));
     this.addEdge(new Edge(n1, n2));
     this.addEdge(new Edge(n1, n3));
     this.addEdge(new Edge(n1, n4));
@@ -433,11 +525,11 @@ Graph.prototype = {
   },
 
   testFiveNodes: function() {
-    var n1 = this.addNode(new Node({name:"one",type:'supernode'}));
-    var n2 = this.addNode(new Node({name:"stranger"}));
-    var n3 = this.addNode(new Node({name:"three"}));
-    var n4 = this.addNode(new Node({name:"four"}));
-    var n5 = this.addNode(new Node({name:"five"}));
+    var n1 = this.addNode(new Node({id:1, name:"one",type:'supernode'}));
+    var n2 = this.addNode(new Node({id:2, name:"stranger"}));
+    var n3 = this.addNode(new Node({id:3, name:"three"}));
+    var n4 = this.addNode(new Node({id:4, name:"four"}));
+    var n5 = this.addNode(new Node({id:5, name:"five"}));
     this.addEdge(new Edge(n1, n2));
     this.addEdge(new Edge(n1, n3));
     this.addEdge(new Edge(n1, n4));
@@ -447,12 +539,12 @@ Graph.prototype = {
   },
 
   testSixNodes: function() {
-    var n1 = this.addNode(new Node({name:"one",type:'supernode'}));
-    var n2 = this.addNode(new Node({name:"stranger"}));
-    var n3 = this.addNode(new Node({name:"three"}));
-    var n4 = this.addNode(new Node({name:"four"}));
-    var n5 = this.addNode(new Node({name:"five"}));
-    var n6 = this.addNode(new Node({name:"six"}));
+    var n1 = this.addNode(new Node({id:1, name:"one",type:'supernode'}));
+    var n2 = this.addNode(new Node({id:2, name:"stranger"}));
+    var n3 = this.addNode(new Node({id:3, name:"three"}));
+    var n4 = this.addNode(new Node({id:4, name:"four"}));
+    var n5 = this.addNode(new Node({id:5, name:"five"}));
+    var n6 = this.addNode(new Node({id:6, name:"six"}));
     this.addEdge(new Edge(n1, n2));
     this.addEdge(new Edge(n1, n3));
     this.addEdge(new Edge(n1, n4));
@@ -465,13 +557,13 @@ Graph.prototype = {
   // 6 nodes around a central one
   // connected in a ring and to the central one
   testComplex01: function() {
-    var n1 = this.addNode(new Node({name:"one",type:'supernode'}));
-    var n2 = this.addNode(new Node({name:"stranger"}));
-    var n3 = this.addNode(new Node({name:"three"}));
-    var n4 = this.addNode(new Node({name:"four"}));
-    var n5 = this.addNode(new Node({name:"five"}));
-    var n6 = this.addNode(new Node({name:"six"}));
-    var n7 = this.addNode(new Node({name:"seven"}));
+    var n1 = this.addNode(new Node({id:1, name:"one",type:'supernode'}));
+    var n2 = this.addNode(new Node({id:2, name:"stranger"}));
+    var n3 = this.addNode(new Node({id:3, name:"three"}));
+    var n4 = this.addNode(new Node({id:4, name:"four"}));
+    var n5 = this.addNode(new Node({id:5, name:"five"}));
+    var n6 = this.addNode(new Node({id:6, name:"six"}));
+    var n7 = this.addNode(new Node({id:7, name:"seven"}));
     // ring
     this.addEdge(new Edge(n2, n3));
     this.addEdge(new Edge(n3, n4));
@@ -785,7 +877,8 @@ Graph.prototype = {
 
       // center graph to canvas
       var bb = this.visual.getBBox();
-      this.visual.translate(-bb.x + (this.w - bb.width) / 2.0, -bb.y + (this.h - bb.height) / 2.0);
+      this.centerVertex = new Vertex( -bb.x + (this.w - bb.width) / 2.0, -bb.y + (this.h - bb.height) / 2.0 );
+      this.visual.translate(this.centerVertex.x, this.centerVertex.y);
     }
   },
 };
