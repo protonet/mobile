@@ -1,13 +1,42 @@
-// the future:
-/*Vertex.prototype = {
-  "sum": function(v) {
-    return new Vertex(this.x + v.x, this.y + v.y);
-  },
-  // ...
-}*/
-
 //* ------------------------------------------------- */
 /* Vertex class */
+
+/*
+var Vertex = function(x, y) {
+  this.x = x;
+  this.y = y;
+};
+
+Vertex.prototype = {
+  sum: function(v) {
+    return new Vertex(this.x + v.x, this.y + v.y);
+  },
+  diff: function(v) {
+    return new Vertex(this.x - v.x, this.y - v.y);
+  },
+  prod: function(scalar) {
+    return new Vertex(this.x * scalar, this.y * scalar);
+  },
+  quot: function(scalar) {
+    return new Vertex(this.x / scalar, this.y / scalar);
+  },
+  len: function() {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
+  },
+  scale: function(len) {
+    return this.norm().prod(len);
+  },
+  norm: function() {
+    return this.quot(this.len());
+  },
+  dot: function(v) {
+    return (this.x * v.x + this.y * v.y);
+  },
+  inverse: function() {
+    return this.prod(-1.0);
+  }
+};
+*/
 
 var Vertex = function(x, y) {
   this.x = x;
@@ -89,6 +118,7 @@ Node.prototype.render = function(paper, small) {
     
     var name = this.info.name;
     var is_stranger = this.info.name.match(/^stranger/);
+
     if (!is_small) {
       if (name.length > 10)
         name = name.substr(0,5)+'...'+name.substr(name.length-7,5);
@@ -98,11 +128,10 @@ Node.prototype.render = function(paper, small) {
 
       var title = this.paper.text(this.position.x, this.position.y, name);
       title.attr({fill: 'white', "font-size":11});
-      if (this.info.type == 'client') {
+      if (this.info.type == 'client')
         title.attr({'font-size':10});
-      }
       if (is_stranger)
-        title.attr({fill: "grey"});
+        title.attr({fill: "#333"});
       this.visual.push(title);
     }
 
@@ -137,20 +166,20 @@ Node.prototype.render = function(paper, small) {
 
     // on mouse drauf Farbe aendern
     box.mouseover(function() {
-      this.attr({fill: $(colors).attr(this.n.info.type).hover});
+      this.attr({fill: (is_stranger ? "#ccc" : $(colors).attr(this.n.info.type).hover)});
     });
     box.mouseout(function() {
-      this.attr({fill: $(colors).attr(this.n.info.type).normal});
+      this.attr({fill: (is_stranger ? "#fff" : $(colors).attr(this.n.info.type).normal)});
     });
 
     if (!is_small) {
       title.n = this;
       title.b = box;
       title.mouseover(function() {
-        this.b.attr({fill: $(colors).attr(this.b.n.info.type).hover});
+        this.b.attr({fill: (is_stranger ? "#ccc" : $(colors).attr(this.b.n.info.type).hover)});
       });
       title.mouseout(function() {
-        this.b.attr({fill: $(colors).attr(this.b.n.info.type).normal});
+        this.b.attr({fill: (is_stranger ? "#fff" : $(colors).attr(this.b.n.info.type).normal)});
       });
 
       title.toFront();
@@ -324,6 +353,7 @@ Graph.prototype.updateFromAsyncInfo = function(online_users) {
   online_users["14"] = {name:"superwoman", supernode:null};
   online_users["15"] = {name:"mrs.x", supernode:null};
   */
+  //console.log(online_users.toSource());
 
   // add id to info
   for (var key in online_users) {
@@ -389,13 +419,18 @@ Graph.prototype.addEdge = function(edge, dublicateOk) {
 };
 
 Graph.prototype.edgeExists = function(fromNode, toNode) {
-  if (fromNode.number == toNode.number)
+  if (fromNode.number == toNode.number || fromNode.info.id == toNode.info.id)
     return true;
+    
   for (var i = 0; i < this.edges.length; i++) {
     var from = this.edges[i].fromNode;
     var to   = this.edges[i].toNode;
-    if ((from.number == fromNode.number && to.number == toNode.number) ||
-        (from.number == toNode.number   && to.number == fromNode.number))
+    if (// via number
+        (from.number == fromNode.number && to.number == toNode.number) ||
+        (from.number == toNode.number   && to.number == fromNode.number) ||
+        // via info.id
+        (from.info.id == fromNode.info.id && to.info.id == toNode.info.id) ||
+        (from.info.id == toNode.info.id   && to.info.id == fromNode.info.id))
           return true;
   }
   return false;
@@ -520,12 +555,12 @@ Graph.prototype.initFromNetworksInfo = function(networks) {
 };
 
 Graph.prototype.log = function() {
-  var nodes = [];
-  var edges = [];
+  var nodes = ["nodes"];
+  var edges = ["edges"];
   for (var i = 0; i < this.nodes.length; i++) {
     var node = this.nodes[i];
     nodes.push([
-      node.number,
+      node.info.id, node.info.type,
       Math.round(node.position.x)+"/"+Math.round(node.position.y)
     ]);
   }
@@ -571,13 +606,19 @@ Graph.prototype.numConnectedClients = function(node) {
 
 Graph.prototype.processQueue = function() {
   if (this.queue.length) {
-    this.addNode(this.queue.shift());
-    this.addEdge(this.queue.shift(), false);
+    var node = this.queue.shift();
+    this.addNode(node);
+    
+    var edge = this.queue.shift();
+    this.addEdge(edge, false);
+    
     this.restart();
   }
 }
 
 Graph.prototype.layout = function() {
+  //this.log();
+
   // determine amount of nodes (not clients!)
   var normal_nodes = new Array();
   for (var n = 0; n < this.nodes.length; n++) {
@@ -737,7 +778,7 @@ Graph.prototype.layout_clients = function() {
       
       // position clients circular around node
       if (clients.length > 0) {
-        var radius = (this.small ? 5.0 : 30.0) + (clients.length * (this.small ? 4.0 : 5.0));
+        var radius = (this.small ? 20.0 : 30.0) + (clients.length * (this.small ? 4.0 : 5.0));
         var angle  = 360.0 / clients.length;
         for (var c = 0; c < clients.length; c++) {
           var client = clients[c];
