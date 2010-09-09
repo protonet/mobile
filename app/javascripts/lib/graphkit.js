@@ -39,7 +39,7 @@ Vertex.prototype = {
 /* ------------------------------------------------- */
 /* ID Generator class */
 
-var IDGenerator = {
+var NodeIDGenerator = {
   last: 0,
   genId: function() {
     this.last++;
@@ -51,7 +51,7 @@ var IDGenerator = {
 /* Graph Node class */
 
 var Node = function(info) {
-  this.number = IDGenerator.genId();
+  this.number = NodeIDGenerator.genId();
   this.info = info;
   
   if (!this.info.type)
@@ -224,23 +224,6 @@ Edge.prototype = {
 }
 
 /* ------------------------------------------------- */
-
-function calcOptimalSpringLength(area, num_nodes, is_small) {
-  return (Math.sqrt(area / num_nodes) * (is_small ? 3.5 : 5.0));
-}
-
-function calcInitialTemperature(width) {
-  return width * 100.0;
-}
-
-function rad_to_deg(x) {
-  return (180.0 / 3.1415 * x);
-}
-function deg_to_rad(x) {
-  return (3.1415 * x / 180.0);
-}
-
-/* ------------------------------------------------- */
 /* Graph class */
 
 var Graph = function(target_id, maxIterations, small) {
@@ -258,9 +241,7 @@ var Graph = function(target_id, maxIterations, small) {
   this.h = $($('#'+target_id)[0]).height();
   this.paper = Raphael(target_id, this.w, this.h);
 
-  this.temperature = calcInitialTemperature(this.w);
   this.area = this.w * this.h;
-  this.optimalSpringLength = calcOptimalSpringLength(this.area, this.nodes.length, this.small);
   
   // create info layer
   this.infolayer = this.paper.rect(0,0,100,100, 10);
@@ -276,6 +257,24 @@ var Graph = function(target_id, maxIterations, small) {
 };
 
 Graph.prototype = {
+
+  calcOptimalSpringLength: function() {
+    return (Math.sqrt(this.area / this.nodes.length) * 3.0);
+  },
+
+  calcInitialTemperature: function() {
+    return this.w * 100.0;
+  },
+
+  /*
+  rad_to_deg: function(x) {
+    return (180.0 / 3.1415 * x);
+  },
+  */
+  
+  deg_to_rad: function(x) {
+    return (3.1415 * x / 180.0);
+  },
 
   showInfo: function(node) {
     var nodepos = node.position.sum(this.centerVertex);
@@ -453,7 +452,7 @@ Graph.prototype = {
   },
 
   restart: function() {
-    this.temperature = calcInitialTemperature(this.w);
+    this.temperature = this.calcInitialTemperature();
     this.iters = 0;
   },
 
@@ -461,9 +460,8 @@ Graph.prototype = {
     if (!this.nodeExists(node.info))
       this.nodes.push(node);
     
-    this.optimalSpringLength = 
-      calcOptimalSpringLength(this.area, this.nodes.length, this.small);
-
+    this.optimalSpringLength = this.calcOptimalSpringLength();
+    
     node.init(this);
     return node;
   },
@@ -673,6 +671,10 @@ Graph.prototype = {
 
   layout: function() {
     //this.log();
+    if (!this.temperature)
+      this.temperature = this.calcInitialTemperature();
+    if (!this.optimalSpringLength)
+      this.optimalSpringLength = this.calcOptimalSpringLength();
 
     // determine amount of nodes (not clients!)
     var normal_nodes = new Array();
@@ -701,8 +703,8 @@ Graph.prototype = {
       for (var n = 0; n < normal_nodes.length; n++) {
         var node = normal_nodes[n];
         if (node.active) {
-          node.position.x = this.w / 2 + Math.sin(deg_to_rad(45 + angle * count)) * radius;
-          node.position.y = this.h / 2 + Math.cos(deg_to_rad(45 + angle * count)) * radius;       
+          node.position.x = this.w / 2 + Math.sin(this.deg_to_rad(45 + angle * count)) * radius;
+          node.position.y = this.h / 2 + Math.cos(this.deg_to_rad(45 + angle * count)) * radius;       
           count++;
         }
       }
@@ -730,7 +732,7 @@ Graph.prototype = {
               var d = delta.len();
     
               // the node gains mass when it "carries" a bunch of clients (it needs more space)
-              var mass = node.mass / ((this.numConnectedClients(node) + 1) * 2.5);
+              var mass = node.mass / ((this.numConnectedClients(node) + 1) * 1.5);
     
               node.disp = 
                 node.disp.sum(
@@ -777,7 +779,7 @@ Graph.prototype = {
       for (var n = 0; n < this.nodes.length; n++) {
         var node = this.nodes[n];
         if (node.info.type != 'client' && node.active) {
-          var optLen = calcOptimalSpringLength(this.area, this.nodes.length) / 3.0;
+          var optLen = this.calcOptimalSpringLength() / 3.0;
           node.disp = node.disp.scale(node.disp.len() > optLen ? optLen : node.disp.len());
         
           node.position = 
@@ -838,8 +840,8 @@ Graph.prototype = {
           for (var c = 0; c < clients.length; c++) {
             var client = clients[c];
             client.info.angle = (c > Math.floor(clients.length / 2) ? 270 : 90) - angle * c;
-            client.position.x = node.position.x + Math.sin(deg_to_rad(angle * c)) * radius;
-            client.position.y = node.position.y + Math.cos(deg_to_rad(angle * c)) * radius;
+            client.position.x = node.position.x + Math.sin(this.deg_to_rad(angle * c)) * radius;
+            client.position.y = node.position.y + Math.cos(this.deg_to_rad(angle * c)) * radius;
             client.info.nodepos = node.position;
           }
         }
