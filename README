@@ -62,6 +62,10 @@ Install our messaging broker:
 sudo port selfupdate
 sudo port install rabbitmq-server
 
+If you want to run our whole testsuite:
+sudo rabbitmqctl add_vhost /test
+sudo rabbitmqctl set_permissions -p /test guest ".*" ".*" ".*"
+
 == NODE.JS
 
 Install node.js by downloading it from http://nodejs.org/#download (>= 0.1.90)

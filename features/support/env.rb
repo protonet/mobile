@@ -76,8 +76,27 @@ module Selenium
   end
 end
 
-# multiuser support
-at_exit do
-  $browsers && $browsers.each { |id, browser| browser[:driver].quit rescue nil }
-end
+# start services
+# this starts up a new node.js instance
+# node = System::Services.node
+# node.start unless node.running?
 
+# this starts up a new node.js instance
+js_dispatcher = System::Services.js_dispatcher
+js_dispatcher.start unless js_dispatcher.running?
+
+# this starts up a new sunspot and solr instance
+solr_server = System::Services.solr
+solr_server.start unless solr_server.running?
+
+
+at_exit do
+  # multiuser support
+  $browsers && $browsers.each { |id, browser| browser[:driver].quit rescue nil }
+  # puts "shutting down node..."
+  # node.stop
+  puts "shutting down the dispatcher"
+  js_dispatcher.stop
+  puts "shutting down the solr server"
+  solr_server.stop
+end

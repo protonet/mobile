@@ -39,11 +39,13 @@ Rails::Initializer.run do |config|
   config.cache_store = :mem_cache_store
 end
 
+# json settings
 ActiveSupport::JSON.backend = 'JSONGem'
 
 # fleximage monkey patch
 require "#{RAILS_ROOT}/lib/fleximage_ext.rb"
 
+# amqp settings
 require 'mq'
 AMQP.settings[:vhost] = configatron.amqp.vhost.nil? ? '/' : configatron.amqp.vhost
 
@@ -54,45 +56,20 @@ unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(Phusio
   Thread.new{ EM.run() }
 end
 
-
 ################################# CHECK SYSTEMS IN INTERACTIVE (script/server) MODE #######################################
 
 if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER)
 
   # this starts up a new node.js instance
-  node = DaemonController.new(
-     :identifier    => 'node.js',
-     :start_command => 'node node/node.js',
-     :ping_command  => lambda { TCPSocket.new('localhost', 8124) },
-     :pid_file      => 'tmp/pids/node.pid',
-     :log_file      => 'log/node.log',
-     :timeout       => 25,
-     :daemonize_for_me => true
-  )
+  node = System::Services.node
   node.start unless node.running?
 
   # this starts up a new node.js instance
-  js_dispatching_server = DaemonController.new(
-     :identifier    => 'js_dispatching_server',
-     :start_command => 'ruby messaging/js_dispatching_control.rb start',
-     :stop_command  => 'ruby messaging/js_dispatching_control.rb stop',
-     :ping_command  => lambda { TCPSocket.new('localhost', configatron.socket.port) },
-     :pid_file      => "tmp/pids/js_dispatcher_#{Rails.env}.pid",
-     :log_file      => "log/js_dispatcher_#{Rails.env}.output",
-     :timeout       => 45
-  )
-  js_dispatching_server.start unless js_dispatching_server.running?
+  js_dispatcher = System::Services.js_dispatcher
+  js_dispatcher.start unless js_dispatcher.running?
 
   # this starts up a new sunspot and solr instance
-  solr_server = DaemonController.new(
-     :identifier    => 'solr_server',
-     :start_command => "sunspot-solr start -p 8983 -s solr --pid-dir=tmp/pids -d solr/data",
-     :stop_command  => "sunspot-solr stop  -p 8983 -s solr --pid-dir=tmp/pids -d solr/data",
-     :ping_command  => lambda { TCPSocket.new('localhost', 8983) },
-     :pid_file      => "tmp/pids/sunspot-solr.pid",
-     :log_file      => "log/sunspot-solr-#{Rails.env}.log",
-     :timeout       => 60
-  )
+  solr_server = System::Services.solr
   solr_server.start unless solr_server.running?
 
   # Checking all Subsystems
@@ -107,7 +84,7 @@ if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FR
   configatron.messaging_bus_active = System::MessagingBus.active?
   puts "RABBIT MQ:      #{configatron.messaging_bus_active ? colored_on : colored_off}"
 
-  configatron.js_dispatching_active = js_dispatching_server.running?
+  configatron.js_dispatching_active = js_dispatcher.running?
   puts "JS DISPATCHING: #{configatron.js_dispatching_active ? "#{colored_on}" : colored_off}"
 
   configatron.nodejs_active = node.running?
@@ -143,9 +120,9 @@ at_exit do
     puts "shutting down node..."
     node.stop
   end
-  if defined?(js_dispatching_server) && js_dispatching_server
+  if defined?(js_dispatcher) && js_dispatcher
     puts "shutting down the dispatcher"
-    js_dispatching_server.stop
+    js_dispatcher.stop
   end
   if defined?(solr_server) && solr_server
      puts "shutting down the solr server"
