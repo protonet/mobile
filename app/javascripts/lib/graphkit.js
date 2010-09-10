@@ -601,9 +601,10 @@ Graph.prototype = {
     }
     var edges = new Array();
     for (var i = 0; i < nodes.length; i++) {
-      for (var j = 0; j < nodes.length; j++) {
+      var j = 0;// TODO: use a complete map
+      //for (var j = 0; j < nodes.length; j++) {
         this.addEdge(new Edge(nodes[i], nodes[j]), false);
-      }
+      //}
     }
   },
 
