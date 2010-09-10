@@ -56,14 +56,16 @@ class NodeConnection < FlashConnection
   def post_init
     log "connected to remote network #{@network.uuid}"
     
-    Channel.global.each do |chan|
+    uuids = []
+    Channel.all(:conditions => {:network_id => @network.id}).each do |chan|
       bind_channel chan
+      uuids << chan.uuid
     end
     
     # TODO: :node_uuid => :uuid, and send :key
     send_json :operation => 'authenticate',
               :payload => {:type => 'node', :uuid => Network.find(1).uuid, :key => @network.key},
-              :channels => Channel.all(:conditions => {:network_id => @network.id}).map(&:uuid)
+              :channels => uuids
   rescue => ex
     p ex, ex.backtrace
   end
@@ -106,12 +108,14 @@ class NodeConnection < FlashConnection
   
   def bind_channel(channel)
     bind('channels', channel.uuid) do |json|
+      log json.inspect
       if json['network_uuid'] == Network.find(1).uuid
         json['operation'] = 'tweet'
+        json.delete 'channel_id' # worthless to the remote
         send_json json
       end
     end
-    log "bound to #{channel.id}"
+    log "bound to channel #{channel.uuid}"
   end
 
   def queue_id

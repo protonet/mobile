@@ -123,12 +123,10 @@ class ClientConnection < FlashServer
                     :channels    => data['channels']
         
         when 'tweet'
-          channel = Channel.find_by_uuid(data['channel_uuid']) if data.has_key? 'channel_uuid'
-          channel = Channel.find_by_id(data['channel_id']) if data.has_key? 'channel_id'
-          
           # TODO: Use a helper or *something*
           
           if node?
+            channel = Channel.find_by_uuid data['channel_uuid']
             tweet = Tweet.create :user_id => 0,
               :author => data['author'],
               :message => data['message'],
@@ -137,6 +135,7 @@ class ClientConnection < FlashServer
               :channels => [channel]
               
           else
+            channel = Channel.find_by_id data['channel_id']
             tweet = Tweet.create :user_id => @user.id,
               :author => @user.display_name,
               :message => data['message'],
