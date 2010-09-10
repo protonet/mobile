@@ -56,82 +56,23 @@ unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(Phusio
   Thread.new{ EM.run() }
 end
 
-################################# CHECK SYSTEMS IN INTERACTIVE (script/server) MODE #######################################
-
+# Check systems in script/server mode (stuff like passenger runs them some other way?)
 if ENV['_'].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER)
-
-  services = [
-    ['Node.JS',        :nodejs_active,         System::Services.node],
-    ['Socket server',  :js_dispatching_active, System::Services.js_dispatcher],
-    ['Sunspot/Solr',   :sunspot_active,        System::Services.solr],
-  ]
+  System::Services.start_all
   
-  puts '--------------------------'
-  puts 'Checking all subsystems...'
-  puts
-
-  colored_on  = "\e[1m\e[32m[ UP ]\e[0m"
-  colored_off = "\e[1m\e[31m[DOWN]\e[0m"
-
-  # checking the messaging bus
-  configatron.messaging_bus_active = System::MessagingBus.active?
-  puts "RabbitMQ:           #{configatron.messaging_bus_active ? colored_on : colored_off}"
-  
-  # checking dynamic services
-  services.each do |(name, entry, klass)|
-    $stdout.print((name + ':').ljust(20))
-    $stdout.flush
-    
-    if klass.running?
-      configatron.__send__ "#{entry}=", true
-      puts colored_on
-    else
-      $stdout.print "\e[sstarting..." # save cursor
-      $stdout.flush
-      
-      begin
-        klass.start
-        
-        running = klass.running?
-        configatron.__send__ "#{entry}=", running
-        puts "\e[u\e[K" + (running ? colored_on : colored_off) # restore & clear to end
-      rescue DaemonController::StartTimeout
-        configatron.__send__ "#{entry}=", false
-        puts "\e[u\e[K" + (colored_off) + " Failed to start in time"
-      end
-    end
-  end
-
-  configatron.ldap.active = false
-  puts "LDAP:               #{configatron.ldap.active ? colored_on : colored_off}"
-  puts '------------------------'
-
   at_exit do
-    $stdout.print "Shutting down services: \e[s" # save cursor
-    $stdout.flush
-    
-    services.each do |(name, entry, klass)|
-      $stdout.print "\e[u\e[K#{name}" # restore & clear to end
-      $stdout.flush
-      
-      klass.stop if klass.running?
-    end
-    
-    $stdout.print "\r\e[2K" # Move to left and clear line
-    $stdout.flush
+    System::Services.stop_all
   end
 end
 
-###########################################################################################################################
-
 if defined?(PhusionPassenger)
-    PhusionPassenger.on_event(:starting_worker_process) do |forked|
-      require "#{RAILS_ROOT}/lib/rack_ext.rb" # overwrite multipart parsing
-        if forked
-            # We're in smart spawning mode.
-            Thread.new{ EM.run() }
-        else
-            # We're in conservative spawning mode. We don't need to do anything.
-        end
+  PhusionPassenger.on_event(:starting_worker_process) do |forked|
+    require "#{RAILS_ROOT}/lib/rack_ext.rb" # overwrite multipart parsing
+    if forked
+      # We're in smart spawning mode.
+      Thread.new{ EM.run() }
+    else
+      # We're in conservative spawning mode. We don't need to do anything.
     end
+  end
 end

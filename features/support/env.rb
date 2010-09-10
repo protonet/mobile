@@ -47,13 +47,14 @@ ActionController::Base.allow_rescue = false
 # subsequent scenarios. If you do this, we recommend you create a Before
 # block that will explicitly put your database in a known state.
 Cucumber::Rails::World.use_transactional_fixtures = true
+
 # How to clean your database when transactions are turned off. See
 # http://github.com/bmabey/database_cleaner for more info.
 if defined?(ActiveRecord::Base)
   begin
     require 'database_cleaner'
     DatabaseCleaner.strategy = :truncation
-  rescue LoadError => ignore_if_database_cleaner_not_present
+  rescue LoadError
   end
 end
 
@@ -63,40 +64,19 @@ Capybara.default_wait_time = 2
 # this solves the problem of closing the browser
 require 'selenium-webdriver'
 Selenium::WebDriver::Remote::Bridge
-module Selenium
-  module WebDriver
-    module Remote
-      class Bridge
-        def quit
-          execute :quit
-        rescue# *QUIT_ERRORS -> rescuing all errors
-        end
-      end
-    end
+class Selenium::WebDriver::Remote::Bridge
+  def quit
+    execute :quit
+  rescue# *QUIT_ERRORS -> rescuing all errors
   end
 end
 
 # start services
-# this starts up a new node.js instance
-# node = System::Services.node
-# node.start unless node.running?
-
-# this starts up a new node.js instance
-js_dispatcher = System::Services.js_dispatcher
-js_dispatcher.start unless js_dispatcher.running?
-
-# this starts up a new sunspot and solr instance
-solr_server = System::Services.solr
-solr_server.start unless solr_server.running?
-
+System::Services.start_all
 
 at_exit do
   # multiuser support
   $browsers && $browsers.each { |id, browser| browser[:driver].quit rescue nil }
-  # puts "shutting down node..."
-  # node.stop
-  puts "shutting down the dispatcher"
-  js_dispatcher.stop
-  puts "shutting down the solr server"
-  solr_server.stop
+  
+  System::Services.stop_all
 end
