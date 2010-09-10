@@ -7,7 +7,7 @@ RAILS_GEM_VERSION = '2.3.5' unless defined? RAILS_GEM_VERSION
 require File.join(File.dirname(__FILE__), 'boot')
 
 # for app wide configurations
-require "configatron"
+require 'configatron'
 
 #  hack this needs to be removed
 require "#{RAILS_ROOT}/lib/rack_ext.rb" if defined?(Rack) && !defined?(PhusionPassenger)
@@ -58,46 +58,68 @@ end
 
 ################################# CHECK SYSTEMS IN INTERACTIVE (script/server) MODE #######################################
 
-if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER)
+if ENV['_'].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER)
 
-  # this starts up a new node.js instance
-  node = System::Services.node
-  node.start unless node.running?
+  services = [
+    ['Node.JS',        :nodejs_active,         System::Services.node],
+    ['Socket server',  :js_dispatching_active, System::Services.js_dispatcher],
+    ['Sunspot/Solr',   :sunspot_active,        System::Services.solr],
+  ]
+  
+  puts '--------------------------'
+  puts 'Checking all subsystems...'
+  puts
 
-  # this starts up a new node.js instance
-  js_dispatcher = System::Services.js_dispatcher
-  js_dispatcher.start unless js_dispatcher.running?
-
-  # this starts up a new sunspot and solr instance
-  solr_server = System::Services.solr
-  solr_server.start unless solr_server.running?
-
-  # Checking all Subsystems
-  puts "------------------------"
-  puts "Checking all subsystems:"
-  puts "                        "
-
-  colored_on  = "\e[1m\e[32m[ ON]\e[0m"
-  colored_off = "\e[1m\e[31m[OFF]\e[0m"
+  colored_on  = "\e[1m\e[32m[ UP ]\e[0m"
+  colored_off = "\e[1m\e[31m[DOWN]\e[0m"
 
   # checking the messaging bus
   configatron.messaging_bus_active = System::MessagingBus.active?
-  puts "RABBIT MQ:      #{configatron.messaging_bus_active ? colored_on : colored_off}"
-
-  configatron.js_dispatching_active = js_dispatcher.running?
-  puts "JS DISPATCHING: #{configatron.js_dispatching_active ? "#{colored_on}" : colored_off}"
-
-  configatron.nodejs_active = node.running?
-  puts "NODE JS:        #{configatron.nodejs_active ? "#{colored_on}" : colored_off}"
-
-  configatron.sunspot_active = solr_server.running?
-  puts "SUNSPOT/SOLR:   #{configatron.sunspot_active ? "#{colored_on}" : colored_off}"
+  puts "RabbitMQ:           #{configatron.messaging_bus_active ? colored_on : colored_off}"
+  
+  # checking dynamic services
+  services.each do |(name, entry, klass)|
+    $stdout.print((name + ':').ljust(20))
+    $stdout.flush
+    
+    if klass.running?
+      configatron.__send__ "#{entry}=", true
+      puts colored_on
+    else
+      $stdout.print "\e[sstarting..." # save cursor
+      $stdout.flush
+      
+      begin
+        klass.start
+        
+        running = klass.running?
+        configatron.__send__ "#{entry}=", running
+        puts "\e[u\e[K" + (running ? colored_on : colored_off) # restore & clear to end
+      rescue DaemonController::StartTimeout
+        configatron.__send__ "#{entry}=", false
+        puts "\e[u\e[K" + (colored_off) + " Failed to start in time"
+      end
+    end
+  end
 
   configatron.ldap.active = false
-  puts "LDAP:           #{configatron.ldap.active ? colored_on : colored_off}"
-  puts "                        "
-  puts "------------------------"
+  puts "LDAP:               #{configatron.ldap.active ? colored_on : colored_off}"
+  puts '------------------------'
 
+  at_exit do
+    $stdout.print "Shutting down services: \e[s" # save cursor
+    $stdout.flush
+    
+    services.each do |(name, entry, klass)|
+      $stdout.print "\e[u\e[K#{name}" # restore & clear to end
+      $stdout.flush
+      
+      klass.stop if klass.running?
+    end
+    
+    $stdout.print "\r\e[2K" # Move to left and clear line
+    $stdout.flush
+  end
 end
 
 ###########################################################################################################################
@@ -112,20 +134,4 @@ if defined?(PhusionPassenger)
             # We're in conservative spawning mode. We don't need to do anything.
         end
     end
-end
-
-
-at_exit do
-  if defined?(node) && node
-    puts "shutting down node..."
-    node.stop
-  end
-  if defined?(js_dispatcher) && js_dispatcher
-    puts "shutting down the dispatcher"
-    js_dispatcher.stop
-  end
-  if defined?(solr_server) && solr_server
-     puts "shutting down the solr server"
-     solr_server.stop
- end
 end
