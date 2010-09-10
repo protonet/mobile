@@ -26,7 +26,7 @@ class Network < ActiveRecord::Base
     end
     
     res = do_post '/networks/negotiate.json', fields
-    update_attributes :key => res['key'] # saves
+    update_attributes :key => res['key'], :uuid => res['node']['uuid'] # saves
     res
   end
   

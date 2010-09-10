@@ -59,12 +59,11 @@ $(function() {
     html += "<form id='create-network-form'>";
     html += "<ul id='channel-picker'>";
     
-    var chans = msg.channels;
-    for (var i=0; i<chans.length; i++) {
-      var chan = chans[i];
+    for (var uuid in msg.channels) {
+      var chan = msg.channels[uuid];
       
-      html += "<li><input type='checkbox' id='channel_" + chan.uuid + "' name='channel_uuid' value='" + chan.uuid + "' />";
-      html += "<label for='channel_" + chan.uuid + "'>" + chan.name + "</label></li>";
+      html += "<li><input type='checkbox' id='channel_" + uuid + "' name='channel_uuid' value='" + uuid + "' />";
+      html += "<label for='channel_" + uuid + "'>" + chan.name + "</label></li>";
     }
     
     html += "</ul><input type='submit' value='Couple' /></form>";

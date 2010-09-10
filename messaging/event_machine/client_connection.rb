@@ -114,7 +114,7 @@ class ClientConnection < FlashServer
                     :trigger     => 'network.creating',
                     :message     => 'Initiating persistant connection...'
 
-          NodeConnection.connect network, @tracker, res['config']['socket_server_host'], res['config']['socket_server_port']
+          NodeConnection.connect network, @tracker, info['config']['socket_server_host'], info['config']['socket_server_port']
           
           send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
                     :trigger     => 'network.create',
