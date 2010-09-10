@@ -21,8 +21,6 @@ class ClientConnection < FlashServer
     if data.is_a?(Hash) && data["operation"] == "authenticate"
       log("auth json: #{data["payload"].inspect}")
       if json_authenticate(data["payload"]) && !@subscribed
-        # type of socket 'web', 'node' or 'api'
-        @type = data["payload"]["type"] || 'api'
         @subscribed = true # don't resubscribe
         bind_socket_to_system_queue
         
@@ -158,32 +156,40 @@ class ClientConnection < FlashServer
   def json_authenticate(auth_data)
     return false if auth_data.nil?
     
-    if auth_data["user_id"]  # it's a user
-      return false if auth_data["user_id"] == 0
-      potential_user = User.find(auth_data["user_id"]) rescue nil
-      @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data["token"])
+    type = auth_data['type'] || 'api'
+    case type
+    
+      when 'web', 'api'
+        return false if auth_data['user_id'] == 0
+        potential_user = User.find(auth_data['user_id']) rescue nil
+        @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data['token'])
+        
+        if @user
+          log("authenticated #{@user.display_name}")
+          send_json :x_target => 'socket_id', :socket_id => @key
+        else
+          log("could not authenticate user #{auth_data.inspect}")
+          return false
+        end
       
-      if @user
-        log("authenticated #{@user.display_name}")
-        send_json :x_target => 'socket_id', :socket_id => @key
-      else
-        log("could not authenticate #{auth_data.inspect}")
-      end
-    elsif auth_data['uuid']
-      potential_node = Network.find_by_uuid(auth_data['uuid']) rescue nil
-      @node = potential_node if potential_node && potential_node.key == auth_data['key']
-      
-      if @node
-        log("authenticated node #{@node.name}")
-        send_json :x_target => 'authenticate', :key => @key
-      else
-        log("could not authenticate node #{auth_data.inspect}")
-      end
-    end
+      when 'node'
+        potential_node = Network.find_by_uuid(auth_data['uuid']) rescue nil
+        @node = potential_node if potential_node && potential_node.key == auth_data['key']
+        
+        if @node
+          log("authenticated node #{@node.name}")
+          send_json :x_target => 'authenticate', :key => @key
+        else
+          log("could not authenticate node #{auth_data.inspect}")
+          return false
+        end
+    
+    end # case
+    @type = type
   end
   
   def send_reload_request
-    send_json :x_target => "document.location.reload"
+    send_json :x_target => 'document.location.reload'
   end
   
   def unbind

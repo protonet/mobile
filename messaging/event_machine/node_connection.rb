@@ -62,7 +62,7 @@ class NodeConnection < FlashConnection
     
     # TODO: :node_uuid => :uuid, and send :key
     send_json :operation => 'authenticate',
-              :payload => {:type => 'node', :node_uuid => Network.find(1).uuid},
+              :payload => {:type => 'node', :uuid => Network.find(1).uuid, :key => @network.key},
               :channels => Channel.all(:conditions => {:network_id => @network.id}).map(&:uuid)
   rescue => ex
     p ex, ex.backtrace
