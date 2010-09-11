@@ -46,7 +46,7 @@ module System
       # TODO: Do something about this!
       configatron.ldap.active = false
       puts "LDAP:               #{configatron.ldap.active ? colored_on : colored_off}"
-      puts '------------------------'
+      puts '--------------------------'
     end
 
     def self.stop_all
