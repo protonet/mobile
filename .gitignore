@@ -9,7 +9,7 @@ doc/api
 doc/app
 *.pid
 *.sqlite3
-config/database.yml
+set_env.sh
 public/javascripts/sprockets.js
 public/javascripts/all.js
 public/stylesheets/all.css
