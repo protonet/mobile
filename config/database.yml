@@ -4,9 +4,9 @@ development:
   reconnect: false
   database: dashboard_development
   pool: 5
-  username: root
-  password:
-  socket: /tmp/mysql.sock
+  username: <%= ENV['PTN_DEV_DB_USER'] || 'root' %>
+  password: <%= ENV['PTN_DEV_DB_PASS'] || '' %>
+  host: localhost
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -18,8 +18,9 @@ test: &test
   database: dashboard_test
   pool: 5
   username: root
-  password:
-  socket: <%= ENV['TEST_DB_SOCKET'] || '/tmp/mysql.sock' %>
+  username: <%= ENV['PTN_TEST_DB_USER']   || 'root' %>
+  password: <%= ENV['PTN_TEST_DB_PASS']   || '' %>
+  host: localhost
 
 production:
   adapter: mysql
@@ -27,10 +28,9 @@ production:
   reconnect: false
   database: dashboard_production
   pool: 5
-  username: root
-  password:
-  socket: /var/run/mysqld/mysqld.sock
-
+  username: <%= ENV['PTN_PROD_DB_USER']   || 'root' %>
+  password: <%= ENV['PTN_PROD_DB_PASS']   || '' %>
+  host: localhost
 
 cucumber:
   <<: *test
