@@ -1,8 +1,13 @@
-require 'test_helper'
+require File.dirname(__FILE__) + '/../test_helper'
 
 class NetworkTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  test "the local method returns your local network (defined by the id 0)" do
+    assert_equal 1, Network.local.id
+  end
+  
+  test "the local method creates the local network if it doesn't exist" do
+    assert Network.all([1]).empty?
+    Network.local
+    assert !Network.all([1]).empty?
   end
 end

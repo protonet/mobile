@@ -36,6 +36,16 @@ class User < ActiveRecord::Base
   after_destroy :move_tweets_to_anonymous
   after_destroy :move_owned_channels_to_anonymous
 
+  def self.anonymous
+    begin
+      find(0)
+    rescue ActiveRecord::RecordNotFound
+      user = new(:name => 'Anonymous', :login => 'Anonymous')
+      user.save_with_validation(false) && update_all("id = 0", "id = #{user.id}")
+      find(0)
+    end
+  end
+  
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   #
   # uff.  this is really an authorization, not authentication routine.

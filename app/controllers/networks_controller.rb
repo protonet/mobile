@@ -49,7 +49,7 @@ class NetworksController < ApplicationController
   # externally available
   def negotiate
     res = {
-      :node => Network.find(1),
+      :node => Network.local,
       :config => {
         :socket_server_host => request.env["SERVER_NAME"],
         :socket_server_port => configatron.socket.port,

@@ -18,7 +18,7 @@ class ClientTracker
   
   def add_user user, conn
     @online_users[user.id]['name'] ||= user.display_name
-    @online_users[user.id]['network_uuid'] ||= Network.find(1).uuid
+    @online_users[user.id]['network_uuid'] ||= Network.local.uuid
     @online_users[user.id]['connections'] ||= []
     @online_users[user.id]['connections'] << [conn.key, conn.type]
   end

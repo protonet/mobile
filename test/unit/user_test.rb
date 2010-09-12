@@ -2,6 +2,20 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class UserTest < Test::Unit::TestCase
   
+  context "Calling the class method anonymous" do
+    it "should return an user with the id 0" do
+      assert_equal 0, User.anonymous.id
+    end
+    
+    it "should create an entry for the anonymous user if it doesn't exist" do
+      User.delete_all
+      assert User.all([0]).empty?
+      User.anonymous
+      assert !User.all([0]).empty?
+    end
+    
+  end
+  
   context "Removing old temporary users also called strangers" do
     it "should remove all strangers created prior to 2 days ago" do
       User.destroy_all
