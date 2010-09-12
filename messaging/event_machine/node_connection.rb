@@ -64,7 +64,7 @@ class NodeConnection < FlashConnection
     
     # TODO: :node_uuid => :uuid, and send :key
     send_json :operation => 'authenticate',
-              :payload => {:type => 'node', :uuid => Network.find(1).uuid, :key => @network.key},
+              :payload => {:type => 'node', :uuid => Network.local.uuid, :key => @network.key},
               :channels => uuids
   rescue => ex
     p ex, ex.backtrace
@@ -80,7 +80,7 @@ class NodeConnection < FlashConnection
     
     if json['x_target'] == 'protonet.globals.communicationConsole.receiveMessage' then
       # TODO: when using node UUIDs, this check needs to be against the current node I think
-      return if json['network_uuid'] == Network.find(1).uuid
+      return if json['network_uuid'] == Network.local.uuid
       
       channel = Channel.find_by_uuid(json['channel_uuid'])
       json['channel_id'] = channel.id
@@ -109,7 +109,7 @@ class NodeConnection < FlashConnection
   def bind_channel(channel)
     bind('channels', channel.uuid) do |json|
       log json.inspect
-      if json['network_uuid'] == Network.find(1).uuid
+      if json['network_uuid'] == Network.local.uuid
         json['operation'] = 'tweet'
         json.delete 'channel_id' # worthless to the remote
         send_json json

@@ -7,6 +7,16 @@ class Network < ActiveRecord::Base
   validates_uniqueness_of :uuid
   after_create :generate_uuid, :if => lambda {|c| c.uuid.blank? && c.local? }
   
+  def self.local
+    begin
+      find(1)
+    rescue ActiveRecord::RecordNotFound
+      network = new(:id => 1, :name => "protonet-#{ActiveSupport::SecureRandom.base64(6)}", :description => 'this is your own node', :key => 'encryptme', :supernode => 'localhost')
+      network.save && update_all("id = 1", "id = #{network.id}")
+      find(1)
+    end
+  end
+  
   def local?
     id == 1
   end
@@ -21,7 +31,7 @@ class Network < ActiveRecord::Base
     fields = {:key => self.key}
   
     # stupid rails
-    Network.find(1).attributes.each_pair do |key, val|
+    Network.local.attributes.each_pair do |key, val|
       fields["network[#{key}]"] = val
     end
     
