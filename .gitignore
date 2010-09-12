@@ -9,6 +9,7 @@ doc/api
 doc/app
 *.pid
 *.sqlite3
+config/database.yml
 public/javascripts/sprockets.js
 public/javascripts/all.js
 public/stylesheets/all.css

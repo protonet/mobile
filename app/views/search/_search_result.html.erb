@@ -1,5 +1,12 @@
 <div id="feed-viewer-<%= tweet.id %>" class="feed-viewer">
-  <span class="pos-num"><%= pos%></span>
+  <span id="search-pos-<%= pos %>" class="pos-num"><%= link_to(pos, "#", :name => "search-pos-#{pos}")%></span>
+  <div id="search-pager">
+  <% number_of_hits_for_page(@search_results.total, (params[:page] || 1)).times do |i| -%>
+    <% pager_pos = i + 1 -%>
+    <span><%= link_to(pager_pos, "#search-pos-#{pager_pos}") %></span>
+  <% end -%>
+  </div>
+
   <span class="more-tweets">
     <%= link_to(image_tag("up_arrow.png"),
       more_tweets_path(tweet.id,channel.id,more_time + 10,less_time,pos)) %>

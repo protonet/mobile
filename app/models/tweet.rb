@@ -1,6 +1,8 @@
 class Tweet < ActiveRecord::Base
   include Rabbit
 
+  SEARCH_RESULTS_PER_PAGE = 5
+
   searchable do
     integer :channel_ids, :references => Channel, :multiple => true
     text :message, :stored => true
@@ -24,7 +26,7 @@ class Tweet < ActiveRecord::Base
   def local?
     network_id == 1
   end
-  
+
   def remote?
     network_id != 1
   end

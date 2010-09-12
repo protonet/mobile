@@ -62,8 +62,29 @@ span.highlight {
   padding: 3px;
 }
 
+.pos-num a {
+  text-decoration: none;
+}
+
+#search-pager {
+  margin: 5px 0 10px 100px;
+  font-size: 14px;
+  display: block;
+  width: 120px;
+}
+
+#search-pager a {
+  font-size: 11px;
+  border: 2px solid #e4ab4f;
+  text-align: center;
+  padding: 1px;
+  width: 20px;
+  text-decoration: none;
+  color
+}
+
 .more-tweets {
-  margin: 0 0 10px 350px;
+  margin: 0 0 10px 250px;
   font-size: 11px;
   display: block;
 }

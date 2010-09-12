@@ -5,7 +5,7 @@ development:
   database: dashboard_development
   pool: 5
   username: root
-  password: 
+  password:
   socket: /tmp/mysql.sock
 
 # Warning: The database defined as "test" will be erased and
@@ -18,7 +18,7 @@ test: &test
   database: dashboard_test
   pool: 5
   username: root
-  password: 
+  password:
   socket: <%= ENV['TEST_DB_SOCKET'] || '/tmp/mysql.sock' %>
 
 production:
@@ -28,7 +28,7 @@ production:
   database: dashboard_production
   pool: 5
   username: root
-  password: 
+  password:
   socket: /var/run/mysqld/mysqld.sock
 
 

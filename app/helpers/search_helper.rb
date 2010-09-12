@@ -13,4 +13,15 @@ module SearchHelper
 
     time_in_words.join(", ")
   end
+
+  def number_of_hits_for_page(num_results, page_number)
+    page_number = page_number.to_i
+    num_full_pages = num_results / Tweet::SEARCH_RESULTS_PER_PAGE
+
+    if page_number > num_full_pages
+      num_full_pages = num_results % Tweet::SEARCH_RESULTS_PER_PAGE
+    else
+      Tweet::SEARCH_RESULTS_PER_PAGE
+    end
+  end
 end
