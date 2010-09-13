@@ -18,6 +18,7 @@ class Images::AvatarsController < ApplicationController
     @avatar.update_attributes(params[:images_avatar])
     @avatar.user = current_user
     if @avatar.save
+      expire_action images_avatar_path(@avatar.id)
       redirect_to preferences_path
     else
       flash[:notice] = 'Your photo did not pass validation!'
