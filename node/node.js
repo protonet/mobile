@@ -35,6 +35,13 @@ connection.addListener("ready", function() {
 
 
 /*----------------------------------- HTTP TASKS -----------------------------------*/
+var htmlTaskPort = 8124;
+process.argv.forEach(function(val){
+  var match;
+  if(match = val.match(/port=(\d+)/)) {
+    htmlTaskPort = parseInt(match[1], 10);
+  }
+});
 var http      = require("http"),
     parseUrl  = require("url").parse;
 
@@ -48,7 +55,7 @@ http.createServer(function(request, response) {
       require("./tasks/screenshot").make(params, response);
       break;
   }
-}).listen(8124);
+}).listen(htmlTaskPort);
 
 
 /*----------------------------------- STARTUP STUFF -----------------------------------*/

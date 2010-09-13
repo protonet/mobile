@@ -1,5 +1,6 @@
 #!/bin/bash
 
+export NODE_PORT=8124
 export CURRENT_PATH=$1
 export HOME=$CURRENT_PATH/../..
 shift 1
@@ -8,7 +9,7 @@ shift 1
 cd $CURRENT_PATH
 case $1 in
    start)
-      exec 2>&1 /usr/local/bin/node $CURRENT_PATH/node/node.js 1>$CURRENT_PATH/log/node.log &
+      exec 2>&1 /usr/local/bin/node $CURRENT_PATH/node/node.js port=$NODE_PORT 1>$CURRENT_PATH/log/node.log &
       ;;
     stop)  
       kill `cat $CURRENT_PATH/tmp/pids/node.pid` ;;

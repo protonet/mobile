@@ -35,7 +35,7 @@ configatron.images.externals_path = "public/system/externals"
 
 configatron.ldap.active = false
 configatron.socket.port = 5000
-
+configatron.nodejs.port = 8124
 # checks for stage specific config files
 stage_config = "#{RAILS_ROOT}/config/environments/stage.rb"
 eval(IO.read(stage_config), binding, stage_config) if test(?f, stage_config)

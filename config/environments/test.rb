@@ -32,4 +32,5 @@ configatron.images.avatars_path   = "public/avatars"
 configatron.images.externals_path = "public/externals"
 
 configatron.socket.port = 5001
+configatron.nodejs.port = 8125
 configatron.amqp.vhost  = "/test"
