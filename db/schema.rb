@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100908131219) do
+ActiveRecord::Schema.define(:version => 20100913124214) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -39,7 +39,6 @@ ActiveRecord::Schema.define(:version => 20100908131219) do
     t.integer  "channel_id"
     t.integer  "user_id"
     t.integer  "flags",      :default => 0
-    t.integer  "integer",    :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
