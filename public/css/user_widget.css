@@ -39,6 +39,11 @@
   color: #000;
 }
 
+#user-widget li.stranger {
+  font-style: italic;
+  color: #999;
+}
+
 #user-widget li.typing {
   background-position: 5px -43px;
 }

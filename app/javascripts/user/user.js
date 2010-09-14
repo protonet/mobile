@@ -28,5 +28,5 @@ protonet.user = {
   }
 };
 
-//= require "config.js"
 //= require "browser.js"
+//= require "config.js"

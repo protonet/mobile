@@ -385,16 +385,21 @@ protonet.timeline.Channel.prototype = {
    * Handle user replies
    */
   _replyNotifications: function(meepData, instance) {
-    if (this.isSelected) {
-      return;
+    var isWindowFocused             = protonet.utils.isWindowFocused(),
+        isAllowedToDoNotifications  = protonet.user.Config.get("reply_notification"),
+        userId                      = protonet.user.data.id;
+    
+    if (isAllowedToDoNotifications && !isWindowFocused) {
+      new protonet.ui.Notification({
+        image:  meepData.avatar,
+        title:  protonet.t("REPLY_NOTIFICATION_TITLE"),
+        text:   meepData.message.truncate(140)
+      });
     }
     
-    var userId = protonet.user.data.id;
-    if ($.inArray(userId, instance.userReplies) == -1) {
-      return;
+    if (!this.isSelected && $.inArray(userId, instance.userReplies) != -1) {
+      this.unreadReplies++;
+      this._toggleReplyBadge();
     }
-    
-    this.unreadReplies++;
-    this._toggleReplyBadge();
   }
 };

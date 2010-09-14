@@ -42,18 +42,22 @@
           <fieldset>
             <legend>Get started by <strong>signing up</strong> (it's free)</legend>
             <div>
-              <%= f.label :username, "username" %>
-              <%= f.text_field :username, :title => "user name" %>
+              <%= f.label :login, "username" %>
+              <%= f.text_field :login, :title => "user name" %>
             </div>
             <div>
               <%= f.label :password, "password" %>
               <%= f.password_field :password, :title => "password" %>
-              <%= f.hidden_field "password_confirmation" %>
             </div>
             <div>
-              <%= f.label :signup_contact, "social media profile or email" %>
-              <%= f.text_field :signup_contact, :title => "social media profile or email" %>
-              <span class="hint">(eg. http://www.facebook.com/john.doe)</span>
+              <%= f.label :password_confirmation, "password confirmation" %>
+              <%= f.password_field :password_confirmation, :title => "password" %>
+            </div>
+            <div>
+              <!-- TODO: Enable this -->
+              <%#= f.label :signup_contact, "social media profile or email" %>
+              <%#= f.text_field :signup_contact, :title => "social media profile or email" %>
+              <!-- <span class="hint">(eg. http://www.facebook.com/john.doe)</span> -->
             </div>
             <div>
               <button type="submit" name="join">sign up</button>

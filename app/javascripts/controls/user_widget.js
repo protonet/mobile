@@ -1,4 +1,5 @@
 //= require "../ui/resizer.js"
+//= require "../ui/notification.js"
 //= require "../lib/jquery-ui-1.8.4.highlight-effect.min.js"
 
 protonet.controls.UserWidget = function() {
@@ -30,8 +31,8 @@ protonet.controls.UserWidget.prototype = {
   _observe: function() {
     protonet.Notifications
       .bind("user.added", function(e, data) {
-        
-      })
+        this.addUser(data.id, data);
+      }.bind(this))
       
       .bind("user.typing", function(e, data) {
         this._typingStart(data.user_id);
@@ -113,19 +114,23 @@ protonet.controls.UserWidget.prototype = {
    */
   createUsers: function(users) {
     for (var userId in users) {
-      var user = users[userId],
-          alreadyExists = !!this.usersData[userId],
-          isViewer = protonet.user.data.name == user.name,
-          isStranger = user.name.startsWith("stranger_");
-      
-      if (!alreadyExists) {
-        this.usersData[userId] = {
-          isViewer:   isViewer,
-          isStranger: isStranger,
-          element:    this.createElement(userId, user.name, isViewer, isStranger)
-        };
-      }
+      this.createUser(userId, users[userId]);
     }
+  },
+  
+  createUser: function(userId, user) {
+    if (this.usersData[userId]) {
+      return;
+    }
+    
+    var isViewer = protonet.user.data.name == user.name,
+        isStranger = user.name.startsWith("stranger_");
+    
+    this.usersData[userId] = {
+      isViewer:   isViewer,
+      isStranger: isStranger,
+      element:    this.createElement(userId, user.name, isViewer, isStranger)
+    };
   },
   
   createElement: function(userId, userName, isViewer, isStranger) {
@@ -133,6 +138,7 @@ protonet.controls.UserWidget.prototype = {
       "data-user-id": userId,
       text:           userName,
       title:          userName,
+      tabIndex:       -1,
       className:      [isViewer ? "myself" : "", isStranger ? "stranger" : ""].join(" ")
     }).appendTo(this.list);
   },
@@ -144,13 +150,18 @@ protonet.controls.UserWidget.prototype = {
     this.list.find(".typing").prependTo(this.list);
   },
   
-  _cleanupStrangers: function() {
-    // TODO
+  cleanupStrangers: function() {
+    for (var i in this.usersData) {
+      var user = this.usersData[i];
+      if (user.isStranger && !user.isOnline) {
+        user.element.detach();
+        delete this.usersData[i];
+      }
+    }
   },
   
   updateCount: function() {
-    var total = 0,
-        online = 0;
+    var total = 0, online = 0;
     for (var i in this.usersData) {
       total++;
       if (this.usersData[i].isOnline) {

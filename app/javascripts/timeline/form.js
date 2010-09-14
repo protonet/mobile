@@ -39,6 +39,7 @@ protonet.timeline.Form = {
     protonet.Notifications.bind("users.data_available", function(e, userData) {
       var userNames = [];
       $.each(userData, function(key, value) { userNames.push(value.name); });
+      userNames = userNames.sort(function(a, b) { return a.length - b.length > 0 ? 1 : -1; });
       this.autoCompleter.addData(userNames, true);
     }.bind(this));
     
