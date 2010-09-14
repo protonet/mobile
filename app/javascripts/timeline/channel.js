@@ -387,9 +387,10 @@ protonet.timeline.Channel.prototype = {
   _replyNotifications: function(meepData, instance) {
     var isWindowFocused             = protonet.utils.isWindowFocused(),
         isAllowedToDoNotifications  = protonet.user.Config.get("reply_notification"),
-        userId                      = protonet.user.data.id;
+        userId                      = protonet.user.data.id,
+        isReplyToViewer             = $.inArray(userId, instance.userReplies) != -1;
     
-    if (isAllowedToDoNotifications && !isWindowFocused) {
+    if (isReplyToViewer && isAllowedToDoNotifications && !isWindowFocused) {
       new protonet.ui.Notification({
         image:  meepData.avatar,
         title:  protonet.t("REPLY_NOTIFICATION_TITLE"),
@@ -397,7 +398,7 @@ protonet.timeline.Channel.prototype = {
       });
     }
     
-    if (!this.isSelected && $.inArray(userId, instance.userReplies) != -1) {
+    if (!this.isSelected && isReplyToViewer) {
       this.unreadReplies++;
       this._toggleReplyBadge();
     }

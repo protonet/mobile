@@ -4,5 +4,5 @@ protonet.translations = {
   MEEP_SENDING: "[sending...]",
   MEEP_ERROR_LONG: "Olala... your meep hasn't been sent. Try again or leave the computer and enjoy the wonderful sun outside!",
   NO_MEEPS_AVAILABLE: "Hurry! Be the first one to post a message here.",
-  REPLY_NOTIFICATION_TITLE: "Protonet - New reply"
+  REPLY_NOTIFICATION_TITLE: "protonet - new reply"
 };

@@ -127,6 +127,7 @@ protonet.controls.UserWidget.prototype = {
         isStranger = user.name.startsWith("stranger_");
     
     this.usersData[userId] = {
+      name:       user.name,
       isViewer:   isViewer,
       isStranger: isStranger,
       element:    this.createElement(userId, user.name, isViewer, isStranger)

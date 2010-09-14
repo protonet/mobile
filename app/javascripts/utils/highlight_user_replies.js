@@ -14,6 +14,10 @@ protonet.utils.highlightUserReplies = (function() {
       userMapping     = {},
       viewer          = {};
   
+  protonet.Notifications.bind("user.added", function(e, data) {
+    userMapping[data.name.toLowerCase()] = Number(data.id);
+  });
+  
   protonet.Notifications.bind("user.data_available", function(e, userData) {
     viewer = userData;
   });

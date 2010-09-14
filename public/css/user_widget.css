@@ -32,6 +32,7 @@
   overflow: hidden;
   background-position: 4px -18px;
   color: #999;
+  cursor: pointer;
 }
 
 #user-widget li.online {

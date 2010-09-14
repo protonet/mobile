@@ -4,6 +4,7 @@
 /**
  * @events
  *    form.submitted          - Indicates that the input has been submitted
+ *    form.create_reply       - Pass the name to a user and it prefills the message textarea
  *    meep.render_from_form   - Causes a new meep to render and to post
  */
 protonet.timeline.Form = {
@@ -56,7 +57,7 @@ protonet.timeline.Form = {
      * Add newly registered user to auto completer
      */
     protonet.Notifications.bind("user.added", function(e, user){
-      this.autoCompleter.addData(user.user_name, true);
+      this.autoCompleter.addData(user.name, true);
     }.bind(this));
     
     /**
@@ -73,6 +74,19 @@ protonet.timeline.Form = {
      */
     protonet.Notifications.bind("socket.update_id", function(e, data) {
       this.socketIdInput.val(data.socket_id);
+    }.bind(this));
+    
+    /**
+     * Create replies on demand
+     */
+    protonet.Notifications.bind("form.create_reply", function(e, userName) {
+      var value = this.input.val(),
+          reply = "@" + userName +  " ";
+      if ($.trim(value).length && !this.input.hasClass("inline-hint")) {
+        this.input.focus().val(value + " " + reply);
+      } else {
+        this.input.focus().val(reply);
+      }
     }.bind(this));
     
     
