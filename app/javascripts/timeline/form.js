@@ -80,13 +80,9 @@ protonet.timeline.Form = {
      * Create replies on demand
      */
     protonet.Notifications.bind("form.create_reply", function(e, userName) {
-      var value = this.input.val(),
-          reply = "@" + userName +  " ";
-      if ($.trim(value).length && !this.input.hasClass("inline-hint")) {
-        this.input.focus().val(value + " " + reply);
-      } else {
-        this.input.focus().val(reply);
-      }
+      var value = this.input.focus().val(),
+          reply = "@" + userName + " ";
+      this.input.val(value + ((value.slice(-1) == " " || !value.length) ? "" : " ") + reply);
     }.bind(this));
     
     

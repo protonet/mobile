@@ -37,9 +37,8 @@ protonet.user = {
   
   _createContextMenu: function() {
     new protonet.ui.ContextMenu("[data-user-id]", {
-      "holla at him/her": function(link, closeContextMenu) {
+      "send reply": function(link, closeContextMenu) {
         var user = this.usersData[+link.attr("data-user-id")];
-        
         if (user) {
           protonet.Notifications.trigger("form.create_reply", user.name);
           closeContextMenu();
