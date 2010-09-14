@@ -11,6 +11,13 @@ set :scm, :git
 
 namespace :deploy do
   
+  desc "first run"
+  task :first_run, :roles => :app do
+    setup
+    update_code
+    setup_db
+  end
+  
   # use deploy:setup first ;)
   desc "prepare node for installation"
   task :prepare, :roles => :app do
@@ -34,12 +41,6 @@ namespace :deploy do
     sleep 1
     run monit_command
   end
-
-  desc "set all the necessary symlinks"
-  task :create_protonet_symlinks, :roles => :app do
-    # db symlink
-    run "ln -s #{shared_path}/db #{release_path}/db/shared"
-  end
   
   desc "copy stage dependent config files"
   task :copy_stage_config, :roles => :app do
@@ -50,8 +51,9 @@ namespace :deploy do
     # do nothing
   end
   
+  desc "create the database on if it doesn't exist"
   task :setup_db do
-    run "cd #{current_release} && RAILS_ENV=production bundle exec rake db:setup"
+    run "cd #{current_release}; mysql -u root dashboard_production -e \"show tables;\" 2>&1 > /dev/null; if [ $? -ne 0 ] ;then sh -c \"RAILS_ENV=production bundle exec rake db:setup\"; fi"
   end
   
 end
@@ -89,7 +91,6 @@ after "deploy:setup", "deploy:prepare"
 after "deploy:cold", "setup_db"
 after "deploy:update_code", "bundler:bundle_new_release"
 after "deploy:finalize_update", "deploy:copy_stage_config"
-after "deploy:finalize_update", "deploy:create_protonet_symlinks"
 after "deploy", "deploy:cleanup"
 after "deploy:start", "passenger:restart", "deploy:monit"
 after "deploy:restart", "passenger:restart", "deploy:monit"

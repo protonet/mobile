@@ -86,6 +86,19 @@ script/server
 
 # goto http://localhost:3000 and enjoy the ride!
 
+=== DEPLOYING ON TARGET SYSTEMS
+
+To deploy on a given node:
+
+# if this is the first time you deploy to that node you need to do this first
+cap node deploy:first_run NODE=yournodesaddress
+# and
+cap node deploy:migrations NODE=yournodesaddress
+
+# or any of our other targets
+cap live deploy:migrations # -> deploys to team.protonet.info
+cap xing deploy:migrations # -> deploys to protonet.xing.com
+cap node deploy:migrations NODE=backup.protonet.info # -> deploys to backup.protonet.info
 
 === OTHER STUFF
 These things are not needed if you just want to do some basic development:
