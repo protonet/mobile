@@ -86,14 +86,12 @@ class NodeConnection < FlashConnection
       json['channel_id'] = channel.id
       json['network_uuid'] = @network.uuid
       
-      tweet = Tweet.create :user_id => 0,
+      Tweet.create :user_id => 0,
         :author => json['author'],
         :message => json['message'],
         :text_extension => json['text_extension'],
         :network_id => @network.id,
         :channels => [channel]
-      
-      publish 'channels', json['channel_uuid'], json
       
     elsif json['trigger'] == 'user.update_online_states' then
       @tracker.update_remote_users json['online_users']
