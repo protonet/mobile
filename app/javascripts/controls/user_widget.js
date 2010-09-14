@@ -31,7 +31,7 @@ protonet.controls.UserWidget.prototype = {
   _observe: function() {
     protonet.Notifications
       .bind("user.added", function(e, data) {
-        this.addUser(data.id, data);
+        this.createUser(data.id, data);
       }.bind(this))
       
       .bind("user.typing", function(e, data) {

@@ -64,14 +64,13 @@ protonet.user.Config = {
   },
   
   _renderConfigs: function() {
-    this.container = $("#user-navigation .settings");
     var container = $("#user-navigation .settings");
         list = $("<ul />");
     $.each(this.configs, function(key, config) {
       this._getElement(key, config).appendTo(list);
     }.bind(this));
     
-    this.container
+    container
       .append(list)
       .click(function(event) { event.preventDefault(); });
   },
