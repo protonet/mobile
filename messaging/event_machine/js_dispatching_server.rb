@@ -91,6 +91,9 @@ module JsDispatchingServer
     @@online_users[@user.id]["connections"]  << [@key, @type]
     data = {:trigger => "users.update_status", :online_users => @@online_users}.to_json
     send_and_publish('system','system.users', data)
+    # FIXME: Dunno why but we've to send the data to the current user again
+    # because it sometimes doesn't reach him (we've to investigate)
+    send_data(data + "\0")
   end
 
   def remove_from_online_users
