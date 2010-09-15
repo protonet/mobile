@@ -4,8 +4,8 @@ module BackendAdapters
     DEFAULT_WLAN_INTERFACES = [:private_interface, :public_interface]
     
     DEFAULT_UBUNTU_CONFIG = {
-      :private_interface => 'ath0',
-      :public_interface => 'ath1',
+      :private_interface => 'wlan0',
+      # :public_interface => 'ath1',
       :base_connection => 'eth0',
       :arp_command => ''
     }
@@ -49,7 +49,7 @@ module BackendAdapters
     end
     
     
-   private
+   # private
       def get_connected_macs_to_wlan(iface)
         raise ArgumentError, iface unless DEFAULT_WLAN_INTERFACES.include?(iface)
         foo = `wlanconfig #{@config[iface]} list sta`
