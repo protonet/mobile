@@ -15,6 +15,11 @@ class User < ActiveRecord::Base
 
   validates_format_of       :name,     :with => Authentication.name_regex,  :message => Authentication.bad_name_message, :allow_nil => true, :unless => :skip_validation
   validates_length_of       :name,     :maximum => 100, :unless => :skip_validation
+  
+  # TODO: Grandfather these in somehow
+  #validates_presence_of     :email,    :unless => :skip_validation
+  #validates_uniqueness_of   :email,    :unless => :skip_validation
+  #validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message, :unless => :skip_validation
 
   # HACK HACK HACK -- how to do attr_accessible from here?
   # prevents a user from submitting a crafted form that bypasses activation
