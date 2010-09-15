@@ -1,9 +1,14 @@
-<% @network_interfaces.each do |interface| %>
-  <% name = interface.keys.first %>
-  INTERFACE NAME:<br />
-  <%= name %><br />
-  IPv4:<br />
-  <%= interface[name]["inet addr"] %><br />
-  IPv6:<br />
-  <%= interface[name]["inet6 addr"] %><br />
-<% end %>
+<table id="net-interfaces">
+  <tr>
+    <th>Interface</th>
+    <th>IPv4</th>
+    <th>IPv6</th>
+  </tr>
+<% @interfaces.each_pair do |(name, interface)| -%>
+  <tr>
+    <td><%=h name %></td>
+    <td><%=h interface["inet addr"] %></td>
+    <td><%=h interface["inet6 addr"] %></td>
+  </tr>
+<% end -%>
+</table>
