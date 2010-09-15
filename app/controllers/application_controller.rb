@@ -8,18 +8,15 @@ class ApplicationController < ActionController::Base
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
   # hack for reload problem in development
   before_filter :set_backend_for_development
-  before_filter :set_user
 
   # Scrub sensitive parameters from your log
-  filter_parameter_logging :password
+  filter_parameter_logging :password # TODO: confirmation field?
   
-  
-  private
-  def set_user
-    # calling current_user automatically loads the user
-    self.current_user ||= User.stranger(session[:session_id])
+  def current_user
+    @current_user ||= User.stranger(session[:session_id])
   end
   
+  private
   def set_backend_for_development
     System::Backend.backend_connection = BackendAdapters::DevelopmentMock.new unless System::Backend.backend_connection
   end
