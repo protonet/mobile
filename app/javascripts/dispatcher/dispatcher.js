@@ -1,10 +1,7 @@
+/**
+ * TODO: Still misses reconnect logic (fetch missed meeps and reconnect socket)
+ */
 protonet.dispatcher = {
-  timeouts: {
-    SOCKET_CHECK:     30000,
-    SOCKET_OFFLINE:   40000,
-    SOCKET_RECONNECT: 5000
-  },
-  
   SOCKET_ID: "flash-socket",
   
   initialize: function() {
@@ -28,7 +25,7 @@ protonet.dispatcher = {
       }.bind(this))
     
       .bind("socket.disconnected", function() {
-        this.reconnectSocket();
+        this.handleDisconnect();
       }.bind(this))
     
       .bind("socket.send", function(e, data) {
@@ -65,8 +62,7 @@ protonet.dispatcher = {
     this.socket = swfobject.getObjectById(this.SOCKET_ID);
     this.connectSocket();
     $(window).bind({
-      unload: function() { this.socket.closeSocket(); }.bind(this),
-      focus: function() { this.reconnectSocketIfNotConnected(); }.bind(this)
+      unload: function() { this.socket.closeSocket(); }.bind(this)
     });
   },
     
@@ -76,52 +72,45 @@ protonet.dispatcher = {
   
   connectSocketCallback: function(status) {
     if (status) {
-      this.startSocketCheck();
       this.authenticateUser();
+      this.startSocketCheck();
     } else {
-      setTimeout(this.reconnectSocketIfNotConnected.bind(this), this.timeouts.SOCKET_RECONNECT);
+      this.handleDisconnect();
     }
   },
   
+  /**
+   * Send data to socket every 25 seconds
+   * If no answer is received after 5 seconds the socket appears to be offline
+   * Try to reconnect after 5 seconds
+   */
   startSocketCheck: function() {
     if (this.socketCheckInterval) {
       return;
     }
     
-    this.socketCheckInterval = setInterval(function() {
-      protonet.Notifications.trigger("socket.check");
-    }, this.timeouts.SOCKET_CHECK);
-  },
-  
-  socketCheck: function() {
-    this.reconnectSocketIfNotConnected();
-    this.pingSocket();
-  },
-  
-  reconnectSocketIfNotConnected: function() {
-    if ((new Date() - this.socketActive) > this.timeouts.SOCKET_OFFLINE && !this.socketReconnecting) {
-      protonet.Notifications.trigger("socket.disconnected");
-    }
-  },
-  
-  reconnectSocket: function() {
-    this.socketReconnecting = true;
-    setTimeout(function() {
-      this.socketReconnecting = false;
-    }.bind(this), this.timeouts.SOCKET_OFFLINE);
-    this.socket.closeSocket();
-    // protonet.globals.endlessScroller.loadNotReceivedTweets();
-    this.connectSocket();
+    this.socketCheckInterval = setInterval(this.pingSocket.bind(this), 25000);
   },
   
   pingSocket: function() {
+    clearTimeout(this.socketOfflineTimeout);
+    this.socketOfflineTimeout = setTimeout(function() {
+      protonet.Notifications.trigger("socket.disconnected");
+    }.bind(this), 5000);
+    
     protonet.Notifications.trigger("socket.send", { operation: "ping" });
   },
   
   pingSocketCallback: function(message) {
-    this.socketActive = new Date();
+    clearTimeout(this.socketOfflineTimeout);
   },
-
+  
+  handleDisconnect: function() {
+    this.socket.closeSocket();
+    clearInterval(this.socketCheckInterval);
+    setTimeout(this.connectSocket.bind(this), 5000);
+  },
+  
   authenticateUser: function() {
     protonet.Notifications.trigger("socket.send", {
       operation: "authenticate",

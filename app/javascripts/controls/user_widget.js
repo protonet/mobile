@@ -9,14 +9,16 @@ protonet.controls.UserWidget = function() {
   
   this.onlineUsersCount = this.container.find("output.count");
   this.usersData = {};
+  this.channelSubscriptions = {};
   
-  this.list.find("li").each(function(i, li) {
+  this.list.children().each(function(i, li) {
     li = $(li);
     this.usersData[+li.attr("data-user-id")] = {
-      element:    li,
-      name:       li.text(),
-      isViewer:   li.hasClass("myself"),
-      isStranger: false
+      element:              li,
+      name:                 li.text(),
+      isViewer:             li.hasClass("myself"),
+      isStranger:           false,
+      channelSubscriptions: []
     };
   }.bind(this));
   
@@ -32,6 +34,7 @@ protonet.controls.UserWidget.prototype = {
     protonet.Notifications
       .bind("user.added", function(e, data) {
         this.createUser(data.id, data);
+        this.updateCount();
       }.bind(this))
       
       .bind("user.typing", function(e, data) {
@@ -54,9 +57,18 @@ protonet.controls.UserWidget.prototype = {
         this.updateUsers(data.online_users);
       }.bind(this))
       
-      .bind("channels.update_subscriptions", function(e, data) {
-        
-      });
+      .bind("channels.update_subscriptions", function(e, channelSubscriptions) {
+        this.channelSubscriptions = channelSubscriptions.data;
+        this.filterChannelUsers(protonet.timeline.Channels.selected);
+      }.bind(this))
+      
+      .bind("socket.disconnected", function() {
+        this.updateUsers({});
+      }.bind(this))
+      
+      .bind("channel.change", function(e, channelId) {
+        this.filterChannelUsers(channelId);
+      }.bind(this));
   },
   
   /**
@@ -73,10 +85,6 @@ protonet.controls.UserWidget.prototype = {
    *   },
    *
    * Note: strangers will only be shown when they are online
-   *
-   * TODO: they are not visible in the user widget when initially rendered
-   *  which means that we have to insert them into the dom tree by ourselves
-   *  eg. by firing "user.added"
    *
    * TODO: add logic for when user is per via api connected, we need an icon here for, btw.
    */
@@ -127,10 +135,11 @@ protonet.controls.UserWidget.prototype = {
         isStranger = user.name.startsWith("stranger_");
     
     this.usersData[userId] = {
-      name:       user.name,
-      isViewer:   isViewer,
-      isStranger: isStranger,
-      element:    this.createElement(userId, user.name, isViewer, isStranger)
+      name:                 user.name,
+      isViewer:             isViewer,
+      isStranger:           isStranger,
+      channelSubscriptions: [],
+      element:              this.createElement(userId, user.name, isViewer, isStranger)
     };
   },
   
@@ -161,12 +170,34 @@ protonet.controls.UserWidget.prototype = {
     }
   },
   
+  filterChannelUsers: function(channelId) {
+    var channelSubscriptions = this.channelSubscriptions[channelId];
+    if (!this.channelSubscriptions[channelId]) {
+      return;
+    }
+    
+    this.list.children().hide();
+    
+    for (var i=0, l=channelSubscriptions.length; i<l; i++) {
+      var userId = channelSubscriptions[i],
+          user = this.usersData[userId];
+      if (user) {
+        user.element.show();
+      }
+    }
+    
+    this.updateCount();
+  },
+  
   updateCount: function() {
     var total = 0, online = 0;
     for (var i in this.usersData) {
-      total++;
-      if (this.usersData[i].isOnline) {
-        online++;
+      var user = this.usersData[i];
+      if (user.element.is(":visible")) {
+        total++;
+        if (this.usersData[i].isOnline) {
+          online++;
+        }
       }
     }
     
@@ -215,7 +246,6 @@ protonet.controls.UserWidgetOld = (function() {
     
     protonet.Notifications.bind('user.added', function(e, msg){
       this.addUserFromMessage(msg);
-      this.filterChannelUsers(protonet.timeline.Channels.selected);
     }.bind(this));
     
     protonet.Notifications.bind('channel.subscribed channel.unsubscribed', function(e, msg){

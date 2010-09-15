@@ -117,7 +117,7 @@ module JsDispatchingServer
     @user.channels.each do |channel|
       filtered_channel_users[channel.id] = @@channel_users[channel.id]
     end
-    data = {:trigger => 'channel.update_subscriptions', :data => filtered_channel_users}.to_json
+    data = {:trigger => 'channels.update_subscriptions', :data => filtered_channel_users}.to_json
     send_data(data + "\0")
   end
   
