@@ -12,11 +12,11 @@ class ApplicationController < ActionController::Base
   # Scrub sensitive parameters from your log
   filter_parameter_logging :password # TODO: confirmation field?
   
-  def current_user
-    @current_user ||= User.stranger(session[:session_id])
+  private
+  def login_as_guest
+    User.stranger(session[:session_id])
   end
   
-  private
   def set_backend_for_development
     System::Backend.backend_connection = BackendAdapters::DevelopmentMock.new unless System::Backend.backend_connection
   end
