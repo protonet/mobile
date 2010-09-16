@@ -32,6 +32,9 @@ class PreferencesController < ApplicationController
     p @interfaces
     render :partial => 'network_settings'
   end
+  def interface
+    render :text => System::Backend.get_interface_information(params[:id]).inspect.gsub(',', ',<br/> &nbsp; ')
+  end
   
   def wifi_settings
     render :partial => 'wifi_settings'

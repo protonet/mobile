@@ -9,7 +9,7 @@
   </tr>
 <% @interfaces.each_pair do |(name, interface)| -%>
   <tr>
-    <td><%=h name %></td>
+    <td><%=link_to h(name), :controller => 'preferences', :action => 'interface', :id => name %></td>
     <td><%=h interface['type'] %></td>
     <td><%=h interface['inet addr'] %></td>
     <td><%=h interface['inet6 addr'] %></td>
@@ -18,3 +18,10 @@
   </tr>
 <% end -%>
 </table>
+
+<script type="text/javascript">
+  $("#net-interfaces a").click(function(event){
+    $("#preferences-details").load(event.currentTarget.href);
+    return false;
+  });
+</script>
