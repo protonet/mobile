@@ -127,17 +127,6 @@ protonet.timeline.Form = {
     this.input.val("");
   },
   
-  _typingEnd: function() {
-    if (this.typing) {
-      this.typing = false;
-      clearTimeout(this._typingTimeout);
-      protonet.Notifications.trigger("socket.send", {
-        operation: "user.typing_end",
-        payload: { user_id: protonet.user.data.id }
-      });
-    }
-  },
-  
   _typingStart: function() {
     if (!this.typing) {
       this.typing = true;
@@ -149,5 +138,16 @@ protonet.timeline.Form = {
     
     clearTimeout(this._typingTimeout);
     this._typingTimeout = setTimeout(this._typingEnd.bind(this), 2500);
+  },
+  
+  _typingEnd: function() {
+    if (this.typing) {
+      this.typing = false;
+      clearTimeout(this._typingTimeout);
+      protonet.Notifications.trigger("socket.send", {
+        operation: "user.typing_end",
+        payload: { user_id: protonet.user.data.id }
+      });
+    }
   }
 };

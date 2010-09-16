@@ -178,9 +178,7 @@ class User < ActiveRecord::Base
       :trigger        => "user.#{type}",
       :channel_id     => channel.id,
       :user_id        => id,
-      :user_name      => display_name,
-      :avatar_url     => active_avatar_url,
-      }.to_json, :key => "channels.#{channel.id}")
+    }.to_json, :key => "channels.#{channel.id}")
   end
 
   def password_required_with_logged_out_user?
