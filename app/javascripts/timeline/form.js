@@ -99,7 +99,7 @@ protonet.timeline.Form = {
      * pressing the shiftKey while hitting the enter key.
      */
     this.form.submit(this.submit.bind(this));
-    this.input.keydown(function(event) {
+    this.input.keypress(function(event) {
       if (event.keyCode != 13 || event.shiftKey) {
         return;
       }

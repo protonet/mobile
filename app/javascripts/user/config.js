@@ -138,6 +138,6 @@ if (protonet.ui.Notification.supported()) {
       "true":  "reply notifications <span class=\"on\">on</span>",
       "false": "reply notifications <span class=\"off\">off</span>"
     },
-    defaultValue: true
+    defaultValue: false
   };
 }
