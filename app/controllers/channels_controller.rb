@@ -29,9 +29,9 @@ class ChannelsController < ApplicationController
     channel = Channel.new(params[:channel].merge(:owner => current_user))
     success = channel && channel.save
     if success && channel.errors.empty?
-      flash[:notice] = "Successfully created channel '#{h(params[:channel][:name])}'"
+      flash[:notice] = "Successfully created channel '#{params[:channel][:name]}'"
     else
-      flash[:error] = "Could not create channel '#{h(params[:channel][:name])}', the reason is: #{channel.errors.map(&:inspect).join(' ')}"
+      flash[:error] = "Could not create channel '#{params[:channel][:name]}', the reason is: #{channel.errors.map(&:inspect).join(' ')}"
     end
     redirect_to :action => 'index', :anchor => channel.id
   end
