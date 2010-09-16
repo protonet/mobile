@@ -28,11 +28,8 @@ class PreferencesController < ApplicationController
   end
   
   def network_settings
-    @interfaces = {}
-    System::Backend.get_interfaces.each do |interface|
-      @interfaces[interface.keys.first] = interface.values.first
-    end
-    
+    @interfaces = System::Backend.get_interfaces
+    p @interfaces
     render :partial => 'network_settings'
   end
   

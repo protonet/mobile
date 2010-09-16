@@ -1,14 +1,20 @@
 <table id="net-interfaces">
   <tr>
     <th>Interface</th>
+    <th>Type</th>
     <th>IPv4</th>
     <th>IPv6</th>
+    <th>Rx</th>
+    <th>Tx</th>
   </tr>
 <% @interfaces.each_pair do |(name, interface)| -%>
   <tr>
     <td><%=h name %></td>
-    <td><%=h interface["inet addr"] %></td>
-    <td><%=h interface["inet6 addr"] %></td>
+    <td><%=h interface['type'] %></td>
+    <td><%=h interface['inet addr'] %></td>
+    <td><%=h interface['inet6 addr'] %></td>
+    <td><%=h interface['RX packets'] %></td>
+    <td><%=h interface['TX packets'] %></td>
   </tr>
 <% end -%>
 </table>

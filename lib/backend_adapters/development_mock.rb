@@ -28,11 +28,11 @@ module BackendAdapters
     end
     
     def get_interfaces
-      JSON.parse `cat #{RAILS_ROOT}/lib/backend_adapters/utilities/ifconfig_parser_development_mock | awk -f #{RAILS_ROOT}/lib/backend_adapters/utilities/ifconfig_parser.awk`
+      LinuxCommands.ifconfig :source => "#{RAILS_ROOT}/lib/backend_adapters/utilities/ifconfig_parser_development_mock"
     end
 
-    def get_interface_information(iface)
-      JSON.parse `cat #{RAILS_ROOT}/lib/backend_adapters/utilities/ifconfig_parser_development_mock | awk -f #{RAILS_ROOT}/lib/backend_adapters/utilities/ifconfig_parser.awk -v "interface=#{iface}" -v "keys=inet6 addr,inet addr"`
+    def get_interface_information(iface) # TODO: take 'information' off the name
+      LinuxCommands.ifconfig :source => "#{RAILS_ROOT}/lib/backend_adapters/utilities/ifconfig_parser_development_mock", :adapter => iface
     end
     
   end

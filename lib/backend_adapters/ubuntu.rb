@@ -41,20 +41,11 @@ module BackendAdapters
     end
     
     def get_interfaces
-      ifaces = {}
-      
-      `ifconfig -a`.split("\n\n").each do |raw|
-        iface, raw = raw.split(' ', 2)
-        ifaces[iface] = parse_raw_ifconfig raw
-      end
-      
-      ifaces
+      LinuxCommands.ifconfig
     end
 
     def get_interface_information(iface) # TODO: take 'information' off the name
-      raw = `ifconfig #{iface}` # TODO: sanitize!!!!!!!
-      return nil unless raw.any?
-      parse_raw_ifconfig raw
+      LinuxCommands.ifconfig :adapter => iface
     end
     
     
