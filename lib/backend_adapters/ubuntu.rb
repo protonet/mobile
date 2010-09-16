@@ -41,15 +41,45 @@ module BackendAdapters
     end
     
     def get_interfaces
-      JSON.parse `/sbin/ifconfig | original-awk -f #{RAILS_ROOT}/lib/backend_adapters/utilities/ifconfig_parser.awk`
+      ifaces = {}
+      
+      `ifconfig -a`.split("\n\n").each do |raw|
+        iface, raw = raw.split(' ', 2)
+        ifaces[iface] = parse_raw_ifconfig raw
+      end
+      
+      ifaces
     end
 
-    def get_interface_information(iface)
-      JSON.parse `/sbin/ifconfig | original-awk -f #{RAILS_ROOT}/lib/backend_adapters/utilities/ifconfig_parser.awk -v "interface=#{iface}" -v "keys=inet6 addr,inet addr"`
+    def get_interface_information(iface) # TODO: take 'information' off the name
+      raw = `ifconfig #{iface}` # TODO: sanitize!!!!!!!
+      return nil unless raw.any?
+      parse_raw_ifconfig raw
     end
     
     
-   # private
+    # private
+      def parse_raw_ifconfig raw, keys=nil
+        data = {}
+        
+        # The first line is a little strange because the interface name
+        # can contain spaces and HWaddr doesn't have a colon.
+        # TODO: Use some OOP stuff instead of =~ and $~
+        raw =~ /^Link encap:(.+?)  (?:HWaddr ([0-9a-fA-F:]+))?/
+        data['type'], data['MAC'] = $~.captures
+        
+        keys ||= ['inet addr', 'inet6 addr', 'RX packets', 'TX packets', 'RX bytes', 'TX bytes']
+        keys.each do |key|
+          next unless raw.include? key
+          
+          start = raw.index(key) + key.size + 1 # account for the colon
+          space = raw.index(' ', start + 1) - 1 # trim space
+          data[key] = raw[start..space].strip
+        end
+        
+        data
+      end
+      
       def get_connected_macs_to_wlan(iface)
         raise ArgumentError, iface unless DEFAULT_WLAN_INTERFACES.include?(iface)
         foo = `wlanconfig #{@config[iface]} list sta`
