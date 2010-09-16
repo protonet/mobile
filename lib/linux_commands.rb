@@ -36,7 +36,7 @@ class << self
     # The first line is a little strange because the interface name
     # can contain spaces and HWaddr doesn't have a colon.
     # TODO: Use some OOP stuff instead of =~ and $~
-    raw =~ /^Link encap:(.+?)  (?:HWaddr ([0-9a-fA-F:]+))?/
+    raw =~ /Link encap:(.+?)  (?:HWaddr ([0-9a-fA-F:]+))?/
     data['type'], data['MAC'] = $~.captures
     
     keys ||= ['inet addr', 'inet6 addr', 'RX packets', 'TX packets', 'RX bytes', 'TX bytes']
