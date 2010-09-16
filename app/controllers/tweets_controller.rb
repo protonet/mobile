@@ -36,8 +36,8 @@ class TweetsController < ApplicationController
     channels = Channel.find(:all, :conditions => ["id in (?)",  channel_ids])
     # current user is nil when not logged in, that's ok
     @tweet = Tweet.new(params[:tweet].merge({:author => author, :user => current_user, :channels => channels}))
-    # saving, nothing else is done here for the moment
     @tweet.save
+    
     respond_to do |format|
       format.js  { render :text => @tweet.id }
       format.html { redirect_to :controller => :instruments, :channel_id => channels.first.id }

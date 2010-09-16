@@ -11,7 +11,7 @@ class InstrumentsController < ApplicationController
   end
   
   def public_dashboard
-    @channels = current_user.channels
+    @channels = current_user.verified_channels
     
     respond_to do |format|
       format.json do

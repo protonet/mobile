@@ -1,0 +1,90 @@
+#search-box {
+  margin-left: 100px;
+  margin-right: auto;
+  padding: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 500px;
+}
+
+#search-box input[name='search_term'] {
+  width: 300px;
+  font-size: 16px;
+}
+
+#search-box select[name='channel_id'] {
+  font-size: 16px;
+}
+
+#search-box select[type='submit'] {
+  size: 16px;
+}
+
+span.highlight {
+  background-color: #fbf828;
+}
+
+.pagination {
+  margin-left: 230px;
+  margin-right: auto;
+  padding: 5px;
+  width: 400px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.pagination .current {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ea8e30;
+}
+
+.pagination a, .prev_page, .next_page {
+  padding:3px;
+  font-size: 16px;
+}
+
+.search-border {
+  margin-left: 200px;
+  border: 1px solid #b3b3b3;
+  width: 300px;
+  height: 1px;
+  background-color: #b3b3b3;
+}
+
+.pos-num {
+  margin: 0 0 10px 100px;
+  font-size: 14px;
+  display: block;
+  border: 2px solid #b3b3b3;
+  width: 20px;
+  text-align: center;
+  padding: 3px;
+}
+
+.pos-num a {
+  text-decoration: none;
+}
+
+#search-pager {
+  margin: 5px 0 10px 100px;
+  font-size: 14px;
+  display: block;
+  width: 120px;
+}
+
+#search-pager a {
+  font-size: 11px;
+  border: 2px solid #e4ab4f;
+  text-align: center;
+  padding: 1px;
+  width: 20px;
+  text-decoration: none;
+  color
+}
+
+.more-tweets {
+  margin: 0 0 10px 250px;
+  font-size: 11px;
+  display: block;
+}

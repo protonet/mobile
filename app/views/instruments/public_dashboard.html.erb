@@ -1,7 +1,8 @@
 <section id="main">
   <%- message_hint = current_user.stranger? ? 'welcome stranger! talk to us...' : "go ahead @#{current_user.display_name}, I'm all yours..." %>
   <%- form_for :tweet, :url => tweets_path, :html => { :id => "message-form" } do |f| -%>
-    <%= f.hidden_field("channel_id", :name => "tweet[channel_id]", :autocomplete => "off") %>
+    <%= f.hidden_field(:channel_id, :name => "tweet[channel_id]", :autocomplete => "off") %>
+    <%= f.hidden_field(:channel_uuid, :name => 'message_channel_uuid', :autocomplete => 'off') %>
     <%= f.hidden_field(:socket_id) %>
     <%= f.hidden_field(:avatar, :value => current_user.active_avatar_url) %>
     <%= f.hidden_field(:author, :value => current_user.display_name) %>
@@ -21,7 +22,11 @@
     <ul>
       <%- @channels.each_with_index do |c, index| -%>
         <li>
-          <%= link_to c.name.capitalize, { :channel_id => c.id }, { :title => c.description, 'data-channel-id' => c.id } %>
+          <%= link_to c.name.capitalize, { :channel_id => c.id }, {
+            :title => c.description,
+            'data-channel-id' => c.id,
+            'data-channel-uuid' => c.uuid
+          } %>
         </li>
       <%- end -%>
     </ul>
@@ -81,11 +86,14 @@
 <div class="main">
   <%- form_for :tweet, :url => tweets_path, :html => { :id => "message-form" } do |f| -%>
     <div id="text-input">
+
       <fieldset>
         <% message_hint = current_user.stranger? ? 'welcome stranger! talk to us...' : "go ahead @#{current_user.display_name} I'm all yours..."%>
         <%= f.text_area(:message, :id => 'message', :title => message_hint) %>
-        <%= f.hidden_field('channel_id', :id => "message_channel_id", :name => 'message_channel_id',
-                                         :value => '1', :autocomplete => 'off') %>
+        <%= f.hidden_field('channel_id',  :id => "message_channel_id", :name => 'message_channel_id',
+                                          :value => @active_channel.id, :autocomplete => 'off') %>
+       <%= f.hidden_field('channel_uuid', :id => "message_channel_uuid", :name => 'message_channel_uuid',
+                                          :value => @active_channel.uuid, :autocomplete => 'off') %>
         <%= f.hidden_field(:socket_id) %>
         <%= f.hidden_field(:text_extension, :id => 'text-extension-input', :value => '', :autocomplete => 'off') %>
       </fieldset>
@@ -99,11 +107,11 @@
       <a href="#" title="Remove (ESC)" class="remove">x</a>
     </div>
   <%- end -%>
-  
+
   <%= render :partial => 'channels/channel_selector', :locals => {:channels => @channels, :active_channel => @active_channel} %>
-  
-  <div id="feed-viewer">
-    <div id="feed-holder" style="width:<%= @channels.size * 613 %>px; left: <%= @channels.index(@active_channel) * -613 %>px;">
+
+  <div class="feed-viewer">
+    <div class="feed-holder" style="width:<%= @channels.size * 613 %>px; left: <%= @channels.index(@active_channel) * -613 %>px;">
       <% @channels.each do |c| %>
         <%= render :partial => '/tweets/tweet_list', :locals => {:tweets => c.tweets.recent.all(:limit => 25, :include => [:avatar]), :channel => c} %>
       <% end %>
@@ -118,6 +126,7 @@
   <%= render :partial => 'sessions/registration_box' %>
   <%= render :partial => 'users/user_list', :locals => {:users => []} %>
   <%= render :partial => 'system/files/file_list', :locals => {:file_system => System::FileSystem.all("/" + @active_channel.id.to_s), :channel_id => @active_channel.id} %>
+  <%= render :partial => 'networks/monitor', :locals => {} %>
 </div>
 
 
@@ -128,7 +137,7 @@
                                                        :author => '', :created_at => '',
                                                        :html_id => 'tweet-{id}-{id}'} %>
   </div>
-  
+
   <div id="text-extension-template">
     <%= render :partial => 'tweets/text_extension' %>
   </div>

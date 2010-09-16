@@ -1,0 +1,10 @@
+<div id="search-box">
+  <% form_tag search_path, :method => 'post', :id => 'search-form' do -%>
+    <%= select_tag :channel_id, options_for_select([['All', 0]] + @channels.map{|c| [c.name, c.id]}) %>
+    <%= text_field_tag :search_term, @search_term %>
+    <%= submit_tag 'search' %>
+  <% end -%>
+</div>
+
+<div id="search-results"></div>
+

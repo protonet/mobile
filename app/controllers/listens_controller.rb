@@ -12,7 +12,14 @@ class ListensController < ApplicationController
     
     if channel
       current_user.subscribe(channel)
-      flash[:notice] = "you started listening to '#{h(channel.name)}'"
+      flash[:notice] = "you started listening to #{h(channel.name)}#{' (pending verification)' if !channel.public?}"
+    else
+      flash[:error] = "could not subscribe to channel with identifier #{h((params[:channel_name] || params[:channel_id]).to_s)}"
+    end
+    if params[:channel_name] && (channel && !channel.public?)
+      redirect_to "/"
+    elsif params[:channel_name]
+      redirect_to "/#{("#channel_name=" + channel.name if channel.try(:name))}"
     else
       flash[:error] = "could not subscribe to channel with identifier '#{params[:channel_id].to_s}'"
     end
@@ -31,5 +38,17 @@ class ListensController < ApplicationController
     end
     redirect_to :controller => 'channels', :action => 'index', :anchor => channel.id
   end
-  
+
+  def accept
+    listen = Listen.find(params[:listen_id])
+    channel = listen.channel
+    if current_user == channel.owner
+      listen.verified = true
+      flash[:notice] = "you allowed user #{listen.user.name} to listen to channel #{channel.name}" if listen.save
+    else
+      flash[:notice] = "only the channel owner can accept subscription request!"
+    end
+    redirect_to :controller => 'channels', :action => 'index', :anchor => channel.id
+  end
+
 end

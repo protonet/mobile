@@ -34,3 +34,4 @@ configatron.socket.port = 5000
 # Log all js event notifications
 configatron.log_event_notifications = true
 configatron.avoid_caching = true
+configatron.nodejs.port = 8124

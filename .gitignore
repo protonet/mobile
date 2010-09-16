@@ -1,12 +1,15 @@
 log/*.log
+log/*.lck
 tmp/**/*
 .DS_Store
 .gitignore
+.bundle
 .bundle/*
 doc/api
 doc/app
 *.pid
 *.sqlite3
+set_env.sh
 public/javascripts/sprockets.js
 public/javascripts/all.js
 public/stylesheets/all.css
@@ -17,7 +20,7 @@ public/images/avatars/*
 public/externals/*
 public/images/externals/*
 mkmf.log
-db/schema.rb
 node/screenshots/*
 node.pid.lock
 Gemfile.lock
+solr/data

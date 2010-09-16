@@ -198,6 +198,10 @@ div, button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, 
 #channel .browse a:before {
   content: "\002B\0020";
 }
+#channel .global {
+  background: green none;
+  background-color: green;
+}
 /* =CHANNEL OPTIONS
 --------------------------------------------------------------------------- */
 h2 {
@@ -273,6 +277,9 @@ h2 {
   color: rgba(0, 0, 0, 0.5);
   font-weight: normal;
 }
+#network li.clicked {
+  background: none;
+}
 #network .control {
   float: right;
 }
@@ -287,11 +294,22 @@ h2 {
   top: -5px;
   width: 82px;
 }
-#network a.off {
+#network a.on {
   background-position: 0 0;
 }
-#network a.on {
+#network a.off {
   background-position: 0 -31px;
+}
+#network a.create {
+  background: none;
+  display: block;
+  font-size: 1.2em;
+  margin: 0 0 0.3em;
+  text-align: right;
+  width: auto;
+}
+#network div.create {
+  margin: 0 0 1em;
 }
 #network-search {
   margin-bottom: 1em;
@@ -307,6 +325,20 @@ h2 {
 }
 /* =NETWORK-MONITOR
 --------------------------------------------------------------------------- */
+#network-wrap {
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  background: rgb(213, 213, 213);
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  font-size: 1.2em;
+  margin: 0 0 1em 0;
+  padding: 0.3em;
+}
+#network-links {
+  text-align: right;
+  padding: 0.3em;
+}
 #network-monitor-wrapper {
   background: rgb(247, 247, 247);
   border: 0.1em solid rgb(212, 212, 212);
@@ -320,12 +352,41 @@ h2 {
  -moz-border-radius: 0.5em;
  -webkit-border-radius: 0.5em;
  width: 520px;
- height: 570px;
+ height: 300px;
  opacity:0.95;
- background-color: #141414;
+ background-color: #fff; #141414;
  padding: 1em 1em 0.5em;
- border: 0.1em solid #FDAB54;
+ xborder: 0.1em solid #FDAB54;
 }
+  .side #network-monitor {
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    font-size: 1.2em;
+    margin: 0 0 0 0;
+    padding: 0.3em;
+    width: 294px;
+    height: 200px;
+  }
+  .clear {
+    float: none;
+  }
+#network-details {
+  vertical-align: top;
+  background: rgb(247, 247, 247);
+  border: 0.1em solid rgb(212, 212, 212);
+  display: inline-block;
+  overflow:scroll;
+  height: 220px;
+  margin: 0 0 1em;
+  padding: 1em 1em 0.5em;
+  width: 520px;
+}
+
 /* =PREFERENCES
 --------------------------------------------------------------------------- */
 h2 {
@@ -516,7 +577,7 @@ h2 {
 }
 /* =FEEDVIEWER (OUTER)
 --------------------------------------------------------------------------- */
-#feed-viewer {
+.feed-viewer {
   width: 613px;
   position: relative;
   clear: both;
@@ -525,7 +586,7 @@ h2 {
 
 /* =FEEDVIEWER (INNER)
 --------------------------------------------------------------------------- */
-#feed-holder {
+.feed-holder {
   position: relative;
 }
 
@@ -825,6 +886,13 @@ h2 {
   font-size: 0.7em;
 }
 
+.message-channels {
+  font-size: 0.7em;
+  font-weight: bold;
+  color: #ea8e30;
+  clear: both;
+}
+
 /* =REGISTRATION-TEASER
 --------------------------------------------------------------------------- */
 #registration-teaser {
@@ -840,7 +908,7 @@ h2 {
 #registration-form {
   -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-  background: rgb(255, 255, 255) url(/images/bkg_register.png) no-repeat scroll top left; 
+  background: rgb(255, 255, 255) url(/images/bkg_register.png) no-repeat scroll top left;
   border: 1px solid rgba(0, 0, 0, 0.4);
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   display: block;
@@ -856,7 +924,7 @@ h2 {
   display: block;
   width: 290px;
 }
-#registration-form li { 
+#registration-form li {
   margin-bottom: 0.5em;
 }
 #registration-form input {
@@ -969,7 +1037,7 @@ h2 {
 }
 
 
-/* =MINI MENU 
+/* =MINI MENU
 --------------------------------------------------------------------------- */
 #mini-menu {
   position: absolute;
@@ -1150,7 +1218,7 @@ h2 {
 .contextMenu li.separator {
   border-top: solid 1px #CCC;
 }
-.contextMenu li.download a { 
+.contextMenu li.download a {
   background-image: url(/images/file_download.png);
 }
 .contextMenu li.open a {
@@ -1343,11 +1411,18 @@ h2 {
   float: left;
   width:  350px;
 }
-#channels ul {
+#channels ul.channel-list {
   max-height: 540px;
   overflow: auto;
 }
-#channels li {
+#channels li.network p {
+  border-bottom:1px solid #D4D4D4;
+  margin-bottom:6px;
+  margin-right: 8px;
+  padding:2px;
+  text-align:right;
+}
+#channels li.channel {
   -moz-border-radius: 0.5em;
   -webkit-border-radius: 0.5em;
   background: rgb(255, 255, 255) url(/images/bkg_message.png) repeat-x scroll left bottom;
@@ -1360,13 +1435,13 @@ h2 {
   padding: 1em 0.6em;
   text-decoration: none;
   cursor: pointer;
-  width: 310px;
+  width: 309px;
 }
-#channels li.clicked,
+#channels li.channel.clicked,
 #users li.clicked div {
   background: none;
 }
-#channels li span {
+#channels li.channel span {
   color: rgba(0, 0, 0, 0.5);
   font-weight: normal;
 }
@@ -1463,6 +1538,6 @@ h2 {
 }
 .channel-remove-listner {
   float: right;
-} 
+}
 
 

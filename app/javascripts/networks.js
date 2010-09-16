@@ -1,53 +1,102 @@
-//= require "lib/raphael-min.js"
 //= require "lib/jquery-ui-1.7.2.custom.min.js"
+//= require "dispatching/dispatching_system.js"
+//= require "networkmonitor.js"
 
-var paper = Raphael("network-monitor", 520, 570);
-// var circle = paper.circle(50, 40, 10);
-// circle.attr({"fill": "#FDAB54", "stroke": "#ddd"});
-
-$("#network li").click(function(event){
-  // debugger;
-  network_id = this.id.match(/network-(.*)/)[1];
-  $.getJSON("/networks/"+network_id+"/map", 
-    function(data){
-      drawNetwork(data);
-    }
-  );
+// Initialize communication stuff
+$(function() {
+  protonet.globals.dispatcher = new protonet.dispatching.DispatchingSystem();
 });
 
-function drawNetwork(data) {
-  // {:nodes => [
-  //   {:name => "protonet-7.local", :type => 'edge', :clients => [{:name => 'foo'}, {:name => 'bar'}]},
-  //   {:name => "protonet-4.local", :type => 'edge'},
-  //   {:name => "protonet-main",    :type => 'supernode'}
-  // ], :name => network.name, :type => 'cloud'}
-  x = 58.5;
-  y = 40;
-  rectangle = paper.rect(x, y, 400, 200, 10);
-  rectangle.attr({"stroke": "#FDAB54", "stroke-width": 2});
-  txt = {"font": '10px Fontin-Sans, Arial', stroke: "none", fill: "#FDAB54"};
-  paper.text(50+x, 10+y, data.name).attr(txt);
-  var angle = (2 * Math.PI / data.nodes.length);
-  var radar_length = 40;
-  var circles = [];
-  for(var i in data.nodes) {
-    var x_offset = radar_length * Math.cos(angle * (i+1));
-    var y_offset = radar_length * Math.sin(angle * (i+1));
-    var circle_x = x+200+x_offset;
-    var circle_y = y+100+y_offset;
-    var circle = paper.circle(circle_x, circle_y, 10);
-    circle.attr({"fill": "#FDAB54", "stroke": "#ddd"});
-    paper.text(circle_x + 50, circle_y, data.nodes[i].name).attr({"font": '10px Fontin-Sans, Arial', stroke: "none", fill: "#eee"});
-    circles.push(circle);
-  }
-  for(i in circles) {
-    (parseInt(i, 10) + 1 == circles.length) ? n = 0 : n = parseInt(i, 10) + 1;
-    var path = paper.path("M " + circles[i].attrs.cx + " " + circles[i].attrs.cy + " L " + circles[n].attrs.cx + " " + circles[n].attrs.cy);
-    path.attr({"stroke": "#eee", "stroke-width": 2, "opacity": 0.7});
-    path.toBack();
-  }
-}
+/////////////////////////////////
 
 $(function() {
-  $("#network li:first").click()
+  var input = $("a[rel]");
+  protonet.utils.toggleElement(input);
+});
+
+$(function() {
+  $("#network li").click(function(event){
+    networkId = this.id.match(/network-(.*)/)[1];
+    $("#network-details").load("/networks/" + networkId);
+    $("#network li.clicked").toggleClass("clicked");
+    $(this).toggleClass("clicked");
+  });
+  if(location.hash) {
+    $("#network-" + location.hash.substring(1)).click();
+  } else {
+    $("#network li:first").click();
+  }
+  $("#network .control a").click(function(e){
+    $.ajax({
+      url: this.href,
+      data: {},
+      success: function(data) {
+        $(e.currentTarget).removeClass("off");
+        $(e.currentTarget).addClass("on");
+     },
+      error: function() {
+        console.log('error')
+      }
+    });
+    return false;
+  });
+  
+  $('#new-network-form').submit(function(event){
+    protonet.globals.dispatcher.sendJSON({
+      "operation": "network.probe",
+      "supernode": $("#network_supernode").attr("value")
+    })
+    
+    $("#network-details").html("Loading channel list...");
+    $("#create").slideUp("medium");
+    
+    event.stopPropagation();
+    event.preventDefault();
+  })
+  
+  protonet.Notifications.bind('network.probe', function(e, msg) {
+    var html = "<h3>Please select channels to couple from remote node.</h3>";
+    html += "<form id='create-network-form'>";
+    html += "<ul id='channel-picker'>";
+    
+    for (var uuid in msg.channels) {
+      var chan = msg.channels[uuid];
+      
+      html += "<li><input type='checkbox' id='channel_" + uuid + "' name='channel_uuid' value='" + uuid + "' />";
+      html += "<label for='channel_" + uuid + "'>" + chan.name + "</label></li>";
+    }
+    
+    html += "</ul><input type='submit' value='Couple' /></form>";
+    form = $("#network-details").html(html).find('#create-network-form');
+    
+    form.submit(function(event){
+      var uuids = new Array();
+      $("input:checkbox[name=channel_uuid]:checked").each(
+        function(){ uuids.push(this.value); }
+      );
+      
+      protonet.globals.dispatcher.sendJSON({
+        "operation": "network.create",
+        "name": $("#network_name").attr("value"),
+        "description": $("#network_description").attr("value"),
+        "supernode": $("#network_supernode").attr("value"),
+        "channels": uuids
+      })
+      
+      $("#network-details").html("Waiting for local node...");
+      
+      event.stopPropagation();
+      event.preventDefault();
+    });
+  });
+  
+  // network creation in progress
+  protonet.Notifications.bind('network.creating', function(e, msg) {
+    $("#network-details").html(msg.message);
+  });
+  
+  // network creation complete
+  protonet.Notifications.bind('network.create', function(e, msg) {
+    $("#network-details").load("/networks/" + msg.id);
+  });
 });

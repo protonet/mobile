@@ -3,7 +3,7 @@ var fs  = require("fs");
 
 /*----------------------------------- SOCKET TASKS -----------------------------------*/
 var amqp = require('./modules/node-amqp/amqp');
-connection = amqp.createConnection({ host: "localhost" });
+connection = amqp.createConnection({ host: "localhost", vhost: "/" });
 connection.addListener("error", function(){
   console.log("error trying to reach the rabbit, please start your rabbitmq-server");
 });
@@ -26,7 +26,6 @@ connection.addListener("ready", function() {
       case "eval":
         publish(eval(message.javascript));
         break;
-        
       case "http_proxy":
         require("./tasks/http_proxy").get(message.url, publish);
         break;
@@ -36,6 +35,13 @@ connection.addListener("ready", function() {
 
 
 /*----------------------------------- HTTP TASKS -----------------------------------*/
+var htmlTaskPort = 8124;
+process.argv.forEach(function(val){
+  var match;
+  if(match = val.match(/port=(\d+)/)) {
+    htmlTaskPort = parseInt(match[1], 10);
+  }
+});
 var http      = require("http"),
     parseUrl  = require("url").parse;
 
@@ -49,7 +55,7 @@ http.createServer(function(request, response) {
       require("./tasks/screenshot").make(params, response);
       break;
   }
-}).listen(8124);
+}).listen(htmlTaskPort);
 
 
 /*----------------------------------- STARTUP STUFF -----------------------------------*/

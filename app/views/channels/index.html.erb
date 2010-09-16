@@ -7,19 +7,24 @@
     </fieldset>
   </form>
 
-  <ul>
-    <%- @channels.each do |c| -%>
-      <% if (current_user.subscribed? c) || c.public then %>
-      <li id="channel-<%= c.id %>">
-        <% if current_user.subscribed? c %>
-          <img src="/images/bullet_green.png" width="16" height="16" alt="" class="channel-indicator" />
-        <% end %>
-        <%= "#{h c.name} <span>(#{h c.description})</span>" %>
-     </li>
-     <%- end -%>
-   <%- end -%>
+  <ul class="channel-list">
+    <% @networks.each do |n| %>
+    <li class="network" id="network-<%= n.id %>">
+      <p><%= n.name %></p>
+      <ul>
+        <%- n.channels.each do |c| -%>
+          <li id="channel-<%= c.id %>" class="channel">
+            <% if current_user.subscribed?(c) %>
+              <img src="/images/bullet_green.png" width="16" height="16" alt="" class="channel-indicator" />
+            <% end %>
+            <%= "#{h c.name} <span>(#{h c.description})</span>" %>
+         </li>
+       <%- end -%>
+      </ul>
+    </li>
+    <% end %>
   </ul>
-  
+
   <%= link_to 'create a channel', "#", :class => "create", :rel => "create" %>
 
   <div id="create" class="create section hidden">

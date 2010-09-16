@@ -6,25 +6,12 @@ class UsersController < ApplicationController
 
   def show
     render :partial => "user_details", :locals => {:user => User.find(params[:id])}
-
-    #@user = User.find(params[:id])
-    #@avatar = @user.avatar
-
-    #respond_to do |format|
-    #  format.html do
-    #    if @user == current_user
-    #      render 'show_for_owner'
-    #    else
-    #      render 'show'
-    #    end
-    #  end# show.html.erb
-    #  format.xml { render :xml => @user }
-    #end
   end
 
   # render new.rhtml
   def new
     @user = User.new
+    render :template => "sessions/_registration_box"
   end
 
   def create
@@ -37,16 +24,13 @@ class UsersController < ApplicationController
       # button. Uncomment if you understand the tradeoffs.
       # reset session
       self.current_user = @user # !! now logged in
-      System::MessagingBus.topic('users').publish({
-        :trigger        => 'user.added',
-        :id             => @user.id,
-        :name           => @user.display_name,
-      }.to_json, :key => 'users.new')
+      
+      flash[:notice] = "Thanks for signing up! We're sending you an email with your activation code (ORLY)."
       redirect_back_or_default('/')
-      flash[:notice] = "Thanks for signing up!"
     else
-      flash[:error]  = "We couldn't set up that account, sorry. Please try again, or contact an admin (link is above)."
-      redirect_to :action => 'new'
+      @user ||= User.new
+      flash.now[:error]  = "Sorry, but we couldn't set up that account. Please try again, or contact an admin."
+      render :template => "sessions/_registration_box"
     end
   end
 
@@ -67,10 +51,10 @@ class UsersController < ApplicationController
   end
 
   def list_channels
-    channels = current_user ? current_user.channels : [Channel.home]
+    channels = current_user ? current_user.verified_channels : [Channel.home]
     respond_to do |format|
       format.json do
-        channels = channels.collect { |c| {:id => c.id, :name => c.name, :description => c.description}}
+        channels = channels.collect { |c| {:id => c.id, :name => c.name, :description => c.description, :uuid => c.uuid}}
         render :json => {:channels => channels}
       end
     end

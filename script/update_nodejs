@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cd /tmp
+which curl
+if [ $? -eq 0 ]; then
+    curl -O http://nodejs.org/dist/node-v0.2.1.tar.gz
+  else
+    wget http://nodejs.org/dist/node-v0.2.1.tar.gz
+fi
+tar xzf node-v0.2.1.tar.gz
+cd node-v0.2.1/
+./configure
+make
+sudo make install

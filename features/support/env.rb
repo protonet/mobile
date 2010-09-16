@@ -16,6 +16,7 @@ require 'capybara/rails'
 require 'capybara/cucumber'
 require 'capybara/session'
 require 'cucumber/rails/capybara_javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
+
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd
 # prefer to use XPath just remove this line and adjust any selectors in your
@@ -46,20 +47,36 @@ ActionController::Base.allow_rescue = false
 # subsequent scenarios. If you do this, we recommend you create a Before
 # block that will explicitly put your database in a known state.
 Cucumber::Rails::World.use_transactional_fixtures = true
+
 # How to clean your database when transactions are turned off. See
 # http://github.com/bmabey/database_cleaner for more info.
 if defined?(ActiveRecord::Base)
   begin
     require 'database_cleaner'
     DatabaseCleaner.strategy = :truncation
-  rescue LoadError => ignore_if_database_cleaner_not_present
+  rescue LoadError
   end
 end
 
-Capybara.default_wait_time = 5
+Capybara.default_wait_time = 2
 
-# multiuser support
-at_exit do
-  $browsers && $browsers.each { |id, browser| browser[:driver].quit rescue nil }
+# multiuser hack
+# this solves the problem of closing the browser
+require 'selenium-webdriver'
+Selenium::WebDriver::Remote::Bridge
+class Selenium::WebDriver::Remote::Bridge
+  def quit
+    execute :quit
+  rescue# *QUIT_ERRORS -> rescuing all errors
+  end
 end
 
+# start services
+System::Services.start_all
+
+at_exit do
+  # multiuser support
+  $browsers && $browsers.each { |id, browser| browser[:driver].quit rescue nil }
+  
+  System::Services.stop_all
+end

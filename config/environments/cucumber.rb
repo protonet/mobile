@@ -11,7 +11,7 @@ config.whiny_nils = true
 
 # Show full error reports and disable caching
 config.action_controller.consider_all_requests_local = true
-config.action_controller.perform_caching             = false
+config.action_controller.perform_caching             = true
 
 # Disable request forgery protection in test environment
 config.action_controller.allow_forgery_protection    = false
@@ -33,6 +33,9 @@ configatron.user_file_path = "/tmp"
 configatron.images.avatars_path   = "public/avatars"
 configatron.images.externals_path = "public/externals"
 
-configatron.socket.port = 5002
+configatron.socket.port = 5001
+configatron.nodejs.port = 8125
 configatron.js_dispatching_active = true
 configatron.messaging_bus_active  = true
+
+configatron.amqp.vhost  = "/test"

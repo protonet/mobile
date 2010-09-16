@@ -4,14 +4,19 @@ $(function() {
 });
 
 $(function() {
-  $("#channels ul li").click(function(event){
-    $("#channels-details").load("/channels/" + event.currentTarget.id.match(/channel-(.*)/)[1]);
-    $("#channels ul li.clicked").toggleClass("clicked");
+  $("#channels li.channel").click(function(event){
+    var channelId = event.currentTarget.id.match(/channel-(.*)/)[1];
+    var networkId = $(event.currentTarget).parent().parent().attr('id').match(/network-(.*)/)[1];
+    $("#channels-details").load("/channels/" + channelId + '?network_id=' + networkId);
+    $("#channels li.channel.clicked").toggleClass("clicked");
     $(this).toggleClass("clicked");
   });
   if(location.hash) {
     $("#channel-" + location.hash.substring(1)).click();
   } else {
-    $("#channels li:first").click();
+    $("#channels li.channel:first").click();
   }
+  $(".network").each(function(e) {
+    console.log(e);
+  });
 });

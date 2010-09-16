@@ -6,12 +6,17 @@
         <span>no email, no credit card, just pure awesomeness!</span>
       </legend>
       <ul>
+        <li><%= error_messages_for :user, :header_tag => 'h3', :object_name => 'account' %></li>
         <li>
-          <%= label_tag "login" %>
+          <%= f.label :login %>
           <%= f.text_field "login", {:id => 'new-user-login', :title => 'user name'} %>
         </li>
         <li>
-          <%= label_tag "password" %>
+          <%= f.label :email %>
+          <%= f.text_field "email", {:id => 'new-user-email', :title => 'email address'} %>
+        </li>
+        <li>
+          <%= f.label :password %>
           <%= f.password_field "password", {:id => 'new-user-password'} %>
           <%= f.hidden_field "password_confirmation", {:id => 'new-user-password-confirmation'} %>
         </li>

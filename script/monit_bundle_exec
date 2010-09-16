@@ -7,4 +7,4 @@ shift 2
 . $HOME/../.bashrc
 . $HOME/../.profile
 cd $CURRENT_PATH
-bundle exec ruby $@
+bundle exec $@

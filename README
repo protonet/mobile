@@ -38,8 +38,8 @@ Protonet-Dashboard runs on rails, sqlite3, rabbitmq, eventmachine (+amqp), node.
 === INSTALL
 
 == GENERAL
-git clone git@github.com:dudemeister/protonet-dashboard.git
-cd protonet-dashboard
+git clone git@github.com:protonet/dashboard.git
+cd dashboard
 git submodule init
 git submodule update
 
@@ -52,6 +52,9 @@ git submodule update
 # install the needed gems:
 bundle install
 
+# do the db
+rake db:setup
+
 == MESSAGING
 
 Install our messaging broker:
@@ -59,11 +62,9 @@ Install our messaging broker:
 sudo port selfupdate
 sudo port install rabbitmq-server
 
-# if you have stopped it you can restart it by using:
-sudo rabbitmq-server
-
-# and start up the javascript dispatcher
-./messaging/event_machine/js_dispatching_server.rb
+If you want to run our whole testsuite:
+sudo rabbitmqctl add_vhost /test
+sudo rabbitmqctl set_permissions -p /test guest ".*" ".*" ".*"
 
 == NODE.JS
 
@@ -77,13 +78,29 @@ make
 === START THE SYSTEM
 
 # After installing all dependencies you can get the system running by doing these steps:
-
+# start the messaging broker
 sudo rabbitmq-server
-ruby messaging/event_machine/js_dispatching_server.rb
-node node/node.js
+
+# and start the rails server (it will start and shutdown the js dispatcher and node.js automatically)
+script/server
+
+# goto http://localhost:3000 and enjoy the ride!
+
+=== DEPLOYING ON TARGET SYSTEMS
+
+To deploy on a given node:
+
+# if this is the first time you deploy to that node you need to do this first
+cap node deploy:first_run NODE=yournodesaddress
+# and
+cap node deploy:migrations NODE=yournodesaddress
+
+# or any of our other targets
+cap live deploy:migrations # -> deploys to team.protonet.info
+cap xing deploy:migrations # -> deploys to protonet.xing.com
+cap node deploy:migrations NODE=backup.protonet.info # -> deploys to backup.protonet.info
 
 === OTHER STUFF
-
 These things are not needed if you just want to do some basic development:
 
 == LOCAL APACHE CONFIG

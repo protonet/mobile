@@ -1,9 +1,27 @@
-<% @network_interfaces.each do |interface| %>
-  <% name = interface.keys.first %>
-  INTERFACE NAME:<br />
-  <%= name %><br />
-  IPv4:<br />
-  <%= interface[name]["inet addr"] %><br />
-  IPv6:<br />
-  <%= interface[name]["inet6 addr"] %><br />
-<% end %>
+<table id="net-interfaces">
+  <tr>
+    <th>Interface</th>
+    <th>Type</th>
+    <th>IPv4</th>
+    <th>IPv6</th>
+    <th>Rx</th>
+    <th>Tx</th>
+  </tr>
+<% @interfaces.each_pair do |(name, interface)| -%>
+  <tr>
+    <td><%=link_to h(name), :controller => 'preferences', :action => 'interface', :id => name %></td>
+    <td><%=h interface['type'] %></td>
+    <td><%=h interface['inet addr'] %></td>
+    <td><%=h interface['inet6 addr'] %></td>
+    <td><%=h interface['RX packets'] %></td>
+    <td><%=h interface['TX packets'] %></td>
+  </tr>
+<% end -%>
+</table>
+
+<script type="text/javascript">
+  $("#net-interfaces a").click(function(event){
+    $("#preferences-details").load(event.currentTarget.href);
+    return false;
+  });
+</script>

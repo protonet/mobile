@@ -1,13 +1,28 @@
 class ChannelsController < ApplicationController
   
-  before_filter :login_required
+  # before_filter :login_required
   
   def index
-    @channels = Channel.all
+    respond_to do |format|
+      format.json do
+        network_id  = params[:network_id].to_i
+        render :json => Network.find(network_id).channels
+      end
+      format.html do
+        @networks = Network.all
+      end
+    end
   end
   
   def show
-    render :partial => "channel_details", :locals => {:channel => Channel.find(params[:id])}
+    respond_to do |format|
+      format.json do
+        render :text => 'json'
+      end
+      format.html do
+        render :partial => "channel_details", :locals => {:channel => Channel.find(params[:id])}
+      end
+    end
   end
   
   def create
@@ -53,7 +68,7 @@ class ChannelsController < ApplicationController
   def list
     respond_to do |format|
       format.json do
-        channels = Channel.all.collect { |c| {:id => c.id, :name => c.name, :description => c.description}}
+        channels = Channel.all.collect { |c| {:id => c.id, :name => c.name, :description => c.description, :uuid => c.uuid}}
         render :json => {:channels => channels}
       end
     end

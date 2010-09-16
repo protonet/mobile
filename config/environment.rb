@@ -7,7 +7,7 @@ RAILS_GEM_VERSION = '2.3.5' unless defined? RAILS_GEM_VERSION
 require File.join(File.dirname(__FILE__), 'boot')
 
 # for app wide configurations
-require "configatron"
+require 'configatron'
 
 configatron.log_event_notifications = false
 configatron.avoid_caching = false
@@ -24,22 +24,9 @@ Rails::Initializer.run do |config|
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
   config.load_paths += %W( #{RAILS_ROOT}/app/middleware )
 
-  # Specify gems that this application depends on and have them installed with rake gems:install
-  config.gem "eventmachine"
-  config.gem "tmm1-amqp", :lib => "mq"
-  config.gem "json"
-  config.gem "sprockets"
-  config.gem 'fleximage'
-
-  config.gem "sqlite3-ruby", :lib => "sqlite3"
-
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
-
-  # Skip frameworks you're not going to use. To use Rails without a database,
-  # you must remove the Active Record framework.
-  # config.frameworks -= [ :active_record, :active_resource, :action_mailer ]
 
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
@@ -51,13 +38,19 @@ Rails::Initializer.run do |config|
   # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
   # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
   # config.i18n.default_locale = :de
-  
+
   config.cache_store = :mem_cache_store
 end
 
+# json settings
 ActiveSupport::JSON.backend = 'JSONGem'
 
+# fleximage monkey patch
 require "#{RAILS_ROOT}/lib/fleximage_ext.rb"
+
+# amqp settings
+require 'mq'
+AMQP.settings[:vhost] = configatron.amqp.vhost.nil? ? '/' : configatron.amqp.vhost
 
 unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(PhusionPassenger)
   # this starts the eventmachine reactor in a new thread
@@ -66,100 +59,23 @@ unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(Phusio
   Thread.new{ EM.run() }
 end
 
-
-################################# CHECK SYSTEMS IN INTERACTIVE (script/server) MODE #######################################
-
-if ENV["_"].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER)
-
-  # this starts up a new node.js instance
-  node = DaemonController.new(
-     :identifier    => 'node.js',
-     :start_command => 'node node/node.js',
-     :ping_command  => lambda { TCPSocket.new('localhost', 8124) },
-     :pid_file      => 'tmp/pids/node.pid',
-     :log_file      => 'log/node.log',
-     :timeout       => 25,
-     :daemonize_for_me => true
-  )
-  node.start unless node.running?
+# Check systems in script/server mode (stuff like passenger runs them some other way?)
+if ENV['_'].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER)
+  System::Services.start_all
   
-  # this starts up a new node.js instance
-  js_dispatching_server = DaemonController.new(
-     :identifier    => 'js_dispatching_server',
-     :start_command => 'ruby messaging/js_dispatching_control.rb start',
-     :stop_command  => 'ruby messaging/js_dispatching_control.rb stop',
-     :ping_command  => lambda { TCPSocket.new('localhost', configatron.socket.port) },
-     :pid_file      => 'tmp/pids/js_dispatching_server.rb.pid',
-     :log_file      => 'log/js_dispatching.log',
-     :timeout       => 25
-  )
-  js_dispatching_server.start unless js_dispatching_server.running?
-  
-  # Checking all Subsystems
-  puts "------------------------"
-  puts "Checking all subsystems:"
-  puts "                        "
-  
-  colored_on  = "\e[1m\e[32m[ ON]\e[0m"
-  colored_off = "\e[1m\e[31m[OFF]\e[0m"
-  # checking the messaging bus
-  configatron.messaging_bus_active = System::MessagingBus.active?
-  puts "RABBIT MQ:      #{configatron.messaging_bus_active ? colored_on : colored_off}"
-  
-
-  # checking on the js dispatching server
-  configatron.js_dispatching_active = begin
-    host = TCPSocket.new('localhost', configatron.socket.port)
-    host.close
-    true
-  rescue Errno::ECONNREFUSED
-    false
+  at_exit do
+    System::Services.stop_all
   end
-  puts "JS DISPATCHING: #{configatron.js_dispatching_active ? "#{colored_on}" : colored_off}"
-  
-  # checking on nodejs
-  configatron.nodejs_active = begin
-    host = TCPSocket.new('localhost', 8124)
-    host.close
-    true
-  rescue Errno::ECONNREFUSED
-    false
-  end
-  puts "NODE JS:        #{configatron.nodejs_active ? "#{colored_on}" : colored_off}"
-  
-  # checking ldap
-  configatron.ldap.active = begin
-    false
-  end
-  puts "LDAP:           #{configatron.ldap.active ? colored_on : colored_off}"
-  
-  puts "                        "
-  puts "------------------------"
-  
 end
-
-###########################################################################################################################
 
 if defined?(PhusionPassenger)
-    PhusionPassenger.on_event(:starting_worker_process) do |forked|
-      require "#{RAILS_ROOT}/lib/rack_ext.rb" # overwrite multipart parsing
-        if forked
-            # We're in smart spawning mode.
-            Thread.new{ EM.run() }
-        else
-            # We're in conservative spawning mode. We don't need to do anything.
-        end
+  PhusionPassenger.on_event(:starting_worker_process) do |forked|
+    require "#{RAILS_ROOT}/lib/rack_ext.rb" # overwrite multipart parsing
+    if forked
+      # We're in smart spawning mode.
+      Thread.new{ EM.run() }
+    else
+      # We're in conservative spawning mode. We don't need to do anything.
     end
-end
-
-
-at_exit do
-  if defined?(node) && node
-    puts "shutting down node..."
-    node.stop
-  end
-  if defined?(js_dispatching_server) && js_dispatching_server
-    puts "shutting down the dispatcher"
-    js_dispatching_server.stop
   end
 end
