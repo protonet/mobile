@@ -171,9 +171,9 @@ class User < ActiveRecord::Base
     return if stranger?
     
     publish 'system', ['users', 'new'],
-      :trigger        => 'user.added',
+      :trigger   => 'user.added',
       :id        => id,
-      :name      => display_name,
+      :name      => display_name
   end
 
   def subscribe(channel)

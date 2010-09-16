@@ -44,7 +44,7 @@ class Tweet < ActiveRecord::Base
         :channel_id   => channel.id,
         :channel_uuid => channel.uuid,
         :avatar       => user.active_avatar_url,
-        :network_uuid => network.uuid
+        :network_uuid => network.uuid,
         :trigger      => 'meep.receive'
       })
     end
