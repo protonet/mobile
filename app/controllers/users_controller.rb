@@ -30,7 +30,7 @@ class UsersController < ApplicationController
     else
       @user ||= User.new
       flash.now[:error]  = "Sorry, but we couldn't set up that account. Please try again, or contact an admin."
-      render :template => "sessions/_registration_box"
+      redirect_to :action => 'new'
     end
   end
 

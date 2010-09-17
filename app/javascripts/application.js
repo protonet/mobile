@@ -41,7 +41,7 @@ $(function() {
   }
   
   registration_password_field.dPassword({
-    "ICON_PATH": "images/lock.png",
+    "ICON_PATH": "/images/lock.png",
     "ICON_STYLES": {
       display: "inline",
       position: "absolute",
