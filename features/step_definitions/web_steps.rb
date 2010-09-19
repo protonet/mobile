@@ -119,9 +119,9 @@ Then /^(?:|I )should see \/([^\/]*)\/(?: within "([^\"]*)")?$/ do |regexp, selec
   regexp = Regexp.new(regexp)
   with_scope(selector) do
     if page.respond_to? :should
-      page.should have_xpath('//*', :text => regexp)
+      page.should have_xpath('//*', :text => regexp, :visible => true)
     else
-      assert page.has_xpath?('//*', :text => regexp)
+      assert page.has_xpath?('//*', :text => regexp, :visible => true)
     end
   end
 end

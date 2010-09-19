@@ -107,7 +107,7 @@ class User < ActiveRecord::Base
   # create a user with a session id
   def self.stranger(session_id)
     u = find_or_create_by_temporary_identifier(session_id)  do |u|
-      u.name = "stranger_number_#{session_id[0,10]}"
+      u.name = "stranger_#{session_id[0,10]}"
       u.listen_to_home
     end
     u

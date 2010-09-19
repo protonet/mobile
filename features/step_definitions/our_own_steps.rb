@@ -1,4 +1,4 @@
-Then /^wait (\d+) seconds$/ do |seconds|
+Then /^wait (\d+) seconds?$/ do |seconds|
   sleep seconds.to_i
   true
 end
@@ -43,4 +43,8 @@ Given /^I click on "([^"]*)" within "([^"]*)"$/ do |linktext, selector|
   with_scope(selector) do
     find(:xpath, "//a[contains(.,'#{linktext}')]").click
   end
+end
+
+Given /^I leave the page$/ do
+  visit "http://www.google.com"
 end

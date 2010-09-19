@@ -108,11 +108,15 @@ protonet.controls.UserWidget = (function() {
         }
         current_dom_object.attr("class", connection_class);
       }
-
-      for(i in this.temporaryUsers) {
-        online_user = online_users[i];
-        if(!online_user && online_user != 0) {
-          this.removeUser(i);
+      
+      for(i in this.user_objects) {
+        user_object = this.user_objects[i];
+        if(!online_users[i]) {
+          if(this.temporaryUsers[i]) {
+            this.removeUser(i);
+          } else {
+            user_object.attr("class", "offline");
+          }
         }
       }
       
