@@ -16,7 +16,4 @@ $(function() {
   } else {
     $("#channels li.channel:first").click();
   }
-  $(".network").each(function(e) {
-    console.log(e);
-  });
 });

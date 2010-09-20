@@ -134,11 +134,23 @@ protonet.timeline.Meep.prototype = {
       })
     });
     
-    $.ajax({
+    var ajaxOptions = {
       url:        this.config.POST_URL,
       type:       "POST",
       data:       this.queryString,
-      success:    function() {
+      success:    function(response, text, xhr) {
+        /**
+         * "I'm a little more country than that ..."
+         * When the server is offline jquery still assumes
+         * that the request succeeded
+         * Such requests can be detected by manually checking
+         * the http status
+         */
+        if (!xhr.status) {
+          ajaxOptions.error();
+          return;
+        }
+        
         if (status.is(":visible")) {
           status.html(protonet.t("MEEP_SENT")).delay(1000).fadeOut();
         } else {
@@ -149,7 +161,7 @@ protonet.timeline.Meep.prototype = {
         protonet.Notifications.trigger("meep.sent", [this.element, this.data, this]);
       }.bind(this),
       error:      function() {
-        alert(protonet.t("MEEP_ERROR_LONG"));
+        protonet.ui.FlashMessage.show("error", protonet.t("MEEP_ERROR_LONG"));
         
         status.html(protonet.t("MEEP_ERROR"));
         this.element.find("article").addClass("error");
@@ -159,7 +171,9 @@ protonet.timeline.Meep.prototype = {
         (onFailure || $.noop)();
         protonet.Notifications.trigger("meep.error", [this.element, this.data, this]);
       }.bind(this)
-    });
+    };
+    
+    $.ajax(ajaxOptions);
     
     return this;
   }

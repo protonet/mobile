@@ -74,14 +74,21 @@ protonet.timeline.Channels = {
      * Subscribe a new channel by id
      */
     protonet.Notifications.bind("channel.subscribe", function(e, id) {
-      $("<form />", {
-        method: "post",
-        action: "/listens/?channel_id=" + id
-      }).hide().append($("<input />", {
-        name: "authenticity_token",
-        value: protonet.config.authenticity_token
-      })).appendTo("body").submit();
-    });
+      $.ajax({
+        type:   "post",
+        url:    "/listens/",
+        data:   {
+          channel_id:         id,
+          authenticity_token: protonet.config.authenticity_token
+        },
+        success: function() { location.reload(); },
+        error:   function() {
+          var identifier = this.getChannelName(+id) || id,
+              message = protonet.t("CHANNEL_SUBSCRIPTION_ERROR").replace("{identifier}", identifier);
+          protonet.ui.FlashMessage.show("error", message);
+        }.bind(this)
+      });
+    }.bind(this));
     
     /**
      * Ajax history to enable forward and backward

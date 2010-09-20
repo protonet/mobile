@@ -28,11 +28,17 @@
   </head>
   <body>
     <div id="cloud-container"><!-- container for fluffy clouds (call it "the sky") --></div>
-    <%- unless flash.empty? -%>
-      <%= "<div class=\"flash-message notice\"><p>#{flash[:notice]}</p></div>" if flash[:notice] %>
-      <%= "<div class=\"flash-message error\"><p>#{flash[:error]}</p></div>" if flash[:error] %>
-      <%= "<div class=\"flash-message warning\"><p>#{flash[:warning]}</p></div>" if flash[:warning] %>
-    <%- end -%>
+    <%-
+      if flash.empty?
+        flash_message_class_name = flash_message = ''
+      else
+        flash_message_class_name = 'notice'   if flash[:notice]
+        flash_message_class_name = 'error'    if flash[:error]
+        flash_message_class_name = 'warning'  if flash[:warning]
+        flash_message = flash[:notice] || flash[:error] || flash[:warning]
+      end
+    %>
+    <div class="flash-message <%= flash_message_class_name %>"><p><%= flash_message %></p></div>
     
     <%- if current_user.stranger? -%>
       <section id="login">

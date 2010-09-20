@@ -1,23 +1,33 @@
 protonet.ui.FlashMessage = {
+  classNames: ["notice", "error", "warning"],
+  TIMEOUT: 5000,
+  
   initialize: function() {
-    this.element = $("div.flash-message");
+    this.element = $("div.flash-message").click(this.hide.bind(this));;
     
-    if (this.element.length) {
-      this.element.click(this._hide.bind(this));
-      setTimeout(this._show.bind(this), 500);
-      setTimeout(this._hide.bind(this), 5500);
+    if ($.trim(this.element.text())) {
+      this.show();
     }
   },
   
-  _observe: function() {
-    this.element.click(this._hide.bind(this));
+  show: function(type, message) {
+    if (message) {
+      // Using html() instead of text() here will open security holes
+      this.element.find("p").text(message);
+    }
+    
+    if (type) {
+      $.each(this.classNames, function(i, className) {
+        this.element.removeClass(className);
+      }.bind(this));
+      this.element.addClass(type);
+    }
+    
+    this.element.stop().animate({ top: "0px" });
+    setTimeout(this.hide.bind(this), this.TIMEOUT);
   },
   
-  _show: function() {
-    this.element.animate({ top: "0px" });
-  },
-  
-  _hide: function() {
-    this.element.animate({ top: (-this.element.outerHeight()).px() });
+  hide: function() {
+    this.element.stop().animate({ top: (-this.element.outerHeight()).px() });
   }
 };
