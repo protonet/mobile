@@ -54,6 +54,10 @@ class Channel < ActiveRecord::Base
     id == 1
   end
   
+  def locally_hosted?
+    network_id == 1
+  end
+  
   def subscribe_owner
     owner && owner.subscribe(self)
   end

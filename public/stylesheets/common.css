@@ -198,9 +198,22 @@ div, button, p, textarea, input, select, option, h1, h2, h3, h4, legend, label, 
 #channel .browse a:before {
   content: "\002B\0020";
 }
-#channel .global {
-  background: green none;
-  background-color: green;
+#channel .global, #channel .global a:hover {
+  background-image: url(/images/mesh_global.png);
+  background-attachment: scroll;
+  background-position: left top;
+  background-repeat: no-repeat;
+}
+
+#channel .global-hosted, #channel .global-hosted a:hover {
+  background-image: url(/images/mesh_local.png);
+  background-attachment: scroll;
+  background-position: left top;
+  background-repeat: no-repeat;
+}
+
+#channel .global a, #channel .global-hosted a  {
+  padding-left: 20px;
 }
 /* =CHANNEL OPTIONS
 --------------------------------------------------------------------------- */
