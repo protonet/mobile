@@ -1,10 +1,10 @@
 <div id="channel">
   <ul>
-    <% channels.each_with_index do |c, index| %>
-      <li data-channel-id="<%= c.id %>" data-channel-name="<%=h c.name %>" data-channel-index="<%= index %>" class="channel <%= 'active' if c == active_channel %> <%= c.network.local? ? 'local' : 'global' %>">
+    <%- channels.each_with_index do |c, index| %>
+      <li data-channel-id="<%= c.id %>" data-channel-name="<%=h c.name %>" data-channel-index="<%= index %>" class="channel <%= 'active' if c == active_channel %> <%= c.locally_hosted? ? (c.global? ? 'global-hosted' : 'local') : 'global' %>">
         <%= link_to c.name.capitalize, {:channel_id => c.id} %>
       </li>
-    <% end %>
+    <%- end %>
     <li class="browse">
       <a href="/channels" title="Browse more channels"><%= Channel.count - channels.count %> channels, check them out!</a>
     </li>

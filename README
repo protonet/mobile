@@ -90,7 +90,7 @@ script/server
 
 To deploy on a given node:
 
-# if this is the first time you deploy to that node you need to do this first
+# if this is the first time you deploy to that node you need to do this first (use the vm target for VMs that don't have wireless capabilities)
 cap node deploy:first_run NODE=yournodesaddress
 # and
 cap node deploy:migrations NODE=yournodesaddress
@@ -98,6 +98,7 @@ cap node deploy:migrations NODE=yournodesaddress
 # or any of our other targets
 cap live deploy:migrations # -> deploys to team.protonet.info
 cap xing deploy:migrations # -> deploys to protonet.xing.com
+cap vm   deploy:migrations NODE=vm.address.com
 cap node deploy:migrations NODE=backup.protonet.info # -> deploys to backup.protonet.info
 
 === OTHER STUFF

@@ -4,6 +4,7 @@
 RUN_FROM_DISPATCHER = true
 
 require File.dirname(__FILE__) + '/../../config/environment'
+
 require File.dirname(__FILE__) + '/node_connection.rb'
 require File.dirname(__FILE__) + '/client_connection.rb'
 require File.dirname(__FILE__) + '/client_tracker.rb'
