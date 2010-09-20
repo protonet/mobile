@@ -8,23 +8,25 @@ class ListensController < ApplicationController
   end
   
   def create
-    channel = Channel.find(params[:channel_id])
+    channel = if params[:channel_id]
+      Channel.find(params[:channel_id])
+    elsif params[:channel_name]
+      Channel.find_by_name(params[:channel_name])
+    end
     
     if channel
       current_user.subscribe(channel)
-      flash[:notice] = "you started listening to #{h(channel.name)}#{' (pending verification)' if !channel.public?}"
+      flash[:notice] = "you started listening to #{channel.name}#{' (pending verification)' if !channel.public?}"
     else
-      flash[:error] = "could not subscribe to channel with identifier #{h((params[:channel_name] || params[:channel_id]).to_s)}"
+      flash[:error] = "could not subscribe to channel with identifier #{(params[:channel_name] || params[:channel_id]).to_s}"
     end
     if params[:channel_name] && (channel && !channel.public?)
       redirect_to "/"
     elsif params[:channel_name]
       redirect_to "/#{("#channel_name=" + channel.name if channel.try(:name))}"
     else
-      flash[:error] = "could not subscribe to channel with identifier '#{params[:channel_id].to_s}'"
+      redirect_to :controller => 'channels', :anchor => channel.try(:id)
     end
-    
-    redirect_to :controller => 'channels', :anchor => channel.try(:id)
   end
   
   def destroy
