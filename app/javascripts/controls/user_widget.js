@@ -33,8 +33,11 @@ protonet.controls.UserWidget.prototype = {
   _observe: function() {
     protonet.Notifications
       .bind("user.added", function(e, data) {
-        this.createUser(data.id, data);
-        this.updateCount();
+        /**
+         * Creating a user will trigger the user.added event
+         * and the user.subscribed_channel afterwards
+         */
+        this.createUser(data.id, data, true);
       }.bind(this))
       
       .bind("user.typing", function(e, data) {
@@ -126,20 +129,23 @@ protonet.controls.UserWidget.prototype = {
     }
   },
   
-  createUser: function(userId, user) {
+  createUser: function(userId, user, hide) {
     if (this.usersData[userId]) {
       return;
     }
     
     var isViewer = protonet.user.data.name == user.name,
-        isStranger = user.name.startsWith("stranger_");
+        isStranger = user.name.startsWith("stranger_"),
+        element = this.createElement(userId, user.name, isViewer, isStranger);
+    
+    hide && element.hide();
     
     this.usersData[userId] = {
       name:                 user.name,
       isViewer:             isViewer,
       isStranger:           isStranger,
       channelSubscriptions: [],
-      element:              this.createElement(userId, user.name, isViewer, isStranger)
+      element:              element
     };
   },
   
