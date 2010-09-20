@@ -3,14 +3,12 @@
 header.login {
   background: url(/img/icn_login_arrow_r2.png) no-repeat 220px 0;
   position: relative;
-  padding-top: 20px;
 }
 
 #login {
   min-height: 100px;
   padding: 6px 20px 20px 30px;
   width: 890px;
-  margin: 0 0 -20px;
 }
 
 #login h1 {

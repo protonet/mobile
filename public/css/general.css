@@ -108,7 +108,6 @@ aside {
   left: 0;
   right: 0;
   z-index: -1;
-  margin: -20px 0 0;
   opacity: 0.5;
 }
 
@@ -171,7 +170,6 @@ pre {
 /* =HEADER
 =========================================================================== */
 header {
-  margin: 20px 0 0;
   position: relative;
   display: block;
   height: 90px;
@@ -238,7 +236,7 @@ header .hearts {
 #user-navigation  {
   position: absolute;
   right: 0;
-  top: -14px;
+  top: 6px;
   font-size: 10px;
 }
 
