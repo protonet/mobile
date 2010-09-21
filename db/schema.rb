@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100913124214) do
+ActiveRecord::Schema.define(:version => 20100920193520) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -72,6 +72,17 @@ ActiveRecord::Schema.define(:version => 20100913124214) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "system_preferences", :force => true do |t|
+    t.string   "var",                       :null => false
+    t.text     "value"
+    t.integer  "object_id"
+    t.string   "object_type", :limit => 30
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "system_preferences", ["object_type", "object_id", "var"], :name => "index_system_preferences_on_object_type_and_object_id_and_var", :unique => true
 
   create_table "tweets", :force => true do |t|
     t.integer  "user_id"
