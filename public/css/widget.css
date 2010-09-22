@@ -1,9 +1,17 @@
-#user-widget {
+.widget {
   border: 1px rgba(72, 123, 255, 0.8) solid;
   padding: 1px;
 }
 
-#user-widget h3 {
+.widget {
+  margin-bottom: 20px;
+}
+
+.widget:last-child {
+  margin-bottom: 0;
+}
+
+.widget h3 {
   color: #fff;
   font-weight: normal;
   padding: 0 7px;
@@ -14,51 +22,27 @@
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.6)), to(rgba(72, 123, 255, 1)));
 }
 
-#user-widget output {
+.widget output {
   display: inline;
   color: rgba(255, 255, 255, 0.8);
 }
 
-#user-widget li {
-  background-image: url(../img/spr_user_status.png);
-  background-repeat: no-repeat;
+.widget li {
+  color: #333;
   padding-left: 26px;
-  line-height: 22px;
+  overflow: hidden;
+  cursor: pointer;
+  line-height: 24px;
   margin: 0 0 1px;
   white-space: nowrap;
 }
 
-#user-widget li {
-  overflow: hidden;
-  background-position: 4px -18px;
-  color: #999;
-  cursor: pointer;
-}
-
-#user-widget li.online {
-  background-position: 4px 2px;
-  color: #000;
-}
-
-#user-widget li.stranger {
-  font-style: italic;
-  color: #999;
-}
-
-#user-widget li.typing {
-  background-position: 5px -43px;
-}
-
-#user-widget li.myself {
-  font-weight: bold;
-}
-
-#user-widget li:hover,
-#user-widget li:focus {
+.widget li:hover,
+.widget li:focus {
   background-color: rgba(0, 0, 0, 0.06) !important;
 }
 
-#user-widget ul {
+.widget ul {
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
@@ -69,7 +53,7 @@
   margin: 1px 0;
 }
 
-#user-widget .resize {
+.widget .resize {
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
@@ -82,6 +66,43 @@
   cursor: row-resize;
 }
 
-#user-widget .resize:after {
+.widget .resize:after {
   content: ":::::::::::::::::";
+}
+
+
+/*--------------------------------- USER WIDGET ---------------------------------*/
+#user-widget li {
+  color: #999;
+  background-image: url(../img/spr_user_status.png);
+  background-repeat: no-repeat;
+  background-position: 4px -17px;
+}
+
+#user-widget li.online {
+  background-position: 4px 3px;
+  color: #000;
+}
+
+#user-widget li.stranger {
+  font-style: italic;
+  color: #999;
+}
+
+#user-widget li.typing {
+  background-position: 5px -42px;
+}
+
+#user-widget li.myself {
+  font-weight: bold;
+}
+
+
+/*--------------------------------- FILE WIDGET ---------------------------------*/
+#file-widget .address-bar {
+  display: none;
+  color: #666;
+  padding: 4px 7px;
+  font-size: 10px;
+  border-bottom: 1px solid #ccc;
 }

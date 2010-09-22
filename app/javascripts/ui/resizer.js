@@ -1,13 +1,13 @@
 protonet.ui.Resizer = function(element, handle, options) {
   this.element = element;
   this.handle = handle;
-  this.options = $.extend(options, {
+  this.options = $.extend({
     callback: $.noop,
     storage: window.localStorage || {},
     storageKey: "resize_height"
-  });
+  }, options);
   
-  var storedHeight = this.options.storage[this.options.storageKey];
+  var storedHeight = this.options.storage.getItem(this.options.storageKey);
   storedHeight && this.element.css("height", storedHeight.px());
   
   this._observe();
@@ -34,7 +34,7 @@ protonet.ui.Resizer.prototype = {
         this.element.css("height", newHeight.px());
         currentPos = newPos;
         
-        this.options.storage[this.options.storageKey] = newHeight;
+        this.options.storage.setItem(this.options.storageKey, newHeight);
         this.options.callback(newHeight);
       }.bind(this))
       

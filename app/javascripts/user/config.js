@@ -34,11 +34,11 @@ protonet.user.Config = {
   },
   
   set: function(key, value) {
-    this._storage[key] = JSON.stringify(value);
+    this._storage.setItem(key, JSON.stringify(value));
   },
   
   get: function(key) {
-    var value  = this._storage[key],
+    var value  = this._storage.getItem(key),
         config = this.configs[key];
     
     if (config && config.type == "notification") {
@@ -50,7 +50,6 @@ protonet.user.Config = {
     if (typeof(value) != "undefined" && value !== null) {
       return JSON.parse(value);
     } else {
-      var config = this.configs[key];
       return config && config.defaultValue;
     }
   },
@@ -81,6 +80,8 @@ protonet.user.Config = {
         return this._getBooleanElement(key, config);
       case "notification":
         return this._getNotificationElement(key, config);
+      default:
+        return null;
     }
   },
   

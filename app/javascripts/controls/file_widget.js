@@ -1,7 +1,100 @@
 //= require "../utils/escape_html.js"
 //= require "../utils/parse_url.js"
+//= require "../ui/resizer.js"
+//= require "../lib/jquery-ui-1.8.4.highlight-effect.min.js"
 
 protonet.controls.FileWidget = function() {
+  this.container = $("#file-widget");
+  this.list = this.container.find("ul");
+  this.resizer = this.container.find(".resize");
+  this.addressBar = this.container.find(".address-bar");
+  
+  new protonet.ui.Resizer(this.list, this.resizer, { storageKey: "file_widget_height" });
+  
+  this._observe();
+};
+
+
+protonet.controls.FileWidget.prototype = {
+  _observe: function() {
+    protonet.Notifications.bind("channel.change", function(event, channelId) {
+      protonet.Notifications.trigger("files.load", channelId);
+    });
+    
+    protonet.Notifications.bind("files.load", function(event, channelId, path) {
+      this.load(channelId, path);
+    }.bind(this));
+    
+    this.container.delegate("[data-directory-name]", "click", function(event) {
+      
+      var directoryName = $(event.currentTarget).attr("data-directory-name"),
+          path          = this.path + directoryName + "/";
+      protonet.Notifications.trigger("files.load", [this.channelId, path]);
+      event.preventDefault();
+    }.bind(this));
+  },
+  
+  load: function(channelId, path) {
+    path = path || "/";
+    $.getJSON("system/files", {
+      path:       "/" + channelId + path,
+      channel_id: channelId
+    }, this.render.bind(this, channelId, path));
+  },
+  
+  render: function(channelId, path, data) {
+    this.channelId = channelId;
+    this.path = path;
+    this.data = data;
+    
+    this.list.children().detach();
+    
+    $.each($.makeArray(data.directory), function(i, name) {
+      this.renderDirectory(name);
+    }.bind(this));
+    
+    $.each($.makeArray(data.file), function(i, name) {
+      this.renderFile(name);
+    }.bind(this));
+    
+    this._toggleAddressBar();
+  },
+  
+  renderFile: function(name) {
+    $("<li />", {
+      text:                  name,
+      "data-file-name":      name,
+      tabIndex:              -1,
+      title:                 name,
+      className:             "file"
+    }).appendTo(this.list);
+  },
+  
+  renderDirectory: function(name) {
+    $("<li />", {
+      text:                  name,
+      "data-directory-name": name,
+      tabIndex:              -1,
+      title:                 name,
+      className:             "directory"
+    }).appendTo(this.list);
+  },
+  
+  _toggleAddressBar: function() {
+    var visible = this.addressBar.is(":visible");
+    
+    this.addressBar.text(this.path);
+    
+    if (this.path.length > 1 && !visible) {
+      this.addressBar.slideDown("fast");
+    } else if (visible) {
+      this.addressBar.slideUp("fast");
+    }
+  }
+};
+
+
+protonet.controls.FileWidget2 = function() {
   this.wrapper          = $("#file-list");
   this.file_list        = this.wrapper.find("ul.root");
   this.hierarchy_bar    = this.wrapper.find("#file-navigation .hierarchy");
@@ -47,7 +140,7 @@ protonet.controls.FileWidget = function() {
   }.bind(this));
 };
 
-protonet.controls.FileWidget.prototype = {
+protonet.controls.FileWidget2.prototype = {
   "initUpload": function() {
     new this.FileUpload(this);
   },

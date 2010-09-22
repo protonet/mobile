@@ -10,7 +10,7 @@ module ApplicationHelper
   end
   
   def stylesheets
-    ['/css/reset', '/css/general', '/css/login', '/css/channels', '/css/meeps', '/css/form', '/css/text_extension', '/css/user_widget']
+    ['/css/reset', '/css/general', '/css/login', '/css/channels', '/css/meeps', '/css/form', '/css/text_extension', '/css/widget']
   end
 
   def search_highligh_tag(phrase)

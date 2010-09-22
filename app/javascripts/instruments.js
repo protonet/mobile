@@ -14,6 +14,7 @@ $(function() {
   protonet.timeline.initialize();
   
   new protonet.controls.UserWidget();
+  new protonet.controls.FileWidget();
 });
 
 

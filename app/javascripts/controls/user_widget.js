@@ -24,7 +24,7 @@ protonet.controls.UserWidget = function() {
   
   protonet.Notifications.trigger("users.data_available", this.usersData);
   
-  new protonet.ui.Resizer(this.list, this.resizer);
+  new protonet.ui.Resizer(this.list, this.resizer, { storageKey: "user_widget_height" });
   
   this._observe();
 };

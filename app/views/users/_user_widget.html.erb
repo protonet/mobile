@@ -1,5 +1,5 @@
 <% users = User.registered.all -%>
-<div id="user-widget">
+<div id="user-widget" class="widget">
   <h3>Users <output class="count">(0/<%= users.size %>)</output></h3>
   <ul>
     <!-- tabindex="-1" ensures that the element is focusable via css -->

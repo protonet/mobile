@@ -7,7 +7,7 @@
     </title>
     <link rel="shortcut icon" href="img/favicon.png" type="image/png">
     <%= stylesheet_link_tag(stylesheets, :cache => !configatron.avoid_caching) %>
-    <script type="text/javascript">//<![CDATA[
+    <script>
       var protonet = protonet || {};
       protonet.config = {
         base_url:                 location.protocol + "//" + location.host,
@@ -24,7 +24,7 @@
         availableChannels:        <%= get_channel_mapping_as_json %>,
         debugMode:                <%= configatron.log_event_notifications.to_json %>
       };
-    //]]></script>
+    </script>
   </head>
   <body>
     <div id="cloud-container"><!-- container for fluffy clouds (call it "the sky") --></div>
