@@ -49,6 +49,25 @@ git submodule update
 # if you don't have imagemagick install it first:
 (sudo) port install imagemagick
 
+# you'll need uuid4r
+# if you have babushka setup:
+babushka dudemeister:uuid4r
+
+#if not:
+cd /tmp
+curl -LO ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz
+tar xzf uuid-1.6.2.tar.gz
+./configure
+make
+sudo make install
+
+# and now uuid4r
+git clone http://github.com/skaes/uuid4r.git
+cd uuid4r/ext
+ruby extconf.rb
+make
+make install
+
 # install the needed gems:
 bundle install
 

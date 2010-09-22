@@ -77,7 +77,7 @@ class Channel < ActiveRecord::Base
   
   def generate_uuid
     raise RuntimeError if uuid
-    self.update_attribute(:uuid, UUID.create.to_s)
+    self.update_attribute(:uuid, UUID4R::uuid(1))
   end
   
   private
