@@ -6,7 +6,7 @@ class ChannelsController < ApplicationController
     respond_to do |format|
       format.json do
         network_id  = params[:network_id].to_i
-        render :json => Network.find(network_id).channels
+        render :json => network_id == 0 ? {} : Network.find(network_id).channels
       end
       format.html do
         @networks = Network.all

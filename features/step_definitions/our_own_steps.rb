@@ -48,3 +48,15 @@ end
 Given /^I leave the page$/ do
   visit "http://www.google.com"
 end
+
+Then /^I should see "([^\"]*)" in the channel list$/ do |channel_name|
+  with_scope(".channel-list") do
+    assert page.has_xpath?('//*', :text => channel_name, :visible => true)
+  end
+end
+
+Then /^I should see "([^\"]*)" in the channel details pane$/ do |text|
+  with_scope("#channels-details") do
+    assert page.has_xpath?('//*', :text => text, :visible => true)
+  end  
+end

@@ -46,7 +46,8 @@ class User < ActiveRecord::Base
       find(0)
     rescue ActiveRecord::RecordNotFound
       user = new(:name => 'Anonymous', :login => 'Anonymous')
-      user.save_with_validation(false) && update_all("id = 0", "id = #{user.id}")
+      # no callback for this one
+      user.send(:create_without_callbacks) && update_all("id = 0", "id = #{user.id}")
       find(0)
     end
   end
