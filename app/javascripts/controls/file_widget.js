@@ -26,16 +26,23 @@ protonet.controls.FileWidget.prototype = {
     }.bind(this));
     
     this.container.delegate("[data-directory-name]", "click", function(event) {
-      
-      var directoryName = $(event.currentTarget).attr("data-directory-name"),
-          path          = this.path + directoryName + "/";
-      protonet.Notifications.trigger("files.load", [this.channelId, path]);
+      var directoryName = $(event.currentTarget).attr("data-directory-name");
+      protonet.Notifications.trigger("files.load", [this.channelId, directoryName]);
       event.preventDefault();
     }.bind(this));
   },
   
   load: function(channelId, path) {
     path = path || "/";
+    
+    if (!path.startsWith("/")) {
+      path = (this.path || "") + path;
+    }
+    
+    if (!path.endsWith("/")) {
+      path += "/";
+    }
+    
     $.getJSON("system/files", {
       path:       "/" + channelId + path,
       channel_id: channelId
@@ -81,13 +88,35 @@ protonet.controls.FileWidget.prototype = {
   },
   
   _toggleAddressBar: function() {
-    var visible = this.addressBar.is(":visible");
+    var visible = this.addressBar.is(":visible"),
+        paths   = "/",
+        rootLink = $("<a />", {
+          href:                   "#",
+          "data-directory-name":  "/",
+          text:                   "/"
+        });
     
-    this.addressBar.text(this.path);
+    this.addressBar.html("").append(rootLink);
+    
+    $.each(this.path.split("/"), function(i, path) {
+      if (!path) {
+        return;
+      }
+      
+      paths += path + "/";
+      
+      var pathLink = $("<a />", {
+        href:                   "#",
+        "data-directory-name":  paths,
+        text:                   path
+      });
+      
+      this.addressBar.append(pathLink).append("/");
+    }.bind(this));
     
     if (this.path.length > 1 && !visible) {
       this.addressBar.slideDown("fast");
-    } else if (visible) {
+    } else if (this.path.length <= 1 && visible) {
       this.addressBar.slideUp("fast");
     }
   }

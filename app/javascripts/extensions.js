@@ -66,6 +66,11 @@ String.prototype.startsWith = function(str) {
   return this.indexOf(str) === 0;
 };
 
+String.prototype.endsWith = function(str) {
+  var d = this.length - str.length;
+  return d >= 0 && this.lastIndexOf(str) === d;
+};
+
 String.prototype.truncate = function(length) {
   var truncation = "...";
   return this.length > length ? this.slice(0, length - truncation.length) + truncation : String(this);
