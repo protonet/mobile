@@ -10,6 +10,7 @@ doc/app
 *.pid
 *.sqlite3
 set_env.sh
+cleanup.sh
 public/javascripts/sprockets.js
 public/javascripts/all.js
 public/stylesheets/all.css
