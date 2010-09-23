@@ -59,8 +59,11 @@ var Node = function(info) {
 
   this.position = new Vertex(Math.random() * 10, Math.random() * 10);
   this.disp     = new Vertex(0, 0);
-  this.mass     = 500.0;
+  this.mass     = 500.0;    
   this.added = false;
+  
+  this.tmp = {};
+  this.tmp.name = "";
   
   this.active = true;
 };
@@ -69,6 +72,55 @@ Node.prototype = {
   init: function(graph) {
     this.graph = graph;
     //console.log("init "+this.info.id+" ("+this.graph.area+")");
+  },
+  
+  reinit: function() {
+    this.position = new Vertex(Math.random() * 10, Math.random() * 10);
+    this.disp     = new Vertex(0, 0);
+    this.mass     = 500.0;    
+  },
+  
+  get_style: function(attrname) {
+    var styles = {
+      node: {
+        fill: "#ff7400", 
+        hover: "#ff9640",
+        color: "#fff",
+        fontsize: 11,
+        stroke: "#fff",
+        strokewidth: 3
+      },
+      supernode: {
+        fill: "#f00",
+        hover: "#ff4040",
+        color: "#fff",
+        fontsize: 11,
+        stroke: "#fff",
+        strokewidth: 3
+      },
+      client: {
+        fill: "#cd0074",
+        hover: "#e6399b",
+        color: "#fff",
+        fontsize: 10,
+        stroke: "#fff",
+        strokewidth: 3
+      },
+      stranger: {
+        fill: "#fff",
+        hover: "#ccc",
+        color: "#333",
+        fontsize: 10,
+        stroke: "#333",
+        strokewidth: 1
+      }
+    };
+    var type = this.info.type;
+    if (this.info.name.match(/^stranger/) || this.tmp.name != "")
+      type = "stranger";
+    if (this.graph.small && attrname == "strokewidth")
+      return 1;
+    return styles[type][attrname];
   },
   
   render: function(paper, small) {
@@ -90,11 +142,6 @@ Node.prototype = {
           name = '?';
 
         var title = this.paper.text(this.position.x, this.position.y, name);
-        title.attr({fill: 'white', "font-size":11});
-        if (this.info.type == 'client')
-          title.attr({'font-size':10});
-        if (is_stranger)
-          title.attr({fill: "#333"});
         this.visual.push(title);
         
         this.visual_title = title;
@@ -111,58 +158,68 @@ Node.prototype = {
         box = this.paper.rect(this.position.x - (w / 2), this.position.y - (h / 2), w, h, borderradius);
       }
 
-      var colors = {
-        node:      {normal:"#ff7400", hover:"#ff9640"},
-        supernode: {normal:"#f00", hover:"#ff4040"},
-        client:    {normal:"#cd0074", hover:"#e6399b"}
-      };
-
-      box.attr({
-        fill: $(colors).attr(this.info.type).normal,
-        stroke: "white",
-        opacity: 1,
-        "stroke-width": (small ? 1 : 3)
-      });
-      if (is_stranger)
-        box.attr({fill: "white", stroke: "grey", "stroke-width": 1});
-
       box.n = this;
       this.visual.push(box);
       
       this.visual_box = box;
 
-      // on mouse drauf Farbe aendern
-      box.mouseover(function() {
-        this.attr({fill: (is_stranger ? "#ccc" : $(colors).attr(this.n.info.type).hover)});
-      });
-      box.mouseout(function() {
-        this.attr({fill: (is_stranger ? "#fff" : $(colors).attr(this.n.info.type).normal)});
-      });
-
       if (!is_small) {
         title.n = this;
         title.b = box;
         title.mouseover(function() {
-          this.b.attr({fill: (is_stranger ? "#ccc" : $(colors).attr(this.b.n.info.type).hover)});
+            this.b.attr({fill: this.b.n.get_style("hover")
+          });
         });
         title.mouseout(function() {
-          this.b.attr({fill: (is_stranger ? "#fff" : $(colors).attr(this.b.n.info.type).normal)});
+            this.b.attr({fill: this.b.n.get_style("fill")
+          });
         });
 
         title.toFront();
       }
     }
+
+    // set attributes of the text
+    if (this.visual_title) {
+      this.visual_title.attr({fill: this.get_style("color"), "font-size": this.get_style("fontsize")});
+    }
+
+    // set attributes of the box
+    if (this.visual_box) {
+      this.visual_box.attr({
+        fill: this.get_style("fill"),
+        stroke: this.get_style("stroke"),
+        opacity: 1,
+        "stroke-width": this.get_style("strokewidth")
+      });
+
+      // on mouse drauf Farbe aendern
+      this.visual_box.mouseover(function() {
+          this.attr({fill: this.n.get_style("hover")
+        });
+      });
+      this.visual_box.mouseout(function() {
+          this.attr({fill: this.n.get_style("fill")
+        });
+      });
+    }
     
     // update text if tempName is set
-    if (this.info.type == "client" && this.tempName != "" && 
-        this.visual_title && this.visual_box) {
+    if (this.info.type == "client" && this.tmp.name.length > 0
+        && this.visual_title && this.visual_box) {
+      
       // set title
-      this.visual_title.attr({text: this.tempName});
+      this.visual_title.attr({text: this.tmp.name});
       var bb = this.visual_title.getBBox();
       var w = bb.width + 16;
       var h = bb.height + 12;
       // update box size
       this.visual_box.attr({width: w, height: h});
+      
+      // QUICK FIX
+      this.visual_title.translate(14,-1);
+      //this.visual_title.attr({cx: this.position.x, cy: this.position.y}); //translate(14,-1);
+      //this.visual_title.translate(-bb.x + position.x, -bb.y + position.y);
     }
    
     // rotate if client
@@ -172,7 +229,6 @@ Node.prototype = {
       var dir  = this.position.diff(this.info.nodepos);
       var diff = dir.scale(this.visual.getBBox().width / 2 - 6);
       this.visual.translate(diff.x, diff.y);
-
       this.visual.rotate(this.info.angle, false);
     }
 
@@ -188,19 +244,20 @@ Node.prototype = {
     this.visual.mouseout(function() {
       this.n.graph.hideInfo(this.n);
     });
+    
+    if (this.active)
+      this.visual.show();
+    else
+      this.visual.hide();
   
     return this.visual;
   },
 
   deactivate: function() {
-    if (this.visual)
-      this.visual.hide();
     this.active = false;
   },
 
   activate: function() {
-    if (this.visual)
-      this.visual.show();
     this.active = true;
   }
 };
@@ -212,6 +269,7 @@ var Edge = function(fromNode, toNode) {
   this.fromNode = fromNode;
   this.toNode = toNode;
   this.added = false;
+  this.active = true;
 };
 
 Edge.prototype = {
@@ -229,18 +287,22 @@ Edge.prototype = {
       " L" + this.toNode.position.x   + "," + this.toNode.position.y);
   
     this.visual.toBack();
+
+    if (this.active)
+      this.visual.show();
+    else
+      this.visual.hide();
+  
     return this.visual;
   },
 
   deactivate: function() {
-    if (this.visual)
-      this.visual.hide();
+    this.active = false;
   },
 
   activate: function() {
-    if (this.visual)
-      this.visual.show();
-  }
+    this.active = true;
+  },
 }
 
 /* ------------------------------------------------- */
@@ -272,7 +334,7 @@ var Graph = function(target_id, maxIterations, small) {
   this.infolayertext.attr({fill: "#333"});
   this.hideInfo();
   
-  this.maxNumDislayedClients = 5;
+  this.maxNumDisplayedClients = 5;
   
   // the vertex used for centering the whole graph on the canvas
   this.centerVertex = new Vertex(0,0);
@@ -301,13 +363,46 @@ Graph.prototype = {
   showInfo: function(node) {
     var nodepos = node.position.sum(this.centerVertex);
     
+    var text = "";
+    if (node.tmp.name != "") {
+      // "x more" text...
+      text = node.tmp.name+"\n"+node.info.name+"\n";
+      
+      // find the node this client is connected to
+      var nod;
+      for (var e = 0; e < this.edges.length; e++) {
+        var u = this.edges[e].fromNode;
+        var v = this.edges[e].toNode;
+        if (u.number == node.number)
+          nod = v;
+        if (v.number == node.number)
+          nod = u;
+      }
+      
+      for (var e = 0; e < this.edges.length; e++) {
+        var u = this.edges[e].fromNode;
+        var v = this.edges[e].toNode;
+        //text += 
+        //  u.info.name+"("+u.number+"/"+u.info.type+"/"+u.active+")"+"/"+
+        //  v.info.name+"("+v.number+"/"+v.info.type+"/"+v.active+")"+"\n";
+        if ((u.number == nod.number && v.info.type == "client" && !v.active) ||
+            (v.number == nod.number && u.info.type == "client" && !u.active)) {
+        
+          var client = (u.number == nod.number ? v : u);
+          text += client.info.name+"\n";
+        }
+      }
+    }
+    else {
+      // normal info for node
+      text =
+        //"id: "+node.info.id+"\n"+
+        "type: "+node.info.type+"\n"+
+        "name: "+node.info.name
+    }
+    
     // load node info into info layer
-    this.infolayertext.attr({
-        text: 
-          //"id: "+node.info.id+"\n"+
-          "type: "+node.info.type+"\n"+
-          "name: "+node.info.name
-    });
+    this.infolayertext.attr({text: text});
     //console.log("node #"+node.info.id);
     
     var bb = this.infolayertext.getBBox();
@@ -471,13 +566,8 @@ Graph.prototype = {
         }
       }
     }
+    this.processQueue();
     this.restart();
-  },
-
-  restart: function() {
-    this.temperature = this.calcInitialTemperature();
-    this.iters = 0;
-    this.render();
   },
 
   addNode: function(node) {
@@ -717,18 +807,6 @@ Graph.prototype = {
     return n;
   },
 
-  processQueue: function() {
-    if (this.queue.length) {
-      var node = this.queue.shift();
-      this.addNode(node);
-    
-      var edge = this.queue.shift();
-      this.addEdge(edge, false);
-    
-      this.restart();
-    }
-  },
-
   layout: function() {
     //this.log();
     if (!this.temperature)
@@ -819,7 +897,7 @@ Graph.prototype = {
           var d = delta.len();
           
           if (this.numConnectedClients(u) > 0 || this.numConnectedClients(v) > 0)
-            d /= 4;
+            d /= 6;
 
           var rand = new Vertex(Math.random(), Math.random());
 
@@ -874,8 +952,30 @@ Graph.prototype = {
     
       this.layout_clients();
       this.cool();
-    }
+    }    
     return true; 
+  },
+
+  set_node_active: function(node, status) {
+    node.active = status;
+    for (var e = 0; e < this.edges.length; e++) {
+      var edge = this.edges[e];
+      if (edge.fromNode.number == node.number ||
+          edge.toNode.number == node.number)
+        edge.active = status;     
+    }
+    
+  },
+  
+  log_tmp_names: function() {
+    var names =  new Array();
+    for (var n = 0; n < this.nodes.length; n++) {
+      if (this.nodes[n].tmp.name != "")
+        names.push(this.nodes[n].info.name+":"+this.nodes[n].tmp.name);
+      else
+        names.push("");
+    }
+    console.log(names);    
   },
 
   layout_clients: function() {
@@ -890,63 +990,52 @@ Graph.prototype = {
           var edge = this.edges[e];
           var u = edge.fromNode;
           var v = edge.toNode;
-          if (u.active && v.active) {
+          //if (u.active && v.active) {
             if ((u.number == node.number && v.info.type == 'client') ||
                 (v.number == node.number && u.info.type == 'client')) {
               
               var nodeToPush = (u.number == node.number ? v : u);
-              nodeToPush.tempName = "";
-              //if (clients.length < this.maxNumDislayedClients) {
+              if (clients.length < this.maxNumDisplayedClients) {
                 clients.push(nodeToPush);
-              //} else {
-              //  clientsInactive.push(nodeToPush);
-              //}
+              } else {
+                clientsInactive.push(nodeToPush);
+              }
             }
-          }
+          //}
         }
 
-        if (clients.length == this.maxNumDislayedClients && clientsInactive.length > 0)
-          clients[this.maxNumDislayedClients - 1].tempName = '#'+clientsInactive.length+' more...';
-      
         // position clients circular around node
         if (clients.length > 0) {
-          var radius = (this.small ? 20.0 : 30.0) + (clients.length * (this.small ? 4.0 : 5.0));
+          var radius = (this.small ? 20.0 : 30.0) + 25; // + (clients.length * (this.small ? 4.0 : 5.0));
           var angle  = 360.0 / clients.length;
           for (var c = 0; c < clients.length; c++) {
             var client = clients[c];
             this.layout_client(client, node, clients.length, c, angle, radius);
-            /*
-            client.info.angle = (c > Math.floor(clients.length / 2) ? 270 : 90) - angle * c;
-            client.position.x = node.position.x + Math.sin(this.deg_to_rad(angle * c)) * radius;
-            client.position.y = node.position.y + Math.cos(this.deg_to_rad(angle * c)) * radius;
-            client.info.nodepos = node.position;
-            */
             // activate node and connected edges
-            client.activate();
-            for (var e = 0; e < this.edges.length; e++) {
-              var edge = this.edges[e];
-              if (edge.fromNode.number == client.number ||
-                  edge.toNode.number == client.number)
-                edge.activate();           
-            }
+            this.set_node_active(client, true);
           }
-          /*
           for (var c = 0; c < clientsInactive.length; c++) {
             var client = clientsInactive[c];
             this.layout_client(client, node, clientsInactive.length, c, 0, 10);
             // deactivate node and connected edges
-            client.deactivate();
-            for (var e = 0; e < this.edges.length; e++) {
-              var edge = this.edges[e];
-              if (edge.fromNode.number == client.number ||
-                  edge.toNode.number == client.number)
-                edge.deactivate();              
-            }
+            this.set_node_active(client, false);
           }
-          */
+          
+          for (var n = 0; n < clients.length; n++) {
+            clients[n].tmp.name = '';
+            //console.log("clearing temp name of "+clients[n].info.name);
+          }          
+          // set temp name of last displayed client node to "x more..."
+          //console.log(clients.length+" / "+this.maxNumDisplayedClients+" / "+clientsInactive.length);
+          if (clients.length == this.maxNumDisplayedClients && clientsInactive.length > 0) {
+            var client = clients[this.maxNumDisplayedClients - 1];
+            client.tmp.name = '#'+(clientsInactive.length+1)+' more...';
+          }
         }
       }
     }  
+
+    //this.log_tmp_names();
   },
   
   layout_client: function(client, node, total, num, angle, radius) {
@@ -983,15 +1072,21 @@ Graph.prototype = {
     this.visual.translate(this.centerVertex.x, this.centerVertex.y);    
   },
 
-  render: function() {
-    while (this.iters < this.maxIterations) {
-      this.processQueue();
-      this.layout();
-      this.iters++;
-    }
-    this.render_graph();
+  processQueue: function() {
+    for (var q = 0; q < this.queue.length / 2; q++) {
+    //if (this.queue.length) {
+      var node = this.queue.shift();
+      this.addNode(node);
     
-    /*
+      var edge = this.queue.shift();
+      this.addEdge(edge, false);
+      //this.restart();
+    }
+    //this.restart();
+  },
+
+  // should be called within a setInterval() code string
+  render_iterative: function() {
     this.processQueue();
 
     if (this.iters > this.maxIterations)
@@ -999,7 +1094,29 @@ Graph.prototype = {
     this.iters++;
 
     if (this.layout())
-      renderGraph();
-    */
+      this.render_graph();
   },
+
+  render: function() {
+    while (this.iters < this.maxIterations) {
+      //console.log("i: "+this.iters);
+      this.layout();
+      this.iters++;
+    }    
+    this.render_graph();    
+  },
+
+  restart: function() {
+    this.temperature = this.calcInitialTemperature();
+    this.iters = 0;
+    this.render();
+  },
+
+  retry: function() {
+    // place nodes at random positions
+    for (var n = 0; n < this.nodes.length; n++) {
+      this.nodes[n].reinit();
+    }
+    this.restart();
+  }
 };

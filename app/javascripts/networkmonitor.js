@@ -18,7 +18,6 @@ var ourInterval;
   supernode:null, 
   key:null
 */
-
 /*
 function asyncupdate1() {
   console.log("async update 1");
@@ -53,7 +52,13 @@ function asyncupdate4() {
     "21":{name:"#21"},
     "22":{name:"#22"},
     "23":{name:"#23"},
-    "24":{name:"#24"}
+    "24":{name:"#24"},
+    "25":{name:"#25"},
+    "26":{name:"#26"},
+    "27":{name:"#27"},
+    "28":{name:"#28"},
+    "29":{name:"#29"},
+    "30":{name:"#30"}
   });
 }
 */
@@ -71,7 +76,7 @@ $(function() {
     //setTimeout("asyncupdate1()", 1000);
     //setTimeout("asyncupdate2()", 2000);
     //setTimeout("asyncupdate3()", 3000);
-    //setTimeout("asyncupdate4()", 4000);
+    //setTimeout("asyncupdate4()", 1000);
   }
 });
 
