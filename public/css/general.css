@@ -158,12 +158,12 @@ pre {
 }
 
 .flash-message.notice {
-  background: rgba(0, 204, 0, 0.6);
+  background: rgba(0, 204, 0, 0.7);
 }
 
 .flash-message.warning,
 .flash-message.error {
-  background: rgba(231, 92, 121, 0.7);
+  background: rgba(231, 92, 121, 0.8);
 }
 
 

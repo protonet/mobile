@@ -85,6 +85,16 @@ protonet.timeline.Form = {
       this.input.val(value + ((value.slice(-1) == " " || !value.length) ? "" : " ") + reply);
     }.bind(this));
     
+    /**
+     * Update input value
+     */
+    protonet.Notifications.bind("meep.error", function(e, element, data) {
+      var value = this.input.focus().val();
+      if (!$.trim(value)) {
+        this.input.val(data.message);
+      }
+    }.bind(this));
+    
     
     /**
      * Typing state

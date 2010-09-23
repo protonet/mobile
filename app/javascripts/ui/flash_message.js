@@ -24,7 +24,9 @@ protonet.ui.FlashMessage = {
     }
     
     this.element.stop().animate({ top: "0px" });
-    setTimeout(this.hide.bind(this), this.TIMEOUT);
+    
+    clearTimeout(this.timeout);
+    this.timeout = setTimeout(this.hide.bind(this), this.TIMEOUT);
   },
   
   hide: function() {

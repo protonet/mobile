@@ -84,10 +84,6 @@
   position: absolute;
 }
 
-.meeps .error {
-  opacity: 0.5;
-}
-
 .meeps .error .status {
   color: red;
 }

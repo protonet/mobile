@@ -17,15 +17,11 @@ protonet.dispatcher = {
   _observe: function() {
     protonet.Notifications
       .bind("socket.initialized", function() {
-        this.createSocketCallback();
+        this.connectSocket();
       }.bind(this))
-    
+      
       .bind("socket.connected", function(e, status) {
         this.connectSocketCallback(status);
-      }.bind(this))
-    
-      .bind("socket.disconnected", function() {
-        this.handleDisconnect();
       }.bind(this))
     
       .bind("socket.send", function(e, data) {
@@ -36,13 +32,13 @@ protonet.dispatcher = {
         this.receiveData(data);
       }.bind(this))
     
-      .bind("socket.check", function() {
-        this.socketCheck();
-      }.bind(this))
-    
       .bind("socket.ping_received", function() {
         this.pingSocketCallback();
       }.bind(this));
+      
+    $(window)
+      .bind("offline unload", this.disconnectSocket.bind(this))
+      .bind("online", this.connectSocket.bind(this));
   },
   
   createSocket: function() {
@@ -50,6 +46,7 @@ protonet.dispatcher = {
         attributes  = { id: this.SOCKET_ID },
         params      = { allowscriptaccess: "sameDomain", wmode: "transparent" };
     
+    // Fires "socket.initialized" when ready
     swfobject.embedSWF(
       "/flash/socket.swf?" + new Date().getTime(),
       "socket-container",
@@ -57,58 +54,80 @@ protonet.dispatcher = {
       null, {}, params, attributes
     );
   },
-  
-  createSocketCallback: function() {
-    this.socket = swfobject.getObjectById(this.SOCKET_ID);
-    this.connectSocket();
-    $(window).bind({
-      unload: function() { this.socket.closeSocket(); }.bind(this)
-    });
-  },
     
   connectSocket: function() {
+    if (this.connected) {
+      return;
+    }
+    
+    this.socket = this.socket || swfobject.getObjectById(this.SOCKET_ID);
     this.socket.connectSocket(this.server, this.serverPort);
   },
   
   connectSocketCallback: function(status) {
     if (status) {
+      this.connected = true;
       this.authenticateUser();
       this.startSocketCheck();
+      if (this.reconnect) {
+        this.reconnect = false;
+        protonet.ui.FlashMessage.show("notice", protonet.t("SOCKET_RECONNECTED"));
+        protonet.ui.Logo.jumpMonster();
+      }
     } else {
-      this.handleDisconnect();
+      this.disconnectSocket();
     }
   },
   
+  disconnectSocket: function() {
+    this.socket.closeSocket();
+    this.stopSocketCheck();
+    
+    this.startSocketReconnect();
+    
+    // Only shout it to the world when it has been online before
+    if (this.connected) {
+      protonet.ui.FlashMessage.show("error", protonet.t("SOCKET_DISCONNECTED"));
+      protonet.Notifications.trigger("socket.disconnected");
+    }
+    
+    this.connected = false;
+  },
+  
+  stopSocketReconnect: function() {
+    this.reconnect = false;
+    clearTimeout(this.reconnectTimeout);
+  },
+  
+  startSocketReconnect: function() {
+    this.stopSocketReconnect();
+    this.reconnect = true;
+    this.reconnectTimeout = setTimeout(this.connectSocket.bind(this), 5000);
+  },
+  
   /**
-   * Send data to socket every 25 seconds
+   * Send data to socket every 20 seconds
    * If no answer is received after 5 seconds the socket appears to be offline
    * Try to reconnect after 5 seconds
    */
   startSocketCheck: function() {
-    if (this.socketCheckInterval) {
-      return;
-    }
-    
-    this.socketCheckInterval = setInterval(this.pingSocket.bind(this), 25000);
+    this.stopSocketCheck();
+    this.socketCheckInterval = setInterval(this.pingSocket.bind(this), 20000);
+  },
+  
+  stopSocketCheck: function() {
+    clearInterval(this.socketCheckInterval);
   },
   
   pingSocket: function() {
     clearTimeout(this.socketOfflineTimeout);
-    this.socketOfflineTimeout = setTimeout(function() {
-      protonet.Notifications.trigger("socket.disconnected");
-    }.bind(this), 5000);
+    this.socketOfflineTimeout = setTimeout(this.disconnectSocket.bind(this), 5000);
     
     protonet.Notifications.trigger("socket.send", { operation: "ping" });
   },
   
   pingSocketCallback: function(message) {
     clearTimeout(this.socketOfflineTimeout);
-  },
-  
-  handleDisconnect: function() {
-    this.socket.closeSocket();
-    clearInterval(this.socketCheckInterval);
-    setTimeout(this.connectSocket.bind(this), 5000);
   },
   
   authenticateUser: function() {
@@ -138,7 +157,7 @@ protonet.dispatcher = {
       eval(data.x_target + "(data)");
     }
   },
-
+  
   sendData: function(data) {
     this.socket.sendData(JSON.stringify(data));
   }

@@ -52,6 +52,10 @@ protonet.ui.Logo = {
     }.bind(this));
   },
   
+  jumpMonster: function() {
+    this.setMonster(this.monsters[this.monstersIndex]);
+  },
+  
   hearts: function(event) {
     var hearts = $("<span />", {
       className: "hearts",
