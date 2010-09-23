@@ -33,7 +33,7 @@ class Channel < ActiveRecord::Base
     begin
       find(1)
     rescue ActiveRecord::RecordNotFound
-      channel = Channel.new(:name => 'home', :description => 'your homebase - your node :)')
+      channel = Channel.new(:name => 'home', :description => 'your homebase - your node :)', :owner_id => 0)
       channel.save && update_all("id = 1", "id = #{channel.id}")
       channel = find(1)
       channel.create_folder
@@ -52,6 +52,10 @@ class Channel < ActiveRecord::Base
   
   def home?
     id == 1
+  end
+  
+  def locally_hosted?
+    network_id == 1
   end
   
   def subscribe_owner
@@ -73,7 +77,7 @@ class Channel < ActiveRecord::Base
   
   def generate_uuid
     raise RuntimeError if uuid
-    self.update_attribute(:uuid, UUID.create.to_s)
+    self.update_attribute(:uuid, UUID4R::uuid(1))
   end
   
   private

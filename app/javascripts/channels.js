@@ -10,6 +10,7 @@ $(function() {
     $("#channels-details").load("/channels/" + channelId + '?network_id=' + networkId);
     $("#channels li.channel.clicked").toggleClass("clicked");
     $(this).toggleClass("clicked");
+    location.hash = channelId;
   });
   if(location.hash) {
     $("#channel-" + location.hash.substring(1)).click();

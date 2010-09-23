@@ -6,7 +6,8 @@ class PreferencesController < ApplicationController
       {:url => 'node_settings', :name => 'node settings'},
       {:url => 'network_settings', :name => 'network settings'},
       {:url => 'wifi_settings', :name => 'wifi settings'}, 
-      {:url => 'system_overview', :name => 'system overview'}]
+      {:url => 'system_overview', :name => 'system overview'},
+      {:url => 'vpn_settings', :name => 'vpn settings'}]
   end
   
   def profile
@@ -29,7 +30,6 @@ class PreferencesController < ApplicationController
   
   def network_settings
     @interfaces = System::Backend.get_interfaces
-    p @interfaces
     render :partial => 'network_settings'
   end
   def interface
@@ -42,6 +42,10 @@ class PreferencesController < ApplicationController
   
   def system_overview
     render :partial => 'system_overview'
+  end
+  
+  def vpn_settings
+    render :partial => 'vpn_settings'
   end
   
 end

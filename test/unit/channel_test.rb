@@ -9,5 +9,10 @@ class ChannelTest < ActiveSupport::TestCase
   test "normalize_name should normalize names" do
     assert_equal "alis-s-bam-bam", Channel.new(:name => "Alis's Bam bäm").normalize_name
   end
+  
+  test "the locally_hosted? method should return true on local channels" do
+    assert Channel.new(:network_id => 1).locally_hosted?
+    assert !Channel.new(:network_id => 2).locally_hosted?
+  end
 
 end

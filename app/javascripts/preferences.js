@@ -3,6 +3,7 @@ $(function() {
     $("#preferences-details").load("/preferences/" + event.currentTarget.id)
     $("#preferences ul li.clicked").toggleClass("clicked");
     $(this).toggleClass("clicked");
+    location.hash = event.currentTarget.id;
   });
   $("#profile").click();
 });

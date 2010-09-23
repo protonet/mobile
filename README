@@ -49,6 +49,25 @@ git submodule update
 # if you don't have imagemagick install it first:
 (sudo) port install imagemagick
 
+# you'll need uuid4r
+# if you have babushka setup:
+babushka dudemeister:uuid4r
+
+#if not:
+cd /tmp
+curl -LO ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz
+tar xzf uuid-1.6.2.tar.gz
+./configure
+make
+sudo make install
+
+# and now uuid4r
+git clone http://github.com/skaes/uuid4r.git
+cd uuid4r/ext
+ruby extconf.rb
+make
+make install
+
 # install the needed gems:
 bundle install
 
@@ -90,7 +109,7 @@ script/server
 
 To deploy on a given node:
 
-# if this is the first time you deploy to that node you need to do this first
+# if this is the first time you deploy to that node you need to do this first (use the vm target for VMs that don't have wireless capabilities)
 cap node deploy:first_run NODE=yournodesaddress
 # and
 cap node deploy:migrations NODE=yournodesaddress
@@ -98,6 +117,7 @@ cap node deploy:migrations NODE=yournodesaddress
 # or any of our other targets
 cap live deploy:migrations # -> deploys to team.protonet.info
 cap xing deploy:migrations # -> deploys to protonet.xing.com
+cap vm   deploy:migrations NODE=vm.address.com
 cap node deploy:migrations NODE=backup.protonet.info # -> deploys to backup.protonet.info
 
 === OTHER STUFF
