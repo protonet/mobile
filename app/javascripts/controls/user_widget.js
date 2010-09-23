@@ -114,8 +114,8 @@ protonet.controls.UserWidget.prototype = {
     }
     
     this.sortEntries();
-    this.updateCount();
     this.cleanupStrangers();
+    this.updateCount();
   },
   
   /**
