@@ -66,7 +66,8 @@ $(function() {
     protonet.Notifications.bind('user.update_online_states', function(e, msg) {
       NetworkGraph.updateFromAsyncInfo(msg.online_users);
     }.bind(this));
-    ourInterval = setInterval("NetworkGraph.render()", 50);
+    NetworkGraph.render();
+    //ourInterval = setInterval("NetworkGraph.render()", 50);
     //setTimeout("asyncupdate1()", 1000);
     //setTimeout("asyncupdate2()", 2000);
     //setTimeout("asyncupdate3()", 3000);

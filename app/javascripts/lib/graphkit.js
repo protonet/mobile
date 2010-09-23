@@ -84,7 +84,7 @@ Node.prototype = {
 
       if (!is_small) {
         if (name.length > 10)
-          name = name.substr(0,5)+'...'+name.substr(name.length-7,5);
+          name = name.substr(0,4)+'...'+name.substr(name.length-4,4);
 
         if (is_stranger)
           name = '?';
@@ -96,6 +96,8 @@ Node.prototype = {
         if (is_stranger)
           title.attr({fill: "#333"});
         this.visual.push(title);
+        
+        this.visual_title = title;
       }
 
       var bb = (!is_small ? title.getBBox() : {x:0, y:0, width:6, height:4});
@@ -117,15 +119,17 @@ Node.prototype = {
 
       box.attr({
         fill: $(colors).attr(this.info.type).normal,
-        //stroke: "white",
+        stroke: "white",
         opacity: 1,
-        "stroke-width": 0 //(is_small ? 1 : 3)
+        "stroke-width": (small ? 1 : 3)
       });
       if (is_stranger)
         box.attr({fill: "white", stroke: "grey", "stroke-width": 1});
 
       box.n = this;
       this.visual.push(box);
+      
+      this.visual_box = box;
 
       // on mouse drauf Farbe aendern
       box.mouseover(function() {
@@ -147,6 +151,18 @@ Node.prototype = {
 
         title.toFront();
       }
+    }
+    
+    // update text if tempName is set
+    if (this.info.type == "client" && this.tempName != "" && 
+        this.visual_title && this.visual_box) {
+      // set title
+      this.visual_title.attr({text: this.tempName});
+      var bb = this.visual_title.getBBox();
+      var w = bb.width + 16;
+      var h = bb.height + 12;
+      // update box size
+      this.visual_box.attr({width: w, height: h});
     }
    
     // rotate if client
@@ -177,12 +193,14 @@ Node.prototype = {
   },
 
   deactivate: function() {
-    this.visual.hide();
+    if (this.visual)
+      this.visual.hide();
     this.active = false;
   },
 
   activate: function() {
-    this.visual.show();
+    if (this.visual)
+      this.visual.show();
     this.active = true;
   }
 };
@@ -215,11 +233,13 @@ Edge.prototype = {
   },
 
   deactivate: function() {
-    this.visual.hide();
+    if (this.visual)
+      this.visual.hide();
   },
 
   activate: function() {
-    this.visual.show();
+    if (this.visual)
+      this.visual.show();
   }
 }
 
@@ -252,6 +272,8 @@ var Graph = function(target_id, maxIterations, small) {
   this.infolayertext.attr({fill: "#333"});
   this.hideInfo();
   
+  this.maxNumDislayedClients = 5;
+  
   // the vertex used for centering the whole graph on the canvas
   this.centerVertex = new Vertex(0,0);
 };
@@ -259,7 +281,7 @@ var Graph = function(target_id, maxIterations, small) {
 Graph.prototype = {
 
   calcOptimalSpringLength: function() {
-    return (Math.sqrt(this.area / this.nodes.length) * 3.0);
+    return (Math.sqrt(this.area / this.nodes.length) * 4.0);
   },
 
   calcInitialTemperature: function() {
@@ -399,6 +421,7 @@ Graph.prototype = {
   },
 
   updateFromAsyncInfo: function(online_users) {
+    //return true;
     /*
     online_users["11"] = {name:"client", supernode:null};
     online_users["12"] = {name:"mr.x", supernode:null};
@@ -454,6 +477,7 @@ Graph.prototype = {
   restart: function() {
     this.temperature = this.calcInitialTemperature();
     this.iters = 0;
+    this.render();
   },
 
   addNode: function(node) {
@@ -579,6 +603,40 @@ Graph.prototype = {
     return true;
   },
 
+  // realistic layout...
+  testComplex02: function() {
+    var n1 = this.addNode(new Node({id:1, name:"team",type:'supernode'}));
+    var n2 = this.addNode(new Node({id:2, name:"backup",type:'supernode'}));
+    var n3 = this.addNode(new Node({id:3, name:"protonet",type:'supernode'}));
+    var n4 = this.addNode(new Node({id:4, name:"local",type:'supernode'}));
+    var n5 = this.addNode(new Node({id:5, name:"danopia",type:'supernode'}));
+    var c1 = this.addNode(new Node({id:6, name:"dudemeister",type:"client"}));
+    var c2 = this.addNode(new Node({id:7, name:"seda",type:"client"}));
+    var c3 = this.addNode(new Node({id:8, name:"danopia",type:"client"}));
+    var c4 = this.addNode(new Node({id:9, name:"duckinator",type:"client"}));
+    var c5 = this.addNode(new Node({id:10, name:"tom",type:"client"}));
+    var c6 = this.addNode(new Node({id:11, name:"fishman",type:"client"}));
+    var c7 = this.addNode(new Node({id:12, name:"stranger#1",type:"client"}));
+    var c8 = this.addNode(new Node({id:13, name:"stranger#2",type:"client"}));
+    var c9 = this.addNode(new Node({id:14, name:"stranger#3",type:"client"}));
+    // supernode connections
+    this.addEdge(new Edge(n1, n2));
+    this.addEdge(new Edge(n1, n3));
+    this.addEdge(new Edge(n1, n4));
+    this.addEdge(new Edge(n1, n5));
+    // client connections
+    this.addEdge(new Edge(n1, c1));
+    this.addEdge(new Edge(n1, c2));
+    this.addEdge(new Edge(n1, c3));
+    this.addEdge(new Edge(n1, c4));
+    this.addEdge(new Edge(n1, c5));
+    this.addEdge(new Edge(n1, c6));
+    this.addEdge(new Edge(n1, c7));
+    this.addEdge(new Edge(n1, c8));
+    this.addEdge(new Edge(n1, c9));
+    return true;
+  },
+
   initFromNetworksInfo: function(networks) {
 
     //return this.testOneNode();
@@ -588,6 +646,7 @@ Graph.prototype = {
     //return this.testFiveNodes();
     //return this.testSixNodes();
     //return this.testComplex01();
+    //return this.testComplex02();
   
     var nodes = new Array();
     for (var i = 0; i < networks.length; i++) {
@@ -733,11 +792,12 @@ Graph.prototype = {
               var d = delta.len();
     
               // the node gains mass when it "carries" a bunch of clients (it needs more space)
-              var mass = node.mass / ((this.numConnectedClients(node) + 1) * 1.5);
+              //var mass = node.mass / ((this.numConnectedClients(node) + 1) * 1.5);
+              var mass = node.mass;
     
               node.disp = 
                 node.disp.sum(
-                  delta.quot(d).prod( 
+                  delta.quot(d).prod(
                     this.force_repulse(d * mass)
                   )
                 );
@@ -757,6 +817,9 @@ Graph.prototype = {
           var delta = v.position.diff(u.position);
           if (delta.len() == 0) delta = new Vertex(0.1,0.1);
           var d = delta.len();
+          
+          if (this.numConnectedClients(u) > 0 || this.numConnectedClients(v) > 0)
+            d /= 4;
 
           var rand = new Vertex(Math.random(), Math.random());
 
@@ -780,8 +843,12 @@ Graph.prototype = {
       for (var n = 0; n < this.nodes.length; n++) {
         var node = this.nodes[n];
         if (node.info.type != 'client' && node.active) {
+
           var optLen = this.calcOptimalSpringLength() / 3.0;
-          node.disp = node.disp.scale(node.disp.len() > optLen ? optLen : node.disp.len());
+          
+          node.disp = 
+            node.disp.scale(
+                node.disp.len() > optLen ? optLen : node.disp.len());
         
           node.position = 
             node.position.sum(
@@ -818,6 +885,7 @@ Graph.prototype = {
       if (node.info.type != 'client' && node.active) {
         // find client node connected to this one
         var clients = new Array();
+        var clientsInactive = new Array();
         for (var e = 0; e < this.edges.length; e++) {
           var edge = this.edges[e];
           var u = edge.fromNode;
@@ -825,14 +893,20 @@ Graph.prototype = {
           if (u.active && v.active) {
             if ((u.number == node.number && v.info.type == 'client') ||
                 (v.number == node.number && u.info.type == 'client')) {
-          
-              if (u.number == node.number)
-                clients.push(v);
-              else
-                clients.push(u);
+              
+              var nodeToPush = (u.number == node.number ? v : u);
+              nodeToPush.tempName = "";
+              //if (clients.length < this.maxNumDislayedClients) {
+                clients.push(nodeToPush);
+              //} else {
+              //  clientsInactive.push(nodeToPush);
+              //}
             }
           }
         }
+
+        if (clients.length == this.maxNumDislayedClients && clientsInactive.length > 0)
+          clients[this.maxNumDislayedClients - 1].tempName = '#'+clientsInactive.length+' more...';
       
         // position clients circular around node
         if (clients.length > 0) {
@@ -840,48 +914,92 @@ Graph.prototype = {
           var angle  = 360.0 / clients.length;
           for (var c = 0; c < clients.length; c++) {
             var client = clients[c];
+            this.layout_client(client, node, clients.length, c, angle, radius);
+            /*
             client.info.angle = (c > Math.floor(clients.length / 2) ? 270 : 90) - angle * c;
             client.position.x = node.position.x + Math.sin(this.deg_to_rad(angle * c)) * radius;
             client.position.y = node.position.y + Math.cos(this.deg_to_rad(angle * c)) * radius;
             client.info.nodepos = node.position;
+            */
+            // activate node and connected edges
+            client.activate();
+            for (var e = 0; e < this.edges.length; e++) {
+              var edge = this.edges[e];
+              if (edge.fromNode.number == client.number ||
+                  edge.toNode.number == client.number)
+                edge.activate();           
+            }
           }
+          /*
+          for (var c = 0; c < clientsInactive.length; c++) {
+            var client = clientsInactive[c];
+            this.layout_client(client, node, clientsInactive.length, c, 0, 10);
+            // deactivate node and connected edges
+            client.deactivate();
+            for (var e = 0; e < this.edges.length; e++) {
+              var edge = this.edges[e];
+              if (edge.fromNode.number == client.number ||
+                  edge.toNode.number == client.number)
+                edge.deactivate();              
+            }
+          }
+          */
         }
       }
     }  
   },
+  
+  layout_client: function(client, node, total, num, angle, radius) {
+    client.info.angle = (num > Math.floor(total / 2) ? 270 : 90) - angle * num;
+    client.position.x = node.position.x + Math.sin(this.deg_to_rad(angle * num)) * radius;
+    client.position.y = node.position.y + Math.cos(this.deg_to_rad(angle * num)) * radius;
+    client.info.nodepos = node.position;    
+  },
+
+  render_graph: function() {
+    if (!this.visual)
+      this.visual = this.paper.set();
+  
+    // draw edges
+    for (var i = 0; i < this.edges.length; i++) {
+      var visual = this.edges[i].render(this.paper);
+      if (this.edges[i].added == false) {
+        this.visual.push(visual);
+        this.edges[i].added = true;
+      }
+    }
+    // draw nodes
+    for (var i = 0; i < this.nodes.length; i++) {
+      var visual = this.nodes[i].render(this.paper, this.small);
+      if (this.nodes[i].added == false) {
+        this.visual.push(visual);
+        this.nodes[i].added = true;
+      }
+    }
+
+    // center graph to canvas
+    var bb = this.visual.getBBox();
+    this.centerVertex = new Vertex( -bb.x + (this.w - bb.width) / 2.0, -bb.y + (this.h - bb.height) / 2.0 );
+    this.visual.translate(this.centerVertex.x, this.centerVertex.y);    
+  },
 
   render: function() {
+    while (this.iters < this.maxIterations) {
+      this.processQueue();
+      this.layout();
+      this.iters++;
+    }
+    this.render_graph();
+    
+    /*
     this.processQueue();
 
     if (this.iters > this.maxIterations)
       return false;
     this.iters++;
 
-    if (this.layout()) {
-      if (!this.visual)
-        this.visual = this.paper.set();
-    
-      // draw edges
-      for (var i = 0; i < this.edges.length; i++) {
-        var visual = this.edges[i].render(this.paper);
-        if (this.edges[i].added == false) {
-          this.visual.push(visual);
-          this.edges[i].added = true;
-        }
-      }
-      // draw nodes
-      for (var i = 0; i < this.nodes.length; i++) {
-        var visual = this.nodes[i].render(this.paper, this.small);
-        if (this.nodes[i].added == false) {
-          this.visual.push(visual);
-          this.nodes[i].added = true;
-        }
-      }
-
-      // center graph to canvas
-      var bb = this.visual.getBBox();
-      this.centerVertex = new Vertex( -bb.x + (this.w - bb.width) / 2.0, -bb.y + (this.h - bb.height) / 2.0 );
-      this.visual.translate(this.centerVertex.x, this.centerVertex.y);
-    }
+    if (this.layout())
+      renderGraph();
+    */
   },
 };
