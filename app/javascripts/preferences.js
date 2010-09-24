@@ -1,39 +1,38 @@
+//= require "preferences/vpn"
+//= require "preferences/node"
+
 $(function() {
+  // 
+  
+  $("#preferences-details").bind("vpn_settings node_settings", function(event){
+    switch(event.type)
+    {
+    case 'vpn_settings':
+      new protonet.preferences.Vpn();
+      break;
+    case 'node_settings':
+      new protonet.preferences.Node();
+      break;
+    }
+  })
+  
+  // add clickabilty to menus
   $("#preferences ul li").click(function(event){
-    $("#preferences-details").load("/preferences/" + event.currentTarget.id)
+    var preference = event.currentTarget.id;
+    $("#preferences-details").load("/preferences/" + preference, function(){
+      // now initiate controls
+      $("#preferences-details").trigger(preference);
+    })
     $("#preferences ul li.clicked").toggleClass("clicked");
     $(this).toggleClass("clicked");
-    location.hash = event.currentTarget.id;
+    location.hash = preference;
   });
-  $("#profile").click();
+  
+  // jump to selected
+  if(location.hash) {
+    $(location.hash).click();
+  } else {
+    $("#preferences li:first").click();
+  }
+
 });
-
-/*function profileController() {
-  $('foo').click
-}*/
-
-// TODO: place elsewhere
-$.fn.serializeForm = function() {
-  data = {};
-  items = this.serializeArray();
-  $.each(items,function(i,item) {
-    data[item['name']] = item['value'];
-  });
-  return data;
-}
-
-// TODO: place elsewhere
-function submitHook(form, callback) {
-  $(form).submit(function(e) {
-    items = {};
-    items = $(form).serializeForm();
-    url = $(form).attr('action');
-    if(url == '') {
-      alert("Cannot submit form. No action specified");
-      return false;
-    }
-    callback = callback ? callback : function(){};
-    $.post(url, items, callback);
-    return false;
-  });
-}

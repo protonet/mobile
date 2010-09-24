@@ -1,1 +1,8 @@
-VPN is <%= System::Vpn.status %>
+<div id="vpn-settings">
+  <p>VPN is <span class="status"><%= System::Vpn.status %></span></p>
+
+  <p>
+    <%= link_to 'on', system_vpn_on_path %><br>
+    <%= link_to 'off', system_vpn_off_path %>
+  </p>
+</div>

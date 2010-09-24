@@ -1,5 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
 
+  # channels
   map.connect 'channels/search', :controller => 'channels', :action => 'search'
 
   map.list_channels 'channels/list.:format', :controller => 'channels', :action => 'list'
@@ -7,15 +8,20 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :channels do |channels|
     channels.resources :tweets
   end
+  map.destroy_channel 'channels/:id/destroy', :controller => 'channels', :action => 'destroy'
 
+  # tweets
   map.resources   :tweets
+  map.more_tweets '/more_tweets/:tweet_id/:channel_id/:later/:earlier/:pos.:format',
+    :controller => 'search', :action => 'more_tweets'
 
+  # listens
   map.listen_to_channel  'listens/create', :controller => 'listens', :action => 'create'
   map.resources   :listens do |listen|
     listen.accept '/accept', :controller => 'listens', :action => 'accept'
   end
 
-
+  # networks
   map.negotiate_network 'networks/negotiate.:format', :controller => 'networks', :action => 'negotiate'
   map.resources   :networks do |networks|
     networks.map      'map',       :controller => 'networks', :action => 'map'
@@ -27,34 +33,38 @@ ActionController::Routing::Routes.draw do |map|
     networks.resources :channels
   end
 
+  # preferences
   map.preferences '/preferences', :controller => 'preferences', :action => 'index'
+
+  # navigation
   map.navigation '/navigation', :controller => 'navigation', :action => 'index'
+  
+  # session / login / logout stuff
+  map.resource :session
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.register '/register', :controller => 'users', :action => 'create'
   map.signup '/signup', :controller => 'users', :action => 'new'
-
-  map.search '/search.:format', :controller => 'search', :action => 'index'
-  map.more_tweets '/more_tweets/:tweet_id/:channel_id/:later/:earlier/:pos.:format',
-    :controller => 'search', :action => 'more_tweets'
-
-  map.destroy_channel 'channels/:id/destroy', :controller => 'channels', :action => 'destroy'
-
   map.create_token_session 'sessions/create_token.:format', :controller => 'sessions', :action => 'create_token'
+  
 
+  # TODO what is this?
+  map.search '/search.:format', :controller => 'search', :action => 'index'
+  
+  # user stuff
   map.delete_stranger_older_than_two_days 'users/delete_stranger_older_than_two_days', :controller => 'users', :action => 'delete_stranger_older_than_two_days'
   map.resources :users, :has_one => 'setting'
 
-  map.resource :session
-
+  # system
   map.namespace :system do |system|
-    system.connect            'foundations', :controller => 'foundations'
-    system.namespace :files_controller do |files|
-      files.create_directory   'create_directory', :action => 'create_directory'
-    end
-    system.resources    :files
+    system.foundations            'foundations', :controller => 'foundations'
+    system.files_create_directory 'files/create_directory', :controller => 'files', :action => 'create_directory'
+    system.resources              :files
+    system.vpn_on                 'vpn/on',   :controller => 'vpn', :action => 'on'
+    system.vpn_off                'vpn/off',  :controller => 'vpn', :action => 'off'
   end
 
+  # images
   map.namespace :images do |images|
     images.resources :avatars
     #  crazy resizing on the fly, I had to slightly uglify the url so the rails caching can handle it
@@ -66,6 +76,7 @@ ActionController::Routing::Routes.draw do |map|
     images.resources :externals
   end
 
+  # sprockets
   SprocketsApplication.routes(map, :resources)
 
   # The priority is based upon order of creation: first created -> highest priority.

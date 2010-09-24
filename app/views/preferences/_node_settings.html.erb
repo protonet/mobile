@@ -1,37 +1,31 @@
-<% form_for @node, :url => {:controller => 'preferences', :action => 'node_settings'} do |f| -%>
-  <fieldset>
-    <legend>
-      <strong>Node Settings</strong>
-      <span>are used by remote nodes, and allows users to tell which node is which.</span>
-    </legend>
-    <ul>
-      <li><%= error_messages_for :network, :header_tag => 'h3' %></li>
-      <li>
-        <%= f.label :name %>
-        <%= f.text_field :name %>
-      </li>
-      <li>
-        <%= f.label :description %>
-        <%= f.text_field :description %>
-      </li>
-      <li>
-        <%= f.label :supernode %>
-        <%= f.text_field :supernode %>
-      </li>
-    </ul>
-  </fieldset>
-  <button type="submit">
-    <span>
-      <em>Update</em>
-    </span>
-  </button>
-<%- end -%>
-
-<%# TODO: place elsewhere -%>
-<script type="text/javascript">
-  $(function() {
-    submitHook($('#edit_network_1'), function(data) {
-      $('#preferences-details').html(data);
-    });
-  });
-</script>
+<div id="node-settings">
+  <% form_for @node, :url => {:controller => 'preferences', :action => 'node_settings'} do |f| -%>
+    <fieldset>
+      <legend>
+        <strong>Node Settings</strong>
+        <span>are used by remote nodes, and allows users to tell which node is which.</span>
+      </legend>
+      <ul>
+        <li>Your nodes UUID: <%= @node.uuid %></li>
+        <li><%= error_messages_for :network, :header_tag => 'h3' %></li>
+        <li>
+          <%= f.label :name %>
+          <%= f.text_field :name %>
+        </li>
+        <li>
+          <%= f.label :description %>
+          <%= f.text_field :description %>
+        </li>
+        <li>
+          <%= f.label :supernode %>
+          <%= f.text_field :supernode %>
+        </li>
+      </ul>
+    </fieldset>
+    <button type="submit">
+      <span>
+        <em>Update</em>
+      </span>
+    </button>
+  <%- end -%>
+</div>
