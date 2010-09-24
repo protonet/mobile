@@ -1,0 +1,27 @@
+#!/bin/bash
+
+export CURRENT_PATH=$1
+export HOME=$CURRENT_PATH/../..
+shift 1
+. $HOME/../.bashrc
+. $HOME/../.profile
+
+export COMMUNITY=$2
+export PASSWORD=$3
+export PIDFILE=$CURRENT_PATH/tmp/pids/edge.pid
+
+
+case $1 in
+   start)
+      start-stop-daemon --start --make-pidfile --pidfile $PIDFILE --background --exec /usr/bin/edge -- -f -c $COMMUNITY -k $PASSWORD -l team.protonet.info:1099 -r -E -a 10.0.0.1
+      ;;
+    stop)
+      start-stop-daemon --stop --pidfile $PIDFILE
+      ;;
+    status)
+      kill -0 `cat $CURRENT_PATH/tmp/pids/edge.pid`
+      ;;
+    *)  
+      echo "usage: vpn rails-app-path {start|stop|status} node-uuid password" ;;
+esac
+exit 0
