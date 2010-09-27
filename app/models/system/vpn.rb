@@ -2,9 +2,18 @@ module System
   class Vpn
     
     class << self
+      def register_with_monit
+        
+      end
+      
+      def registered_with_monit?
+        
+      end
+      
       def start
         return unless Rails.env == 'production'
-        `sudo /home/protonet/dashboard/current/script/init/vpn /home/protonet/dashboard/current start #{Network.local.uuid} foobar`
+        # System::Backend.monit_start(:)
+        `sudo /home/protonet/dashboard/current/script/init/vpn /home/protonet/dashboard/current start #{System::Preferences.vpn[:identifier]} #{System::Preferences.vpn[:password]}`
       end
     
       def stop

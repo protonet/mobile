@@ -1,5 +1,9 @@
 <div id="vpn-settings">
   <p>VPN is <span class="status"><%= System::Vpn.status %></span></p>
+  <p>
+    VPN identifier is <%= System::Preferences.vpn[:identifier] %><br>
+    VPN password is <%= System::Preferences.vpn[:password] %><br>
+  </p>
 
   <p>
     <%= link_to 'on', system_vpn_on_path %><br>
