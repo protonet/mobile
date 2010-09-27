@@ -1,0 +1,23 @@
+#!/bin/bash
+
+export CURRENT_PATH=$1
+export HOME=$CURRENT_PATH/../..
+shift 1
+. $HOME/../.bashrc
+. $HOME/../.profile
+cd $CURRENT_PATH
+case $1 in
+   start)
+      /usr/local/bin/hostapd -P $CURRENT_PATH/tmp/pids/hostapd.pid -B $CURRENT_PATH/../shared/config/hostapd.conf
+      ;;
+    stop)  
+      kill `cat $CURRENT_PATH/tmp/pids/hostapd.pid`
+      ;;
+    status)
+      kill -0 `cat $CURRENT_PATH/tmp/pids/hostapd.pid`
+      ;;
+      
+    *)  
+      echo "usage: wifi rails-app-path {start|stop|status}" ;;
+esac
+exit 0

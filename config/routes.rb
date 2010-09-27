@@ -60,8 +60,10 @@ ActionController::Routing::Routes.draw do |map|
     system.foundations            'foundations', :controller => 'foundations'
     system.files_create_directory 'files/create_directory', :controller => 'files', :action => 'create_directory'
     system.resources              :files
-    system.vpn_on                 'vpn/on',   :controller => 'vpn', :action => 'on'
-    system.vpn_off                'vpn/off',  :controller => 'vpn', :action => 'off'
+    system.vpn_on                 'vpn/on',   :controller => 'vpn',   :action => 'on'
+    system.vpn_off                'vpn/off',  :controller => 'vpn',   :action => 'off'
+    system.wifi_on                'wifi/on',  :controller => 'wifi',  :action => 'on'
+    system.wifi_off               'wifi/off', :controller => 'wifi',  :action => 'off'
   end
 
   # images
