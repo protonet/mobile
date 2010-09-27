@@ -1,12 +1,14 @@
 <div id="vpn-settings">
-  <p>VPN is <span class="status"><%= System::Vpn.status %></span></p>
+  <p style="font-weight: bold; padding-bottom: 5px;">VPN is <span class="status"><%= System::Vpn.status %></span></p>
   <p>
     VPN identifier is <%= System::Preferences.vpn[:identifier] %><br>
     VPN password is <%= System::Preferences.vpn[:password] %><br>
+    Your nodes VPN address is: 10.0.0.1
   </p>
-
+<br>
   <p>
     <%= link_to 'on', system_vpn_on_path %><br>
     <%= link_to 'off', system_vpn_off_path %>
   </p>
+  
 </div>
