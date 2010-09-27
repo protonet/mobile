@@ -51,7 +51,7 @@ module System
       end
       
       def monit_command(options=nil)
-        system("monit -c #{configatron.shared_file_path}/config/monit_ptn_node -p #{configatron.shared_file_path}/pids/monit.pid #{options}")
+        system("/usr/sbin/monit -c #{configatron.shared_file_path}/config/monit_ptn_node -p #{configatron.shared_file_path}/pids/monit.pid #{options}")
       end
       
     end
