@@ -21,9 +21,9 @@ module System
       def monitor_service
         return if System::Monit.exists?(:wifi)
         config
-        start = "#{RAILS_ROOT}/script/init/wifi #{RAILS_ROOT} start"
-        stop  = "#{RAILS_ROOT}/script/init/wifi #{RAILS_ROOT} start"
-        pid_file = "#{RAILS_ROOT}/tmp/pids/hostapd.pid"
+        start = "#{configatron.current_file_path}/script/init/wifi #{configatron.current_file_path} start"
+        stop  = "#{configatron.current_file_path}/script/init/wifi #{configatron.current_file_path} start"
+        pid_file = "#{configatron.current_file_path}/tmp/pids/hostapd.pid"
         System::Monit.add(:wifi, start, stop, pid_file)
       end
       

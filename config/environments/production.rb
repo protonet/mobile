@@ -29,8 +29,9 @@ config.action_view.cache_template_loading            = true
 System::Backend.backend_connection = BackendAdapters::Ubuntu.new
 puts "Backend '#{System::Backend.backend_connection.info}' connected successfully!"
 
-configatron.shared_file_path = "/home/protonet/dashboard/shared"
-configatron.user_file_path   = "#{configatron.shared_file_path}/user-files"
+configatron.current_file_path = "/home/protonet/dashboard/current"
+configatron.shared_file_path  = "/home/protonet/dashboard/shared"
+configatron.user_file_path    = "#{configatron.shared_file_path}/user-files"
 configatron.images.avatars_path   = "public/system/avatars"
 configatron.images.externals_path = "public/system/externals"
 

@@ -6,7 +6,7 @@ module System
     class << self
       def add(service, start_cmd, stop_cmd, pid_file, options={})
         raise AlreadyAddedError if exists?(service)
-        config <<-EOS
+        config = <<-EOS
         check process #{service} with pidfile #{pid_file}
           start program = "#{start_cmd}"
           stop program = "#{stop_cmd}"
