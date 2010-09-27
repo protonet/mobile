@@ -1,6 +1,8 @@
 .widget {
   border: 1px rgba(72, 123, 255, 0.8) solid;
   padding: 1px;
+  position: relative;
+  overflow: hidden;
 }
 
 .widget {
@@ -70,6 +72,25 @@
   content: ":::::::::::::::::";
 }
 
+.widget.loading:after {
+  position: absolute;
+  top: 26px;
+  left: 0;
+  bottom: 11px;
+  width: 1000px;
+  content: " ";
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.widget .loading-hint {
+  display: none;
+}
+
+.widget.loading .loading-hint {
+  display: inline;
+  color: rgba(255, 255, 255, 0.3);
+}
+
 
 /*--------------------------------- USER WIDGET ---------------------------------*/
 #user-widget li {
@@ -99,32 +120,81 @@
 
 
 /*--------------------------------- FILE WIDGET ---------------------------------*/
-#file-widget .address-bar {
+
+#file-widget .nav-bar {
   display: none;
   color: #999;
   font-size: 10px;
+  position: relative;
   border-bottom: 1px solid #ccc;
+  padding: 0 17px;
+}
+
+#file-widget .address-bar {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 #file-widget .address-bar > * {
   display: inline-block;
   padding: 4px 1px;
-}
-
-#file-widget .address-bar > a {
   color: #999;
   text-decoration: none;
 }
 
 #file-widget .address-bar > *:first-child {
-  padding-left: 7px;
+  padding-left: 2px;
 }
 
 #file-widget .address-bar > *:last-child {
-  padding-right: 7px;
+  padding-right: 2px;
 }
 
 #file-widget .address-bar a:hover {
+  color: #487bff;
+}
+
+#file-widget [rel=forward],
+#file-widget [rel=backward] {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  position: absolute;
+  top: 0;
+  display: inline-block;
+  cursor: default;
+  color: #999;
+  text-decoration: none;
+  padding: 4px 1px;
+}
+
+#file-widget [rel=backward] {
+  left: 0;
+}
+
+#file-widget [rel=forward] {
+  right: 0;
+}
+
+#file-widget [rel=backward]:before {
+  padding-left: 5px;
+  content: "\25C0";
+}
+
+#file-widget [rel=forward]:before {
+  padding-right: 5px;
+  content: "\25B6";
+}
+
+#file-widget .enabled[rel=forward],
+#file-widget .enabled[rel=backward] {
+  cursor: pointer;
+  color: #000;
+}
+
+#file-widget .enabled[rel=forward]:hover,
+#file-widget .enabled[rel=backward]:hover {
   color: #487bff;
 }
 
