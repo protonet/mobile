@@ -69,9 +69,7 @@ protonet.user.Config = {
       this._getElement(key, config).appendTo(list);
     }.bind(this));
     
-    container
-      .append(list)
-      .click(function(event) { event.preventDefault(); });
+    container.append(list);
   },
   
   _getElement: function(key, config) {

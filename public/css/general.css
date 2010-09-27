@@ -45,6 +45,8 @@ input {
 
 a {
   color: #000;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 a:hover {
@@ -86,12 +88,12 @@ aside {
   background: rgb(255, 255, 255);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   display: inline-block;
-  min-height: 500px;
   vertical-align: top;
 }
 
 #main {
   width: 650px;
+  min-height: 500px;
   margin: 0 20px 0 0;
   position: relative;
 }
@@ -277,15 +279,17 @@ header .hearts {
   top: -3px;
 }
 
-#user-navigation > .settings:hover {
+#user-navigation > .settings:hover,
+#user-navigation > .settings:focus {
   background: #fff;
 }
 
-#user-navigation .settings:hover a {
+#user-navigation .settings:hover a,
+#user-navigation .settings:focus a {
   text-decoration: none;
 }
 
-#user-navigation .settings:active ul,
+#user-navigation .settings:focus ul,
 #user-navigation .settings:hover ul {
   display: block;
 }
@@ -296,7 +300,7 @@ header .hearts {
   z-index: 1;
   background: #fff;
   margin: 1px 0 0 -7px;
-  min-width: 80px;
+  min-width: 120px;
   border: 1px solid #999;
   border-top: 0;
 }
@@ -304,7 +308,7 @@ header .hearts {
 #user-navigation .settings li {
   cursor: pointer;
   color: #999;
-  padding: 3px 6px;
+  padding: 4px 6px;
   border-top: 1px solid #ccc;
 }
 

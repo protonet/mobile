@@ -102,19 +102,26 @@
 #file-widget .address-bar {
   display: none;
   color: #999;
-  padding: 3px 7px;
   font-size: 10px;
   border-bottom: 1px solid #ccc;
 }
 
-#file-widget .address-bar a {
-  color: #999;
-  text-decoration: none;
-  padding: 0 1px;
+#file-widget .address-bar > * {
+  display: inline-block;
+  padding: 4px 1px;
 }
 
-#file-widget .address-bar a:first-child {
-  padding: 0;
+#file-widget .address-bar > a {
+  color: #999;
+  text-decoration: none;
+}
+
+#file-widget .address-bar > *:first-child {
+  padding-left: 7px;
+}
+
+#file-widget .address-bar > *:last-child {
+  padding-right: 7px;
 }
 
 #file-widget .address-bar a:hover {

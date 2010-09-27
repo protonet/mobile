@@ -104,13 +104,13 @@
               <img src="<%= current_user.active_avatar_url %>" width="16" height="16">
             </a>
           </li>
-          <li class="account">
+          <li class="account" tabindex="-1">
             <%= link_to("account", preferences_path) %>
           </li>
-          <li class="settings">
-            <a href="#">settings</a>
+          <li class="settings" tabindex="-1">
+            <a>settings</a>
           </li>
-          <li class="logout">
+          <li class="logout" tabindex="-1">
             <%= link_to("logout", :controller => :sessions, :action => :destroy) %>
           </li>
         </ul>

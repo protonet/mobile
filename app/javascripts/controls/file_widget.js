@@ -111,7 +111,7 @@ protonet.controls.FileWidget.prototype = {
         text:                   path
       });
       
-      this.addressBar.append(pathLink).append("/");
+      this.addressBar.append(pathLink).append("<span>/</span>");
     }.bind(this));
     
     if (this.path.length > 1 && !visible) {
