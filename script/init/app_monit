@@ -10,10 +10,10 @@ cd $SHARED
 export SHARED=`pwd`
 case $1 in
    start)
-      /usr/sbin/monit -c $SHARED/system/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid
+      /usr/sbin/monit -c $SHARED/config/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid
       ;;
     stop)  
-      /usr/sbin/monit -c $SHARED/system/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid quit
+      /usr/sbin/monit -c $SHARED/config/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid quit
       ;;
     *)  
       echo "usage: app_monit rails-app-path {start|stop}" ;;

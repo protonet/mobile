@@ -28,14 +28,17 @@ namespace :deploy do
     run "mkdir -p #{shared_path}/avatars; chmod 770 #{shared_path}/avatars"
     run "mkdir -p #{shared_path}/pids; chmod 770 #{shared_path}/pids"
     run "mkdir -p #{shared_path}/system"
+    run "mkdir -p #{shared_path}/config"
+    run "mkdir -p #{shared_path}/config/monit.d"
+    run "mkdir -p #{shared_path}/config/hostapd.d"
     run "mkdir -p #{shared_path}/solr/data"
   end
   
   desc "deploy monit configuration"
   task :monit, :roles => :app do
-    monit_command = "monit -c #{shared_path}/system/monit_ptn_node -l #{shared_path}/log/monit.log -p #{shared_path}/pids/monit.pid"
-    top.upload(StringIO.new(ERB.new(IO.read("config/monit/monit_ptn_node.erb")).result(binding)), "#{shared_path}/system/monit_ptn_node")
-    run "chmod 700 #{shared_path}/system/monit_ptn_node"
+    monit_command = "monit -c #{shared_path}/config/monit_ptn_node -l #{shared_path}/log/monit.log -p #{shared_path}/pids/monit.pid"
+    top.upload(StringIO.new(ERB.new(IO.read("config/monit/monit_ptn_node.erb")).result(binding)), "#{shared_path}/config/monit_ptn_node")
+    run "chmod 700 #{shared_path}/config/monit_ptn_node"
     # and restart monit
     run monit_command + " quit"
     sleep 1
