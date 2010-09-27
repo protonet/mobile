@@ -1,20 +1,22 @@
 #!/bin/bash
 
 export CURRENT_PATH=$1
+export SHARED=$CURRENT_PATH/../shared
 export HOME=$CURRENT_PATH/../..
 shift 1
 . $HOME/../.bashrc
 . $HOME/../.profile
-cd $CURRENT_PATH
+cd $SHARED
+export SHARED=`pwd`
 case $1 in
    start)
-      /usr/local/bin/hostapd -P $CURRENT_PATH/tmp/pids/hostapd.pid -B $CURRENT_PATH/../shared/config/hostapd.d/config
+      /usr/local/bin/hostapd -P $SHARED/pids/hostapd.pid -B $SHARED/config/hostapd.d/config
       ;;
     stop)  
-      kill `cat $CURRENT_PATH/tmp/pids/hostapd.pid`
+      kill `cat $SHARED/pids/hostapd.pid`
       ;;
     status)
-      kill -0 `cat $CURRENT_PATH/tmp/pids/hostapd.pid`
+      kill -0 `cat $SHARED/pids/hostapd.pid`
       ;;
       
     *)  
