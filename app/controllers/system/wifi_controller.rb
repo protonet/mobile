@@ -4,7 +4,7 @@ module System
     def on
       System::Wifi.start
       respond_to do |format|
-        format.html
+        format.html {redirect_to :controller => '/preferences', :action => 'index', :anchor => 'wifi_settings'}
         format.js  { render :json => {:status => 'on'} }
       end
     end
@@ -12,7 +12,7 @@ module System
     def off
       System::Wifi.stop
       respond_to do |format|
-        format.html
+        format.html {redirect_to :controller => '/preferences', :action => 'index', :anchor => 'wifi_settings'}
         format.js  { render :json => {:status => 'off'} }
       end
     end
