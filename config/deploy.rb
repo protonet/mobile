@@ -41,7 +41,7 @@ namespace :deploy do
     run "chmod 700 #{shared_path}/config/monit_ptn_node"
     # and restart monit
     run monit_command + " quit"
-    sleep 1
+    sleep 2
     run monit_command
   end
   
