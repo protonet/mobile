@@ -41,12 +41,12 @@ protonet.timeline.Channel.prototype = {
      * Render new meep in selected channel
      * when event is triggered
      */
-    protonet.Notifications.bind("meep.render_from_form", function(e, form, post) {
+    protonet.Notifications.bind("meep.send", function(e, dataOrForm, post) {
       if (!this.isSelected) {
         return;
       }
       
-      this._renderMeep(form, this.channelList, post);
+      this._renderMeep(dataOrForm, this.channelList, post);
     }.bind(this));
     
     /**

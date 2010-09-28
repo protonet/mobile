@@ -4,48 +4,100 @@
 //= require "../lib/jquery-ui-1.8.4.highlight-effect.min.js"
 
 protonet.controls.FileWidget = function() {
-  this.container = $("#file-widget");
-  this.list = this.container.find("ul");
-  this.resizer = this.container.find(".resize");
-  this.navBar = this.container.find(".nav-bar");
-  this.addressBar = this.container.find(".address-bar");
+  this.container      = $("#file-widget");
+  this.list           = this.container.find("ul");
+  this.resizer        = this.container.find(".resize");
+  this.navBar         = this.container.find(".nav-bar");
+  this.addressBar     = this.container.find(".address-bar");
   
-  this.forwardButton = this.navBar.find("[rel=forward]");
+  this.forwardButton  = this.navBar.find("[rel=forward]");
   this.backwardButton = this.navBar.find("[rel=backward]");
   
   new protonet.ui.Resizer(this.list, this.resizer, { storageKey: "file_widget_height" });
   
   this._resetHistory();
+  this._createContextMenu();
   this._observe();
 };
 
 
 protonet.controls.FileWidget.prototype = {
   _observe: function() {
-    protonet.Notifications.bind("channel.change", function(event, channelId) {
-      this._resetHistory();
-      protonet.Notifications.trigger("files.load", channelId);
-    }.bind(this));
-    
-    protonet.Notifications.bind("files.load", function(event, channelId, path, fromHistory) {
-      this.load(channelId, path, fromHistory);
-    }.bind(this));
-    
-    this.container.delegate("[data-directory-name]", "click", function(event) {
-      var link          = $(event.currentTarget),
-          directoryName = link.attr("data-directory-name");
+    protonet.Notifications
+      .bind("channel.change", function(event, channelId) {
+        this._resetHistory();
+        protonet.Notifications.trigger("files.load", channelId);
+      }.bind(this))
       
-      protonet.Notifications.trigger("files.load", [this.channelId, directoryName]);
-      event.preventDefault();
-    }.bind(this));
+      .bind("files.load", function(event, channelId, path, fromHistory) {
+        this.load(channelId, path, fromHistory);
+      }.bind(this))
+      
+      .bind("file.removed", function(event, data) {
+        if (data.channel_id != this.channelId) {
+          return;
+        }
+        this.list.find("[data-file-path='" + data.path + "']").detach();
+      }.bind(this));
     
-    this.container.delegate(".enabled[rel=backward]", "click", function(event) {
-      protonet.Notifications.trigger("files.load", [this.channelId, this.history[--this.historyIndex], true]);
-    }.bind(this));
+    this.container
+      .delegate("[data-directory-path]", "click", function(event) {
+        var path = $(event.currentTarget).attr("data-directory-path");
+        protonet.Notifications.trigger("files.load", [this.channelId, path]);
+        event.preventDefault();
+      }.bind(this))
+      
+      .delegate(".enabled[rel=backward]", "click", function(event) {
+        protonet.Notifications.trigger("files.load", [this.channelId, this.history[--this.historyIndex], true]);
+      }.bind(this))
+      
+      .delegate(".enabled[rel=forward]", "click", function(event) {
+        protonet.Notifications.trigger("files.load", [this.channelId, this.history[++this.historyIndex], true]);
+      }.bind(this));
+  },
+  
+  _createContextMenu: function() {
+    new protonet.ui.ContextMenu("#file-widget ul [data-file-path]", {
+      "download": function(li, closeContextMenu) {
+        window.open(li.find("a").attr("href"), +new Date());
+        closeContextMenu();
+      },
+      "publish": function(li, closeContextMenu) {
+        this.publish("/" +  this.channelId + li.attr("data-file-path"));
+        closeContextMenu();
+      }.bind(this),
+      "delete": function(li, closeContextMenu) {
+        /**
+         * Answer comes back as event notification
+         */
+        $.ajax({
+          url:        "system/files/delete",
+          type:       "post",
+          data:       {
+            file_path:  li.attr("data-file-path"),
+            channel_id: this.channelId
+          },
+          beforeSend: function() {
+            li.addClass("disabled");
+          },
+          error:      function() {
+            li.removeClass("disabled");
+            protonet.ui.FlashMessage.show("error", protonet.t("FILE_DELETE_ERROR"));
+          }
+        });
+        
+        closeContextMenu();
+      }.bind(this)
+    });
     
-    this.container.delegate(".enabled[rel=forward]", "click", function(event) {
-      protonet.Notifications.trigger("files.load", [this.channelId, this.history[++this.historyIndex], true]);
-    }.bind(this));
+    new protonet.ui.ContextMenu("#file-widget ul [data-directory-path]", {
+      "open":   function() {
+        
+      }.bind(this),
+      "delete": function() {
+        
+      }.bind(this)
+    });
   },
   
   load: function(channelId, path, fromHistory) {
@@ -88,11 +140,11 @@ protonet.controls.FileWidget.prototype = {
     this.list.attr("scrollTop", 0).children().detach();
     
     $.each($.makeArray(data.directory), function(i, name) {
-      this.renderDirectory(name);
+      this.renderItem("directory", name);
     }.bind(this));
     
     $.each($.makeArray(data.file), function(i, name) {
-      this.renderFile(name);
+      this.renderItem("file", name);
     }.bind(this));
     
     if (!fromHistory) {
@@ -104,24 +156,52 @@ protonet.controls.FileWidget.prototype = {
     this._toggleNavBar();
   },
   
-  renderFile: function(name) {
+  renderItem: function(type, name) {
+    var path = this.path + name;
+    
     $("<li />", {
-      text:                  name,
-      "data-file-name":      name,
-      tabIndex:              -1,
-      title:                 name,
-      className:             "file"
-    }).appendTo(this.list);
+      title:      name,
+      className:  type
+    }).attr("data-" + type + "-path", path).append(
+      $("<a />", {
+        tabIndex:   -1,
+        href:       this.getDownloadPath("/" + this.channelId + path),
+        text:       name,
+        target:     "_blank"
+      })
+    ).appendTo(this.list);
   },
   
-  renderDirectory: function(name) {
-    $("<li />", {
-      text:                  name,
-      "data-directory-name": name,
-      tabIndex:              -1,
-      title:                 name,
-      className:             "directory"
-    }).appendTo(this.list);
+  publish: function(filePaths) {
+    filePaths = $.makeArray(filePaths);
+    
+    var message     = {},
+        images      = [],
+        imageNames  = [],
+        imageRegExp = /.+\.(jpe?g|gif|png)$/i,
+        messageText = [protonet.t("PUBLISH_FILES")];
+    
+    $.each(filePaths, function(i, filePath) {
+      var fileName = filePath.slice(filePath.lastIndexOf("/") + 1),
+          downloadUrl = this.getDownloadPath(filePath);
+      if (imageRegExp.test(fileName)) {
+        images.push(protonet.config.base_url + downloadUrl);
+        imageNames.push(fileName);
+      }
+      
+      messageText.push("  * file:" + downloadUrl);
+    }.bind(this)).join("\n");
+    
+    protonet.Notifications.trigger("form.custom_submit", [messageText.join("\n"), images.length ? {
+      title:        "",
+      image:        images,
+      imageHref:    images,
+      imageTitle:   imageNames
+    } : ""]);
+  },
+  
+  getDownloadPath: function(path) {
+    return "/system/files/show?file_path=" + encodeURIComponent(path);
   },
   
   _toggleNavBar: function() {
@@ -129,7 +209,7 @@ protonet.controls.FileWidget.prototype = {
         paths               = "/",
         rootLink            = $("<a />", {
           href:                   "#",
-          "data-directory-name":  "/",
+          "data-directory-path":  "/",
           text:                   "/"
         });
     
@@ -144,7 +224,7 @@ protonet.controls.FileWidget.prototype = {
       
       var pathLink = $("<a />", {
         href:                   "#",
-        "data-directory-name":  paths,
+        "data-directory-path":  paths,
         text:                   path
       });
       

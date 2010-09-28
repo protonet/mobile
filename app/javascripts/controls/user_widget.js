@@ -15,7 +15,7 @@ protonet.controls.UserWidget = function() {
     li = $(li);
     this.usersData[+li.attr("data-user-id")] = {
       element:              li,
-      name:                 li.text(),
+      name:                 $.trim(li.text()),
       isViewer:             li.hasClass("myself"),
       isStranger:           false,
       channelSubscriptions: []
@@ -152,11 +152,15 @@ protonet.controls.UserWidget.prototype = {
   createElement: function(userId, userName, isViewer, isStranger) {
     return $("<li />", {
       "data-user-id": userId,
-      text:           userName,
       title:          userName,
-      tabIndex:       -1,
       className:      [isViewer ? "myself" : "", isStranger ? "stranger" : ""].join(" ")
-    }).appendTo(this.list);
+    }).append(
+      $("<a />", {
+        tabIndex: -1,
+        href:     "#",
+        text:     userName
+      })
+    ).appendTo(this.list);
   },
   
   sortEntries: function() {

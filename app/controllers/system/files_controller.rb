@@ -86,15 +86,15 @@ module System
     end
   
     def delete
-      if params[:file_name]
-        full_path = "#{params["file_path"]}/#{params["file_name"]}"
+      if params[:file_path] && params[:channel_id]
+        full_path = "/#{params[:channel_id]}#{params[:file_path]}"
         FileUtils.rm(System::FileSystem.cleared_path(full_path))
           
         channel = Channel.find(params[:channel_id])
         publish 'files', ['channel', channel.uuid],
           :trigger      => 'file.removed',
-          :path         => params["file_path"],
-          :file_name     => params["file_name"]
+          :path         => params[:file_path],
+          :channel_id   => params[:channel_id]
         return head(:ok)
       else
         return head(:error)

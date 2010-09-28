@@ -24,15 +24,16 @@ protonet.user = {
     /**
      * Highlight meep when sent by current user
      */
-    protonet.Notifications.bind("meep.rendered", function(e, element, data, instance) {
-      if (data.author == this.data.name && !instance.merged) {
-        element.addClass("own");
-      }
-    }.bind(this));
+    protonet.Notifications
+      .bind("meep.rendered", function(e, element, data, instance) {
+        if (data.author == this.data.name && !instance.merged) {
+          element.addClass("own");
+        }
+      }.bind(this))
     
-    protonet.Notifications.bind("users.data_available", function(event, usersData) {
-      this.usersData = usersData;
-    }.bind(this));
+      .bind("users.data_available", function(event, usersData) {
+        this.usersData = usersData;
+      }.bind(this));
   },
   
   _createContextMenu: function() {

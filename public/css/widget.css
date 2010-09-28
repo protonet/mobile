@@ -29,18 +29,20 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-.widget li {
+.widget li a {
+  display: block;
   color: #333;
   padding-left: 26px;
   overflow: hidden;
   cursor: pointer;
-  line-height: 24px;
+  line-height: 25px;
   margin: 0 0 1px;
   white-space: nowrap;
+  text-decoration: none;
 }
 
-.widget li:hover,
-.widget li:focus {
+.widget li a:hover,
+.widget li a:focus {
   background-color: rgba(0, 0, 0, 0.06) !important;
 }
 
@@ -93,28 +95,28 @@
 
 
 /*--------------------------------- USER WIDGET ---------------------------------*/
-#user-widget li {
+#user-widget li a {
   color: #999;
   background-image: url(../img/spr_user_status.png);
   background-repeat: no-repeat;
   background-position: 4px -17px;
 }
 
-#user-widget li.online {
+#user-widget li.online a {
   background-position: 4px 3px;
   color: #000;
 }
 
-#user-widget li.stranger {
+#user-widget li.stranger a {
   font-style: italic;
   color: #999;
 }
 
-#user-widget li.typing {
+#user-widget li.typing a {
   background-position: 5px -42px;
 }
 
-#user-widget li.myself {
+#user-widget li.myself a {
   font-weight: bold;
 }
 
@@ -144,11 +146,11 @@
 }
 
 #file-widget .address-bar > *:first-child {
-  padding-left: 2px;
+  padding-left: 4px;
 }
 
 #file-widget .address-bar > *:last-child {
-  padding-right: 2px;
+  padding-right: 4px;
 }
 
 #file-widget .address-bar a:hover {
@@ -201,9 +203,13 @@
 #file-widget li {
   background-image: url(../img/spr_file_icons.png);
   background-repeat: no-repeat;
-  background-position: 7px -22px;
+  background-position: 7px -21px;
 }
 
 #file-widget li.directory {
   background-position: 7px 6px;
+}
+
+#file-widget li.disabled {
+  opacity: 0.5;
 }

@@ -324,7 +324,6 @@ header .hearts {
   background-color: #fff;
   position: absolute;
   display: none;
-  padding: 3px 2px;
   border: 1px solid #487bff;
   border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -342,14 +341,14 @@ header .hearts {
   display: block;
   width: 100%;
   position: absolute;
-  margin-top: -12px;
+  margin-top: -8px;
   background: url(../img/icn_arrow_context_menu.png) center center no-repeat;
   height: 8px;
 }
 
 .context-menu li {
   cursor: pointer;
-  padding: 3px 4px;
+  padding: 6px;
   color: #487bff;
   min-width: 100px;
   border-bottom: 1px solid #ccc;

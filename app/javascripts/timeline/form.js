@@ -5,16 +5,17 @@
  * @events
  *    form.submitted          - Indicates that the input has been submitted
  *    form.create_reply       - Pass the name to a user and it prefills the message textarea
- *    meep.render_from_form   - Causes a new meep to render and to post
+ *    meep.send               - Causes a new meep to render and to post
  */
 protonet.timeline.Form = {
   initialize: function() {
-    this.form           = $("#message-form");
-    this.input          = this.form.find("#message");
-    this.channelIdInput = this.form.find("#tweet_channel_id");
-    this.socketIdInput  = this.form.find("#tweet_socket_id");
-    this.$window        = $(window);
-    this.typing         = false;
+    this.form               = $("#message-form");
+    this.input              = this.form.find("#message");
+    this.channelIdInput     = this.form.find("#tweet_channel_id");
+    this.socketIdInput      = this.form.find("#tweet_socket_id");
+    this.textExtensionInput = this.form.find("#text-extension-input");
+    this.$window            = $(window);
+    this.typing             = false;
     
     this._initAutocompleter();
     this._initTextExtension();
@@ -86,6 +87,19 @@ protonet.timeline.Form = {
     }.bind(this));
     
     /**
+     * Submit form with custom message or textExtension
+     */
+    protonet.Notifications.bind("form.custom_submit", function(e, message, textExtension) {
+      if (message) {
+        this.input.focus().val(message);
+      }
+      if (textExtension) {
+        this.textExtensionInput.val(JSON.stringify(textExtension));
+      }
+      this.form.submit();
+    }.bind(this));
+    
+    /**
      * Update input value
      */
     protonet.Notifications.bind("meep.error", function(e, element, data) {
@@ -131,7 +145,7 @@ protonet.timeline.Form = {
     
     this._typingEnd();
     
-    protonet.Notifications.trigger("meep.render_from_form", [this.form, true]);
+    protonet.Notifications.trigger("meep.send", [this.form, true]);
     protonet.Notifications.trigger("form.submitted", [this.form]);
     
     this.input.val("");
