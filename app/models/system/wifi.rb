@@ -2,28 +2,31 @@ module System
   class Wifi
     
     SETTINGS = {
-      :default => "ctrl_interface=/var/run/hostapd
-        driver=nl80211
-        hw_mode=g
-        channel=3
-        wme_enabled=1
-        ieee80211n=1
-        ht_capab=[HT40-][SHORT-GI-40][DSSS_CCK-40]",
-      :single => "ssid=private
-        interface=wlan0
-        wpa=2
-        wpa_key_mgmt=WPA-PSK
-        wpa_pairwise=CCMP
-        wpa_passphrase=hheg45$%00",
-      :dual => "ssid=private
-        interface=wlan0
-        wpa=2
-        wpa_key_mgmt=WPA-PSK
-        wpa_pairwise=CCMP
-        wpa_passphrase=hheg45$%00
-        bss=wlan1
-        ssid=public
-        bssid=00:13:10:95:fe:0b"
+      :default => 
+"ctrl_interface=/var/run/hostapd
+driver=nl80211
+hw_mode=g
+channel=3
+wme_enabled=1
+ieee80211n=1
+ht_capab=[HT40-][SHORT-GI-40][DSSS_CCK-40]",
+      :single =>
+"ssid=private
+interface=wlan0
+wpa=2
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=CCMP
+wpa_passphrase=hheg45$%00",
+      :dual => 
+"ssid=private
+interface=wlan0
+wpa=2
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=CCMP
+wpa_passphrase=hheg45$%00
+bss=wlan1
+ssid=public
+bssid=00:13:10:95:fe:0b"
     }
     
     class << self
@@ -71,7 +74,7 @@ module System
       
       def generate_config(type)
         config_file = "#{configatron.shared_file_path}/config/hostapd.d/config"
-        File.open(config_file, 'w') {|f| f.write(SETTINGS[:default] + "\n" + SETTINGS[type]) }
+        File.open(config_file, 'w') {|f| f.write(SETTINGS[:default] + "\n\n" + SETTINGS[type]) }
       end
       
       def config
