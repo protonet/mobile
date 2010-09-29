@@ -213,3 +213,36 @@
 #file-widget li.disabled {
   opacity: 0.5;
 }
+
+#file-widget .add-files {
+  position: relative;
+  border-top: 1px solid #999;
+  border-bottom: 1px solid #999;
+  margin-bottom: 1px;
+}
+
+#file-widget .add-link {
+  position: absolute;
+  width: 15px;
+  right: 0;
+  top: 0;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  line-height: 30px;
+  border-left: 1px solid #999;
+  background: #999;
+  font-weight: bold;
+}
+
+#file-widget .drop-area {
+  background: url(../img/bg_scanlines.png),
+              -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 0.6), rgba(72, 123, 255, 0.9));
+  background: url(../img/bg_scanlines.png),
+              -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.9)), to(rgba(72, 123, 255, 0.6)));
+  margin-right: 15px;
+  line-height: 30px;
+  font-size: 10px;
+  text-align: center;
+  color: #fff;
+}

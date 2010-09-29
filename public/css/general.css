@@ -333,7 +333,7 @@ header .hearts {
   -webkit-box-shadow: 3px 3px 3px #999;
   -moz-box-shadow: 3px 3px 3px #999;
   z-index: 10;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .context-menu:before {

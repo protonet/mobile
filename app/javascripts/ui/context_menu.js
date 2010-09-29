@@ -18,34 +18,42 @@ protonet.ui.ContextMenu = function(selector, options) {
 
 protonet.ui.ContextMenu.prototype = {
   create: function() {
-    var template = $("<li />", { tabIndex: -1 });
-    this.list = $("<menu />", { className: "context-menu" });
+    var template  = $("<li />",   { tabIndex: -1 });
+    this.list     = $("<menu />", { className: "context-menu" });
+    
     $.each(this.options, function(name, callback) {
       template.clone().html(name).appendTo(this.list).data("callback", callback);
     }.bind(this));
     
-    this.list.appendTo("body").mousedown(function(event) { event.stopPropagation(); });
+    this.list.appendTo("body");
   },
   
   observe: function() {
-    var root = $("html");
+    var root    = $("html"),
+        $window = $(window),
+        close   = function() {
+          this.list.hide().undelegate("li", "click.context_menu");
+          $window.unbind("resize.context_menu");
+          root.add(this.list).unbind("mousedown.context_menu");
+        }.bind(this);
+    
     root.delegate(this.selector, "click", function(event) {
       var target = $(event.currentTarget);
-      
       this.position(target);
       
-      this.list.delegate("li", "click.context_menu", function() {
-        $(this).data("callback")(target, function() { root.trigger("mousedown.context_menu"); });
-      });
+      this.list
+        .delegate("li", "click.context_menu", function(event) {
+          $(this).data("callback")(target, close, event);
+        })
+        .bind("mousedown.context_menu", function(event) {
+          event.stopPropagation();
+        });
       
-      root.bind("mousedown.context_menu", function() {
-        this.list.hide().undelegate("li", "click.context_menu");
-        root.unbind("mousedown.context_menu");
-      }.bind(this));
-      
-      $(window).unbind("resize.context_menu").bind("resize.context_menu", function() {
+      $window.bind("resize.context_menu", function() {
         this.position(target);
       }.bind(this));
+      
+      root.bind("mousedown.context_menu", close);
       
       event.preventDefault();
     }.bind(this));
@@ -57,7 +65,7 @@ protonet.ui.ContextMenu.prototype = {
     
     this.list.css({
       left: (offsets.left + (size.width / 2) - (this.list.outerWidth(true) / 2)).px(),
-      top: (offsets.top + size.height).px()
+      top:  (offsets.top + size.height).px()
     }).fadeIn(500);
   }
 };

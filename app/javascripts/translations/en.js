@@ -9,5 +9,7 @@ protonet.translations = {
   SOCKET_DISCONNECTED: "There has been a connection problem. Please wait a few seconds while our hard working monsters fix the problem.",
   SOCKET_RECONNECTED: "Ok, everything back to normal. Our hard-working engineering monsters fixed the problem.",
   FILE_DELETE_ERROR: "File couldn't be deleted",
+  DIRECTORY_DELETE_ERROR: "Folder couldn't be deleted",
+  DIRECTORY_DELETE_CONFIRM: "Are you sure? This will delete the folder including all contents. There's no undo.",
   PUBLISH_FILES: "Published the following file(s):"
 };

@@ -33,15 +33,15 @@ module System
     end
     
     def delete_directory
-      if params[:directory_name]
-        full_directory_path = "#{params["file_path"]}/#{params["directory_name"]}"
-        FileUtils.rm_rf(System::FileSystem.cleared_path(full_directory_path))
+      if params[:file_path] && params[:channel_id]
+        full_path = "/#{params[:channel_id]}#{params[:file_path]}"
+        FileUtils.rm_rf(System::FileSystem.cleared_path(full_path))
           
         channel = Channel.find(params[:channel_id])
         publish 'files', ['channel', channel.uuid],
           :trigger        => 'directory.removed',
-          :path           => params["file_path"],
-          :directory_name => params["directory_name"]
+          :path           => params[:file_path],
+          :channel_id     => params[:channel_id]
         return head(:ok)
       else
         return head(:error)
@@ -89,7 +89,7 @@ module System
       if params[:file_path] && params[:channel_id]
         full_path = "/#{params[:channel_id]}#{params[:file_path]}"
         FileUtils.rm(System::FileSystem.cleared_path(full_path))
-          
+        
         channel = Channel.find(params[:channel_id])
         publish 'files', ['channel', channel.uuid],
           :trigger      => 'file.removed',

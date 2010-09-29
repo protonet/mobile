@@ -38,10 +38,18 @@ protonet.controls.FileWidget.prototype = {
           return;
         }
         this.list.find("[data-file-path='" + data.path + "']").detach();
+      }.bind(this))
+      
+      .bind("directory.removed", function(event, data) {
+        if (data.channel_id != this.channelId) {
+          return;
+        }
+        this.list.find("[data-directory-path='" + data.path + "']").detach();
       }.bind(this));
     
+    
     this.container
-      .delegate("[data-directory-path]", "click", function(event) {
+      .delegate(".address-bar [data-directory-path]", "click", function(event) {
         var path = $(event.currentTarget).attr("data-directory-path");
         protonet.Notifications.trigger("files.load", [this.channelId, path]);
         event.preventDefault();
@@ -58,7 +66,7 @@ protonet.controls.FileWidget.prototype = {
   
   _createContextMenu: function() {
     new protonet.ui.ContextMenu("#file-widget ul [data-file-path]", {
-      "download": function(li, closeContextMenu) {
+      "<strong>download</strong>": function(li, closeContextMenu) {
         window.open(li.find("a").attr("href"), +new Date());
         closeContextMenu();
       },
@@ -68,7 +76,7 @@ protonet.controls.FileWidget.prototype = {
       }.bind(this),
       "delete": function(li, closeContextMenu) {
         /**
-         * Answer comes back as event notification
+         * Success response comes as event notification
          */
         $.ajax({
           url:        "system/files/delete",
@@ -80,7 +88,7 @@ protonet.controls.FileWidget.prototype = {
           beforeSend: function() {
             li.addClass("disabled");
           },
-          error:      function() {
+          error: function() {
             li.removeClass("disabled");
             protonet.ui.FlashMessage.show("error", protonet.t("FILE_DELETE_ERROR"));
           }
@@ -91,11 +99,36 @@ protonet.controls.FileWidget.prototype = {
     });
     
     new protonet.ui.ContextMenu("#file-widget ul [data-directory-path]", {
-      "open":   function() {
-        
+      "<strong>open</strong>":   function(li, closeContextMenu) {
+        var path = li.attr("data-directory-path");
+        protonet.Notifications.trigger("files.load", [this.channelId, path]);
+        closeContextMenu();
       }.bind(this),
-      "delete": function() {
+      "delete": function(li, closeContextMenu) {
+        if (!confirm(protonet.t("DIRECTORY_DELETE_CONFIRM"))) {
+          return;
+        }
         
+        /**
+         * Success response comes as event notification
+         */
+        $.ajax({
+          url:  "system/files/delete_directory",
+          type: "post",
+          data: {
+            file_path:  li.attr("data-directory-path"),
+            channel_id: this.channelId
+          },
+          beforeSend: function() {
+            li.addClass("disabled");
+          },
+          error: function() {
+            li.removeClass("disabled");
+            protonet.ui.FlashMessage.show("error", protonet.t("DIRECTORY_DELETE_ERROR"));
+          }
+        });
+        
+        closeContextMenu();
       }.bind(this)
     });
   },
