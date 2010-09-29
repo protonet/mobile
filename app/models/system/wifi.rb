@@ -50,8 +50,7 @@ module System
 
       def switch_mode(type)
         return false unless [:single, :dual].includes?(type)
-        config_file = "#{configatron.shared_file_path}/config/hostapd.d/config"
-        File.open(config_file, 'w') {|f| f.write(SETTINGS[:default] + "\n" + SETTINGS[type]) }
+        generate_config(type)
         System::Preferences.wifi_mode = type
         (type == :single ? {'wlan0' => '10.42.0.1'} : {'wlan0' => '10.42.0.1', 'wlan1' => '10.43.0.1'}).each do |interface, ip|
           System::Networking.config_wifi_interface(interface, ip)
@@ -70,9 +69,15 @@ module System
         System::Monit.add(:wifi, start, stop, pid_file)
       end
       
+      def generate_config(type)
+        config_file = "#{configatron.shared_file_path}/config/hostapd.d/config"
+        File.open(config_file, 'w') {|f| f.write(SETTINGS[:default] + "\n" + SETTINGS[type]) }
+      end
+      
       def config
         return 'only available in production' unless Rails.env == 'production'
         config_file = "#{configatron.shared_file_path}/config/hostapd.d/config"
+        generate_config(System::Preferences.wifi_mode) unless File.exists?(config_file)
         File.read(config_file)
       end
       
