@@ -160,7 +160,11 @@ class ClientConnection < FlashServer
     
       when 'web', 'api'
         return false if auth_data['user_id'] == 0
-        potential_user = User.find(auth_data['user_id']) rescue nil
+        potential_user = begin 
+          User.find(auth_data['user_id'])
+        rescue ActiveRecord::RecordNotFound
+          nil
+        end
         @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data['token'])
         
         if @user
