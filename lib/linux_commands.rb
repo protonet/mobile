@@ -14,7 +14,7 @@ class << self
       return nil unless raw.any?
       parse_ifconfig_block raw, options[:keys]
     else
-      raw ||= `ifconfig -a`
+      raw ||= `/sbin/ifconfig -a`
       parse_ifconfig raw, options[:keys]
     end
   end
