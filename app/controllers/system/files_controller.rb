@@ -12,16 +12,17 @@ module System
     end
     
     def create_directory
-      if params[:directory_name]
+      if params[:directory_name] && params[:file_path] && params[:channel_id]
         begin
-          full_directory_path = "#{params["file_path"]}/#{params["directory_name"]}"
+          full_directory_path = "/#{params[:channel_id]}#{params[:file_path]}/#{params[:directory_name]}"
           FileUtils.mkdir(System::FileSystem.cleared_path(full_directory_path))
           
           channel = Channel.find(params[:channel_id])
           publish 'files', ['channel', channel.uuid],
             :trigger        => 'directory.added',
-            :path           => params["file_path"],
-            :directory_name => params["directory_name"]
+            :path           => params[:file_path],
+            :directory_name => params[:directory_name],
+            :channel_id     => params[:channel_id]
         rescue
           return head(409)
         else

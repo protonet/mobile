@@ -320,6 +320,8 @@ header .hearts {
   color: #e75c79;
 }
 
+/* =CONTEXT MENU
+=========================================================================== */
 .context-menu {
   background-color: #fff;
   position: absolute;
@@ -351,6 +353,7 @@ header .hearts {
   padding: 6px;
   color: #487bff;
   min-width: 100px;
+  overflow: hidden;
   border-bottom: 1px solid #ccc;
 }
 
@@ -361,4 +364,13 @@ header .hearts {
 
 .context-menu li:last-child {
   border-bottom: 0;
+}
+
+/** Overrule styles, set by plupload.js */
+.context-menu li .plupload {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  height: 100px !important;
+  width: 500px !important;
 }

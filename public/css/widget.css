@@ -29,12 +29,14 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-.widget li a {
+.widget li {
+  overflow: hidden;
+}
+
+.widget li > * {
   display: block;
   color: #333;
   padding-left: 26px;
-  overflow: hidden;
-  cursor: pointer;
   line-height: 25px;
   margin: 0 0 1px;
   white-space: nowrap;
@@ -47,9 +49,6 @@
 }
 
 .widget ul {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
   overflow: auto;
   height: 170px;
   min-height: 50px;
@@ -99,11 +98,11 @@
   color: #999;
   background-image: url(../img/spr_user_status.png);
   background-repeat: no-repeat;
-  background-position: 4px -17px;
+  background-position: 4px -16px;
 }
 
 #user-widget li.online a {
-  background-position: 4px 3px;
+  background-position: 4px 4px;
   color: #000;
 }
 
@@ -203,46 +202,70 @@
 #file-widget li {
   background-image: url(../img/spr_file_icons.png);
   background-repeat: no-repeat;
-  background-position: 7px -21px;
+  background-position: 7px -20px;
 }
 
 #file-widget li.directory {
-  background-position: 7px 6px;
+  background-position: 7px 7px;
 }
 
 #file-widget li.disabled {
   opacity: 0.5;
 }
 
-#file-widget .add-files {
+#file-widget li.disabled a {
+  cursor: default;
+}
+
+#file-widget li.directory input {
+  border: 1px solid #ccc;
+  display: block;
+  background: transparent;
+  line-height: inherit;
+  height: 23px;
+  width: 100%;
+  padding-left: 25px;
+}
+
+#file-widget .options {
   position: relative;
-  border-top: 1px solid #999;
-  border-bottom: 1px solid #999;
   margin-bottom: 1px;
 }
 
-#file-widget .add-link {
+#file-widget #add-objects {
   position: absolute;
-  width: 15px;
+  width: 16px;
   right: 0;
   top: 0;
   color: #fff;
   text-decoration: none;
   text-align: center;
   line-height: 30px;
-  border-left: 1px solid #999;
-  background: #999;
+  background: rgb(170, 170, 170);
   font-weight: bold;
+  cursor: pointer;
 }
 
-#file-widget .drop-area {
+
+#file-widget #add-objects:focus,
+#file-widget #add-objects:hover {
+  background: #999;
+}
+
+#file-widget #drop-area {
   background: url(../img/bg_scanlines.png),
               -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 0.6), rgba(72, 123, 255, 0.9));
   background: url(../img/bg_scanlines.png),
               -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.9)), to(rgba(72, 123, 255, 0.6)));
-  margin-right: 15px;
   line-height: 30px;
   font-size: 10px;
   text-align: center;
   color: #fff;
+}
+
+#file-widget #drop-area.dragenter {
+  background: url(../img/bg_scanlines.png),
+              -moz-linear-gradient(100% 100% 90deg, rgba(255, 140, 71, 0.7), rgba(255, 140, 71, 1));
+  background: url(../img/bg_scanlines.png),
+              -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 140, 71, 1)), to(rgba(255, 140, 71, 0.7)));
 }

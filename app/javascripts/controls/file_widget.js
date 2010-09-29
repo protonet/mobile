@@ -2,6 +2,7 @@
 //= require "../utils/parse_url.js"
 //= require "../ui/resizer.js"
 //= require "../lib/jquery-ui-1.8.4.highlight-effect.min.js"
+//= require "../lib/plupload.full.min.js"
 
 protonet.controls.FileWidget = function() {
   this.container      = $("#file-widget");
@@ -9,6 +10,7 @@ protonet.controls.FileWidget = function() {
   this.resizer        = this.container.find(".resize");
   this.navBar         = this.container.find(".nav-bar");
   this.addressBar     = this.container.find(".address-bar");
+  this.dropArea       = $("#drop-area");
   
   this.forwardButton  = this.navBar.find("[rel=forward]");
   this.backwardButton = this.navBar.find("[rel=backward]");
@@ -16,7 +18,8 @@ protonet.controls.FileWidget = function() {
   new protonet.ui.Resizer(this.list, this.resizer, { storageKey: "file_widget_height" });
   
   this._resetHistory();
-  this._createContextMenu();
+  this._initContextMenu();
+  this._initFileUpload();
   this._observe();
 };
 
@@ -45,6 +48,15 @@ protonet.controls.FileWidget.prototype = {
           return;
         }
         this.list.find("[data-directory-path='" + data.path + "']").detach();
+      }.bind(this))
+      
+      .bind("directory.added", function(event, data) {
+        if (data.channel_id != this.channelId || data.path != this.path) {
+          return;
+        }
+        this.renderItem("directory", data.directory_name, true)
+          .css("backgroundColor", "#ffff99")
+          .animate({ "backgroundColor": "#ffffff" }, { duration: 1000 });
       }.bind(this));
     
     
@@ -61,10 +73,18 @@ protonet.controls.FileWidget.prototype = {
       
       .delegate(".enabled[rel=forward]", "click", function(event) {
         protonet.Notifications.trigger("files.load", [this.channelId, this.history[++this.historyIndex], true]);
+      }.bind(this))
+      
+      .delegate("li.disabled", "click", function(event) {
+        event.stopPropagation();
+        event.preventDefault();
       }.bind(this));
   },
   
-  _createContextMenu: function() {
+  _initContextMenu: function() {
+    /**
+     * File context menu
+     */
     new protonet.ui.ContextMenu("#file-widget ul [data-file-path]", {
       "<strong>download</strong>": function(li, closeContextMenu) {
         window.open(li.find("a").attr("href"), +new Date());
@@ -98,6 +118,9 @@ protonet.controls.FileWidget.prototype = {
       }.bind(this)
     });
     
+    /**
+     * Folder context menu
+     */
     new protonet.ui.ContextMenu("#file-widget ul [data-directory-path]", {
       "<strong>open</strong>":   function(li, closeContextMenu) {
         var path = li.attr("data-directory-path");
@@ -129,6 +152,129 @@ protonet.controls.FileWidget.prototype = {
         });
         
         closeContextMenu();
+      }.bind(this)
+    });
+    
+    /**
+     * New file/folder context menu
+     */
+    this.uploadContextMenu = new protonet.ui.ContextMenu("#add-objects", {
+      "Create new folder": function(li, closeContextMenu) {
+        this.createFolderInput();
+        closeContextMenu();
+      }.bind(this),
+      "Upload file": $.noop
+    });
+    
+    var refresh = function() {
+      this.uploader.trigger("Refresh");
+    }.bind(this);
+    
+    this.uploadContextMenu.bind("open", refresh).bind("close", refresh);
+  },
+  
+  _initFileUpload: function() {
+    /**
+     * The browse link is part of the context menu which doesn't exist yet
+     */
+    var timestamp   = new Date().getTime(),
+        list        = this.uploadContextMenu.list,
+        browseLink  = list.children(":eq(1)").attr("id", "browse:" + timestamp);
+    
+    this.uploader = new plupload.Uploader({
+      runtimes:       "html5,flash,html4",
+      browse_button:  browseLink.attr("id"),
+      container:      browseLink.attr("id"),
+      max_file_size:  "1000mb",
+      url:            "upload.php",
+      flash_swf_url:  "/flash/plupload.flash.swf",
+      drop_element:   this.dropArea.attr("id")
+    });
+    
+    this.uploader.bind("FilesAdded", function(uploader, files) {
+      $.each(files, function(i, file) { this.renderItem("file", file.name).addClass("disabled"); }.bind(this));
+      this.list.attr("scrollTop", this.list.attr("scrollHeight"));
+      this.dropArea.trigger("dragleave");
+    }.bind(this));
+    
+    this.dropArea
+      .bind("dragover", function(event) {
+        event.preventDefault();
+        this.dropArea.addClass("dragenter").html(protonet.t("DROP"));
+      }.bind(this))
+      .bind("dragleave", function(event) {
+        event.preventDefault();
+        this.dropArea.removeClass("dragenter").html(this.dropArea.data("default_html"));
+      }.bind(this))
+      .data("default_html", this.dropArea.html());
+    
+    this.uploader.init();
+  },
+  
+  _getUploadUrl: function() {
+    return "/system/files" +
+      "?_rails_dashboard_session=" + encodeURIComponent(protonet.user.data.session_id) +
+      "&authenticity_token="       + encodeURIComponent(protonet.user.data.authenticity_token) +
+      "&channel_id="               + this.channelId + 
+      "&file_path="                + encodeURIComponent(this.path);
+  },
+  
+  createFolderInput: function() {
+    var li = this.renderItem("directory", "", true);
+    li.children().detach();
+    
+    var input = $("<input />", {
+      value: protonet.t("DEFAULT_DIRECTORY")
+    }).appendTo(li);
+    
+    /** Deferred focus needed to avoid conflict with blur event */
+    var deferredFocus = function() {
+      setTimeout(function() { input.focus(); }, 10);
+    };
+    
+    input.focus().get(0).select();
+    
+    input.bind({
+      click: function(event) {
+        event.stopPropagation();
+      },
+      keypress: function(event) {
+        if (event.keyCode == 13) {
+          $(this).trigger("blur");
+        }
+        if (event.keyCode == 27) {
+          li.detach();
+        }
+      },
+      blur: function() {
+        if (!$.trim(input.val())) {
+          deferredFocus();
+          return;
+        }
+        
+        $.ajax({
+          type: "post",
+          url:  "system/files/create_directory",
+          data: {
+            directory_name:     input.val(),
+            file_path:          this.path,
+            channel_id:         this.channelId,
+            authenticity_token: protonet.user.data.authenticity_token
+          },
+          beforeSend: function() { input.attr("disabled", "disabled"); },
+          complete:   function() { input.removeAttr("disabled"); },
+          success:    function() { input.detach(); }.bind(this),
+          error:      function(transport) {
+            var message;
+            if (transport.status == "409") {
+              message = "DIRECTORY_EXISTS_ERROR";
+            } else {
+              message = "UNKNOWN_ERROR";
+            }
+            protonet.ui.FlashMessage.show("error", protonet.t(message));
+            deferredFocus();
+          }
+        });
       }.bind(this)
     });
   },
@@ -172,27 +318,32 @@ protonet.controls.FileWidget.prototype = {
     
     this.list.attr("scrollTop", 0).children().detach();
     
-    $.each($.makeArray(data.directory), function(i, name) {
+    /**
+     * Chunk it for performance reasons, we never know how many files have
+     * to be rendered
+     */
+    $.makeArray(data.directory).chunk(function(name) {
       this.renderItem("directory", name);
+    }.bind(this), function() {
+      $.makeArray(data.file).chunk(function(name) {
+        this.renderItem("file", name);
+      }.bind(this), function() {
+        if (!fromHistory) {
+          this.history = this.history.slice(0, this.historyIndex + 1);
+          this.history.push(this.path);
+          this.historyIndex = this.history.length - 1;
+        }
+        
+        this._toggleNavBar();
+      }.bind(this));
     }.bind(this));
-    
-    $.each($.makeArray(data.file), function(i, name) {
-      this.renderItem("file", name);
-    }.bind(this));
-    
-    if (!fromHistory) {
-      this.history = this.history.slice(0, this.historyIndex + 1);
-      this.history.push(this.path);
-      this.historyIndex = this.history.length - 1;
-    }
-    
-    this._toggleNavBar();
   },
   
-  renderItem: function(type, name) {
-    var path = this.path + name;
+  renderItem: function(type, name, ensurePosition) {
+    var path = this.path + name,
+        position = ensurePosition && this.list.find("." + type + ":last");
     
-    $("<li />", {
+    var li = $("<li />", {
       title:      name,
       className:  type
     }).attr("data-" + type + "-path", path).append(
@@ -202,7 +353,15 @@ protonet.controls.FileWidget.prototype = {
         text:       name,
         target:     "_blank"
       })
-    ).appendTo(this.list);
+    );
+    
+    if (position && position.length) {
+      li.insertAfter(position);
+    } else {
+      li.appendTo(this.list);
+    }
+    
+    return li;
   },
   
   publish: function(filePaths) {
