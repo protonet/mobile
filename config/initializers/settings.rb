@@ -1,0 +1,1 @@
+System::Preferences.defaults[:wifi_mode] = :dual
