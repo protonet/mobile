@@ -11,6 +11,12 @@ module System
         config_file = "#{configatron.shared_file_path}/config/ifconfig.d/#{interface}"
         return if File.exists?(config_file) # yeah doesn't handle ip changes
         File.open(config_file, 'w') {|f| f.write("address #{ip}\nnetmask 255.255.255.0") }
+        restart_interface(interface)
+      end
+      
+      def restart_interface(interface)
+        `/sbin/ifconfig #{interface} down`
+        `/sbin/ifconfig #{interface} up`
       end
       
     end

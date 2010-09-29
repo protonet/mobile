@@ -12,6 +12,9 @@ require 'configatron'
 # UUID4r
 require 'uuid4r'
 
+# ruby ip foo
+require 'ip'
+
 #  hack this needs to be removed
 require "#{RAILS_ROOT}/lib/rack_ext.rb" if defined?(Rack) && !defined?(PhusionPassenger)
 
