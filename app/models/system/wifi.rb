@@ -43,7 +43,6 @@ bssid=00:13:10:95:fe:0b"
       
       def restart
         return unless Rails.env == 'production'
-        monitor_service
         System::Monit.restart(:wifi)
       end
     
