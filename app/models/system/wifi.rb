@@ -53,7 +53,7 @@ bssid=00:13:10:95:fe:0b"
       end
 
       def switch_mode(type)
-        return false unless [:single, :dual].includes?(type)
+        return false unless [:single, :dual].include?(type)
         generate_config(type)
         System::Preferences.wifi_mode = type
         (type == :single ? {'wlan0' => '10.42.0.1'} : {'wlan0' => '10.42.0.1', 'wlan1' => '10.43.0.1'}).each do |interface, ip|
