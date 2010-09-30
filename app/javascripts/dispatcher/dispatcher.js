@@ -38,7 +38,7 @@ protonet.dispatcher = {
       
     $(window)
       .bind("offline unload", this.disconnectSocket.bind(this))
-      .bind("online", this.connectSocket.bind(this));
+      .bind("online focus", this.connectSocket.bind(this));
   },
   
   createSocket: function() {
@@ -54,7 +54,7 @@ protonet.dispatcher = {
       null, {}, params, attributes
     );
   },
-    
+  
   connectSocket: function() {
     if (this.connected) {
       return;
@@ -73,7 +73,8 @@ protonet.dispatcher = {
         this.reconnect = false;
         protonet.Notifications
           .trigger("flash_message.notice", protonet.t("SOCKET_RECONNECTED"))
-          .trigger("monster.jump");
+          .trigger("monster.jump")
+          .trigger("socket.reconnected");
       }
     } else {
       this.disconnectSocket();

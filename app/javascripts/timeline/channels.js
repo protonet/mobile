@@ -88,6 +88,29 @@ protonet.timeline.Channels = {
     }.bind(this));
     
     /**
+     * Logic for loading meeps that were send when the user was disconnected
+     */
+    protonet.Notifications.bind("socket.reconnected", function(event) {
+      var channelStates = {};
+      $.each(this.data, function(i, channel) {
+        var latestMeepData = channel.meeps[channel.meeps.length - 1];
+        channelStates[channel.id] = latestMeepData ? latestMeepData.id : 0;
+      });
+      
+      $.ajax({
+        url:      "/tweets/sync",
+        data:     { channel_states: channelStates },
+        success: function(response) {
+          $.each(response, function(channelId, meeps) {
+            $.each(meeps, function(i, meepData) {
+              protonet.Notifications.trigger("meep.receive", [meepsData]);
+            });
+          });
+        }
+      });
+    }.bind(this));
+    
+    /**
      * Ajax history to enable forward and backward
      * buttons in browser to switch between channels
      */
@@ -96,7 +119,7 @@ protonet.timeline.Channels = {
   
   _renderChannelLists: function() {
     this.data.chunk(function(channelData) {
-      var link       = this.channelLinks.filter("[data-channel-id=" + channelData.id + "]");
+      var link = this.channelLinks.filter("[data-channel-id=" + channelData.id + "]");
       new protonet.timeline.Channel(channelData, link).render(this.container);
     }.bind(this), function() {
       protonet.Notifications.trigger("channels.initialized", [this.data]);

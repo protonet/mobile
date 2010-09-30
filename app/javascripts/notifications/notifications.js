@@ -25,9 +25,15 @@ protonet.Notifications = (function() {
     return this;
   }
   
+  function one(event, handler) {
+    HOST_ELEMENT.one(event, handler);
+    return this;
+  }
+  
   return {
-    bind:               bind,
-    unbind:             unbind,
-    trigger:            trigger
+    bind:    bind,
+    unbind:  unbind,
+    trigger: trigger,
+    one:     one
   };
 })();

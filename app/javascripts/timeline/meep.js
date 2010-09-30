@@ -157,6 +157,8 @@ protonet.timeline.Meep.prototype = {
           status.hide();
         }
         
+        this.data.id = +response;
+        
         (onSuccess || $.noop)();
         protonet.Notifications.trigger("meep.sent", [this.element, this.data, this]);
       }.bind(this),

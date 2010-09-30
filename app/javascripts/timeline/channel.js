@@ -119,6 +119,18 @@ protonet.timeline.Channel.prototype = {
     }.bind(this));
     
     /**
+     * Make sure that the data object is up to date
+     */
+    protonet.Notifications
+      .bind("meep.sent", function(e, meepElement, meepData, instance) {
+        this.data.meeps.push(meepData);
+      }.bind(this))
+      
+      .bind("meep.receive", function(e, meepData) {
+        this.data.meeps.push(meepData);
+      }.bind(this));
+    
+    /**
      * Set tab to active and store state
      */
     protonet.Notifications.bind("channel.change", function(e, channelId) {

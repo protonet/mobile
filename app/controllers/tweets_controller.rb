@@ -13,6 +13,17 @@ class TweetsController < ApplicationController
     
     render :json => Tweet.prepare_for_frontend(channel, meeps)
   end
+  
+  # request: { :channel_states => { 1 => 123123, 2 => 213123 } }
+  # response: { 1 => [{ :message => 'foo bar' }, { :message => 'foo bar' }], 2 => [{ :message => 'foo bar' }] }
+  def sync
+    result = {}
+    params[:channel_states].each do |channel_id, first_meep_id|
+      channel = Channel.find(channel_id)
+      result[channel_id] = Tweet.prepare_for_frontend(channel, channel.tweets.all(:conditions => ["tweets.id > ?", first_meep_id], :order => "tweets.id ASC", :limit => 100, :include => [:avatar]))
+    end
+    render :json => result
+  end
 
   def new
   end
