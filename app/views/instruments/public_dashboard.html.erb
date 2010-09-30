@@ -23,13 +23,14 @@
         <li>
           <%= link_to c.name.capitalize, { :channel_id => c.id }, {
             :title => c.description,
+            :class => c.locally_hosted? ? (c.global? ? 'global-hosted' : 'local') : 'global',
             'data-channel-id' => c.id,
             'data-channel-uuid' => c.uuid
           } %>
         </li>
       <%- end -%>
     </ul>
-    <%= link_to "manage channels", "/channels", :class => "manage-channels" %>
+    <%= link_to "add/manage channels", "/channels", :class => "manage-channels" %>
   </div>
   <output id="timeline"></output>
   <div id="timeline-loading-indicator"></div>
@@ -68,79 +69,3 @@
 <script type="protonet/template" id="reply-from-channel-template">
   <%= render :partial => 'meeps/reply_from_channel' %>
 </script>
-
-<% if false %>
-
-
-<ul id="meeps">
-  <li class="own">
-    @<span class="username">jeveh</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    <p class="author"><span class="image"><img src="/avatars/2009/12/8/1.png" width="36" height="36" alt="" /></span>m0rk <time>2 hours ago</time></p>
-  </li>
-  <li>
-    @<span class="username">paukul</span> @<span class="username">enebo</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-    <p class="author"><span class="image"><img src="/avatars/2009/12/8/1.png" width="36" height="36" alt="" /></span>m0rk <time>5 hours ago</time></p>
-  </li>
-</ul>
-
-
-<div class="main">
-  <%- form_for :tweet, :url => tweets_path, :html => { :id => "message-form" } do |f| -%>
-    <div id="text-input">
-
-      <fieldset>
-        <% message_hint = current_user.stranger? ? 'welcome stranger! talk to us...' : "go ahead @#{current_user.display_name} I'm all yours..."%>
-        <%= f.text_area(:message, :id => 'message', :title => message_hint) %>
-        <%= f.hidden_field('channel_id',  :id => "message_channel_id", :name => 'message_channel_id',
-                                          :value => @active_channel.id, :autocomplete => 'off') %>
-       <%= f.hidden_field('channel_uuid', :id => "message_channel_uuid", :name => 'message_channel_uuid',
-                                          :value => @active_channel.uuid, :autocomplete => 'off') %>
-        <%= f.hidden_field(:socket_id) %>
-        <%= f.hidden_field(:text_extension, :id => 'text-extension-input', :value => '', :autocomplete => 'off') %>
-      </fieldset>
-      <button type="submit" name="commit">
-        <span>
-          <em>submit</em>
-        </span>
-      </button>
-    </div>
-    <div id="text-extension-preview">
-      <a href="#" title="Remove (ESC)" class="remove">x</a>
-    </div>
-  <%- end -%>
-
-  <%= render :partial => 'channels/channel_selector', :locals => {:channels => @channels, :active_channel => @active_channel} %>
-
-  <div class="feed-viewer">
-    <div class="feed-holder" style="width:<%= @channels.size * 613 %>px; left: <%= @channels.index(@active_channel) * -613 %>px;">
-      <% @channels.each do |c| %>
-        <%= render :partial => '/tweets/tweet_list', :locals => {:tweets => c.tweets.recent.all(:limit => 25, :include => [:avatar]), :channel => c} %>
-      <% end %>
-    </div>
-  </div>
-</div>
-
-<div class="side">
-  <div id="navigation-link">
-    <a href="#">SHOW NAVIGATION <span class="shortcut"></span></a>
-  </div>
-  <%= render :partial => 'sessions/registration_box' %>
-  <%= render :partial => 'users/user_list', :locals => {:users => []} %>
-  <%= render :partial => 'system/files/file_list', :locals => {:file_system => System::FileSystem.all("/" + @active_channel.id.to_s), :channel_id => @active_channel.id} %>
-  <%= render :partial => 'networks/monitor', :locals => {} %>
-</div>
-
-
-<%# Templates for JavaScript %>
-<div id="templates">
-  <div id="message-template">
-    <%= render :partial => 'tweets/tweet', :locals => {:message => '', :avatar => '/img/user_picture.png',
-                                                       :author => '', :created_at => '',
-                                                       :html_id => 'tweet-{id}-{id}'} %>
-  </div>
-
-  <div id="text-extension-template">
-    <%= render :partial => 'tweets/text_extension' %>
-  </div>
-</div>
-<%- end -%>
