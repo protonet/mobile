@@ -24,11 +24,11 @@ protonet.media.Proxy = (function() {
       }
     });
     
-    protonet.globals.dispatcher.sendMessage(JSON.stringify({
+    protonet.Notifications.trigger("socket.send", {
       operation:  "work",
       task:       "http_proxy",
       url:        url
-    }));
+    });
   }
   
   /**
