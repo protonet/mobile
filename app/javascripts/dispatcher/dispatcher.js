@@ -71,8 +71,9 @@ protonet.dispatcher = {
       this.startSocketCheck();
       if (this.reconnect) {
         this.reconnect = false;
-        protonet.ui.FlashMessage.show("notice", protonet.t("SOCKET_RECONNECTED"));
-        protonet.ui.Logo.jumpMonster();
+        protonet.Notifications
+          .trigger("flash_message.notice", protonet.t("SOCKET_RECONNECTED"))
+          .trigger("monster.jump");
       }
     } else {
       this.disconnectSocket();
@@ -87,8 +88,9 @@ protonet.dispatcher = {
     
     // Only shout it to the world when it has been online before
     if (this.connected) {
-      protonet.ui.FlashMessage.show("error", protonet.t("SOCKET_DISCONNECTED"));
-      protonet.Notifications.trigger("socket.disconnected");
+      protonet.Notifications
+        .trigger("flash_message.error", protonet.t("SOCKET_DISCONNECTED"))
+        .trigger("socket.disconnected");
     }
     
     this.connected = false;

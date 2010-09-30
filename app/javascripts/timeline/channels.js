@@ -31,7 +31,7 @@ protonet.timeline.Channels = {
      * such as tab links and in-timeline channel replies
      */
     $(document).delegate("a[data-channel-id]", "click",  function(event) {
-       var id = parseInt($(event.currentTarget).attr("data-channel-id"), 10);
+       var id = +$(event.currentTarget).attr("data-channel-id");
        if (!id) {
          return;
        }
@@ -47,12 +47,9 @@ protonet.timeline.Channels = {
      *
      * If the desired channel is not already subscribed this
      * will fire the channel.subscribe event
-     * 
-     * Caution: Be sure that the passed id is always of typeof "number"
-     * otherwise the comparsion with the already subscribed channel ids will
-     * fail
      */
     protonet.Notifications.bind("channel.change", function(e, id, avoidHashChange) {
+      id = +id; // Makes sure that id is a Number
       if ($.inArray(id, this.subscribedChannels) == -1) {
         protonet.Notifications.trigger("channel.subscribe", id);
         return;
@@ -85,7 +82,7 @@ protonet.timeline.Channels = {
         error:   function() {
           var identifier = this.getChannelName(+id) || id,
               message = protonet.t("CHANNEL_SUBSCRIPTION_ERROR").replace("{identifier}", identifier);
-          protonet.ui.FlashMessage.show("error", message);
+          protonet.Notifications.trigger("flash_message.error", message);
         }.bind(this)
       });
     }.bind(this));
@@ -114,7 +111,7 @@ protonet.timeline.Channels = {
   _selectChannel: function() {
     var hashParams        = protonet.utils.parseQueryString(location.hash.slice(1)),
         queryParams       = protonet.utils.parseQueryString(location.search.slice(1)),
-        urlChannelId      = parseInt(hashParams.channel_id || queryParams.channel_id, 10),
+        urlChannelId      = +(hashParams.channel_id || queryParams.channel_id),
         selectedChannelId = urlChannelId || (this.data[0] ? this.data[0].id : null);
     
     if (selectedChannelId && this.selected != selectedChannelId) {

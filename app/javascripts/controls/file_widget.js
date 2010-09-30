@@ -110,7 +110,7 @@ protonet.controls.FileWidget.prototype = {
           },
           error: function() {
             li.removeClass("disabled");
-            protonet.ui.FlashMessage.show("error", protonet.t("FILE_DELETE_ERROR"));
+            protonet.Notifications.trigger("flash_message.error", protonet.t("FILE_DELETE_ERROR"));
           }
         });
         
@@ -147,7 +147,7 @@ protonet.controls.FileWidget.prototype = {
           },
           error: function() {
             li.removeClass("disabled");
-            protonet.ui.FlashMessage.show("error", protonet.t("DIRECTORY_DELETE_ERROR"));
+            protonet.Notifications.trigger("flash_message.error", protonet.t("DIRECTORY_DELETE_ERROR"));
           }
         });
         
@@ -271,7 +271,7 @@ protonet.controls.FileWidget.prototype = {
             } else {
               message = "UNKNOWN_ERROR";
             }
-            protonet.ui.FlashMessage.show("error", protonet.t(message));
+            protonet.Notifications.trigger("flash_message.error", protonet.t(message));
             deferredFocus();
           }
         });

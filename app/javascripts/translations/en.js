@@ -15,5 +15,6 @@ protonet.translations = {
   DROP: "drop it like it's hot!",
   DEFAULT_DIRECTORY: "New folder",
   DIRECTORY_EXISTS_ERROR: "Folder already exists. Please choose a different name.",
-  UNKNOWN_ERROR: "An error occured. Please try again"
+  UNKNOWN_ERROR: "An error occured. Please try again",
+  LOADING_MEEPS_ERROR: "We couldn't load and set up your channels. A maintenance monster is already informed."
 };

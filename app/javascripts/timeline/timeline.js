@@ -1,44 +1,37 @@
-/**
- * TODO (project: pre-timesquare):
- *  - endless scrolling
- *  - prevent scrolling when watching video in timeline
- *  - meep merging
- *  - grab selected channel from url
- *  - meep sending via ajax/dispatcher
- *  - channel notifications
- *  - documentation
- *  - remove slide logic/html -done
- */
 protonet.timeline = {
   initialize: function() {
-    this.loadingIndicator = $("#timeline-loading-indicator");
-    
     this._observe();
     this._initForm();
     this.load();
   },
   
   _observe: function() {
+    var loadingIndicator = $("#timeline-loading-indicator");
+    
     protonet.Notifications.bind("timeline.loading_start", function() {
-      this.loadingIndicator.show();
-    }.bind(this));
+      loadingIndicator.show();
+    });
     
     protonet.Notifications.bind("timeline.loading_end", function() {
-      this.loadingIndicator.hide();
-    }.bind(this));
+      loadingIndicator.hide();
+    });
   },
   
-  /**
-   * TODO: Add failure handling to ajax request
-   */
   load: function() {
     protonet.Notifications.trigger("timeline.loading_start");
     
     $.ajax({
       url: "/",
+       /**
+        * Dummy parameter needed to avoid weird caching/history issues in Firefox
+        */
+      data: { ajax: 1 },
       success: this._initChannels.bind(this),
       complete: function() {
         protonet.Notifications.trigger("timeline.loading_end");
+      },
+      error: function() {
+        protonet.Notifications.trigger("flash_message.error", protonet.t("LOADING_MEEPS_ERROR"));
       }
     });
   },

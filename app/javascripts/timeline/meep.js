@@ -161,7 +161,7 @@ protonet.timeline.Meep.prototype = {
         protonet.Notifications.trigger("meep.sent", [this.element, this.data, this]);
       }.bind(this),
       error:      function() {
-        protonet.ui.FlashMessage.show("error", protonet.t("MEEP_ERROR_LONG"));
+        protonet.Notifications.trigger("flash_message.error", protonet.t("MEEP_ERROR_LONG"));
         
         var element = this.merged ? this.element.find("article:first") : this.element;
         element.addClass("error").delay(5000).fadeOut();

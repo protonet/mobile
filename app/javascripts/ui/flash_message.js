@@ -1,3 +1,14 @@
+/**
+ * Use this for notifying users about a failed or succeeded operation
+ * Much more fancier than alert()!
+ *
+ * @example
+ *    // either
+ *    protonet.Notifications.trigger("flash_message.error", "Ouch something bad happened!");
+ *    
+ *    // or
+ *    protonet.ui.FlashMessage.show("error", "Ouch something bad happened!");
+ */
 protonet.ui.FlashMessage = {
   classNames: ["notice", "error", "warning"],
   TIMEOUT: 5000,
@@ -8,11 +19,20 @@ protonet.ui.FlashMessage = {
     if ($.trim(this.element.text())) {
       this.show();
     }
+    
+    this._observe();
+  },
+  
+  _observe: function() {
+    protonet.Notifications
+      .bind("flash_message.error flash_message.notice flash_message.warning", function(event, message) {
+        this.show(event.handleObj.namespace, message);
+      }.bind(this));
   },
   
   show: function(type, message) {
     if (message) {
-      // Using html() instead of text() here will open security holes
+      // Using html() instead of text() here would open security holes
       this.element.find("p").text(message);
     }
     

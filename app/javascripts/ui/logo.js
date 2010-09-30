@@ -1,5 +1,7 @@
 /**
  * Just some easter egg stuff :-)
+ *
+ * Let the monster jump via event notification monster.jump
  */
 protonet.ui.Logo = {
   monsters:       ["default", "business", "female", "surfer"],
@@ -8,10 +10,15 @@ protonet.ui.Logo = {
   initialize: function() {
     this.monster = $("header > .monster");
     this.monster.click(this.nextMonster.bind(this)).queue();
-    $(".heart").live("click", this.hearts.bind(this));
     if (this.monstersIndex != 0) {
       this.setMonster(this.monsters[this.monstersIndex]);
     }
+    this._observe();
+  },
+  
+  _observe: function() {
+    protonet.Notifications.bind("monster.jump", this.jumpMonster.bind(this));
+    $(".heart").live("click", this.hearts.bind(this));
   },
   
   nextMonster: function(event) {
