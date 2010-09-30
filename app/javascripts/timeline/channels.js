@@ -103,7 +103,7 @@ protonet.timeline.Channels = {
         success: function(response) {
           $.each(response, function(channelId, meeps) {
             $.each(meeps, function(i, meepData) {
-              protonet.Notifications.trigger("meep.receive", [meepsData]);
+              protonet.Notifications.trigger("meep.receive", [meepData]);
             });
           });
         }
