@@ -10,7 +10,8 @@ module System
       def config_wifi_interface(interface, ip)
         config_file = "#{configatron.shared_file_path}/config/ifconfig.d/#{interface}"
         return if File.exists?(config_file) # yeah doesn't handle ip changes
-        File.open(config_file, 'w') {|f| f.write("address #{ip}\nnetmask 255.255.255.0") }
+        File.open(config_file, 'w') {|f| f.write("#!/bin/bash\nifconfig #{interface} #{ip} netmask 255.255.255.0") }
+        `/bin/chmod +x #{config_file}`
         restart_interface(interface)
       end
       
