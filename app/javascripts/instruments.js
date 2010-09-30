@@ -13,12 +13,11 @@ $(function() {
   protonet.dispatcher.initialize();
   protonet.timeline.initialize();
   
+  // Init widgets
   new protonet.controls.UserWidget();
   new protonet.controls.FileWidget();
-});
-
-// Frickin' stunning cloud animation (makes your squirrel run in circles!!)
-$(function() {
+  
+  // Frickin' stunning cloud graphics (makes your squirrel run in circles!!)
   setTimeout(function() {
     new protonet.effects.Clouds($("#cloud-container"), {
       minStartPosition: -20,
@@ -29,10 +28,8 @@ $(function() {
       animated:         false
     });
   }, 100);
-});
 
-// Initialize fluid if the app is running in a fluid container
-$(function() {
+  // Initialize fluid if the app is running in a fluid container
   if (protonet.user.Browser.SUPPORTS_FLUID()) {
     new protonet.controls.Fluid();
   }
