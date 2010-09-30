@@ -163,7 +163,7 @@ protonet.controls.FileWidget.prototype = {
         this.createFolderInput();
         closeContextMenu();
       }.bind(this),
-      "Upload file": $.noop
+      "Upload file": function(li, closeContextMenu) { closeContextMenu(); }
     });
     
     var refresh = function() {
@@ -381,7 +381,7 @@ protonet.controls.FileWidget.prototype = {
         imageNames.push(fileName);
       }
       
-      messageText.push("  * file:" + downloadUrl);
+      messageText.push("• file:" + downloadUrl);
     }.bind(this)).join("\n");
     
     protonet.Notifications.trigger("form.custom_submit", [messageText.join("\n"), images.length ? {

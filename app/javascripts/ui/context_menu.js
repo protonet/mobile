@@ -4,12 +4,21 @@
  *
  * @example
  *    var contextMenu = new protonet.ui.ContextMenu("a.foo-bar", {
- *      "say hello": function() {},
- *      "show profile": function() {}
+ *      "say hello": function(li, closeContextMenu) {
+ *        // parameter 'li' is the link on which the user clicked to open the context menu
+ *        // parameter 'closeContextMenu' is a function that can be invoked in order to close the context menu
+ *      },
+ *      "show profile": function(li) {
+ *        showProfile(li.attr("data-user-id"));
+ *      }
  *    });
  *
  *    contextMenu.bind("open", function() {
  *      alert("context menu opened");
+ *    });
+ *
+ *    contextMenu.bind("close", function() {
+ *      alert("context menu closed");
  *    });
  */
 
