@@ -175,6 +175,7 @@
   -webkit-border-radius: 5px;
   border-radius: 5px;
   text-decoration: none;
+  display: inline-block;
 }
 
 .reply.channel {
