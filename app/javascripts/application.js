@@ -11,7 +11,6 @@
 //= require "ui/flash_message.js"
 //= require "ui/logo.js"
 //= require "utils/toggle_element.js"
-//= require "networkmonitor.js"
 
 //---------------------------- INITIALIZE APPLICATION ----------------------------
 

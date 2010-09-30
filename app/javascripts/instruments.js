@@ -6,7 +6,7 @@
 //= require "controls/user_widget.js"
 //= require "controls/pretty_date.js"
 //= require "controls/fluid.js"
-//-= require "networkmonitor.js"
+//= require "networkmonitor.js"
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
 $(function() {
