@@ -1,12 +1,13 @@
 /* =CHANNELS
 =========================================================================== */
 
-.channels#main {
+
+.channelslist#main {
   width: 490px;
 }
-  .channels#main > form,
-  .channels#main > ul,
-  .channels#main > div {
+  .channelslist#main > form,
+  .channelslist#main > ul,
+  .channelslist#main > div {
     padding: 20px 20px 0;
   }
 
@@ -19,7 +20,7 @@
     line-height: 1;
   }
 
-.channels#side {
+.channelslist#side {
   width: 360px;
   -moz-border-radius: 1em;
   -wkit-border-radius: 1em;
@@ -27,25 +28,25 @@
   margin-top: 20px;
 }
 
-.channels#main #create-channel {
+.channelslist#main #create-channel {
   padding: 10px 0 20px;  
   margin: 20px;
 }
-  .channels#main #create-channel h3 {
+  .channelslist#main #create-channel h3 {
     color: orange;
     font-weight: normal;
     font-style: italic;
     margin: 0 0 8px 0;
     text-align: center;
   }
-  .channels#main #create-channel input[type="text"] {
+  .channelslist#main #create-channel input[type="text"] {
     padding: 2px 4px;
     font-size: 12px;
     width: 212px;
     vertical-align: middle;
     margin: 0 0 7px 0;
   }
-  .channels#main #create-channel button {
+  .channelslist#main #create-channel button {
     width: 446px;
   }
 
@@ -73,7 +74,7 @@
   position: relative;
 }
 
-/*
+
 #channels {
   border-bottom: 1px solid rgb(140, 140, 140);
   margin: 0 20px 15px 30px;
@@ -158,6 +159,5 @@
   background: #ff7f31;
   right: 13px;
 }
-*/
 
 /* ==============================================================CHANNELS = */
