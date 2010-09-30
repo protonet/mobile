@@ -91,7 +91,7 @@ aside {
   vertical-align: top;
 }
 
-#main {
+section.main {
   width: 650px;
   min-height: 500px;
   margin: 0 20px 0 0;
@@ -378,4 +378,20 @@ header .hearts {
   cursor: pointer;
   height: 500px;
   font-size: 100px;
+}
+
+
+/* =SUB PAGES
+=========================================================================== */
+section.sub {
+  width: 895px;
+  padding: 20px;
+}
+
+.sub h2 {
+  margin-bottom: 20px;
+}
+
+.sub form {
+  margin-bottom: 20px;
 }

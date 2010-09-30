@@ -1,17 +1,178 @@
-<h2>Users</h2>
+<style>
+.options {
+  background: rgb(247, 247, 247);
+  border: 1px solid rgb(212, 212, 212);
+  padding: 10px;
+  display: inline-block;
+  vertical-align: top;
+  width: 350px;
+  float: left;
+}
+.options li {
+  margin: 0 0 0.5em;
+}
+.options .section {
+  -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
+  background: rgb(255, 255, 255) url(/images/bkg_message.png) repeat-x scroll left bottom;
+  border-radius: 0.5em;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  color: rgb(0, 0, 0);
+  font-size: 1.4em;
+  font-weight: bold;
+  padding: 1em 0.6em;
+  position: relative;
+  text-decoration: none;
+  z-index: 1;
+}
+.options .section input {
+  width: 215px;
+}
+.options .section .edit,
+.options .section .show,
+.options .section .destroy {
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: normal;
+}
+.options .control {
+  float: right;
+}
+.options .section .edit,
+.options .section .show,
+.options .section .destroy {
+  display: none;
+}
+.options .section:hover .edit,
+.options .section:hover .show,
+.options .section:hover .destroy {
+  display: inline;
+}
+.options .section.edit,
+.options .section.show,
+.options .section.create {
+  z-index: 0;
+  padding: 0;
+  top: -7px;
+}
+.options .section.create {
+  top: 0;
+}
+.hidden {
+  display: none;
+}
+.options .section.edit form,
+.options .section.show dl,
+.options .section.create form {
+  padding: 1em 0.6em;
+}
 
-<div id="users" class="users options">
-  <%= link_to "delete strangers older than 2 days", { :action => "delete_stranger_older_than_two_days" }, :class => "cleanup" %>
+.options .section .listen {
+  background: url(/images/spr_on_off.png) no-repeat;
+  display: inline-block;
+  height: 31px;
+  margin: 0 0 0 0.25em;
+  position :relative;
+  text-indent: -500em;
+  top: -5px;
+  width: 82px;
+}
+.options .section .off {
+  background-position: 0 0;
+}
+.options .section .on {
+  background-position: 0 -31px;
+}
 
-  <ul>
-    <%- @users.each do |u| -%>
-      <li id="user-<%= u.id %>">
-        <div class="index section">
-          <%= "<span>#{h u.display_name}</span>" %>
-        </div>
-      </li>
-    <%- end -%>
-  </ul>
-</div>
-<div id="users-details">
-</div>
+.options .section button {
+  background: transparent;
+  border: 0;
+  font-size: 1.0em;
+  margin: 0 0 0 0.5em;
+  outline: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+.options .section button span {
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  background: rgb(241, 241, 241);
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  display: block;
+  padding: 0.1em;
+}
+.options .section button span em {
+  background: rgb(151, 151, 151) url(/images/bkg_button.png) repeat-x scroll left bottom;
+  color: rgb(0, 0, 0);
+  display: block;
+  font-style: normal;
+  line-height: 14px;
+  padding: 0.2em 0.7em;
+}
+
+.users a.cleanup {
+  display: block;
+  font-size: 1.2em;
+  margin: 0 0 1em;
+  text-align: right;
+}
+.users dl:after {
+  clear: both;
+  content: ".";
+  display: block;
+  height: 0;
+  visibility: hidden;
+}
+.users dt {
+  clear: left;
+  float: left;
+  padding: 0.2em 0.4em;
+  vertical-align: top;
+}
+.users dd {
+  min-height: 1.4em;
+  padding: 0.2em 0.4em 0.2em 130px;
+  vertical-align: top;
+}
+
+#users-details {
+  background: rgb(247, 247, 247);
+  border: 1px solid rgb(212, 212, 212);
+  padding: 10px;
+  margin-left: 20px;
+  width: 480px;
+  float:left;
+}
+
+#users-details h3 {
+  font-size: 1.4em;
+  font-weight: bold;
+  margin: 0 0 0.1em;
+  display: inline;
+}
+
+#users-details h4 {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 0.1em 0 0.3em;
+}
+</style>
+
+<section class="sub main">
+  <h2>Users</h2>
+
+  <div id="users-page" class="users options">
+    <%= link_to "delete strangers older than 2 days", { :action => "delete_stranger_older_than_two_days" }, :class => "cleanup" %>
+
+    <ul>
+      <%- @users.each do |u| -%>
+        <li id="user-<%= u.id %>">
+          <div class="index section">
+            <%= "<span>#{h u.display_name}</span>" %>
+          </div>
+        </li>
+      <%- end -%>
+    </ul>
+  </div>
+  <output id="users-details"></output>
+</section>

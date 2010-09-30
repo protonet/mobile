@@ -1,4 +1,4 @@
-<section id="main">
+<section class="main">
   <%- message_hint = current_user.stranger? ? 'welcome stranger! talk to us...' : "go ahead @#{current_user.display_name}, I'm all yours..." %>
   <%- form_for :tweet, :url => tweets_path, :html => { :id => "message-form" } do |f| -%>
     <%= f.hidden_field(:channel_id, :name => "tweet[channel_id]", :autocomplete => "off") %>

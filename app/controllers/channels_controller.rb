@@ -52,7 +52,7 @@ class ChannelsController < ApplicationController
     if(channel && channel.owned_by(current_user)) 
       success = channel.destroy
       if success && channel.errors.empty?
-        flash[:notice] = "Successfully deleted channel '#{h(channel.name)}'"
+        flash[:notice] = "Successfully deleted channel '#{channel.name}'"
       else
         flash[:error] = "Could not delete channel '#{h(channel.name)}'"
       end

@@ -17,7 +17,7 @@ $(function() {
   })
   
   // add clickabilty to menus
-  $("#preferences ul li").click(function(event){
+  $("#preferences-page ul li").click(function(event){
     var preference = event.currentTarget.id;
     $("#preferences-details").load("/preferences/" + preference, function(){
       // now initiate controls
@@ -32,7 +32,7 @@ $(function() {
   if(location.hash) {
     $(location.hash).click();
   } else {
-    $("#preferences li:first").click();
+    $("#preferences-page li:first").click();
   }
 
 });

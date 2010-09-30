@@ -4,14 +4,14 @@ $(function() {
 });
 
 $(function() {
-  $("#users ul li").click(function(event){
+  $("#users-page ul li").click(function(event){
     $("#users-details").load("/users/" + event.currentTarget.id.match(/user-(.*)/)[1]);
-    $("#users ul li.clicked").toggleClass("clicked");
+    $("#users-page ul li.clicked").toggleClass("clicked");
     $(this).toggleClass("clicked");
   });
   if(location.hash) {
     $("#user-" + location.hash.substring(1)).click();
   } else {
-    $("#users li:first").click();
+    $("#users-page li:first").click();
   }
 });
