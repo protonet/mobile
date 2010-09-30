@@ -44,6 +44,7 @@
 
 .meeps article p {
   white-space: pre-wrap;
+  overflow: hidden;
 }
 
 .meeps .avatar {

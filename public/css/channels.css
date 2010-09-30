@@ -4,7 +4,7 @@
 #channels {
   border-bottom: 1px solid rgb(140, 140, 140);
   margin: 0 20px 15px 30px;
-  padding: 0 110px 0 15px;
+  padding: 0 0 0 15px;
   position: relative;
 }
 
@@ -14,10 +14,14 @@
 }
 
 #channels li {
-  margin-top: 5px;
+  margin-top: 3px;
   display: inline-block;
   vertical-align: bottom;
   position: relative;
+}
+
+#channels li:last-child {
+  margin-right: 100px;
 }
 
 #channels li a {
@@ -32,7 +36,7 @@
   border: 1px solid rgb(180, 180, 180);
   color: rgb(140, 140, 140);
   display: block;
-  line-height: 24px;
+  line-height: 22px;
   padding: 0 10px;
   position: relative;
   text-decoration: none;
@@ -51,12 +55,12 @@
 }
 
 #channels .manage-channels {
-  bottom: 2px;
-  color: rgb(180, 180, 180);
-  font-size: 11px;
+  color: rgb(170, 170, 170);
+  font-size: 12px;
+  text-decoration: none;
   position: absolute;
   right: 5px;
-  text-decoration: none;
+  bottom: 2px;
 }
 
 #channels .badge,

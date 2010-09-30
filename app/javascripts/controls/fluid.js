@@ -4,7 +4,7 @@ protonet.controls.Fluid = function() {
   this.fluid = window.fluid;
   this.unreadMessages = 0;
   
-  protonet.Notifications.bind("message.new", function(e, message) {
+  protonet.Notifications.bind("meep.receive", function(e, meepData) {
     if (protonet.utils.isWindowFocused()) {
       return;
     }
@@ -12,12 +12,12 @@ protonet.controls.Fluid = function() {
     this.unreadMessages++;
     this.fluid.dockBadge = this.unreadMessages;
     this.fluid.showGrowlNotification({
-      title: message.author, 
-      description: message.message, 
+      title: meepData.author, 
+      description: meepData.message,
       priority: 1,
       sticky: false,
-      identifier: "protonet-message-" + message.id,
-      icon: protonet.config.base_url + "/" + message.user_icon_url
+      identifier: "protonet-message-" + meepData.id,
+      icon: protonet.config.base_url + "/" + meepData.avatar
     });
   }.bind(this));
   
