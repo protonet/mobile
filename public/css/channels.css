@@ -1,79 +1,6 @@
 /* =CHANNELS
 =========================================================================== */
 
-.channels#main {
-  width: 490px;
-}
-  .channels#main > form,
-  .channels#main > ul,
-  .channels#main > div {
-    padding: 20px 20px 0;
-  }
-
-  #channels-search {
-    width: 433px;
-    padding: 5px 6px 7px;
-    border-width: 3px;
-    border-color: #888 #ccc #ccc #888;
-    font: 16px/1.4em Verdana,sans-serif;
-    line-height: 1;
-  }
-
-.channels#side {
-  width: 360px;
-  -moz-border-radius: 1em;
-  -wkit-border-radius: 1em;
-  border-radius: 1em;
-  margin-top: 20px;
-}
-
-.channels#main #create-channel {
-  padding: 10px 0 20px;  
-  margin: 20px;
-}
-  .channels#main #create-channel h3 {
-    color: orange;
-    font-weight: normal;
-    font-style: italic;
-    margin: 0 0 8px 0;
-    text-align: center;
-  }
-  .channels#main #create-channel input[type="text"] {
-    padding: 2px 4px;
-    font-size: 12px;
-    width: 212px;
-    vertical-align: middle;
-    margin: 0 0 7px 0;
-  }
-  .channels#main #create-channel button {
-    width: 446px;
-  }
-
-.network p {
-  font-size: 12px;
-  font-style: italic;
-  padding: 0 0 5px 5px;
-  background: -moz-linear-gradient(100% 100% 90deg, rgba(150, 150, 150, 0.1), transparent);
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(150, 150, 150, 0.1)));
-  border: 1px solid rgb(220, 220, 220);
-  -moz-border-radius: 1em 1em 0 0;
-  -wkit-border-radius: 1em 1em 0 0;
-  border-radius: 1em 1em 0 0;
-  padding: 7px 14px 5px;
-  margin: 0 0 3px 0;
-  display: inline-block;
-}
-
-.channel {
-  background: -moz-linear-gradient(100% 100% 90deg, rgba(0, 0, 0, 0.1), transparent);
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.1)));
-  border: 1px solid rgb(180, 180, 180);
-  margin: 0 0 10px;
-  padding: 10px;
-  position: relative;
-}
-
-/*
 #channels {
   border-bottom: 1px solid rgb(140, 140, 140);
   margin: 0 20px 15px 30px;
@@ -158,6 +85,5 @@
   background: #ff7f31;
   right: 13px;
 }
-*/
 
 /* ==============================================================CHANNELS = */
