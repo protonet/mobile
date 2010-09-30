@@ -11,28 +11,20 @@
 //= require "ui/flash_message.js"
 //= require "ui/logo.js"
 //= require "utils/toggle_element.js"
-//= require "lib/jQuery.dPassword.js"
-//= require "networkmonitor.js"
 
 //---------------------------- INITIALIZE APPLICATION ----------------------------
 
 $(function() {
   protonet.user.initialize();
-});
-
-// add inline hints
-$(function() {
+  
+  // Inline hints
   $("input:text[title], input:password[title], textarea[title]").each(function() {
     var input = $(this);
     new protonet.utils.InlineHint(input, input.attr("title"));
   });
-});
-
-// add notification message neatification
-$(function() {
+  
+  // add notification message neatification
   protonet.ui.FlashMessage.initialize();
-});
-
-$(function() {
+  
   protonet.ui.Logo.initialize();
 });

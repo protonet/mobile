@@ -139,7 +139,7 @@ protonet.timeline.Form = {
   submit: function(event) {
     event && event.preventDefault();
     
-    if (this.input.val().trim() == "") {
+    if ($.trim(this.input.val()) == "") {
       return;
     }
     

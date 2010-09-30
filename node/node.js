@@ -8,14 +8,15 @@ connection.addListener("error", function(){
   console.log("error trying to reach the rabbit, please start your rabbitmq-server");
 });
 connection.addListener("ready", function() {
-  var exchange      = connection.exchange("system"),
+  var exchange      = connection.exchange("worker"),
       userExchange  = connection.exchange("users"),
       workerQueue   = connection.queue("node-worker");
   
-  workerQueue.bind(exchange, "worker.#");
+  workerQueue.bind(exchange, "#");
   workerQueue.subscribeJSON(function(message) {
     sys.puts("worker queue message");
-    sys.puts(sys.inspect(message));
+    sys.puts(message.data);
+    message = JSON.parse(message.data);
     
     var publish = function(result) {
       userExchange.publish("users." + message.user_id, { result: result, trigger: "workdone" });

@@ -246,7 +246,7 @@ class ClientConnection < FlashServer
 
   def send_work_request(data)
     data[:user_id] = @user.id
-    publish 'system', '#', data
+    publish 'worker', '#', data
   end
 
   def send_and_publish(topic, key, data)
