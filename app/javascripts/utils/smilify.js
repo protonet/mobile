@@ -18,7 +18,7 @@ protonet.utils.smilify = (function() {
     { shortcuts: [":-)", ":)"], className: "grin" },
     { shortcuts: [":-O", ":O", ":-o", ":o"], className: "amazed" },
     { shortcuts: [":-(", ":("], className: "sad" },
-    { shortcuts: [":'-(", ":'("], className: "cry" },
+    { shortcuts: [":'-(", ":'(", ";("], className: "cry" },
     { shortcuts: [">:O", ">:-O", ":@", ">:-(", ">:("], className: "angry" },
     { shortcuts: [":-P", ":P"], className: "tongue" },
     { shortcuts: ["B-)", "B)", "8-)", "8)"], className: "glasses" },
