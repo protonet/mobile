@@ -129,7 +129,7 @@ Node.prototype = {
       var box;
       var borderradius = (this.info.type == 'client' ? h/2 : 5);
       if (is_small && this.info.type == 'client') {
-        box = this.paper.circle(this.position.x, this.position.y, 5);
+        box = this.paper.circle(this.position.x, this.position.y, 7);
       } else {
         box = this.paper.rect(this.position.x - (w / 2), this.position.y - (h / 2), w, h, borderradius);
       }
@@ -698,7 +698,7 @@ Graph.prototype = {
     //return this.testFiveNodes();
     //return this.testSixNodes();
     //return this.testComplex01();
-    return this.testComplex02();
+    //return this.testComplex02();
   
     var nodes = new Array();
     for (var i = 0; i < networks.length; i++) {
@@ -968,7 +968,7 @@ Graph.prototype = {
 
         // position clients circular around node
         if (clients.length > 0) {
-          var radius = (this.small ? 20.0 : 30.0) + 25; // + (clients.length * (this.small ? 4.0 : 5.0));
+          var radius = (this.small ? 30.0 : 50.0); // + 25 + (clients.length * (this.small ? 4.0 : 5.0));
           var angle  = 360.0 / clients.length;
           for (var c = 0; c < clients.length; c++) {
             var client = clients[c];
