@@ -48,6 +48,11 @@
   background-color: rgba(0, 0, 0, 0.06) !important;
 }
 
+.widget li.error > * {
+  color: red;
+  opacity: 0.5;
+}
+
 .widget ul {
   overflow: auto;
   height: 170px;

@@ -16,5 +16,6 @@ protonet.translations = {
   DEFAULT_DIRECTORY: "New folder",
   DIRECTORY_EXISTS_ERROR: "Folder already exists. Please choose a different name.",
   UNKNOWN_ERROR: "An error occured. Please try again",
-  LOADING_MEEPS_ERROR: "We couldn't load and set up your channels. A maintenance monster is already informed."
+  LOADING_MEEPS_ERROR: "We couldn't load and set up your channels. A maintenance monster is already informed.",
+  UPLOAD_IN_PROGRESS: "An upload is currently in progress which would be broken up. Are you sure?"
 };

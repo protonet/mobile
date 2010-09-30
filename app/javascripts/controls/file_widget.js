@@ -43,6 +43,15 @@ protonet.controls.FileWidget.prototype = {
         this.list.find("[data-file-path='" + data.path + "']").detach();
       }.bind(this))
       
+      .bind("file.added", function(event, data) {
+        if (data.channel_id != this.channelId || data.path != this.path) {
+          return;
+        }
+        this.renderItem("file", data.file_name)
+          .css("backgroundColor", "#ffff99")
+          .animate({ "backgroundColor": "#ffffff" }, { duration: 1000 });
+      }.bind(this))
+      
       .bind("directory.removed", function(event, data) {
         if (data.channel_id != this.channelId) {
           return;
@@ -163,7 +172,7 @@ protonet.controls.FileWidget.prototype = {
         this.createFolderInput();
         closeContextMenu();
       }.bind(this),
-      "Upload file": function(li, closeContextMenu) { closeContextMenu(); }
+      "Upload file": function(li, closeContextMenu) {}
     });
     
     var refresh = function() {
@@ -179,22 +188,66 @@ protonet.controls.FileWidget.prototype = {
      */
     var timestamp   = new Date().getTime(),
         list        = this.uploadContextMenu.list,
-        browseLink  = list.children(":eq(1)").attr("id", "browse:" + timestamp);
+        browseLink  = list.children(":eq(1)").attr("id", "browse:" + timestamp),
+        progress    = $("<span />", { className: "progress", text: "(0 %) " });
     
     this.uploader = new plupload.Uploader({
-      runtimes:       "html5,flash,html4",
+      runtimes:       "html5,flash",
       browse_button:  browseLink.attr("id"),
       container:      browseLink.attr("id"),
       max_file_size:  "1000mb",
-      url:            "upload.php",
+      url:            "",
       flash_swf_url:  "/flash/plupload.flash.swf",
       drop_element:   this.dropArea.attr("id")
     });
     
     this.uploader.bind("FilesAdded", function(uploader, files) {
-      $.each(files, function(i, file) { this.renderItem("file", file.name).addClass("disabled"); }.bind(this));
+      $.each(files, function(i, file) {
+        this.renderItem("file", file.name)
+          .attr("id", "file-" + file.id)
+          .addClass("disabled")
+          .children("a")
+          .prepend(progress.clone());
+      }.bind(this));
       this.list.attr("scrollTop", this.list.attr("scrollHeight"));
       this.dropArea.trigger("dragleave");
+    }.bind(this));
+    
+    this.uploader.bind("QueueChanged", function(uploader, files) {
+      uploader.settings.url = this._getUploadUrl();
+      uploader.start();
+    }.bind(this));
+    
+    this.uploader.bind("UploadProgress", function(uploader, file) {
+      this.list.find("#file-" + file.id + " .progress").text("(" + file.percent + " %) ");
+    }.bind(this));
+    
+    this.uploader.bind("BeforeUpload", function(uploader, file) {
+      window.onbeforeunload = function() {
+        return protonet.t("UPLOAD_IN_PROGRESS");
+      };
+    });
+    
+    this.uploader.bind("FileUploaded", function(uploader, file) {
+      window.onbeforeunload = null;
+      this.list.find("#file-" + file.id).detach();
+    }.bind(this));
+    
+    this.uploader.bind("Error", function(uploader, error) {
+      window.onbeforeunload = null;
+      
+      protonet.Notifications.trigger(
+        "flash_message.error",
+        "Error: " + error.message +
+        "(Code: " + error.code + ", Status " + error.status + ") ");
+      
+      try {
+        this.list.find("#file-" + error.file.id)
+          .removeClass("disabled")
+          .addClass("error")
+          .find(".progress")
+          .text("(error) ");
+      } catch(e) {};
     }.bind(this));
     
     this.dropArea

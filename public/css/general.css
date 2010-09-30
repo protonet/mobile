@@ -371,6 +371,11 @@ header .hearts {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
-  height: 100px !important;
   width: 500px !important;
+}
+
+.context-menu li .plupload input {
+  cursor: pointer;
+  height: 500px;
+  font-size: 100px;
 }
