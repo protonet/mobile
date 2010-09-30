@@ -1,40 +1,3 @@
-//* ------------------------------------------------- */
-/* Vertex class */
-
-var Vertex = function(x, y) {
-  this.x = x;
-  this.y = y;
-};
-
-Vertex.prototype = {
-  sum: function(v) {
-    return new Vertex(this.x + v.x, this.y + v.y);
-  },
-  diff: function(v) {
-    return new Vertex(this.x - v.x, this.y - v.y);
-  },
-  prod: function(scalar) {
-    return new Vertex(this.x * scalar, this.y * scalar);
-  },
-  quot: function(scalar) {
-    return new Vertex(this.x / scalar, this.y / scalar);
-  },
-  len: function() {
-    return Math.sqrt(this.x * this.x + this.y * this.y);
-  },
-  scale: function(len) {
-    return this.norm().prod(len);
-  },
-  norm: function() {
-    return this.quot(this.len());
-  },
-  dot: function(v) {
-    return (this.x * v.x + this.y * v.y);
-  },
-  inverse: function() {
-    return this.prod(-1.0);
-  }
-};
 
 /* ------------------------------------------------- */
 /* ID Generator class */
@@ -45,7 +8,7 @@ var NodeIDGenerator = {
     this.last++;
     return this.last;
   }
-}
+};
 
 /* ------------------------------------------------- */
 /* Graph Node class */
@@ -208,34 +171,40 @@ Node.prototype = {
     if (this.info.type == "client" && this.tmp.name.length > 0
         && this.visual_title && this.visual_box) {
       
+      //console.log("updating "+this.info.name+" "+this.info.angle);
+      
       // set title
       this.visual_title.attr({text: this.tmp.name});
-      var bb = this.visual_title.getBBox();
-      var w = bb.width + 16;
-      var h = bb.height + 12;
+
+      var bbt = this.visual_title.getBBox();
+      var bbb = this.visual_box.getBBox();
+      this.visual_title.translate(-bbt.x, -bbt.y);
+      this.visual_box.translate(-bbb.x, -bbb.y);
+
       // update box size
-      this.visual_box.attr({width: w, height: h});
+      this.visual_box.attr({width: bbt.width + 16, height: bbt.height + 12});
       
-      // QUICK FIX
-      this.visual_title.translate(14,-1);
-      //this.visual_title.attr({cx: this.position.x, cy: this.position.y}); //translate(14,-1);
-      //this.visual_title.translate(-bb.x + position.x, -bb.y + position.y);
+      this.visual_title.translate(this., 0);
+      this.visual_box.translate(-diff, 0);
+      
+      this.tmp.name = "";
     }
    
-    // rotate if client
-    if (this.info.type == 'client') {
-      // move visual so that it does not overlap local-node
-      // vector from local-node to this client-node
-      var dir  = this.position.diff(this.info.nodepos);
-      var diff = dir.scale(this.visual.getBBox().width / 2 - 6);
-      this.visual.translate(diff.x, diff.y);
-      this.visual.rotate(this.info.angle, false);
-    }
-
     // update the position of the visual
     var bb = this.visual.getBBox();
     this.visual.translate(-bb.x + this.position.x - bb.width/2, -bb.y + this.position.y - bb.height/2);
     
+    // rotate if client
+    if (this.info.type == 'client') {
+      // move visual so that it does not overlap local-node
+      // vector from local-node to this client-node
+      //var dir = this.position.diff(this.info.nodepos);
+      //var diff = dir.scale(this.visual.getBBox().width / 2 - 6);
+      //this.visual.translate(diff.x, diff.y);
+      
+      //this.visual.rotate(this.info.angle, false);
+    }
+
     // show visual on mouse-over
     this.visual.n = this;
     this.visual.mouseover(function() {
@@ -303,7 +272,7 @@ Edge.prototype = {
   activate: function() {
     this.active = true;
   },
-}
+};
 
 /* ------------------------------------------------- */
 /* Graph class */
@@ -326,13 +295,8 @@ var Graph = function(target_id, maxIterations, small) {
   this.area = this.w * this.h;
   
   // create info layer
-  this.infolayer = this.paper.rect(0,0,100,100, 10);
-  this.infolayer.attr({fill: "white", stroke: "#ccc", "stroke-width": 1});
-  this.infolayerline = this.paper.path("M0,0 L10,10");
-  this.infolayerline.attr({stroke: "#ccc", "stroke-width": 1});
-  this.infolayertext = this.paper.text(0,0,"hello");
-  this.infolayertext.attr({fill: "#333"});
-  this.hideInfo();
+  this.infobubble = new Speechbubble(this.paper, this.w, this.h);
+  this.infobubble.hide();
   
   this.maxNumDisplayedClients = 5;
   
@@ -361,8 +325,7 @@ Graph.prototype = {
   },
 
   showInfo: function(node) {
-    var nodepos = node.position.sum(this.centerVertex);
-    
+    // determine text to show
     var text = "";
     if (node.tmp.name != "") {
       // "x more" text...
@@ -400,37 +363,22 @@ Graph.prototype = {
         "type: "+node.info.type+"\n"+
         "name: "+node.info.name
     }
-    
-    // load node info into info layer
-    this.infolayertext.attr({text: text});
-    //console.log("node #"+node.info.id);
-    
-    var bb = this.infolayertext.getBBox();
-    this.infolayer.attr({
-      width: bb.width + 20,
-      height: bb.height + 20
-    });
-    this.infolayer.attr({
-      x: nodepos.x + 30, 
-      y: nodepos.y - ((bb.height + 20) / 2)
-    });
-    this.infolayertext.attr({
-      x: nodepos.x + 30 + ((bb.width + 20) / 2), 
-      y: nodepos.y
-    });
-    this.infolayerline.attr({
-      path: "M"+nodepos.x+","+nodepos.y+" "+
-            "L"+(nodepos.x + 30)+","+nodepos.y
-    });
 
-    //this.infolayerline.toFront();
-    this.infolayer.toFront();
-    this.infolayertext.toFront();
+    this.infobubble.setText(text);
     
-    this.infolayerline.show();
-    this.infolayer.show();
-    this.infolayertext.show();
+    var nodepos = node.position.sum(this.centerVertex);
+    this.infobubble.setTargetPos(nodepos);
     
+    var bb = node.visual.getBBox(); // we can be sure there is one at this point!
+    if (node.info.type == 'client') {
+      this.infobubble.setTargetOffset(7);    
+    }
+    else {
+      this.infobubble.setTargetOffset(bb.width / 2 - 3);     
+    }
+    
+    this.infobubble.show();
+
     // highlight connected edges
     for (var e = 0; e < this.edges.length; e++) {
       var edge = this.edges[e];
@@ -443,11 +391,9 @@ Graph.prototype = {
   },
   
   hideInfo: function(node) {
-    this.infolayertext.hide();
-    this.infolayer.hide();
-    this.infolayerline.hide();
+    this.infobubble.hide();
 
-    // highlight connected edges
+    // un-highlight connected edges
     for (var e = 0; e < this.edges.length; e++) {
       var edge = this.edges[e];
       var u = edge.fromNode;
@@ -736,7 +682,7 @@ Graph.prototype = {
     //return this.testFiveNodes();
     //return this.testSixNodes();
     //return this.testComplex01();
-    //return this.testComplex02();
+    return this.testComplex02();
   
     var nodes = new Array();
     for (var i = 0; i < networks.length; i++) {
@@ -1102,8 +1048,8 @@ Graph.prototype = {
       //console.log("i: "+this.iters);
       this.layout();
       this.iters++;
-    }    
-    this.render_graph();    
+    }
+    this.render_graph();
   },
 
   restart: function() {

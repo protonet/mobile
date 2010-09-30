@@ -1,4 +1,6 @@
 //= require "lib/raphael-min.js"
+//= require "lib/vertex.js"
+//= require "lib/speechbubble.js"
 //= require "lib/graphkit.js"
 
 var NetworkGraph;
