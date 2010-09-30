@@ -1,12 +1,10 @@
-<h2>Channels</h2>
-<div id="channels">
-
+<section id="main" class="channels">
   <form action="/channels/search" class="search">
     <fieldset>
-      <input type="text" value="<%= params[:description] %>" name="description" title="search for interesting channels…"/>
+      <input id="channels-search" type="text" value="<%= params[:description] %>" name="description" title="search for interesting channels…"/>
     </fieldset>
   </form>
-
+	
   <ul class="channel-list">
     <% @networks.each do |n| %>
     <li class="network" id="network-<%= n.id %>">
@@ -25,18 +23,24 @@
     <% end %>
   </ul>
 
+<% if false %>
   <%= link_to 'create a channel', "#", :class => "create", :rel => "create" %>
+<% end %>
 
-  <div id="create" class="create section hidden">
-    <%- form_for :channel, :url => channels_path, :action => 'post' do |f| -%>
-      <fieldset>
-        <%= f.text_field :name, { :title => 'Name of the channel…' } %>
-        <%= f.text_field :description, { :title => 'Description of the channel…' } %>
-        <%= button 'Create' %>
-      </fieldset>
-    <%- end -%>
-  </div>
+	<div id="create-channel">
+	  <h3>Create a channel</h3>
+	    <%- form_for :channel, :url => channels_path, :action => 'post' do |f| -%>
+	      <fieldset>
+	        <%= f.text_field :name, { :title => 'Name of the channel…' } %>
+	        <%= f.text_field :description, { :title => 'Description of the channel…' } %>
+	        <%= button 'Create' %>
+	      </fieldset>
+	    <%- end -%>
+	</div>
+</section>
 
-</div>
-<div id="channels-details">
-</div>
+
+<aside id="side" class="channels">
+	channel details...
+</aside>
+
