@@ -103,17 +103,3 @@ String.prototype.isEmail = (function() {
 Number.prototype.px = function() {
   return this + "px";
 };
-
-
-
-
-//---------------------------- HTML5 FILE ----------------------------
-if (/object|function/.test(typeof(File))) {
-  File.prototype.asObject = function() {
-    return { id: this.getId(), name: this.fileName, size: this.fileSize };
-  };
-  
-  File.prototype.getId = function() {
-    return this.fileSize + "-" + this.fileName.replace(/[^a-z0-9]/gi, "");
-  };
-}
