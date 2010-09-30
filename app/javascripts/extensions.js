@@ -6,7 +6,7 @@ if (typeof(console) == "undefined" || typeof(console.log) != "function") {
 
 
 //---------------------------- FUNCTION ----------------------------
-Function.prototype.bind = function () {
+Function.prototype.bind = function() {
   if (arguments.length < 2 && arguments[0] === undefined) {
     return this;
   }
@@ -21,9 +21,54 @@ Function.prototype.bind = function () {
 
 
 
+//---------------------------- ARRAY ----------------------------
+Array.prototype.chunk = (function() {
+  var DELAY = 50,
+      MAX_EXECUTION_TIME = 50;
+  return function(iterator, callback) {
+    var arr = this, i = 0, iterationLength = arr.length, time;
+    var perform = function() {
+      time = new Date();
+      while (i<iterationLength) {
+        iterator(arr[i], i);
+        i++;
+        if ((new Date() - time) > MAX_EXECUTION_TIME) {
+          /** Breathe */
+          setTimeout(function() { perform(); }, DELAY);
+          return;
+        }
+      }
+      callback && setTimeout(callback, DELAY);
+    };
+    perform();
+  };
+})();
+
+if (!Array.prototype.indexOf) {
+  Array.prototype.indexOf = function(item, i) {
+    i || (i = 0);
+    var length = this.length;
+    if (i < 0) i = length + i;
+    for (; i < length; i++) {
+      if (this[i] === item) {
+        return i;
+      }
+    }
+    return -1;
+  };
+}
+
+
+
+
 //---------------------------- STRING ----------------------------
 String.prototype.startsWith = function(str) {
   return this.indexOf(str) === 0;
+};
+
+String.prototype.endsWith = function(str) {
+  var d = this.length - str.length;
+  return d >= 0 && this.lastIndexOf(str) === d;
 };
 
 String.prototype.truncate = function(length) {
@@ -58,18 +103,3 @@ String.prototype.isEmail = (function() {
 Number.prototype.px = function() {
   return this + "px";
 };
-
-
-
-
-//---------------------------- HTML5 FILE ----------------------------
-if (/object|function/.test(typeof(File))) {
-  File.prototype.asObject = function() {
-    return { id: this.getId(), name: this.fileName, size: this.fileSize };
-  };
-  
-  File.prototype.getId = function() {
-    return this.fileSize + "-" + this.fileName.replace(/[^a-z0-9]/gi, "");
-  };
-  
-}

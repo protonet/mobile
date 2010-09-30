@@ -53,8 +53,8 @@ class ClientConnection < FlashServer
     elsif (@user || node?) && data.is_a?(Hash)
       case data["operation"]
         
-        when /^user\.(.*)/
-          update_user_status($1)
+        when /^user\.typing/
+          update_user_typing_status(data["operation"])
           
         when 'ping'
           send_ping_answer
@@ -66,8 +66,7 @@ class ClientConnection < FlashServer
           log "Pulling channel list off #{data['supernode']}"
           network = Network.new :supernode => data['supernode']
           
-          send_json :x_target  => 'protonet.Notifications.triggerFromSocket',
-                    :trigger   => 'network.probe',
+          send_json :trigger   => 'network.probe',
                     :supernode => data['supernode'],
                     :channels  => network.get_channels
         
@@ -78,27 +77,23 @@ class ClientConnection < FlashServer
                                 :description => data['description'],
                                 :supernode => data['supernode']
           
-          send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
-                    :trigger     => 'network.creating',
+          send_json :trigger     => 'network.creating',
                     :message     => 'Probing remote node...'
           
           info = network.negotiate
           
-          send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
-                    :trigger     => 'network.creating',
+          send_json :trigger     => 'network.creating',
                     :message     => 'Creating local entry for remote node...'
           
           network.save
           
-          send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
-                    :trigger     => 'network.creating',
+          send_json :trigger     => 'network.creating',
                     :message     => 'Importing channels...'
           
           data['channels'].each do |uuid|
             chan = info['channels'][uuid]
             
-            send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
-                      :trigger     => 'network.creating',
+            send_json :trigger     => 'network.creating',
                       :message     => 'Importing channel: ' + chan['name']
             
             Channel.create :name => chan['name'],
@@ -108,14 +103,12 @@ class ClientConnection < FlashServer
               :network_id => network.id
           end
           
-          send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
-                    :trigger     => 'network.creating',
+          send_json :trigger     => 'network.creating',
                     :message     => 'Initiating persistant connection...'
 
           NodeConnection.connect network, @tracker, info['config']['socket_server_host'], info['config']['socket_server_port']
           
-          send_json :x_target    => 'protonet.Notifications.triggerFromSocket',
-                    :trigger     => 'network.create',
+          send_json :trigger     => 'network.create',
                     :id          => network.id,
                     :name        => data['name'],
                     :description => data['description'],
@@ -169,7 +162,7 @@ class ClientConnection < FlashServer
         
         if @user
           log("authenticated #{@user.display_name}")
-          send_json :x_target => 'socket_id', :socket_id => @key
+          send_json :trigger => 'socket.update_id', :socket_id => @key
         else
           log("could not authenticate user #{auth_data.inspect}")
           return false
@@ -213,10 +206,14 @@ class ClientConnection < FlashServer
   end
   
   def refresh_users
-    send_and_publish 'system', 'users',
-      :x_target => "protonet.Notifications.triggerFromSocket",
+    data = {
       :online_users => @tracker.global_users,
-      :trigger => 'user.update_online_states'
+      :trigger => 'users.update_status'
+    }
+    send_and_publish 'system', 'users', data
+    # FIXME: Dunno why but we've to send the data to the current user again
+    # because it sometimes doesn't reach him (we've to investigate)
+    # send_json(data)
   end
   
   def fill_channel_users
@@ -233,19 +230,18 @@ class ClientConnection < FlashServer
       filtered_channel_users[channel.id] = @tracker.channel_users[channel.id]
     end
     
-    send_json :x_target => 'protonet.Notifications.triggerFromSocket',
-              :trigger => 'channel.update_subscriptions',
+    send_json :trigger => 'channels.update_subscriptions',
               :data => filtered_channel_users
   end
   
-  def update_user_status(status)
+  def update_user_typing_status(operation)
     send_and_publish 'system', 'users',
-      :x_target => "protonet.globals.userWidget.updateWritingStatus",
-      :data => {:user_id => @user.id, :status => status}
+      :trigger => operation,
+      :user_id => @user.id
   end
 
   def send_ping_answer
-    send_json :x_target => "protonet.globals.dispatcher.pingSocketCallback"
+    send_json :trigger => "socket.ping_received"
   end
 
   def send_work_request(data)
@@ -255,17 +251,12 @@ class ClientConnection < FlashServer
 
   def send_and_publish(topic, key, data)
     publish topic, key, data
-    
-    # due to some weird behaviour when calling publish
-    # we need to send the data directly to the current socket
-    send_json data
   end
 
   def bind_socket_to_system_queue
     bind 'system', '#' do |json|
       log("got system message: #{json.inspect}")
       
-      json['x_target'] ||= 'protonet.Notifications.triggerFromSocket' # jquery object
       send_json json
     end
   end
@@ -284,24 +275,18 @@ class ClientConnection < FlashServer
   def bind_channel(channel)
     bind 'channels', channel.uuid do |json|
       sender_socket_id = json['socket_id']
-      # TODO the next line and this method need refactoring
-      # TODO handle unsubscribing in the first place
-      #queue.unsubscribe if json['trigger'] == "channel.unsubscribe"
-      json['x_target'] ||= 'protonet.globals.communicationConsole.receiveMessage'
       send_json json if !sender_socket_id || sender_socket_id.to_i != @key
     end
   end
 
   def bind_files_for_channel(channel)
     bind 'files', 'channel', channel.uuid do |json|
-      json['x_target'] ||= 'protonet.Notifications.triggerFromSocket' # jquery object
       send_json json
     end
   end
 
   def bind_user
     bind 'users', @user.id do |json|
-      json['x_target'] ||= 'protonet.Notifications.triggerFromSocket' # jquery object
       send_json json
     end
   end

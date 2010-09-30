@@ -1,5 +1,4 @@
 //= require "../../utils/escape_html.js"
-//= require "../../utils/prettify_diff.js"
 //= require "../../lib/google_code_prettify.js"
 
 protonet.text_extensions.render.code = function(data, hide) {

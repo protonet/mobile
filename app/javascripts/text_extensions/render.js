@@ -1,6 +1,7 @@
 //= require "../utils/escape_html.js"
 //= require "../utils/strip_tags.js"
 //= require "../utils/parse_url.js"
+//= require "../utils/template.js"
 
 /**
  * Supported fields:
@@ -31,8 +32,6 @@
  *
  */
 protonet.text_extensions.render = (function() {
-  var template;
-  
   var mediaTypeDetection = {
     flash:    function(data) { return data.flash && typeof(data.flash) == "string"; },
     image:    function(data) { return data.image && typeof(data.image) == "string"; },
@@ -57,9 +56,7 @@ protonet.text_extensions.render = (function() {
   }
   
   return function(container, data) {
-    template = template || $($("#text-extension-template").html());
-    
-    var results     = template.clone(),
+    var results     = new protonet.utils.Template("text-extension-template").toElement(),
         description = protonet.utils.escapeHtml(protonet.utils.stripTags(data.description || "")),
         title       = protonet.utils.escapeHtml(protonet.utils.stripTags(data.title || "")),
         provider    = data.type,
@@ -68,8 +65,8 @@ protonet.text_extensions.render = (function() {
         url         = data.url,
         domain      = protonet.utils.parseUrl(url).host;
     
-    title = title.truncate(protonet.text_extensions.config.MAX_TITLE_LENGTH);
-    description = description.truncate(protonet.text_extensions.config.MAX_DESCRIPTION_LENGTH);
+    title           = title.truncate(protonet.text_extensions.config.MAX_TITLE_LENGTH);
+    description     = description.truncate(protonet.text_extensions.config.MAX_DESCRIPTION_LENGTH);
     
     if (data.titleAppendix) {
       title += " (" + protonet.utils.escapeHtml(data.titleAppendix) + ")";

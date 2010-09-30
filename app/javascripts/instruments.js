@@ -1,77 +1,55 @@
-//= require "user/config.js"
-//= require "user/browser.js"
+//= require "dispatcher/dispatcher.js"
+//= require "timeline/timeline.js"
+//= require "text_extensions/text_extensions.js"
 //= require "effects/clouds.js"
-//= require "dispatching/dispatching_system.js"
-//= require "controls/communication_console.js"
 //= require "controls/file_widget.js"
-//= require "controls/endless_scroller.js"
 //= require "controls/user_widget.js"
 //= require "controls/pretty_date.js"
 //= require "controls/fluid.js"
-//= require "text_extensions/main.js"
-//= require "lib/jQuery.dPassword.js"
-//= require "networkmonitor.js"
+//-= require "networkmonitor.js"
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
-
-// Initialize configuration stuff
 $(function() {
-  protonet.user.Config.initialize();
+  protonet.dispatcher.initialize();
+  protonet.timeline.initialize();
+  
+  new protonet.controls.UserWidget();
+  new protonet.controls.FileWidget();
 });
 
 
 // Initialize communication stuff
 $(function() {
-  protonet.globals.communicationConsole = new protonet.controls.CommunicationConsole();
-  protonet.globals.channelSelector      = new protonet.controls.ChannelSelector();
-  protonet.globals.dispatcher           = new protonet.dispatching.DispatchingSystem();
-});
-
-// Initialize text extensions
-$(function() {
-  protonet.text_extensions.initialize(protonet.globals.channelSelector.getCurrentChannelId());
+  // protonet.globals.communicationConsole = new protonet.controls.CommunicationConsole();
+  // protonet.globals.dispatcher           = new protonet.dispatching.DispatchingSystem();
+  
 });
 
 // Initialize file stuff
 $(function() {
-  protonet.globals.fileWidget = new protonet.controls.FileWidget();
-});
-
-
-// Initialize endless scrolling
-$(function() {
-  protonet.globals.endlessScroller = new protonet.controls.EndlessScroller();
+  // protonet.globals.fileWidget = new protonet.controls.FileWidget();
 });
 
 // Initialize user widget
 $(function() {
-  protonet.globals.userWidget = new protonet.controls.UserWidget();
-});
-
-// Initialize pretty dates ("2 minutes ago")
-$(function() {
-  protonet.controls.PrettyDate.initialize();
-  setInterval(function() {
-    protonet.controls.PrettyDate.update();
-  }, 30000);
+  // protonet.globals.userWidget = new protonet.controls.UserWidget();
 });
 
 // Frickin' stunning cloud animation (makes your squirrel run in circles!!)
-// $(function() {
-//   protonet.globals.clouds = new protonet.effects.Clouds($("#cloud-container"), {
-//     minStartPosition: -20,
-//     maxStartPosition: 90,
-//     minSize:          20,
-//     maxSize:          70,
-//     minSpeed:         1,
-//     maxSpeed:         2,
-//     amount:           15
-//   });
-// });
+$(function() {
+  new protonet.effects.Clouds($("#cloud-container"), {
+    minStartPosition: -20,
+    maxStartPosition: 90,
+    minSize:          10,
+    maxSize:          50,
+    amount:           20,
+    animated:         false
+  });
+});
 
 // Initialize fluid if the app is running in a fluid container
-$(function() {
-  if (protonet.user.Browser.SUPPORTS_FLUID()) {
-    new protonet.controls.Fluid();
-  }
-});
+// $(function() {
+//   if (protonet.user.Browser.SUPPORTS_FLUID()) {
+//     new protonet.controls.Fluid();
+//   }
+// });

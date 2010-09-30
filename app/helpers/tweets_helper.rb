@@ -41,4 +41,5 @@ module TweetsHelper
     
     [@show_wrapper_start, @show_wrapper_end, @first_id, @last_id]
   end
+
 end

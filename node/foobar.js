@@ -16,7 +16,7 @@ amqp.addListener("ready", function() {
   
   channelsQueue.bind(channelsExchange, "channels.#");
   channelsQueue.subscribe(function(message) {
-    if(true || message['x_target'] && message.x_target == "protonet.globals.communicationConsole.receiveMessage") {
+    if(true || message['x_target'] && message.trigger == "meep.receive") {
       message = JSON.parse(message.data.toString('utf-8'));
       // sys.puts(sys.inspect(message));
       message.channel_id = remoteChannelUuidToId[message.channel_uuid];

@@ -152,7 +152,7 @@ protonet.controls.Tweet = (function() {
     },
     
     getTemplate: function() {
-      template = template || $($("#message-template").html());
+      template = template || $($("#meep-template").html());
       return template.clone();
     }
   };

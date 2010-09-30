@@ -1,4 +1,4 @@
-//= require "../utils/add_slashes"
+//= require "../utils/add_slashes.js"
 
 protonet.controls.ChannelSelector = function() {
   this.channelInput   = $("#message_channel_id");
@@ -34,7 +34,7 @@ protonet.controls.ChannelSelector.prototype = {
       this.feedViewer.attr("scrollLeft", this.currentScrollLeft || 0);
     }.bind(this));
     
-    this.container.delegate(".channel > a", "click", function(event) {
+    this.container.delegate("li a", "click", function(event) {
       var anchor      = $(event.currentTarget),
           li          = anchor.parent("li"),
           index       = li.attr("data-channel-index"),
@@ -101,9 +101,9 @@ protonet.controls.ChannelSelector.prototype = {
 
   notify: function(channelId) {
     var anchor = $("#channel [data-channel-id={id}] > a".replace("{id}", channelId)),
-        notificationElement = anchor.find(".notification");
+        notificationElement = anchor.find(".new-meeps");
     if (notificationElement.length == 0) {
-      notificationElement = $("<span />", { html: 0, className: "notification" }).appendTo(anchor);
+      notificationElement = $("<span />", { html: 0, className: "new-meeps" }).appendTo(anchor);
     }
     notificationElement.html(parseInt(notificationElement.html(), 10) + 1);
   },

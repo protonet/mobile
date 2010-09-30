@@ -58,7 +58,7 @@ protonet.data.Flickr.getPhoto = (function() {
 protonet.data.Flickr.getPhotoSet = (function() {
   var MULTI_QUERY = "USE \"http://www.datatables.org/data/query.multi.xml\" AS multiquery;" +
                     "SELECT * FROM multiquery WHERE queries=\"{queries}\"",
-      YQL_GET_PHOTOSET_INFO = "SELECT id FROM flickr.photosets.photos WHERE photoset_id = '{id}' LIMIT 8",
+      YQL_GET_PHOTOSET_INFO = "SELECT id FROM flickr.photosets.photos WHERE photoset_id = '{id}' LIMIT 10",
       YQL_GET_PHOTO_INFO = "SELECT urls, title, description, url FROM flickr.photos.info WHERE photo_id IN ({sub_select})",
       YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE photo_id IN ({sub_select}) AND label IN ('Square', 'Small')",
       callbacks,
@@ -121,7 +121,7 @@ protonet.data.Flickr.getPhotoSet = (function() {
 protonet.data.Flickr.getPhotoSearch = (function() {
   var MULTI_QUERY = "USE \"http://www.datatables.org/data/query.multi.xml\" AS multiquery;" +
                     "SELECT * FROM multiquery WHERE queries=\"{queries}\"",
-      YQL_GET_PHOTOS_INFO = "SELECT id FROM flickr.photos.search WHERE text = '{query}' AND sort = '{sort}' LIMIT 8",
+      YQL_GET_PHOTOS_INFO = "SELECT id FROM flickr.photos.search WHERE text = '{query}' AND sort = '{sort}' LIMIT 10",
       YQL_GET_PHOTO_INFO = "SELECT urls, title, description, url FROM flickr.photos.info WHERE photo_id IN ({sub_select})",
       YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE photo_id IN ({sub_select}) AND label IN ('Square', 'Small')",
       callbacks,

@@ -1,3 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>
+      <%= strip_tags(yield(:page_title)) || 'protonet - it\'s yours' %>
+    </title>
+    <link rel="shortcut icon" href="img/favicon.png" type="image/png">
+    <%= stylesheet_link_tag(stylesheets, :cache => !configatron.avoid_caching) %>
+    <script>
+      var protonet = protonet || {};
+      protonet.config = {
+        base_url:                 location.protocol + "//" + location.host,
+        dispatching_server:       "<%= request.env["SERVER_NAME"] %>",
+        dispatching_server_port:  "<%= configatron.socket.port %>",
+        token:                    "<%= current_user.communication_token %>",
+        user_name:                "<%= current_user.display_name %>",
+        user_id:                  "<%= current_user.id %>",
+        user_channel_ids:         "<%= current_user.channels && current_user.channels.map {|c| c.id}.to_json %>",
+        user_icon_url:            "<%= current_user.active_avatar_url %>",
+        session_id:               "<%= cookies['_rails_dashboard_session'] %>",
+        authenticity_token:       "<%= form_authenticity_token %>",
+        server:                   "<%= request.env['SERVER_SOFTWARE'] && request.env['SERVER_SOFTWARE'].match(/^\w*/)[0] %>",
+        availableChannels:        <%= get_channel_mapping_as_json %>,
+        debugMode:                <%= configatron.log_event_notifications.to_json %>
+      };
+    </script>
+  </head>
+  <body>
+    <div id="cloud-container"><!-- container for fluffy clouds (call it "the sky") --></div>
+    <%-
+      if flash.empty?
+        flash_message_class_name = flash_message = ''
+      else
+        flash_message_class_name = 'notice'   if flash[:notice]
+        flash_message_class_name = 'error'    if flash[:error]
+        flash_message_class_name = 'warning'  if flash[:warning]
+        flash_message = flash[:notice] || flash[:error] || flash[:warning]
+      end
+    %>
+    <div class="flash-message <%= flash_message_class_name %>"><p><%= flash_message %></p></div>
+    
+    <%- if current_user.stranger? -%>
+      <section id="login">
+        <h1>Welcome guest</h1>
+
+        <%- form_for :user, :url => users_path, :html => { :class => "sign-up form" } do |f| -%>
+          <fieldset>
+            <legend>Get started by <strong>signing up</strong> (it's free)</legend>
+            <div>
+              <%= f.label :login, "username" %>
+              <%= f.text_field :login, :title => "user name" %>
+            </div>
+            <div>
+              <%= f.label :password, "password" %>
+              <%= f.password_field :password, :title => "password" %>
+            </div>
+            <div>
+              <%= f.label :password_confirmation, "password confirmation" %>
+              <%= f.password_field :password_confirmation, :title => "password" %>
+            </div>
+            <div>
+              <!-- TODO: Enable this -->
+              <%#= f.label :signup_contact, "social media profile or email" %>
+              <%#= f.text_field :signup_contact, :title => "social media profile or email" %>
+              <!-- <span class="hint">(eg. http://www.facebook.com/john.doe)</span> -->
+            </div>
+            <div>
+              <button type="submit" name="join">sign up</button>
+            </div>
+          </fieldset>
+        <%- end -%>
+
+        <%- form_tag session_path, { :class => "login form" } do -%>
+          <fieldset>
+            <legend>or <strong>logging in</strong></legend>
+            <div>
+              <%= label_tag :login, "login", :for => "login_login" %>
+              <%= text_field_tag :login, @login, :title => "user name", :id => "login_login" %>
+            </div>
+            <div>
+              <%= label_tag :password, "password", :for => "login_password" %>
+              <%= password_field_tag :password, nil, :title => "password", :id => "login_password" %>
+            </div>
+            <div class="forgot-password">
+              <a href="" class="hint" title="shit happens!">forgot password?</a>
+            </div>
+            <div>
+              <button type="submit" name="commit">login</button>
+            </div>
+          </fieldset>
+        <%- end -%>
+      </section>
+    <%- end -%>
+
+    <header<%= " class=\"login\"" if current_user.stranger? %>>
+      <a href="<%= root_path %>" class="logo">protonet – it's yours</a>
+      <a href="<%= root_path %>" class="monster default">change character</a>
+      <%- unless current_user.stranger? -%>
+        <ul id="user-navigation">
+          <li class="welcome">
+            <a href="<%= preferences_path %>">
+              <strong><%=h current_user.display_name %></strong>
+              <img src="<%= current_user.active_avatar_url %>" width="16" height="16">
+            </a>
+          </li>
+          <li class="account" tabindex="-1">
+            <%= link_to("account", preferences_path) %>
+          </li>
+          <li class="settings" tabindex="-1">
+            <a>settings</a>
+          </li>
+          <li class="logout" tabindex="-1">
+            <%= link_to("logout", :controller => :sessions, :action => :destroy) %>
+          </li>
+        </ul>
+      <%- end -%>
+    </header>
+    
+    <%= yield %>
+    
+    <footer></footer>
+    
+    <%= sprockets_include_tag(:default) %>    
+    <%= sprockets_include_tag(controller_name.to_sym) %>
+  </body>
+</html>
+
+
+
+
+
+<% if false %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 
@@ -85,3 +219,5 @@
     <%= sprockets_include_tag(controller_name.to_sym) %>
   </body>
 </html>
+
+<% end %>

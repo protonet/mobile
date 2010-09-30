@@ -9,13 +9,13 @@ protonet.controls.CommunicationConsole = function() {
   // elements
   this.input = $("#message");
   this.form = $("#message-form");
-  this.input_channel_id = $("#message_channel_id");
+  this.input_channel_id = $("#tweet_channel_id");
   
   // add sub views
   protonet.globals.inputConsole = new protonet.controls.InputConsole({
-    "input_console": this.input,
-    "parent_widget": this,
-    "form": this.form
+    input_console:  this.input,
+    parent_widget:  this,
+    form:           this.form
   });
   
   protonet.globals.textExtensionInput = new protonet.text_extensions.Input(this.input);
@@ -23,16 +23,15 @@ protonet.controls.CommunicationConsole = function() {
   // make it a global user object
   this.user_config      = protonet.config;
   this.current_user_id  = protonet.config.user_id;
-
-  this.highlightReplies();
+  
   this.observe();
 };
 
 protonet.controls.CommunicationConsole.prototype = {
   observe: function() {
     protonet.Notifications
-      .bind("messages.new", this.highlightReplies.bind(this))
-      .bind("notification.new", this._notification.bind(this));
+      .bind("notification.new", this._notification.bind(this))
+      .bind("channel.changed", function(e, id) { this.input_channel_id.val(id); }.bind(this));
   },
   
   // this is just a proof of concept
@@ -84,7 +83,7 @@ protonet.controls.CommunicationConsole.prototype = {
   },
   
   _notification: function(e, channelId, message) {
-    var currentChannelId = protonet.globals.channelSelector.getCurrentChannelId();
+    var currentChannelId = protonet.timeline.Channels.selected;
     channelId = channelId || currentChannelId;
     var isCurrentChannel = channelId == currentChannelId;
     var isAllowedToPlaySound = protonet.user.Config.get("sound");

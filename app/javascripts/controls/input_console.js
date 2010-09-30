@@ -69,7 +69,7 @@ protonet.controls.InputConsole.prototype = {
   "tweet": function(event) {
     console.log("sending via js");
     this.parent_widget.sendTweetFromInput();
-
+    
     clearTimeout(this.writeTimeout);
     this.writing = false;
     this.recheck = false;
@@ -97,13 +97,11 @@ protonet.controls.InputConsole.prototype = {
       this.writeTimeout = setTimeout(function(){
         if (caretPosition == this.caretPosition) {
           this.sendStoppedWritingNotification();
-          // console.log("stopped writing");
           this.writing = false;
         }
       }.bind(this), 3000);
       
       setTimeout(function(){
-        // console.log('setting recheck');
         this.recheck = true;
       }.bind(this), 500);
       

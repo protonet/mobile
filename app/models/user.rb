@@ -172,23 +172,21 @@ class User < ActiveRecord::Base
     return if stranger?
     
     publish 'system', ['users', 'new'],
-      :trigger        => 'user.added',
-      :user_id        => id,
-      :user_name      => display_name,
-      :avatar_url     => active_avatar_url,
-      :x_target       => 'protonet.Notifications.triggerFromSocket'
+      :trigger   => 'user.added',
+      :id        => id,
+      :name      => display_name
   end
 
   def subscribe(channel)
     return if channels.include?(channel)
     channels << channel
-    send_channel_notification(channel, :subscribe) if save
+    send_channel_notification(channel, :subscribed_channel) if save
   end
 
   def unsubscribe(channel)
     return unless channels.include?(channel)
     channels.delete(channel)
-    send_channel_notification(channel, :unsubscribe) if save
+    send_channel_notification(channel, :unsubscribed_channel) if save
   end
 
   def subscribed?(channel)
@@ -197,12 +195,9 @@ class User < ActiveRecord::Base
 
   def send_channel_notification(channel, type)
     publish 'channels', channel.uuid,
-      :trigger        => "channel.#{type}",
+      :trigger        => "user.#{type}",
       :channel_id     => channel.id,
-      :user_id        => id,
-      :user_name      => display_name,
-      :avatar_url     => active_avatar_url,
-      :x_target       => 'protonet.Notifications.triggerFromSocket'
+      :user_id        => id
   end
 
   def password_required_with_logged_out_user?
@@ -211,6 +206,6 @@ class User < ActiveRecord::Base
   alias_method_chain :password_required?, :logged_out_user
 
   def active_avatar_url
-    avatar ? "/images/avatars/#{avatar.id}" : '/images/userpicture.jpg'
+    avatar ? "/images/avatars/#{avatar.id}" : '/img/user_picture.png'
   end
 end

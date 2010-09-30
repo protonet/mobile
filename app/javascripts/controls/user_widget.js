@@ -1,181 +1,250 @@
-protonet.controls.UserWidget = (function() {
-  var REG_EXP_ID = /user-list-user-(.*)/,
-      CONNECTION_CLASSES = {
-        "web": "online"
-      };
-  
-  function UserWidget(args) {
-    this.container = $("#user-list");
-    this.updateEntries();
-    this.user_list = this.container.find("ul.root");
-    this.user_names = [];
-    this.user_objects = {};
-    this.channel_users = {};
-    this.temporaryUsers = {};
-    
-    this.entries.each(function(i, entry){
-      var user_id = entry.id.match(REG_EXP_ID)[1];
-      this.addUser(user_id, entry);
-    }.bind(this));
-    
-    if (protonet.globals.inputConsole) {
-      protonet.globals.inputConsole.initAutocompleter(this.user_names, {'prepend': true});
-      protonet.globals.inputConsole.bindAutocompleterToUserAddedEvents();
-    }
-    
-    protonet.Notifications.bind('user.added', function(e, msg){
-      this.addUserFromMessage(msg);
-      this.filterChannelUsers(protonet.globals.channelSelector.getCurrentChannelId());
-    }.bind(this));
-    
-    protonet.Notifications.bind('channel.subscribe channel.unsubscribe', function(e, msg){
-      switch(e.handleObj.namespace) {
-        case 'subscribe':
-          this.channel_users[msg.channel_id].push(msg.user_id);
-          break;
-        case 'unsubscribe':
-          this.channel_users[msg.channel_id].splice(this.channel_users[msg.channel_id].indexOf(msg.user_id), 1);
-          break;
-      }
-      this.filterChannelUsers(protonet.globals.channelSelector.getCurrentChannelId());
-    }.bind(this));
-    
-    protonet.Notifications.bind('channel.update_subscriptions', function(e, msg){
-      for(var i in msg.data) {
-        this.channel_users[i] = msg.data[i];
-      };
-      this.filterChannelUsers(protonet.globals.channelSelector.getCurrentChannelId());
-    }.bind(this));
-        
-    protonet.Notifications.bind("channel.changed", function(e, id) {
-      this.filterChannelUsers(id);
-    }.bind(this));
-    
-    protonet.Notifications.bind("user.update_online_states", function(e, msg){
-      this.update(msg);
-    }.bind(this));
-  };
-  
-  UserWidget.prototype = {
-    "addUserFromMessage": function(msg) {
-      this.addUser(msg.user_id, this.addUserElement(msg.user_id, msg.avatar_url, msg.user_name));
-      this.entries = this.container.find("li"); // recalculate
-    },
-    
-    "addUserElement": function(userId, avatarUrl, userName) {
-      var newUserEntry = this.entries.first().clone();
-      newUserEntry.attr("id", 'user-list-user-' + userId);
-      newUserEntry.find('img').attr('src', avatarUrl);
-      newUserEntry.find('span').html(userName);
-      this.user_list.append(newUserEntry);
-      return newUserEntry;
-    },
-    
-    "addUser": function(user_id, element) {
-      this.user_objects[user_id] = $(element);
-      this.user_names.push(this.user_objects[user_id].children("span").html());      
-      this.updateEntries();
-    },
-    
-    "removeUser": function(user_id) {
-      var userName = this.user_objects[user_id].children("span").html();
-      delete this.temporaryUsers[user_id];
-      this.user_objects[user_id].remove();
-      delete this.user_objects[user_id];
-      this.user_names.splice (jQuery.inArray(userName, this.user_names),1);
-      this.updateEntries();
-    },
-    
-    "updateEntries": function() {
-      this.entries = this.container.find("li");
-    },
-    
-    // note to self: a more performant version would be:
-    // send an integer identifier (update 102923)
-    // if I received (update - 1) just do an incremental udpate
-    // this would ensure data integrity and be very fast ;)
-    "update": function(data) {
-      var online_users = data.online_users;
-      var online_user;
-      for(var i in online_users) {
-        online_user            = online_users[i];
-        var connection_class   = this.cssClassForConnections(online_user && online_user.connections);
-        var current_dom_object = this.user_objects[i];
-        if(!current_dom_object) {
-          current_dom_object = this.addUserElement(i, "/images/userpicture.jpg", online_user["name"]);
-          this.addUser(i, current_dom_object);
-          this.temporaryUsers[i] = current_dom_object;
-        }
-        current_dom_object.attr("class", connection_class);
-      }
-      
-      for(i in this.user_objects) {
-        user_object = this.user_objects[i];
-        if(!online_users[i]) {
-          if(this.temporaryUsers[i]) {
-            this.removeUser(i);
-          } else {
-            user_object.attr("class", "offline");
-          }
-        }
-      }
-      
-      this.sortEntries();
-    },
-    
-    "filterChannelUsers": function(channel_id) {
-      if(protonet.user.Config.get("always_show_all_users_in_channels")) {
-        for(user_id in this.user_objects) {
-          this.user_objects[user_id].show();
-        }
-      } else {
-        for(user_id in this.user_objects) {
-          if($.inArray(parseInt(user_id, 10), this.channel_users[channel_id]) >= 0) {
-            this.user_objects[user_id].show();
-          } else {
-            this.user_objects[user_id].hide();
-          };
-        };
-      }
-    },
+//= require "../ui/resizer.js"
+//= require "../ui/notification.js"
+//= require "../lib/jquery-ui-1.8.4.highlight-effect.min.js"
 
-    "cssClassForConnections": function(sockets) {
-      if (!sockets) {
-        return "offline";
+protonet.controls.UserWidget = function() {
+  this.container = $("#user-widget");
+  this.list = this.container.find("ul");
+  this.resizer = this.container.find(".resize");
+  
+  this.onlineUsersCount = this.container.find("output.count");
+  this.usersData = {};
+  this.channelSubscriptions = {};
+  
+  this.list.children().each(function(i, li) {
+    li = $(li);
+    this.usersData[+li.attr("data-user-id")] = {
+      element:              li,
+      name:                 $.trim(li.text()),
+      isViewer:             li.hasClass("myself"),
+      isStranger:           false,
+      channelSubscriptions: []
+    };
+  }.bind(this));
+  
+  protonet.Notifications.trigger("users.data_available", this.usersData);
+  
+  new protonet.ui.Resizer(this.list, this.resizer, { storageKey: "user_widget_height" });
+  
+  this._observe();
+};
+
+protonet.controls.UserWidget.prototype = {
+  _observe: function() {
+    protonet.Notifications
+      .bind("user.added", function(e, data) {
+        /**
+         * Creating a user will trigger the user.added event
+         * and the user.subscribed_channel afterwards
+         */
+        this.createUser(data.id, data, true);
+      }.bind(this))
+      
+      .bind("user.typing", function(e, data) {
+        this._typingStart(data.user_id);
+      }.bind(this))
+      
+      .bind("user.typing_end", function(e, data) {
+        this._typingEnd(data.user_id);
+      }.bind(this))
+      
+      .bind("user.subscribed_channel", function(e, data) {
+        this._userSubscribedChannel(+data.user_id, +data.channel_id);
+      }.bind(this))
+      
+      .bind("user.unsubscribed_channel", function(e, data) {
+        this._userUnsubscribedChannel(+data.user_id, +data.channel_id);
+      }.bind(this))
+      
+      .bind("users.update_status", function(e, data) {
+        this.updateUsers(data.online_users);
+      }.bind(this))
+      
+      .bind("channels.update_subscriptions", function(e, channelSubscriptions) {
+        this.channelSubscriptions = channelSubscriptions.data;
+        this.filterChannelUsers();
+      }.bind(this))
+      
+      .bind("socket.disconnected", function() {
+        this.updateUsers({});
+      }.bind(this))
+      
+      .bind("channel.change", function(e, channelId) {
+        this.filterChannelUsers(channelId);
+      }.bind(this));
+  },
+  
+  /**
+   * Gets something like this:
+   *   {
+   *       "200": {
+   *           "name": "tiff",
+   *           "connections": [[408344, "web"], [147121, "web"]]
+   *       },
+   *       "306": {
+   *           "name": "stranger_number_66f9a8b65c",
+   *           "connections": [[691946, "web"]]
+   *       }
+   *   },
+   *
+   * Note: strangers will only be shown when they are online
+   *
+   * TODO: add logic for when user is per via api connected, we need an icon here for, btw.
+   */
+  updateUsers: function(onlineUsers) {
+    // Create users if they don't exist already
+    this.createUsers(onlineUsers);
+    
+    for (var userId in this.usersData) {
+      var user = this.usersData[userId],
+          onlineUser = onlineUsers[userId];
+      
+      var hasBeenOnlineBefore = user.isOnline !== false;
+      user.isOnline = !!onlineUser;
+      
+      // Highlight effect for users that just came online
+      if (user.isOnline && !hasBeenOnlineBefore) {
+        user.element
+          .addClass("new-online")
+          .css("backgroundColor", "#ffff99")
+          .animate({ "backgroundColor": "#ffffff" }, { duration: 1000 });
       }
       
-      for (var x in sockets) {
-        var socket = sockets[x][1];
-        var type = CONNECTION_CLASSES[socket] || socket;
-        // web trumps socket, break if the user has a web connection
-        if (type == "web") { break; }
-      };
-      return type;
-    },
-    
-    "sortEntries": function() {
-      this.entries.filter(".api").prependTo(this.user_list);
-      this.entries.filter(".online").prependTo(this.user_list);
-      this.entries.filter(".writing").prependTo(this.user_list);
-    },
-    
-    "updateWritingStatus": function(data) {
-      var user_id = data.data.user_id;
-      var status  = data.data.status;
-      var current_dom_object = this.user_objects[user_id];
-      if (current_dom_object && status == "writing") {
-        this.user_list.prepend(current_dom_object);
-        current_dom_object.attr("class", "writing");
-      } else {
-        current_dom_object.attr("class", "online");
-      }
-    },
-    
-    "getUserNames": function() {
-      return this.user_names;
+      user.isOnline ? user.element.addClass("online") : user.element.removeClass("online").removeClass("typing");
     }
-  };
+    
+    this.sortEntries();
+    this.cleanupStrangers();
+    this.updateCount();
+  },
   
-  return UserWidget;
+  /**
+   * Expects something like 
+   *  { 101: { name: "tiff" }, 202: { name: "ali" } }
+   * as users parameters
+   */
+  createUsers: function(users) {
+    for (var userId in users) {
+      this.createUser(userId, users[userId]);
+    }
+  },
   
-})();
+  createUser: function(userId, user, hide) {
+    if (this.usersData[userId]) {
+      return;
+    }
+    
+    var isViewer = protonet.user.data.name == user.name,
+        isStranger = user.name.startsWith("stranger_"),
+        element = this.createElement(userId, user.name, isViewer, isStranger);
+    
+    hide && element.hide();
+    
+    this.usersData[userId] = {
+      name:                 user.name,
+      isViewer:             isViewer,
+      isStranger:           isStranger,
+      channelSubscriptions: [],
+      element:              element
+    };
+  },
+  
+  createElement: function(userId, userName, isViewer, isStranger) {
+    return $("<li />", {
+      "data-user-id": userId,
+      title:          userName,
+      className:      [isViewer ? "myself" : "", isStranger ? "stranger" : ""].join(" ")
+    }).append(
+      $("<a />", {
+        tabIndex: -1,
+        href:     "#",
+        text:     userName
+      })
+    ).appendTo(this.list);
+  },
+  
+  sortEntries: function() {
+    this.list.find(".api").prependTo(this.list);
+    this.list.find(".online").prependTo(this.list);
+    this.list.find(".new-online").removeClass("new-online").prependTo(this.list);
+    this.list.find(".typing").prependTo(this.list);
+  },
+  
+  cleanupStrangers: function() {
+    for (var i in this.usersData) {
+      var user = this.usersData[i];
+      if (user.isStranger && !user.isOnline) {
+        user.element.detach();
+        delete this.usersData[i];
+      }
+    }
+  },
+  
+  filterChannelUsers: function(channelId) {
+    channelId = channelId || protonet.timeline.Channels.selected;
+    var channelSubscriptions = this.channelSubscriptions[channelId];
+    if (!this.channelSubscriptions[channelId]) {
+      return;
+    }
+    
+    this.list.children().hide();
+    
+    for (var i=0, l=channelSubscriptions.length; i<l; i++) {
+      var userId = channelSubscriptions[i],
+          user = this.usersData[userId];
+      if (user) {
+        user.element.show();
+      }
+    }
+    
+    this.updateCount();
+  },
+  
+  updateCount: function() {
+    var total = 0, online = 0;
+    for (var i in this.usersData) {
+      var user = this.usersData[i];
+      if (user.element.is(":visible")) {
+        total++;
+        if (this.usersData[i].isOnline) {
+          online++;
+        }
+      }
+    }
+    
+    this.onlineUsersCount.text("(" + online + "/" + total + ")");
+  },
+  
+  _userUnsubscribedChannel: function(userId, channelId) {
+    var channelUsers = this.channelSubscriptions[channelId];
+    channelUsers.splice(channelUsers.indexOf(userId), 1);
+    if (channelId == protonet.timeline.Channels.selected) {
+      var user = this.usersData[userId];
+      user && user.element.hide();
+      this.updateCount();
+    }
+  },
+  
+  _userSubscribedChannel: function(userId, channelId) {
+    this.channelSubscriptions[channelId].push(userId);
+    if (channelId == protonet.timeline.Channels.selected) {
+      var user = this.usersData[userId];
+      user && user.element.show();
+      this.updateCount();
+    }
+  },
+  
+  _typingStart: function(userId) {
+    var userData = this.usersData[userId];
+    if (userData.element) {
+      userData.element.prependTo(this.list).addClass("typing");
+    }
+  },
+  
+  _typingEnd: function(userId) {
+    var userData = this.usersData[userId];
+    if (userData.element) {
+      userData.element.removeClass("typing");
+    }
+  }
+};

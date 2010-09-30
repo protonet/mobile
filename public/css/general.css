@@ -1,0 +1,381 @@
+/* =GENERAL
+
+    COLORS:
+      blue        #487bff   rgb(72, 123, 255) - MAIN COLOR, USE FOR LINKS AND CHANNEL HIGHLIGHTING
+      orange      #ff7f31   rgb(255, 140, 71) - USE FOR HIGHLIGHTING USER STUFF (own meeps, user replies, buttons, ...)
+      red/rosa    #e75c79   rgb(231, 92, 121) - USE FOR NOTIFICATIONS (flash messages, badges, ...)
+      green       #00cc00   rgb(0, 204, 0)
+      black       #000      rgb(0, 0, 0)
+      grey_dark   #666      rgb(102, 102, 102)
+      grey        #999      rgb(153, 153, 153)
+      grey_light  #ccc      rgb(204, 204, 204)
+      white       #fff      rgb(255, 255, 255)
+=========================================================================== */
+@font-face {
+  font-family: "Univers Light Condensed";
+  src: url("/css/fonts/Univers Light Condensed.ttf");
+}
+
+@font-face {
+  font-family: "Univers LT 47 CondensedLt";
+  src: url("/css/fonts/Univers LT 47 Condensed Light.ttf");
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  overflow-y: scroll;
+  background: url(/img/background_top.png) repeat-x,
+              url(/img/background_bottom.png) repeat-x left bottom,
+              url(/img/background.png) fixed;
+  margin: 0 auto;
+  width: 940px;
+  color: #000;
+}
+
+body,
+select,
+textarea,
+input {
+  font: 12px/1.4em Verdana, sans-serif;
+}
+
+a {
+  color: #000;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+a:hover {
+  color: rgb(72, 123, 255);
+}
+
+button {
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  background: rgb(255, 140, 71);
+  background: -moz-linear-gradient(100% 100% 90deg, rgba(255, 140, 71, 0.7), rgba(255, 140, 71, 1));
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 140, 71, 1)), to(rgba(255, 140, 71, 0.7)));
+  border: 1px solid #fff;
+  border-radius: 4px;
+  color: #fff;
+  padding: 2px 15px;
+  -moz-box-shadow: 0 0 4px #666;
+  -webkit-box-shadow: 0 0 4px #666;
+  box-shadow: 0 0 4px #666;
+}
+
+button:hover {
+  background: rgb(255, 140, 71);
+}
+
+button::-moz-focus-inner {
+  padding: 0;
+  border: 0 none;
+}
+
+output {
+  display: block;
+}
+
+section,
+aside {
+  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  background: rgb(255, 255, 255);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  display: inline-block;
+  vertical-align: top;
+}
+
+#main {
+  width: 650px;
+  min-height: 500px;
+  margin: 0 20px 0 0;
+  position: relative;
+}
+
+#side {
+  width: 220px;
+  padding: 20px;
+}
+
+#cloud-container {
+  position: fixed;
+  overflow: hidden;
+  height: 450px;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  opacity: 0.5;
+}
+
+input[type=text],
+input[type=password] {
+  border: 1px solid;
+  border-color: #666 #ccc #ccc #666;
+  padding: 2px 4px;
+  width: 200px;
+  height: 18px;
+}
+
+.hint {
+  color: #999;
+}
+
+.inline-hint {
+  color: #ccc;
+}
+
+pre {
+  margin: 5px 0;
+  max-height: 200px;
+  overflow: auto;
+  display: block;
+  font-size: 12px;
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #ccc;
+  font-family: Courier New, Courier;
+}
+
+.flash-message {
+  top: -50px;
+  left: 0;
+  right: 0;
+  position: fixed;
+  z-index: 2;
+  color: #fff;
+  padding: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.flash-message > p {
+  width: 950px;
+  margin: 0 auto;
+}
+
+.flash-message.notice {
+  background: rgba(0, 204, 0, 0.7);
+}
+
+.flash-message.warning,
+.flash-message.error {
+  background: rgba(231, 92, 121, 0.8);
+}
+
+
+/* =HEADER
+=========================================================================== */
+header {
+  position: relative;
+  display: block;
+  height: 90px;
+}
+
+header .logo {
+  top: bottom: 0;
+  left: -13px;
+  position: absolute;
+  background: url(/img/logo.png) no-repeat;
+  height: 125px;
+  text-indent: -9999px;
+  width: 225px;
+}
+
+header .monster {
+  position: absolute;
+  bottom: -4px;
+  left: 136px;
+  width: 73px;
+  height: 72px;
+  font-size: 9px;
+  background: url(/img/spr_monsters.png) no-repeat;
+  color: #999;
+  text-decoration: none;
+  white-space: nowrap;
+  line-height: 42px;
+  text-indent: -9999px;
+}
+
+header .monster:hover {
+  text-indent: 66px;
+}
+
+header .monster.default {
+  background-position: 2px bottom;
+}
+
+header .monster.business {
+  background-position: -74px bottom;
+}
+
+header .monster.female {
+  background-position: -147px bottom;
+}
+
+header .monster.surfer {
+  background-position: -217px bottom;
+}
+
+header .hearts {
+  position: absolute;
+  color: #e75c79;
+  font-size: 13px;
+  text-shadow: 1px 1px 1px #999;
+  width: 70px;
+  left: 136px;
+  top: 50px;
+  text-align: center;
+}
+
+/* =USER NAVIGATION
+=========================================================================== */
+#user-navigation  {
+  position: absolute;
+  right: 0;
+  top: 6px;
+  font-size: 10px;
+}
+
+#user-navigation > li {
+  float: left;
+  line-height: 13px;
+  vertical-align: middle;
+  padding: 0 6px 1px;
+  border-right: 1px solid #999;
+}
+
+#user-navigation > li:last-child,
+#user-navigation > li:first-child {
+  border: 0;
+}
+
+#user-navigation > li > a {
+  color: #487bff;
+}
+
+#user-navigation .welcome {
+  padding-right: 0;
+  color: #666;
+}
+
+#user-navigation .welcome a {
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  padding-right: 26px;
+  display: block;
+}
+
+#user-navigation .welcome img {
+  border: 2px solid #fff;
+  position: absolute;
+  right: 0;
+  top: -3px;
+}
+
+#user-navigation > .settings:hover,
+#user-navigation > .settings:focus {
+  background: #fff;
+}
+
+#user-navigation .settings:hover a,
+#user-navigation .settings:focus a {
+  text-decoration: none;
+}
+
+#user-navigation .settings:focus ul,
+#user-navigation .settings:hover ul {
+  display: block;
+}
+
+#user-navigation .settings ul {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  background: #fff;
+  margin: 1px 0 0 -7px;
+  min-width: 120px;
+  border: 1px solid #999;
+  border-top: 0;
+}
+
+#user-navigation .settings li {
+  cursor: pointer;
+  color: #999;
+  padding: 4px 6px;
+  border-top: 1px solid #ccc;
+}
+
+#user-navigation .settings .on {
+  color: #00cc00;
+}
+
+#user-navigation .settings .off {
+  color: #e75c79;
+}
+
+/* =CONTEXT MENU
+=========================================================================== */
+.context-menu {
+  background-color: #fff;
+  position: absolute;
+  display: none;
+  border: 1px solid #487bff;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  font-size: 10px;
+  box-shadow: 3px 3px 3px #999;
+  -webkit-box-shadow: 3px 3px 3px #999;
+  -moz-box-shadow: 3px 3px 3px #999;
+  z-index: 10;
+  margin-top: 2px;
+}
+
+.context-menu:before {
+  content: " ";
+  display: block;
+  width: 100%;
+  position: absolute;
+  margin-top: -8px;
+  background: url(../img/icn_arrow_context_menu.png) center center no-repeat;
+  height: 8px;
+}
+
+.context-menu li {
+  cursor: pointer;
+  padding: 6px;
+  color: #487bff;
+  min-width: 100px;
+  overflow: hidden;
+  border-bottom: 1px solid #ccc;
+}
+
+.context-menu li:hover,
+.context-menu li:focus {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.context-menu li:last-child {
+  border-bottom: 0;
+}
+
+/** Overrule styles, set by plupload.js */
+.context-menu li .plupload {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 500px !important;
+}
+
+.context-menu li .plupload input {
+  cursor: pointer;
+  height: 500px;
+  font-size: 100px;
+}

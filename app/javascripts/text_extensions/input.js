@@ -1,3 +1,5 @@
+//= require "../utils/unshort_url.js"
+
 protonet.text_extensions.Input = function(input) {
   this.input = input;
   this.providers = protonet.text_extensions.provider;
@@ -16,7 +18,7 @@ protonet.text_extensions.Input.prototype = {
     this.input.bind("paste", this._paste.bind(this));
     this.input.bind("keyup", this._keyUp.bind(this));
     this.removeLink.bind("click", this._cancel.bind(this));
-    protonet.Notifications.bind("message.send", this._submitted.bind(this));
+    protonet.Notifications.bind("form.submitted", this._submitted.bind(this));
   },
   
   _paste: function() {
@@ -68,12 +70,13 @@ protonet.text_extensions.Input.prototype = {
   
   _selectUrl: function(url) {
     this.url = url;
-    this._getDataProvider(this.url);
+    this._show();
     
-    if (this.provider) {
-      this._show();
-      this._request();
-    }
+    protonet.utils.unshortUrl(url, function(originalUrl) {
+      this.originalUrl = originalUrl;
+      this._getDataProvider(originalUrl);
+      this.provider ? this._request() : this._hide();
+    }.bind(this));
   },
   
   _getDataProvider: function(url) {
@@ -88,7 +91,7 @@ protonet.text_extensions.Input.prototype = {
   
   _request: function() {
     this._cancelRequest = false;
-    this.provider.loadData(this.url, this._render.bind(this), this._ignoreUrlAndReset.bind(this));
+    this.provider.loadData(this.originalUrl, this._render.bind(this), this._ignoreUrlAndReset.bind(this));
   },
   
   _render: function(data) {
@@ -96,7 +99,7 @@ protonet.text_extensions.Input.prototype = {
       return;
     }
     
-    this.data = $.extend({}, data, { type: this.providerName, url: this.url });
+    this.data = $.extend({}, data, { type: this.providerName, url: this.originalUrl });
     this.renderer = new protonet.text_extensions.render(this.container, this.data);
     
     this.setInput(this.data);
@@ -167,6 +170,7 @@ protonet.text_extensions.Input.prototype = {
     
     delete this.data;
     delete this.url;
+    delete this.originalUrl;
     delete this.provider;
   },
   
