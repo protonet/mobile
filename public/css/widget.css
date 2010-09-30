@@ -1,0 +1,276 @@
+.widget {
+  border: 1px rgba(72, 123, 255, 0.8) solid;
+  padding: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.widget {
+  margin-bottom: 20px;
+}
+
+.widget:last-child {
+  margin-bottom: 0;
+}
+
+.widget h3 {
+  color: #fff;
+  font-weight: normal;
+  padding: 0 7px;
+  font-size: 13px;
+  line-height: 25px;
+  background: rgba(72, 123, 255, 0.65);
+  background: -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 1), rgba(72, 123, 255, 0.6));
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.6)), to(rgba(72, 123, 255, 1)));
+}
+
+.widget output {
+  display: inline;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.widget li {
+  overflow: hidden;
+}
+
+.widget li > * {
+  display: block;
+  color: #333;
+  padding-left: 26px;
+  line-height: 25px;
+  margin: 0 0 1px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.widget li a:hover,
+.widget li a:focus {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+.widget li.error > * {
+  color: red;
+  opacity: 0.5;
+}
+
+.widget ul {
+  overflow: auto;
+  height: 170px;
+  min-height: 50px;
+  padding: 4px 0 3px;
+  margin: 1px 0;
+}
+
+.widget .resize {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  display: block;
+  font-size: 7px;
+  line-height: 10px;
+  height: 10px;
+  text-align: center;
+  background: #f0f0f0;
+  cursor: row-resize;
+}
+
+.widget .resize:after {
+  content: ":::::::::::::::::";
+}
+
+.widget.loading:after {
+  position: absolute;
+  top: 26px;
+  left: 0;
+  bottom: 11px;
+  width: 1000px;
+  content: " ";
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.widget .loading-hint {
+  display: none;
+}
+
+.widget.loading .loading-hint {
+  display: inline;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+
+/*--------------------------------- USER WIDGET ---------------------------------*/
+#user-widget li a {
+  color: #999;
+  background-image: url(../img/spr_user_status.png);
+  background-repeat: no-repeat;
+  background-position: 4px -16px;
+}
+
+#user-widget li.online a {
+  background-position: 4px 4px;
+  color: #000;
+}
+
+#user-widget li.stranger a {
+  font-style: italic;
+  color: #999;
+}
+
+#user-widget li.typing a {
+  background-position: 5px -42px;
+}
+
+#user-widget li.myself a {
+  font-weight: bold;
+}
+
+
+/*--------------------------------- FILE WIDGET ---------------------------------*/
+
+#file-widget .nav-bar {
+  display: none;
+  color: #999;
+  font-size: 10px;
+  position: relative;
+  border-bottom: 1px solid #ccc;
+  padding: 0 17px;
+}
+
+#file-widget .address-bar {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#file-widget .address-bar > * {
+  display: inline-block;
+  padding: 4px 1px;
+  color: #333;
+  text-decoration: none;
+}
+
+#file-widget .address-bar > *:first-child {
+  padding-left: 4px;
+}
+
+#file-widget .address-bar > *:last-child {
+  padding-right: 4px;
+}
+
+#file-widget .address-bar a:hover {
+  color: #487bff;
+}
+
+#file-widget [rel=forward],
+#file-widget [rel=backward] {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  position: absolute;
+  top: 0;
+  display: inline-block;
+  cursor: default;
+  color: #999;
+  text-decoration: none;
+  padding: 4px 1px;
+}
+
+#file-widget [rel=backward] {
+  left: 0;
+}
+
+#file-widget [rel=forward] {
+  right: 0;
+}
+
+#file-widget [rel=backward]:before {
+  padding-left: 5px;
+  content: "\25C0";
+}
+
+#file-widget [rel=forward]:before {
+  padding-right: 5px;
+  content: "\25B6";
+}
+
+#file-widget .enabled[rel=forward],
+#file-widget .enabled[rel=backward] {
+  cursor: pointer;
+  color: #000;
+}
+
+#file-widget .enabled[rel=forward]:hover,
+#file-widget .enabled[rel=backward]:hover {
+  color: #487bff;
+}
+
+#file-widget li {
+  background-image: url(../img/spr_file_icons.png);
+  background-repeat: no-repeat;
+  background-position: 7px -20px;
+}
+
+#file-widget li.directory {
+  background-position: 7px 7px;
+}
+
+#file-widget li.disabled {
+  opacity: 0.5;
+}
+
+#file-widget li.disabled a {
+  cursor: default;
+}
+
+#file-widget li.directory input {
+  border: 1px solid #ccc;
+  display: block;
+  background: transparent;
+  line-height: inherit;
+  height: 23px;
+  width: 100%;
+  padding-left: 25px;
+}
+
+#file-widget .options {
+  position: relative;
+  margin-bottom: 1px;
+}
+
+#file-widget #add-objects {
+  position: absolute;
+  width: 16px;
+  right: 0;
+  top: 0;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  line-height: 30px;
+  background: rgb(170, 170, 170);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+#file-widget #add-objects:focus,
+#file-widget #add-objects:hover {
+  background: #999;
+}
+
+#file-widget #drop-area {
+  background: url(../img/bg_scanlines.png),
+              -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 0.6), rgba(72, 123, 255, 0.9));
+  background: url(../img/bg_scanlines.png),
+              -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.9)), to(rgba(72, 123, 255, 0.6)));
+  line-height: 30px;
+  font-size: 10px;
+  text-align: center;
+  color: #fff;
+}
+
+#file-widget #drop-area.dragenter {
+  background: url(../img/bg_scanlines.png),
+              -moz-linear-gradient(100% 100% 90deg, rgba(255, 140, 71, 0.7), rgba(255, 140, 71, 1));
+  background: url(../img/bg_scanlines.png),
+              -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 140, 71, 1)), to(rgba(255, 140, 71, 0.7)));
+}

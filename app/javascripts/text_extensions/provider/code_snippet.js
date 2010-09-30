@@ -10,7 +10,6 @@ protonet.text_extensions.provider.CodeSnippet = {
     protonet.media.Proxy.httpGet(txtUrl, function(body) {
       if (body) {
         onSuccess({
-          title:        "Code Snippet",
           code:         body,
           codeTitle:    niceUrl
         });

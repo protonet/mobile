@@ -78,7 +78,7 @@ class NodeConnection < FlashConnection
   def receive_json(json)
     log "Received JSON: #{json.inspect}"
     
-    if json['x_target'] == 'protonet.globals.communicationConsole.receiveMessage' then
+    if json['x_target'] == 'meep.receive' then
       # TODO: when using node UUIDs, this check needs to be against the current node I think
       return if json['network_uuid'] == Network.local.uuid
       
@@ -93,14 +93,13 @@ class NodeConnection < FlashConnection
         :network_id => @network.id,
         :channels => [channel]
       
-    elsif json['trigger'] == 'user.update_online_states' then
+    elsif json['trigger'] == 'users.update_status' then
       @tracker.update_remote_users json['online_users']
       
       # TODO: abstract this out
       publish 'system', 'users',
-        :x_target => "protonet.Notifications.triggerFromSocket",
         :online_users => @tracker.global_users,
-        :trigger => 'user.update_online_states'
+        :trigger => 'users.update_status'
     end
   end
   

@@ -57,6 +57,7 @@ babushka dudemeister:uuid4r
 cd /tmp
 curl -LO ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz
 tar xzf uuid-1.6.2.tar.gz
+cd uuid-1.6.2/
 ./configure
 make
 sudo make install
@@ -87,7 +88,7 @@ sudo rabbitmqctl set_permissions -p /test guest ".*" ".*" ".*"
 
 == NODE.JS
 
-Install node.js by downloading it from http://nodejs.org/#download (>= 0.1.90)
+Install node.js by downloading it from http://nodejs.org/#download (>= 0.1.100)
 then extract it and execute:
 
 ./configure

@@ -1,6 +1,7 @@
 protonet.data.GitHub = (function() {
   var COMMIT_INFO = "http://github.com/api/v2/json/commits/show/{user}/{repo}/{id}?callback=?",
       REPO_INFO = "http://github.com/api/v2/json/repos/show/{user}/{repo}?callback=?",
+      ISSUE_INFO = "http://github.com/api/v2/json/issues/show/{user}/{repo}/{id}?callback=?",
       TIMEOUT = 4000;
   
   function getCommit(user, repo, id, onSuccess, onFailure) {
@@ -18,6 +19,15 @@ protonet.data.GitHub = (function() {
       .replace("{repo}", repo);
     
     _getJson(apiUrl, "repository", onSuccess, onFailure);
+  }
+  
+  function getIssue(user, repo, id, onSuccess, onFailure) {
+    var apiUrl = ISSUE_INFO
+      .replace("{user}", user)
+      .replace("{repo}", repo)
+      .replace("{id}", id);
+      
+    _getJson(apiUrl, "issue", onSuccess, onFailure);
   }
   
   function _getJson(apiUrl, responseKey, onSuccess, onFailure) {
@@ -39,6 +49,7 @@ protonet.data.GitHub = (function() {
   
   return {
     getCommit: getCommit,
-    getRepository: getRepository
+    getRepository: getRepository,
+    getIssue: getIssue
   };
 })();

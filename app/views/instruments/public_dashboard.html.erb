@@ -1,3 +1,88 @@
+<section id="main">
+  <%- message_hint = current_user.stranger? ? 'welcome stranger! talk to us...' : "go ahead @#{current_user.display_name}, I'm all yours..." %>
+  <%- form_for :tweet, :url => tweets_path, :html => { :id => "message-form" } do |f| -%>
+    <%= f.hidden_field(:channel_id, :name => "tweet[channel_id]", :autocomplete => "off") %>
+    <%= f.hidden_field(:socket_id) %>
+    <%= f.hidden_field(:avatar, :value => current_user.active_avatar_url) %>
+    <%= f.hidden_field(:author, :value => current_user.display_name) %>
+    <%= f.hidden_field(:text_extension, :id => 'text-extension-input', :value => "", :autocomplete => "off") %>
+    <div id="textarea-wrapper">
+      <%= f.text_area(:message, :id => 'message', :title => message_hint) %>
+      <input type="submit" value="" title="Send message [ENTER]">
+      <output id="text-extension-preview">
+        <a href="#" title="Delete attachment [ESC]" class="hint remove">remove <strong>x</strong></a>
+      </output>
+    </div>
+    <div class="avatar">
+      <img src="<%= current_user.active_avatar_url %>" width="36" height="36" title="That's you!">
+    </div>
+  <%- end -%>
+  <div id="channels">
+    <ul>
+      <%- @channels.each_with_index do |c, index| -%>
+        <li>
+          <%= link_to c.name.capitalize, { :channel_id => c.id }, {
+            :title => c.description,
+            'data-channel-id' => c.id,
+            'data-channel-uuid' => c.uuid
+          } %>
+        </li>
+      <%- end -%>
+    </ul>
+    <%= link_to "manage channels", "/channels", :class => "manage-channels" %>
+  </div>
+  <output id="timeline"></output>
+  <div id="timeline-loading-indicator"></div>
+</section>
+
+<aside id="side">
+  <%= render :partial => 'users/user_widget' %>
+  <%= render :partial => 'system/files/file_widget' %>
+</aside>
+
+<script type="protonet/template" id="meep-template">
+  <%= render :partial => 'meeps/meep' %>
+</script>
+
+<script type="protonet/template" id="meep-to-merge-template">
+  <%= render :partial => 'meeps/meep_to_merge' %>
+</script>
+
+<script type="protonet/template" id="text-extension-template">
+  <%= render :partial => 'meeps/text_extension' %>
+</script>
+
+<script type="protonet/template" id="channel-reply-template">
+  <%= render :partial => 'meeps/channel_reply' %>
+</script>
+
+<script type="protonet/template" id="user-reply-template">
+  <%= render :partial => 'meeps/user_reply' %>
+</script>
+
+<script type="protonet/template" id="smilie-template">
+  <%= render :partial => 'meeps/smilie' %>
+</script>
+
+<script type="protonet/template" id="reply-from-channel-template">
+  <%= render :partial => 'meeps/reply_from_channel' %>
+</script>
+
+<% if false %>
+
+
+<ul id="meeps">
+  <li class="own">
+    @<span class="username">jeveh</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    <p class="author"><span class="image"><img src="/avatars/2009/12/8/1.png" width="36" height="36" alt="" /></span>m0rk <time>2 hours ago</time></p>
+  </li>
+  <li>
+    @<span class="username">paukul</span> @<span class="username">enebo</span> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    <p class="author"><span class="image"><img src="/avatars/2009/12/8/1.png" width="36" height="36" alt="" /></span>m0rk <time>5 hours ago</time></p>
+  </li>
+</ul>
+
+
 <div class="main">
   <%- form_for :tweet, :url => tweets_path, :html => { :id => "message-form" } do |f| -%>
     <div id="text-input">
@@ -48,7 +133,7 @@
 <%# Templates for JavaScript %>
 <div id="templates">
   <div id="message-template">
-    <%= render :partial => 'tweets/tweet', :locals => {:message => '', :avatar => '/images/userpicture.jpg',
+    <%= render :partial => 'tweets/tweet', :locals => {:message => '', :avatar => '/img/user_picture.png',
                                                        :author => '', :created_at => '',
                                                        :html_id => 'tweet-{id}-{id}'} %>
   </div>
@@ -57,3 +142,4 @@
     <%= render :partial => 'tweets/text_extension' %>
   </div>
 </div>
+<%- end -%>

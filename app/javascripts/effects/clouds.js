@@ -29,7 +29,9 @@ protonet.effects.Clouds = function(container, config) {
       this.clouds = this.clouds.add(this._createCloud());
     }
     this.clouds.appendTo(this.container);
-    this._startAnimation();
+    if (this.config.animated) {
+      this._startAnimation();
+    }
   }.bind(this));
 };
 
@@ -45,8 +47,9 @@ protonet.effects.Clouds.prototype = {
     maxSize:          100,                  // Max size of clouds in percent (relative to the natural size)
     minStartPosition: 0,                    // Min start position of clouds in percent (relative to the container width)
     maxStartPosition: 100,                  // Max start position of clouds in percent (relative to the container width)
-    image:            "/images/cloud.png",  // Url to the cloud image
-    insertMethod:     "prepend"             // jQuery method for inserting the sky element into the given container
+    image:            "/img/cloud.png",     // Url to the cloud image
+    insertMethod:     "prepend",            // jQuery method for inserting the sky element into the given container
+    animated:         true
   },
   
   _createCloud: function(fromStart) {
@@ -67,8 +70,11 @@ protonet.effects.Clouds.prototype = {
     
     cloudElement
       .attr(randomSize)
-      .css({ position: "absolute" })
-      .css({ top: randomPosition.top.px(), left: randomPosition.left.px() });
+      .css({
+        position: "absolute",
+        top: randomPosition.top.px(),
+        left: randomPosition.left.px()
+      });
     
     cloudElement.data("speed", protonet.utils.getRandomNumberInRange(this.config.minSpeed, this.config.maxSpeed));
     
@@ -126,7 +132,7 @@ protonet.effects.Clouds.prototype = {
   },
   
   _startAnimation: function() {
-    this._interval = setInterval(this._moveClouds.bind(this), 100);
+    this._interval = setInterval(this._moveClouds.bind(this), 150);
   },
   
   _moveClouds: function() {
@@ -136,7 +142,7 @@ protonet.effects.Clouds.prototype = {
       cloud = $(cloud);
       
       var speed = cloud.data("speed"),
-          posLeft = parseInt(cloud.css("left"), 10);
+          posLeft = parseFloat(cloud.css("left"), 10);
       
       if (posLeft > this.containerSize.width) {
         cloud.remove();

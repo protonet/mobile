@@ -33,7 +33,7 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
       Then I should see /justadded/ within "#user-list ul.root"
       And I fill in "message" with "Hallo @just"
       Then the message field should contain "Hallo @justadded"
-
+      
   @javascript
   Scenario: Keeping the user list updated
     Given a user exists with login: "dudemeister"

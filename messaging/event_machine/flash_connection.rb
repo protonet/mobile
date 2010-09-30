@@ -19,7 +19,7 @@ class FlashConnection < EventMachine::Connection
   def receive_json json
     log "Received JSON: #{json.inspect}"
     
-    if json['x_target'] == 'protonet.globals.communicationConsole.receiveMessage' then
+    if json['trigger'] == 'meep.receive' then
       publish 'channels', "channels.#{json['channel_uuid']}", json.to_json
     end
   end

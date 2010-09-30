@@ -69,5 +69,9 @@ protonet.user.Browser = {
   
   SUPPORTS_FLUID: function() {
     return !!window.fluid;
+  },
+  
+  SUPPORTS_NOTIFICATIONS: function() {
+    return "webkitNotifications" in window;
   }
 };

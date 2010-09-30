@@ -29,6 +29,10 @@ protonet.data.MetaData = {
   
   LINK_REL: ["video_src", "image_src", "audio_src"],
   
+  regExps: {
+    DUBLIN_CORE: /^dc\./
+  },
+  
   get: function(url, onSuccess, onFailure) {
     var query = this.QUERY.replace("{url}", url);
     new protonet.data.YQL.Query(query).execute(this._success.bind(this, onSuccess, url), onFailure);
@@ -53,9 +57,12 @@ protonet.data.MetaData = {
     // handle meta elements
     $.each(metaTags, function(i, metaTag) {
       if (typeof(metaTag.name) == "string" && typeof(metaTag.content) == "string") {
-        data[metaTag.name.toLowerCase()] = $.trim(metaTag.content);
+        // Handling Dublin Core Meta Tags http://www.seoconsultants.com/meta-tags/dublin/
+        var name    = $.trim(metaTag.name.toLowerCase()).replace(this.regExps.DUBLIN_CORE, ""),
+            content = $.trim(metaTag.content);
+        data[name] = content;
       }
-    });
+    }.bind(this));
     
     // handle opengraph meta tags
     $.each(metaTags, function(i, metaTag) {

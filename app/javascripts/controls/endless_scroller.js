@@ -5,7 +5,7 @@ protonet.controls.EndlessScroller = (function() {
       REG_EXP_TWEET_INDEX = /tweet-(\d*)-(\d*)/;
   
   function EndlessScroller() {
-    this.channelId = protonet.globals.channelSelector.getCurrentChannelId();
+    this.channelId = protonet.timeline.Channels.selected;
     this._observe();
     
     protonet.Notifications.bind("channel.changed", function(e, newChannelId) {
@@ -56,7 +56,6 @@ protonet.controls.EndlessScroller = (function() {
 
           // Ok, let the browser breathe and then do the rest
           setTimeout(function() {
-            protonet.Notifications.trigger("messages.new", params.channel_id, showNotification);
             if (showNotification) {
               protonet.Notifications.trigger("notification.new", params.channel_id);
             }

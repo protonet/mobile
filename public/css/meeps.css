@@ -1,0 +1,210 @@
+/* =MEEPS
+=========================================================================== */
+
+.meeps li {
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+  background: -moz-linear-gradient(100% 100% 90deg, rgba(0, 0, 0, 0.1), transparent);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.1)));
+  border: 1px solid rgb(180, 180, 180);
+  border-radius: 1em;
+  margin: 0 20px 15px 45px;
+  padding: 10px;
+  position: relative;
+}
+
+.meeps .own {
+  background: -moz-linear-gradient(100% 100% 90deg, rgba(234, 100, 47, 0.1), transparent);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(234, 100, 47, 0.1)));
+}
+
+.meeps .author {
+  font: 10px/1.4em Verdana, sans-serif;
+  margin-top: 5px;
+  color: #666;
+}
+
+.meeps article {
+  border-bottom: 1px solid rgb(220, 220, 220);
+  display: block;
+  margin: 0 0 5px;
+  padding: 0 0 5px;
+}
+
+.meeps article:nth-last-child(2) {
+  border-bottom: 0;
+  background: url("/img/icn_message_arrow.png") no-repeat left bottom;
+  margin: 0 0 0 -25px;
+  padding: 0 0 0 25px;
+}
+
+.meeps .own article:nth-last-child(2) {
+  background-image: url("/img/icn_own_message_arrow.png");
+}
+
+.meeps article p {
+  white-space: pre-wrap;
+}
+
+.meeps .avatar {
+  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  bottom: 0;
+  height: 46px;
+  left: -70px;
+  position: absolute;
+  width: 21px;
+}
+
+.meeps .avatar img {
+  background: rgb(255, 255, 255);
+  padding: 5px;
+}
+
+.meeps time {
+  color: rgb(180, 180, 180);
+}
+
+.meeps .username {
+  color: rgb(234, 100, 47);
+}
+
+.meeps .status {
+  color: rgb(180, 180, 180);
+  float: right;
+}
+
+.meeps .separator:after {
+  right: 0;
+  left: 0;
+  content: " ";
+  bottom: -9px;
+  border-bottom: 1px dotted rgb(180, 180, 180);
+  position: absolute;
+}
+
+.meeps .error .status {
+  color: red;
+}
+
+#timeline-loading-indicator {
+  display: none;
+  height: 48px;
+  background: url(/img/icn_loading_big.gif) center center no-repeat;
+  margin-bottom: 6px;
+}
+
+.no-meeps-available {
+  display: none;
+  text-align: center;
+  color: rgb(180, 180, 180);
+}
+
+/* Smilies */
+.smilie {
+  display: inline-block;
+  vertical-align: bottom;
+  background: url(/img/spr_smilies_r2.png) no-repeat;
+  width: 28px;
+  height: 23px;
+  text-indent: -9999px;
+}
+
+.smilie.laugh {
+  background-position: 0 0;
+}
+
+.smilie.amazed {
+  background-position: -28px 0;
+}
+
+.smilie.sad {
+  background-position: -56px 0;
+}
+
+.smilie.angry {
+  background-position: -84px 0;
+}
+
+.smilie.cry {
+  background-position: -112px 0;
+}
+
+.smilie.tongue {
+  background-position: -140px 0;
+}
+
+.smilie.glasses {
+  background-position: -169px 0;
+}
+
+.smilie.wink {
+  background-position: -197px 0;
+}
+
+.smilie.struggled {
+  background-position: -225px 0;
+}
+
+.smilie.grin {
+  background-position: -253px 0;
+}
+
+.heart {
+  color: red;
+  cursor: default;
+  text-shadow: 1px 1px 1px #999;
+}
+
+/* Socket */
+#flash-socket {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  right: 0;
+  top: 0;
+}
+
+/* Channel/User replies */
+.reply {
+  color: #fff !important;
+  padding: 1px 4px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.reply.channel {
+  background: rgba(72, 123, 255, 0.8);
+}
+
+.reply.channel:hover {
+  background: rgba(72, 123, 255, 1);
+}
+
+.reply.user {
+  color: #000 !important;
+  border: 1px solid rgb(255, 140, 71);
+}
+
+.reply.user.myself {
+  color: #fff !important;
+  border: 0;
+  background: rgba(255, 140, 71, 0.8);
+}
+
+.reply.user.myself:hover {
+  background: rgba(255, 140, 71, 1);
+}
+
+.reply-from-channel a {
+  color: rgba(72, 123, 255, 0.8);
+}
+
+.reply-from-channel a:hover {
+  color: rgba(72, 123, 255, 1);
+}
+
+/* ================================================================ MEEPS = */

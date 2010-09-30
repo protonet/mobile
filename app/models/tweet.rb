@@ -21,7 +21,8 @@ class Tweet < ActiveRecord::Base
   validates_presence_of :message
 
   attr_accessor :socket_id
-  after_create :send_to_queue if Rails.env == 'production' || configatron.messaging_bus_active
+  
+  after_create :send_to_queue if Rails.env == 'production' || configatron.messaging_bus_active == true
 
   def local?
     network_id == 1
@@ -36,15 +37,28 @@ class Tweet < ActiveRecord::Base
   end
 
   def send_to_queue
+    self.text_extension = JSON.parse(text_extension) rescue nil
     channels.each do |channel|
       publish 'channels', channel.uuid, self.attributes.merge({
-        :socket_id => socket_id,
-        :channel_id => channel.id,
+        :socket_id    => socket_id,
+        :channel_id   => channel.id,
         :channel_uuid => channel.uuid,
-        :user_icon_url => user.active_avatar_url,
-        :network_uuid => network.uuid
+        :avatar       => user.active_avatar_url,
+        :network_uuid => network.uuid,
+        :trigger      => 'meep.receive'
       })
     end
+  end
+
+  def self.prepare_for_frontend(channel, meeps)
+    meeps.map do |m|
+      m.text_extension = JSON.parse(m.text_extension) rescue nil
+      m.attributes.merge({ :avatar => m.user.active_avatar_url, :channel_id => channel.id })
+    end
+  end
+  
+  def self.valid_attributes
+    column_names + ['socket_id']
   end
 
   def from_minutes_before(mins, channel_id)

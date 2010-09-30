@@ -1,14 +1,36 @@
 protonet.utils.autoLink = (function() {
-  var REG_EXP = /(\b(((https?|ftp):\/\/)|(www\.))[-A-Z0-9+&@#\/%?=~_|!:,.;\[\]]*[-A-Z0-9+&@#\/%=~_|])/gim, // old /(\S+\.{1}[^\s\,\.\!]+)/g
-      MAX_DISPLAY_LENGTH = 55;
+  /**
+   * This is basically a rebuild of
+   * the rails auto_link_urls text helper
+   *
+   * revision 1:
+   *    /(\S+\.{1}[^\s\,\.\!]+)/g
+   *
+   * revision 2:
+   *    /(\b(((https?|ftp):\/\/)|(www\.))[-A-Z0-9+&@#\/%?=~_|!:,.;\[\]]*[-A-Z0-9+&@#\/%=~_|])/gim
+   */
+  var URL_REG_EXP           = /(https?:\/\/|www\.)[^\s<]+/gi,
+      TRAILING_CHAR_REG_EXP = /([^\w\/-])$/i,
+      MAX_DISPLAY_LENGTH    = 55,
+      BRACKETS              = {
+        ")": "(",
+        "]": "[",
+        "}": "{"
+      };
   
   return function(str) {
-    return str.replace(REG_EXP, function(url) {
-      if (!url.isUrl()) {
-        return url;
+    return str.replace(URL_REG_EXP, function(url) {
+      var punctuation = (url.match(TRAILING_CHAR_REG_EXP) || [])[1] || "",
+          opening     = BRACKETS[punctuation];
+      
+      url = url.replace(TRAILING_CHAR_REG_EXP, "");
+      
+      if (url.split(opening).length > url.split(punctuation).length) {
+        url = url + punctuation;
+        punctuation = "";
       }
       
-      var realUrl = url,
+      var realUrl    = url,
           displayUrl = url.truncate(MAX_DISPLAY_LENGTH);
       
       // Add http prefix if necessary
@@ -16,7 +38,7 @@ protonet.utils.autoLink = (function() {
         realUrl = "http://" + realUrl;
       }
       
-      return '<a href="' + realUrl + '" target="_blank" rel="nofollow">' + displayUrl + '</a>';
+      return '<a href="' + realUrl + '" target="_blank">' + displayUrl + '</a>' + punctuation;
     });
   };
 })();

@@ -3,30 +3,26 @@ module System
     include Rabbit
     
     def index
-      @channels = current_user.verified_channels
-      @active_channel = params[:channel_id] ? Channel.find(params[:channel_id]) : @channels.first
-      
       raw_files = FileSystem.all(params['path'])
-      @files = raw_files.collect do |k,v|
-        {:type => k, :name => v}
-      end
+      
       respond_to do |format|
         format.html
-        format.js  { render :json => @files }
+        format.js  { render :json => raw_files }
       end
     end
     
     def create_directory
-      if params[:directory_name]
+      if params[:directory_name] && params[:file_path] && params[:channel_id]
         begin
-          full_directory_path = "#{params["file_path"]}/#{params["directory_name"]}"
+          full_directory_path = "/#{params[:channel_id]}#{params[:file_path]}#{params[:directory_name]}"
           FileUtils.mkdir(System::FileSystem.cleared_path(full_directory_path))
           
           channel = Channel.find(params[:channel_id])
           publish 'files', ['channel', channel.uuid],
             :trigger        => 'directory.added',
-            :path           => params["file_path"],
-            :directory_name => params["directory_name"]
+            :path           => params[:file_path],
+            :directory_name => params[:directory_name],
+            :channel_id     => params[:channel_id]
         rescue
           return head(409)
         else
@@ -38,15 +34,15 @@ module System
     end
     
     def delete_directory
-      if params[:directory_name]
-        full_directory_path = "#{params["file_path"]}/#{params["directory_name"]}"
-        FileUtils.rm_rf(System::FileSystem.cleared_path(full_directory_path))
+      if params[:file_path] && params[:channel_id]
+        full_path = "/#{params[:channel_id]}#{params[:file_path]}"
+        FileUtils.rm_rf(System::FileSystem.cleared_path(full_path))
           
         channel = Channel.find(params[:channel_id])
         publish 'files', ['channel', channel.uuid],
           :trigger        => 'directory.removed',
-          :path           => params["file_path"],
-          :directory_name => params["directory_name"]
+          :path           => params[:file_path],
+          :channel_id     => params[:channel_id]
         return head(:ok)
       else
         return head(:error)
@@ -54,7 +50,7 @@ module System
     end
     
     def create
-      if params[:file]
+      if params[:file] && params[:channel_id] && params[:file_path]
         # FIXME make sure this is not hackable (filename could now be ../../.. and move basically anywhere)
         filename = params[:file].original_filename.strip
         
@@ -64,16 +60,17 @@ module System
           filename       = latin1_to_utf8.iconv(filename)
         end
         
-        full_file_path    = "#{params["file_path"]}/#{filename}"
-        cleared_file_path = System::FileSystem.cleared_path("#{params["file_path"]}/#{filename}")
+        full_file_path    = "/#{params[:channel_id]}#{params[:file_path]}#{filename}"
+        cleared_file_path = System::FileSystem.cleared_path(full_file_path)
         target_file       = cleared_file_path
         FileUtils.mv(params[:file].path, target_file)
-          
+        
         channel = Channel.find(params[:channel_id])
         publish 'files', ['channel', channel.uuid],
           :trigger      => 'file.added',
-          :path         => params["file_path"],
-          :file_name     => filename
+          :path         => params[:file_path],
+          :file_name    => filename,
+          :channel_id   => params[:channel_id]
         return head(:ok)
       else
         return head(:error)
@@ -91,15 +88,15 @@ module System
     end
   
     def delete
-      if params[:file_name]
-        full_path = "#{params["file_path"]}/#{params["file_name"]}"
+      if params[:file_path] && params[:channel_id]
+        full_path = "/#{params[:channel_id]}#{params[:file_path]}"
         FileUtils.rm(System::FileSystem.cleared_path(full_path))
-          
+        
         channel = Channel.find(params[:channel_id])
         publish 'files', ['channel', channel.uuid],
           :trigger      => 'file.removed',
-          :path         => params["file_path"],
-          :file_name     => params["file_name"]
+          :path         => params[:file_path],
+          :channel_id   => params[:channel_id]
         return head(:ok)
       else
         return head(:error)

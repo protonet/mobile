@@ -4,31 +4,30 @@
  * central pub sub point
  */
 protonet.Notifications = (function() {
-  var PSEUDO_ELEMENT = $("<div />");
+  var HOST_ELEMENT = $(document.documentElement);
   
   function bind(event, handler) {
-    PSEUDO_ELEMENT.bind(event, handler);
+    HOST_ELEMENT.bind(event, handler);
     return this;
   }
   
   function unbind(event, handler) {
-    PSEUDO_ELEMENT.unbind(event, handler);
+    HOST_ELEMENT.unbind(event, handler);
     return this;
   }
   
   function trigger(event, data) {
-    PSEUDO_ELEMENT.trigger(event, data);
+    if (protonet.config.debugMode) {
+      console.log(event, data);
+    }
+    
+    HOST_ELEMENT.trigger(event, data);
     return this;
   }
   
-  function triggerFromSocket(message) {
-    return trigger(message.trigger, message);
-  }
-  
   return {
-    bind: bind,
-    unbind: unbind,
-    trigger: trigger,
-    triggerFromSocket: triggerFromSocket
+    bind:               bind,
+    unbind:             unbind,
+    trigger:            trigger
   };
 })();

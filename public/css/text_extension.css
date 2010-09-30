@@ -1,0 +1,254 @@
+/* =TEXT EXTENSION
+=========================================================================== */
+#text-extension-preview {
+  height: 0px;
+  clear: both;
+  opacity: 0;
+  display: none;
+  position: relative;
+  margin-top: 6px;
+  border: 1px dotted #999;
+  padding: 4px 50px 4px 4px;
+}
+
+#text-extension-preview .remove {
+  position: absolute;
+  display: block;
+  line-height: 9px;
+  top: 4px;
+  right: 4px;
+  font-size: 9px;
+  text-decoration: none;
+}
+
+#text-extension-preview .remove strong {
+  color: #666;
+}
+
+#text-extension-preview.loading-bar {
+  background: url(/img/loading_bar.gif) no-repeat center center;
+}
+
+.text-extension-results {
+  line-height: 1.3;
+  font-size: 10px; /* Ensure a unique font-size */
+}
+
+.text-extension-results a {
+  text-decoration: none;
+}
+
+.text-extension-results h4 {
+  display: none;
+  padding: 3px 5px;
+  color: #000;
+  border-bottom: 1px solid #666;
+  background-color: #ccc;
+  position: relative;
+}
+
+.text-extension-results output:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+.text-extension-results .title {
+  color: #000;
+  display: block;
+  font-weight: bold;
+  margin: 0 0 2px 0;
+  min-width: 200px;
+}
+
+.text-extension-results .description {
+  color: #666;
+  min-width: 200px;
+  text-decoration: none;
+}
+
+.text-extension-results .domain {
+  color: #999;
+  display: block;
+  margin: 0 0 2px 0;
+}
+
+.text-extension-results .media {
+  margin: 0 10px 0 0;
+  float: left;
+  display: block;
+  position: relative;
+}
+
+.text-extension-results .media a {
+  display: block;
+  line-height: 0;
+  text-decoration: none;
+}
+
+.text-extension-results .media img {
+  background: #999;
+}
+
+.text-extension-results .media a:hover img {
+  -webkit-box-shadow: 0 0 10px #666;
+  -moz-box-shadow: 0 0 10px #666;
+  box-shadow: 0 0 10px #666;
+}
+
+.meeps .text-extension-results {
+  margin: 8px 0 6px;
+}
+
+/* =IFRAME (Doodle, Maps...)
+--------------------------------------------------------------------------- */
+.text-extension-results .media iframe {
+  border: 1px solid #999;
+  width: 561px;
+  height: 200px;
+}
+
+#text-extension-preview .text-extension-results .media iframe {
+  width: 530px;
+}
+
+/* =VIDEO/FLASH TEXT EXTENSION (YouTube, Slideshare, ...)
+--------------------------------------------------------------------------- */
+.text-extension-results.flash object {
+  height: 280px;
+  width: 563px;
+  margin-bottom: 5px;
+}
+
+#text-extension-preview .text-extension-results.flash object {
+  width: 530px;
+  height: 280px;
+}
+
+.text-extension-results.flash .media a:after {
+  content: "\25BA";
+  cursor: pointer;
+  font-family: Arial;
+  font-size: 20px;
+  color: #fff;
+  background: #000;
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  height: 30px;
+  width: 30px;
+  margin: -15px 0 0 -15px;
+  line-height: 30px;
+  text-indent: 4px;
+  vertical-align: middle;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  box-shadow: 0 0 2px 2px #666;
+  -webkit-box-shadow: 0 0 2px 2px #666;
+  -moz-box-shadow: 0 0 2px 2px #666;
+}
+
+.text-extension-results.flash .media a:hover:after {
+  background: #487bff;
+}
+
+.text-extension-results.flash .media a:active:after {
+  opacity: 0.8;
+}
+
+/* =LINK TEXT EXTENSION
+--------------------------------------------------------------------------- */
+.text-extension-results.Link .media img {
+  background: #fff url(/img/screenshot_fetching.gif) center center no-repeat;
+}
+
+/* =IMAGES TEXT EXTENSIONS
+--------------------------------------------------------------------------- */
+.text-extension-results.image .media a,
+.text-extension-results.images .media a {
+  width: 100px;
+  height: 75px;
+}
+
+.text-extension-results.images .media a {
+  position: relative;
+  margin: 0 5px 5px 0;
+  float: left;
+  display: block;
+}
+
+.text-extension-results.images img:hover {
+  background: #ccc;
+}
+
+.text-extension-results.images .title {
+  clear: both;
+}
+
+/* =CODE TEXT EXTENSION
+--------------------------------------------------------------------------- */
+.text-extension-results.code .media,
+.text-extension-results.codes .media {
+  float: none;
+  margin-bottom: 4px;
+}
+
+.text-extension-results.code .media strong,
+.text-extension-results.codes .media strong {
+  padding-left: 21px;
+  background: transparent url(/images/icn_code.png) no-repeat 0 0;
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 16px;
+  margin-bottom: 2px;
+}
+
+.text-extension-results.code .media strong a,
+.text-extension-results.codes .media strong a {
+  display: inline;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+
+/* Code highlighting */
+pre .str { color: #080; }
+pre .kwd { color: #008; }
+pre .com { color: #800; }
+pre .typ { color: #606; }
+pre .lit { color: #066; }
+pre .pun { color: #660; }
+pre .pln { color: #000; }
+pre .tag { color: #008; }
+pre .atn { color: #606; }
+pre .atv { color: #080; }
+pre .dec { color: #606; }
+
+
+/* =GITHUB COMMIT TEXT EXTENSION
+--------------------------------------------------------------------------- */
+.text-extension-results.GithubCommit .media strong {
+  background: transparent url(/images/github_file_modes.png) no-repeat 0 0;
+}
+
+.text-extension-results.GithubCommit .media strong a {
+  font-weight: normal;
+}
+
+.text-extension-results.GithubCommit .media div.added strong {
+  background-position: 0 0;
+}
+
+.text-extension-results.GithubCommit .media div.modified strong {
+  background-position: 0 -40px;
+}
+
+.text-extension-results.GithubCommit .media div.removed strong {
+  background-position: 0 -80px;
+}
