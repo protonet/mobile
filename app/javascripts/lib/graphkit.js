@@ -25,6 +25,8 @@ var Node = function(info) {
   this.mass     = 500.0;    
   this.added = false;
   
+  this.padding = {h:6, v:8};
+  
   this.tmp = {};
   this.tmp.name = "";
   
@@ -43,7 +45,7 @@ Node.prototype = {
     this.mass     = 500.0;    
   },
   
-  get_style: function(attrname) {
+  get_style: function(attrname, actualType) {
     var styles = {
       node: {
         fill: "#ff7400", 
@@ -78,15 +80,26 @@ Node.prototype = {
         strokewidth: 1
       }
     };
-    var type = this.info.type;
+    var type = (actualType ? actualType : this.info.type);
     if (this.info.name.match(/^stranger/) || this.tmp.name != "")
       type = "stranger";
     if (this.graph.small && attrname == "strokewidth")
       return 1;
+    if (this.graph.small && attrname == "fontsize")
+      return styles[type][attrname] - 2;
     return styles[type][attrname];
   },
   
   render: function(paper, small) {
+    var actualType =
+      (this.info.type == "client" && this.tmp.name.length > 0 ?
+        "stranger" : 0);
+
+    var padding = {
+      v: (small ? this.padding.v - 2 : this.padding.v),
+      h: (small ? this.padding.h - 2 : this.padding.h)
+    };
+
     if (!this.visual) {
       // create the initial visual
       this.paper  = paper;
@@ -111,8 +124,8 @@ Node.prototype = {
       }
 
       var bb = (!is_small ? title.getBBox() : {x:0, y:0, width:6, height:4});
-      var w = bb.width + 16;
-      var h = bb.height + 12;
+      var w = bb.width + (padding.v * 2);
+      var h = bb.height + (padding.h * 2);
       var box;
       var borderradius = (this.info.type == 'client' ? h/2 : 5);
       if (is_small && this.info.type == 'client') {
@@ -130,11 +143,11 @@ Node.prototype = {
         title.n = this;
         title.b = box;
         title.mouseover(function() {
-            this.b.attr({fill: this.b.n.get_style("hover")
+            this.b.attr({fill: this.b.n.get_style("hover", actualType)
           });
         });
         title.mouseout(function() {
-            this.b.attr({fill: this.b.n.get_style("fill")
+            this.b.attr({fill: this.b.n.get_style("fill", actualType)
           });
         });
 
@@ -158,11 +171,11 @@ Node.prototype = {
 
       // on mouse drauf Farbe aendern
       this.visual_box.mouseover(function() {
-          this.attr({fill: this.n.get_style("hover")
+          this.attr({fill: this.n.get_style("hover", actualType)
         });
       });
       this.visual_box.mouseout(function() {
-          this.attr({fill: this.n.get_style("fill")
+          this.attr({fill: this.n.get_style("fill", actualType)
         });
       });
     }
@@ -182,10 +195,13 @@ Node.prototype = {
       this.visual_box.translate(-bbb.x, -bbb.y);
 
       // update box size
-      this.visual_box.attr({width: bbt.width + 16, height: bbt.height + 12});
+      this.visual_box.attr({
+        width: bbt.width + (padding.v * 2), 
+        height: bbt.height + (padding.h * 2)}
+      );
       
-      this.visual_title.translate(this., 0);
-      this.visual_box.translate(-diff, 0);
+      //this.visual_title.translate(this., 0);
+      //this.visual_box.translate(-diff, 0);
       
       this.tmp.name = "";
     }
@@ -202,7 +218,7 @@ Node.prototype = {
       //var diff = dir.scale(this.visual.getBBox().width / 2 - 6);
       //this.visual.translate(diff.x, diff.y);
       
-      //this.visual.rotate(this.info.angle, false);
+      this.visual.rotate(this.info.angle, false);
     }
 
     // show visual on mouse-over

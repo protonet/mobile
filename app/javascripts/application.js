@@ -12,6 +12,7 @@
 //= require "ui/logo.js"
 //= require "utils/toggle_element.js"
 //= require "lib/jQuery.dPassword.js"
+//= require "networkmonitor.js"
 
 //---------------------------- INITIALIZE APPLICATION ----------------------------
 

@@ -68,7 +68,7 @@ function asyncupdate4() {
 $(function() {
   if ($("network-monitor")) {
     // make graph and render it
-    NetworkGraph = new Graph("network-monitor", 50, ($('.side #network-monitor').size() > 0));
+    NetworkGraph = new Graph("network-monitor", 50, ($('#network-widget #network-monitor').size() > 0));
     NetworkGraph.initFromNetworksInfo(networks);
     protonet.Notifications.bind('users.update_status', function(e, msg) {
       NetworkGraph.updateFromAsyncInfo(msg.online_users);

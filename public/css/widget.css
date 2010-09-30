@@ -23,6 +23,9 @@
   background: -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 1), rgba(72, 123, 255, 0.6));
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.6)), to(rgba(72, 123, 255, 1)));
 }
+  .widget h3 a {
+    color: #fff;
+  }
 
 .widget output {
   display: inline;
@@ -97,6 +100,11 @@
   color: rgba(255, 255, 255, 0.3);
 }
 
+/*--------------------------------- NETWORK WIDGET ---------------------------------*/
+#network-widget #network-monitor {
+  width: 216px;
+  height: 170px;
+}
 
 /*--------------------------------- USER WIDGET ---------------------------------*/
 #user-widget li a {
