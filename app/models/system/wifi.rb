@@ -56,7 +56,6 @@ bssid=00:13:10:95:fe:0b"
         generate_config(type)
         System::Preferences.wifi_mode = type
         (type == :single ? {'wlan0' => '10.42.0.1'} : {'wlan0' => '10.42.0.1', 'wlan1' => '10.43.0.1'}).each do |interface, ip|
-          System::Networking.config_wifi_interface(interface, ip)
           System::Dnsmasq.add_interface(interface, ip)
         end
         System::Dnsmasq.restart

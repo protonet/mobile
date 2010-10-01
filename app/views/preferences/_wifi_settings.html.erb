@@ -9,3 +9,5 @@
   <%= link_to 'on', system_wifi_on_path %><br>
   <%= link_to 'off', system_wifi_off_path %>
 </p>
+<br>
+<p>Iptables ready: <bold><%= System::Networking.iptables_rules_ready %></bold></p>

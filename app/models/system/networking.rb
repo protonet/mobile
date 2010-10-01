@@ -3,16 +3,14 @@ module System
     
     class << self
       
-      def load_iptable_rules
-        
+      def iptables_rules_ready
+        return false unless Rails.env == 'production'
+        return true if File.exists?("#{configatron.shared_file_path}/config/ifconfig.d/iptables")
+        FileUtils.cp("#{RAILS_ROOT}/lib/backend_adapters/ubuntu/iptables/protonet", "#{configatron.shared_file_path}/config/ifconfig.d/iptables")
       end
       
       def config_wifi_interface(interface, ip)
-        config_file = "#{configatron.shared_file_path}/config/ifconfig.d/#{interface}"
-        return if File.exists?(config_file) # yeah doesn't handle ip changes
-        File.open(config_file, 'w') {|f| f.write("#!/bin/bash\nifconfig #{interface} #{ip} netmask 255.255.255.0") }
-        `/bin/chmod +x #{config_file}`
-        restart_interface(interface)
+        #doesn't work
       end
       
       def restart_interface(interface)

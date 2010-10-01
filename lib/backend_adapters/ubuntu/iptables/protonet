@@ -76,7 +76,7 @@ echo "   Route PUBLIC IFACE ($PUBIF) traffic to unknown_user chain by default.."
   # unknown users will be redirected to the dashboard, all other traffic will be dropped
   # this redirects the tcp:80 packets, also I couldn't leave it in the unknown_user chain it
   # seems
-  $IPT -t nat -A PREROUTING -i $PUBIF -p tcp -m tcp --dport 80 -j DNAT --to-destination 10.42.1.1:80
+  $IPT -t nat -A PREROUTING -i $PUBIF -p tcp -m tcp --dport 80 -j DNAT --to-destination 10.43.0.1:80
   # all traffic is being sent to the unknown_user chain
   $IPT -A INPUT -i $PUBIF -j unknown_user
 
