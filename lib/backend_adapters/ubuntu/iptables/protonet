@@ -53,8 +53,9 @@ echo "   Creating our own chains (unknown_user and known_user_internet_allowed)"
   $IPT -N known_user_internet_allowed
 
 echo "   Creating unknown_user chain and setting its rules.."
-  # accept allow tcp:80, and udp:53 (dns) requests
+  # accept allow tcp:80, dhcp:67 and udp:53 (dns) requests
   $IPT -A unknown_user -p tcp -m tcp --dport 80 -j ACCEPT
+  $IPT -A unknown_user -p udp -m udp --dport 67 -j ACCEPT
   $IPT -A unknown_user -p udp -m udp --dport 53 -j ACCEPT 
   # drop the rest
   $IPT -A unknown_user -j DROP
