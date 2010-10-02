@@ -38,7 +38,7 @@
         flash_message = flash[:notice] || flash[:error] || flash[:warning]
       end
     %>
-    <div class="flash-message <%= flash_message_class_name %>"><p><%= flash_message %></p></div>
+    <div class="flash-message <%= flash_message_class_name %>"><p><%= h(flash_message) %></p></div>
     
     <%- if current_user.stranger? -%>
       <section id="login">
@@ -50,14 +50,17 @@
             <div>
               <%= f.label :login, "username" %>
               <%= f.text_field :login, :title => "user name" %>
+              <span class="hint">min. 3 characters</span>
             </div>
             <div>
               <%= f.label :password, "password" %>
               <%= f.password_field :password, :title => "password" %>
+              <span class="hint">min. 6 characters</span>
             </div>
             <div>
               <%= f.label :password_confirmation, "password confirmation" %>
               <%= f.password_field :password_confirmation, :title => "password" %>
+              <span class="hint">repeat for confirmation</span>
             </div>
             <div>
               <!-- TODO: Enable this -->
@@ -82,9 +85,9 @@
               <%= label_tag :password, "password", :for => "login_password" %>
               <%= password_field_tag :password, nil, :title => "password", :id => "login_password" %>
             </div>
-            <div class="forgot-password">
-              <a href="" class="hint" title="shit happens!">forgot password?</a>
-            </div>
+            <!-- TODO:<div class="forgot-password">
+                <a href="" class="hint" title="shit happens!">forgot password?</a>
+            </div>-->
             <div>
               <button type="submit" name="commit">login</button>
             </div>
@@ -104,6 +107,11 @@
               <img src="<%= current_user.active_avatar_url %>" width="16" height="16">
             </a>
           </li>
+          <%- unless current_user.has_avatar? %>
+            <li class="change-avatar" tabindex="-1">
+              <%= link_to("upload avatar", preferences_path) %>
+            </li>
+          <%- end %>
           <li class="account" tabindex="-1">
             <%= link_to("account", preferences_path) %>
           </li>
@@ -204,14 +212,6 @@
         </span>
       </div>
     <% end %>
-
-    <%- unless flash.empty? -%>
-      <div class="message">
-        <%= "<p class=\"notice\"><span>#{flash[:notice]}</span></p>" if flash[:notice] %>
-        <%= "<p class=\"error\"><span>#{flash[:error]}</span></p>" if flash[:error] %>
-        <%= "<p class=\"warning\"><span>#{flash[:warning]}</span></p>" if flash[:warning] %>
-      </div>
-    <%- end -%>
 
     <%= yield %>
 

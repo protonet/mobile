@@ -106,6 +106,11 @@
   height: 170px;
 }
 
+#network-widget h3 a {
+  float: right;
+  color: rgba(255, 255, 255, 0.8);
+}
+
 /*--------------------------------- USER WIDGET ---------------------------------*/
 #user-widget li a {
   color: #999;
@@ -266,6 +271,7 @@
 }
 
 #file-widget #drop-area {
+  background: rgb(72, 123, 255) url(../img/bg_scanlines.png);
   background: url(../img/bg_scanlines.png),
               -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 0.6), rgba(72, 123, 255, 0.9));
   background: url(../img/bg_scanlines.png),

@@ -208,4 +208,8 @@ class User < ActiveRecord::Base
   def active_avatar_url
     avatar ? "/images/avatars/#{avatar.id}" : '/img/user_picture.png'
   end
+  
+  def has_avatar?
+    !!avatar
+  end
 end

@@ -28,9 +28,7 @@ body {
 
 body {
   overflow-y: scroll;
-  background: url(/img/background_top.png) repeat-x,
-              url(/img/background_bottom.png) repeat-x left bottom,
-              url(/img/background.png) fixed;
+  background: #dae4ff; /* Same as rgba(72, 123, 255, 0.2); which creates a very buggy background effect in opera 10.64 */
   margin: 0 auto;
   width: 940px;
   color: #000;
@@ -264,6 +262,10 @@ header .hearts {
   color: #666;
 }
 
+#user-navigation .change-avatar {
+  font-weight: bold;
+}
+
 #user-navigation .welcome a {
   text-decoration: none;
   color: inherit;
@@ -336,6 +338,7 @@ header .hearts {
   -moz-box-shadow: 3px 3px 3px #999;
   z-index: 10;
   margin-top: 2px;
+  min-width: 100px;
 }
 
 .context-menu:before {
@@ -352,7 +355,6 @@ header .hearts {
   cursor: pointer;
   padding: 6px;
   color: #487bff;
-  min-width: 100px;
   overflow: hidden;
   border-bottom: 1px solid #ccc;
 }

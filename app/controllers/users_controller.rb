@@ -25,13 +25,13 @@ class UsersController < ApplicationController
       # reset session
       self.current_user = @user # !! now logged in
       
-      flash[:notice] = "Thanks for signing up! We're sending you an email with your activation code (ORLY)."
-      redirect_back_or_default('/')
+      flash[:notice] = "Thanks for signing up, #{@user.display_name}!"
     else
       @user ||= User.new
-      flash.now[:error]  = "Sorry, but we couldn't set up that account. Please try again, or contact an admin."
-      redirect_to :action => 'new'
+      flash[:error]  = "Sorry, but we couldn't set up that account. Please try again."
     end
+    
+    redirect_back_or_default('/')
   end
 
   def update

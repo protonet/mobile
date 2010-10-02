@@ -47,6 +47,9 @@ protonet.controls.FileWidget.prototype = {
         if (data.channel_id != this.channelId || data.path != this.path) {
           return;
         }
+        
+        this.list.find(".disabled[data-file-path$='" + data.file_name + "']").detach();
+        
         this.renderItem("file", data.file_name)
           .css("backgroundColor", "#ffff99")
           .animate({ "backgroundColor": "#ffffff" }, { duration: 1000 });
@@ -230,11 +233,15 @@ protonet.controls.FileWidget.prototype = {
     
     this.uploader.bind("FileUploaded", function(uploader, file) {
       window.onbeforeunload = null;
-      this.list.find("#file-" + file.id).detach();
     }.bind(this));
     
     this.uploader.bind("Error", function(uploader, error) {
       window.onbeforeunload = null;
+      
+      var isWeirdOperaBug = error.code == -500 && !error.status && !error.file;
+      if (isWeirdOperaBug) {
+        return;
+      }
       
       protonet.Notifications.trigger(
         "flash_message.error",
