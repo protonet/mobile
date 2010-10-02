@@ -48,7 +48,7 @@ protonet.controls.FileWidget.prototype = {
           return;
         }
         
-        this.list.find(".disabled[data-file-path$='" + data.file_name + "']").detach();
+        this.list.find(".disabled[data-file-path$='/" + data.file_name + "']").detach();
         
         this.renderItem("file", data.file_name)
           .css("backgroundColor", "#ffff99")
@@ -66,6 +66,9 @@ protonet.controls.FileWidget.prototype = {
         if (data.channel_id != this.channelId || data.path != this.path) {
           return;
         }
+        
+        this.list.find("[data-directory-path$='/" + data.directory_name + "']").detach();
+        
         this.renderItem("directory", data.directory_name, true)
           .css("backgroundColor", "#ffff99")
           .animate({ "backgroundColor": "#ffffff" }, { duration: 1000 });
@@ -307,7 +310,8 @@ protonet.controls.FileWidget.prototype = {
         }
       },
       blur: function() {
-        if (!$.trim(input.val())) {
+        var directoryName = $.trim(input.val());
+        if (!directoryName) {
           deferredFocus();
           return;
         }
@@ -316,14 +320,14 @@ protonet.controls.FileWidget.prototype = {
           type: "post",
           url:  "system/files/create_directory",
           data: {
-            directory_name:     input.val(),
+            directory_name:     directoryName,
             file_path:          this.path,
             channel_id:         this.channelId,
             authenticity_token: protonet.user.data.authenticity_token
           },
           beforeSend: function() { input.attr("disabled", "disabled"); },
           complete:   function() { input.removeAttr("disabled"); },
-          success:    function() { input.detach(); }.bind(this),
+          success:    function() { input.attr("data-directory-path", this.path + "/" + directoryName); }.bind(this),
           error:      function(transport) {
             var message;
             if (transport.status == "409") {
