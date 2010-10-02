@@ -120,14 +120,19 @@ protonet.timeline.Channel.prototype = {
     
     /**
      * Make sure that the data object is up to date
+     * by tracking incoming and outgoing meeps
      */
     protonet.Notifications
       .bind("meep.sent", function(e, meepElement, meepData, instance) {
-        this.data.meeps.push(meepData);
+        if (meepData.channel_id == this.data.id) {
+          this.data.meeps.push(meepData);
+        }
       }.bind(this))
       
       .bind("meep.receive", function(e, meepData) {
-        this.data.meeps.push(meepData);
+        if (meepData.channel_id == this.data.id) {
+          this.data.meeps.push(meepData);
+        }
       }.bind(this));
     
     /**
