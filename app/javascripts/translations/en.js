@@ -17,5 +17,6 @@ protonet.translations = {
   DIRECTORY_EXISTS_ERROR: "Folder already exists. Please choose a different name.",
   UNKNOWN_ERROR: "An error occured. Please try again",
   LOADING_MEEPS_ERROR: "We couldn't load and set up your channels. A maintenance monster is already informed.",
-  UPLOAD_IN_PROGRESS: "An upload is currently in progress which would be broken up. Are you sure?"
+  UPLOAD_IN_PROGRESS: "An upload is currently in progress which would be broken up. Are you sure?",
+  PUBLISH_FILES_CONFIRM: "Your files have been uploaded successfully. Do you want to publish them?"
 };

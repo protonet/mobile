@@ -1,5 +1,6 @@
 //= require "../utils/escape_html.js"
 //= require "../utils/parse_url.js"
+//= require "../utils/escape_for_css_query.js"
 //= require "../ui/resizer.js"
 //= require "../lib/jquery-ui-1.8.4.highlight-effect.min.js"
 //= require "../lib/plupload.full.min.js"
@@ -40,15 +41,14 @@ protonet.controls.FileWidget.prototype = {
         if (data.channel_id != this.channelId) {
           return;
         }
-        this.list.find("[data-file-path='" + data.path + "']").detach();
+        $("#file-widget [data-file-path='" + protonet.utils.escapeForCssQuery(data.path) + "']").detach();
       }.bind(this))
       
       .bind("file.added", function(event, data) {
         if (data.channel_id != this.channelId || data.path != this.path) {
           return;
         }
-        
-        this.list.find(".disabled[data-file-path$='/" + data.file_name + "']").detach();
+        $("#file-widget [data-file-path$='/" + protonet.utils.escapeForCssQuery(data.file_name) + "']").detach();
         
         this.renderItem("file", data.file_name)
           .css("backgroundColor", "#ffff99")
@@ -59,7 +59,7 @@ protonet.controls.FileWidget.prototype = {
         if (data.channel_id != this.channelId) {
           return;
         }
-        this.list.find("[data-directory-path='" + data.path + "']").detach();
+        $("#file-widget [data-directory-path='" + protonet.utils.escapeForCssQuery(data.path) + "']").detach();
       }.bind(this))
       
       .bind("directory.added", function(event, data) {
@@ -67,7 +67,7 @@ protonet.controls.FileWidget.prototype = {
           return;
         }
         
-        this.list.find("[data-directory-path$='/" + data.directory_name + "']").detach();
+        $("#file-widget [data-directory-path$='/" + protonet.utils.escapeForCssQuery(data.directory_name) + "']").detach();
         
         this.renderItem("directory", data.directory_name, true)
           .css("backgroundColor", "#ffff99")
@@ -173,7 +173,7 @@ protonet.controls.FileWidget.prototype = {
     /**
      * New file/folder context menu
      */
-    this.uploadContextMenu = new protonet.ui.ContextMenu("#add-objects", {
+    this.uploadContextMenu = new protonet.ui.ContextMenu("#file-widget .add-objects", {
       "Create new folder": function(li, closeContextMenu) {
         this.createFolderInput();
         closeContextMenu();
@@ -192,10 +192,11 @@ protonet.controls.FileWidget.prototype = {
     /**
      * The browse link is part of the context menu which doesn't exist yet
      */
-    var timestamp   = new Date().getTime(),
-        list        = this.uploadContextMenu.list,
-        browseLink  = list.children(":eq(1)").attr("id", "browse:" + timestamp),
-        progress    = $("<span />", { className: "progress", text: "(0 %) " });
+    var timestamp     = new Date().getTime(),
+        list          = this.uploadContextMenu.list,
+        filesInQueue  = [],
+        browseLink    = list.children(":eq(1)").attr("id", "browse:" + timestamp),
+        progress      = $("<span />", { className: "progress", text: "(0 %) " });
     
     this.uploader = new plupload.Uploader({
       runtimes:       "html5,flash",
@@ -204,8 +205,14 @@ protonet.controls.FileWidget.prototype = {
       max_file_size:  "1000mb",
       url:            "",
       flash_swf_url:  "/flash/plupload.flash.swf",
-      drop_element:   this.dropArea.attr("id")
+      drop_element:   "file-widget"
     });
+    
+    this.uploader.bind("Init", function(uploader) {
+      if (uploader.features.dragdrop) {
+        this.container.addClass("dragdrop");
+      }
+    }.bind(this));
     
     this.uploader.bind("FilesAdded", function(uploader, files) {
       $.each(files, function(i, file) {
@@ -214,13 +221,17 @@ protonet.controls.FileWidget.prototype = {
           .addClass("disabled")
           .children("a")
           .prepend(progress.clone());
+        filesInQueue.push(file);
       }.bind(this));
+      
       this.list.attr("scrollTop", this.list.attr("scrollHeight"));
-      this.dropArea.trigger("dragleave");
+      this.container.trigger("dragleave");
     }.bind(this));
     
     this.uploader.bind("QueueChanged", function(uploader, files) {
       uploader.settings.url = this._getUploadUrl();
+      uploader._path = this.path;
+      uploader._channelId = this.channelId;
       uploader.start();
     }.bind(this));
     
@@ -234,13 +245,32 @@ protonet.controls.FileWidget.prototype = {
       };
     });
     
+    /**
+     * After the file has been uploaded the backend will send out
+     * an event notification which will enable the file for being
+     * downloaded 
+     */
     this.uploader.bind("FileUploaded", function(uploader, file) {
       window.onbeforeunload = null;
+      if (uploader.total.percent >= 100 && uploader.total.queued <= 1) {
+        if (confirm(protonet.t("PUBLISH_FILES_CONFIRM"))) {
+          this.publish($.map(filesInQueue, function(file) {
+            return "/" + uploader._channelId + uploader._path + file.name;
+          }));
+        }
+        filesInQueue = [];
+      }
     }.bind(this));
+    
     
     this.uploader.bind("Error", function(uploader, error) {
       window.onbeforeunload = null;
       
+      /**
+       * Don't ask me why...
+       * but Opera somehow thinks that plupload
+       * isn't initialized even though it is
+       */
       var isWeirdOperaBug = error.code == -500 && !error.status && !error.file;
       if (isWeirdOperaBug) {
         return;
@@ -251,25 +281,28 @@ protonet.controls.FileWidget.prototype = {
         "Error: " + error.message +
         "(Code: " + error.code + ", Status " + error.status + ") ");
       
-      try {
+      if (error.file) {
         this.list.find("#file-" + error.file.id)
           .removeClass("disabled")
           .addClass("error")
           .find(".progress")
           .text("(error) ");
-      } catch(e) {};
+      }
     }.bind(this));
     
-    this.dropArea
+    this.container
       .bind("dragover", function(event) {
         event.preventDefault();
-        this.dropArea.addClass("dragenter").html(protonet.t("DROP"));
+        this.container.addClass("dragenter");
+        this.dropArea.html(protonet.t("DROP"));
       }.bind(this))
       .bind("dragleave", function(event) {
         event.preventDefault();
-        this.dropArea.removeClass("dragenter").html(this.dropArea.data("default_html"));
-      }.bind(this))
-      .data("default_html", this.dropArea.html());
+        this.container.removeClass("dragenter");
+        this.dropArea.html(this.dropArea.data("default_html"));
+      }.bind(this));
+    
+    this.dropArea.data("default_html", this.dropArea.html());
     
     this.uploader.init();
   },
@@ -428,7 +461,7 @@ protonet.controls.FileWidget.prototype = {
     return li;
   },
   
-  publish: function(filePaths) {
+  publish: function(filePaths, channelId) {
     filePaths = $.makeArray(filePaths);
     
     var message     = {},
