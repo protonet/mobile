@@ -81,14 +81,17 @@ protonet.dispatcher = {
     }
   },
   
-  disconnectSocket: function() {
+  disconnectSocket: function(event) {
     this.socket.closeSocket();
     this.stopSocketCheck();
     
     this.startSocketReconnect();
     
-    // Only shout it to the world when it has been online before
-    if (this.connected) {
+    // Don't show a flash message when user closes the window
+    var isUnload = event && event.type == "unload";
+    
+    // ... also only shout it to the world when the socket has been online before
+    if (this.connected && !isUnload) {
       protonet.Notifications
         .trigger("flash_message.error", protonet.t("SOCKET_DISCONNECTED"))
         .trigger("socket.disconnected");
