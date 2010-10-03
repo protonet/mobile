@@ -1,6 +1,3 @@
-/**
- * TODO: Still misses reconnect logic (fetch missed meeps and reconnect socket)
- */
 protonet.dispatcher = {
   SOCKET_ID: "flash-socket",
   
