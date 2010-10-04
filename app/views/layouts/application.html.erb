@@ -43,40 +43,46 @@
     <%- if current_user.stranger? -%>
       <section id="login">
         <h1>Welcome guest</h1>
-
-        <%- form_for :user, :url => users_path, :html => { :class => "sign-up form" } do |f| -%>
+        
+        <%- if configatron.ldap.single_authentication != true %>
+          <%- form_for :user, :url => users_path, :html => { :class => "sign-up form" } do |f| %>
+            <fieldset>
+              <legend>Get started by <strong>signing up</strong> (it's free)</legend>
+              <div>
+                <%= f.label :login, "username" %>
+                <%= f.text_field :login, :title => "user name" %>
+                <span class="hint">min. 3 characters</span>
+              </div>
+              <div>
+                <%= f.label :password, "password" %>
+                <%= f.password_field :password, :title => "password" %>
+                <span class="hint">min. 6 characters</span>
+              </div>
+              <div>
+                <%= f.label :password_confirmation, "password confirmation" %>
+                <%= f.password_field :password_confirmation, :title => "password" %>
+                <span class="hint">repeat for confirmation</span>
+              </div>
+              <div>
+                <!-- TODO: Enable this -->
+                <%#= f.label :signup_contact, "social media profile or email" %>
+                <%#= f.text_field :signup_contact, :title => "social media profile or email" %>
+                <!-- <span class="hint">(eg. http://www.facebook.com/john.doe)</span> -->
+              </div>
+              <div>
+                <button type="submit" name="join">sign up</button>
+              </div>
+            </fieldset>
+          <%- end %>
+        <%- end %>
+        
+        <%- form_tag session_path, { :class => "login form #{'ldap' if configatron.ldap.single_authentication == true}" } do -%>
           <fieldset>
-            <legend>Get started by <strong>signing up</strong> (it's free)</legend>
-            <div>
-              <%= f.label :login, "username" %>
-              <%= f.text_field :login, :title => "user name" %>
-              <span class="hint">min. 3 characters</span>
-            </div>
-            <div>
-              <%= f.label :password, "password" %>
-              <%= f.password_field :password, :title => "password" %>
-              <span class="hint">min. 6 characters</span>
-            </div>
-            <div>
-              <%= f.label :password_confirmation, "password confirmation" %>
-              <%= f.password_field :password_confirmation, :title => "password" %>
-              <span class="hint">repeat for confirmation</span>
-            </div>
-            <div>
-              <!-- TODO: Enable this -->
-              <%#= f.label :signup_contact, "social media profile or email" %>
-              <%#= f.text_field :signup_contact, :title => "social media profile or email" %>
-              <!-- <span class="hint">(eg. http://www.facebook.com/john.doe)</span> -->
-            </div>
-            <div>
-              <button type="submit" name="join">sign up</button>
-            </div>
-          </fieldset>
-        <%- end -%>
-
-        <%- form_tag session_path, { :class => "login form" } do -%>
-          <fieldset>
-            <legend>or <strong>logging in</strong></legend>
+            <%- if configatron.ldap.single_authentication == true %>
+              <legend><strong>Log in</strong> with your ldap credentials</legend>
+            <%- else %>
+              <legend>or <strong>logging in</strong></legend>
+            <%- end %>
             <div>
               <%= label_tag :login, "login", :for => "login_login" %>
               <%= text_field_tag :login, @login, :title => "user name", :id => "login_login" %>

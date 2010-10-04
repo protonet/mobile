@@ -202,7 +202,7 @@ protonet.controls.FileWidget.prototype = {
         progress      = $("<span />", { className: "progress", text: "(0 %) " });
     
     this.uploader = new plupload.Uploader({
-      runtimes:       "flash",
+      runtimes:       "html5,flash",
       browse_button:  browseLink.attr("id"),
       container:      browseLink.attr("id"),
       max_file_size:  maxFileSize,
@@ -270,12 +270,10 @@ protonet.controls.FileWidget.prototype = {
       window.onbeforeunload = null;
       
       /**
-       * Don't ask me why...
-       * but Opera somehow thinks that plupload
-       * isn't initialized even though it is
+       * Ignore initialization errors
        */
-      var isWeirdOperaBug = error.code == plupload.INIT_ERROR && navigator.userAgent.indexOf("Opera") != -1;
-      if (isWeirdOperaBug) {
+      var isInitError = error.code == plupload.INIT_ERROR;
+      if (isInitError) {
         return;
       }
       

@@ -20,7 +20,7 @@ $(function() {
   // Frickin' stunning cloud graphics (makes your squirrel run in circles!!)
   setTimeout(function() {
     new protonet.effects.Clouds($("#cloud-container"), {
-      minStartPosition: -20,
+      minStartPosition: -10,
       maxStartPosition: 90,
       minSize:          10,
       maxSize:          50,

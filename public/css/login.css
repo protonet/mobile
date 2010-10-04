@@ -51,13 +51,26 @@ header.login {
   line-height: 24px;
 }
 
+#login form {
+  padding-left: 10px;
+}
+
 #login .sign-up {
   padding-right: 10px;
 }
 
 #login .login {
-  border: 0 none;
   padding-left: 10px;
+  border: 0 none;
+}
+
+#login .login.ldap {
+  padding-left: 0;
+}
+
+#login .login.ldap input[type=text],
+#login .login.ldap input[type=password] {
+  width: 280px;
 }
 
 /* ================================================================ LOGIN = */
