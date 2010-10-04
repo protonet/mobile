@@ -24,7 +24,7 @@ $(function() {
       maxStartPosition: 90,
       minSize:          10,
       maxSize:          50,
-      amount:           20,
+      amount:           25,
       animated:         false
     });
   }, 100);

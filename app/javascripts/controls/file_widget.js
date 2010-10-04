@@ -3,7 +3,9 @@
 //= require "../utils/escape_for_css_query.js"
 //= require "../ui/resizer.js"
 //= require "../lib/jquery-ui-1.8.4.highlight-effect.min.js"
-//= require "../lib/plupload.full.min.js"
+//= require "../lib/plupload.min.js"
+//= require "../lib/plupload.html5.min.js"
+//= require "../lib/plupload.flash.min.js"
 
 protonet.controls.FileWidget = function() {
   this.container      = $("#file-widget");
@@ -193,16 +195,17 @@ protonet.controls.FileWidget.prototype = {
      * The browse link is part of the context menu which doesn't exist yet
      */
     var timestamp     = new Date().getTime(),
+        maxFileSize   = $.browser.mozilla ? "100mb" : "1000mb",
         list          = this.uploadContextMenu.list,
         filesInQueue  = [],
         browseLink    = list.children(":eq(1)").attr("id", "browse:" + timestamp),
         progress      = $("<span />", { className: "progress", text: "(0 %) " });
     
     this.uploader = new plupload.Uploader({
-      runtimes:       "html5,flash",
+      runtimes:       "flash",
       browse_button:  browseLink.attr("id"),
       container:      browseLink.attr("id"),
-      max_file_size:  "1000mb",
+      max_file_size:  maxFileSize,
       url:            "",
       flash_swf_url:  "/flash/plupload.flash.swf",
       drop_element:   "file-widget"
@@ -271,15 +274,24 @@ protonet.controls.FileWidget.prototype = {
        * but Opera somehow thinks that plupload
        * isn't initialized even though it is
        */
-      var isWeirdOperaBug = error.code == -500 && !error.status && !error.file;
+      var isWeirdOperaBug = error.code == plupload.INIT_ERROR && navigator.userAgent.indexOf("Opera") != -1;
       if (isWeirdOperaBug) {
         return;
       }
       
-      protonet.Notifications.trigger(
-        "flash_message.error",
-        "Error: " + error.message +
-        "(Code: " + error.code + ", Status " + error.status + ") ");
+      if (error.code == plupload.FILE_SIZE_ERROR) {
+        protonet.Notifications.trigger(
+          "flash_message.error",
+          "File '" + error.file.name + "' is too big (max size: " + maxFileSize + ")" + 
+          ($.browser.mozilla ? " - Use Chrome/Safari to upload bigger files" : "")
+        );
+      } else {
+        protonet.Notifications.trigger(
+          "flash_message.error",
+          "File Upload Error: " + error.message +
+          "(Code: " + error.code + ") "
+        );
+      }
       
       if (error.file) {
         this.list.find("#file-" + error.file.id)
@@ -288,6 +300,8 @@ protonet.controls.FileWidget.prototype = {
           .find(".progress")
           .text("(error) ");
       }
+      
+      this.container.trigger("dragleave");
     }.bind(this));
     
     this.container
@@ -311,7 +325,7 @@ protonet.controls.FileWidget.prototype = {
     return "/system/files" +
       "?_rails_dashboard_session=" + encodeURIComponent(protonet.user.data.session_id) +
       "&authenticity_token="       + encodeURIComponent(protonet.user.data.authenticity_token) +
-      "&channel_id="               + this.channelId + 
+      "&channel_id="               + this.channelId +
       "&file_path="                + encodeURIComponent(this.path);
   },
   

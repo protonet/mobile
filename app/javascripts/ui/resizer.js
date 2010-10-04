@@ -3,7 +3,7 @@ protonet.ui.Resizer = function(element, handle, options) {
   this.handle = handle;
   this.options = $.extend({
     callback: $.noop,
-    storage: window.localStorage || {},
+    storage: window.localStorage,
     storageKey: "resize_height"
   }, options);
   

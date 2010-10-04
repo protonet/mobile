@@ -28,7 +28,7 @@ protonet.user.Config = {
   },
   
   initialize: function() {
-    this._storage = window.localStorage || {};
+    this._storage = window.localStorage;
     
     this._renderConfigs();
   },
