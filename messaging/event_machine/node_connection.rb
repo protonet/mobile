@@ -78,7 +78,7 @@ class NodeConnection < FlashConnection
   def receive_json(json)
     log "Received JSON: #{json.inspect}"
     
-    if json['x_target'] == 'meep.receive' then
+    if json['trigger'] == 'meep.receive' then
       # TODO: when using node UUIDs, this check needs to be against the current node I think
       return if json['network_uuid'] == Network.local.uuid
       
