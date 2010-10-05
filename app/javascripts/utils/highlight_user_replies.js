@@ -10,7 +10,7 @@
  *      => [2] // array of user ids
  */
 protonet.utils.highlightUserReplies = (function() {
-  var REG_EXP         = /(\s|^)@([\w\.\-_@]+)/g,
+  var REG_EXP         = /(\s|^|\()@([\w\.\-_@]+)/g,
       userMapping     = {},
       viewer          = {};
   

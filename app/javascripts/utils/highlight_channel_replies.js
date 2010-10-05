@@ -10,7 +10,7 @@
  *      => [2] // array of channel ids
  */
 protonet.utils.highlightChannelReplies = (function() {
-  var REG_EXP         = /(\s|^)@([\w\.\-_@]+)/g,
+  var REG_EXP         = /(\s|^|\()@([\w\.\-_@]+)/g,
       channelMapping  = {};
   
   protonet.Notifications.bind("channels.data_available", function(e, channelData, availableChannels) {
