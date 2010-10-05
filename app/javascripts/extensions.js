@@ -21,6 +21,7 @@ if (typeof(localStorage) == "undefined") {
 
 
 
+
 //---------------------------- FUNCTION ----------------------------
 Function.prototype.bind = function() {
   if (arguments.length < 2 && arguments[0] === undefined) {

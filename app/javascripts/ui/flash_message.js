@@ -14,7 +14,7 @@ protonet.ui.FlashMessage = {
   TIMEOUT: 5000,
   
   initialize: function() {
-    this.element = $("div.flash-message").click(this.hide.bind(this));;
+    this.element = $("div.flash-message").click(this.hide.bind(this));
     
     if ($.trim(this.element.text())) {
       this.show();
@@ -43,13 +43,19 @@ protonet.ui.FlashMessage = {
       this.element.addClass(type);
     }
     
-    this.element.stop().animate({ top: "0px" });
+    this.element.stop().css("position", "fixed").animate({ top: "0px" });
     
     clearTimeout(this.timeout);
     this.timeout = setTimeout(this.hide.bind(this), this.TIMEOUT);
   },
   
   hide: function() {
-    this.element.stop().animate({ top: (-this.element.outerHeight()).px() });
+    this.element.stop().animate({ top: (-this.element.outerHeight()).px() }, function() {
+      /**
+       * Set it back to absolute to avoid scrolling performance issues
+       * in webkit browsers
+       */
+      this.element.css("position", "absolute");
+    }.bind(this));
   }
 };

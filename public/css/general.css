@@ -144,7 +144,7 @@ pre {
   top: -50px;
   left: 0;
   right: 0;
-  position: fixed;
+  position: absolute;
   z-index: 2;
   color: #fff;
   padding: 8px;
