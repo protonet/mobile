@@ -15,8 +15,11 @@ protonet.text_extensions.Input = function(input) {
 
 protonet.text_extensions.Input.prototype = {
   _initEvents: function() {
-    this.input.bind("paste", this._paste.bind(this));
-    this.input.bind("keyup", this._keyUp.bind(this));
+    this.input
+      .bind("paste", this._paste.bind(this))
+      .bind("keyup", this._keyUp.bind(this))
+      .bind("dragenter", this._dragEnter.bind(this))
+      .bind("drop", this._drop.bind(this));
     this.removeLink.bind("click", this._cancel.bind(this));
     protonet.Notifications.bind("form.submitted", this._submitted.bind(this));
   },
@@ -39,6 +42,19 @@ protonet.text_extensions.Input.prototype = {
     if (isEscape) {
       return this._cancel();
     }
+  },
+  
+  _dragEnter: function(event) {
+    event.preventDefault();
+    var valueLength = this.input.val().length;
+    this.input.attr({
+      "selectionEnd":   valueLength,
+      "selectionStart": valueLength
+    }).focus();
+  },
+  
+  _drop: function() {
+    this._parse();
   },
   
   _cancel: function(event) {

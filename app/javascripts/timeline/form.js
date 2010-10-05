@@ -124,7 +124,7 @@ protonet.timeline.Form = {
      */
     this.form.submit(this.submit.bind(this));
     this.input.keypress(function(event) {
-      if (event.keyCode != 13 || event.shiftKey) {
+      if (event.keyCode != 13 || event.shiftKey || event.altKey) {
         return;
       }
       

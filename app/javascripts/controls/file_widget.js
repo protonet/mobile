@@ -95,7 +95,18 @@ protonet.controls.FileWidget.prototype = {
       .delegate("li.disabled", "click", function(event) {
         event.stopPropagation();
         event.preventDefault();
-      }.bind(this));
+      }.bind(this))
+      .delegate("li[data-file-path] > a", "dragstart", function(event) {
+        var dataTransfer = event.originalEvent.dataTransfer;
+        if (dataTransfer) {
+          var anchor    = $(this),
+              fileName  = anchor.text(),
+              fileUrl   = this.href;
+          dataTransfer.setData("DownloadURL", "application/octet-stream:" + fileName + ":" + fileUrl);
+          dataTransfer.setData("text/plain", fileUrl + " ");
+        }
+      });
+      
   },
   
   _initContextMenu: function() {

@@ -30,15 +30,22 @@ protonet.timeline.Channels = {
      * Observe click on elements with data attribute
      * such as tab links and in-timeline channel replies
      */
-    $(document).delegate("a[data-channel-id]", "click",  function(event) {
-       var id = +$(event.currentTarget).attr("data-channel-id");
-       if (!id) {
-         return;
-       }
+    $(document)
+      .delegate("a[data-channel-id]", "click",  function(event) {
+         var id = +$(event.currentTarget).attr("data-channel-id");
+         if (!id) {
+           return;
+         }
        
-       protonet.Notifications.trigger("channel.change", id);
-       event.preventDefault();
-    }.bind(this));
+         protonet.Notifications.trigger("channel.change", id);
+         event.preventDefault();
+      }.bind(this))
+      .delegate("a[data-channel-id]", "dragstart", function(event) {
+        if (event.originalEvent.dataTransfer)  {
+          var channelId = $(event.currentTarget).attr("data-channel-id");
+          event.originalEvent.dataTransfer.setData("text/plain", "@" + this.getChannelName(channelId) + " ");
+        }
+      }.bind(this));
     
     /**
      * Track selected channel

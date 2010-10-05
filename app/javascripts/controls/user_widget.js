@@ -72,6 +72,12 @@ protonet.controls.UserWidget.prototype = {
       .bind("channel.change", function(e, channelId) {
         this.filterChannelUsers(channelId);
       }.bind(this));
+    
+    this.container.delegate("li[data-user-id] > a", "dragstart", function(event) {
+      if (event.originalEvent.dataTransfer)  {
+        event.originalEvent.dataTransfer.setData("text/plain", "@" + $(this).text() + " ");
+      }
+    });
   },
   
   /**
