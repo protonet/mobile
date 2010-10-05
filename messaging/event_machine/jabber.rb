@@ -52,12 +52,12 @@ EM.run do
   events_queue              = amq.queue("consumer-jabber-bridge4", :auto_delete => true)
   frontend_queue            = amq.queue("consumer-jabber-bridge5", :auto_delete => true)
 
-  channel_queue.bind(amq.topic("channels"), :key => "channels.#{4}").subscribe do |msg|
+  channel_queue.bind(amq.topic("channels"), :key => "channels.#{Channel.find(4).uuid}").subscribe do |msg|
     message = JSON(msg)
     askrails.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"] && message["author"].match(/\{x\}/)
   end
 
-  channel_queue2.bind(amq.topic("channels"), :key => "channels.#{16}").subscribe do |msg|
+  channel_queue2.bind(amq.topic("channels"), :key => "channels.#{Channel.find(16).uuid}").subscribe do |msg|
     message = JSON(msg)
     cp.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"] && message["author"].match(/\{x\}/)
   end
@@ -67,12 +67,12 @@ EM.run do
     content_discovery.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"] && message["author"].match(/\{x\}/)
   end
 
-  events_queue.bind(amq.topic("channels"), :key => "channels.#{22}").subscribe do |msg|
+  events_queue.bind(amq.topic("channels"), :key => "channels.#{Channel.find(22).uuid}").subscribe do |msg|
     message = JSON(msg)
     events.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"] && message["author"].match(/\{x\}/)
   end
 
-  frontend_queue.bind(amq.topic("channels"), :key => "channels.#{20}").subscribe do |msg|
+  frontend_queue.bind(amq.topic("channels"), :key => "channels.#{Channel.find(20).uuid}").subscribe do |msg|
     message = JSON(msg)
     frontend.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"] && message["author"].match(/\{x\}/)
   end
