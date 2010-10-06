@@ -1,10 +1,18 @@
-//= require "lib/jquery-ui-1.7.2.custom.min.js"
-//= require "dispatching/dispatching_system.js"
+//-= require "lib/jquery-ui-1.7.2.custom.min.js"
+//-= require "dispatching/dispatching_system.js"
+//-= require "networkmonitor.js"
+
+//= require "dispatcher/dispatcher.js"
+//= require "timeline/timeline.js"
+//= require "effects/clouds.js"
+//= require "controls/pretty_date.js"
+//= require "controls/fluid.js"
 //= require "networkmonitor.js"
 
 // Initialize communication stuff
 $(function() {
-  protonet.globals.dispatcher = new protonet.dispatching.DispatchingSystem();
+  protonet.dispatcher.initialize();
+  //protonet.globals.dispatcher = new protonet.dispatching.DispatchingSystem();
 });
 
 /////////////////////////////////

@@ -20,7 +20,7 @@ var ourInterval;
   supernode:null, 
   key:null
 */
-/*
+
 function asyncupdate1() {
   console.log("async update 1");
   NetworkGraph.updateFromAsyncInfo({
@@ -63,7 +63,6 @@ function asyncupdate4() {
     "30":{name:"#30"}
   });
 }
-*/
 
 $(function() {
   if ($("network-monitor")) {
