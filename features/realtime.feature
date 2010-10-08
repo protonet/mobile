@@ -13,12 +13,11 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
       And I am logged in as "batman"
     #batman
     Given I am using the second browser
+      And wait 2 seconds
       And I send the message "Hallo!"
     #dudemeister
     And I am using the first browser
-      Then wait 2 seconds
       Then I should see "Hallo!" in the timeline
-      
       
   @javascript
   Scenario: Creating a user and seeing him in the userlist and the autocompletion
