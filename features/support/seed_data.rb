@@ -10,7 +10,7 @@ end
 After do
 
   # reset connection tracker
-  `killall -2 js_dispatcher_cucumber`
+  `killall -2 js_dispatcher_#{Rails.env}`
   sleep 0.5
 
 end
