@@ -25,4 +25,11 @@ EventMachine::run do
   Network.all(:conditions => {:coupled => true}).each do |network|
     NodeConnection.negotiate network, tracker
   end
+  
+  trap("INT") do
+    # reset connection tracker, needed for tests
+    puts "resetting connection tracker"
+    connections = tracker.open_sockets.each {|s| s.close_connection}
+  end
+  
 end

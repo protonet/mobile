@@ -59,7 +59,6 @@ Feature: Using the protonet dashboard
     Given a user exists with login: "dudemeister"
     And a channel exists with name: "cool-channel"
     And "dudemeister" is listening to "cool-channel"
-    And wait 10 seconds
     And I am logged in as "dudemeister"
     Then I should see "Cool-channel" within "#channels"
     

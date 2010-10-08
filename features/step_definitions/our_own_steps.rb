@@ -13,8 +13,8 @@ end
 
 Given /^I am logged in as "([^\"]*)"$/ do |username|
   within("form.login") do
-    fill_in 'login', :with => username
-    fill_in 'password', :with => '123456'
+    fill_in 'login_login', :with => username
+    fill_in 'login_password', :with => '123456'
     click('login')
     sleep 1 # wait for socket
   end
@@ -48,6 +48,10 @@ end
 
 Given /^I leave the page$/ do
   visit "http://www.google.com"
+end
+
+Given /^I log out$/ do
+  visit "/logout"
 end
 
 Then /^I should see "([^\"]*)" in the channel list$/ do |channel_name|
