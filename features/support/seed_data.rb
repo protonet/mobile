@@ -10,7 +10,7 @@ end
 After do
 
   # reset connection tracker
-  `killall -2 js_dispatcher_#{Rails.env}`
+  `kill -2 #{System::Services.services["js_dispatching_server"][2].pid}`
   sleep 0.5
 
 end
