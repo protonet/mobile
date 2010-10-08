@@ -16,6 +16,7 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
       And I send the message "Hallo!"
     #dudemeister
     And I am using the first browser
+      Then wait 2 seconds
       Then I should see "Hallo!" in the timeline
       
       
