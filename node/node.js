@@ -60,7 +60,7 @@ http.createServer(function(request, response) {
 
 
 /*----------------------------------- STARTUP STUFF -----------------------------------*/
-var tmp_file = 'tmp/pids/node.pid'
+var tmp_file = 'tmp/pids/node_' + htmlTaskPort + '.pid'
 fs.writeFile(tmp_file, process.pid.toString(), function (err) {
   if (err) throw err;
   console.log('Pid-file saved!');

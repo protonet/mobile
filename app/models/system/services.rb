@@ -91,7 +91,7 @@ System::Services.add 'Node.JS', :nodejs_active,
   :identifier    => 'node.js',
   :start_command => "node node/node.js port=#{configatron.nodejs.port}",
   :ping_command  => lambda { TCPSocket.new('localhost', configatron.nodejs.port) },
-  :pid_file      => 'tmp/pids/node.pid',
+  :pid_file      => "tmp/pids/node_#{configatron.nodejs.port}.pid",
   :log_file      => 'log/node.log',
   :timeout       => 25,
   :daemonize_for_me => true
