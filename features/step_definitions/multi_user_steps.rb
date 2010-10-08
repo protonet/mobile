@@ -35,9 +35,11 @@ end
 Given /^I am using the first browser$/ do
   check_selenium_browsers
   set_selenium_browser(1)
+  sleep 0.5
 end
 
 Given /^I am using the second browser$/ do
   check_selenium_browsers
   set_selenium_browser(2)
+  sleep 0.5
 end

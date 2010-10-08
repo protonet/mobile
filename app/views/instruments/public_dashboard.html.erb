@@ -8,7 +8,7 @@
     <%= f.hidden_field(:text_extension, :id => 'text-extension-input', :value => "", :autocomplete => "off") %>
     <div id="textarea-wrapper">
       <%= f.text_area(:message, :id => 'message', :title => message_hint) %>
-      <input type="submit" value="" title="Send message [ENTER]">
+      <input type="submit" id="submit-message" value="" title="Send message [ENTER]">
       <output id="text-extension-preview">
         <a href="#" title="Delete attachment [ESC]" class="hint remove">remove <strong>x</strong></a>
       </output>

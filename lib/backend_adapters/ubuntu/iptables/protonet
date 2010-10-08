@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# This is the PROTONET iptables configuration file, I basically use it to generate the setting, it is then used
+# This is the PROTONET sudo iptables configuration file, I basically use it to generate the setting, it is then used
 # to save it and call it from the /etc/network.interfaces file, loopback device, it is adapted from
-# http://www.linuxhomenetworking.com/wiki/index.php/Quick_HOWTO_:_Ch14_:_Linux_Firewalls_Using_iptables
+# http://www.linuxhomenetworking.com/wiki/index.php/Quick_HOWTO_:_Ch14_:_Linux_Firewalls_Using_sudo iptables
 # and changed to suit my needs.
 # 
 # WHAT'S THE PLAN:
@@ -22,9 +22,9 @@
 
 
 
-# The location of the iptables and kernel module programs
+# The location of the sudo iptables and kernel module programs
 #
-IPT=/sbin/iptables
+IPT=/sbin/sudo iptables
 
 #Setting the EXTERNAL and INTERNAL interfaces for the network
 EXTIF="eth0"
@@ -38,28 +38,28 @@ echo "   Internal PUBLIC Interface:   $PUBIF"
 echo "   Internal PRIVATE Interface:  $PRVIF"
 
 echo "   Clearing any existing rules and setting default policy.."
-  $IPT -P INPUT ACCEPT
-  $IPT -F INPUT 
-  $IPT -P OUTPUT ACCEPT
-  $IPT -F OUTPUT
-  $IPT -P FORWARD DROP
-  $IPT -F FORWARD
-  $IPT -F unknown_user
-  $IPT -F known_user_internet_allowed 
-  $IPT -t nat -F
+  sudo iptables -P INPUT ACCEPT
+  sudo iptables -F INPUT 
+  sudo iptables -P OUTPUT ACCEPT
+  sudo iptables -F OUTPUT
+  sudo iptables -P FORWARD DROP
+  sudo iptables -F FORWARD
+  sudo iptables -F unknown_user
+  sudo iptables -F known_user_internet_allowed 
+  sudo iptables -t nat -F
 
 echo "   Creating our own chains (unknown_user and known_user_internet_allowed)"
-  $IPT -N unknown_user
-  $IPT -N known_user_internet_allowed
+  sudo iptables -N unknown_user -t nat
+  sudo iptables -N known_user_internet_allowed
 
 echo "   Creating unknown_user chain and setting its rules.."
   # accept allow tcp:80, udp:67 (dhcp) and udp:53 (dns) and tcp:5000 (protonet-socket) requests
-  $IPT -A unknown_user -p tcp -m tcp --dport 80 -j ACCEPT
-  $IPT -A unknown_user -p udp -m udp --dport 67 -j ACCEPT
-  $IPT -A unknown_user -p udp -m udp --dport 53 -j ACCEPT
-  $IPT -A unknown_user -p tcp -m tcp --dport 5000 -j ACCEPT
+  sudo iptables -A unknown_user -p tcp -m tcp --dport 80 -j ACCEPT
+  sudo iptables -A unknown_user -p udp -m udp --dport 67 -j ACCEPT
+  sudo iptables -A unknown_user -p udp -m udp --dport 53 -j ACCEPT
+  sudo iptables -A unknown_user -p tcp -m tcp --dport 5000 -j ACCEPT
   # drop the rest
-  $IPT -A unknown_user -j DROP
+  sudo iptables -A unknown_user -j DROP
   
 echo "   Creating known_user_internet_allowed chain and setting its rules.."
   # allowing established connections + outbound stuff, log the rest
@@ -67,10 +67,10 @@ echo "   Creating known_user_internet_allowed chain and setting its rules.."
   for iface in ${ALLINTIFS[@]}
   do
     echo "   ... setting rules for $iface ..."
-    $IPT -A known_user_internet_allowed -i $EXTIF -o $iface -m state --state ESTABLISHED,RELATED -j ACCEPT
-    $IPT -A known_user_internet_allowed -i $iface -o $EXTIF -j ACCEPT    
+    sudo iptables -A known_user_internet_allowed -i $EXTIF -o $iface -m state --state ESTABLISHED,RELATED -j ACCEPT
+    sudo iptables -A known_user_internet_allowed -i $iface -o $EXTIF -j ACCEPT    
   done
-  $IPT -A known_user_internet_allowed -j LOG
+  sudo iptables -A known_user_internet_allowed -j LOG
   echo "   known_user_internet_allowed chain is ready!"
 
 
@@ -78,16 +78,105 @@ echo "   Route PUBLIC IFACE ($PUBIF) traffic to unknown_user chain by default.."
   # unknown users will be redirected to the dashboard, all other traffic will be dropped
   # this redirects the tcp:80 packets, also I couldn't leave it in the unknown_user chain it
   # seems
-  $IPT -t nat -A PREROUTING -i $PUBIF -p tcp -m tcp --dport 80 -j DNAT --to-destination 10.43.0.1:80
+  # sudo iptables -t nat -A PREROUTING -i $PUBIF -p tcp -m tcp --dport 80 -j DNAT --to-destination 10.43.0.1:80
   # all traffic is being sent to the unknown_user chain
-  $IPT -A INPUT -i $PUBIF -j unknown_user
+  sudo iptables -A INPUT -i $PUBIF -j unknown_user
 
 
 echo "   Route PRIVATE IFACE ($PRVIF) traffic to known_user_internet_allowed.."
   # yeah not very beautiful but it does work (also I know what happens here - no magic :))
-  $IPT -A FORWARD -i $EXTIF -o $PRVIF -j known_user_internet_allowed
-  $IPT -A FORWARD -i $PRVIF -o $EXTIF -j known_user_internet_allowed
+  sudo iptables -A FORWARD -i $EXTIF -o $PRVIF -j known_user_internet_allowed
+  sudo iptables -A FORWARD -i $PRVIF -o $EXTIF -j known_user_internet_allowed
 
 
 echo "   Enabling SNAT (MASQUERADE) functionality on $EXTIF"
-  $IPT -t nat -A POSTROUTING -o $EXTIF -j MASQUERADE
+  sudo iptables -t nat -A POSTROUTING -o $EXTIF -j MASQUERADE
+
+
+# the stuff below works
+  # sudo iptables -P INPUT ACCEPT
+  # sudo iptables -F INPUT 
+  # sudo iptables -P OUTPUT ACCEPT
+  # sudo iptables -F OUTPUT
+  # sudo iptables -P FORWARD DROP
+  # sudo iptables -F FORWARD
+  # sudo iptables -F unknown_user
+  # sudo iptables -F known_user_internet_allowed 
+  # sudo iptables -t nat -F
+  # 
+  # sudo iptables -N unknown_user -t nat
+  # sudo iptables -N known_user_internet_allowed
+  # 
+  # sudo iptables -t nat -A PREROUTING -i wlan1 -p tcp -m tcp --destination 10.43.0.1 --dport 80 -j ACCEPT
+  # sudo iptables -t nat -A PREROUTING -i wlan1 -p udp -m udp --destination 10.43.0.1 --dport 67 -j ACCEPT
+  # sudo iptables -t nat -A PREROUTING -i wlan1 -p udp -m udp --destination 10.43.0.1 --dport 53 -j ACCEPT
+  # sudo iptables -t nat -A PREROUTING -i wlan1 -p tcp -m tcp --destination 10.43.0.1 --dport 5000 -j ACCEPT
+  # 
+  # sudo iptables -t nat -A PREROUTING -i wlan1 -j unknown_user
+  # sudo iptables -t filter -A FORWARD -i wlan1 -m mark --mark 99 -j DROP
+  # 
+  # # allowed users
+  # sudo iptables -t nat -A unknown_user -m mac --mac-source "00:1d:fe:b4:79:61" -j RETURN
+  # 
+  # # mark and drop
+  # sudo iptables -t nat -A unknown_user -j MARK --set-mark 99
+  # sudo iptables -t nat -A unknown_user -m mark --mark 99 -p tcp --dport 80 -j DNAT --to-destination 10.43.0.1
+  # 
+  # # and forwarding
+  # sudo iptables -A FORWARD -i eth0 -o wlan1 -m state --state ESTABLISHED,RELATED -j ACCEPT
+  # sudo iptables -A FORWARD -i wlan1 -o eth0 -j ACCEPT
+  # sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+  # 
+  # 
+  # 
+  # 
+  # sudo iptables -I unknown_user 1 -t nat -m mac --mac-source "00:1d:fe:b4:79:61" -j RETURN
+  # 
+  # 
+  # IPTABLES=/sbin/iptables
+  # 
+  # EXTIF="eth0"
+  # PRVIF="wlan0"
+  # PUBIF="wlan1"
+  # 
+  # # Set the default policy to drop all forwarded packets
+  # iptables -P FORWARD DROP
+  # 
+  # # Create internet chain
+  # # This is used to authenticate users who have already signed up
+  # iptables -N internet -t nat
+  # 
+  # 
+  # # Accept all local traffic
+  # iptables -t nat -A PREROUTING -i eth0 --destination 10.0.0.0/16 -j ACCEPT
+  # 
+  # # First send all traffic via newly created internet chain
+  # # At the prerouting NAT stage this will DNAT them to the local
+  # # webserver for them to signup if they aren't authorised
+  # # Packets for unauthorised users are marked for dropping later
+  # iptables -t nat -A PREROUTING -j internet
+  # 
+  # 
+  # # Now that we've got to the forward filter, drop all packets
+  # # marked 99 - these are unknown users. We can't drop them earlier
+  # # as there's no filter table
+  # iptables -t filter -A FORWARD -m mark --mark 99 -j DROP
+  # 
+  # ###### INTERNET CHAIN ##########
+  # # Allow authorised clients in, redirect all others to login webserver
+  # # Add known users to the NAT table to stop their dest being rewritten
+  # # Ignore MAC address with a * - these users are blocked
+  # # This awk script goes through the /var/lib/users flat file line by line
+  # awk 'BEGIN { FS="\t"; } { system("iptables -t nat -A internet -m mac --mac-source "$4" -j RETURN"); }' /var/lib/users
+  # 
+  # # MAC address not found. Mark the packet 99
+  # iptables -t nat -A internet -j MARK --set-mark 99
+  # # Redirects web requests from Unauthorised users to logon Web Page
+  # iptables -t nat -A internet -m mark --mark 99 -p tcp --dport 80 -j DNAT --to-destination 10.0.0.1
+  # ################################
+  # 
+  # 
+  # # Enable Internet connection sharing
+  # iptables -A FORWARD -i ppp0 -o eth0 -m state --state ESTABLISHED,RELATED -j ACCEPT
+  # iptables -A FORWARD -i eth0 -o ppp0 -j ACCEPT
+  # iptables -t nat -A POSTROUTING -o ppp0 -j MASQUERADE

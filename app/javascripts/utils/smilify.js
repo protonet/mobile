@@ -20,7 +20,7 @@ protonet.utils.smilify = (function() {
     { shortcuts: [":-(", ":("], className: "sad" },
     { shortcuts: [":'-(", ":'(", ";("], className: "cry" },
     { shortcuts: [">:O", ">:-O", ":@", ">:-(", ">:("], className: "angry" },
-    { shortcuts: [":-P", ":P"], className: "tongue" },
+    { shortcuts: [":-P", ":P", ":p"], className: "tongue" },
     { shortcuts: ["B-)", "B)", "8-)", "8)"], className: "glasses" },
     { shortcuts: [";-)", ";)"], className: "wink" },
     { shortcuts: [":-/", ":/"], className: "struggled" }

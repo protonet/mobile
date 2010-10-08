@@ -1,5 +1,5 @@
 Before do
-
+  DatabaseCleaner.start
   Network.local
   User.anonymous
   Channel.home

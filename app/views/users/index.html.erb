@@ -11,6 +11,11 @@
 .options li {
   margin: 0 0 0.5em;
 }
+
+.options li.clicked div {
+  background: none;
+}
+
 .options .section {
   -moz-border-radius: 0.5em;
   -webkit-border-radius: 0.5em;
@@ -159,11 +164,16 @@
 </style>
 
 <section class="sub main">
-  <h2>Users</h2>
-
+  <h2>Users</h2>  
   <div id="users-page" class="users options">
     <%= link_to "delete strangers older than 2 days", { :action => "delete_stranger_older_than_two_days" }, :class => "cleanup" %>
-
+    <ul>
+      <li id="user-general-settings">
+        <div class="index section">
+          general settings
+        </div>
+      </li>
+    </ul>
     <ul>
       <%- @users.each do |u| -%>
         <li id="user-<%= u.id %>">

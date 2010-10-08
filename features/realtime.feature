@@ -13,11 +13,11 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
       And I am logged in as "batman"
     #batman
     Given I am using the second browser
-      And I fill in "message" with "Hallo!"
-      And I press "submit" within "#message-form"
+      And I send the message "Hallo!"
     #dudemeister
     And I am using the first browser
-      Then I should see "Hallo!" within ".feed-holder ul li:first"
+      Then I should see "Hallo!" in the timeline
+      
       
   @javascript
   Scenario: Creating a user and seeing him in the userlist and the autocompletion
@@ -30,7 +30,7 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
       And I register as "justadded"
       And wait 1 seconds
     Given I am using the first browser
-      Then I should see /justadded/ within "#user-list ul.root"
+      Then I should see /justadded/ within "#user-widget ul"
       And I fill in "message" with "Hallo @just"
       Then the message field should contain "Hallo @justadded"
       
@@ -41,10 +41,10 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
     # seeing strangers in the user list
     And I am using the first browser
       And I go to the startpage
-      Then I should see /stranger/ within "#user-list ul.root"
+      Then I should see one stranger online
     # and then he's gone
     Given I am logged in as "dudemeister"
-      Then I should not see /stranger/ within "#user-list ul.root"
+      Then I should see no strangers online
     # another user comes
     Given I am using the second browser
       And I go to the startpage
@@ -54,4 +54,4 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
       And I leave the page
     # the second user should now be alone
     Given I am using the second browser
-      Then I should not see /dudemeister/ within "#user-list ul.root li.online"
+      Then I should not see /dudemeister/ within "#user-widget ul .online"

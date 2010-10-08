@@ -65,6 +65,7 @@ ActionController::Routing::Routes.draw do |map|
     system.vpn_off                'vpn/off',  :controller => 'vpn',   :action => 'off'
     system.wifi_on                'wifi/on',  :controller => 'wifi',  :action => 'on'
     system.wifi_off               'wifi/off', :controller => 'wifi',  :action => 'off'
+    system.preferences_update     'preferences/update', :controller => 'preferences', :action => 'update'
   end
 
   # images

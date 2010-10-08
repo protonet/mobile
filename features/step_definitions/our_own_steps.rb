@@ -11,8 +11,8 @@ Then /^I wait for the autocompletion$/ do
   sleep 0.5
 end
 
-Given /^I am logged in as "([^"]*)"$/ do |username|
-  within("#login-form") do
+Given /^I am logged in as "([^\"]*)"$/ do |username|
+  within("form.login") do
     fill_in 'login', :with => username
     fill_in 'password', :with => '123456'
     click('login')
@@ -20,11 +20,12 @@ Given /^I am logged in as "([^"]*)"$/ do |username|
   end
 end
 
-Given /^I register as "([^"]*)"$/ do |username|
-  within("#registration-form") do
-    fill_in 'new-user-login',    :with => username
-    fill_in 'new-user-password', :with => '123456'
-    click('Join')
+Given /^I register as "([^\"]*)"$/ do |username|
+  within("form.sign-up") do
+    fill_in 'user_login',    :with => username
+    fill_in 'user_password', :with => '123456'
+    fill_in 'user_password_confirmation', :with => '123456'
+    click('sign up')
   end
 end
 
@@ -62,7 +63,26 @@ Then /^I should see "([^\"]*)" in the channel details pane$/ do |text|
 end
 
 Then /^I should see "([^\"]*)" in the timeline$/ do |text|
-  with_scope(".feed-holder ul li:first") do
+  with_scope('#timeline') do
     assert page.has_xpath?('//*', :text => text, :visible => true)
   end
+end
+
+Then /^I should see the login form$/ do
+  assert page.has_xpath?('//form[@action="/session"]', :visible => true)
+end
+
+Given /^I send the message "([^\"]*)"$/ do |text|
+  within('#message-form') do
+    fill_in 'message', :with => text
+    click_button('submit-message')
+  end
+end
+
+Then /^I should see one stranger online$/ do
+  assert find(:css, "#user-widget .stranger")
+end
+
+Then /^I should see no strangers online$/ do
+  assert !find(:css, "#user-widget .stranger")
 end

@@ -30,6 +30,7 @@ class InstrumentsController < ApplicationController
       response.headers['Expires'] = 'Fri, 01 Jan 1990 00:00:00 GMT'
     end
     
+    # TODO -> this doesn't belong here, move to tweets (meeps) controller
     def get_meeps_as_json(channels)
       render :json => channels.map { |channel|
         meeps = channel.tweets.recent.all(:limit => 25, :include => [:avatar])

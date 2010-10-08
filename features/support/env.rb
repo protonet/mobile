@@ -58,7 +58,7 @@ if defined?(ActiveRecord::Base)
   end
 end
 
-Capybara.default_wait_time = 2
+Capybara.default_wait_time = 4
 
 # multiuser hack
 # this solves the problem of closing the browser

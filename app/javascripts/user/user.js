@@ -4,6 +4,7 @@ protonet.user = {
   data: {
     name:                   protonet.config.user_name,
     id:                     Number(protonet.config.user_id),
+    is_admin:               protonet.config.user_is_admin,
     subscribed_channel_ids: protonet.config.user_channel_ids,
     avatar:                 protonet.config.user_icon_url,
     session_id:             protonet.config.session_id,
@@ -37,7 +38,7 @@ protonet.user = {
   },
   
   _createContextMenu: function() {
-    new protonet.ui.ContextMenu("[data-user-id]", {
+    var contextOptions = {
       "send reply": function(link, closeContextMenu) {
         var user = this.usersData[+link.attr("data-user-id")];
         if (user) {
@@ -48,7 +49,18 @@ protonet.user = {
       "show profile": function() {
         alert("Sorry, profiles are not available yet ...");
       }
-    });
+    };
+    if(protonet.user.data.is_admin) {
+      contextOptions["give internet access"] = function(link, closeContextMenu) {
+        var user = this.usersData[+link.attr("data-user-id")];
+        // todo add a && user.stranger()
+        if (user) {
+          protonet.Notifications.trigger("system.give_internet_access", user);
+          closeContextMenu();
+        }
+      }.bind(this);
+    }
+    new protonet.ui.ContextMenu("[data-user-id]", contextOptions);
   }
 };
 

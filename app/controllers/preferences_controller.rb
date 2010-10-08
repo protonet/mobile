@@ -48,4 +48,8 @@ class PreferencesController < ApplicationController
     render :partial => 'vpn_settings'
   end
   
+  def user_settings
+    render :partial => 'user_settings'
+  end
+  
 end
