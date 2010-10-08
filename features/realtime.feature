@@ -14,7 +14,7 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
     #batman
     Given I am using the second browser
       And I send the message "Hallo!"
-      And I wait 30 seconds
+      And wait 30 seconds
     #dudemeister
     And I am using the first browser
       Then I should see "Hallo!" in the timeline
