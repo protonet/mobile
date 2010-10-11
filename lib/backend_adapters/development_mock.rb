@@ -14,11 +14,11 @@ module BackendAdapters
       ["10.25.1.2", "10.25.1.3", "10.25.1.4"]
     end
   
-    def give_internet_rights_to_client(ip)
+    def grant_internet_access(ip)
     
     end
   
-    def revoke_internet_rights_from_client(ip)
+    def revoke_internet_access(ip)
 
     end
     
@@ -37,6 +37,19 @@ module BackendAdapters
 
     def get_interface_information(iface) # TODO: take 'information' off the name
       LinuxCommands.ifconfig :source => "#{RAILS_ROOT}/lib/backend_adapters/utilities/ifconfig_parser_development_mock", :adapter => iface
+    end
+    
+    def hostname
+      'localhost'
+    end
+    
+    def requested_host_local?(host)
+      true
+    end
+    
+    
+    def get_mac_for_ip(ip)
+      '7c:c5:37:45:7f:85'
     end
     
   end

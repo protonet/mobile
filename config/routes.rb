@@ -1,5 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
 
+  map.connect 'captive', :controller => 'system/captive', :action => 'index'
+
   # channels
   map.connect 'channels/search', :controller => 'channels', :action => 'search'
 

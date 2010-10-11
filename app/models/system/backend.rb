@@ -7,13 +7,16 @@ module System
     @@backend_api_methods = [
       :info,
       :get_ips_of_currently_connected_clients,
-      :give_internet_rights_to_client,
-      :revoke_internet_rights_from_client,
+      :grant_internet_access,
+      :revoke_internet_access,
       :ssid_of_base_station,
       :server_ips,
       :get_interfaces,
       :get_interface_information,
-      :get_hostname_for_ip
+      :get_hostname_for_ip,
+      :get_mac_for_ip,
+      :hostname,
+      :requested_host_local?
       ].freeze
   
     class << self

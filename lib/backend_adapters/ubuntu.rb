@@ -31,14 +31,6 @@ module BackendAdapters
         end
       end.flatten
     end
-
-    def give_internet_rights_to_client(ip)
-    
-    end
-  
-    def revoke_internet_rights_from_client(ip)
-
-    end
     
     def get_interfaces
       LinuxCommands.ifconfig
@@ -52,6 +44,27 @@ module BackendAdapters
       match = `nslookup #{ip}`.split("\t").last.match(/name = (.*)\./) && match[1]
     end
     
+    def get_ip_for_hostname(hostname)
+      match = `nslookup #{hostname}`.split("\t").last.match(/(Address:.*)\n\n/m) && match[1]
+    end
+    
+    def hostname
+      @hostname ||= `hostname`
+    end
+    
+    def local_hosts
+      @local_hosts ||= ([System::Backend.hostname, 'localhost', '127.0.0.1', '10.42.0.1', '10.43.0.1', 'protonet'] + LinuxCommands.ifconfig.map { |i, data| data['inet addr'] })
+    end
+    
+    def check_locality(host)
+      if local_hosts.include?(get_ip_for_hostname(host))
+        @local_hosts << host
+      end
+    end
+    
+    def requested_host_local?(host)
+      local_hosts.include?(host) || check_locality(host)
+    end
     
     # private
       def parse_raw_ifconfig raw, keys=nil
@@ -75,6 +88,20 @@ module BackendAdapters
         data
       end
       
+    def grant_internet_access(ip)
+      # Add PC to the firewall
+      `sudo iptables -I internet 1 -t nat -m mac --mac-source #{get_mac_for_ip(ip)} -j RETURN`
+
+      # The following line removes connection tracking for the PC
+      # This clears any previous (incorrect) route info for the redirection
+      `sudo rmtrack #{ip}`
+    end
+    
+    def revoke_internet_access(ip)
+
+    end
+    
+   # private
       def get_connected_macs_to_wlan(iface)
         raise ArgumentError, iface unless DEFAULT_WLAN_INTERFACES.include?(iface)
         foo = `wlanconfig #{@config[iface]} list sta`
@@ -105,6 +132,11 @@ module BackendAdapters
         # raise RuntimeError, ip_array if ip_array.size != 1 # not implemented yet
         ip_array.first
       end
-      
+
+      def get_mac_for_ip(ip)
+        match = `/usr/sbin/arp -a #{ip}`
+        match = match.match(REGEXPS[:mac])
+        match && match[0]
+      end
   end
 end
