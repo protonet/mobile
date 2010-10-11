@@ -128,7 +128,11 @@ class ClientConnection < FlashServer
               :channels => [channel]
               
           else
-            channel = Channel.find_by_id data['channel_id']
+            if data['channel_uuid']
+              channel = Channel.find_by_uuid data['channel_uuid']
+            else
+              channel = Channel.find_by_id data['channel_id']
+            end
             tweet = Tweet.create :user_id => @user.id,
               :author => @user.display_name,
               :message => data['message'],
