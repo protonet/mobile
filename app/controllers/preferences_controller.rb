@@ -52,4 +52,12 @@ class PreferencesController < ApplicationController
     render :partial => 'user_settings'
   end
   
+
+  def get_vpn
+    render :json => {
+      'community' => System::Preferences.vpn[:identifier],
+      'key' => System::Preferences.vpn[:password]
+    }
+  end
+
 end

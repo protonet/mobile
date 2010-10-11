@@ -38,6 +38,7 @@ ActionController::Routing::Routes.draw do |map|
 
   # preferences
   map.preferences '/preferences', :controller => 'preferences', :action => 'index'
+  map.vpn_preferences '/preferences/get_vpn.:format', :controller => 'preferences', :action => 'get_vpn'
 
   # navigation
   map.navigation '/navigation', :controller => 'navigation', :action => 'index'
