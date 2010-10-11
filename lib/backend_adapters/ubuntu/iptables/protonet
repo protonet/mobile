@@ -45,7 +45,6 @@ echo "   Clearing any existing rules and setting default policy.."
   $IPT -P FORWARD DROP
   $IPT -F FORWARD
   $IPT -F unknown_user
-  $IPT -F known_user_internet_allowed 
   $IPT -t nat -F
 
 echo "   Creating our unknown_user chain (handles traffic from public interface)"
@@ -71,8 +70,8 @@ echo "   allow traffic from all stored (and authorized) mac addresses"
 echo "   mark all traffic from the unknown_user chain as 99 (untrusted)"
   $IPT -t nat -A unknown_user -j MARK --set-mark 99
   
-echo "   TODO: PROBABLY NOT NEEDED, RESEARCH"
-  # $IPT -t nat -A unknown_user -m mark --mark 99 -p tcp --dport 80 -j DNAT --to-destination 10.43.0.1
+echo "   redirect all traffic to 10.43.0.1"
+  $IPT -t nat -A unknown_user -m mark --mark 99 -p tcp --dport 80 -j DNAT --to-destination 10.43.0.1
 
 echo "   setup connection sharing.."
   # allowing established connections + outbound stuff, log the rest
@@ -83,10 +82,9 @@ echo "   setup connection sharing.."
     $IPT -A FORWARD -i $EXTIF -o $iface -m state --state ESTABLISHED,RELATED -j ACCEPT
     $IPT -A FORWARD -i $iface -o $EXTIF -j ACCEPT    
   done
-  # $IPT -A known_user_internet_allowed -j LOG
 
 echo "   Enabling SNAT (MASQUERADE) functionality on $EXTIF"
-  $IPT-t nat -A POSTROUTING -o $EXTIF -j MASQUERADE
+  $IPT -t nat -A POSTROUTING -o $EXTIF -j MASQUERADE
 
 
 # the stuff below works
