@@ -22,6 +22,10 @@ module BackendAdapters
 
     end
     
+    def get_hostname_for_ip(ip)
+      match = `nslookup #{ip}`.split("\t").last.match(/name = (.*)\./) && match[1]
+    end
+    
     # the following method currently on osx, and probably not an all systems
     def ssid_of_base_station
       `/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -I`.match(/BSSID: (.*)/)[1].gsub(/0{1}:?/, '00').delete(':')

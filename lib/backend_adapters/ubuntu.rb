@@ -48,6 +48,10 @@ module BackendAdapters
       LinuxCommands.ifconfig :adapter => iface
     end
     
+    def get_hostname_for_ip(ip)
+      match = `nslookup #{ip}`.split("\t").last.match(/name = (.*)\./) && match[1]
+    end
+    
     
     # private
       def parse_raw_ifconfig raw, keys=nil

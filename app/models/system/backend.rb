@@ -12,7 +12,8 @@ module System
       :ssid_of_base_station,
       :server_ips,
       :get_interfaces,
-      :get_interface_information
+      :get_interface_information,
+      :get_hostname_for_ip
       ].freeze
   
     class << self
