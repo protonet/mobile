@@ -80,8 +80,8 @@ echo "   setup connection sharing.."
   for iface in ${ALLINTIFS[@]}
   do
     echo "   ... setting rules for $iface ..."
-    $IPT -A known_user_internet_allowed -i $EXTIF -o $iface -m state --state ESTABLISHED,RELATED -j ACCEPT
-    $IPT -A known_user_internet_allowed -i $iface -o $EXTIF -j ACCEPT    
+    $IPT -A FORWARD -i $EXTIF -o $iface -m state --state ESTABLISHED,RELATED -j ACCEPT
+    $IPT -A FORWARD -i $iface -o $EXTIF -j ACCEPT    
   done
   # $IPT -A known_user_internet_allowed -j LOG
 
