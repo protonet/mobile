@@ -24,7 +24,7 @@
 
 # The location of the sudo iptables and kernel module programs
 #
-IPT=/sbin/sudo iptables
+IPT=/sbin/iptables
 
 #Setting the EXTERNAL and INTERNAL interfaces for the network
 EXTIF="eth0"
@@ -38,59 +38,55 @@ echo "   Internal PUBLIC Interface:   $PUBIF"
 echo "   Internal PRIVATE Interface:  $PRVIF"
 
 echo "   Clearing any existing rules and setting default policy.."
-  sudo iptables -P INPUT ACCEPT
-  sudo iptables -F INPUT 
-  sudo iptables -P OUTPUT ACCEPT
-  sudo iptables -F OUTPUT
-  sudo iptables -P FORWARD DROP
-  sudo iptables -F FORWARD
-  sudo iptables -F unknown_user
-  sudo iptables -F known_user_internet_allowed 
-  sudo iptables -t nat -F
+  $IPT -P INPUT ACCEPT
+  $IPT -F INPUT 
+  $IPT -P OUTPUT ACCEPT
+  $IPT -F OUTPUT
+  $IPT -P FORWARD DROP
+  $IPT -F FORWARD
+  $IPT -F unknown_user
+  $IPT -F known_user_internet_allowed 
+  $IPT -t nat -F
 
-echo "   Creating our own chains (unknown_user and known_user_internet_allowed)"
-  sudo iptables -N unknown_user -t nat
-  sudo iptables -N known_user_internet_allowed
+echo "   Creating our unknown_user chain (handles traffic from public interface)"
+  $IPT -N unknown_user -t nat
 
-echo "   Creating unknown_user chain and setting its rules.."
+echo "   manage traffic coming from the public interface.."
   # accept allow tcp:80, udp:67 (dhcp) and udp:53 (dns) and tcp:5000 (protonet-socket) requests
-  sudo iptables -A unknown_user -p tcp -m tcp --dport 80 -j ACCEPT
-  sudo iptables -A unknown_user -p udp -m udp --dport 67 -j ACCEPT
-  sudo iptables -A unknown_user -p udp -m udp --dport 53 -j ACCEPT
-  sudo iptables -A unknown_user -p tcp -m tcp --dport 5000 -j ACCEPT
-  # drop the rest
-  sudo iptables -A unknown_user -j DROP
+  $IPT -t nat -A PREROUTING -i $PUBIF -p tcp -m tcp --destination 10.43.0.1 --dport 80 -j ACCEPT
+  $IPT -t nat -A PREROUTING -i $PUBIF -p udp -m udp --destination 10.43.0.1 --dport 67 -j ACCEPT
+  $IPT -t nat -A PREROUTING -i $PUBIF -p udp -m udp --destination 10.43.0.1 --dport 53 -j ACCEPT
+  $IPT -t nat -A PREROUTING -i $PUBIF -p tcp -m tcp --destination 10.43.0.1 --dport 5000 -j ACCEPT
+
+echo "   send all public traffic to the unknown_user chain"
+  $IPT -t nat -A PREROUTING -i $PUBIF -j unknown_user
+
+echo "   and drop all forward pakets marked 99"
+  $IPT -t filter -A FORWARD -i $PUBIF -m mark --mark 99 -j DROP
+
+
+echo "   allow traffic from all stored (and authorized) mac addresses"
+  awk 'BEGIN { FS="\t"; } { system("$IPT -t nat -A unknown_user -m mac --mac-source "$4" -j RETURN"); }' /var/lib/users
+
+echo "   mark all traffic from the unknown_user chain as 99 (untrusted)"
+  $IPT -t nat -A unknown_user -j MARK --set-mark 99
   
-echo "   Creating known_user_internet_allowed chain and setting its rules.."
+echo "   TODO: PROBABLY NOT NEEDED, RESEARCH"
+  # $IPT -t nat -A unknown_user -m mark --mark 99 -p tcp --dport 80 -j DNAT --to-destination 10.43.0.1
+
+echo "   setup connection sharing.."
   # allowing established connections + outbound stuff, log the rest
   # for all internal interface... some refact might be needed as some point
   for iface in ${ALLINTIFS[@]}
   do
     echo "   ... setting rules for $iface ..."
-    sudo iptables -A known_user_internet_allowed -i $EXTIF -o $iface -m state --state ESTABLISHED,RELATED -j ACCEPT
-    sudo iptables -A known_user_internet_allowed -i $iface -o $EXTIF -j ACCEPT    
+    $IPT -A known_user_internet_allowed -i $EXTIF -o $iface -m state --state ESTABLISHED,RELATED -j ACCEPT
+    $IPT -A known_user_internet_allowed -i $iface -o $EXTIF -j ACCEPT    
   done
-  sudo iptables -A known_user_internet_allowed -j LOG
-  echo "   known_user_internet_allowed chain is ready!"
-
-
-echo "   Route PUBLIC IFACE ($PUBIF) traffic to unknown_user chain by default.."
-  # unknown users will be redirected to the dashboard, all other traffic will be dropped
-  # this redirects the tcp:80 packets, also I couldn't leave it in the unknown_user chain it
-  # seems
-  # sudo iptables -t nat -A PREROUTING -i $PUBIF -p tcp -m tcp --dport 80 -j DNAT --to-destination 10.43.0.1:80
-  # all traffic is being sent to the unknown_user chain
-  sudo iptables -A INPUT -i $PUBIF -j unknown_user
-
-
-echo "   Route PRIVATE IFACE ($PRVIF) traffic to known_user_internet_allowed.."
-  # yeah not very beautiful but it does work (also I know what happens here - no magic :))
-  sudo iptables -A FORWARD -i $EXTIF -o $PRVIF -j known_user_internet_allowed
-  sudo iptables -A FORWARD -i $PRVIF -o $EXTIF -j known_user_internet_allowed
-
+  # $IPT -A known_user_internet_allowed -j LOG
 
 echo "   Enabling SNAT (MASQUERADE) functionality on $EXTIF"
-  sudo iptables -t nat -A POSTROUTING -o $EXTIF -j MASQUERADE
+  $IPT-t nat -A POSTROUTING -o $EXTIF -j MASQUERADE
 
 
 # the stuff below works
