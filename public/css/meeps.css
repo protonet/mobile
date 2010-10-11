@@ -106,7 +106,7 @@
 .smilie {
   display: inline-block;
   vertical-align: bottom;
-  background: url(/img/spr_smilies_r2.png) no-repeat;
+  background: url(/img/spr_smilies_r3.png) no-repeat;
   width: 28px;
   height: 23px;
   text-indent: -9999px;
@@ -150,6 +150,10 @@
 
 .smilie.grin {
   background-position: -253px 0;
+}
+
+.smilie.kiss {
+  background-position: -281px 0;
 }
 
 .heart {
