@@ -55,6 +55,7 @@ class PreferencesController < ApplicationController
 
   def get_vpn
     render :json => {
+      'description' => Network.local.name,
       'community' => System::Preferences.vpn[:identifier],
       'key' => System::Preferences.vpn[:password]
     }
