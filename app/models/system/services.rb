@@ -85,7 +85,7 @@ System::Services.add 'Sunspot/Solr', :sunspot_active,
   :ping_command  => lambda { TCPSocket.new('localhost', solr_port) },
   :pid_file      => "tmp/pids/sunspot-solr-#{Rails.env}.pid",
   :log_file      => "log/sunspot-solr-#{Rails.env}.log",
-  :timeout       => 90
+  :timeout       => 120
 
 System::Services.add 'Node.JS', :nodejs_active,
   :identifier    => 'node.js',

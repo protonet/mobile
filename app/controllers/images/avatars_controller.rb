@@ -14,9 +14,8 @@ class Images::AvatarsController < ApplicationController
   end
 
   def create
-    @avatar = Images::Avatar.find_by_user_id(current_user.id) || Images::Avatar.new
-    @avatar.update_attributes(params[:images_avatar])
-    @avatar.user = current_user
+    @avatar = Images::Avatar.find_by_user_id(current_user.id) || Images::Avatar.new(:user => current_user)
+    @avatar.image_file = params[:images_avatar][:image_file]
     if @avatar.save
       expire_action images_avatar_path(@avatar.id)
       redirect_to preferences_path
