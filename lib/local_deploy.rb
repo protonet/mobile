@@ -5,18 +5,19 @@ class LocalDeploy
   PACKING_TYPE = ".tar.gz"
   KEY = "adbasdbaskjdbjk1b23123kjasndjkbas"
   DEPLOY_ROOT = "/home/protonet/dashboard"
+  APP_ROOT = "/dashboard"
   MAX_NUM_RELEASES = 5
 
   class << self
     attr_accessor :env
 
-    def first_run(env)
+    def first_run(env = "production")
       self.env = env
       create_directories
       setup_db
     end
 
-    def deploy(env)
+    def deploy(env = "production")
       self.env = env
       get_code
       release_dir
@@ -71,20 +72,16 @@ class LocalDeploy
         FileUtils.cd "/tmp"
         system "tar -xzf #{ARCHIVE_NAME}#{PACKING_TYPE}"
         FileUtils.mv ARCHIVE_NAME, "#{release_path}/#{Time.now.strftime('%Y%m%d%H%M%S')}"
-        # remove old symlink
-        # create new symlink
       end
     end
 
     def clean_up
       all_releases = Dir["#{release_path}/*"].sort
+      if (num_releases = all_releases.size) > MAX_NUM_RELEASES
+        num_to_delete = num_releases - MAX_NUM_RELEASES
 
-      while true
-        if all_releases.size > MAX_NUM_RELEASES
-          FileUtils.r_rf "#{release_path}/#{all_releases.first}"
-          all_releases.delete(0)
-        else
-          break
+        num_to_delete.times do
+          FileUtils.r_rf "#{release_path}/#{all_releases.delete_at(0)}"
         end
       end
     end
@@ -110,22 +107,31 @@ class LocalDeploy
       system "RAILS_ENV=#{env} rake db:migrate"
     end
 
-    def passenger_restart
-      system "touch #{current_path}/tmp/restart.txt"
+    def link
+      FileUtils.rm current_path
+      FileUtils.ln_s latest_deploy, current_path
+    end
+
+    def restart
+      FileUtils.touch "#{current_path}/tmp/restart.txt"
     end
 
     private
 
     def current_path
-      "#{DEPLOY_ROOT}/dashboard/current"
+      "#{DEPLOY_ROOT}#{APP_ROOT}/current"
     end
 
     def shared_path
-      "#{DEPLOY_ROOT}/dashboard/shared"
+      "#{DEPLOY_ROOT}#{APP_ROOT}/shared"
     end
 
     def release_path
-      "#{DEPLOY_ROOT}/dashboard/releases"
+      "#{DEPLOY_ROOT}#{APP_ROOT}/releases"
+    end
+
+    def latest_deploy
+      "#{release_path}/#{Dir["#{release_path}/*"].sort.last}"
     end
   end
 end
