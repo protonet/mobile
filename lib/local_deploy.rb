@@ -8,20 +8,24 @@ class LocalDeploy
   MAX_NUM_RELEASES = 5
 
   class << self
-    def first_run
+    attr_accessor :env
+
+    def first_run(env)
+      self.env = env
       create_directories
       setup_db
     end
 
-    def deploy
+    def deploy(env)
+      self.env = env
       get_code
-      create_release_directory
+      release_dir
       unpack
-      clean_up_old_releases
       bundle
-      run_migrations
-      create_new_symlink
-      passenger_restart
+      migrate
+      clean_up
+      link
+      restart
     end
 
     def create_directories
@@ -46,9 +50,9 @@ class LocalDeploy
 
     def setup_db
       FileUtils.cd current_path
-      system "mysql -u root dashboard_production -e 'show tables;'"
-      if $?.exitstatus == 0
-        system "RAILS_ENV=production bundle exec rake db:setup"
+      system "mysql -u root dashboard_production -e 'show tables;' 2>&1 > /dev/null"
+      if $?.exitstatus != 0
+        system "RAILS_ENV=#{self.env} bundle exec rake db:setup"
       end
     end
 
@@ -57,7 +61,7 @@ class LocalDeploy
       system "wget http://releases.protonet.info/latest/#{KEY}"
     end
 
-    def create_release_dir
+    def release_dir
       FileUtils.mkdir_p shared_path if !File.exists? shared_path
       FileUtils.mkdir_p releases_path if !File.exists? releases_path
     end
@@ -72,7 +76,7 @@ class LocalDeploy
       end
     end
 
-    def clean_up_old_releases
+    def clean_up
       all_releases = Dir["#{release_path}/*"].sort
 
       while true
@@ -94,16 +98,16 @@ class LocalDeploy
 
       FileUtils.cd release_path
 
-      system "bundle check"
+      system "bundle check 2>&1 > /dev/null"
 
-      if $?.exitstatus == 0
+      if $?.exitstatus != 0
         system "bundle install --without test --without cucumber"
       end
     end
 
     def migrate
       FileUtils.cd current_path
-      system "rake db:migrate"
+      system "RAILS_ENV=#{env} rake db:migrate"
     end
 
     def passenger_restart
