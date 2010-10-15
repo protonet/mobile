@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
     requested_uri = request.protocol + request.host_with_port + request.request_uri
     return true if System::Backend.requested_host_local?(request.host)
     # otherwise redirect to captive? and the url
-    redirect_to "/captive?req=" + URI.escape(requested_uri)
+    redirect_to "http://protonet/captive?req=" + URI.escape(requested_uri)
   end
   
 end
