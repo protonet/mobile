@@ -45,7 +45,7 @@ module BackendAdapters
     end
     
     def get_ip_for_hostname(hostname)
-      (match = `nslookup #{hostname}`.split("\t").last.match(/(Address:.*)\n\n/m)) && match[1]
+      (match = `nslookup #{hostname}`.split("\t").last.match(/Address: (.*)\n\n/m)) && match[1]
     end
     
     def hostname
