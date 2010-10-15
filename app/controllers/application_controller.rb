@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
   # hack for reload problem in development
-  before_filter :set_backend_for_development#, :captive_check
+  before_filter :set_backend_for_development, :captive_check
 
   # Scrub sensitive parameters from your log
   filter_parameter_logging :password # TODO: confirmation field?
