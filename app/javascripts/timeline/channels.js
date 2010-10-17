@@ -134,7 +134,7 @@ protonet.timeline.Channels = {
   
   _renderChannelLists: function() {
     this.data.chunk(function(channelData) {
-      var link = this.channelLinks.filter("[data-channel-id=" + channelData.id + "]");
+      var link = this.channelLinks.filter("[data-channel-id='" + channelData.id + "']");
       new protonet.timeline.Channel(channelData, link).render(this.container);
     }.bind(this), function() {
       protonet.Notifications.trigger("channels.initialized", [this.data]);
@@ -151,7 +151,6 @@ protonet.timeline.Channels = {
         queryParams       = protonet.utils.parseQueryString(location.search.slice(1)),
         urlChannelId      = +(hashParams.channel_id || queryParams.channel_id),
         selectedChannelId = urlChannelId || (this.data[0] ? this.data[0].id : null);
-    
     if (selectedChannelId && this.selected != selectedChannelId) {
       protonet.Notifications.trigger("channel.change", [selectedChannelId, true]);
     }

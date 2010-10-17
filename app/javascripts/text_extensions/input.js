@@ -128,7 +128,7 @@ protonet.text_extensions.Input.prototype = {
     this.container.animate({
       height: "30px",
       opacity: 100
-    }, 200);
+    }, 200).show();
   },
   
   expand: function() {
