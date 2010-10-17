@@ -9,7 +9,7 @@
  *        // parameter 'closeContextMenu' is a function that can be invoked in order to close the context menu
  *      },
  *      "show profile": function(li) {
- *        showProfile(li.attr("data-user-id"));
+ *        showProfile(li.data("user-id"));
  *      }
  *    });
  *

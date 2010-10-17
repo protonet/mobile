@@ -79,7 +79,7 @@ protonet.controls.FileWidget.prototype = {
     
     this.container
       .delegate(".address-bar [data-directory-path]", "click", function(event) {
-        var path = $(event.currentTarget).attr("data-directory-path");
+        var path = $(event.currentTarget).data("directory-path");
         protonet.Notifications.trigger("files.load", [this.channelId, path]);
         event.preventDefault();
       }.bind(this))
@@ -119,7 +119,7 @@ protonet.controls.FileWidget.prototype = {
         closeContextMenu();
       },
       "publish": function(li, closeContextMenu) {
-        this.publish("/" +  this.channelId + li.attr("data-file-path"));
+        this.publish("/" +  this.channelId + li.data("file-path"));
         closeContextMenu();
       }.bind(this),
       "delete": function(li, closeContextMenu) {
@@ -130,7 +130,7 @@ protonet.controls.FileWidget.prototype = {
           url:        "system/files/delete",
           type:       "post",
           data:       {
-            file_path:  li.attr("data-file-path"),
+            file_path:  li.data("file-path"),
             channel_id: this.channelId
           },
           beforeSend: function() {
@@ -151,7 +151,7 @@ protonet.controls.FileWidget.prototype = {
      */
     new protonet.ui.ContextMenu("#file-widget ul [data-directory-path]", {
       "<strong>open</strong>":   function(li, closeContextMenu) {
-        var path = li.attr("data-directory-path");
+        var path = li.data("directory-path");
         protonet.Notifications.trigger("files.load", [this.channelId, path]);
         closeContextMenu();
       }.bind(this),
@@ -167,7 +167,7 @@ protonet.controls.FileWidget.prototype = {
           url:  "system/files/delete_directory",
           type: "post",
           data: {
-            file_path:  li.attr("data-directory-path"),
+            file_path:  li.data("directory-path"),
             channel_id: this.channelId
           },
           beforeSend: function() {
@@ -383,7 +383,7 @@ protonet.controls.FileWidget.prototype = {
           },
           beforeSend: function() { input.attr("disabled", "disabled"); },
           complete:   function() { input.removeAttr("disabled"); },
-          success:    function() { input.attr("data-directory-path", this.path + "/" + directoryName); }.bind(this),
+          success:    function() { input.data("directory-path", this.path + "/" + directoryName); }.bind(this),
           error:      function(transport) {
             var message;
             if (transport.status == "409") {
