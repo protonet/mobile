@@ -344,11 +344,14 @@ header .hearts {
 .context-menu:before {
   content: " ";
   display: block;
-  width: 100%;
+  left: 50%;
   position: absolute;
-  margin-top: -8px;
-  background: url(../img/icn_arrow_context_menu.png) center center no-repeat;
-  height: 8px;
+  margin: -8px 0 0 -7px;
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #487bff;
 }
 
 .context-menu li {

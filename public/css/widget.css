@@ -23,9 +23,11 @@
   background: -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 1), rgba(72, 123, 255, 0.6));
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.6)), to(rgba(72, 123, 255, 1)));
 }
-  .widget h3 a {
-    color: #fff;
-  }
+
+.widget h3 a {
+  text-decoration: none;
+  color: #fff;
+}
 
 .widget output {
   display: inline;

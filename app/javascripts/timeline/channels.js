@@ -78,6 +78,12 @@ protonet.timeline.Channels = {
      * Subscribe a new channel by id
      */
     protonet.Notifications.bind("channel.subscribe", function(e, id) {
+      var error = function() {
+        var identifier = this.getChannelName(+id) || id,
+            message = protonet.t("CHANNEL_SUBSCRIPTION_ERROR").replace("{identifier}", identifier);
+        protonet.Notifications.trigger("flash_message.error", message);
+      }.bind(this);
+      
       $.ajax({
         type:   "post",
         url:    "/listens/",
@@ -85,12 +91,14 @@ protonet.timeline.Channels = {
           channel_id:         id,
           authenticity_token: protonet.config.authenticity_token
         },
-        success: function() { location.reload(); },
-        error:   function() {
-          var identifier = this.getChannelName(+id) || id,
-              message = protonet.t("CHANNEL_SUBSCRIPTION_ERROR").replace("{identifier}", identifier);
-          protonet.Notifications.trigger("flash_message.error", message);
-        }.bind(this)
+        success: function(data) {
+          if (data.success) {
+            location.reload();
+          } else {
+            error();
+          }
+        },
+        error: error
       });
     }.bind(this));
     

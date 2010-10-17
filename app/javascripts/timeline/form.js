@@ -111,12 +111,6 @@ protonet.timeline.Form = {
     
     
     /**
-     * Typing state
-     */
-    this.input.keypress(this._typingStart.bind(this));
-    
-    
-    /**
      * Fire global event when form is submitted
      * or the user hits the enter key in the input
      * Please note it's still possible to create line breaks by
@@ -124,6 +118,10 @@ protonet.timeline.Form = {
      */
     this.form.submit(this.submit.bind(this));
     this.input.keypress(function(event) {
+      if (!event.metaKey) {
+        this._typingStart();
+      }
+      
       if (event.keyCode != 13 || event.shiftKey || event.altKey) {
         return;
       }

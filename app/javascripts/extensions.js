@@ -41,7 +41,7 @@ Function.prototype.bind = function() {
 //---------------------------- ARRAY ----------------------------
 Array.prototype.chunk = (function() {
   var DELAY = 50,
-      MAX_EXECUTION_TIME = 50;
+      MAX_EXECUTION_TIME = 100;
   return function(iterator, callback) {
     var arr = this, i = 0, iterationLength = arr.length, time;
     var perform = function() {

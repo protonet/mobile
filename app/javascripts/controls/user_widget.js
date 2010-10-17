@@ -58,6 +58,7 @@ protonet.controls.UserWidget.prototype = {
       
       .bind("users.update_status", function(e, data) {
         this.updateUsers(data.online_users);
+        this.filterChannelUsers();
       }.bind(this))
       
       .bind("channels.update_subscriptions", function(e, channelSubscriptions) {
