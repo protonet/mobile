@@ -40,7 +40,7 @@ protonet.user = {
   _createContextMenu: function() {
     var contextOptions = {
       "send reply": function(link, closeContextMenu) {
-        var user = this.usersData[+link.data("user-id")];
+        var user = this.usersData[+link.attr("data-user-id")];
         if (user) {
           protonet.Notifications.trigger("form.create_reply", user.name);
           closeContextMenu();
@@ -50,11 +50,10 @@ protonet.user = {
         alert("Sorry, profiles are not available yet ...");
       }
     };
-    
-    if (protonet.user.data.is_admin) {
+    if(protonet.user.data.is_admin) {
       contextOptions["give internet access"] = function(link, closeContextMenu) {
-        var user = this.usersData[+link.data("user-id")];
-        // todo add a && user.isStranger
+        var user = this.usersData[+link.attr("data-user-id")];
+        // todo add a && user.stranger()
         if (user) {
           protonet.Notifications.trigger("system.give_internet_access", user);
           closeContextMenu();

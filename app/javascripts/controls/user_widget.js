@@ -13,7 +13,7 @@ protonet.controls.UserWidget = function() {
   
   this.list.children().each(function(i, li) {
     li = $(li);
-    this.usersData[+li.data("user-id")] = {
+    this.usersData[+li.attr("data-user-id")] = {
       element:              li,
       name:                 $.trim(li.text()),
       isViewer:             li.hasClass("myself"),
