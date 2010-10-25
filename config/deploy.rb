@@ -38,6 +38,7 @@ namespace :deploy do
   
   desc "deploy monit configuration"
   task :monit, :roles => :app do
+    jabber_bridge_active = fetch(:jabber_bridge) rescue false
     monit_command = "monit -c #{shared_path}/config/monit_ptn_node -l #{shared_path}/log/monit.log -p #{shared_path}/pids/monit.pid"
     top.upload(StringIO.new(ERB.new(IO.read("config/monit/monit_ptn_node.erb")).result(binding)), "#{shared_path}/config/monit_ptn_node")
     run "chmod 700 #{shared_path}/config/monit_ptn_node"

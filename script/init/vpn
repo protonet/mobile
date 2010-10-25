@@ -19,7 +19,7 @@ case $1 in
       start-stop-daemon --stop --pidfile $PIDFILE
       ;;
     status)
-      kill -0 `cat $CURRENT_PATH/tmp/pids/edge.pid`
+      kill -0 `cat $PIDFILE
       ;;
     *)  
       echo "usage: vpn rails-app-path {start|stop|status} node-uuid password" ;;

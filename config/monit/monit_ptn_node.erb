@@ -1,114 +1,25 @@
-###############################################################################
-## Monit control file
-###############################################################################
-##
-## Comments begin with a '#' and extend through the end of the line. Keywords
-## are case insensitive. All path's MUST BE FULLY QUALIFIED, starting with '/'.
-##
-## Bellow is the example of some frequently used statements. For information
-## about the control file, a complete list of statements and options please 
-## have a look in the monit manual.
-##
-##
-###############################################################################
-## Global section
-###############################################################################
-##
-## Start monit in background (run as daemon) and check the services at 2-minute
-## intervals.
-#
-set daemon  30
-#
-#
-## Set syslog logging with the 'daemon' facility. If the FACILITY option is
-## omited, monit will use 'user' facility by default. You can specify the
-## path to the file for monit native logging.
-#
+##########################################################################
+# monit settings for every node
+##########################################################################
+
+# refresh rate
+set daemon 30
+
+# logfile configuration
 set logfile syslog facility log_daemon 
-#
-#
-## Set list of mailservers for alert delivery. Multiple servers may be 
-## specified using comma separator. By default monit uses port 25 - it is 
-## possible to override it with the PORT option.
-#
-# set mailserver mail.bar.baz,               # primary mailserver
-#                backup.bar.baz port 10025,  # backup mailserver on port 10025
-#                localhost                   # fallback relay
-#
-#
-## By default monit will drop the event alert, in the case that there is no
-## mailserver available. In the case that you want to keep the events for
-## later delivery retry, you can use the EVENTQUEUE statement. The base
-## directory where undelivered events will be stored is specified by the
-## BASEDIR option. You can limit the maximal queue size using the SLOTS
-## option (if omited then the queue is limited just by the backend filesystem).
-#
-# set eventqueue
-#     basedir /var/monit  # set the base directory where events will be stored
-#     slots 100           # optionaly limit the queue size
-#
-#
-## Monit by default uses the following alert mail format:
-##
-## --8<--
-## From: monit@$HOST                         # sender
-## Subject: monit alert --  $EVENT $SERVICE  # subject
-##
-## $EVENT Service $SERVICE                   #
-##                                           #
-## 	Date:        $DATE                   #
-## 	Action:      $ACTION                 #
-## 	Host:        $HOST                   # body
-## 	Description: $DESCRIPTION            #
-##                                           #
-## Your faithful employee,                   #
-## monit                                     #
-## --8<--
-##
-## You can override the alert message format or its parts such as subject
-## or sender using the MAIL-FORMAT statement. Macros such as $DATE, etc.
-## are expanded on runtime. For example to override the sender:
-#
-# set mail-format { from: monit@foo.bar }
-#
-#
-## You can set the alert recipients here, which will receive the alert for
-## each service. The event alerts may be restricted using the list.
-#
-# set alert sysadm@foo.bar                       # receive all alerts
-# set alert manager@foo.bar only on { timeout }  # receive just service-
-#                                                # timeout alert
-#
-#
-## Monit has an embedded webserver, which can be used to view the 
-## configuration, actual services parameters or manage the services using the 
-## web interface.
-#
-set httpd port 2812 # and
-#use address localhost
 
-##Monit web-server ACL.
-# allow localhost      # allow localhost to connect to the server and
-# allow 172            # allow 172.x to connect to the server,
-                     # You can give only one per entry
+# control and http interface
+set httpd port 2812
 
-allow protonet:admin     # user name and password for authentication.
-###############################################################################
-## Services
-###############################################################################
-##
-## Check the general system resources such as load average, cpu and memory
-## usage. Each rule specifies the tested resource, the limit and the action
-## which will be performed in the case that the test failed.
-#
-#  check system myhost.mydomain.tld
-#    if loadavg (1min) > 4 then alert
-#    if loadavg (5min) > 2 then alert
-#    if memory usage > 75% then alert
-#    if cpu usage (user) > 70% then alert
-#    if cpu usage (system) > 30% then alert
-#    if cpu usage (wait) > 20% then alert
+# TODO: add some real user/password
+allow protonet:admin
 
+
+##########################################################################
+# default processes, more are added in runtime at shared/config/monit.d/*
+##########################################################################
+
+# app  settings
 check process rabbitmq with pidfile /var/run/rabbitmq.pid
   start program = "/usr/bin/sudo /etc/init.d/rabbitmq-server start"
   stop program = "/usr/bin/sudo /etc/init.d/rabbitmq-server stop"
@@ -126,19 +37,18 @@ check process node.js with pidfile <%= shared_path %>/pids/node_8124.pid
   if 3 restarts within 5 cycles then timeout
   if totalmem > 200.0 MB for 2 cycles then restart
 
-check process js_dispatching_control.rb with pidfile <%= shared_path %>/pids/js_dispatcher_production.pid
+check process js_dispatcher with pidfile <%= shared_path %>/pids/js_dispatcher_production.pid
   start program = "<%= current_path %>/script/monit_bundle_exec production <%= current_path %> ruby <%= current_path %>/messaging/js_dispatching_control.rb start"
   stop program  = "<%= current_path %>/script/monit_bundle_exec production <%= current_path %> ruby <%= current_path %>/messaging/js_dispatching_control.rb stop"
   if 3 restarts within 5 cycles then timeout
   if totalmem > 200.0 MB for 2 cycles then restart
-
 
 check process solr with pidfile <%= shared_path %>/pids/sunspot-solr.pid
   start program = "<%= current_path %>/script/init/solr <%= current_path %> start"
   stop program  = "<%= current_path %>/script/init/solr <%= current_path %> stop"
   if 3 restarts within 5 cycles then timeout
 
-<% if (fetch(:jabber_bridge) rescue false) %>
+<% if false && jabber_bridge_active %>
   check process jabber.rb with pidfile <%= shared_path %>/pids/jabber.rb.pid
     start program = "<%= current_path %>/script/monit_bundle_exec production <%= current_path %> ruby <%= current_path %>/messaging/jabber_control.rb start"
     stop program  = "<%= current_path %>/script/monit_bundle_exec production <%= current_path %> ruby <%= current_path %>/messaging/jabber_control.rb stop"
