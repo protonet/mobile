@@ -69,6 +69,7 @@ ActionController::Routing::Routes.draw do |map|
     system.wifi_on                'wifi/on',  :controller => 'wifi',  :action => 'on'
     system.wifi_off               'wifi/off', :controller => 'wifi',  :action => 'off'
     system.preferences_update     'preferences/update', :controller => 'preferences', :action => 'update'
+    system.release_update         'releases/update',    :controller => 'releases',    :action => 'update'
   end
 
   # images

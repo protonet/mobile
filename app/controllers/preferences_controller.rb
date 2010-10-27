@@ -7,7 +7,9 @@ class PreferencesController < ApplicationController
       {:url => 'network_settings', :name => 'network settings'},
       {:url => 'wifi_settings', :name => 'wifi settings'}, 
       {:url => 'system_overview', :name => 'system overview'},
-      {:url => 'vpn_settings', :name => 'vpn settings'}]
+      {:url => 'vpn_settings', :name => 'vpn settings'},
+      {:url => 'software_updates', :name => 'software updates'}
+    ]
   end
   
   def profile
@@ -50,6 +52,10 @@ class PreferencesController < ApplicationController
   
   def user_settings
     render :partial => 'user_settings'
+  end
+  
+  def software_updates
+    render :partial => 'software_updates'
   end
   
 

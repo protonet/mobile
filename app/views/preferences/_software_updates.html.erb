@@ -1,0 +1,9 @@
+update your nodes software<br>
+you are running on release  : <bold><%= System::Release.current_version %></bold><br>
+latest version is           : <bold><%= System::Release.latest_version %></bold><br>
+software update is available: <bold><%= !System::Release.most_recent? %></bold><br>
+
+
+<% form_tag(system_release_update_path) do %>
+  <%= button "update" %>
+<% end %>

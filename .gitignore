@@ -25,3 +25,5 @@ node/screenshots/*
 node.pid.lock
 Gemfile.lock
 solr/data
+RELEASE
+.project
