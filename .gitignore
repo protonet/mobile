@@ -26,4 +26,5 @@ node.pid.lock
 Gemfile.lock
 solr/data
 RELEASE
+TYPE
 .project

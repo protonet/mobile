@@ -1,13 +1,47 @@
-#!/bin/sh
+#!/bin/bash
 
-HOST=protodeploy@deploy.flyingseagull.de
-APPARCHIVE=dashboard_app.tar.bz2
+export HOST=protonet-live
+export APPARCHIVE=dashboard.tar.gz
 
 # for os x tells tar not to include resource forks
 export COPYFILE_DISABLE=true
-tar --exclude '\.git*' --exclude '*.psd' --exclude 'public/uploads/*' -cjvf $APPARCHIVE $PWD/.
 
-# currently off, we're doing it by hand
-# scp $APPARCHIVE $HOST:deploy/assets
-# 
-# rm $APPARCHIVE
+#  is this a beta or a stable release?
+select release_type in BETA STABLE
+do 
+  break;
+done
+
+#  prepare the basics
+cd /tmp
+rm -rf dashboard
+git clone git@github.com:protonet/dashboard.git
+cd dashboard
+git submodule init
+git submodule update
+rm -rf .git
+
+#  generate a new version
+export last_version=`curl http://releases.protonet.info/release/version`
+let "last_version += 1"
+
+#  write that stuff
+echo $release_type > TYPE
+echo $last_version > RELEASE
+
+#  now create an archive
+cd /tmp
+tar -pczf $APPARCHIVE dashboard/
+rm -rf /tmp/dashboard
+
+# create directory for the new release and upload it
+ssh protonet-live "mkdir -p ~/code-dispatcher/releases/$last_version"
+scp $APPARCHIVE protonet-live:~/code-dispatcher/releases/$last_version
+
+# if this is a stable release then link that thing to stable
+if [ $release_type = "STABLE" ]; then
+   ssh protonet-live "ln -s ~/code-dispatcher/releases/$last_version ~/code-dispatcher/stable"
+fi
+
+# cleanup
+rm /tmp/$APPARCHIVE
