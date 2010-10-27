@@ -2,8 +2,7 @@ module System
   class ReleasesController < ApplicationController
     
     def update
-      System::Release.update!
-      render :text => 'bam!'
+      render :text => "Software update was #{System::Release.update! ? 'successful!' : 'a FAIL!'}"
     end
     
   end
