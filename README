@@ -145,10 +145,10 @@ NameVirtualHost *:80
 
 <VirtualHost *:80>
   ServerName protonet.local
-  DocumentRoot "/Users/jelveh/Projekte/protonet-dashboard/public"
+  DocumentRoot "/Users/jelveh/Projekte/dashboard/public"
   RailsEnv development
   RailsAllowModRewrite off
-  <directory "/Users/jelveh/Projekte/protonet-dashboard/public">
+  <directory "/Users/jelveh/Projekte/dashboard/public">
     Order allow,deny
     Allow from all
   </directory>

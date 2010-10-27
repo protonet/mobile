@@ -6,7 +6,7 @@
 protonet.text_extensions.provider.GithubCommit = {
   /**
    * Matches
-   * https://github.com/dudemeister/protonet-dashboard/commit/8444bd9c8097e87454b0d2d86c7102f2165a20e2
+   * https://github.com/protonet/dashboard/commit/8444bd9c8097e87454b0d2d86c7102f2165a20e2
    */
   REG_EXP: /github\.com\/(.+?)\/(.+?)\/commit\/(\w{40})/i,
   
