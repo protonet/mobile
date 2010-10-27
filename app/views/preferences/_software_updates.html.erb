@@ -1,5 +1,5 @@
 update your nodes software<br>
-you are running on release  : <bold><%= System::Release.current_version %>/<%= System::Release.type %></bold><br>
+you are running on release  : <bold><%= System::Release.current_version %>/<%= System::Release.current_type %></bold><br>
 latest stable version is    : <bold><%= System::Release.latest_version %></bold><br>
 latest beta version is      : <bold><%= System::Release.latest_beta_version %></bold><br>
 software update is available: <bold><%= !System::Release.most_recent? %></bold><br>

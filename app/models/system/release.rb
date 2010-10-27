@@ -7,8 +7,8 @@ module System
         @current_version ||= File.readlines("#{RAILS_ROOT}/RELEASE")[0].to_i
       end
       
-      def type
-        @type ||= File.readlines("#{RAILS_ROOT}/TYPE")[0]
+      def current_type
+        @current_type ||= File.readlines("#{RAILS_ROOT}/TYPE")[0]
       end
 
       def latest_version
@@ -24,7 +24,10 @@ module System
       end
       
       def update!
-        system("")
+        return false if Rails.env != 'production'
+        if File.exist?("~/deploy")
+          system("cd ~/deploy; bin/deploy -r protonet -e production -m deploy -c #{configatron.shared_file_path}/protonet.d/deploy_config")
+        end
       end
 
     end

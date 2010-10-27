@@ -40,7 +40,7 @@ scp $APPARCHIVE protonet-live:~/code-dispatcher/releases/$last_version
 
 # if this is a stable release then link that thing to stable
 if [ $release_type = "STABLE" ]; then
-   ssh protonet-live "ln -s ~/code-dispatcher/releases/$last_version ~/code-dispatcher/stable"
+   ssh protonet-live "rm -f ~/code-dispatcher/stable; ln -s ~/code-dispatcher/releases/$last_version ~/code-dispatcher/stable"
 fi
 
 # cleanup
