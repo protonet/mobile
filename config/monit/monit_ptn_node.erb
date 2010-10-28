@@ -21,35 +21,41 @@ allow protonet:admin
 
 # app  settings
 check process rabbitmq with pidfile /var/run/rabbitmq.pid
+  group base
   start program = "/usr/bin/sudo /etc/init.d/rabbitmq-server start"
   stop program = "/usr/bin/sudo /etc/init.d/rabbitmq-server stop"
   if totalmem > 80.0 MB for 5 cycles then restart
 
 check process apache2 with pidfile /var/run/apache2.pid
+  group base
   start program = "/usr/bin/sudo /etc/init.d/apache2 start"
   stop program  = "/usr/bin/sudo /etc/init.d/apache2 stop"
   if totalmem > 500.0 MB for 5 cycles then restart
   if children > 250 then restart
   
 check process node.js with pidfile <%= shared_path %>/pids/node_8124.pid
+  group daemons
   start program = "<%= current_path %>/script/init/node <%= current_path %> start"
   stop program  = "<%= current_path %>/script/init/node <%= current_path %> stop"
   if 3 restarts within 5 cycles then timeout
   if totalmem > 200.0 MB for 2 cycles then restart
 
 check process js_dispatcher with pidfile <%= shared_path %>/pids/js_dispatcher_production.pid
+  group daemons
   start program = "<%= current_path %>/script/monit_bundle_exec production <%= current_path %> ruby <%= current_path %>/messaging/js_dispatching_control.rb start"
   stop program  = "<%= current_path %>/script/monit_bundle_exec production <%= current_path %> ruby <%= current_path %>/messaging/js_dispatching_control.rb stop"
   if 3 restarts within 5 cycles then timeout
   if totalmem > 200.0 MB for 2 cycles then restart
 
 check process solr with pidfile <%= shared_path %>/pids/sunspot-solr.pid
+  group solr
   start program = "<%= current_path %>/script/init/solr <%= current_path %> start"
   stop program  = "<%= current_path %>/script/init/solr <%= current_path %> stop"
   if 3 restarts within 5 cycles then timeout
 
 <% if false && jabber_bridge_active %>
   check process jabber.rb with pidfile <%= shared_path %>/pids/jabber.rb.pid
+    group daemons
     start program = "<%= current_path %>/script/monit_bundle_exec production <%= current_path %> ruby <%= current_path %>/messaging/jabber_control.rb start"
     stop program  = "<%= current_path %>/script/monit_bundle_exec production <%= current_path %> ruby <%= current_path %>/messaging/jabber_control.rb stop"
     if 10 restarts within 10 cycles then timeout
