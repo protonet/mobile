@@ -5,6 +5,7 @@
 //= require "../utils/smilify.js"
 //= require "../utils/heartify.js"
 //= require "../utils/codify.js"
+//= require "../utils/quotify.js"
 //= require "../utils/highlight_channel_replies.js"
 //= require "../utils/highlight_user_replies.js"
 //= require "../utils/template.js"
@@ -64,6 +65,7 @@ protonet.timeline.Meep.prototype = {
     $.each([
       // Order of functions is essential!
       protonet.utils.escapeHtml,
+      protonet.utils.quotify,
       protonet.utils.codify,
       protonet.utils.smilify,
       protonet.utils.heartify,

@@ -47,6 +47,36 @@
   overflow: hidden;
 }
 
+.meeps article q:before,
+.meeps article q:after {
+  font-family: serif;
+  font-size: 20px;
+  color: #999;
+  height: 0px;
+  display: inline-block;
+}
+
+.meeps article q:before {
+  vertical-align: top;
+  content: "\201C";
+  margin-right: 2px;
+}
+
+.meeps article q:after {
+  vertical-align: middle;
+  content: "\201D";
+  margin-left: 2px;
+}
+
+.meeps article q {
+  display: block;
+  margin: 5px 0 0;
+  padding: 2px 0;
+  padding-left: 5px;
+  color: #666;
+  border-left: 2px solid #999;
+}
+
 .meeps .avatar {
   -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
