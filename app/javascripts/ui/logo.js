@@ -4,7 +4,7 @@
  * Let the monster jump via event notification monster.jump
  */
 protonet.ui.Logo = {
-  monsters:       ["default", "business", "female", "surfer"],
+  monsters:       ["default", "business", "female", "surfer", "nerd"],
   monstersIndex:  (window.localStorage && window.localStorage.getItem("monster")) || 0,
   
   initialize: function() {

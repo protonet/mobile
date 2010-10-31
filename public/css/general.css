@@ -220,6 +220,10 @@ header .monster.surfer {
   background-position: -217px bottom;
 }
 
+header .monster.nerd {
+  background-position: -292px bottom;
+}
+
 header .hearts {
   position: absolute;
   color: #e75c79;
