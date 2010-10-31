@@ -2,7 +2,7 @@
 
     COLORS:
       blue        #487bff   rgb(72, 123, 255) - MAIN COLOR, USE FOR LINKS AND CHANNEL HIGHLIGHTING
-      orange      #ff7f31   rgb(255, 140, 71) - USE FOR HIGHLIGHTING USER STUFF (own meeps, user replies, buttons, ...)
+      orange      #ff7f31   rgb(255, 127, 49) - USE FOR HIGHLIGHTING USER STUFF (own meeps, user replies, buttons, ...)
       red/rosa    #e75c79   rgb(231, 92, 121) - USE FOR NOTIFICATIONS (flash messages, badges, ...)
       green       #00cc00   rgb(0, 204, 0)
       black       #000      rgb(0, 0, 0)
@@ -54,9 +54,9 @@ a:hover {
 button {
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  background: rgb(255, 140, 71);
-  background: -moz-linear-gradient(100% 100% 90deg, rgba(255, 140, 71, 0.7), rgba(255, 140, 71, 1));
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 140, 71, 1)), to(rgba(255, 140, 71, 0.7)));
+  background: rgb(255, 127, 49);
+  background: -moz-linear-gradient(100% 100% 90deg, rgba(255, 127, 49, 0.7), rgba(255, 127, 49, 1));
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 127, 49, 1)), to(rgba(255, 127, 49, 0.7)));
   border: 1px solid #fff;
   border-radius: 4px;
   color: #fff;
@@ -67,7 +67,7 @@ button {
 }
 
 button:hover {
-  background: rgb(255, 140, 71);
+  background: rgb(255, 127, 49);
 }
 
 button::-moz-focus-inner {

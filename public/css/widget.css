@@ -294,14 +294,14 @@
 }
 
 #file-widget.dragdrop.dragenter {
-  border: 1px solid rgb(255, 140, 71);
+  border: 1px solid rgb(255, 127, 49);
 }
 
 
 #file-widget.dragdrop.dragenter #drop-area {
-  background: rgb(255, 140, 71) url(../img/bg_scanlines.png);
+  background: rgb(255, 127, 49) url(../img/bg_scanlines.png);
   background: url(../img/bg_scanlines.png),
-              -moz-linear-gradient(100% 100% 90deg, rgba(255, 140, 71, 0.7), rgba(255, 140, 71, 1));
+              -moz-linear-gradient(100% 100% 90deg, rgba(255, 127, 49, 0.7), rgba(255, 127, 49, 1));
   background: url(../img/bg_scanlines.png),
-              -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 140, 71, 1)), to(rgba(255, 140, 71, 0.7)));
+              -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 127, 49, 1)), to(rgba(255, 127, 49, 0.7)));
 }
