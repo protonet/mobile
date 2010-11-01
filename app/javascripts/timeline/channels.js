@@ -36,7 +36,7 @@ protonet.timeline.Channels = {
          if (!id) {
            return;
          }
-       
+         
          protonet.Notifications.trigger("channel.change", id);
          event.preventDefault();
       }.bind(this))
@@ -56,7 +56,7 @@ protonet.timeline.Channels = {
      * will fire the channel.subscribe event
      */
     protonet.Notifications.bind("channel.change", function(e, id, avoidHashChange) {
-      id = +id; // Makes sure that id is a Number
+      id = +id; // + Makes sure that id is a Number
       if ($.inArray(id, this.subscribedChannels) == -1) {
         protonet.Notifications.trigger("channel.subscribe", id);
         return;
@@ -93,7 +93,7 @@ protonet.timeline.Channels = {
         },
         success: function(data) {
           if (data.success) {
-            location.reload();
+            location.href = "?channel_id=" + id;
           } else {
             error();
           }
