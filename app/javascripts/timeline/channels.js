@@ -162,5 +162,6 @@ protonet.timeline.Channels = {
         return channelName;
       }
     }
+    return null;
   }
 };
