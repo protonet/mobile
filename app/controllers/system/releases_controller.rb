@@ -2,12 +2,12 @@ module System
   class ReleasesController < ApplicationController
     
     def update
-      response = if current_user.admin?
-        "Software update was #{System::Release.update! ? 'successful!' : 'a FAIL!'}"
+      if current_user.admin?
+        System::Release.update! ? (flash[:notice] = "Software update was a SUCCESS!") : (flash[:error] = "Software update was a FAIL!")
       else
-        "You're no admin, man, what are you doing here?"
+        flash[:error] = "You're no admin, man, what are you doing here?"
       end
-      render :text => response
+      redirect_to :back
     end
     
   end
