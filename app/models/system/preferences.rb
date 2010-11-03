@@ -39,7 +39,7 @@ module System
         object(var_name).destroy
         true
       else
-        raise SettingNotFound, "Setting variable \"#{var_name}\" not found"
+        raise PreferencesNotFound, "Setting variable \"#{var_name}\" not found"
       end
     end
 

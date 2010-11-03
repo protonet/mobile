@@ -15,3 +15,20 @@
 <div id="avatar-upload" style="display:none;">
   <%= render new_images_avatar_path %>
 </div>
+<br>
+<br>
+<%- if current_user.admin? -%>
+<p>
+  congrats bro! you're an ADMIN!
+</p>  
+<%- end -%>
+<%- unless System::Preferences.admin_set -%>
+<br>
+<p>
+  Enter admin key to become an admin, this can only be done once from the command-line (rake reset_admin_key):
+  <% form_tag(:action => 'request_admin_flag', :controller => 'users') do %>
+    <%= text_field_tag :key, nil, :size => 16, :maxlength => 16 %>
+    <%= button "submit" %>
+  <% end %>
+</p>
+<%- end -%>

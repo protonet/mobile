@@ -212,4 +212,14 @@ class User < ActiveRecord::Base
   def has_avatar?
     !!avatar
   end
+  
+  def make_admin(key)
+    return :admin_already_set if System::Preferences.admin_set == true
+    if key == System::Preferences.admin_key
+      (update_attribute(:admin, true) && System::Preferences.admin_set = true) ? :ok : :error
+    else
+      :key_error
+    end
+  end
+  
 end

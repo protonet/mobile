@@ -58,7 +58,6 @@ class PreferencesController < ApplicationController
     render :partial => 'software_updates'
   end
   
-
   def get_vpn
     render :json => {
       'description' => Network.local.name,

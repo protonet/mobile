@@ -11,6 +11,13 @@ task :restart_with_debug do
   system("touch tmp/debug.txt")
 end
 
+desc 'Reset admin getting key'
+task :reset_admin_key => :environment do
+  System::Preferences.admin_set = false
+  System::Preferences.admin_key = ActiveSupport::SecureRandom.base64(10)
+  puts "\n\nUse this key to become an admin, can only be used once:\n\n#{System::Preferences.admin_key}\n\nbe careful!"
+end
+
 # connect to debugger (for passenger) with
 # rdebug -c
 

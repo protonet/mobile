@@ -59,5 +59,20 @@ class UsersController < ApplicationController
       end
     end
   end
+  
+  def request_admin_flag
+    logger.info "======================>>>>>>>>>>>  #{params[:key] == System::Preferences.admin_key} key #{System::Preferences.admin_key} sent #{params[:key]}"
+    case current_user.make_admin(params[:key])
+    when :ok
+      flash[:notice] = "woot! you're an admin now!"
+    when :admin_already_set
+      flash[:error] = 'already done you need to reset with rake'
+    when :key_error
+      flash[:error] = 'you entered an invalid key'
+    else
+      flash[:error] = 'error! BAM!'
+    end
+    redirect_to :back
+  end
 
 end
