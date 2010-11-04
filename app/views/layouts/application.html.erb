@@ -36,8 +36,9 @@
       else
         flash_message_class_name = 'notice'   if flash[:notice]
         flash_message_class_name = 'error'    if flash[:error]
+        flash_message_class_name = 'error'    if flash[:alert]
         flash_message_class_name = 'warning'  if flash[:warning]
-        flash_message = flash[:notice] || flash[:error] || flash[:warning]
+        flash_message = flash[:notice] || flash[:error] || flash[:warning] || flash[:alert]
       end
     %>
     <div class="flash-message <%= flash_message_class_name %>"><p><%= h(flash_message) %></p></div>
@@ -78,7 +79,7 @@
           <%- end %>
         <%- end %>
         
-        <%- form_tag session_path, { :class => "login form #{'ldap' if configatron.ldap.single_authentication == true}" } do -%>
+        <%- form_tag user_session_path, { :class => "login form #{'ldap' if configatron.ldap.single_authentication == true}" } do -%>
           <fieldset>
             <%- if configatron.ldap.single_authentication == true %>
               <legend><strong>Log in</strong> with your ldap credentials</legend>
@@ -86,12 +87,12 @@
               <legend>or <strong>logging in</strong></legend>
             <%- end %>
             <div>
-              <%= label_tag :login, "login", :for => "login_login" %>
-              <%= text_field_tag :login, @login, :title => "user name", :id => "login_login" %>
+              <%= label :user, :login, "login" %>
+              <%= text_field :user, :login, :value => @login, :title => "user name", :id => "login_login" %>
             </div>
             <div>
-              <%= label_tag :password, "password", :for => "login_password" %>
-              <%= password_field_tag :password, nil, :title => "password", :id => "login_password" %>
+              <%= label :user, :password, "password" %>
+              <%= password_field :user, :password, :value => nil, :title => "password", :id => "login_password" %>
             </div>
             <!-- TODO:<div class="forgot-password">
                 <a href="" class="hint" title="shit happens!">forgot password?</a>

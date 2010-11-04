@@ -2,17 +2,27 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
-  include AuthenticatedSystem
+  # include AuthenticatedSystem
   
   helper :all # include all helpers, all the time
+  helper_method :logged_in?
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
   # hack for reload problem in development
-  before_filter :set_backend_for_development, :captive_check
+  before_filter :set_backend_for_development, :captive_check, :current_user, :guest_login
 
   # Scrub sensitive parameters from your log
   filter_parameter_logging :password # TODO: confirmation field?
-  
+
+  # devise migration
+  def logged_in?
+    user_signed_in?
+  end
+ 
   private
+  def guest_login
+    @current_user = login_as_guest if current_user.nil?
+  end
+
   def login_as_guest
     User.stranger(session[:session_id])
   end

@@ -1,59 +1,55 @@
-# This controller handles the login/logout function of the site.  
 class SessionsController < ApplicationController
+  prepend_before_filter :require_no_authentication, :only => [ :new, :create ]
+  include Devise::Controllers::InternalHelpers
 
-  # render new.rhtml
-  def new
-  end
-
-  def create
-    logout_keeping_session!
-    user = User.authenticate(params[:login], params[:password])
-
-    if user
-      # Protects against session fixation attacks, causes request forgery
-      # protection if user resubmits an earlier form using back
-      # button. Uncomment if you understand the tradeoffs.
-      # reset_session
-      self.current_user = user
-      # auto set remember me... we might need to change that back sometime later
-      params[:remember_me] = "1"
-      new_cookie_flag = (params[:remember_me] == "1")
-      handle_remember_cookie! new_cookie_flag
-      redirect_back_or_default('/')
-      flash[:notice] = "Logged in successfully"
-    else
-      note_failed_signin
-      @login       = params[:login]
-      @remember_me = params[:remember_me]
-      redirect_back_or_default('/')
-    end
-  end
-  
-  def create_token
-    user = User.authenticate(params[:login], params[:password])
+  # WITH JSON RESPONSE       
+  def sign_in_and_redirect(resource_or_scope, resource=nil, skip=false)
+    scope      = Devise::Mapping.find_scope!(resource_or_scope)
+    resource ||= resource_or_scope
+    sign_in(scope, resource) unless skip
     respond_to do |format|
-      format.json do
-        if user
-          self.current_user = user
-          render :json => {:user_id => user.id.to_s, :token => user.communication_token, :authenticity_token => form_authenticity_token}
-        else
-          render :json => {:user_id => "0", :token => ''}
-        end
-      end
-      format.html { render :text => '' }
+      format.html {redirect_to stored_location_for(scope) || after_sign_in_path_for(resource) }
+      format.json { render :json => {:user_id => resource.id.to_s, :token => resource.communication_token, :authenticity_token => form_authenticity_token} }
     end
   end
 
-  def destroy
-    logout_killing_session!
-    flash[:notice] = "You have been logged out."
-    redirect_back_or_default('/')
+
+
+  # GET /resource/sign_in
+  def new
+    unless flash[:notice].present?
+      Devise::FLASH_MESSAGES.each do |message|
+        set_now_flash_message :alert, message if params.try(:[], message) == "true"
+      end
+    end
+
+    build_resource
+    render_with_scope :new
   end
 
-protected
-  # Track failed login attempts
-  def note_failed_signin
-    flash[:error] = "Couldn't log you in as '#{params[:login]}'"
-    logger.warn "Failed login for '#{params[:login]}' from #{request.remote_ip} at #{Time.now.utc}"
+  # POST /resource/sign_in
+  def create
+    if resource = authenticate(resource_name)
+      set_flash_message :notice, :signed_in
+      sign_in_and_redirect(resource_name, resource, true)
+    elsif [:custom, :redirect].include?(warden.result)
+      throw :warden, :scope => resource_name
+    else
+      set_now_flash_message :alert, (warden.message || :invalid)
+      clean_up_passwords(build_resource)
+      render_with_scope :new
+    end
   end
+
+  # GET /resource/sign_out
+  def destroy
+    set_flash_message :notice, :signed_out if signed_in?(resource_name)
+    sign_out_and_redirect(resource_name)
+  end
+
+  protected
+
+    def clean_up_passwords(object)
+      object.clean_up_passwords if object.respond_to?(:clean_up_passwords)
+    end
 end

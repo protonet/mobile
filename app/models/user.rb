@@ -3,17 +3,19 @@ require 'net/ldap' if configatron.ldap.single_authentication == true
 
 class User < ActiveRecord::Base
   include Rabbit
-  
-  include ::Authentication
-  include ::Authentication::ByPassword
-  include ::Authentication::ByCookieToken
+
+  NAME_REGEX    = /\A[^[:cntrl:]\\<>\/&]*\z/
+  BAD_NAME_MSG  = "use only letters, numbers, and .-_@ please."
+  BAD_EMAIL_MSG = "should look like an email address."
+
+  devise :database_authenticatable, :registerable
 
   validates_presence_of     :login,    :unless => :skip_validation
   validates_length_of       :login,    :within => 3..40, :unless => :skip_validation
   validates_uniqueness_of   :login,    :unless => :skip_validation
-  validates_format_of       :login,    :with => Authentication.login_regex, :message => Authentication.bad_login_message, :unless => :skip_validation
+  validates_format_of       :login,    :with => NAME_REGEX, :message => BAD_EMAIL_MSG, :unless => :skip_validation
 
-  validates_format_of       :name,     :with => Authentication.name_regex,  :message => Authentication.bad_name_message, :allow_nil => true, :unless => :skip_validation
+  validates_format_of       :name,     :with => NAME_REGEX,  :message => BAD_NAME_MSG, :allow_nil => true, :unless => :skip_validation
   validates_length_of       :name,     :maximum => 100, :unless => :skip_validation
   
   # TODO: Grandfather these in somehow
@@ -58,13 +60,13 @@ class User < ActiveRecord::Base
   # We really need a Dispatch Chain here or something.
   # This will also let us return a human error message.
   #
-  def self.authenticate(login, password)
-    return nil if login.blank? || password.blank?
-    return ldap_authenticate(login, password) if configatron.ldap.single_authentication == true
+  # def self.authenticate(login, password)
+  #   return nil if login.blank? || password.blank?
+  #   return ldap_authenticate(login, password) if configatron.ldap.single_authentication == true
 
-    u = find_by_login(login.downcase) # need to get the salt
-    u && u.authenticated?(password) ? u : nil
-  end
+  #   u = find_by_login(login.downcase) # need to get the salt
+  #   u && u.authenticated?(password) ? u : nil
+  # end
 
   def self.ldap_authenticate(login, password)
     # try to authenticate against the LDAP server
@@ -84,7 +86,7 @@ class User < ActiveRecord::Base
   end
 
   def generate_new_communication_token
-    self.communication_token = self.class.make_token
+    self.communication_token = Devise.friendly_token
     self.communication_token_expires_at = Time.now + 5.day
     save
     # todo: propagate
