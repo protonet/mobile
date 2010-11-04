@@ -6,5 +6,5 @@ software update is available: <bold><%= !System::Release.most_recent? %></bold><
 
 
 <% form_tag(system_release_update_path) do %>
-  <%= button "update" %>
+  <%= button(System::Release.most_recent? ? "reinstall" : "update") %>
 <% end %>
