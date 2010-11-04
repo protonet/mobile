@@ -2,6 +2,19 @@ class SessionsController < ApplicationController
   prepend_before_filter :require_no_authentication, :only => [ :new, :create ]
   include Devise::Controllers::InternalHelpers
 
+  # WITH JSON RESPONSE       
+  def sign_in_and_redirect(resource_or_scope, resource=nil, skip=false)
+    scope      = Devise::Mapping.find_scope!(resource_or_scope)
+    resource ||= resource_or_scope
+    sign_in(scope, resource) unless skip
+    respond_to do |format|
+      format.html {redirect_to stored_location_for(scope) || after_sign_in_path_for(resource) }
+      format.json { render :json => {:user_id => resource.id.to_s, :token => resource.communication_token, :authenticity_token => form_authenticity_token} }
+    end
+  end
+
+
+
   # GET /resource/sign_in
   def new
     unless flash[:notice].present?
