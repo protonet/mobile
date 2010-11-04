@@ -24,6 +24,7 @@ gem "sunspot_rails", :require => 'sunspot/rails'
 gem "will_paginate", "2.3.14"
 gem "ruby-ip", "0.9.0"
 gem "hoptoad_notifier"
+gem "devise", "1.0.8"
 
 group :production do
   gem "passenger", "2.2.15"

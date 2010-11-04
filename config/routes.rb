@@ -1,4 +1,8 @@
 ActionController::Routing::Routes.draw do |map|
+  map.devise_for :users, :path_names => { :sign_in => 'login', :sign_out => 'logout' }
+  map.new_user_session 'login', :controller => 'sessions', :action => 'new', :conditions => { :method => :get }
+  map.login 'login', :controller => 'sessions', :action => 'create', :conditions => { :method => :post }
+  map.logout 'logout', :controller => 'sessions', :action => 'destroy', :conditions => { :method => :get }
 
   map.connect 'captive', :controller => 'system/captive', :action => 'index'
 
@@ -44,9 +48,6 @@ ActionController::Routing::Routes.draw do |map|
   map.navigation '/navigation', :controller => 'navigation', :action => 'index'
   
   # session / login / logout stuff
-  map.resource :session
-  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
-  map.login '/login', :controller => 'sessions', :action => 'new'
   map.register '/register', :controller => 'users', :action => 'create'
   map.signup '/signup', :controller => 'users', :action => 'new'
   map.create_token_session 'sessions/create_token.:format', :controller => 'sessions', :action => 'create_token'

@@ -86,12 +86,12 @@
               <legend>or <strong>logging in</strong></legend>
             <%- end %>
             <div>
-              <%= label_tag :login, "login", :for => "login_login" %>
-              <%= text_field_tag :login, @login, :title => "user name", :id => "login_login" %>
+              <%= label :user, :login, "login" %>
+              <%= text_field :user, :login, :value => @login, :title => "user name", :id => "login_login" %>
             </div>
             <div>
-              <%= label_tag :password, "password", :for => "login_password" %>
-              <%= password_field_tag :password, nil, :title => "password", :id => "login_password" %>
+              <%= label :user, :password, "password" %>
+              <%= password_field :user, :password, :value => nil, :title => "password", :id => "login_password" %>
             </div>
             <!-- TODO:<div class="forgot-password">
                 <a href="" class="hint" title="shit happens!">forgot password?</a>
