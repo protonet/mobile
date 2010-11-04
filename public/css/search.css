@@ -1,0 +1,37 @@
+#search-form {
+  margin-bottom: 20px;
+}
+
+input.search {
+  border-width: 3px;
+  padding: 5px 27px 5px 5px;
+  font-size: 14px;
+  width: 182px;
+  background: url(../img/icn_search.png) 190px center no-repeat;
+}
+
+.modal-window-dialog.search {
+  top: 90px !important;
+}
+
+.modal-window-dialog input.search {
+  width: 572px;
+  background-position: 580px;
+}
+
+.modal-window-dialog .meeps {
+  margin: 0 -20px;
+  width: 650px;
+}
+
+.modal-window-dialog .meeps li:last-child {
+  margin-bottom: 0;
+}
+
+.modal-window-dialog .no-meeps-available {
+  display: block;
+}
+
+.modal-window-dialog.loading input.search {
+  background-image: url(../img/icn_loading.gif);
+}

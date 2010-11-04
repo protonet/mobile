@@ -1,7 +1,7 @@
 //= require "../utils/auto_link.js"
 //= require "../utils/auto_link_file_paths.js"
 //= require "../utils/escape_html.js"
-//= require "../utils/nl2br.js"
+//= require "../utils/highlight_keyword.js"
 //= require "../utils/smilify.js"
 //= require "../utils/heartify.js"
 //= require "../utils/codify.js"
@@ -27,6 +27,10 @@
  *    var meep = $("#meeps li:first");
  *    new protonet.timeline.Meep({ message: "foo", author: "christopher.blum"}).mergeWith(meep).post(callback);
  *
+ *    // render meep and highlight the word "foo" in the meep message as well as in the text extension
+ *    // please note that the highlighting of keywords only works after the rendering
+ *    new protonet.timeline.Meep(myMeepForm).highlight("foo").render("#container")
+ *
  * @events
  *    meep.rendered - A new meep has been inserted into the DOM
  *    meep.render   - Trigger this event with channelId and meep data or form if you want a new meep to be rendered
@@ -48,7 +52,7 @@ protonet.timeline.Meep.prototype = {
    */
   config: {
     // Url to post the meep to
-    POST_URL:              "/tweets"
+    POST_URL: "/tweets"
   },
   
   _parseForm: function(form) {
@@ -72,7 +76,6 @@ protonet.timeline.Meep.prototype = {
       protonet.utils.highlightChannelReplies,
       protonet.utils.highlightUserReplies,
       protonet.utils.autoLink,
-      protonet.utils.nl2br,
       protonet.utils.autoLinkFilePaths
     ], function(i, method) {
       message = method(message);
@@ -82,6 +85,11 @@ protonet.timeline.Meep.prototype = {
     this.channelReplies = protonet.utils.highlightChannelReplies.result;
     
     return message;
+  },
+  
+  highlight: function(keyword) {
+    protonet.utils.highlightKeyword(keyword, this.element.find("article")[0]);
+    return this;
   },
   
   render: function(channelList) {

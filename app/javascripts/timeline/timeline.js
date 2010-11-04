@@ -2,6 +2,7 @@ protonet.timeline = {
   initialize: function() {
     this._observe();
     this._initForm();
+    this._initSearch();
     this.load();
   },
   
@@ -44,8 +45,13 @@ protonet.timeline = {
   
   _initForm: function() {
     protonet.timeline.Form.initialize();
+  },
+  
+  _initSearch: function() {
+    protonet.timeline.Search.initialize();
   }
 };
 
 //= require "form.js"
 //= require "channels.js"
+//= require "search.js"

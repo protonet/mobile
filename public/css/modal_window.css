@@ -1,0 +1,53 @@
+.modal-window-shadow {
+  background-color: rgba(0, 0, 0, 0.7);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.modal-window-dialog {
+  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+  position: absolute;
+  background-color: #fff;
+  min-width: 200px;
+  min-height: 20px;
+  padding: 20px;
+}
+
+.modal-window-dialog,
+.modal-window-shadow {
+  z-index: 5;
+  display: none;
+}
+
+.modal-window-dialog > h2 {
+  margin-bottom: 15px;
+}
+
+.modal-window-close-link {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+  color: #000;
+  float: right;
+  text-align: center;
+  padding: 5px;
+  margin: -35px -35px 0 0;
+  width: 19px;
+  line-height: 19px;
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 40px;
+  -moz-border-radius: 40px;
+  -webkit-border-radius: 40px;
+  cursor: pointer;
+}
+
+.modal-window-close-link:hover {
+  color: #487bff;
+  border: 2px solid #487bff;
+}

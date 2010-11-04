@@ -11,6 +11,7 @@
   margin: 0 20px 15px 45px;
   padding: 10px;
   position: relative;
+  list-style: none;
 }
 
 .meeps .own {

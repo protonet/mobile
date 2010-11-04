@@ -3,25 +3,23 @@ class SearchController < ApplicationController
 
   def index
     respond_to do |format|
-      format.html {}
-      format.js do
+      format.json do
         perform_search
-
-        if @search_results.blank?
-          render :partial => "search/no_search_query"
-        elsif @search_results.total == 0
-          render :partial => "search/no_search_results"
-        else
-          render :partial => "search/search_results",
-            :locals => {:search_results => @search_results}
-        end
+        
+        # TODO: Refactor Tweet.prepare_for_frontend and use it here
+        render :json => @search_results.hits.map {|hit|
+          meep = hit.instance
+          meep.text_extension = JSON.parse(meep.text_extension) rescue nil
+          meep.attributes.merge({ :avatar => meep.user.active_avatar_url, :channel_id => meep.channels.first.id })
+        }.to_json
       end
+      format.html {}
     end
   end
 
   def more_tweets
     respond_to do |format|
-      format.js do
+      format.json do
         perform_search
 
         channel = Channel.find(params[:channel_id])
