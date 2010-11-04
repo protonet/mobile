@@ -34,7 +34,7 @@
 
 <%- if current_user.admin? -%>
 <h4>Admin status:</h4>
-<p>congrats bro! you're an ADMIN!</p>  
+<p>congrats bro! you're an ADMIN! Check out your users <%= link_to 'here', :controller => :users, :action => :index %>.</p>  
 <%- end -%>
 
 <%- unless System::Preferences.admin_set -%>

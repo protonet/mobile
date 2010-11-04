@@ -12,19 +12,38 @@
 <p><%= if user.admin then "jep" else "nope" end %></p>
 
 <h4>Guest?</h4>
-<p><%= if user.guest then "gotcha" else "lord, no!" end %></p>
+<p><%= if user.guest then "yes, you are, isn't bad though!" else "lord, no!" end %></p>
 
 <% if current_user.admin || user.id == session[:user_id] %>
-	<h4>Edit</h4>
-	<div id="edit-<%= user.id %>" class="edit section">
-	<% form_for user, :url => { :action => 'update' } do |f| -%>
-	  <fieldset>
-	    <%= f.hidden_field :id, { :value => user.id, :id => "user-id-#{user.id}" } %>
-	    <%= f.text_field :name, { :value => user.name, :id => "user-name-#{user.id}", :title => "Name of the user…" } %>
-	    <%= f.text_field :email, { :value => user.email, :id => "user-email-#{user.id}", :title => "E-Mail of the user…" } %>
-	    <%= button "Save" %>
-	  </fieldset>
-	<% end %>
-	</div>
+  <br>
+  <h4>Edit</h4>
+
+  <h5>Basic Userdata:</h5>
+  <div id="edit-<%= user.id %>" class="edit section">
+  <% form_for user, :url => { :action => 'update' } do |f| -%>
+    <fieldset>
+      <%= f.hidden_field :id, { :value => user.id, :id => "user-id-#{user.id}" } %>
+      <%= f.text_field :name, { :value => user.name, :id => "user-name-#{user.id}", :title => "Name of the user…" } %><br>
+      <%= f.text_field :login, { :value => user.login, :id => "user-login-#{user.id}", :title => "Login of the user…" } %><br>
+      <%= f.text_field :email, { :value => user.email, :id => "user-email-#{user.id}", :title => "E-Mail of the user…" } %>
+      <%= button "Update" %>
+    </fieldset>
+  <% end %>
+  </div>
 <% end %>
+
+<%- if current_user.admin -%>
+  <h5>Admin settings:</h5>
+  <% form_tag('/', {:id => 'admin-setting'}) do %>
+    <%= hidden_field_tag      :user_id, user.id %>
+    <%= label_tag             :admin_password, 'Administrator - please enter your password for changes:' %>
+    <%= password_field_tag    :admin_password %>
+    <%= hidden_field_tag      :admin_flag, false %>
+    Admin? <%= check_box_tag  :admin, true, user.admin? %>
+    <%= button "Update" %>
+  <% end %>
+  
+  <h5>Password reset!</h5>
+  
+<%- end -%>
 
