@@ -5,25 +5,40 @@
   <b>Name:</b>
   <%=h current_user.display_name %>
 </p>
+<br>
 
+<h4>Change user image:</h4>
 <button onclick="$('#avatar-upload').toggle()">
   <span>
-    <em>change</em>
+    <em>change user image</em>
   </span>
 </button>
-
 <div id="avatar-upload" style="display:none;">
   <%= render new_images_avatar_path %>
 </div>
+
 <br>
 <br>
-<%- if current_user.admin? -%>
-<p>
-  congrats bro! you're an ADMIN!
-</p>  
+<%- unless configatron.ldap.single_authentication == true -%>
+<h4>Change your password:</h4>
+  <% form_tag(:action => 'change_password', :controller => 'users') do %>
+    <%= label_tag      :current_password,          'Current password:' %>
+    <%= password_field_tag :current_password, nil %><br>
+    <%= label_tag      :new_password,              'New password:' %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <%= password_field_tag :new_password, nil %><br>
+    <%= label_tag      :new_password_verification, 'Verify password:' %>&nbsp;&nbsp;&nbsp;
+    <%= password_field_tag :new_password_verification, nil %><br>
+    <%= button "change password" %>
+  <% end %>
 <%- end -%>
+
+<%- if current_user.admin? -%>
+<h4>Admin status:</h4>
+<p>congrats bro! you're an ADMIN!</p>  
+<%- end -%>
+
 <%- unless System::Preferences.admin_set -%>
-<br>
+<h4>Admin status:</h4>
 <p>
   Enter admin key to become an admin, this can only be done once from the command-line (rake reset_admin_key):
   <% form_tag(:action => 'request_admin_flag', :controller => 'users') do %>

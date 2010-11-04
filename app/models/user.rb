@@ -99,9 +99,10 @@ class User < ActiveRecord::Base
     token && token == read_attribute(:communication_token) && communication_token_expires_at > DateTime.now
   end
 
-  def reset_password(new_password)
+  def reset_password(new_password, new_password_verification = nil)
+    new_password_verification ||= new_password
     self.password               = new_password
-    self.password_confirmation  = new_password
+    self.password_confirmation  = new_password_verification
     save
   end
 

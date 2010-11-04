@@ -73,5 +73,16 @@ class UsersController < ApplicationController
     end
     redirect_to :back
   end
+  
+  def change_password
+    error = nil
+    if current_user == User.authenticate(current_user.login, params[:current_password])
+      error = 'confirmation did not match new password' unless current_user.reset_password(params[:new_password], params[:new_password_verification])
+    else
+      error = 'bad current password entered'
+    end
+    error ? flash[:error]  = "There was an error changing you password: #{error}." : flash[:notice] = "You've succesfully changed your password!"
+    redirect_to :back
+  end
 
 end
