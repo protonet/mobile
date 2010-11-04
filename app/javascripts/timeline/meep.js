@@ -87,8 +87,12 @@ protonet.timeline.Meep.prototype = {
     return message;
   },
   
-  highlight: function(keyword) {
-    protonet.utils.highlightKeyword(keyword, this.element.find("article")[0]);
+  highlight: function(keywords) {
+    var element = this.element[0];
+    keywords = keywords.split(/\s+/);
+    $.each(keywords, function(i, keyword) {
+      protonet.utils.highlightKeyword(keyword, element);
+    });
     return this;
   },
   

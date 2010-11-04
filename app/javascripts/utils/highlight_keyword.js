@@ -33,7 +33,7 @@ protonet.utils.highlightKeyword = (function() {
       }
       
       // nodeType 3 == text node
-      if (currentNode.nodeType !== 3 || !regExp.test(currentNode.data)) {
+      if (currentNode.nodeType !== 3 || !currentNode.data.match(regExp)) {
         continue;
       }
       
