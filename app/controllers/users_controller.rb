@@ -15,15 +15,15 @@ class UsersController < ApplicationController
   end
 
   def create
-    logout_keeping_session!
+    sign_out(:user)
     @user = User.new(params[:user])
     success = @user && @user.save
     if success && @user.errors.empty?
+      sign_in(@user)
       # Protects against session fixation attacks, causes request forgery
       # protection if visitor resubmits an earlier form using back
       # button. Uncomment if you understand the tradeoffs.
       # reset session
-      self.current_user = @user # !! now logged in
       
       flash[:notice] = "Thanks for signing up, #{@user.display_name}!"
     else
@@ -31,7 +31,7 @@ class UsersController < ApplicationController
       flash[:error]  = "Sorry, but we couldn't set up that account. Please try again."
     end
     
-    redirect_back_or_default('/')
+    redirect_to('/')
   end
 
   def update
