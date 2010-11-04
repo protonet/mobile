@@ -3,31 +3,32 @@
 Devise.setup do |config|
   # Configure the e-mail address which will be shown in DeviseMailer.
   config.mailer_sender = "please-change-me@config-initializers-devise.com"
+  # REST_AUTH_SITE_KEY
+  config.pepper = "2717f8eb6b2409afb7f9e4318df0591f70f58260"
+  # Configure how many times you want the password is reencrypted. Default is 10.
+  config.stretches = 10
+  config.encryptor = :restful_authentication_sha1
+  config.authentication_keys = [ :login ]
+  config.use_default_scope = true
+  config.default_scope = :user
+  # Devise.setup do |config|
+  #   # Required
+  #   config.ldap_host = configatron.ldap.host
+  #   config.ldap_port = 636
+  #   config.ldap_base_dn = configatron.ldap.base
+  #   config.ldap_login_attribute = 'uid'
+
+  #   # Optional, these will default to false or nil if not set
+  #   config.ldap_ssl = true
+  # end
+
   
   # Configure the content type of DeviseMailer mails (defaults to text/html")
   # config.mailer_content_type = "text/plain"
 
-  # ==> Configuration for :authenticatable
-  # Invoke `rake secret` and use the printed value to setup a pepper to generate
-  # the encrypted password. By default no pepper is used.
-  config.pepper = "2717f8eb6b2409afb7f9e4318df0591f70f58260"
 
-  # Configure how many times you want the password is reencrypted. Default is 10.
-  config.stretches = 10
-
-  # Define which will be the encryption algorithm. Supported algorithms are :sha1
   # (default), :sha512 and :bcrypt. Devise also supports encryptors from others
-  # authentication tools as :clearance_sha1, :authlogic_sha512 (then you should set
-  # stretches above to 20 for default behavior) and :restful_authentication_sha1
-  # (then you should set stretches to 10, and copy REST_AUTH_SITE_KEY to pepper)
-  config.encryptor = :restful_authentication_sha1
 
-  # Configure which keys are used when authenticating an user. By default is
-  # just :email. You can configure it to use [:username, :subdomain], so for
-  # authenticating an user, both parameters are required. Remember that those
-  # parameters are used only when authenticating and not when retrieving from
-  # session. If you need permissions, you should implement that in a before filter.
-  config.authentication_keys = [ :login ]
 
   # The realm used in Http Basic Authentication
   # config.http_authentication_realm = "Application"
@@ -73,16 +74,6 @@ Devise.setup do |config|
   # "sessions/users/new". It's turned off by default because it's slower if you
   # are using only default views.
   # config.scoped_views = true
-
-  # By default, devise detects the role accessed based on the url. So whenever
-  # accessing "/users/sign_in", it knows you are accessing an User. This makes
-  # routes as "/sign_in" not possible, unless you tell Devise to use the default
-  # scope, setting true below.
-  config.use_default_scope = true
-
-  # Configure the default scope used by Devise. By default it's the first devise
-  # role declared in your routes.
-  config.default_scope = :user
 
   # If you want to use other strategies, that are not (yet) supported by Devise,
   # you can configure them inside the config.warden block. The example below

@@ -78,7 +78,7 @@
           <%- end %>
         <%- end %>
         
-        <%- form_tag session_path, { :class => "login form #{'ldap' if configatron.ldap.single_authentication == true}" } do -%>
+        <%- form_tag user_session_path, { :class => "login form #{'ldap' if configatron.ldap.single_authentication == true}" } do -%>
           <fieldset>
             <%- if configatron.ldap.single_authentication == true %>
               <legend><strong>Log in</strong> with your ldap credentials</legend>
