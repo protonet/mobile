@@ -60,13 +60,13 @@ class User < ActiveRecord::Base
   # We really need a Dispatch Chain here or something.
   # This will also let us return a human error message.
   #
-  def self.authenticate(login, password)
-    return nil if login.blank? || password.blank?
-    return ldap_authenticate(login, password) if configatron.ldap.single_authentication == true
+  # def self.authenticate(login, password)
+  #   return nil if login.blank? || password.blank?
+  #   return ldap_authenticate(login, password) if configatron.ldap.single_authentication == true
 
-    u = find_by_login(login.downcase) # need to get the salt
-    u && u.authenticated?(password) ? u : nil
-  end
+  #   u = find_by_login(login.downcase) # need to get the salt
+  #   u && u.authenticated?(password) ? u : nil
+  # end
 
   def self.ldap_authenticate(login, password)
     # try to authenticate against the LDAP server
