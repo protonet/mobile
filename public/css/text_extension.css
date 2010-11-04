@@ -109,10 +109,6 @@
 
 /* =IFRAME (Doodle, Maps...)
 --------------------------------------------------------------------------- */
-.text-extension-results.iframe .media {
-  margin-right: 0;
-}
-
 .text-extension-results .media iframe {
   border: 1px solid #999;
   width: 561px;
@@ -125,10 +121,6 @@
 
 /* =VIDEO/FLASH TEXT EXTENSION (YouTube, Slideshare, ...)
 --------------------------------------------------------------------------- */
-.text-extension-results.flash .media {
-  margin-right: 0;
-}
-
 .text-extension-results.flash object {
   height: 280px;
   width: 563px;

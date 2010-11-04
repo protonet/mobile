@@ -57,7 +57,7 @@ protonet.timeline.Search = {
       .get(0)
       .focus();
     
-    this.search(keyword);
+    this.bigInput.trigger("keyup");
   },
   
   search: function(keyword, callback) {

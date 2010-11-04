@@ -1,10 +1,9 @@
 .modal-window-shadow {
   background-color: rgba(0, 0, 0, 0.7);
-  position: fixed;
+  position: absolute;
+  overflow-y: scroll;
   top: 0;
-  bottom: 0;
   left: 0;
-  right: 0;
 }
 
 .modal-window-dialog {

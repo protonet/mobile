@@ -8,7 +8,8 @@ protonet.text_extensions = {
         return;
       }
       
-      if (meepData.channel_id != this.currentChannelId) {
+      // Put text extension rendering into a queue when channel isn't selected
+      if (meepData.channel_id != this.currentChannelId && meepData.channel_id != "search") {
         this.queue.push({ data: meepData, element: meepElement });
         return;
       }

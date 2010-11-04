@@ -9,6 +9,9 @@
  *      protonet.utils.highlightKeyword("foo", document.getElementById("foo-container"));
  *      document.getElementById("foo-container").innerHTML;
  *      // => '<mark>foo</mark> bar <a href="/foo/bar"><mark>foo</mark></a>'
+ *      
+ *      // Also you can pass in a regular expression:
+ *      protonet.utils.highlightKeyword(/foo[1-9]/gi, document.getElementById("foo-container"));
  *    </script>
  */
 protonet.utils.highlightKeyword = (function() {
@@ -16,7 +19,7 @@ protonet.utils.highlightKeyword = (function() {
       HTML_REPLACEMENT = "<mark>$&</mark>";
   
   return function(keyword, element) {
-    var regExp = new RegExp(protonet.utils.escapeForRegExp(keyword), "g"),
+    var regExp = $.type(keyword) == "regexp" ? keyword : new RegExp(protonet.utils.escapeForRegExp(keyword), "gi"),
         childNodes = element.childNodes,
         childNodesLength = childNodes.length;
     
@@ -26,7 +29,7 @@ protonet.utils.highlightKeyword = (function() {
       // nodeType 1 == element node
       if (currentNode.nodeType === 1 &&
           $.inArray(currentNode.nodeName.toLowerCase(), EXCLUDES) == -1) {
-        arguments.callee(keyword, currentNode);
+        arguments.callee(regExp, currentNode);
       }
       
       // nodeType 3 == text node
