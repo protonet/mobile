@@ -25,7 +25,6 @@ gem "will_paginate", "2.3.14"
 gem "ruby-ip", "0.9.0"
 gem "hoptoad_notifier"
 gem "devise", "1.0.8"
-gem "fishman-uuid4r"
 
 group :production do
   gem "passenger", "2.2.15"
