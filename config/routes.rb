@@ -46,7 +46,6 @@ ActionController::Routing::Routes.draw do |map|
   map.devise_for :users, :path_names => { :sign_in => 'login', :sign_out => 'logout' }
   map.new_user_session 'login', :controller => 'sessions', :action => 'new', :conditions => { :method => :get }
   map.login 'login', :controller => 'sessions', :action => 'create', :conditions => { :method => :post }
-  map.create_token 'login.:format', :controller => 'sessions', :action => 'create'
   map.logout 'logout', :controller => 'sessions', :action => 'destroy', :conditions => { :method => :get }
   map.register '/register', :controller => 'users', :action => 'create'
   map.signup '/signup', :controller => 'users', :action => 'new'
