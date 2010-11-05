@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
     sign_in(scope, resource) unless skip
     respond_to do |format|
       format.html {redirect_to stored_location_for(scope) || after_sign_in_path_for(resource) }
-      format.json { render :json => {:user_id => resource.id.to_s, :token => resource.communication_token, :authenticity_token => form_authenticity_token} }
+      format.json { render :json => {:user_id => resource.id.to_s, :token => resource.communication_token} }
     end
   end
 
