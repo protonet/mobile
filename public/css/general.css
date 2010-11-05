@@ -133,6 +133,33 @@ input[type=password] {
   color: #ccc;
 }
 
+a.close-link {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  width: 19px;
+  line-height: 19px;
+  background: #000;
+  border: 1px solid #fff;
+  border-radius: 30px;
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;
+  box-shadow: 0 0 2px 2px #666;
+  -webkit-box-shadow: 0 0 2px 2px #666;
+  -moz-box-shadow: 0 0 2px 2px #666;
+}
+
+a.close-link:hover {
+  background: #487bff;
+}
+
+.close-link:active {
+  opacity: 0.8;
+}
+
 pre {
   margin: 5px 0;
   max-height: 200px;

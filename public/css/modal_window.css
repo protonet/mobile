@@ -28,25 +28,6 @@
 }
 
 .modal-window-close-link {
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 16px;
-  color: #000;
   float: right;
-  text-align: center;
-  padding: 5px;
   margin: -35px -35px 0 0;
-  width: 19px;
-  line-height: 19px;
-  background: #fff;
-  border: 2px solid #000;
-  border-radius: 40px;
-  -moz-border-radius: 40px;
-  -webkit-border-radius: 40px;
-  cursor: pointer;
-}
-
-.modal-window-close-link:hover {
-  color: #487bff;
-  border: 2px solid #487bff;
 }

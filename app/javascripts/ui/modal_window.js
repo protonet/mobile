@@ -9,7 +9,7 @@ protonet.ui.ModalWindow = (function($) {
       shadow:     $("<div />", { className: "modal-window-shadow" }),
       dialog:     $("<div />", { className: this.originalClassName = "modal-window-dialog" }),
       content:    $("<output />", { className: "modal-window-content" }),
-      closeLink:  $("<a />", { className: "modal-window-close-link", html: "X" }),
+      closeLink:  $("<a />", { className: "modal-window-close-link close-link", html: "X" }),
       headline:   $("<h2 />")
     });
     

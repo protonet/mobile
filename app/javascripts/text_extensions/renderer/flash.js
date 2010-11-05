@@ -11,11 +11,27 @@ protonet.text_extensions.render.flash = (function() {
     anchor.attr("id", placeholderId).click(function(event) {
       event.preventDefault();
       
+      var callback = function(event) {
+        var flashElement = event.ref;
+        if (flashElement) {
+          $("<a>", {
+            className: "flash-close-link close-link",
+            html: "X",
+            click: function() {
+              $(this).detach();
+              $(flashElement).replaceWith(anchor);
+              anchor.css("visibility", "");
+            }
+          }).insertBefore(flashElement);
+        }
+      };
+      
       swfobject.embedSWF(
         data.flash,
         placeholderId,
         "auto", "auto", "8",
-        null, {}, swfObjectParams
+        null, {}, swfObjectParams,
+        {}, callback
       );
     });
     

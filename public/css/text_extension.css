@@ -158,6 +158,18 @@
   -moz-box-shadow: 0 0 2px 2px #666;
 }
 
+.text-extension-results.flash .media .flash-close-link {
+  position: absolute;
+  right: 0;
+  top: -8px;
+  right: -8px;
+  line-height: 19px;
+}
+
+.text-extension-results.flash .media .flash-close-link:after {
+  display: none;
+}
+
 .text-extension-results.flash .media a:hover:after {
   background: #487bff;
 }
