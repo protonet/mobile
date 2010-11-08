@@ -1,5 +1,5 @@
 class UsersController < ApplicationController 
-   
+  
   def index
     @users = User.all
   end
@@ -74,14 +74,28 @@ class UsersController < ApplicationController
     redirect_to :back
   end
   
-  def change_password
-    error = nil
-    if current_user == User.authenticate(current_user.login, params[:current_password])
-      error = 'confirmation did not match new password' unless current_user.reset_password(params[:new_password], params[:new_password_verification])
-    else
-      error = 'bad current password entered'
+  def make_user_admin
+    if current_user.admin? && current_user.valid_password?(params[:admin_password])
+      
     end
-    error ? flash[:error]  = "There was an error changing you password: #{error}." : flash[:notice] = "You've succesfully changed your password!"
+    redirect_to :action => 'index', :anchor => params[:user_id]
+  end
+  
+  def generate_new_password
+    if current_user.admin? && current_user.valid_password?(params[:admin_password])
+      
+    end
+    redirect_to :action => 'index', :anchor => params[:user_id]
+  end
+  
+  def change_password
+    @user = current_user
+    @user.errors.add(:password_confirmation, 'does not match your new password') if params[:password] != params[:password_confirmation]
+    if @user.errors.empty? && @user.update_with_password(params)
+      flash[:notice] = "You've succesfully changed your password!"
+    else
+      flash[:error]  = "There was an error changing you password: #{@user.errors.full_messages.to_sentence}."
+    end
     redirect_to :back
   end
 

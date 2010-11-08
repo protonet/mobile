@@ -73,7 +73,7 @@ Then /^I should see "([^\"]*)" in the timeline$/ do |text|
 end
 
 Then /^I should see the login form$/ do
-  assert page.has_xpath?('//form[@action="/session"]', :visible => true)
+  assert page.has_xpath?('//form[@action="/users/login"]', :visible => true)
 end
 
 Given /^I send the message "([^\"]*)"$/ do |text|

@@ -101,13 +101,6 @@ class User < ActiveRecord::Base
     token && token == read_attribute(:communication_token) && communication_token_expires_at > DateTime.now
   end
 
-  def reset_password(new_password, new_password_verification = nil)
-    new_password_verification ||= new_password
-    self.password               = new_password
-    self.password_confirmation  = new_password_verification
-    save
-  end
-
   # create a user with a session id
   def self.stranger(session_id)
     u = find_or_create_by_temporary_identifier(session_id)  do |u|

@@ -20,6 +20,10 @@ Given /^(?:|I )am on (.+)$/ do |page_name|
   visit path_to(page_name)
 end
 
+When /^(?:|I )go unauthenticated to the start page$/ do
+  visit "/logout"
+end
+
 When /^(?:|I )go to (.+)$/ do |page_name|
   visit path_to(page_name)
   sleep 1

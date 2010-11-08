@@ -1,6 +1,6 @@
 class ChannelsController < ApplicationController
   
-  # before_filter :login_required
+  before_filter :only_registered
   
   def index
     respond_to do |format|

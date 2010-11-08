@@ -1,7 +1,7 @@
 class ListensController < ApplicationController
   include ERB::Util
   
-  before_filter :login_required
+  before_filter :only_registered
   
   def index
     redirect_to listen_to_channel_path(:channel_name => params[:channel_name]) if params[:channel_name]

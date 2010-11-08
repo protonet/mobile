@@ -14,7 +14,7 @@
 <h4>Guest?</h4>
 <p><%= if user.guest then "yes, you are, isn't bad though!" else "lord, no!" end %></p>
 
-<% if current_user.admin || user.id == session[:user_id] %>
+<% if user.id != 0 && !user.stranger?  && (current_user.admin || user.id == session[:user_id]) %>
   <br>
   <h4>Edit</h4>
 
@@ -32,9 +32,9 @@
   </div>
 <% end %>
 
-<%- if current_user.admin -%>
+<%- if user.id != 0 && !user.stranger? && current_user.admin -%>
   <h5>Admin settings:</h5>
-  <% form_tag('/', {:id => 'admin-setting'}) do %>
+  <% form_tag({:action => 'make_user_admin'}, {:id => 'admin-setting'}) do %>
     <%= hidden_field_tag      :user_id, user.id %>
     <%= label_tag             :admin_password, 'Administrator - please enter your password for changes:' %>
     <%= password_field_tag    :admin_password %>
@@ -44,6 +44,12 @@
   <% end %>
   
   <h5>Password reset!</h5>
+  <% form_tag({:action => 'generate_new_password'}, {:id => 'password-reset'}) do %>
+    <%= hidden_field_tag      :user_id, user.id %>
+    <%= label_tag             :admin_password, 'Administrator - please enter your password for changes:' %>
+    <%= password_field_tag    :admin_password %>
+    <%= button "Generate New Password " %>
+  <% end %>
   
 <%- end -%>
 

@@ -6,10 +6,10 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
       And a user exists with login: "batman"
       And a channel exists with name: "cool-channel"
     And I am using the first browser
-      And I go to the start page
+      And go unauthenticated to the start page
       And I am logged in as "dudemeister"
     And I am using the second browser
-      And I go to the start page
+      And go unauthenticated to the start page
       And I am logged in as "batman"
     #batman
     Given I am using the second browser
@@ -22,12 +22,11 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
   Scenario: Creating a user and seeing him in the userlist and the autocompletion
     Given a user exists with login: "dudemeister"
     And I am using the first browser
-      And I go to the startpage
+      And go unauthenticated to the start page
       And I am logged in as "dudemeister"
     Given I am using the second browser
-      And I go to the startpage
+      And go unauthenticated to the start page
       And I register as "justadded"
-      And wait 1 seconds
     Given I am using the first browser
       Then I should see /justadded/ within "#user-widget ul"
       And I fill in "message" with "Hallo @just"
@@ -39,14 +38,14 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
     And a user exists with login: "batman"
     # seeing strangers in the user list
     And I am using the first browser
-      And I go to the startpage
+      And go unauthenticated to the start page
       Then I should see one stranger online
     # and then he's gone
     Given I am logged in as "dudemeister"
       Then I should see no strangers online
     # another user comes
     Given I am using the second browser
-      And I go to the startpage
+      And go unauthenticated to the start page
       And I am logged in as "batman"
     # and the first one leaves
     Given I am using the first browser

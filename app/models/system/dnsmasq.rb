@@ -4,16 +4,20 @@ module System
     class << self
             
       def add_interface(interface, ip)
-        config_file = "#{configatron.shared_file_path}/config/dnsmasq.d/#{interface}"
-        return if File.exists?(config_file)
+        return if File.exists?(config_file(interface))
         ip = IP.new(ip)
-        File.open(config_file, 'w') {|f| f.write("address=/protonet/#{ip}\ninterface=#{interface}\ndhcp-range=#{interface},#{ip.network(1)},#{ip.network(200)},4h") }
-        restart
+        File.open(config_file(interface), 'w') {|f| f.write("interface=#{interface}\naddress=/protonet/#{ip}\ndhcp-range=#{interface},#{ip.network(1)},#{ip.network(200)},4h") }
+        restart(interface)
       end
       
-      def restart
-        `sudo /etc/init.d/dnsmasq restart`
+      def restart(interface)
+        `sudo /home/protonet/dashboard/current/script/init/dnsmasq /home/protonet/dashboard/current restart #{interface}`
       end
+      
+      def config_file(interface)
+        "#{configatron.shared_file_path}/config/dnsmasq.d/#{interface}"
+      end
+      
       
     end
 

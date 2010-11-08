@@ -21,13 +21,15 @@
 <br>
 <%- unless configatron.ldap.single_authentication == true -%>
 <h4>Change your password:</h4>
-  <% form_tag(:action => 'change_password', :controller => 'users') do %>
-    <%= label_tag      :current_password,          'Current password:' %>
+  <%= error_messages_for @user %>
+
+  <% form_tag({:action => 'change_password', :controller => 'users'}, :id => 'change_password') do %>
+    <%= label_tag      :current_password,          'Current password:' %>&nbsp;
     <%= password_field_tag :current_password, nil %><br>
-    <%= label_tag      :new_password,              'New password:' %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <%= password_field_tag :new_password, nil %><br>
-    <%= label_tag      :new_password_verification, 'Verify password:' %>&nbsp;&nbsp;&nbsp;
-    <%= password_field_tag :new_password_verification, nil %><br>
+    <%= label_tag      :password,              'New password:' %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <%= password_field_tag :password, nil %><br>
+    <%= label_tag      :password_confirmation, 'Confirm password:' %>&nbsp;
+    <%= password_field_tag :password_confirmation, nil %><br>
     <%= button "change password" %>
   <% end %>
 <%- end -%>

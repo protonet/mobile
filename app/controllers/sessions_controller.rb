@@ -13,8 +13,6 @@ class SessionsController < ApplicationController
     end
   end
 
-
-
   # GET /resource/sign_in
   def new
     unless flash[:notice].present?

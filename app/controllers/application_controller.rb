@@ -38,4 +38,8 @@ class ApplicationController < ActionController::Base
     redirect_to "http://protonet/captive?req=" + URI.escape(requested_uri)
   end
   
+  def only_registered
+    !current_user.stranger?
+  end
+  
 end

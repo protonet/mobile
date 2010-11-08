@@ -87,11 +87,11 @@
               <legend>or <strong>logging in</strong></legend>
             <%- end %>
             <div>
-              <%= label :user, :login, "login" %>
+              <%= label :login, :login, "login" %>
               <%= text_field :user, :login, :value => @login, :title => "user name", :id => "login_login" %>
             </div>
             <div>
-              <%= label :user, :password, "password" %>
+              <%= label :login, :password, "password" %>
               <%= password_field :user, :password, :value => nil, :title => "password", :id => "login_password" %>
             </div>
             <!-- TODO:<div class="forgot-password">

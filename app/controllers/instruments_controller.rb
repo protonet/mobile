@@ -1,5 +1,5 @@
 class InstrumentsController < ApplicationController
-  before_filter :login_required, :except => [:index, :public_dashboard]
+  before_filter :only_registered, :except => [:index, :public_dashboard]
   before_filter :set_nocache_header
   
   def index
