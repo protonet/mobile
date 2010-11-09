@@ -48,7 +48,7 @@ ActionController::Base.allow_rescue = false
 # block that will explicitly put your database in a known state.
 Cucumber::Rails::World.use_transactional_fixtures = false
 
-Capybara.default_wait_time = 20
+Capybara.default_wait_time = 10
 
 # multiuser hack
 # this solves the problem of closing the browser
