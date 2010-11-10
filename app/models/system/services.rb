@@ -74,8 +74,9 @@ System::Services.add 'Socket server', :js_dispatching_active,
   :stop_command  => 'ruby messaging/js_dispatching_control.rb stop',
   :ping_command  => lambda { TCPSocket.new('localhost', configatron.socket.port) },
   :pid_file      => "tmp/pids/js_dispatcher_#{Rails.env}.pid",
-  :log_file      => "log/js_dispatcher_#{Rails.env}.output",
-  :start_timeout => 120
+  :log_file      => "tmp/pids/js_dispatcher_#{Rails.env}.output",
+  :start_timeout => 60,
+  :ping_interval => 5
 
 solr_port = Sunspot.config.solr.url.match(/:(\d+)\//)[1]
 System::Services.add 'Sunspot/Solr', :sunspot_active,
@@ -85,7 +86,7 @@ System::Services.add 'Sunspot/Solr', :sunspot_active,
   :ping_command  => lambda { TCPSocket.new('localhost', solr_port) },
   :pid_file      => "tmp/pids/sunspot-solr-#{Rails.env}.pid",
   :log_file      => "log/sunspot-solr-#{Rails.env}.log",
-  :start_timeout => 120
+  :start_timeout => 60
 
 System::Services.add 'Node.JS', :nodejs_active,
   :identifier    => 'node.js',
