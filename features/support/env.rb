@@ -68,5 +68,5 @@ at_exit do
   # multiuser support
   $browsers && $browsers.each { |id, browser| browser[:driver].quit rescue nil }
   
-  System::Services.stop_all
+  System::Services.stop_all unless ENV["NOSTOP"].to_i == 1
 end

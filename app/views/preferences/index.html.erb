@@ -37,20 +37,7 @@
 }
 
 #preferences-page a {
-  background: url(/images/spr_on_off.png) no-repeat;
-  display: inline-block;
-  height: 31px;
-  margin: 0 0 0 0.5em;
-  position :relative;
-  text-indent: -500em;
-  top: -5px;
-  width: 82px;
-}
-#preferences-page a.off {
-  background-position: 0 0;
-}
-#preferences-page a.on {
-  background-position: 0 -31px;
+  text-decoration: none;
 }
 #preferences-search {
   margin-bottom: 1em;
@@ -82,7 +69,7 @@
     <ul>
       <%- @preferences.each do |p| -%>
         <li id ="<%= p[:url] %>">
-          <%= p[:name] %>
+          <a href="#"><%= p[:name] %></a>
         </li>
       <%- end -%>
     </ul>

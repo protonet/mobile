@@ -11,10 +11,11 @@ Then /^I wait for the autocompletion$/ do
   sleep 0.5
 end
 
-Given /^I am logged in as "([^\"]*)"$/ do |username|
+Given /^I am logged in as "([^\"]*)"(?: with "([^\"]*)")?$/ do|username, password|
+  password ||= '123456'
   within("form.login") do
     fill_in 'login_login', :with => username
-    fill_in 'login_password', :with => '123456'
+    fill_in 'login_password', :with => password
     click('login')
     sleep 1 # wait for socket
   end
@@ -89,4 +90,10 @@ end
 
 Then /^I should see no strangers online$/ do
   assert !find(:css, "#user-widget .stranger")
+end
+
+Then /^I should be logged in as "([^\"]*)"$/ do |username|
+  within('#user-navigation') do
+    assert page.has_content?(username)
+  end
 end

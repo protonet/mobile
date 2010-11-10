@@ -1,4 +1,5 @@
 class PreferencesController < ApplicationController
+  before_filter :only_registered
   
   def index
     @preferences = [
