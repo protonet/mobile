@@ -84,7 +84,7 @@ Given /^I send the message "([^\"]*)"$/ do |text|
 end
 
 Then /^I should see one stranger online$/ do
-  assert find(:css, "#user-widget .stranger")
+  assert !!find(:css, "#user-widget .stranger")
 end
 
 Then /^I should see no strangers online$/ do

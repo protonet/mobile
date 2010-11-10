@@ -192,6 +192,10 @@ class ClientConnection < FlashServer
     send_json :x_target => 'document.location.reload'
   end
   
+  def send_reconnect_request
+    send_json :trigger => 'socket.reconnect'
+  end
+  
   def unbind
     log("connection closed")
     @tracker.remove_conn self

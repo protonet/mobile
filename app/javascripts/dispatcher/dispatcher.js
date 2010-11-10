@@ -31,6 +31,10 @@ protonet.dispatcher = {
     
       .bind("socket.ping_received", function() {
         this.pingSocketCallback();
+      }.bind(this))
+      
+      .bind("socket.reconnect", function() {
+        this.reconnectSocket();
       }.bind(this));
       
     $(window)
@@ -106,6 +110,11 @@ protonet.dispatcher = {
     this.stopSocketReconnect();
     this.reconnect = true;
     this.reconnectTimeout = setTimeout(this.connectSocket.bind(this), 5000);
+  },
+  
+  reconnectSocket: function() {
+    this.disconnectSocket();
+    setTimeout(this.connectSocket(), 1000);
   },
   
   /**

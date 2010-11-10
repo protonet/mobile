@@ -29,7 +29,7 @@ EventMachine::run do
   trap("INT") do
     # reset connection tracker, needed for tests
     puts "resetting connection tracker"
-    connections = tracker.open_sockets.each {|s| s.close_connection}
+    connections = tracker.open_sockets.each {|s| s.send_reconnect_request}
   end
   
 end

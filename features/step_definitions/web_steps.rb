@@ -22,6 +22,7 @@ end
 
 When /^(?:|I )go unauthenticated to the start page$/ do
   visit "/logout"
+  sleep 1
 end
 
 When /^(?:|I )go to (.+)$/ do |page_name|
