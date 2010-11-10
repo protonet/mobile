@@ -92,7 +92,7 @@ class UsersController < ApplicationController
     @user = current_user
     @user.errors.add(:password_confirmation, 'does not match your new password') if params[:password] != params[:password_confirmation]
     if @user.errors.empty? && @user.update_with_password(params)
-      flash[:notice] = "You've succesfully changed your password!"
+      flash[:notice] = "You've successfully changed your password!"
     else
       flash[:error]  = "There was an error changing you password: #{@user.errors.full_messages.to_sentence}."
     end

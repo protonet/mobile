@@ -9,10 +9,21 @@ Background:
   Scenario: Changing my password
     And I follow "your profile" within "#preferences-page"
     Then I should see "Change your password" within "#preferences-details"
+    
+    # failure
+    And I fill in "current_password" with "incorrect" within "#change-password"
+    And I fill in "password" with "654321" within "#change-password"
+    And I fill in "password_confirmation" with "654321" within "#change-password"
+    And I press "change password" within "#change-password"    
+    Then I should see "an error changing" within ".flash-message"
+    # success
     And I fill in "current_password" with "123456" within "#change-password"
     And I fill in "password" with "654321" within "#change-password"
     And I fill in "password_confirmation" with "654321" within "#change-password"
     And I press "change password" within "#change-password"
+    Then I should see "successfully changed" within ".flash-message"
+    
+    # and try it out
     Then I log out
     And I am logged in as "dudemeister" with "654321"
     Then I should be logged in as "dudemeister"
@@ -20,7 +31,7 @@ Background:
   @wip
   @javascript
   Scenario: Seeing my own profile
-    Given I click on "your profile"
+    Given I follow "your profile" within "#preferences-page"
     Then I should see my user name
     Then I should see my user image
     And I should see the change button
