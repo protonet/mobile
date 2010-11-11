@@ -18,6 +18,15 @@ task :reset_admin_key => :environment do
   puts "\n\nUse this key to become an admin, can only be used once:\n\n#{System::Preferences.admin_key}\n\nbe careful!"
 end
 
+desc 'Reset admin getting key AND all admin users'
+task :reset_admin_key_and_users => :environment do
+  System::Preferences.admin_set = false
+  System::Preferences.admin_key = ActiveSupport::SecureRandom.base64(10)
+  User.update_all("admin = 0", "admin = 1")
+  puts "\n\nUse this key to become an admin, can only be used once:\n\n#{System::Preferences.admin_key}\n\nbe careful!"
+end
+
+
 # connect to debugger (for passenger) with
 # rdebug -c
 

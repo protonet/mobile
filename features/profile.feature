@@ -41,21 +41,19 @@ Background:
     And I press "Upload" within "#new_images_avatar"
     # custom avatars are stored at /images/avatars/*
     Then I should see an image with the url "/images/avatars" within "#preferences-details"
-    Then wait 30 seconds
 
-  @wip
   @javascript
   Scenario: Claiming administrator rights
-    Given I click on "your profile"
     Given administrator rights have not been claimed
-    And I enter the claiming key
-    And submit the form
-    Then I should be an admin
+    And administrator claiming key is "secret"
+    And I follow "your profile" within "#preferences-page"
+    And I fill in "key" with "secret" within "#admin-request"
+    And I press "submit" within "#admin-request"
+    Then I should see "you're an ADMIN" within "#preferences-details"
 
-  @wip
   @javascript
   Scenario: Trying to claim admin rights if they have already be given
-    Given I click on "your profile"
-    And administrator rights have been claimed
-    Then I should not see the form
-
+    Given administrator rights have been claimed
+    And I follow "your profile" within "#preferences-page"
+    And wait 1 second
+    Then I should not find "#admin-request" on the page

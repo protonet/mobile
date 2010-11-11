@@ -92,6 +92,14 @@ Then /^I should see no strangers online$/ do
   assert !find(:css, "#user-widget .stranger")
 end
 
+Then /^I should find "([^\"]*)" on the page$/ do |selector|
+  assert !!find(:css, selector)
+end
+
+Then /^I should not find "([^\"]*)" on the page$/ do |selector|
+  assert !find(:css, selector)
+end
+
 Then /^I should be logged in as "([^\"]*)"$/ do |username|
   within('#user-navigation') do
     assert page.has_content?(username)
@@ -108,3 +116,14 @@ Then /^(?:|I )should see an image with the url "([^\"]*)"(?: within "([^\"]*)")?
   end
 end
 
+Given /^administrator rights have not been claimed$/ do
+  System::Preferences.admin_set = false
+end
+
+Given /^administrator rights have been claimed$/ do
+  System::Preferences.admin_set = true
+end
+
+Given /^administrator claiming key is "([^\"]*)"$/ do |key|
+  System::Preferences.admin_key = key
+end
