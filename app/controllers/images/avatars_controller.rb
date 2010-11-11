@@ -21,7 +21,7 @@ class Images::AvatarsController < ApplicationController
       redirect_to preferences_path
     else
       flash[:notice] = 'Your photo did not pass validation!'
-      render :new
+      redirect :back
     end
   end
 end

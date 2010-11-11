@@ -28,16 +28,20 @@ Background:
     And I am logged in as "dudemeister" with "654321"
     Then I should be logged in as "dudemeister"
 
-  @wip
   @javascript
   Scenario: Seeing my own profile
     Given I follow "your profile" within "#preferences-page"
-    Then I should see my user name
-    Then I should see my user image
-    And I should see the change button
-    And I click on the change button
-    And I should be able to choose a file and upload it
-    Then I should have a new user image
+    Then I should see "Name: dudemeister" within "#preferences-details"
+    # standard image
+    Then I should see an image with the url "/img/user_picture.png" within "#preferences-details"
+    And I should see "change user image" within "#preferences-details"
+    And I press "change user image" within "#preferences-details"
+    Then I should see "Upload" within "#new_images_avatar"
+    And I attach "profile_pic.png" to "images_avatar[image_file]"
+    And I press "Upload" within "#new_images_avatar"
+    # custom avatars are stored at /images/avatars/*
+    Then I should see an image with the url "/images/avatars" within "#preferences-details"
+    Then wait 30 seconds
 
   @wip
   @javascript

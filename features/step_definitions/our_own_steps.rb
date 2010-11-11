@@ -97,3 +97,14 @@ Then /^I should be logged in as "([^\"]*)"$/ do |username|
     assert page.has_content?(username)
   end
 end
+
+When /^I attach "([^\"]*)" to "([^\"]*)"$/ do |file, field|
+  attach_file(field, "#{RAILS_ROOT}/features/upload_files/#{file}")
+end
+
+Then /^(?:|I )should see an image with the url "([^\"]*)"(?: within "([^\"]*)")?$/ do |url, selector|
+  with_scope(selector) do
+    assert page.has_xpath?("//img[starts-with(@src, #{url})]", :visible => true)
+  end
+end
+
