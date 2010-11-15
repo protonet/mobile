@@ -37,8 +37,9 @@
     <%= hidden_field_tag      :user_id, user.id %>
     <%= label_tag             :admin_password, 'Administrator - please enter your password for changes:' %>
     <%= password_field_tag    :admin_password %>
-    <%= hidden_field_tag      :admin_flag, false %>
-    Admin? <%= check_box_tag  :admin, true, user.admin? %>
+    <%= hidden_field_tag      :admin, false %><br>
+    <%= label_tag             :admin, 'Should this user become an Admin?' %>
+    <%= check_box_tag  :admin, true, user.admin? %>
     <%= button "Update" %>
   <% end %>
   

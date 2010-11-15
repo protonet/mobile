@@ -26,6 +26,16 @@ Background:
     And I should not see "Edit" within "#users-details"
 
   @javascript
+  Scenario: Admin: Seeing some other users profile
+    And "dudemeister" is an admin
+    And I go to the users page
+    And I follow "someotherdude" within "#users-page"
+    Then I should see "someotherdude" within "#users-details"
+    And I should see "Edit" within "#users-details"
+    And I should see "Should this user become an Admin" within "#users-details"
+    And I should see "Password reset" within "#users-details"
+
+  @javascript
   Scenario: Seeing my own profile
     And I follow "dudemeister" within "#users-page"
     Then I should see "that's you!" within "#users-page li.clicked"
