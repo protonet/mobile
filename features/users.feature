@@ -33,4 +33,16 @@ Background:
     And  I fill in "user[email]" with "some@email.com"
     And  I press "Update" within "#users-details .edit"
     Then I should see "Successfully updated" within ".flash-message"
-  
+    And I should see "newname" within "#users-details"
+
+  @javascript
+  Scenario: Seeing my own profile
+    And I follow "dudemeister" within "#users-page"
+    Then I should see "that's you!" within "#users-page li.clicked"
+    And I should see "dudemeister" within "#users-details"
+    And I should see "Edit" within "#users-details"
+    Then I fill in "user[login]" with "newname"
+    And  I fill in "user[email]" with "some@email.com"
+    And  I press "Update" within "#users-details .edit"
+    Then I should see "Successfully updated" within ".flash-message"
+    And I should see "newname" within "#users-details"

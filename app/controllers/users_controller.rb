@@ -47,7 +47,11 @@ class UsersController < ApplicationController
   end
 
   def delete_stranger_older_than_two_days
-    User.delete_strangers_older_than_two_days!
+    if current_user.admin? && User.delete_strangers_older_than_two_days!
+      flash[:notice] = "Successfully deleted all old strangers!"
+    else
+      flash[:error]  = "Couldn't delete old strangers!"
+    end
     redirect_to :action => 'index'
   end
 

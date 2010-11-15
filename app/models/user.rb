@@ -224,7 +224,7 @@ class User < ActiveRecord::Base
   end
   
   def can_be_edited_by?(user)
-    user.id != 0 && !user.stranger? && (self.admin? || user.id == self.id)
+    self.id != 0 && !user.stranger? && (user.admin? || user.id == self.id)
   end
   
 end
