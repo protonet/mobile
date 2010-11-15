@@ -1,6 +1,13 @@
 //= require "../ui/modal_window.js"
 //= require "../utils/escape_html.js"
 
+/**
+ * TODO:
+ *  - Endless scrolling
+ *  - Fix scrolling performance on webkit
+ *  - Show messages in context
+ *  - Speed!
+ */
 protonet.timeline.Search = {
   initialize: function() {
     this.form   = $("#search-form");
@@ -20,8 +27,11 @@ protonet.timeline.Search = {
         this.input.val("");
         this.show(value);
       }.bind(this),
-      submit:   function() {
-        this.show(this.input.val());
+      submit:   function(event) {
+        var value = this.input.val();
+        this.input.val("");
+        this.show(value);
+        event.preventDefault();
       }.bind(this)
     });
   },
@@ -48,9 +58,7 @@ protonet.timeline.Search = {
           clearTimeout(this.timeout);
         }.bind(this),
         keyup:     function() {
-          this.timeout = setTimeout(function() {
-            this.search(this.bigInput.val());
-          }.bind(this), 200);
+          this.timeout = setTimeout(function() { this.search(this.bigInput.val()); }.bind(this), 200);
         }.bind(this)
       })
       .val(keyword)
@@ -102,6 +110,9 @@ protonet.timeline.Search = {
     });
   },
   
+  /**
+   * TODO: Need for speed here, OPTIMIZE the shit out of this
+   */
   render: function(keyword, data) {
     if (!data.length) {
       this.renderHint("No results found");
