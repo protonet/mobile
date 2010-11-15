@@ -1,7 +1,7 @@
 development:
   adapter: mysql
   encoding: utf8
-  reconnect: false
+  reconnect: true
   database: dashboard_development
   pool: 5
   username: <%= ENV['PTN_DEV_DB_USER'] || 'root' %>
@@ -15,7 +15,7 @@ development:
 test: &test
   adapter: mysql
   encoding: utf8
-  reconnect: false
+  reconnect: true
   database: dashboard_test
   pool: 5
   username: root

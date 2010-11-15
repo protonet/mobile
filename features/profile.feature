@@ -1,7 +1,7 @@
-Feature: Managing you're profile
+Feature: Managing your profile
 Background:
   Given a user exists with login: "dudemeister"
-  And I go to the start page
+  And I go unauthenticated to the start page
   And I am logged in as "dudemeister"
   And I go to the preferences page
 
