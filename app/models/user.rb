@@ -54,25 +54,11 @@ class User < ActiveRecord::Base
       find(0)
     end
   end
-  
-  # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
-  #
-  # uff.  this is really an authorization, not authentication routine.
-  # We really need a Dispatch Chain here or something.
-  # This will also let us return a human error message.
-  #
-  # def self.authenticate(login, password)
-  #   return nil if login.blank? || password.blank?
-  #   return ldap_authenticate(login, password) if configatron.ldap.single_authentication == true
 
-  #   u = find_by_login(login.downcase) # need to get the salt
-  #   u && u.authenticated?(password) ? u : nil
-  # end
-  
   def self.authenticate(*args)
     if configatron.ldap.single_authentication == true
-      return nil if login.blank? || password.blank?
-      return ldap_authenticate(login, password)
+      return nil if args[0][:login].blank? || args[0][:password].blank?
+      return ldap_authenticate(args[0][:login], args[0][:password])
     else
       super
     end
