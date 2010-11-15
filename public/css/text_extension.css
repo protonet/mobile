@@ -172,6 +172,8 @@
 
 .text-extension-results.flash .media a:hover:after {
   background: #487bff;
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
 }
 
 .text-extension-results.flash .media a:active:after {

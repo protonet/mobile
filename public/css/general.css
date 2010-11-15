@@ -153,6 +153,8 @@ a.close-link {
 }
 
 a.close-link:hover {
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
   background: #487bff;
 }
 
