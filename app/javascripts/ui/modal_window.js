@@ -1,3 +1,5 @@
+//= require "../utils/get_scrollbar_width.js"
+
 protonet.ui.ModalWindow = (function($) {
   var elements  = {},
       $document = $(document),
@@ -56,9 +58,16 @@ protonet.ui.ModalWindow = (function($) {
       elements.shadow.fadeIn("fast");
     }
     
-    // Remove scrollbar on body
-    // TODO: This doesn't work on the iPad!
-    $body.add("html").css("overflow", "hidden");
+    /**
+     * Removes scrollbar on body and replaces it width a padding-left to avoid visual weirdness
+     * TODO: This doesn't work on the iPad!
+     */
+    var oldPaddingRight = parseInt($body.css("padding-right"), 10),
+        scrollBarWidth  = protonet.utils.getScrollbarWidth();
+    $body.add("html")
+      .css("overflow", "hidden")
+      .css("padding-right", (oldPaddingRight + scrollBarWidth).px())
+      .data("old-padding-right", oldPaddingRight);
     
     // Show the actual dialog
     elements.dialog.attr({ className: this.originalClassName }).addClass(cssClass).show();
@@ -68,7 +77,10 @@ protonet.ui.ModalWindow = (function($) {
   }
   
   function hide() {
-    $body.css("overflow", "");
+    $body.css({
+      "overflow": "",
+      "padding-right": $body.data("old-padding-right")
+    });
     elements.dialog.attr({ className: this.originalClassName }).add(elements.shadow).hide();
     
     return this;
