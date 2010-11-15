@@ -79,9 +79,10 @@ class UsersController < ApplicationController
     redirect_to :back
   end
   
-  def make_user_admin
+  def update_user_admin_flag
     if current_user.admin? && current_user.valid_password?(params[:admin_password])
-      
+      user = User.find(params[:user_id])
+      user.update_attribute(:admin, params[:admin]) && flash[:notice] = "Successfully made #{user.login} an admin!"
     end
     redirect_to :action => 'index', :anchor => params[:user_id]
   end

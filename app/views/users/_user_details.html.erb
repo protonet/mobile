@@ -33,7 +33,7 @@
 
 <%- if user.can_be_edited_by?(current_user) && current_user.admin -%>
   <h5>Admin settings:</h5>
-  <% form_tag({:action => 'make_user_admin'}, {:id => 'admin-setting'}) do %>
+  <% form_tag({:action => 'update_user_admin_flag'}, {:id => 'admin-setting'}) do %>
     <%= hidden_field_tag      :user_id, user.id %>
     <%= label_tag             :admin_password, 'Administrator - please enter your password for changes:' %>
     <%= password_field_tag    :admin_password %>
