@@ -14,7 +14,7 @@
 <h4>Guest?</h4>
 <p><%= if user.guest then "yes, you are, isn't bad though!" else "lord, no!" end %></p>
 
-<% if user.id != 0 && !user.stranger?  && (current_user.admin || user.id == session[:user_id]) %>
+<% if current_user.admin || user.can_be_edited_by?(current_user) %>
   <br>
   <h4>Edit</h4>
 
@@ -23,7 +23,6 @@
   <% form_for user, :url => { :action => 'update' } do |f| -%>
     <fieldset>
       <%= f.hidden_field :id, { :value => user.id, :id => "user-id-#{user.id}" } %>
-      <%= f.text_field :name, { :value => user.name, :id => "user-name-#{user.id}", :title => "Name of the user…" } %><br>
       <%= f.text_field :login, { :value => user.login, :id => "user-login-#{user.id}", :title => "Login of the user…" } %><br>
       <%= f.text_field :email, { :value => user.email, :id => "user-email-#{user.id}", :title => "E-Mail of the user…" } %>
       <%= button "Update" %>
@@ -32,7 +31,7 @@
   </div>
 <% end %>
 
-<%- if user.id != 0 && !user.stranger? && current_user.admin -%>
+<%- if current_user.admin -%>
   <h5>Admin settings:</h5>
   <% form_tag({:action => 'make_user_admin'}, {:id => 'admin-setting'}) do %>
     <%= hidden_field_tag      :user_id, user.id %>
@@ -50,6 +49,5 @@
     <%= password_field_tag    :admin_password %>
     <%= button "Generate New Password " %>
   <% end %>
-  
 <%- end -%>
 

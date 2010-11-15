@@ -35,6 +35,7 @@ class User < ActiveRecord::Base
   has_one   :avatar, :class_name => 'Images::Avatar', :dependent => :destroy
 
   named_scope :registered, :conditions => {:temporary_identifier => nil}
+  named_scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"
 
   after_create :create_ldap_user if configatron.ldap.active == true
   after_create :send_create_notification
@@ -216,6 +217,14 @@ class User < ActiveRecord::Base
     else
       :key_error
     end
+  end
+  
+  def can_edit?(user)
+    user.can_be_edited_by?(self)
+  end
+  
+  def can_be_edited_by?(user)
+    user.id != 0 && !user.stranger? && (self.admin? || user.id == self.id)
   end
   
 end

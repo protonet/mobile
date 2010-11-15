@@ -1,7 +1,8 @@
 class UsersController < ApplicationController 
   
   def index
-    @users = User.all
+    @users = User.registered
+    @strangers_count = User.strangers.count
   end
 
   def show
@@ -36,13 +37,13 @@ class UsersController < ApplicationController
 
   def update
     user = User.find(params[:user][:id])
-    success = user && user.update_attributes(params[:user])
+    success = user && (user.update_attributes(params[:user]) if user.can_edit?(user))
     if success && user.errors.empty?
-      flash[:notice] = "Successfully updated user '#{params[:user][:name]}'"
+      flash[:notice] = "Successfully updated user '#{user.login}'"
     else
-      flash[:error] = "Could not update user '#{params[:user][:name]}'"
+      flash[:error] = "Could not update user '#{user.login}'"
     end
-    redirect_to :action => 'index'
+    redirect_to :action => 'index', :anchor => user.id
   end
 
   def delete_stranger_older_than_two_days
