@@ -127,3 +127,8 @@ end
 Given /^administrator claiming key is "([^\"]*)"$/ do |key|
   System::Preferences.admin_key = key
 end
+
+Given /^"([^\"]*)" is an admin$/ do |username|
+  user = User.find_by_login(username)
+  user.update_attribute(:admin, true)
+end

@@ -6,8 +6,10 @@ Background:
   And I am logged in as "dudemeister"
   And I go to the users page
 
-  @javascript @wip
+  @javascript
   Scenario: Admin: seeing the general settings
+    And "dudemeister" is an admin
+    And I go to the users page
     And I follow "general settings" within "#users-page"
     Then I should see "Logged out users get to see dashboard?" within "#users-details"
 
