@@ -68,6 +68,15 @@ class User < ActiveRecord::Base
   #   u = find_by_login(login.downcase) # need to get the salt
   #   u && u.authenticated?(password) ? u : nil
   # end
+  
+  def self.authenticate(*args)
+    if configatron.ldap.single_authentication == true
+      return nil if login.blank? || password.blank?
+      return ldap_authenticate(login, password)
+    else
+      super
+    end
+  end
 
   def self.ldap_authenticate(login, password)
     # try to authenticate against the LDAP server
