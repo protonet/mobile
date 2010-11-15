@@ -153,9 +153,9 @@
   border-radius: 20px;
   -moz-border-radius: 20px;
   -webkit-border-radius: 20px;
-  box-shadow: 0 0 2px 2px #666;
-  -webkit-box-shadow: 0 0 2px 2px #666;
-  -moz-box-shadow: 0 0 2px 2px #666;
+  box-shadow: 0 0 2px 1px #666;
+  -webkit-box-shadow: 0 0 2px 1px #666;
+  -moz-box-shadow: 0 0 2px 1px #666;
 }
 
 .text-extension-results.flash .media .flash-close-link {
