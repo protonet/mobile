@@ -1,15 +1,25 @@
 //= require "../utils/get_scrollbar_width.js"
 
+/**
+ * Modal Window
+ * 
+ * @example
+ *    protonet.ui.ModalWindow.update({ content: "foobar", headline: "Listen up!" }).show("my-modal-window"); 
+ *    // "my-modal-window" is a css class name which should be set on the dialog element
+ *    // in order to make it targetable via css selectors
+ */
 protonet.ui.ModalWindow = (function($) {
-  var elements  = {},
-      $document = $(document),
-      $window   = $(window),
-      $body     = $(document.body);
+  var elements          = {},
+      currentClassName  = null,
+      originalClassName = null,
+      $document         = $(document),
+      $window           = $(window),
+      $body             = $(document.body);
   
   function _create() {
     $.extend(elements, {
       shadow:     $("<div />", { className: "modal-window-shadow" }),
-      dialog:     $("<div />", { className: this.originalClassName = "modal-window-dialog" }),
+      dialog:     $("<div />", { className: originalClassName = "modal-window-dialog" }),
       content:    $("<output />", { className: "modal-window-content" }),
       closeLink:  $("<a />", { className: "modal-window-close-link close-link", html: "X" }),
       headline:   $("<h2 />")
@@ -50,7 +60,7 @@ protonet.ui.ModalWindow = (function($) {
   }
   
   function show(className) {
-    this.className = className;
+    currentClassName = className;
     
     if (!elements.shadow) {
       _create();
@@ -72,7 +82,7 @@ protonet.ui.ModalWindow = (function($) {
       .data("old-padding-right", oldPaddingRight);
     
     // Show the actual dialog
-    elements.dialog.attr({ "class": this.originalClassName }).addClass(className).show();
+    elements.dialog.attr({ "class": originalClassName }).addClass(currentClassName).show();
     position();
     
     protonet.Notifications.trigger("modal_window.shown");
@@ -81,14 +91,14 @@ protonet.ui.ModalWindow = (function($) {
   }
   
   function hide() {
-    this.className = null;
+    currentClassName = null;
     
     $body.css({
       "overflow": "",
       "padding-right": $body.data("old-padding-right")
     });
     
-    elements.dialog.attr({ "class": this.originalClassName }).add(elements.shadow).hide();
+    elements.dialog.attr({ "class": originalClassName }).add(elements.shadow).hide();
     
     protonet.Notifications.trigger("modal_window.hidden");
     
@@ -131,6 +141,10 @@ protonet.ui.ModalWindow = (function($) {
   
   function get(element) {
     return elements[element];
+  }
+  
+  function getClassName() {
+    return currentClassName;
   }
   
   return {

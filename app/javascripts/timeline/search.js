@@ -19,7 +19,7 @@ protonet.timeline.Search = {
   
   _observe: function() {
     protonet.Notifications.bind("channel.change", function() {
-      if (this.modalWindow.className == "search") {
+      if (this.modalWindow.getClassName() == "search") {
         this.modalWindow.hide();
       }
     }.bind(this));
@@ -90,7 +90,6 @@ protonet.timeline.Search = {
     this._cancel();
     
     this.currentXhr = $.ajax({
-      type: "get",
       data: {
         search_term: keyword,
         channel_id:  0

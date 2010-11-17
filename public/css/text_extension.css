@@ -177,7 +177,8 @@
 }
 
 .text-extension-results.flash .media a:active:after {
-  opacity: 0.8;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
 }
 
 /* =LINK TEXT EXTENSION

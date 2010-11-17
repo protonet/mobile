@@ -158,8 +158,9 @@ a.close-link:hover {
   background: #487bff;
 }
 
-.close-link:active {
-  opacity: 0.8;
+a.close-link:active {
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
 }
 
 pre {
