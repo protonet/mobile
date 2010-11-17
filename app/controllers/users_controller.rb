@@ -1,5 +1,7 @@
 class UsersController < ApplicationController 
   
+  before_filter :only_registered, :except => [:new, :create]
+  
   def index
     @users = User.registered
     @strangers_count = User.strangers.count
@@ -107,5 +109,13 @@ class UsersController < ApplicationController
     end
     redirect_to :back
   end
-
+  
+  def delete
+    user = User.find(params[:user_id])
+    if current_user.admin? && current_user != user
+      user.destroy && flash[:notice] = "You have deleted the user #{user.login}!"
+    end
+    redirect_to :action => 'index'
+  end
+  
 end

@@ -18,12 +18,18 @@ Background:
     And I follow "Anonymous" within "#users-page"
     Then I should see "Anonymous" within "#users-details"
     And I should not see "Edit" within "#users-details"
+    And I should not see "Admin settings" within "#users-details"
+    And I should not see "Password reset" within "#users-details"
+    And I should not see "Delete User" within "#users-details"
 
   @javascript
   Scenario: Seeing some other users profile
     And I follow "someotherdude" within "#users-page"
     Then I should see "someotherdude" within "#users-details"
     And I should not see "Edit" within "#users-details"
+    And I should not see "Admin settings" within "#users-details"
+    And I should not see "Password reset" within "#users-details"
+    And I should not see "Delete User" within "#users-details"
 
   @javascript
   Scenario: Admin: Managing some other users profile
@@ -34,6 +40,7 @@ Background:
     And I should see "Edit" within "#users-details"
     And I should see "Should this user become an Admin" within "#users-details"
     And I should see "Password reset" within "#users-details"
+    And I should not see "Delete User" within "#users-details"
     # allright now that the basics are done
     # test making an user admin
     And check "admin" within "#admin-setting"
@@ -62,3 +69,11 @@ Background:
     And  I press "Update" within "#users-details .edit"
     Then I should see "Successfully updated" within ".flash-message"
     And I should see "newname" within "#users-details"
+    
+  @javascript @wip
+  Scenario: Admin: Deleting an user
+    Given I go to the users page
+    And select an user
+    And I have the rights
+    Then I should be able to delete the user
+    And his tweets should still be visible

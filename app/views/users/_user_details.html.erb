@@ -42,11 +42,19 @@
 <%- end -%>
 
 <%- if user.can_be_edited_by?(current_user) && current_user.admin && user != current_user -%>  
-  <h5>Password reset!</h5>
+  <h5>Password reset:</h5>
   <% form_tag({:action => 'generate_new_password'}, {:id => 'password-reset'}) do %>
     <%= hidden_field_tag      :user_id, user.id %>
     <%= label_tag             :admin_password, 'Administrator - please enter your password for changes:' %>
     <%= password_field_tag    :admin_password %>
     <%= button "Generate New Password " %>
+  <% end %>
+<%- end -%>
+
+<%- if user.can_be_edited_by?(current_user) && current_user.admin && user != current_user -%>  
+  <h5>Delete User:</h5>
+  <% form_tag({:action => 'delete'}, {:id => 'user-delete'}) do %>
+    <%= hidden_field_tag      :user_id, user.id %>
+    <%= button "DELETE THIS USER" %>
   <% end %>
 <%- end -%>
