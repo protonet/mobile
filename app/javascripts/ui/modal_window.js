@@ -148,11 +148,12 @@ protonet.ui.ModalWindow = (function($) {
   }
   
   return {
-    show:       show,
-    update:     update,
-    hide:       hide,
-    position:   position,
-    get:        get
+    show:         show,
+    update:       update,
+    hide:         hide,
+    position:     position,
+    get:          get,
+    getClassName: getClassName
   };
 })(jQuery);
 
