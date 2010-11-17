@@ -1,0 +1,11 @@
+#!/bin/bash
+
+export SHARED_PATH=$1
+export HOME=$SHARED_PATH/../..
+shift 1
+. $HOME/.bashrc
+. $HOME/.profile
+
+cd $HOME/deploy
+git pull
+bin/deploy -r protonet -e production -m deploy -c $SHARED_PATH/config/protonet.d/deploy_config 2>&1 > /tmp/foobar

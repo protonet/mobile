@@ -26,7 +26,7 @@ module System
       def update!
         return false if Rails.env != 'production'
         if File.exist?("/home/protonet/deploy")
-          system("cd /home/protonet/deploy; /usr/bin/git pull; bin/deploy -r protonet -e production -m deploy -c #{configatron.shared_file_path}/config/protonet.d/deploy_config")
+          system("/home/protonet/dashboard/current/script/init/update_release #{configatron.shared_file_path}")
         end
       end
 
