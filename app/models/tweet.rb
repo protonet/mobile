@@ -1,7 +1,7 @@
 class Tweet < ActiveRecord::Base
   include Rabbit
 
-  SEARCH_RESULTS_PER_PAGE = 5
+  SEARCH_RESULTS_PER_PAGE = 10
 
   searchable do
     integer :channel_ids, :references => Channel, :multiple => true

@@ -73,6 +73,7 @@ protonet.timeline.Search = {
       return;
     }
     
+    this.page    = 1;
     this.keyword = keyword;
     
     if (!keyword) {
@@ -111,7 +112,7 @@ protonet.timeline.Search = {
   },
   
   /**
-   * TODO: Need for speed here, OPTIMIZE the shit out of this
+   * TODO: Need for speed here, OPTIMIZE the shit out of this (cblum)
    */
   render: function(keyword, data) {
     if (!data.length) {
@@ -123,7 +124,9 @@ protonet.timeline.Search = {
     protonet.ui.ModalWindow.update({ content: container });
     
     data.reverse().chunk(function(meepData, i) {
-      new protonet.timeline.Meep(meepData).render(container).highlight(keyword);
+      return new protonet.timeline.Meep(meepData).render(container);
+    }, function(meeps) {
+      meeps.chunk(function(meep) { meep.highlight(keyword); });
     });
   },
   

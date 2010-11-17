@@ -39,15 +39,15 @@ Function.prototype.bind = function() {
 
 
 //---------------------------- ARRAY ----------------------------
-Array.prototype.chunk = (function() {
+Array.prototype.chunk = function() {
   var DELAY = 50,
       MAX_EXECUTION_TIME = 100;
   return function(iterator, callback) {
-    var arr = this, i = 0, iterationLength = arr.length, time;
+    var arr = this, i = 0, returnValues = [], iterationLength = arr.length, time;
     var perform = function() {
       time = new Date();
       while (i<iterationLength) {
-        iterator(arr[i], i);
+        returnValues.push(iterator(arr[i], i));
         i++;
         if ((new Date() - time) > MAX_EXECUTION_TIME) {
           /** Breathe */
@@ -55,11 +55,11 @@ Array.prototype.chunk = (function() {
           return;
         }
       }
-      callback && setTimeout(callback, DELAY);
+      callback && setTimeout(function() { callback(returnValues); }, DELAY);
     };
     perform();
   };
-})();
+}();
 
 if (!Array.prototype.indexOf) {
   Array.prototype.indexOf = function(item, i) {
