@@ -97,7 +97,9 @@ protonet.timeline.Search = {
       },
       url:     "/search",
       beforeSend: function() {
-        this.modalWindow.get("dialog").addClass("loading");
+        setTimeout(function() {
+          this.modalWindow.get("dialog").addClass("loading");
+        }.bind(this), 0);
       }.bind(this),
       success: this.render.bind(this, keyword),
       error:   function(xhr) {
