@@ -15,15 +15,8 @@ protonet.ui.FlashMessage = {
   
   initialize: function() {
     this.element = $("div.flash-message");
-
-    // stickies are closed differently
-    if(this.element.attr("class").match(/sticky/)) {
-      var closeLink   = $("<a />", {href: location.hash}).append($("<img />", {src: "/img/pictos_cross.png", width: "16px", height: "16px"}));
-      this.element.append(closeLink);
-      closeLink.click(this.hide.bind(this));
-    } else {
-      this.element.click(this.hide.bind(this));
-    }
+    this.element.click(this.hide.bind(this));
+    this.element.find(".flash-message-close-link").click(this.hide.bind(this));
     
     if ($.trim(this.element.text())) {
       this.show();
@@ -34,7 +27,7 @@ protonet.ui.FlashMessage = {
   
   _observe: function() {
     protonet.Notifications
-      .bind("flash_message.error flash_message.notice flash_message.warning", function(event, message) {
+      .bind("flash_message.error flash_message.notice flash_message.warning flash_message.sticky", function(event, message) {
         this.show(event.handleObj.namespace, message);
       }.bind(this));
   },
@@ -55,14 +48,18 @@ protonet.ui.FlashMessage = {
     this.element.stop().css("position", "fixed").animate({ top: "0px" });
     
     clearTimeout(this.timeout);
-
+    
     // also non stickies auto hide after TIMEOUT seconds
-    if(!this.element.attr("class").match(/sticky/)) {
+    if (!this.element.hasClass("sticky")) {
       this.timeout = setTimeout(this.hide.bind(this), this.TIMEOUT);
     }
   },
   
-  hide: function() {
+  hide: function(event) {
+    if ($(event.currentTarget).hasClass("sticky")) {
+      return;
+    }
+    
     this.element.stop().animate({ top: (-this.element.outerHeight()).px() }, function() {
       /**
        * Set it back to absolute to avoid scrolling performance issues
@@ -70,5 +67,7 @@ protonet.ui.FlashMessage = {
        */
       this.element.css("position", "absolute");
     }.bind(this));
+    
+    event && event.preventDefault();
   }
 };

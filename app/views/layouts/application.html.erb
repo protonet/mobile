@@ -42,7 +42,10 @@
         flash_message = flash[:notice] || flash[:error] || flash[:warning] || flash[:alert] || flash[:sticky]
       end
     %>
-    <div class="flash-message <%= flash_message_class_name %>"><p><%= h(flash_message) %></p></div>
+    <div class="flash-message <%= flash_message_class_name %>">
+      <p><%= h(flash_message) %></p>
+      <a href="" class="flash-message-close-link">X</a>
+    </div>
     
     <%- if current_user.stranger? -%>
       <section id="login">

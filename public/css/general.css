@@ -191,6 +191,20 @@ pre {
   margin: 0 auto;
 }
 
+.flash-message .flash-message-close-link {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: none;
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.flash-message.sticky .flash-message-close-link {
+  display: inline;
+}
+
 .flash-message.notice {
   background: rgba(0, 204, 0, 0.7);
 }
@@ -201,24 +215,11 @@ pre {
 }
 
 .flash-message.sticky {
-  background:   none repeat scroll 0 0 #FFFBE0;
-  border-color: #FED144;
-  border-right: 1px solid #FED144;
-  border-style: solid;
+  background: #FFFBE0;
+  border: solid #FED144;
   border-width: 4px 1px 1px;
-  color:        grey;
-  cursor:       auto;
-}
-
-.flash-message.sticky .close {
-  cursor: pointer;
-}
-
-.flash-message.sticky p {
-  float: left;
-}
-.flash-message.sticky a {
-  float: right;
+  cursor: default;
+  color: #000;
 }
 
 
