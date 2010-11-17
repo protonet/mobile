@@ -10,13 +10,20 @@
  */
 protonet.timeline.Search = {
   initialize: function() {
-    this.form   = $("#search-form");
-    this.input  = this.form.find("input.search");
+    this.form        = $("#search-form");
+    this.input       = this.form.find("input.search");
+    this.modalWindow = protonet.ui.ModalWindow;
     
     this._observe();
   },
   
   _observe: function() {
+    protonet.Notifications.bind("channel.change", function() {
+      if (this.modalWindow.className == "search") {
+        this.modalWindow.hide();
+      }
+    }.bind(this));
+    
     this.form.bind({
      keydown: function() {
         var value = this.input.val();
@@ -47,7 +54,7 @@ protonet.timeline.Search = {
   show: function(keyword) {
     this.bigInput = this.bigInput || $("<input />", { className: "search" });
     
-    protonet.ui.ModalWindow.update({
+    this.modalWindow.update({
       headline: this.bigInput
     }).show("search");
     
@@ -90,8 +97,8 @@ protonet.timeline.Search = {
       },
       url:     "/search",
       beforeSend: function() {
-        protonet.ui.ModalWindow.get("dialog").addClass("loading");
-      },
+        this.modalWindow.get("dialog").addClass("loading");
+      }.bind(this),
       success: this.render.bind(this, keyword),
       error:   function(xhr) {
         if (xhr.aborted) {
@@ -106,8 +113,8 @@ protonet.timeline.Search = {
         if (xhr.aborted) {
           return;
         }
-        protonet.ui.ModalWindow.get("dialog").removeClass("loading");
-      }
+        this.modalWindow.get("dialog").removeClass("loading");
+      }.bind(this)
     });
   },
   
@@ -121,7 +128,7 @@ protonet.timeline.Search = {
     }
     
     var container = $("<ul />", { className: "meeps" });
-    protonet.ui.ModalWindow.update({ content: container });
+    this.modalWindow.update({ content: container });
     
     data.reverse().chunk(function(meepData, i) {
       return new protonet.timeline.Meep(meepData).render(container);
@@ -131,7 +138,7 @@ protonet.timeline.Search = {
   },
   
   renderHint: function(hint) {
-    protonet.ui.ModalWindow.update({
+    this.modalWindow.update({
       content: $("<p />", { html: hint, className: "no-meeps-available" })
     });
   }

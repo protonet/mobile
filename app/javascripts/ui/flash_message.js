@@ -56,7 +56,7 @@ protonet.ui.FlashMessage = {
   },
   
   hide: function(event) {
-    if ($(event.currentTarget).hasClass("sticky")) {
+    if (event && $(event.currentTarget).hasClass("sticky")) {
       return;
     }
     

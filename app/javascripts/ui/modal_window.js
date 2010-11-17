@@ -49,7 +49,9 @@ protonet.ui.ModalWindow = (function($) {
     return this;
   }
   
-  function show(cssClass) {
+  function show(className) {
+    this.className = className;
+    
     if (!elements.shadow) {
       _create();
     }
@@ -70,18 +72,25 @@ protonet.ui.ModalWindow = (function($) {
       .data("old-padding-right", oldPaddingRight);
     
     // Show the actual dialog
-    elements.dialog.attr({ className: this.originalClassName }).addClass(cssClass).show();
+    elements.dialog.attr({ "class": this.originalClassName }).addClass(className).show();
     position();
+    
+    protonet.Notifications.trigger("modal_window.shown");
     
     return this;
   }
   
   function hide() {
+    this.className = null;
+    
     $body.css({
       "overflow": "",
       "padding-right": $body.data("old-padding-right")
     });
-    elements.dialog.attr({ className: this.originalClassName }).add(elements.shadow).hide();
+    
+    elements.dialog.attr({ "class": this.originalClassName }).add(elements.shadow).hide();
+    
+    protonet.Notifications.trigger("modal_window.hidden");
     
     return this;
   }
