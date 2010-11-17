@@ -40,7 +40,7 @@ Background:
     And I should see "Edit" within "#users-details"
     And I should see "Should this user become an Admin" within "#users-details"
     And I should see "Password reset" within "#users-details"
-    And I should not see "Delete User" within "#users-details"
+    And I should see "Delete User" within "#users-details"
     # allright now that the basics are done
     # test making an user admin
     And check "admin" within "#admin-setting"
