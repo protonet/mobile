@@ -38,7 +38,8 @@
         flash_message_class_name = 'error'    if flash[:error]
         flash_message_class_name = 'error'    if flash[:alert]
         flash_message_class_name = 'warning'  if flash[:warning]
-        flash_message = flash[:notice] || flash[:error] || flash[:warning] || flash[:alert]
+        flash_message_class_name = 'sticky'   if flash[:sticky]
+        flash_message = flash[:notice] || flash[:error] || flash[:warning] || flash[:alert] || flash[:sticky]
       end
     %>
     <div class="flash-message <%= flash_message_class_name %>"><p><%= h(flash_message) %></p></div>

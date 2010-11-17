@@ -89,7 +89,10 @@ class UsersController < ApplicationController
   
   def generate_new_password
     if current_user.admin? && current_user.valid_password?(params[:admin_password])
-      
+      user = User.find(params[:user_id])
+      new_password  = @template.pronoucable_password
+      user.password = new_password
+      flash[:sticky] = "Generated new password for #{user.login}: \"#{new_password}\" please remind him to change it." if user.save
     end
     redirect_to :action => 'index', :anchor => params[:user_id]
   end

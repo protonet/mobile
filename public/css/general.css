@@ -200,6 +200,27 @@ pre {
   background: rgba(231, 92, 121, 0.8);
 }
 
+.flash-message.sticky {
+  background:   none repeat scroll 0 0 #FFFBE0;
+  border-color: #FED144;
+  border-right: 1px solid #FED144;
+  border-style: solid;
+  border-width: 4px 1px 1px;
+  color:        grey;
+  cursor:       auto;
+}
+
+.flash-message.sticky .close {
+  cursor: pointer;
+}
+
+.flash-message.sticky p {
+  float: left;
+}
+.flash-message.sticky a {
+  float: right;
+}
+
 
 /* =HEADER
 =========================================================================== */

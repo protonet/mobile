@@ -12,12 +12,14 @@ Then /^I wait for the autocompletion$/ do
 end
 
 Given /^I am logged in as "([^\"]*)"(?: with "([^\"]*)")?$/ do|username, password|
-  password ||= '123456'
+  password ||= (@password || '123456')
   within("form.login") do
     fill_in 'login_login', :with => username
     fill_in 'login_password', :with => password
     click('login')
-    sleep 1 # wait for socket
+  end
+  within('#user-navigation') do
+    assert page.has_content?(username)
   end
 end
 
@@ -27,6 +29,9 @@ Given /^I register as "([^\"]*)"$/ do |username|
     fill_in 'user_password', :with => '123456'
     fill_in 'user_password_confirmation', :with => '123456'
     click('sign up')
+  end
+  within('#user-navigation') do
+    assert page.has_content?(username)
   end
 end
 
@@ -131,4 +136,10 @@ end
 Given /^"([^\"]*)" is an admin$/ do |username|
   user = User.find_by_login(username)
   user.update_attribute(:admin, true)
+end
+
+Given /^(?:|I )store \/([^\/]*)\/ within "([^\"]*)" into "([^\"]*)"$/ do |regexp, selector, variable|
+  regexp = Regexp.new(regexp)
+  text = find(:css, selector).text.match(regexp).to_a.last
+  instance_variable_set("@#{variable}", text)
 end

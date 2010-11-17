@@ -9,10 +9,7 @@
 <p><%= user.created_at %></p>
 
 <h4>Admin?</h4>
-<p><%= if user.admin then "jep" else "nope" end %></p>
-
-<h4>Guest?</h4>
-<p><%= if user.guest then "yes, you are, isn't bad though!" else "lord, no!" end %></p>
+<p class="admin"><%= user.admin ? "yes" : "no" %></p>
 
 <% if user.can_be_edited_by?(current_user) %>
   <br>
@@ -42,7 +39,9 @@
     <%= check_box_tag  :admin, true, user.admin? %>
     <%= button "Update" %>
   <% end %>
-  
+<%- end -%>
+
+<%- if user.can_be_edited_by?(current_user) && current_user.admin && user != current_user -%>  
   <h5>Password reset!</h5>
   <% form_tag({:action => 'generate_new_password'}, {:id => 'password-reset'}) do %>
     <%= hidden_field_tag      :user_id, user.id %>
@@ -51,4 +50,3 @@
     <%= button "Generate New Password " %>
   <% end %>
 <%- end -%>
-

@@ -10,11 +10,20 @@
  *    protonet.ui.FlashMessage.show("error", "Ouch something bad happened!");
  */
 protonet.ui.FlashMessage = {
-  classNames: ["notice", "error", "warning"],
+  classNames: ["notice", "error", "warning", "sticky"],
   TIMEOUT: 5000,
   
   initialize: function() {
-    this.element = $("div.flash-message").click(this.hide.bind(this));
+    this.element = $("div.flash-message");
+
+    // stickies are closed differently
+    if(this.element.attr("class").match(/sticky/)) {
+      var closeLink   = $("<a />", {href: location.hash}).append($("<img />", {src: "/img/pictos_cross.png", width: "16px", height: "16px"}));
+      this.element.append(closeLink);
+      closeLink.click(this.hide.bind(this));
+    } else {
+      this.element.click(this.hide.bind(this));
+    }
     
     if ($.trim(this.element.text())) {
       this.show();
@@ -46,7 +55,11 @@ protonet.ui.FlashMessage = {
     this.element.stop().css("position", "fixed").animate({ top: "0px" });
     
     clearTimeout(this.timeout);
-    this.timeout = setTimeout(this.hide.bind(this), this.TIMEOUT);
+
+    // also non stickies auto hide after TIMEOUT seconds
+    if(!this.element.attr("class").match(/sticky/)) {
+      this.timeout = setTimeout(this.hide.bind(this), this.TIMEOUT);
+    }
   },
   
   hide: function() {
