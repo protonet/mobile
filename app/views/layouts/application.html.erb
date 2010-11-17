@@ -7,7 +7,7 @@
     </title>
     <link rel="shortcut icon" href="img/favicon.png" type="image/png">
     <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
-    <%= stylesheet_link_tag(stylesheets, :cache => !configatron.avoid_caching) %>
+    <%= stylesheet_link_tag(stylesheets, :cache => (configatron.avoid_caching != false)) %>
     <script>
       var protonet = protonet || {};
       protonet.config = {
@@ -146,91 +146,3 @@
     <%= sprockets_include_tag(controller_name.to_sym) %>
   </body>
 </html>
-
-
-
-
-
-<% if false %>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-
-  <head>
-    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
-    <meta http-equiv="pragma" content="no-cache" />
-    <meta name="robots" content="noindex, nofollow" />
-    <title><%= strip_tags(yield(:page_title)) || 'protonet - changing the internet, one node at a time' %></title>
-
-    <%= stylesheet_link_tag("common", :cache => false) %>
-    <%= stylesheet_link_tag("navigation", :cache => false) %>
-    <%= stylesheet_link_tag("text_extension", :cache => false) %>
-    <%= stylesheet_link_tag("search", :cache => false) %>
-
-    <link rel="shortcut icon" href="/images/favicon.png" />
-
-    <script type="text/javascript">//<![CDATA[
-      var protonet = protonet || {};
-      protonet.config = {
-        base_url:                 location.protocol + "//" + location.host,
-        dispatching_server:       '<%= request.env["SERVER_NAME"] %>',
-        dispatching_server_port:  '<%= configatron.socket.port %>',
-        token:                    '<%= current_user.communication_token %>',
-        user_name:                '<%= current_user.display_name %>',
-        user_id:                  '<%= current_user.id %>',
-        user_channel_ids:         '<%= current_user.verified_channels && current_user.verified_channels.map {|c| c.id}.to_json %>',
-        user_icon_url:            '<%= current_user.active_avatar_url %>',
-        session_id:               '<%= cookies["_rails_dashboard_session"] %>',
-        authenticity_token:       '<%= form_authenticity_token %>',
-        server:                   '<%= request.env["SERVER_SOFTWARE"] && request.env["SERVER_SOFTWARE"].match(/^\w*/)[0] %>'
-      };
-
-      protonet.globals = {
-        textExtensions: [],
-        availableChannels: <%= channel_mapping = {}; Channel.all.each {|channel| channel_mapping[escape_javascript(channel.name)] = channel.id}; channel_mapping.to_json %>
-      };
-    //]]></script>
-  </head>
-
-  <body>
-    <div id="cloud-container"></div>
-    <div class="header">
-      <%= link_to '<img src="/images/protonet_logo.png" width="166" height="52" alt="protonet" />', root_path %>
-    </div>
-    <% if current_user.stranger? %>
-      <%- form_tag session_path, { :id => "login-form" } do -%>
-        <fieldset>
-          <ul>
-            <li>
-              <%= label_tag "login" %>
-              <%= text_field_tag "login", @login, :title => 'user name' %>
-            </li>
-            <li>
-              <%= label_tag "password" %>
-              <%= password_field_tag "password", nil, :title => 'password' %>
-            </li>
-          </ul>
-        </fieldset>
-        <button type="submit" name="commit">
-          <span>
-            <em>login</em>
-          </span>
-        </button>
-      <%- end -%>
-    <% else %>
-      <div id="mini-menu">
-        <strong>Hello <%= link_to current_user.display_name, preferences_path %>:</strong>
-        <span class="option-links">
-          <%= link_to 'logout', :controller => :sessions, :action => :destroy %>
-        </span>
-      </div>
-    <% end %>
-
-    <%= yield %>
-
-    <%= sprockets_include_tag(:default) %>
-    <%= sprockets_include_tag(controller_name.to_sym) %>
-  </body>
-</html>
-
-<% end %>

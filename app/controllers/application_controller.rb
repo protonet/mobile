@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   before_filter :set_backend_for_development, :captive_check, :current_user, :guest_login
 
   # Scrub sensitive parameters from your log
-  filter_parameter_logging :password # TODO: confirmation field?
+  filter_parameter_logging :password, :password_confirmation, :admin_password
 
   # devise migration
   def logged_in?
@@ -39,7 +39,17 @@ class ApplicationController < ActionController::Base
   end
   
   def only_registered
-    !current_user.stranger?
+    if current_user.stranger?
+      if System::Preferences.allow_dashboard_for_strangers == false
+        flash[:error] = "Please authenticate :) !"
+        return redirect_to("/login")
+      else
+        # check wether it is an allowed uri
+        #  move to {:controller => '', :action => ''} scheme
+        # ["/", "tweets"]
+        return redirect_to("/") unless request.path == "/"
+      end
+    end
   end
   
 end

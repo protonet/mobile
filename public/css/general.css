@@ -292,6 +292,14 @@ header .hearts {
   text-align: center;
 }
 
+/* =HEADER
+=========================================================================== */
+#single-login {
+  position: absolute;
+  top: 50%;
+  margin-top: -180px;
+}
+
 /* =USER NAVIGATION
 =========================================================================== */
 #user-navigation  {

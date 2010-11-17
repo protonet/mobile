@@ -1,25 +1,15 @@
 class InstrumentsController < ApplicationController
-  before_filter :only_registered, :except => [:index, :public_dashboard]
   before_filter :set_nocache_header
+  before_filter :only_registered
   
   def index
-    logged_in? ? private_dashboard : public_dashboard
-  end
-
-  def private_dashboard
-    public_dashboard
-  end
-  
-  def public_dashboard
     @channels = current_user.verified_channels
     
     respond_to do |format|
       format.json do
         get_meeps_as_json(@channels)
       end
-      format.html do
-        render 'public_dashboard'
-      end
+      format.html
     end
   end
   
