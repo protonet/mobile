@@ -33,6 +33,7 @@ namespace :deploy do
     run "mkdir -p #{shared_path}/config/hostapd.d"
     run "mkdir -p #{shared_path}/config/dnsmasq.d"
     run "mkdir -p #{shared_path}/config/ifconfig.d"
+    run "mkdir -p #{shared_path}/config/protonet.d"
     run "mkdir -p #{shared_path}/solr/data"
   end
   
