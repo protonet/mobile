@@ -416,7 +416,7 @@ protonet.controls.FileWidget.prototype = {
     $.ajax({
       url:        "system/files",
       data:       {
-        path:       "/" + channelId + path,
+        path:       path,
         channel_id: channelId
       },
       dataType:   "json",

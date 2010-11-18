@@ -46,8 +46,11 @@ class ApplicationController < ActionController::Base
       else
         # check wether it is an allowed uri
         #  move to {:controller => '', :action => ''} scheme
-        # ["/", "tweets"]
-        return redirect_to("/") unless request.path == "/"
+        return redirect_to("/") unless [
+          ["instruments", "index"],
+          ["tweets", "create"],
+          ["system/files", "index"]
+        ].include?([params[:controller], params[:action]])
       end
     end
   end

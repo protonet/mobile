@@ -10,33 +10,11 @@ class UsersController < ApplicationController
   def show
     render :partial => "user_details", :locals => {:user => User.find(params[:id])}
   end
-
-  # render new.rhtml
+  
   def new
-    @user = User.new
-    render :template => "sessions/_registration_box"
+    redirect_to :controller => "registrations", :action => :new
   end
-
-  def create
-    sign_out(:user)
-    @user = User.new(params[:user])
-    success = @user && @user.save
-    if success && @user.errors.empty?
-      sign_in(@user)
-      # Protects against session fixation attacks, causes request forgery
-      # protection if visitor resubmits an earlier form using back
-      # button. Uncomment if you understand the tradeoffs.
-      # reset session
-      
-      flash[:notice] = "Thanks for signing up, #{@user.display_name}!"
-    else
-      @user ||= User.new
-      flash[:error]  = "Sorry, but we couldn't set up that account. Please try again."
-    end
-    
-    redirect_to('/')
-  end
-
+  
   def update
     user = User.find(params[:user][:id])
     success = user && (user.update_attributes(params[:user]) if user.can_edit?(user))

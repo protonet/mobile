@@ -2,8 +2,10 @@ module System
   class FilesController < ApplicationController
     include Rabbit
     
+    before_filter :only_registered, :check_channel_membership
+    
     def index
-      raw_files = FileSystem.all(params['path'])
+      raw_files = FileSystem.all("/" + params[:channel_id] + params['path'])
       
       respond_to do |format|
         format.html
@@ -101,6 +103,10 @@ module System
       else
         return head(:error)
       end
+    end
+    
+    def check_channel_membership
+      !!current_user.channels.first(:conditions => ["channels.id = ?", params[:channel_id]], :select => "channels.id")
     end
   
   end

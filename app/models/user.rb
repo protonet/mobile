@@ -13,11 +13,11 @@ class User < ActiveRecord::Base
   validates_presence_of     :login,    :unless => :skip_validation
   validates_length_of       :login,    :within => 3..40, :unless => :skip_validation
   validates_uniqueness_of   :login,    :unless => :skip_validation
-  validates_format_of       :login,    :with => NAME_REGEX, :message => BAD_EMAIL_MSG, :unless => :skip_validation
+  validates_format_of       :login,    :with => NAME_REGEX, :message => BAD_NAME_MSG, :unless => :skip_validation
 
   validates_format_of       :name,     :with => NAME_REGEX,  :message => BAD_NAME_MSG, :allow_nil => true, :unless => :skip_validation
   validates_length_of       :name,     :maximum => 100, :unless => :skip_validation
-  
+
   # TODO: Grandfather these in somehow
   #validates_presence_of     :email,    :unless => :skip_validation
   #validates_uniqueness_of   :email,    :unless => :skip_validation

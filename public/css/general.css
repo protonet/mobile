@@ -210,9 +210,18 @@ pre {
   background: rgba(0, 204, 0, 0.7);
 }
 
+.flash-message.notice:hover {
+  background: rgba(0, 204, 0, 1);
+}
+
 .flash-message.warning,
 .flash-message.error {
   background: rgba(231, 92, 121, 0.8);
+}
+
+.flash-message.warning:hover,
+.flash-message.error:hover {
+  background: rgba(231, 92, 121, 1);
 }
 
 .flash-message.sticky {
@@ -298,6 +307,19 @@ header .hearts {
   position: absolute;
   top: 50%;
   margin-top: -180px;
+}
+
+#single-login .errorExplanation {
+  background:       none repeat scroll 0 0 white;
+  margin-bottom:    10px;
+  margin-left:      auto;
+  margin-right:     auto;
+  padding:          10px;
+  width:            500px;
+}
+
+#single-login .errorExplanation h2 {
+  color:            red;
 }
 
 /* =USER NAVIGATION

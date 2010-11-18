@@ -1,4 +1,4 @@
-Feature: Using the protonet channel management    
+Feature: Using the protonet channel management
 
   @javascript
   Scenario: Seeing the channel list and it's details
