@@ -68,6 +68,6 @@ protonet.ui.FlashMessage = {
       this.element.css("position", "absolute");
     }.bind(this));
     
-    event && event.preventDefault();
+    event && event.preventDefault && event.preventDefault();
   }
 };
