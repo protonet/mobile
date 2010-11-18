@@ -132,6 +132,10 @@
   height: 280px;
 }
 
+.text-extension-results.flash object[data^='http://player.soundcloud.com'] {
+  height: 81px !important;
+}
+
 .text-extension-results.flash .media a:after {
   content: "\25BA";
   cursor: pointer;
@@ -161,8 +165,8 @@
 .text-extension-results.flash .media .flash-close-link {
   position: absolute;
   right: 0;
-  top: -8px;
-  right: -8px;
+  top: -10px;
+  right: -10px;
   line-height: 19px;
 }
 
