@@ -1,13 +1,15 @@
 protonet.preferences.UsersGeneral = function() {
-  this.form = $("#allow-dashboard");
-  this._observeCheckbox();
+  this.forms = $("#users-details form");
+  this._observeForms();
 };
 
 protonet.preferences.UsersGeneral.prototype = {
-  _observeCheckbox: function() {
-    this.form.change(function(){
-      $.post(this.action, $(this).serialize());
-      return false;
-    });
+  _observeForms: function() {
+    this.forms.each(function(i) {
+      $(this.forms[i]).change(function(){
+        $.post(this.action, $(this).serialize());
+        return false;
+      });
+    }.bind(this));
   }
 }

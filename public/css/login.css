@@ -64,12 +64,12 @@ header.login {
   border: 0 none;
 }
 
-#login .login.ldap {
+#login .login.no-register {
   padding-left: 0;
 }
 
-#login .login.ldap input[type=text],
-#login .login.ldap input[type=password] {
+#login .login.no-register input[type=text],
+#login .login.no-register input[type=password] {
   width: 280px;
 }
 

@@ -77,3 +77,8 @@ Background:
     And I have the rights
     Then I should be able to delete the user
     And his tweets should still be visible
+    
+  @javascript @wip
+  Scenario: Admin: Managing stranger rights
+    # allowing them to see the dashboard or not
+    # allowing strangers to register or not

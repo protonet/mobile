@@ -4,3 +4,8 @@ BAM!
   <%= hidden_field_tag 'preferences[allow_dashboard_for_strangers]', false  %>
   Logged out users get to see dashboard? <%= check_box_tag 'preferences[allow_dashboard_for_strangers]', true, System::Preferences.allow_dashboard_for_strangers %>
 <% end %>
+
+<% form_tag(system_preferences_update_path, {:id => 'allow-registrations'}) do %>
+  <%= hidden_field_tag 'preferences[allow_registrations_for_strangers]', false  %>
+  Strangers are allowed to register (without invitation)? <%= check_box_tag 'preferences[allow_registrations_for_strangers]', true, System::Preferences.allow_registrations_for_strangers %>
+<% end %>
