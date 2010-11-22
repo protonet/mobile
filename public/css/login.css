@@ -7,7 +7,7 @@ header.login {
 
 #login {
   min-height: 100px;
-  padding: 6px 20px 20px 30px;
+  padding: 6px 30px 20px 30px;
   width: 890px;
 }
 
@@ -23,6 +23,10 @@ header.login {
   padding: 2px 0;
   vertical-align: top;
   width: 432px;
+}
+
+#single-login #login, #single-login #login .form {
+  width: auto;
 }
 
 #login .form legend {
