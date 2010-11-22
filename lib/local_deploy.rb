@@ -4,7 +4,7 @@ class LocalDeploy
   ARCHIVE_NAME = "protonet"
   PACKING_TYPE = ".tar.gz"
   KEY = "adbasdbaskjdbjk1b23123kjasndjkbas"
-  DEPLOY_ROOT = "/home/protonet/dashboard"
+  DEPLOY_ROOT = "/home/protonet"
   APP_ROOT = "/dashboard"
   MAX_NUM_RELEASES = 5
 
@@ -30,6 +30,7 @@ class LocalDeploy
     end
 
     def create_directories
+      log "CREATING DIRECTORY STRUCTURE"
       create_directory "#{shared_path}/log"
       create_directory "#{shared_path}/db"
       create_directory "#{shared_path}/system"
@@ -53,21 +54,25 @@ class LocalDeploy
       FileUtils.cd current_path
       system "mysql -u root dashboard_production -e 'show tables;' 2>&1 > /dev/null"
       if $?.exitstatus != 0
+        log "SETTING UP DATABASE"
         system "RAILS_ENV=#{self.env} bundle exec rake db:setup"
       end
     end
 
     def get_code
+      log "GETTING CODE"
       FileUtils.cd "/tmp"
       system "wget http://releases.protonet.info/latest/#{KEY}"
     end
 
     def release_dir
+      log "SETTING UP RELEASE AND SHARED DIRECTORIES"
       FileUtils.mkdir_p shared_path if !File.exists? shared_path
       FileUtils.mkdir_p releases_path if !File.exists? releases_path
     end
 
     def unpack
+      log "UNPACKING CODE"
       if File.exists?("/tmp/#{ARCHIVE_NAME}#{PACKING_TYPE}")
         FileUtils.cd "/tmp"
         system "tar -xzf #{ARCHIVE_NAME}#{PACKING_TYPE}"
@@ -76,6 +81,7 @@ class LocalDeploy
     end
 
     def clean_up
+      log "CLEANING UP"
       all_releases = Dir["#{release_path}/*"].sort
       if (num_releases = all_releases.size) > MAX_NUM_RELEASES
         num_to_delete = num_releases - MAX_NUM_RELEASES
@@ -87,6 +93,7 @@ class LocalDeploy
     end
 
     def bundle
+      log "BUNDLER"
       shared_dir = File.join(shared_path, 'bundle')
       release_dir = File.join(release_path, '.bundle')
 
@@ -103,6 +110,7 @@ class LocalDeploy
     end
 
     def migrate
+      log "RUNNING MIGRATIONS"
       FileUtils.cd current_path
       system "RAILS_ENV=#{env} rake db:migrate"
     end
@@ -113,6 +121,7 @@ class LocalDeploy
     end
 
     def restart
+      log "RESTARTING"
       FileUtils.touch "#{current_path}/tmp/restart.txt"
     end
 
@@ -132,6 +141,10 @@ class LocalDeploy
 
     def latest_deploy
       "#{release_path}/#{Dir["#{release_path}/*"].sort.last}"
+    end
+
+    def log(message)
+      puts "***** #{message} *****"
     end
   end
 end

@@ -21,6 +21,7 @@ gem "daemon_controller", "0.2.5"
 gem "xmpp4r", "0.5"
 gem "xmpp4r-simple", "0.8.8"
 gem "sunspot_rails", :require => 'sunspot/rails'
+gem "sunspot_index_queue"
 gem "will_paginate", "2.3.14"
 gem "ruby-ip", "0.9.0"
 gem "hoptoad_notifier"
@@ -46,3 +47,4 @@ group :cucumber do
   gem "database_cleaner", "0.5.2"
   gem "pickle", "0.3.0"
 end
+

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101101213201) do
+ActiveRecord::Schema.define(:version => 20101122193025) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -72,6 +72,20 @@ ActiveRecord::Schema.define(:version => 20101101213201) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "sunspot_index_queue_entries", :force => true do |t|
+    t.string   "record_class_name",                                    :null => false
+    t.string   "record_id",                                            :null => false
+    t.boolean  "is_delete",                         :default => false, :null => false
+    t.datetime "run_at",                                               :null => false
+    t.integer  "priority",                          :default => 0,     :null => false
+    t.integer  "lock"
+    t.string   "error",             :limit => 4000
+    t.integer  "attempts",                          :default => 0,     :null => false
+  end
+
+  add_index "sunspot_index_queue_entries", ["record_class_name", "record_id"], :name => "sunspot_index_queue_entries_record"
+  add_index "sunspot_index_queue_entries", ["run_at", "record_class_name", "priority"], :name => "sunspot_index_queue_entries_run_at"
 
   create_table "system_preferences", :force => true do |t|
     t.string   "var",                       :null => false
