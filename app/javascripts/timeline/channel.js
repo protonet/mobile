@@ -1,7 +1,7 @@
 //= require "meep.js"
 //= require "../utils/browser_title.js"
 //= require "../utils/is_window_focused.js"
-//= require "../lib/jquery.inview.js"
+//= require "../lib/jquery.inview/jquery.inview.js"
 
 /**
  * @example

@@ -1,5 +1,6 @@
 //= require "../ui/modal_window.js"
 //= require "../utils/escape_html.js"
+//= require "../lib/jquery.inview/jquery.inview.js"
 
 /**
  * TODO:
@@ -12,6 +13,7 @@ protonet.timeline.Search = {
   initialize: function() {
     this.form        = $("#search-form");
     this.input       = this.form.find("input.search");
+    this.meepList    = $("<ul />", { className: "meeps" });
     this.modalWindow = protonet.ui.ModalWindow;
     
     this._observe();
@@ -128,19 +130,35 @@ protonet.timeline.Search = {
       return;
     }
     
-    var container = $("<ul />", { className: "meeps" });
-    this.modalWindow.update({ content: container });
+    this.modalWindow.update({ content: this.meepList.html("") });
     
     data.reverse().chunk(function(meepData, i) {
-      return new protonet.timeline.Meep(meepData).render(container);
-    }, function(meeps) {
-      meeps.chunk(function(meep) { meep.highlight(keyword); });
-    });
+      return new protonet.timeline.Meep(meepData).render(this.meepList);
+    }.bind(this), function(meeps) {
+      meeps.chunk(function(meep) { meep.highlight(keyword); }, this._afterRendering.bind(this));
+    }.bind(this));
   },
   
   renderHint: function(hint) {
     this.modalWindow.update({
       content: $("<p />", { html: hint, className: "no-meeps-available" })
     });
+  },
+  
+  _afterRendering: function() {
+    this._initEndlessScrolling();
+  },
+  
+  _initEndlessScrolling: function() {
+    var lastMeepInList = this.meepList.children(":last").addClass("separator");
+    
+    lastMeepInList.one("inview", function(event, visible) {
+      if (!visible) {
+        return;
+      }
+      
+      var lastMeepId = lastMeepInList.data("meep").id;
+      console.log("LOAD MORE");
+    }.bind(this));
   }
 };
