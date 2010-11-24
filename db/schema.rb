@@ -106,6 +106,7 @@ ActiveRecord::Schema.define(:version => 20101122193025) do
     t.datetime "updated_at"
     t.text     "text_extension"
     t.integer  "network_id",     :default => 1
+    t.integer  "reply_from"
   end
 
   create_table "users", :force => true do |t|
