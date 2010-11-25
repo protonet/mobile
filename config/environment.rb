@@ -68,7 +68,7 @@ end
 # Check systems in script/server mode (stuff like passenger runs them some other way?)
 if ENV['_'].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER)
   System::Services.start_all
-  
+
   at_exit do
     System::Services.stop_all
   end
@@ -85,3 +85,7 @@ if defined?(PhusionPassenger)
     end
   end
 end
+
+# solr_queue
+require 'solr_queue'
+
