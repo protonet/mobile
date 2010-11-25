@@ -10,6 +10,10 @@ protonet.text_extensions.render.flash = (function() {
         placeholderId = "swfobject-placeholder-" + index++;
     
     anchor.attr("id", placeholderId).click(function(event) {
+      if (!swfobject.hasFlashPlayerVersion("8")) {
+        return;
+      }
+      
       event.preventDefault();
       
       var callback = function(event) {

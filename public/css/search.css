@@ -8,6 +8,7 @@ input.search {
   font-size: 14px;
   width: 182px;
   background: url(../img/icn_search.png) 190px center no-repeat;
+  -webkit-appearance: none;
 }
 
 .modal-window-dialog.search {
