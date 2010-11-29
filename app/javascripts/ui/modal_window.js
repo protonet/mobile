@@ -76,9 +76,11 @@ protonet.ui.ModalWindow = (function($) {
      */
     var oldPaddingRight = parseInt($body.css("padding-right"), 10),
         scrollBarWidth  = protonet.utils.getScrollbarWidth();
-    $body.add("html")
-      .css("overflow", "hidden")
-      .css("padding-right", (oldPaddingRight + scrollBarWidth).px())
+    $body
+      .css({
+        "overflow": "hidden",
+        "padding-right": (oldPaddingRight + scrollBarWidth).px()
+      })
       .data("old-padding-right", oldPaddingRight);
     
     // Show the actual dialog
