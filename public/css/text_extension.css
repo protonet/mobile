@@ -136,6 +136,11 @@
   height: 81px !important;
 }
 
+.text-extension-results.flash object[data^='http://listen.grooveshark.com'] {
+  height: 100px !important;
+  width: 100px !important;
+}
+
 .text-extension-results.flash .media a:after {
   content: "\25BA";
   cursor: pointer;
