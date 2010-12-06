@@ -10,7 +10,7 @@
     var protonet = protonet || {};
     protonet.config = {
       base_url:                 location.protocol + "//" + location.host,
-      dispatching_server:       "<%= request.env["SERVER_NAME"] %>",
+      dispatching_server:       "<%= server_name %>",
       dispatching_server_port:  "<%= configatron.socket.port %>",
       token:                    "<%= current_user.communication_token %>",
       user_name:                "<%= current_user.display_name %>",

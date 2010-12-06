@@ -1,6 +1,15 @@
 var sys = require("sys");
 var fs  = require("fs");
 
+/*----------------------------------- CONFIG  ----------------------------------------*/
+var htmlTaskPort = 8124;
+process.argv.forEach(function(val){
+  var match;
+  if(match = val.match(/port=(\d+)/)) {
+    htmlTaskPort = parseInt(match[1], 10);
+  }
+});
+
 /*----------------------------------- SOCKET TASKS -----------------------------------*/
 var amqp = require('./modules/node-amqp/amqp');
 connection = amqp.createConnection({ host: "localhost", vhost: "/" });
@@ -18,14 +27,18 @@ connection.addListener("ready", function() {
     sys.puts(message.data);
     message = JSON.parse(message.data);
     
-    var publish = function(result) {
-      userExchange.publish("users." + message.user_id, { result: result, trigger: "workdone" });
+    var publish = function(result, trigger) {
+      userExchange.publish("users." + message.user_id, { result: result, trigger: (trigger + ".workdone") });
     };
     
     switch(message.task) {
       // example, remove for production
       case "eval":
-        publish(eval(message.javascript));
+        publish(eval(message.javascript), "eval");
+        break;
+      case "screenshot":
+        // debugger;
+        require("./tasks/screenshot").make_and_publish(message.url, publish);
         break;
       case "http_proxy":
         require("./tasks/http_proxy").get(message.url, publish);
@@ -34,33 +47,34 @@ connection.addListener("ready", function() {
   });
 });
 
-
-/*----------------------------------- HTTP TASKS -----------------------------------*/
-var htmlTaskPort = 8124;
-process.argv.forEach(function(val){
-  var match;
-  if(match = val.match(/port=(\d+)/)) {
-    htmlTaskPort = parseInt(match[1], 10);
-  }
-});
+/*----------------------------------- HTTP TASKS  ----------------------------------*/
+/*----------------------------------- SCREENSHOTS ----------------------------------*/
 var http      = require("http"),
     parseUrl  = require("url").parse;
 
 http.createServer(function(request, response) {
+
   var parsedUrl = parseUrl(request.url, true),
       params    = parsedUrl.query,
-      task      = parsedUrl.pathname.replace(/\//g, "");
-  
+      task      = parsedUrl.pathname.replace(/\//g, ""),
+      headers   = request.headers;
+
   switch(task) {
-    case "screenshot":
-      require("./tasks/screenshot").make(params, response);
+    case "screenshooter":
+      require("./tasks/screenshot").make_and_send(params.url, response);
       break;
+    case "image_proxy":
+      require("./tasks/image_proxy").proxy(params, headers, response);
+      break;
+    default:
+      response.writeHead(200, {'Content-Type': 'text/plain'});
+      response.end('WTF?\n');
   }
+  
 }).listen(htmlTaskPort);
 
-
 /*----------------------------------- STARTUP STUFF -----------------------------------*/
-var tmp_file = 'tmp/pids/node_' + htmlTaskPort + '.pid'
+var tmp_file = 'tmp/pids/node_' + htmlTaskPort + '.pid';
 fs.writeFile(tmp_file, process.pid.toString(), function (err) {
   if (err) throw err;
   console.log('Pid-file saved!');
@@ -69,6 +83,7 @@ sys.puts("started with pid: " + tmp_file);
 
 var stdin = process.openStdin();
 
+/*----------------------------------- SHUTDOWN STUFF ----------------------------------*/
 function shutdownTasks() {
   console.log('Cleaning pid file.');
   fs.unlinkSync(tmp_file);

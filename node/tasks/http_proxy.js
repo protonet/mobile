@@ -25,7 +25,7 @@ exports.get = function(url, callback) {
     });
     response.addListener("end", function() {
       sys.puts("http_proxy response end received.");
-      callback({ body: body.join(""), statusCode: response.statusCode });
+      callback({ body: body.join(""), statusCode: response.statusCode }, "http_proxy");
     });
   });
   request.end();

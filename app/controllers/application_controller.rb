@@ -48,7 +48,9 @@ class ApplicationController < ActionController::Base
         return redirect_to("/") unless [
           ["instruments", "index"],
           ["tweets", "create"],
-          ["system/files", "index"]
+          ["system/files", "index"],
+          ["system/files", "create"],
+          ["system/files", "show"]
         ].include?([params[:controller], params[:action]])
       end
     end

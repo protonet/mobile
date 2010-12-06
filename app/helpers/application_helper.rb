@@ -27,6 +27,14 @@ module ApplicationHelper
   def avatar_url(avatar)
     avatar ? "/images/avatars/#{avatar.id}" : '/img/user_picture.png'
   end
+  
+  def server_name
+    if request.env["SERVER_NAME"] == "_"
+      request.env["HTTP_HOST"].sub(/:[0-9]*/, "")
+    else
+      request.env["SERVER_NAME"]
+    end
+  end
 
   private
   

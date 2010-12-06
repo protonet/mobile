@@ -1,7 +1,7 @@
 protonet.media.Proxy = (function() {
   var imageDefaultSize = { width: 0, height: 0 }, // 0x0 => original size (Logic by Mr. Failveh)
       // Apache decodes urls before giving them to rails, therefore we need to double encode them
-      IMAGE_URL = "/images/externals/show?width={width}&height={height}&image_file_url={url}",
+      IMAGE_URL = "/image_proxy?width={width}&height={height}&url={url}",
       IMAGE_AVAILABLE_URL = "/images/externals/is_available?image_file_url={url}",
       HTTP_TIMEOUT = 5000;
   
@@ -10,13 +10,13 @@ protonet.media.Proxy = (function() {
    */
   function httpGet(url, onSuccess, onFailure) {
     var timeout = setTimeout(function() {
-      protonet.Notifications.unbind("workdone.http_proxy");
+      protonet.Notifications.unbind("http_proxy.workdone");
       onFailure();
     }, HTTP_TIMEOUT);
     
-    protonet.Notifications.bind("workdone.http_proxy", function(event, response) {
+    protonet.Notifications.bind("http_proxy.workdone", function(event, response) {
       clearTimeout(timeout);
-      protonet.Notifications.unbind("workdone.http_proxy");
+      protonet.Notifications.unbind("http_proxy.workdone");
       if (response.result && response.result.statusCode == 200) {
         onSuccess(response.result.body);
       } else {
@@ -48,7 +48,7 @@ protonet.media.Proxy = (function() {
   function getImageUrl(url, size) {
     size = $.extend({}, imageDefaultSize, size);
     return IMAGE_URL
-      .replace("{url}", encodeURIComponent(url))
+      .replace("{url}", url)
       .replace("{width}", size.width)
       .replace("{height}", size.height);
   }

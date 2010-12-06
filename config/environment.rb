@@ -58,7 +58,7 @@ require "#{RAILS_ROOT}/lib/fleximage_ext.rb"
 require 'mq'
 AMQP.settings[:vhost] = configatron.amqp.vhost.nil? ? '/' : configatron.amqp.vhost
 
-unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(PhusionPassenger)
+unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || (defined?(PhusionPassenger) && Rails.env == 'production')
   # this starts the eventmachine reactor in a new thread
   # since the Em.run block is blocking until stopped this will ensure
   # that amqp communications are not blocking the app at any time
@@ -66,7 +66,7 @@ unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || defined?(Phusio
 end
 
 # Check systems in script/server mode (stuff like passenger runs them some other way?)
-if ENV['_'].match(/script\/server/) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER)
+if (ENV['SERVER_SOFTWARE'].try(:match, /nginx/) && Rails.env != 'production' || ENV['_'].match(/script\/server/)) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER)
   System::Services.start_all
 
   at_exit do

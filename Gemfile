@@ -27,10 +27,7 @@ gem "ruby-ip", "0.9.0"
 gem "hoptoad_notifier"
 gem "devise", "1.0.8"
 gem "dudemeister-uuid4r", "0.1.3"
-
-group :production do
-  gem "passenger", "2.2.15"
-end
+gem "passenger", "3.0.0"
 
 group :test do
   gem "jeremymcanally-context", "0.5.5"

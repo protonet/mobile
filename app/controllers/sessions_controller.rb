@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
   prepend_before_filter :require_no_authentication, :only => [ :new, :create ]
+  skip_before_filter    :verify_authenticity_token, :only => [:create]
   include Devise::Controllers::InternalHelpers
 
   # WITH JSON RESPONSE       
