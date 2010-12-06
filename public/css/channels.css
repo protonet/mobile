@@ -6,6 +6,7 @@
   margin: 0 20px 15px 30px;
   padding: 0 0 0 15px;
   position: relative;
+  z-index: 5;
 }
 
 #channels ul {

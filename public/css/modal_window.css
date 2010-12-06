@@ -1,33 +1,41 @@
 .modal-window-shadow {
   background-color: rgba(0, 0, 0, 0.7);
   position: absolute;
-  overflow-y: scroll;
   top: 0;
   left: 0;
+  bottom: 0;
+  right: 0;
 }
 
 .modal-window-dialog {
   -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 1);
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 1);
   box-shadow: 0 0 10px rgba(0, 0, 0, 1);
-  position: absolute;
-  background-color: #fff;
-  min-width: 200px;
+  background: #fff;
+  position: relative;
+  width: 650px;
   min-height: 20px;
+  margin: 90px auto 0;
+}
+
+.modal-window-content {
   padding: 20px;
 }
 
-.modal-window-dialog,
+.modal-window-dialog > h2 {
+  background: rgba(72, 123, 255, 0.5);
+  background: -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 0.6), rgba(72, 123, 255, 0.3));
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.3)), to(rgba(72, 123, 255, 0.6)));
+  padding: 20px;
+}
+
 .modal-window-shadow {
   z-index: 5;
   display: none;
 }
 
-.modal-window-dialog > h2 {
-  margin-bottom: 15px;
-}
-
 .modal-window-close-link {
-  float: right;
-  margin: -35px -35px 0 0;
+  position: absolute;
+  top: -16px;
+  right: -16px;
 }

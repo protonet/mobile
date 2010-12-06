@@ -7,12 +7,8 @@ input.search {
   padding: 5px 27px 5px 5px;
   font-size: 14px;
   width: 182px;
-  background: url(../img/icn_search.png) 190px center no-repeat;
+  background: #fff url(../img/icn_search.png) 190px center no-repeat;
   -webkit-appearance: none;
-}
-
-.modal-window-dialog.search {
-  top: 90px !important;
 }
 
 .modal-window-dialog input.search {

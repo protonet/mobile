@@ -1,5 +1,3 @@
-//= require "../utils/get_scrollbar_width.js"
-
 /**
  * Modal Window
  * 
@@ -39,11 +37,9 @@ protonet.ui.ModalWindow = (function($) {
        if (event.keyCode == 27) { hide(); }
      });
      
-     $window.bind("resize.modal_window", function(event) {
-       position();
-     });
+     $window.bind("resize.modal_window scroll.modal_window", position);
      
-     elements.closeLink.bind("click.modal_window", hide);
+     elements.closeLink.add(elements.shadow).bind("click.modal_window", hide);
   }
   
   /**
@@ -70,21 +66,7 @@ protonet.ui.ModalWindow = (function($) {
       elements.shadow.fadeIn("fast");
     }
     
-    /**
-     * Removes scrollbar on body and replaces it width a padding-left to avoid visual weirdness
-     * TODO: This doesn't work on the iPad!
-     */
-    var oldPaddingRight = parseInt($body.css("padding-right"), 10),
-        scrollBarWidth  = protonet.utils.getScrollbarWidth();
-    $body
-      .css({
-        "overflow": "hidden",
-        "padding-right": (oldPaddingRight + scrollBarWidth).px()
-      })
-      .data("old-padding-right", oldPaddingRight);
-    
-    // Show the actual dialog
-    elements.dialog.attr({ "class": originalClassName }).addClass(currentClassName).show();
+    elements.dialog.attr({ "class": originalClassName }).addClass(currentClassName);
     position();
     
     protonet.Notifications.trigger("modal_window.shown");
@@ -95,12 +77,7 @@ protonet.ui.ModalWindow = (function($) {
   function hide() {
     currentClassName = null;
     
-    $body.css({
-      "overflow": "",
-      "padding-right": $body.data("old-padding-right")
-    });
-    
-    elements.dialog.attr({ "class": originalClassName }).add(elements.shadow).hide();
+    elements.shadow.hide();
     
     protonet.Notifications.trigger("modal_window.hidden");
     
@@ -108,35 +85,7 @@ protonet.ui.ModalWindow = (function($) {
   }
   
   function position() {
-    var viewport = {
-          width:  $window.width(),
-          height: $window.height()
-        },
-        dialog   = {
-          width:  elements.dialog.outerWidth(),
-          height: elements.dialog.outerHeight()
-        },
-        scroll   = {
-          left:   $window.scrollLeft(),
-          top:    $window.scrollTop()
-        },
-        top      = scroll.top + viewport.height / 2 - dialog.height / 2,
-        left     = scroll.left + viewport.width / 2 - dialog.width / 2;
-    
-    top  = top < 20 ? 20 : top;
-    left = left < 0 ? 0 : left;
-    
-    elements.shadow.css({
-      top:    scroll.top.px(),
-      left:   scroll.left.px(),
-      width:  viewport.width.px(),
-      height: viewport.height.px()
-    });
-    
-    elements.dialog.css({
-      top:  top.px(),
-      left: left.px()
-    });
+    elements.dialog.stop().animate({ top: $window.scrollTop().px() }, 1000);
     
     return this;
   }

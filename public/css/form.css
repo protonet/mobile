@@ -9,6 +9,7 @@
   min-height: 80px;
   padding: 2px;
   position: relative;
+  background: #fff;
 }
 
 #textarea-wrapper textarea {

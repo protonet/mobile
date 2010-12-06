@@ -2,43 +2,45 @@
 <html>
   <%= render :partial => 'shared/layout_head' %>
   <body>
-    <%= render :partial => 'shared/layout_basic_body' %>
+    <div class="inner-body">
+      <%= render :partial => 'shared/layout_basic_body' %>
     
-    <%- if current_user.stranger? -%>
-      <%= render :partial => 'sessions/registration_box' %>
-    <%- end -%>
-
-    <header<%= " class=\"login\"" if current_user.stranger? %>>
-      <a href="<%= root_path %>" class="logo">protonet – it's yours</a>
-      <a href="<%= root_path %>" class="monster default">change character</a>
-      <%- unless current_user.stranger? -%>
-        <ul id="user-navigation">
-          <li class="welcome">
-            <a href="<%= preferences_path %>">
-              <strong><%=h current_user.display_name %></strong>
-              <img src="<%= current_user.active_avatar_url %>" width="16" height="16">
-            </a>
-          </li>
-          <%- unless current_user.has_avatar? %>
-            <li class="change-avatar" tabindex="-1">
-              <%= link_to("upload avatar", preferences_path) %>
-            </li>
-          <%- end %>
-          <li class="account" tabindex="-1">
-            <%= link_to("account", preferences_path) %>
-          </li>
-          <li class="settings" tabindex="-1">
-            <a>settings</a>
-          </li>
-          <li class="logout" tabindex="-1">
-            <%= link_to("logout", logout_path) %>
-          </li>
-        </ul>
+      <%- if current_user.stranger? -%>
+        <%= render :partial => 'sessions/registration_box' %>
       <%- end -%>
-    </header>
+
+      <header<%= " class=\"login\"" if current_user.stranger? %>>
+        <a href="<%= root_path %>" class="logo">protonet – it's yours</a>
+        <a href="<%= root_path %>" class="monster default">change character</a>
+        <%- unless current_user.stranger? -%>
+          <ul id="user-navigation">
+            <li class="welcome">
+              <a href="<%= preferences_path %>">
+                <strong><%=h current_user.display_name %></strong>
+                <img src="<%= current_user.active_avatar_url %>" width="16" height="16">
+              </a>
+            </li>
+            <%- unless current_user.has_avatar? %>
+              <li class="change-avatar" tabindex="-1">
+                <%= link_to("upload avatar", preferences_path) %>
+              </li>
+            <%- end %>
+            <li class="account" tabindex="-1">
+              <%= link_to("account", preferences_path) %>
+            </li>
+            <li class="settings" tabindex="-1">
+              <a>settings</a>
+            </li>
+            <li class="logout" tabindex="-1">
+              <%= link_to("logout", logout_path) %>
+            </li>
+          </ul>
+        <%- end -%>
+      </header>
     
-    <%= yield %>
+      <%= yield %>
     
-    <%= render :partial => 'shared/layout_footer' %>
+      <%= render :partial => 'shared/layout_footer' %>
+    </div>
   </body>
 </html>
