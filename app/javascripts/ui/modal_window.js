@@ -26,6 +26,8 @@ protonet.ui.ModalWindow = (function($) {
     elements.shadow.append(elements.dialog).appendTo($body);
     elements.closeLink.add(elements.headline).add(elements.content).appendTo(elements.dialog);
     
+    elements.dialog.queue();
+    
     _observe();
   }
   
@@ -36,7 +38,9 @@ protonet.ui.ModalWindow = (function($) {
     $document.bind("keydown.modal_window", function(event) {
        if (event.keyCode == 27) { hide(); }
      });
-     $window.bind("resize.modal_window scroll.modal_window", position);
+     $window
+      .bind("scroll.modal_window", position)
+      .bind("resize.modal_window", resize);
      elements.dialog.bind("click", false);
      elements.closeLink.add(elements.shadow).bind("click.modal_window", hide);
   }
@@ -66,7 +70,9 @@ protonet.ui.ModalWindow = (function($) {
     }
     
     elements.dialog.attr({ "class": originalClassName }).addClass(currentClassName);
-    position();
+    
+    position(true);
+    resize(true);
     
     protonet.Notifications.trigger("modal_window.shown");
     
@@ -77,15 +83,29 @@ protonet.ui.ModalWindow = (function($) {
     currentClassName = null;
     
     elements.shadow.hide();
-    
     protonet.Notifications.trigger("modal_window.hidden");
     
     return this;
   }
   
-  function position() {
-    elements.dialog.stop().animate({ top: $window.scrollTop().px() }, 1000);
+  function position(immediately) {
+    var top = ($window.scrollTop() + 90).px();
+    if (immediately === true) {
+      elements.dialog.css("top", top);
+    } else {
+      elements.dialog.stop(true).delay(500).animate({ top: top }, 500);
+    }
     
+    return this;
+  }
+  
+  function resize(immediately) {
+    var height = ($window.height() - 2 * 90 - elements.headline.outerHeight()).px();
+    if (immediately === true) {
+      elements.content.css("height", height);
+    } else {
+      elements.content.stop(true).delay(500).animate({ height: height }, 500);
+    }
     return this;
   }
   
