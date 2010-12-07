@@ -36,9 +36,8 @@ protonet.ui.ModalWindow = (function($) {
     $document.bind("keydown.modal_window", function(event) {
        if (event.keyCode == 27) { hide(); }
      });
-     
      $window.bind("resize.modal_window scroll.modal_window", position);
-     
+     elements.dialog.bind("click", false);
      elements.closeLink.add(elements.shadow).bind("click.modal_window", hide);
   }
   
