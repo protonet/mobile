@@ -16,17 +16,22 @@ input.search {
   background-position: 580px;
 }
 
-.modal-window-dialog .meeps {
+.modal-window-dialog.search .meeps {
   margin: 0 -20px;
   width: 650px;
 }
 
-.modal-window-dialog .meeps li:last-child {
+.modal-window-dialog.search .meeps li:last-child {
   margin-bottom: 0;
 }
 
-.modal-window-dialog .no-meeps-available {
+.modal-window-dialog.search .no-meeps-available {
   display: block;
+}
+
+.modal-window-dialog.search .modal-window-content {
+  padding-left: 45px;
+  margin-left: -25px;
 }
 
 .modal-window-dialog.loading input.search {
