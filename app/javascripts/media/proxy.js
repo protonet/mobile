@@ -1,7 +1,5 @@
 protonet.media.Proxy = (function() {
-  var imageDefaultSize = { width: 0, height: 0 }, // 0x0 => original size (Logic by Mr. Failveh)
-      // Apache decodes urls before giving them to rails, therefore we need to double encode them
-      IMAGE_URL = "/image_proxy?width={width}&height={height}&url={url}",
+  var IMAGE_URL = "/image_proxy?url={url}",
       IMAGE_AVAILABLE_URL = "/images/externals/is_available?image_file_url={url}",
       HTTP_TIMEOUT = 5000;
   
@@ -32,30 +30,19 @@ protonet.media.Proxy = (function() {
   }
   
   /**
-   * Asynchronously checks if an image is already cached
-   * callback is invoked with boolean status parameter
-   */
-  function isImageAvailable(url, callback) {
-    $.getJSON(IMAGE_AVAILABLE_URL.replace("{url}", encodeURIComponent(url)), function(response) {
-      callback(response.is_available);
-    });
-  }
-  
-  /**
    * Get image proxy url
    * Optional size parameter causes server side cropping
    */
   function getImageUrl(url, size) {
-    size = $.extend({}, imageDefaultSize, size);
-    return IMAGE_URL
-      .replace("{url}", url)
-      .replace("{width}", size.width)
-      .replace("{height}", size.height);
+    var imageUrl = IMAGE_URL.replace("{url}", encodeURIComponent(url));
+    if (size) {
+      imageUrl + "&width=" + size.width + "&height=" + size.height;
+    }
+    return imageUrl;
   }
   
   return {
     httpGet: httpGet,
-    isImageAvailable: isImageAvailable,
     getImageUrl: getImageUrl
   };
 })();

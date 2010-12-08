@@ -1,5 +1,4 @@
 source :gemcutter
-source "http://gems.github.com"
 
 gem "rails", "2.3.5"
 gem "configatron", "2.6.3"
@@ -27,7 +26,7 @@ gem "ruby-ip", "0.9.0"
 gem "hoptoad_notifier"
 gem "devise", "1.0.8"
 gem "dudemeister-uuid4r", "0.1.3"
-gem "passenger", "3.0.0"
+gem "passenger_dudemeister", "3.0.1"
 
 group :test do
   gem "jeremymcanally-context", "0.5.5"

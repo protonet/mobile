@@ -51,6 +51,8 @@ exports.proxy = function(params, headers, response) {
           sys.puts("Done resizing.");
           callback(to);
         });
+    } else {
+      callback(from);
     }
   }
   

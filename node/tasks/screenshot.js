@@ -36,9 +36,10 @@ exports.make_and_send = function(url, response) {
       directory     = "public/externals/screenshots",
       fileName      = process.cwd() + "/" + directory + "/" + baseName + "-clipped.png",
       // DANGER TODO FIXME -> escape url or sanitize it
-      sanitizedUrl  = url;
+      sanitizedUrl  = url.replace('"', '');
 
   function sendScreenshot(fileName) {
+    console.log('sending: ' + fileName);
     screenshot_requests[fileName].forEach(function (r) {
       r.writeHead(200, { 'Content-Type': 'image/png'});
       fs.createReadStream(fileName)
