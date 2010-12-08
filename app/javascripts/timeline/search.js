@@ -10,6 +10,8 @@
  *  - Speed!
  */
 protonet.timeline.Search = {
+  RESULTS_COUNT: 10,
+  
   initialize: function() {
     this.form        = $("#search-form");
     this.input       = this.form.find("input.search");
@@ -93,8 +95,9 @@ protonet.timeline.Search = {
     
     this.currentXhr = $.ajax({
       data: {
-        search_term: keyword,
-        channel_id:  0
+        search_term:    keyword,
+        results_count:  this.RESULTS_COUNT,
+        channel_id:     0
       },
       url:     "/search",
       beforeSend: function() {
@@ -145,8 +148,10 @@ protonet.timeline.Search = {
     });
   },
   
-  _afterRendering: function() {
-    this._initEndlessScrolling();
+  _afterRendering: function(meeps) {
+    if (meeps.length >= this.RESULTS_COUNT) {
+      this._initEndlessScrolling();
+    }
   },
   
   _initEndlessScrolling: function() {
