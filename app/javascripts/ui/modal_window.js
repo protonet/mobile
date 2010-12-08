@@ -1,3 +1,5 @@
+//= require "../utils/get_scrollbar_width.js"
+
 /**
  * Modal Window
  * 
@@ -8,6 +10,7 @@
  */
 protonet.ui.ModalWindow = (function($) {
   var elements          = {},
+      scrollbarWidth    = 0,
       currentClassName  = null,
       originalClassName = null,
       $document         = $(document),
@@ -74,6 +77,15 @@ protonet.ui.ModalWindow = (function($) {
     position(true);
     resize(true);
     
+    var originalPaddingRight = $body.css("padding-right");
+    scrollbarWidth = scrollbarWidth || protonet.utils.getScrollbarWidth();
+    
+    $body
+      .css({
+        "overflow-y": "hidden",
+        "padding-right": (parseInt(originalPaddingRight, 10) + scrollbarWidth).px()
+      });
+    
     protonet.Notifications.trigger("modal_window.shown");
     
     return this;
@@ -83,6 +95,13 @@ protonet.ui.ModalWindow = (function($) {
     currentClassName = null;
     
     elements.shadow.hide();
+    
+    $body
+      .css({
+        "overflow-y": "",
+        "padding-right": ""
+      });
+    
     protonet.Notifications.trigger("modal_window.hidden");
     
     return this;
@@ -126,4 +145,3 @@ protonet.ui.ModalWindow = (function($) {
     getClassName: getClassName
   };
 })(jQuery);
-
