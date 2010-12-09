@@ -10,6 +10,7 @@
     var protonet = protonet || {};
     protonet.config = {
       base_url:                 location.protocol + "//" + location.host,
+      node_base_url:            <%= server_software != 'nginx' ? '"http://localhost:8124"' : 'location.protocol + "//" + location.host' %>,
       dispatching_server:       "<%= server_name %>",
       dispatching_server_port:  "<%= configatron.socket.port %>",
       token:                    "<%= current_user.communication_token %>",
@@ -20,7 +21,7 @@
       user_is_admin:            <%= current_user.admin?.to_json %>, 
       session_id:               "<%= cookies['_rails_dashboard_session'] %>",
       authenticity_token:       "<%= form_authenticity_token %>",
-      server:                   "<%= request.env['SERVER_SOFTWARE'] && request.env['SERVER_SOFTWARE'].match(/^\w*/)[0] %>",
+      server:                   "<%= server_software %>",
       availableChannels:        <%= get_channel_mapping_as_json %>,
       debugMode:                <%= configatron.log_event_notifications.to_json %>
     };

@@ -309,8 +309,8 @@ header .hearts {
 =========================================================================== */
 #single-login {
   position: absolute;
-  top: 50%;
-  margin-top: -180px;
+/*  top: 50%;*/
+/*  margin-top: -180px;*/
 }
 
 #single-login .errorExplanation {

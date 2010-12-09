@@ -1,5 +1,5 @@
 protonet.media.Proxy = (function() {
-  var IMAGE_URL = "/image_proxy?url={url}",
+  var IMAGE_URL = protonet.config.node_base_url + "/image_proxy?url={url}",
       IMAGE_AVAILABLE_URL = "/images/externals/is_available?image_file_url={url}",
       HTTP_TIMEOUT = 5000;
   
