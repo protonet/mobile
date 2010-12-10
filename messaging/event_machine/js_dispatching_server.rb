@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
-require 'rubygems'
-require 'eventmachine'
+# require 'rubygems'
+# require 'eventmachine'
 # removed I'm getting a no such file to load -- evma_httpserver (LoadError)
 # require 'evma_httpserver'
 
