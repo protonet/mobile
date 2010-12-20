@@ -305,12 +305,11 @@ header .hearts {
   text-align: center;
 }
 
-/* =HEADER
+/* =SINGLE LOGIN
 =========================================================================== */
 #single-login {
-  position: absolute;
-/*  top: 50%;*/
-/*  margin-top: -180px;*/
+  width: 890px;
+  margin: 100px auto 0;
 }
 
 #single-login .errorExplanation {
