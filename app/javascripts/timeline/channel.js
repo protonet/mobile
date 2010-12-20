@@ -121,6 +121,10 @@ protonet.timeline.Channel.prototype = {
         if (meepData.channel_id == this.data.id) {
           this.data.meeps.push(meepData);
         }
+      }.bind(this))
+      
+      .bind("channel.rendered_more", function(e, channelList, data) {
+        Array.prototype.unshift.apply(this.data.meeps, data.meeps || []);
       }.bind(this));
     
     /**
