@@ -22,7 +22,6 @@ protonet.timeline.Channel = function(data, link) {
   this.link         = $(link);
   this.data         = data;
   this.$window      = $(window);
-  this.latestMeep   = null;
   
   this.unreadReplies = 0;
   this.unreadMeeps   = 0;
@@ -61,17 +60,6 @@ protonet.timeline.Channel.prototype = {
       
       this._notifications();
       this._replyNotifications(meepData, instance);
-    }.bind(this));
-    
-    /**
-     * Store new meep in data obj
-     */
-    protonet.Notifications.bind("meep.rendered", function(e, meepElement, meepData, instance) {
-      if (meepData.channel_id != this.data.id) {
-        return;
-      }
-      
-      this.latestMeep = instance;
     }.bind(this));
     
     /**
@@ -263,7 +251,7 @@ protonet.timeline.Channel.prototype = {
    */
   _renderMeep: function(meepDataOrForm, channelList, post) {
     var meep              = new protonet.timeline.Meep(meepDataOrForm),
-        previousMeep      = this.latestMeep;
+        previousMeep      = channelList.find(":first").data("instance");
     
     if (previousMeep && this._shouldBeMerged(previousMeep, meep)) {
       meep.mergeWith(previousMeep.element);
