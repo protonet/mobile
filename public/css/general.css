@@ -309,7 +309,9 @@ header .hearts {
 =========================================================================== */
 #single-login {
   width: 890px;
-  margin: 100px auto 0;
+  margin: 0 auto;
+  position: relative;
+  top: 100px;
 }
 
 #single-login .errorExplanation {
