@@ -11,6 +11,7 @@
 protonet.ui.ModalWindow = (function($) {
   var elements          = {},
       scrollbarWidth    = 0,
+      offset            = 50,
       currentClassName  = null,
       originalClassName = null,
       $document         = $(document),
@@ -108,7 +109,7 @@ protonet.ui.ModalWindow = (function($) {
   }
   
   function position(immediately) {
-    var top = ($window.scrollTop() + 90).px();
+    var top = ($window.scrollTop() + offset).px();
     if (immediately === true) {
       elements.dialog.css("top", top);
     } else {
@@ -119,11 +120,13 @@ protonet.ui.ModalWindow = (function($) {
   }
   
   function resize(immediately) {
-    var height = ($window.height() - 2 * 90 - elements.headline.outerHeight()).px();
+    var height = ($window.height() - 2 * offset - elements.headline.outerHeight()).px();
     if (immediately === true) {
       elements.content.css("height", height);
     } else {
-      elements.content.stop(true).delay(500).animate({ height: height }, 500);
+      elements.content.stop(true).delay(500).animate({ height: height }, 500, function() {
+        elements.content.css({ overflowX: "", overflowY: "" });
+      });
     }
     return this;
   }

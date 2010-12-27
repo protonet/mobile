@@ -119,7 +119,7 @@
   color: red;
 }
 
-#timeline-loading-indicator {
+.meep-loading-indicator {
   display: none;
   height: 48px;
   background: url(/img/icn_loading_big.gif) center center no-repeat;

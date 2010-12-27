@@ -12,6 +12,8 @@
 protonet.timeline.Search = {
   RESULTS_COUNT: 10,
   
+  currentXhrs: [],
+  
   initialize: function() {
     this.form        = $("#search-form");
     this.input       = this.form.find("input.search");
@@ -48,11 +50,12 @@ protonet.timeline.Search = {
   },
   
   _cancel: function() {
-    if (this.currentXhr) {
-      this.currentXhr.aborted = true;
-      this.currentXhr.abort();
-      this.currentXhr = null;
-    }
+    $.each(this.currentXhrs, function(i, xhr) {
+      xhr.aborted = true;
+      xhr.abort();
+    });
+    
+    this.currentXhrs = [];
   },
   
   show: function(keyword) {
@@ -79,6 +82,32 @@ protonet.timeline.Search = {
     this.bigInput.trigger("keyup");
   },
   
+  load: function(keyword, page, callback) {
+    this._cancel();
+    
+    this.currentXhrs.push($.ajax({
+      data: {
+        search_term:    keyword,
+        results_count:  this.RESULTS_COUNT,
+        channel_id:     0,
+        page:           page || 1
+      },
+      url: "/search",
+      beforeSend: function() {
+        this.modalWindow.get("dialog").addClass("loading");
+      }.bind(this),
+      success: function(data) {
+        callback && callback(data);
+      },
+      complete: function(xhr) {
+        if (xhr.aborted) {
+          return;
+        }
+        this.modalWindow.get("dialog").removeClass("loading");
+      }.bind(this)
+    }));
+  },
+  
   search: function(keyword, callback) {
     if (keyword == this.keyword) {
       return;
@@ -88,57 +117,30 @@ protonet.timeline.Search = {
     this.keyword = keyword;
     
     if (!keyword) {
-      this.renderHint( "Please enter a keyword");
-      return;
-    }
-    this._cancel();
-    
-    this.currentXhr = $.ajax({
-      data: {
-        search_term:    keyword,
-        results_count:  this.RESULTS_COUNT,
-        channel_id:     0
-      },
-      url:     "/search",
-      beforeSend: function() {
-        setTimeout(function() {
-          this.modalWindow.get("dialog").addClass("loading");
-        }.bind(this), 0);
-      }.bind(this),
-      success: this.render.bind(this, keyword),
-      error:   function(xhr) {
-        if (xhr.aborted) {
-          return;
-        }
-        protonet.Notifications.trigger(
-          "flash_message.error",
-          protonet.t("SEARCH_ERROR").replace("{keyword}", keyword)
-        );
-      }.bind(this),
-      complete: function(xhr) {
-        if (xhr.aborted) {
-          return;
-        }
-        this.modalWindow.get("dialog").removeClass("loading");
-      }.bind(this)
-    });
-  },
-  
-  /**
-   * TODO: Need for speed here, OPTIMIZE the shit out of this (cblum)
-   */
-  render: function(keyword, data) {
-    if (!data.length) {
-      this.renderHint("No results found");
+      this.renderHint("Please enter a keyword");
       return;
     }
     
     this.modalWindow.update({ content: this.meepList.html("") });
     
+    this.load(keyword, this.page, function(data) {
+      this.render(this.meepList, data, this._afterRendering.bind(this));
+    }.bind(this));
+  },
+  
+  /**
+   * TODO: Need for speed here, OPTIMIZE the shit out of this (cblum)
+   */
+  render: function(container, data, callback) {
+    if (!data.length) {
+      this.renderHint("No results found");
+      return;
+    }
+    
     data.reverse().chunk(function(meepData, i) {
-      return new protonet.timeline.Meep(meepData).render(this.meepList);
-    }.bind(this), function(meeps) {
-      meeps.chunk(function(meep) { meep.highlight(keyword); }, this._afterRendering.bind(this));
+      return new protonet.timeline.Meep(meepData).render(container);
+    }, function(meeps) {
+      meeps.chunk(function(meep) { meep.highlight(this.keyword); }.bind(this), callback);
     }.bind(this));
   },
   
@@ -154,7 +156,7 @@ protonet.timeline.Search = {
     }
   },
   
-  _initEndlessScrolling: function() {
+  _initEndlessScrolling: function(key) {
     var lastMeepInList = this.meepList.children(":last").addClass("separator");
     
     lastMeepInList.one("inview", function(event, visible) {
@@ -162,8 +164,16 @@ protonet.timeline.Search = {
         return;
       }
       
-      var lastMeepId = lastMeepInList.data("meep").id;
-      console.log("LOAD MORE");
+      this.indicator = this.indicator || $("<div>", { className: "meep-loading-indicator" }).insertAfter(this.meepList).show();
+      
+      this.load(this.keyword, ++this.page, function(data) {
+        var tempContainer = $("<ul>");
+        this.render(tempContainer, data, function(meeps) {
+          this.meepList.append(tempContainer.children());
+          this._afterRendering(meeps);
+          this.indicator.remove();
+        }.bind(this));
+      }.bind(this));
     }.bind(this));
   }
 };
