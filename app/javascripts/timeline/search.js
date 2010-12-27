@@ -132,7 +132,7 @@ protonet.timeline.Search = {
    * TODO: Need for speed here, OPTIMIZE the shit out of this (cblum)
    */
   render: function(container, data, callback) {
-    if (!data.length) {
+    if (!data.length && this.page == 1) {
       this.renderHint("No results found");
       return;
     }
