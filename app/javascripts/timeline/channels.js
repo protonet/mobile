@@ -36,7 +36,6 @@ protonet.timeline.Channels = {
          if (!id) {
            return;
          }
-         
          protonet.Notifications.trigger("channel.change", id);
          event.preventDefault();
       }.bind(this))

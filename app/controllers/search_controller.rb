@@ -10,7 +10,7 @@ class SearchController < ApplicationController
         render :json => @search_results.hits.map {|hit|
           meep = hit.instance
           meep.text_extension = JSON.parse(meep.text_extension) rescue nil
-          meep.attributes.merge({ :avatar => meep.user.active_avatar_url, :channel_id => "search" })
+          meep.attributes.merge({ :avatar => meep.user.active_avatar_url, :channel_id => "search", :posted_in => meep.channels.first.id })
         }.to_json
       end
       format.html {}

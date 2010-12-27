@@ -45,8 +45,10 @@ protonet.ui.ModalWindow = (function($) {
      $window
       .bind("scroll.modal_window", position)
       .bind("resize.modal_window", resize);
-     elements.dialog.bind("click", false);
-     elements.closeLink.add(elements.shadow).bind("click.modal_window", hide);
+     elements.closeLink.bind("click.modal_window", hide);
+     elements.shadow.bind("click.modal_window", function(event) {
+       if (event.target == elements.shadow[0]) { hide(); }
+     });
   }
   
   /**

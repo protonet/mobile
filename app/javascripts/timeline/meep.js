@@ -114,7 +114,7 @@ protonet.timeline.Meep.prototype = {
    * Private, please use public "render" or "mergeWith"
    */
   _render: function(template, container) {
-    var replyFromChannelTemplate, templateData;
+    var replyFromChannelTemplate, postedInChannelTemplate, templateData;
     
     if (this.data.reply_from) {
       replyFromChannelTemplate = new protonet.utils.Template("reply-from-channel-template", {
@@ -123,9 +123,17 @@ protonet.timeline.Meep.prototype = {
       }).toString();
     }
     
+    if (this.data.posted_in) {
+      postedInChannelTemplate = new protonet.utils.Template("posted-in-channel-template", {
+        channel_id: this.data.posted_in,
+        channel_name: protonet.timeline.Channels.getChannelName(this.data.posted_in)
+      }).toString();
+    }
+    
     templateData = $.extend({}, this.data, {
       converted_message: this._convertMessage(this.data.message),
-      reply_from: replyFromChannelTemplate || ""
+      reply_from: replyFromChannelTemplate || "",
+      posted_in:  postedInChannelTemplate || ""
     });
     
     this.element = new protonet.utils.Template(template, templateData)
