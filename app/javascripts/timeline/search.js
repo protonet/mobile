@@ -164,7 +164,7 @@ protonet.timeline.Search = {
         return;
       }
       
-      this.indicator = this.indicator || $("<div>", { className: "meep-loading-indicator" }).insertAfter(this.meepList).show();
+      this.indicator = (this.indicator || $("<div>", { className: "meep-loading-indicator" })).insertAfter(this.meepList).show();
       
       this.load(this.keyword, ++this.page, function(data) {
         var tempContainer = $("<ul>");
