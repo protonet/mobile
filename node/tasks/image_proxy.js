@@ -5,6 +5,7 @@ var http      = require("http"),
     path      = require('path'),
     fs        = require("fs"),
     md5       = require("./../modules/md5").create,
+    child     = require('child_process'),
     image_requests = {};
 
 
@@ -24,14 +25,20 @@ exports.proxy = function(params, headers, response) {
   function sendImage(fileName) {
     // once done send all
     image_requests[fileName].forEach(function (r) {
-      r.writeHead(200)
-      fs.createReadStream(fileName)
-        .addListener('data', function(data){
-          r.write(data, 'binary');
-        })
-        .addListener('end', function(){
-          r.end();
-        });
+      child.exec("file --mime -b " + fileName, function(error, stdout, stderr) {
+        if(stdout && stdout.match(/(.*);/)) {
+          r.writeHead(200, {'Content-Type': stdout.match(/(.*);/)[1]})
+        } else {
+          r.writeHead(200)
+        }
+        fs.createReadStream(fileName)
+          .addListener('data', function(data){
+            r.write(data, 'binary');
+          })
+          .addListener('end', function(){
+            r.end();
+          });
+      });
     });
   }
   
