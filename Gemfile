@@ -1,5 +1,5 @@
 source :gemcutter
-source 'http://rubygems.org'
+source 'http://gems.github.com/'
 
 gem "rails", "2.3.5"
 gem "configatron", "2.6.3"
