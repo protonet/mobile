@@ -1,4 +1,5 @@
 source :gemcutter
+source 'http://rubygems.org'
 
 gem "rails", "2.3.5"
 gem "configatron", "2.6.3"
@@ -19,7 +20,7 @@ gem "bundler", "0.9.26"
 gem "daemon_controller", "0.2.5"
 gem "xmpp4r", "0.5"
 gem "xmpp4r-simple", "0.8.8"
-gem "sunspot_rails", :require => 'sunspot/rails'
+gem "sunspot_rails", "1.1.0", :require => 'sunspot/rails'
 gem "sunspot_index_queue"
 gem "will_paginate", "2.3.14"
 gem "ruby-ip", "0.9.0"
