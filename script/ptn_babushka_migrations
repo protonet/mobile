@@ -1,6 +1,6 @@
 #!/usr/bin/expect
 
-log_file -noappend ./test.log
+log_file -noappend /tmp/ptn_update_migrations.log
 
 # never time out
 set timeout -1
