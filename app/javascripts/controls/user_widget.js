@@ -181,7 +181,7 @@ protonet.controls.UserWidget.prototype = {
     for (var i in this.usersData) {
       var user = this.usersData[i];
       if (user.isStranger && !user.isOnline) {
-        user.element.detach();
+        user.element.remove();
         delete this.usersData[i];
       }
     }

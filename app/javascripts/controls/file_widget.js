@@ -43,14 +43,14 @@ protonet.controls.FileWidget.prototype = {
         if (data.channel_id != this.channelId) {
           return;
         }
-        $("#file-widget [data-file-path='" + protonet.utils.escapeForCssQuery(data.path) + "']").detach();
+        $("#file-widget [data-file-path='" + protonet.utils.escapeForCssQuery(data.path) + "']").remove();
       }.bind(this))
       
       .bind("file.added", function(event, data) {
         if (data.channel_id != this.channelId || data.path != this.path) {
           return;
         }
-        $("#file-widget [data-file-path$='/" + protonet.utils.escapeForCssQuery(data.file_name) + "']").detach();
+        $("#file-widget [data-file-path$='/" + protonet.utils.escapeForCssQuery(data.file_name) + "']").remove();
         
         this.renderItem("file", data.file_name)
           .css("backgroundColor", "#ffff99")
@@ -61,7 +61,7 @@ protonet.controls.FileWidget.prototype = {
         if (data.channel_id != this.channelId) {
           return;
         }
-        $("#file-widget [data-directory-path='" + protonet.utils.escapeForCssQuery(data.path) + "']").detach();
+        $("#file-widget [data-directory-path='" + protonet.utils.escapeForCssQuery(data.path) + "']").remove();
       }.bind(this))
       
       .bind("directory.added", function(event, data) {
@@ -69,7 +69,7 @@ protonet.controls.FileWidget.prototype = {
           return;
         }
         
-        $("#file-widget [data-directory-path$='/" + protonet.utils.escapeForCssQuery(data.directory_name) + "']").detach();
+        $("#file-widget [data-directory-path$='/" + protonet.utils.escapeForCssQuery(data.directory_name) + "']").remove();
         
         this.renderItem("directory", data.directory_name, true)
           .css("backgroundColor", "#ffff99")
@@ -340,7 +340,7 @@ protonet.controls.FileWidget.prototype = {
   
   createFolderInput: function() {
     var li = this.renderItem("directory", "", true);
-    li.children().detach();
+    li.children().remove();
     
     var input = $("<input />", {
       value: protonet.t("DEFAULT_DIRECTORY")
@@ -362,7 +362,7 @@ protonet.controls.FileWidget.prototype = {
           $(this).trigger("blur");
         }
         if (event.keyCode == 27) {
-          li.detach();
+          li.remove();
         }
       },
       blur: function() {
@@ -436,7 +436,7 @@ protonet.controls.FileWidget.prototype = {
     this.path = path;
     this.data = data;
     
-    this.list.attr("scrollTop", 0).children().detach();
+    this.list.attr("scrollTop", 0).children().remove();
     
     /**
      * Chunk it for performance reasons, we never know how many files have

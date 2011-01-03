@@ -15,7 +15,7 @@ protonet.utils.getScrollbarWidth = (function() {
       testElement2 = testElement1.clone().css("overflow", "scroll");
       testElements = testElement1.add(testElement2).appendTo("body");
       CACHED_WIDTH = (testElement1[0].clientWidth - testElement2[0].clientWidth);
-      testElements.detach();
+      testElements.remove();
     }
     
     return CACHED_WIDTH;

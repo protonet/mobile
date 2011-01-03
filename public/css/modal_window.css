@@ -15,6 +15,7 @@
   position: relative;
   width: 650px;
   margin: 0 auto;
+  border-bottom: 4px solid #999;
 }
 
 .modal-window-content {
@@ -28,6 +29,9 @@
   background: rgba(72, 123, 255, 0.5);
   background: -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 0.6), rgba(72, 123, 255, 0.3));
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.3)), to(rgba(72, 123, 255, 0.6)));
+  -webkit-box-shadow: 0 0 10px #999;
+  -moz-box-shadow: 0 0 10px #999;
+  box-shadow: 0 0 10px #999;
   padding: 20px;
 }
 

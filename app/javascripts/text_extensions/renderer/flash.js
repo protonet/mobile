@@ -23,7 +23,7 @@ protonet.text_extensions.render.flash = (function() {
             className: "flash-close-link close-link",
             html: "X",
             click: function() {
-              $(this).detach();
+              $(this).remove();
               $(flashElement).replaceWith(anchor);
               anchor.css("visibility", "");
             }

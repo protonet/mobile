@@ -40,15 +40,19 @@ protonet.ui.ModalWindow = (function($) {
      * Close when user hits esc key
      */
     $document.bind("keydown.modal_window", function(event) {
-       if (event.keyCode == 27) { hide(); }
-     });
-     $window
+      if (event.keyCode == 27) { hide(); }
+    });
+    $window
       .bind("scroll.modal_window", position)
       .bind("resize.modal_window", resize);
-     elements.closeLink.bind("click.modal_window", hide);
-     elements.shadow.bind("click.modal_window", function(event) {
-       if (event.target == elements.shadow[0]) { hide(); }
-     });
+    elements.shadow
+      .bind("mousedown.modal_window", function(event) { event.preventDefault(); })
+      .bind("click.modal_window", function(event) {
+        if (event.target == elements.shadow[0]) { hide(); }
+      });
+      
+    elements.closeLink.bind("click.modal_window", hide);
+    elements.dialog.bind("mousedown.modal_window", function(event) { event.stopPropagation(); });
   }
   
   /**
