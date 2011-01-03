@@ -31,8 +31,6 @@ protonet.ui.ModalWindow = (function($) {
     elements.closeLink.add(elements.headline).add(elements.content).appendTo(elements.dialog);
     
     elements.dialog.queue();
-    
-    _observe();
   }
   
   function _observe() {
@@ -42,7 +40,9 @@ protonet.ui.ModalWindow = (function($) {
     $document.bind("keydown.modal_window", function(event) {
       if (event.keyCode == 27) { hide(); }
     });
+    
     $window
+      .bind("mousewheel.modal_window", false)
       .bind("scroll.modal_window", position)
       .bind("resize.modal_window", resize);
     elements.shadow
@@ -50,9 +50,17 @@ protonet.ui.ModalWindow = (function($) {
       .bind("click.modal_window", function(event) {
         if (event.target == elements.shadow[0]) { hide(); }
       });
-      
+    
     elements.closeLink.bind("click.modal_window", hide);
-    elements.dialog.bind("mousedown.modal_window", function(event) { event.stopPropagation(); });
+    elements.dialog.bind("mousedown.modal_window mousewheel.modal_window", function(event) { event.stopPropagation(); });
+  }
+  
+  function _unobserve() {
+    $window.unbind(".modal_window");
+    $document.unbind(".modal_window");
+    elements.shadow.unbind(".modal_window");
+    elements.closeLink.unbind(".modal_window");
+    elements.dialog.unbind(".modal_window");
   }
   
   /**
@@ -81,6 +89,7 @@ protonet.ui.ModalWindow = (function($) {
     
     elements.dialog.attr({ "class": originalClassName }).addClass(currentClassName);
     
+    _observe();
     position(true);
     resize(true);
     
@@ -109,6 +118,7 @@ protonet.ui.ModalWindow = (function($) {
         "padding-right": ""
       });
     
+    _unobserve();
     protonet.Notifications.trigger("modal_window.hidden");
     
     return this;
