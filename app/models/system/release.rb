@@ -23,10 +23,12 @@ module System
         latest_version == current_version
       end
       
-      def update!
+      def update!(password=nil)
         return false if Rails.env != 'production'
+        success = true
         if File.exist?("/home/protonet/deploy")
-          system("/home/protonet/dashboard/current/script/init/update_release #{configatron.shared_file_path}")
+          success =  success && system("/home/protonet/dashboard/current/script/init/update_release #{configatron.shared_file_path}")
+          success =  success && system("export HISTIGNORE=\"*ptn_babushka_migrations*\"; /home/protonet/dashboard/current/script/babushka_migrations #{password}")
         end
       end
 
