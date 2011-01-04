@@ -17,4 +17,4 @@ expect {
 # puts $expect_out(buffer)
 log_file
 
-# call like script/ptn_update_babushka LICENSEKEY make sure to do a export HISTIGNORE="*ptn_update_babushka*" to make sure the command is not stored in the shell history
+# call like script/ptn_babushka_update LICENSEKEY make sure to do a export HISTIGNORE="*ptn_babushka_update*" to make sure the command is not stored in the shell history

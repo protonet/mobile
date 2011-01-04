@@ -3,8 +3,9 @@ you are running on release  : <bold><%= System::Release.current_version %>/<%= S
 latest stable release is    : <bold><%= System::Release.latest_version %></bold><br>
 latest beta   release is    : <bold><%= System::Release.latest_beta_version %></bold><br>
 software update is available: <bold><%= !System::Release.most_recent? %></bold><br>
-
-
+<br />
 <% form_tag(system_release_update_path) do %>
-  <%= button(System::Release.most_recent? ? "reinstall" : "update") %>
+  <%= label_tag          :password,          'Enter your *NODE* password:' %><br />
+  <%= password_field_tag :password, nil %><br />
+  and hit <%= button(System::Release.most_recent? ? "reinstall" : "update") %>
 <% end %>
