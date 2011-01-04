@@ -26,13 +26,10 @@ module System
       def update!(password=nil)
         return false if Rails.env != 'production'
         license_key = "FIXME"
-        success = true
         if File.exist?("/home/protonet/deploy")
-          success = success && system("export HISTIGNORE=\"*ptn_babushka_update*\"; /home/protonet/dashboard/current/script/ptn_babushka_update #{license_key}")
-          
-          success =  success && system("export HISTIGNORE=\"*ptn_babushka_migrations*\"; /home/protonet/dashboard/current/script/ptn_babushka_migrations #{password}")
-          
-          success =  success && system("/home/protonet/dashboard/current/script/ptn_update_release #{configatron.shared_file_path}")
+          babushka_update     = system("export HISTIGNORE=\"*ptn_babushka_update*\"; /home/protonet/dashboard/current/script/ptn_babushka_update #{license_key}")
+          babushka_migrations = system("export HISTIGNORE=\"*ptn_babushka_migrations*\"; /home/protonet/dashboard/current/script/ptn_babushka_migrations #{password}")
+          release_update      = system("/home/protonet/dashboard/current/script/ptn_release_update #{configatron.shared_file_path}")
         end
       end
 
