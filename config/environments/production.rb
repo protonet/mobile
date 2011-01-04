@@ -31,6 +31,7 @@ puts "Backend '#{System::Backend.backend_connection.info}' connected successfull
 
 configatron.current_file_path = "/home/protonet/dashboard/current"
 configatron.shared_file_path  = "/home/protonet/dashboard/shared"
+configatron.deploy_config_file_path = "#{configatron.shared_file_path}/config/protonet.d/deploy_config"
 configatron.user_file_path    = "#{configatron.shared_file_path}/user-files"
 configatron.images.avatars_path   = "public/system/avatars"
 configatron.images.externals_path = "public/system/externals"

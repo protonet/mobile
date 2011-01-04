@@ -25,12 +25,12 @@ module System
       
       def update!(password=nil)
         return false if Rails.env != 'production'
-        license_key = "FIXME"
-        if File.exist?("/home/protonet/deploy")
-          babushka_update     = system("export HISTIGNORE=\"*ptn_babushka_update*\"; /home/protonet/dashboard/current/script/ptn_babushka_update #{license_key}")
-          babushka_migrations = system("export HISTIGNORE=\"*ptn_babushka_migrations*\"; /home/protonet/dashboard/current/script/ptn_babushka_migrations #{password}")
-          release_update      = system("/home/protonet/dashboard/current/script/ptn_release_update #{configatron.shared_file_path}")
-        end
+        return false unless File.exist?("/home/protonet/deploy") && File.exist?(configatron.deploy_config_file_path)
+        license_key = File.read(configatron.deploy_config_file_path).match(/:key, \"(.*)\"/)[1]
+        babushka_update     = system("export HISTIGNORE=\"*ptn_babushka_update*\"; #{configatron.current_file_path}/script/ptn_babushka_update #{license_key}")
+        babushka_migrations = system("export HISTIGNORE=\"*ptn_babushka_migrations*\"; #{configatron.current_file_path}/script/ptn_babushka_migrations #{password}")
+        release_update      = system("#{configatron.current_file_path}/script/ptn_release_update #{configatron.shared_file_path}")
+        {:babushka_update => babushka_update, :babushka_migrations => babushka_migrations, :release_update => release_update}
       end
 
     end
