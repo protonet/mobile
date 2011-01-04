@@ -6,7 +6,7 @@ log_file -noappend /tmp/ptn_update_babushka.log
 set timeout -1
 
 # This spawns the babushka protonet migration
-spawn babushka \"dudemeister:protonet babushka update\"
+spawn babushka "dudemeister:protonet babushka update"
 set license [lindex $argv 0]
 # The script expects Password any number of times and answers with the correct password
 expect {
