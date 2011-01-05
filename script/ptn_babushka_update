@@ -10,7 +10,7 @@ spawn babushka "dudemeister:protonet babushka update"
 set license [lindex $argv 0]
 # The script expects Password any number of times and answers with the correct password
 expect {
-  "Please enter your protonet license key:"  {
+  "Please enter your protonet license key"  {
     send "$license\r"
   }
 }
