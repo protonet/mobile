@@ -27,8 +27,9 @@ namespace :deploy do
     run "mkdir -p #{shared_path}/user-files; chmod 770 #{shared_path}/user-files"
     run "mkdir -p #{shared_path}/avatars; chmod 770 #{shared_path}/avatars"
     run "mkdir -p #{shared_path}/pids; chmod 770 #{shared_path}/pids"
+    run "mkdir -p #{shared_path}/externals/screenshots"
+    run "mkdir -p #{shared_path}/externals/image_proxy"
     run "mkdir -p #{shared_path}/system"
-    run "mkdir -p #{shared_path}/config"
     run "mkdir -p #{shared_path}/config/monit.d"
     run "mkdir -p #{shared_path}/config/hostapd.d"
     run "mkdir -p #{shared_path}/config/dnsmasq.d"
@@ -61,6 +62,11 @@ namespace :deploy do
   desc "create the database on if it doesn't exist"
   task :setup_db do
     run "cd #{current_release}; mysql -u root dashboard_production -e \"show tables;\" 2>&1 > /dev/null; if [ $? -ne 0 ] ;then sh -c \"RAILS_ENV=production bundle exec rake db:setup\"; fi"
+  end
+  
+  desc "symlink externals folder for proxy images and screenshots"
+  task :symlink_externals do
+    run "ln -s #{shared_dir}/externals #{release_dir}/public/externals"
   end
   
 end
@@ -96,7 +102,7 @@ end
 # HOOKS
 after "deploy:setup", "deploy:prepare"
 after "deploy:cold", "setup_db"
-after "deploy:update_code", "bundler:bundle_new_release"
+after "deploy:update_code", "bundler:bundle_new_release", "deploy:symlink_externals"
 after "deploy:finalize_update", "deploy:copy_stage_config"
 after "deploy", "deploy:cleanup"
 after "deploy:start", "passenger:restart", "deploy:monit"
