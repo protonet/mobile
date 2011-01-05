@@ -10,7 +10,7 @@ spawn babushka protonet:up.migration
 set password [lindex $argv 0]
 # The script expects Password any number of times and answers with the correct password
 expect {
-  "Password:"  {
+  -re "\[Pp]assword.*:"  {
     send "$password\r"
     exp_continue
   }
