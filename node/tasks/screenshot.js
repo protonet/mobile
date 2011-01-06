@@ -53,8 +53,19 @@ exports.make_and_send = function(url, response) {
   }
   
   function makeScreenshot(baseName, sanitizedUrl, callback) {
-    var command = "script/local_deps/webkit2png-0.5.sh --clipwidth=300 --clipheight=200 -C -o ";
-    exec(command + baseName + " -D " + directory + ' "' + sanitizedUrl + '"', 
+    var command = '';
+    try
+      {
+        var stat = fs.fstatSync('/usr/local/CutyCapt');
+        if(stats.isFile()) {
+          command = "xvfb-run --server-args=\"-screen 0, 1024x768x24\" CutyCapt --js-can-open-windows=off --url='" + sanitizedUrl + "' --out=" + fileName;
+        }
+      }
+      catch (e)
+      {
+        command = "script/local_deps/webkit2png-0.5.sh --clipwidth=300 --clipheight=200 -C -o " + baseName + " -D " + directory + ' "' + sanitizedUrl + '"';
+      }
+    exec(command, 
       function (error, stdout, stderr) {
         console.log('stdout: ' + stdout);
         console.log('stderr: ' + stderr);
