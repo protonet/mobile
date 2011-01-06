@@ -1,3 +1,4 @@
+//= require "../behaviors/users.js"
 //= require "../ui/context_menu.js"
 
 protonet.user = {
@@ -61,6 +62,11 @@ protonet.user = {
       }.bind(this);
     }
     new protonet.ui.ContextMenu("[data-user-id]", contextOptions);
+  },
+  
+  getUserName: function(userId) {
+    var user = this.usersData[+userId];
+    return user && user.name;
   }
 };
 

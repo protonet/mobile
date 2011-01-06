@@ -1,3 +1,4 @@
+//= require "../behaviors/meeps.js"
 //= require "../utils/auto_link.js"
 //= require "../utils/auto_link_file_paths.js"
 //= require "../utils/escape_html.js"
