@@ -34,11 +34,12 @@ connection.addListener("ready", function() {
     switch(message.task) {
       // example, remove for production
       case "eval":
-        publish(eval(message.javascript), "eval");
+        // just enable for testing
+        // publish(eval(message.javascript), "eval");
         break;
       case "screenshot":
-        // debugger;
-        require("./tasks/screenshot").make_and_publish(message.url, publish);
+        // just enable for testing
+        // require("./tasks/screenshot").make_and_publish(message.url, publish);
         break;
       case "http_proxy":
         require("./tasks/http_proxy").get(message.url, publish);
