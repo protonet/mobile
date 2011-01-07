@@ -71,6 +71,13 @@ exports.make_and_send = function(url, response) {
         console.log('stderr: ' + stderr);
         if (error !== null) {
           console.log('exec error: ' + error);
+          console.log('writing default image');
+          // write default image!
+          exec("cp " + process.cwd() + "/public/images/world-globe-small.jpg " + fileName, function(error, stdout, stderr) {
+            if (error !== null) {
+              callback(fileName);
+            }
+          });
         } else {
           callback(fileName);
         }
