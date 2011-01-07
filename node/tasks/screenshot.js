@@ -85,7 +85,15 @@ exports.make_and_send = function(url, response) {
     screenshot_requests[fileName] = [response];
   }
   
-  makeScreenshot(baseName, sanitizedUrl, sendScreenshot);
+  path.exists(fileName, function(exists) {
+    if(exists) {
+      sys.puts("screenshot file exists");
+      sendScreenshot(fileName);
+    } else {
+      sys.puts("screenshot file does NOT exists");
+      makeScreenshot(baseName, sanitizedUrl, sendScreenshot);
+    }
+  });
 
 };
 
