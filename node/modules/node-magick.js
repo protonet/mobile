@@ -8,16 +8,29 @@ exports.createCommand = function(input) {
 var magickCommand = function(obj) {
   obj.inArgs = [];
   obj.outArgs = [];
-  obj.cropResized = function(width, height, gravity) {
-    return obj.resize(width, height).crop(width, height)
+  obj.cropResize = function(width, height) {
+    return obj.crop(width, height).resize(width, height)
+  };
+  obj.resizeMagick = function(width, height) {
+    return obj.resize(width, height).extent(width, height).gravity("center").background("none");
   };
   obj.resize = function(width, height) {
-    var wh = width + "x" + height;
+    var wh = width + "x" + height + "^";
     return obj.makeArgs(["-resize", wh]);
   };
   obj.crop = function(width, height) {
     var wh = width + "x" + height;
     return obj.makeArgs(["-crop", wh]);
+  };
+  obj.extent = function(width, height) {
+    var wh = width + "x" + height;
+    return obj.makeArgs(["-extent", wh]);
+  };
+  obj.gravity = function(point) {
+    return obj.makeArgs(["-gravity", point]);
+  };
+  obj.background = function(color) {
+    return obj.makeArgs(["-background", color]);
   };
   obj.makeArgs = function(inargs, outargs) {
     if (arguments.length == 1) {

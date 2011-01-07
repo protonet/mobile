@@ -36,7 +36,7 @@ protonet.media.Proxy = (function() {
   function getImageUrl(url, size) {
     var imageUrl = IMAGE_URL.replace("{url}", encodeURIComponent(url));
     if (size) {
-      imageUrl + "&width=" + size.width + "&height=" + size.height;
+      imageUrl += "&width=" + size.width + "&height=" + size.height;
     }
     return imageUrl;
   }

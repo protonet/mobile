@@ -53,7 +53,7 @@ exports.proxy = function(params, headers, response) {
     if(size["height"] && size["width"]) {
       magick
         .createCommand(from)
-        .resize(size["height"], size["width"])
+        .resizeMagick(size["width"], size["height"])
         .write(to, function() {
           sys.puts("Done resizing.");
           callback(to);
@@ -80,7 +80,7 @@ exports.proxy = function(params, headers, response) {
   }
   
   // handle local requests
-  if(parsedUrl.host == headers.host) {
+  if(parsedUrl.host.replace(/:.*/, '') == headers.host.replace(/:.*/, '')) {
     cookie             = headers.cookie; // only send cookie if its a local request
   }
 
