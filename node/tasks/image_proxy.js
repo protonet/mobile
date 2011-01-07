@@ -113,6 +113,11 @@ exports.proxy = function(params, headers, response) {
             "Cookie": cookie
           });
           request.end();
+          // handle errors
+          proxy.addListener("error", function(error) {
+            console.error("client error " + error.stack);
+            send404(fileName);
+          })
           // and get the response
           request.addListener("response", function(proxy_response) {
             sys.puts("http_proxy response received - status code: " + proxy_response.statusCode);
