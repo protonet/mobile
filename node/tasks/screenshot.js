@@ -58,7 +58,7 @@ exports.make_and_send = function(url, response) {
       {
         var stat = fs.lstatSync('/usr/local/bin/CutyCapt');
         if(stat.isFile()) {
-          command = "xvfb-run --server-args=\"-screen 0, 1024x768x24\" script/local_deps/webkit2png.py --scale 300 200 '" + sanitizedUrl + "' -o " + fileName;
+          command = "xvfb-run -a --server-args=\"-screen 0, 1024x768x24\" script/local_deps/webkit2png.py --aspect-ratio crop --scale 300 200 '" + sanitizedUrl + "' -o " + fileName;
         }
       }
       catch (e)
