@@ -14,6 +14,10 @@ expect {
     send "$license\r"
     exp_continue
   }
+  -re ".*file a bug report for that now.*\? " {
+    send "n\r"
+    exp_continue
+  }
 }
 # puts $expect_out(buffer)
 log_file
