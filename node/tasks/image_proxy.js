@@ -102,12 +102,18 @@ exports.proxy = function(params, headers, response) {
         else {
           sys.puts("NO base file exists :(")
           // get the port
+          var secure = false;
           if(!parsedUrl.port) {
-            parsedUrl.port = (parsedUrl.protocol == 'https:' ? 443 : 80)
+            if(parsedUrl.protocol == 'https:') {
+              parsedUrl.port = 443;
+              secure = true;
+            } else {
+              parsedUrl.port = 80;
+            }
           }
           
           // request the image
-          var proxy   = http.createClient(parsedUrl.port, parsedUrl.hostname);
+          var proxy   = http.createClient(parsedUrl.port, parsedUrl.hostname, secure);
           var request = proxy.request("GET", urlPath, {
             "Host": parsedUrl.hostname,
             "Cookie": cookie
