@@ -18,15 +18,6 @@
 
 $(function() {
   protonet.user.initialize();
-  
-  // Inline hints
-  $("input:text[title], input:password[title], textarea[title]").each(function() {
-    var input = $(this);
-    new protonet.utils.InlineHint(input, input.attr("title"));
-  });
-
-  // add notification message neatification
   protonet.ui.FlashMessage.initialize();
-  
   protonet.ui.Logo.initialize();
 });
