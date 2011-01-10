@@ -16,21 +16,21 @@ var magickCommand = function(obj) {
   };
   obj.resize = function(width, height) {
     var wh = width + "x" + height + "^";
-    return obj.makeArgs(["-resize", wh]);
+    return obj.makeArgs(["-resize", wh], null);
   };
   obj.crop = function(width, height) {
     var wh = width + "x" + height;
-    return obj.makeArgs(["-crop", wh]);
+    return obj.makeArgs(["-crop", wh], null);
   };
   obj.extent = function(width, height) {
     var wh = width + "x" + height;
-    return obj.makeArgs(["-extent", wh]);
+    return obj.makeArgs(["-extent", wh], null);
   };
   obj.gravity = function(point) {
-    return obj.makeArgs(["-gravity", point]);
+    return obj.makeArgs(["-gravity", point], null);
   };
   obj.background = function(color) {
-    return obj.makeArgs(["-background", color]);
+    return obj.makeArgs(["-background", color], null);
   };
   obj.makeArgs = function(inargs, outargs) {
     if (arguments.length == 1) {
