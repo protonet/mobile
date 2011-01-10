@@ -149,7 +149,7 @@ protonet.timeline.Meep.prototype = {
    * Send the meep to the server
    */
   post: function(onSuccess, onFailure) {
-    var status = this.element.find(".status").show().html(protonet.t("MEEP_SENDING"));
+    this.setStatus(protonet.t("MEEP_SENDING"));
     
     this.queryString = this.queryString || $.param({
       tweet: $.extend({}, this.data, {
@@ -174,11 +174,7 @@ protonet.timeline.Meep.prototype = {
           return;
         }
         
-        if (status.is(":visible")) {
-          status.html(protonet.t("MEEP_SENT")).delay(1000).fadeOut();
-        } else {
-          status.hide();
-        }
+        this.setStatus(protonet.t("MEEP_SENT"), 1000);
         
         this.data.id = +response;
         
@@ -190,7 +186,8 @@ protonet.timeline.Meep.prototype = {
         
         var element = this.merged ? this.element.find("article:first") : this.element;
         element.addClass("error").delay(5000).fadeOut();
-        status.html(protonet.t("MEEP_ERROR")).delay(5000).fadeOut();
+        
+        this.setStatus(protonet.t("MEEP_ERROR"), 5000);
         
         this.error = true;
         
@@ -200,6 +197,27 @@ protonet.timeline.Meep.prototype = {
     };
     
     $.ajax(ajaxOptions);
+    
+    return this;
+  },
+  
+  setStatus: function(html, fadeOutAfter) {
+    if (!this.status) {
+      var status = this.element.find(".status");
+      this.status = status.length && status;
+    }
+    
+    if (!this.status) {
+      this.status = new protonet.utils.Template("meep-status-template")
+        .toElement()
+        .appendTo(this.element.find(".author"));
+    }
+    
+    this.status.show().html(html);
+    
+    if (fadeOutAfter) {
+      this.status.delay(fadeOutAfter).fadeOut(function() { $(this).hide(); });
+    }
     
     return this;
   }
