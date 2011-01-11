@@ -16,9 +16,8 @@
 protonet.effects.HoverResize = function(element, config) {
   this.element = element;
   this.config = config || {};
-  
   if (this.config.proxy && this.config.newSrc) {
-    this.config.newSrc = protonet.media.Proxy.getImageUrl(this.config.newSrc);
+    this.config.newSrc = protonet.media.Proxy.getImageUrl(this.config.newSrc, this.config.newSize);
   }
   
   this.element.hover(this._mouseOver.bind(this), this._mouseOut.bind(this));
