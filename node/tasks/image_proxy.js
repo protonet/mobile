@@ -1,11 +1,12 @@
 var http      = require("http"),
     parseUrl  = require("url").parse,
     sys       = require("sys"),
-    magick    = require('./../modules/node-magick.js'),
+    magick    = require('./../modules/node-magick'),
     path      = require('path'),
     fs        = require("fs"),
     md5       = require("./../modules/md5").create,
     child     = require('child_process'),
+    request   = require('./../modules/node-utils/request'),
     image_requests = {};
 
 
@@ -113,36 +114,16 @@ exports.proxy = function(params, headers, response) {
           }
           
           // request the image
-          var proxy   = http.createClient(parsedUrl.port, parsedUrl.hostname, secure);
-          var request = proxy.request("GET", urlPath, {
-            "Host": parsedUrl.hostname,
-            "Cookie": cookie
-          });
-          request.end();
-          // handle errors
-          proxy.addListener("error", function(error) {
-            console.error("client error " + error.stack);
-            send404(fileName);
-          })
-          // and get the response
-          request.addListener("response", function(proxy_response) {
-            sys.puts("http_proxy response received - status code: " + proxy_response.statusCode);
-            if(proxy_response.statusCode != 200) {
+          var fileStream = fs.createWriteStream(baseFileName);
+
+          request({"uri": url, "headers": {"Cookie": cookie}, "responseBodyStream": fileStream}, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+              fileStream.end();
+              resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage);
+            } else {
+              fileStream.destroy();
               send404(fileName);
-              return;
             }
-            var fileStream = fs.createWriteStream(baseFileName);
-            proxy_response.addListener("data", function(chunk) {
-              fileStream.write(chunk, "binary");
-            });
-            proxy_response.addListener("end", function() {
-              fileStream.addListener("drain", function() {
-                // Close file stream
-                fileStream.end();
-                // response.writeHead(200, {'Content-Type': proxy_response["headers"]["content-type"]});
-                resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage);
-              });
-            });
           });
 
         }
