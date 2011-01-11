@@ -28,9 +28,9 @@ exports.proxy = function(params, headers, response) {
     image_requests[fileName].forEach(function (r) {
       child.exec("file --mime -b " + fileName, function(error, stdout, stderr) {
         if(stdout && stdout.match(/(.*);/)) {
-          r.writeHead(200, {'Content-Type': stdout.match(/(.*);/)[1]})
+          r.writeHead(200, {'Content-Type': stdout.match(/(.*);/)[1], 'Content-Length': fs.lstatSync(fileName).size})
         } else {
-          r.writeHead(200)
+          r.writeHead(200, {'Content-Length': fs.lstatSync(fileName).size})
         }
         fs.createReadStream(fileName)
           .addListener('data', function(data){
