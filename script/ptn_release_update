@@ -8,4 +8,4 @@ shift 1
 
 cd $HOME/deploy
 git pull
-bin/deploy -r protonet -e production -m deploy -c $SHARED_PATH/config/protonet.d/deploy_config 2>&1 > /tmp/foobar
+bin/deploy -r protonet -e production -m deploy -c $SHARED_PATH/config/protonet.d/deploy_config 2>&1 > /tmp/ptn_release_update
