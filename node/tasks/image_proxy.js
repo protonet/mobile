@@ -44,23 +44,28 @@ exports.proxy = function(params, headers, response) {
   }
   
   function send404(fileName) {
+    console.log("sending 404 for " + fileName);
     image_requests[fileName].forEach(function (r) {
       r.writeHead(404);
       r.end("NOT FOUND!");
     });
   }
   
-  function resizeImage(from, to, size, callback) {
-    if(size["height"] && size["width"]) {
-      magick
-        .createCommand(from)
-        .resizeMagick(size["width"], size["height"])
-        .write(to, function() {
-          sys.puts("Done resizing.");
-          callback(to);
-        });
+  function resizeImage(from, to, size, successCallback, failureCallback) {
+    if(fs.lstatSync(from) && fs.lstatSync(from) > 0) {
+      if(size["height"] && size["width"]) {
+        magick
+          .createCommand(from)
+          .resizeMagick(size["width"], size["height"])
+          .write(to, function() {
+            sys.puts("Done resizing.");
+            successCallback(to);
+          });
+      } else {
+        successCallback(from);
+      }
     } else {
-      callback(from);
+      failureCallback(to);
     }
   }
   
@@ -98,7 +103,7 @@ exports.proxy = function(params, headers, response) {
         if(exists) {
           sys.puts("base file exists :)")
           //only apply size manipulation and then send
-          resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage);
+          resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
         }
         else {
           sys.puts("NO base file exists :(")
@@ -119,9 +124,10 @@ exports.proxy = function(params, headers, response) {
           request({"uri": url, "headers": {"Cookie": cookie}, "responseBodyStream": fileStream}, function (error, response, body) {
             if (!error && response.statusCode == 200) {
               fileStream.end();
-              resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage);
+              resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
             } else {
-              fileStream.destroy();
+              console.log(url + ' returned a ' + response.statusCode)
+              fs.unlinkSync(baseFileName);
               send404(fileName);
             }
           });
