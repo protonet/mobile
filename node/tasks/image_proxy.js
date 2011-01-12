@@ -52,7 +52,7 @@ exports.proxy = function(params, headers, response) {
   }
   
   function resizeImage(from, to, size, successCallback, failureCallback) {
-    if(fs.lstatSync(from) && fs.lstatSync(from) > 0) {
+    if(fs.lstatSync(from) && fs.lstatSync(from).size > 0) {
       if(size["height"] && size["width"]) {
         magick
           .createCommand(from)
