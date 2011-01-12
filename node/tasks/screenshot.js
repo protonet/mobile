@@ -67,11 +67,12 @@ exports.make_and_send = function(url, response) {
       }
     exec(command, 
       function (error, stdout, stderr) {
+        console.log('command: ' + command)
         console.log('stdout: ' + stdout);
         console.log('stderr: ' + stderr);
-        if (error !== null) {
+        if (error !== null || (fs.lstatSync(fileName) && fs.lstatSync(fileName).size == 0)) {
           console.log('exec error: ' + error);
-          console.log('writing default image');
+          console.log('writing default image for ' + sanitizedUrl + ' fileName: ' + fileName);
           // write default image!
           exec("cp " + process.cwd() + "/public/images/world-globe-small.jpg " + fileName, function(error, stdout, stderr) {
             if (error !== null) {

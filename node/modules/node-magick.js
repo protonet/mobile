@@ -48,11 +48,11 @@ var magickCommand = function(obj) {
     }
     return obj;
   };
-  obj.write = function(out, callback) {
+  obj.write = function(out, successCallback, errorCallback) {
     obj.inArgs.push(obj.input); 
     obj.outArgs.push(out);
     var args = obj.inArgs.concat(obj.outArgs);
-    obj.__run("convert", args, callback);
+    obj.__run("convert", args, successCallback, errorCallback);
   };
   obj.__run = function (cmd, args, successCallback, errorCallback) {
     args.unshift(cmd);
