@@ -12,7 +12,7 @@ var magickCommand = function(obj) {
     return obj.crop(width, height).resize(width, height);
   };
   obj.resizeMagick = function(width, height) {
-    return obj.resize(width, height).extent(width, height).gravity("center").background("none").stripMetaData();
+    return obj.stripMetaData().colorSpace('RGB').resample(72).resize(width, height).extent(width, height).gravity("center").background("none");
   };
   obj.resize = function(width, height) {
     var wh = width + "x" + height + "^";
@@ -34,6 +34,12 @@ var magickCommand = function(obj) {
   };
   obj.stripMetaData = function() {
     return obj.makeArgs(["-strip"], null);
+  };
+  obj.resample = function(dpi) {
+    return obj.makeArgs(["-resample", dpi], null);
+  };
+  obj.colorSpace = function(space) {
+    return obj.makeArgs(["-colorspace", space], null);
   };
   obj.makeArgs = function(inargs, outargs) {
     if (arguments.length == 1) {
