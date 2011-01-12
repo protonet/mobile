@@ -60,6 +60,9 @@ exports.proxy = function(params, headers, response) {
           .write(to, function() {
             sys.puts("Done resizing.");
             successCallback(to);
+          }, function() {
+            sys.puts("Failed resizing, maybe not an image?");
+            failureCallback(to);
           });
       } else {
         successCallback(from);

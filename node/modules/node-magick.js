@@ -54,12 +54,16 @@ var magickCommand = function(obj) {
     var args = obj.inArgs.concat(obj.outArgs);
     obj.__run("convert", args, callback);
   };
-  obj.__run = function (cmd, args, callback) {
+  obj.__run = function (cmd, args, successCallback, errorCallback) {
     args.unshift(cmd);
     cmd = "convert";
     sys.puts("running command: " + cmd + " " + args.join(" "));
     var p = childProcess.exec((cmd + " " + args.join(" ")), function(error, stdout, stderr) {
-      callback();
+      if (error !== null) {
+        errorCallback();
+      } else {
+        successCallback();
+      }
     });
   };
   return obj;
