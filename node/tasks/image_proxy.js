@@ -28,9 +28,9 @@ exports.proxy = function(params, headers, response) {
     image_requests[fileName].forEach(function (r) {
       child.exec("file --mime -b " + fileName, function(error, stdout, stderr) {
         if(stdout && stdout.match(/(.*);/)) {
-          r.writeHead(200, {'Content-Type': stdout.match(/(.*);/)[1], 'Content-Length': fs.lstatSync(fileName).size})
+          r.writeHead(200, {'Content-Type': stdout.match(/(.*);/)[1], 'Content-Length': fs.lstatSync(fileName).size});
         } else {
-          r.writeHead(200, {'Content-Length': fs.lstatSync(fileName).size})
+          r.writeHead(200, {'Content-Length': fs.lstatSync(fileName).size});
         }
         fs.createReadStream(fileName)
           .addListener('data', function(data){
@@ -93,20 +93,20 @@ exports.proxy = function(params, headers, response) {
   // image exists with correct size
   path.exists(fileName, function(exists){
     if(exists) {
-      sys.puts("file exists")
+      sys.puts("file exists " + fileName);
       sendImage(fileName);
     } 
     else {
-      sys.puts("file doesn't exists")
+      sys.puts("file doesn't exists");
       path.exists(baseFileName, function(exists) {
         // if the base file exists
         if(exists) {
-          sys.puts("base file exists :)")
+          sys.puts("base file exists :)");
           //only apply size manipulation and then send
           resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
         }
         else {
-          sys.puts("NO base file exists :(")
+          sys.puts("NO base file exists :(");
           // get the port
           var secure = false;
           if(!parsedUrl.port) {
@@ -126,7 +126,7 @@ exports.proxy = function(params, headers, response) {
               fileStream.end();
               resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
             } else {
-              console.log(url + ' returned a ' + response.statusCode)
+              console.log(url + ' returned a ' + response.statusCode);
               fs.unlinkSync(baseFileName);
               send404(fileName);
             }

@@ -9,10 +9,10 @@ var magickCommand = function(obj) {
   obj.inArgs = [];
   obj.outArgs = [];
   obj.cropResize = function(width, height) {
-    return obj.crop(width, height).resize(width, height)
+    return obj.crop(width, height).resize(width, height);
   };
   obj.resizeMagick = function(width, height) {
-    return obj.resize(width, height).extent(width, height).gravity("center").background("none");
+    return obj.resize(width, height).extent(width, height).gravity("center").background("none").stripMetaData();
   };
   obj.resize = function(width, height) {
     var wh = width + "x" + height + "^";
@@ -31,6 +31,9 @@ var magickCommand = function(obj) {
   };
   obj.background = function(color) {
     return obj.makeArgs(["-background", color], null);
+  };
+  obj.stripMetaData = function() {
+    return obj.makeArgs(["-strip"], null);
   };
   obj.makeArgs = function(inargs, outargs) {
     if (arguments.length == 1) {
@@ -60,4 +63,4 @@ var magickCommand = function(obj) {
     });
   };
   return obj;
-}
+};
