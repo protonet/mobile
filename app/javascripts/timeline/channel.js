@@ -327,7 +327,7 @@ protonet.timeline.Channel.prototype = {
       if (!visible) {
         return;
       }
-      var lastMeepId = lastMeepInList.data("meep").id;
+      var lastMeepId = lastMeepInList.find("article:last").data("meep").id;
       this._loadMeeps({ last_id: lastMeepId }, this._renderMoreMeeps.bind(this));
     }.bind(this));
   },

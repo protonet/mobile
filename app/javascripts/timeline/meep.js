@@ -37,6 +37,8 @@
  *    meep.render   - Trigger this event with channelId and meep data or form if you want a new meep to be rendered
  *    meep.sent     - A new meep has been sent to the server
  *    meep.error    - Posting a new meep has been failed
+ *
+ * TODO: Need for speed. Creating & rendering a meep should be fast as hell
  */
 protonet.timeline.Meep = function(dataOrForm) {
   var isFormElement = dataOrForm.jquery && dataOrForm.attr;
@@ -115,18 +117,19 @@ protonet.timeline.Meep.prototype = {
    * Private, please use public "render" or "mergeWith"
    */
   _render: function(template, container) {
-    var replyFromChannelTemplate, postedInChannelTemplate, templateData;
+    var replyFromChannelTemplate, postedInChannelTemplate, templateData,
+        data = { meep: this.data, instance: this };
     
     if (this.data.reply_from) {
       replyFromChannelTemplate = new protonet.utils.Template("reply-from-channel-template", {
-        channel_id: this.data.reply_from,
+        channel_id:   this.data.reply_from,
         channel_name: protonet.timeline.Channels.getChannelName(this.data.reply_from)
       }).toString();
     }
     
     if (this.data.posted_in) {
       postedInChannelTemplate = new protonet.utils.Template("posted-in-channel-template", {
-        channel_id: this.data.posted_in,
+        channel_id:   this.data.posted_in,
         channel_name: protonet.timeline.Channels.getChannelName(this.data.posted_in)
       }).toString();
     }
@@ -139,8 +142,10 @@ protonet.timeline.Meep.prototype = {
     
     this.element = new protonet.utils.Template(template, templateData)
       .toElement()
-      .data({ meep: this.data, instance: this })
       .prependTo(container);
+    
+    this.article = this.element.is("article") ? this.element : this.element.find("article");
+    this.article.add(this.element).data(data);
     
     protonet.Notifications.trigger("meep.rendered", [this.element, this.data, this]);
   },
@@ -184,7 +189,7 @@ protonet.timeline.Meep.prototype = {
       error:      function() {
         protonet.Notifications.trigger("flash_message.error", protonet.t("MEEP_ERROR_LONG"));
         
-        var element = this.merged ? this.element.find("article:first") : this.element;
+        var element = this.merged ? this.article : this.element;
         element.addClass("error").delay(5000).fadeOut();
         
         this.setStatus(protonet.t("MEEP_ERROR"), 5000);

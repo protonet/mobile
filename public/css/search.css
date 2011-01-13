@@ -21,7 +21,7 @@ input.search {
   width: 650px;
 }
 
-.modal-window-dialog.search .meeps li:last-child {
+.modal-window-dialog.search li.meep:last-child {
   margin-bottom: 0;
 }
 

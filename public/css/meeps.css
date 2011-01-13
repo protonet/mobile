@@ -1,6 +1,6 @@
 /* =MEEPS
 =========================================================================== */
-.meeps li {
+.meep {
   -moz-border-radius: 1em;
   -webkit-border-radius: 1em;
   background: -moz-linear-gradient(100% 100% 90deg, rgba(0, 0, 0, 0.1), transparent);
@@ -13,42 +13,102 @@
   list-style: none;
 }
 
-.meeps .own {
+.meeps .meep:hover {
+  -webkit-box-shadow: 0 0 2px #999;
+  -moz-box-shadow: 0 0 2px #999;
+  box-shadow: 0 0 2px #999;
+}
+
+.meeps .meep:focus {
+  -webkit-box-shadow: 0 0 4px #666;
+  -moz-box-shadow: 0 0 4px #666;
+  box-shadow: 0 0 4px #666;
+}
+
+.meep:focus:before {
+  content: " ";
+  background: rgba(72, 123, 255, 0.5);
+  background: -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 0.7), rgba(72, 123, 255, 0.3));
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.3)), to(rgba(72, 123, 255, 0.7)));
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  -moz-border-radius: 0 0.95em 0.95em 0;
+  -webkit-border-radius: 0 0.95em 0.95em 0;
+  border-radius: 0 0.95em 0.95em 0;
+}
+
+.meep .detail-link {
+  padding: 7px 0;
+  margin-top: -7px;
+  display: inline;
+  right: 0;
+  width: 20px;
+  text-align: center;
+  color: #fff;
+  text-decoration: none;
+  text-shadow: #000 0 0 2px;
+  position: absolute;
+  left: -9999px;
+  font-size: 14px;
+}
+
+.meep .detail-link:active,
+.meep:focus .detail-link {
+  left: auto;
+}
+
+.meep:focus .detail-link:active,
+.meep:focus .detail-link:hover {
+  margin-top: -9px;
+  -webkit-transform: scale(1.5);
+}
+
+.meep:focus .detail-link:active {
+  color: black;
+}
+
+.meep .own {
   background: -moz-linear-gradient(100% 100% 90deg, rgba(234, 100, 47, 0.1), transparent);
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(234, 100, 47, 0.1)));
 }
 
-.meeps .author {
+.meep .author {
   font: 10px/1.4em Verdana, sans-serif;
   margin-top: 5px;
   color: #666;
 }
 
-.meeps article {
+.meep article:first-child {
+  padding-top: 0;
+}
+
+.meep article {
   border-bottom: 1px solid rgb(220, 220, 220);
   display: block;
-  margin: 0 0 5px;
-  padding: 0 0 5px;
+  padding: 5px 0 5px;
 }
 
-.meeps article:nth-last-child(2) {
+.meep article:nth-last-child(2) {
   border-bottom: 0;
   background: url("/img/icn_message_arrow.png") no-repeat left bottom;
-  margin: 0 0 0 -25px;
-  padding: 0 0 0 25px;
+  margin-left: -25px;
+  padding-left: 25px;
 }
 
-.meeps .own article:nth-last-child(2) {
+.meep .own article:nth-last-child(2) {
   background-image: url("/img/icn_own_message_arrow.png");
 }
 
-.meeps article p {
+.meep article p {
   white-space: pre-wrap;
   overflow: hidden;
 }
 
-.meeps article q:before,
-.meeps article q:after {
+.meep article q:before,
+.meep article q:after {
   font-family: serif;
   font-size: 20px;
   color: #999;
@@ -56,19 +116,19 @@
   display: inline-block;
 }
 
-.meeps article q:before {
+.meep article q:before {
   vertical-align: top;
   content: "\201C";
   margin-right: 2px;
 }
 
-.meeps article q:after {
+.meep article q:after {
   vertical-align: middle;
   content: "\201D";
   margin-left: 2px;
 }
 
-.meeps article q {
+.meep article q {
   display: block;
   margin: 5px 0 0;
   padding: 2px 0;
@@ -77,7 +137,7 @@
   border-left: 2px solid #999;
 }
 
-.meeps .avatar {
+.meep .avatar {
   -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -88,25 +148,25 @@
   width: 21px;
 }
 
-.meeps .avatar img {
+.meep .avatar img {
   background: rgb(255, 255, 255);
   padding: 5px;
 }
 
-.meeps time {
+.meep time {
   color: rgb(180, 180, 180);
 }
 
-.meeps .username {
+.meep .username {
   color: rgb(234, 100, 47);
 }
 
-.meeps .status {
+.meep .status {
   color: rgb(180, 180, 180);
   float: right;
 }
 
-.meeps .separator:after {
+.meep .separator:after {
   right: 0;
   left: 0;
   content: " ";
@@ -115,7 +175,7 @@
   position: absolute;
 }
 
-.meeps .error .status {
+.meep .error .status {
   color: red;
 }
 
@@ -197,8 +257,9 @@
   position: absolute;
   width: 1px;
   height: 1px;
-  right: 0;
+  left: 0;
   top: 0;
+  z-index: 2147483646;
 }
 
 /* Channel/User replies */

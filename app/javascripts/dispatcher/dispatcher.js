@@ -43,9 +43,12 @@ protonet.dispatcher = {
   },
   
   createSocket: function() {
-    var container   = $("<div />", { id: "socket-container" }).appendTo("body"),
+    // We have to insert the flash outside the body in firefox, otherwise the flash gets reloaded as soon as you
+    // change the css overflow property of the body element
+    // see https://bugzilla.mozilla.org/show_bug.cgi?id=90268
+    var container   = $("<div />", { id: "socket-container" }).appendTo($.browser.mozilla ? "html" : "body"),
         attributes  = { id: this.SOCKET_ID },
-        params      = { allowscriptaccess: "sameDomain", wmode: "transparent" };
+        params      = { allowscriptaccess: "sameDomain", wmode: "opaque" };
     
     // Fires "socket.initialized" when ready
     swfobject.embedSWF(
