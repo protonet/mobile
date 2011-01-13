@@ -41,8 +41,8 @@
 }
 
 .meep .detail-link {
-  padding: 7px 0;
-  margin-top: -7px;
+  padding: 4px 0;
+  margin-top: -4px;
   display: inline;
   right: 0;
   width: 20px;
@@ -62,7 +62,8 @@
 
 .meep .detail-link:active,
 .meep .detail-link:hover {
-  -webkit-transform: scale(1.5);
+  margin-top: -5px;
+  font-size: 20px;
 }
 
 .meep:focus .detail-link:active {
