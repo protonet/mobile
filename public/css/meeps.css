@@ -62,7 +62,6 @@
 
 .meep .detail-link:active,
 .meep .detail-link:hover {
-  margin-top: -9px;
   -webkit-transform: scale(1.5);
 }
 

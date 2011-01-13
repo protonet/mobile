@@ -102,6 +102,8 @@ protonet.ui.ModalWindow = (function($) {
         "padding-right": (parseInt(originalPaddingRight, 10) + scrollbarWidth).px()
       });
     
+    elements.content.css("margin-right", -scrollbarWidth);
+    
     protonet.Notifications.trigger("modal_window.shown");
     
     return this;
