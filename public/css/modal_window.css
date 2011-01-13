@@ -46,3 +46,8 @@
   top: -16px;
   right: -16px;
 }
+
+.modal-window-dialog .loading-indicator {
+  text-align: center;
+  color: rgb(180, 180, 180);
+}

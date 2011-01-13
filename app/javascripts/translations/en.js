@@ -19,5 +19,7 @@ protonet.translations = {
   LOADING_MEEPS_ERROR: "We couldn't load and set up your channels. A maintenance monster is already informed.",
   UPLOAD_IN_PROGRESS: "An upload is currently in progress which would be broken up. Are you sure?",
   PUBLISH_FILES_CONFIRM: "Your files have been uploaded successfully. Do you want to publish them?",
-  SEARCH_ERROR: "Search for '{keyword}' failed. Please try again later."
+  SEARCH_ERROR: "Search for '{keyword}' failed. Please try again later.",
+  MEEP_WINDOW_HEADLINE: "Detail view for message {id}",
+  MODAL_WINDOW_LOADING: "Loading ..."
 };

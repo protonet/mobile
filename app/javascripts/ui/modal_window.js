@@ -155,12 +155,23 @@ protonet.ui.ModalWindow = (function($) {
     return currentClassName;
   }
   
+  function loading() {
+    return update({ content: $("<p>", { html: protonet.t("MODAL_WINDOW_LOADING"), className: "loading-indicator" }) });
+  }
+  
+  function loadingEnd() {
+    elements.content.children(".loading-indicator").remove();
+    return this;
+  }
+  
   return {
     show:         show,
     update:       update,
     hide:         hide,
     position:     position,
     get:          get,
-    getClassName: getClassName
+    getClassName: getClassName,
+    loading:      loading,
+    loadingEnd:   loadingEnd
   };
 })(jQuery);
