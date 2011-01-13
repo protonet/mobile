@@ -1,4 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
+
   map.connect 'captive', :controller => 'system/captive', :action => 'index'
 
   # channels
@@ -22,6 +23,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources   :listens do |listen|
     listen.accept '/accept', :controller => 'listens', :action => 'accept'
   end
+  
+  map.resources  :invitations, :only => [:new, :create]
 
   # networks
   map.negotiate_network 'networks/negotiate.:format', :controller => 'networks', :action => 'negotiate'

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101122193025) do
+ActiveRecord::Schema.define(:version => 20110113160826) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -31,6 +31,17 @@ ActiveRecord::Schema.define(:version => 20101122193025) do
 
   create_table "images_externals", :force => true do |t|
     t.text     "image_url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "invitations", :force => true do |t|
+    t.text     "message"
+    t.integer  "user_id"
+    t.string   "email"
+    t.string   "token"
+    t.string   "channel_ids"
+    t.datetime "accepted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -65,6 +76,19 @@ ActiveRecord::Schema.define(:version => 20101122193025) do
 
   add_index "nodes", ["name"], :name => "index_nodes_on_name"
   add_index "nodes", ["network_id"], :name => "index_nodes_on_network_id"
+
+  create_table "roles", :force => true do |t|
+    t.string   "title"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "roles_users", :id => false, :force => true do |t|
+    t.integer "role_id"
+    t.integer "user_id"
+  end
+
+  add_index "roles_users", ["role_id", "user_id"], :name => "index_roles_users_on_role_id_and_user_id", :unique => true
 
   create_table "says", :force => true do |t|
     t.integer  "channel_id"

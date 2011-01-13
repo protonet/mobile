@@ -54,13 +54,16 @@
   line-height: 26px;
 }
 
-#channels .manage-channels {
-  color: rgb(170, 170, 170);
+#manage-channels {
   font-size: 12px;
-  text-decoration: none;
   position: absolute;
   right: 5px;
   bottom: 2px;
+}
+
+#manage-channels a {
+  color: rgb(170, 170, 170);
+  text-decoration: none;
 }
 
 #channels .badge,

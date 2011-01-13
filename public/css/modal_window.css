@@ -33,6 +33,7 @@
   -moz-box-shadow: 0 0 10px #999;
   box-shadow: 0 0 10px #999;
   padding: 20px;
+  color: white;
 }
 
 .modal-window-shadow {

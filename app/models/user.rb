@@ -18,21 +18,15 @@ class User < ActiveRecord::Base
   validates_format_of       :name,     :with => NAME_REGEX,  :message => BAD_NAME_MSG, :allow_nil => true, :unless => :skip_validation
   validates_length_of       :name,     :maximum => 100, :unless => :skip_validation
 
-  # TODO: Grandfather these in somehow
-  #validates_presence_of     :email,    :unless => :skip_validation
-  #validates_uniqueness_of   :email,    :unless => :skip_validation
-  #validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message, :unless => :skip_validation
-
-  # HACK HACK HACK -- how to do attr_accessible from here?
-  # prevents a user from submitting a crafted form that bypasses activation
-  # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :name, :password, :password_confirmation
 
   has_many  :tweets
   has_many  :listens,  :dependent => :destroy
   has_many  :channels,          :through => :listens
   has_many  :owned_channels,    :class_name => 'Channel', :foreign_key => :owner_id
+  has_many  :invitations
   has_one   :avatar, :class_name => 'Images::Avatar', :dependent => :destroy
+  has_and_belongs_to_many  :roles
 
   named_scope :registered, :conditions => {:temporary_identifier => nil}
   named_scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"
@@ -79,6 +73,10 @@ class User < ActiveRecord::Base
         user if user.save
       end
     end
+  end
+
+  def role_symbols
+    roles.map { |role| role.title.to_sym }
   end
 
   def generate_new_communication_token
