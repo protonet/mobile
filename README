@@ -117,6 +117,7 @@ cap node deploy:migrations NODE=backup.protonet.info # -> deploys to backup.prot
 
 bash -c "`wget -O - babushka.me/up`"
 babushka sources -a dudemeister git://github.com/dudemeister/babushka-deps.git
+# this is the licence key: 83489kjdfj734732snfnfdsns98jsnld
 babushka "dudemeister:protonet babushka"
 babushka protonet:node-preparations
 
