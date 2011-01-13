@@ -113,6 +113,13 @@ cap xing deploy:migrations # -> deploys to protonet.xing.com
 cap vm   deploy:migrations NODE=vm.address.com
 cap node deploy:migrations NODE=backup.protonet.info # -> deploys to backup.protonet.info
 
+=== DEPLOYING ON UBUNTU
+
+bash -c "`wget -O - babushka.me/up`"
+babushka sources -a dudemeister git://github.com/dudemeister/babushka-deps.git
+babushka "dudemeister:protonet babushka"
+babushka protonet:node-preparations
+
 === OTHER STUFF
 These things are not needed if you just want to do some basic development:
 
