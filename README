@@ -119,7 +119,7 @@ bash -c "`wget -O - babushka.me/up`"
 babushka sources -a dudemeister git://github.com/dudemeister/babushka-deps.git
 # this is the licence key: 83489kjdfj734732snfnfdsns98jsnld
 babushka "dudemeister:protonet babushka"
-babushka protonet:node-preparations
+babushka protonet:vm-preparations
 
 === OTHER STUFF
 These things are not needed if you just want to do some basic development:
