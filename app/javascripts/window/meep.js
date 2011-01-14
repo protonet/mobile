@@ -7,7 +7,7 @@ protonet.window.Meep = (function() {
   function show(meepId, data) {
     border = border || (function() {
       return $("<div>", { className: "border" })
-        .append(url   = $("<input>", { readonly: "readonly" }).focus(function() { setTimeout(function() { url[0].select(); }, 10); }))
+        .append(url   = $("<input>", { readonly: "readonly" }).focus(function() { setTimeout(function() { url[0].select(); }, 200); }))
         .append(title = $("<h5>"));
     })();
     
@@ -15,6 +15,7 @@ protonet.window.Meep = (function() {
     url.val(location.protocol + "//" + location.host + "?meep_id=" + meepId);
     
     protonet.ui.ModalWindow.update({ content: border }).show(CLASS_NAME);
+    loading();
     
     return this;
   }
