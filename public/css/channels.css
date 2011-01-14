@@ -48,8 +48,8 @@
   color: rgb(72, 123, 255);
 }
 
-#channels a:focus,
-#channels a:active {
+#channels li a:focus,
+#channels li a:active {
   background: -moz-linear-gradient(100% 100% 90deg, transparent, rgba(0, 0, 0, 0.1));
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0.1)), to(transparent));
 }
