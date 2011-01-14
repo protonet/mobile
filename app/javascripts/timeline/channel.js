@@ -194,10 +194,10 @@ protonet.timeline.Channel.prototype = {
   toggle: function() {
     if (this.isSelected) {
       this.unreadReplies = this.unreadMeeps = 0;
-      this.channelList.show();
+      this.channelList.prependTo(this.container);
       this.link.addClass("active");
     } else {
-      this.channelList.hide();
+      this.channelList.detach();
       this.link.removeClass("active");
     }
     
@@ -209,10 +209,11 @@ protonet.timeline.Channel.prototype = {
    * Renders the channel list and decides whether the list is visible or not
    */
   render: function(container) {
+    this.container = container;
     this.channelList = $("<ul />", {
       "class":            "meeps",
       "data-channel-id":  this.data.id
-    }).hide().appendTo(container).data({ channel: this.data, instance: this });
+    }).data({ channel: this.data, instance: this });
     
     this._renderMeeps(this.data.meeps, this.channelList, function() {
       protonet.Notifications.trigger("channel.rendered", [this.channelList, this.data, this]);
@@ -335,6 +336,7 @@ protonet.timeline.Channel.prototype = {
   /**
    * Show small text hint when
    * channel has no meeps yet
+   * TODO: This isn't working currently
    */
   _initNoMeepsHint: function() {
     if (this.data.meeps.length) {
