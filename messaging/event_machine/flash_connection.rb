@@ -16,14 +16,6 @@ class FlashConnection < EventMachine::Connection
     send_data json.to_json + "\0"
   end
   
-  def receive_json json
-    log "Received JSON: #{json.inspect}"
-    
-    if json['trigger'] == 'meep.receive' then
-      publish 'channels', "channels.#{json['channel_uuid']}", json.to_json
-    end
-  end
-  
   # Null-terminated lines
   def send_line line
     send_data line + "\0"
