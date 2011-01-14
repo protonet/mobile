@@ -2,7 +2,9 @@ protonet.window.Meep = (function() {
   var CLASS_NAME = "meep-window",
       border,
       title,
-      url;
+      url,
+      next,
+      previous;
   
   function show(meepId, data) {
     border = border || (function() {
@@ -11,11 +13,16 @@ protonet.window.Meep = (function() {
         .append(title = $("<h5>"));
     })();
     
+    next = next || $("<a>", { className: "next" });
+    previous = previous || $("<a>", { className: "previous" });
+    
     title.text(protonet.t("MEEP_WINDOW_HEADLINE").replace("{id}", "#" + meepId));
     url.val(location.protocol + "//" + location.host + "?meep_id=" + meepId);
     
-    protonet.ui.ModalWindow.update({ content: border }).show(CLASS_NAME);
+    protonet.ui.ModalWindow.update({ content: border.add(next).add(previous) }).show(CLASS_NAME);
     loading();
+    
+    
     
     return this;
   }
