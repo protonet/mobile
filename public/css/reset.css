@@ -30,10 +30,6 @@ blockquote:before, blockquote:after, q:before, q:after {
   content: '';
 }
 
-:focus {
-  outline: 0;
-}
-
 ins {
   text-decoration: none;
 }

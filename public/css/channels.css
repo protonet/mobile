@@ -43,7 +43,8 @@
   text-decoration: none;
 }
 
-#channels a:hover {
+#channels a:hover,
+#channels a:focus {
   color: rgb(72, 123, 255);
 }
 

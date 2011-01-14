@@ -345,7 +345,7 @@ protonet.timeline.Channel.prototype = {
     
     var noMeepsHint = $("<div />", {
       className: "no-meeps-available"
-    }).hide().html(protonet.t("NO_MEEPS_AVAILABLE")).insertAfter(this.channelList);
+    }).hide().html(protonet.t("NO_MEEPS_AVAILABLE")).appendTo(this.container);
     
     protonet.Notifications.bind("channel.change", function(e, id) {
       if (this.data.id == id && !this.data.meeps.length) {

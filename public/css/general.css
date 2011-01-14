@@ -55,6 +55,22 @@ a:hover {
   color: rgb(72, 123, 255);
 }
 
+:focus {
+  outline: 0;
+}
+
+a:focus {
+  outline: 2px auto -webkit-focus-ring-color;
+}
+
+img:-moz-broken{
+  -moz-force-broken-image-icon: 1;
+}
+
+h5 {
+  font-size: 12px;
+}
+
 mark {
   display: inline;
   background: rgba(0, 204, 0, 0.25);
