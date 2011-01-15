@@ -2,6 +2,7 @@ module ConnectionShared
   attr_accessor :key, :type, :tracker, :queues
   
   def post_init
+    super
     @tracker.add_conn self
     
     @queues = []
