@@ -6,6 +6,7 @@ class HttpConnection < EM::Connection
   include Rabbit
   include ConnectionShared
 
+  @response_initialized = false
   def initialize tracker
     super()
     
@@ -14,9 +15,10 @@ class HttpConnection < EM::Connection
 
   def autosubscribe
     # currently for debugging purposes
+    auth_data = {}
     auth_data['user_id'] = 43
     auth_data['token'] = 'HU2sa9FBr8II22Ihd_8E'
-    if json_authenticate(data["payload"])
+    if json_authenticate(auth_data)
         @subscribed = true # don't resubscribe
         bind_socket_to_system_queue
         bind_socket_to_user_queues
@@ -30,8 +32,8 @@ class HttpConnection < EM::Connection
   #   no_environment_strings
   # end
 
-  def send_json
-    # @response.send_data '<script>test</script>'
+  def send_json json
+    @response.send_data '<script>test</script>'
   end
 
   def process_http_request
@@ -48,11 +50,17 @@ class HttpConnection < EM::Connection
     #   @http_headers
 
     # puts "test connection"
-    @response = EM::DelegatedHttpResponse.new(self)
-    @response.content_type 'text/html'
-    @response.xhr_streaming_enable true
-    @response.send_response
-    # autosubscribe
+    unless @response_initialized
+      @response_initialized = true
+
+      # generate http response object but don't close afterwards
+      @response = EM::DelegatedHttpResponse.new(self)
+      @response.content_type 'text/html'
+      @response.xhr_streaming_enable true
+      @response.send_response
+
+      autosubscribe
+    end
   end
   #
 
