@@ -6,11 +6,6 @@ class FlashConnection < EventMachine::Connection
     
     set_comm_inactivity_timeout 60
   end
-  
-  def post_init
-    log "connected"
-  end
-  
   # JSON packets
   def send_json json
     send_data json.to_json + "\0"

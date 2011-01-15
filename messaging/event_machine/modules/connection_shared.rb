@@ -7,6 +7,7 @@ module ConnectionShared
     @queues = []
     
     @key = rand(1000000)
+    log "connected"
   end
 
   def receive_json(data)
