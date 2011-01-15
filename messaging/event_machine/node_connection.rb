@@ -118,6 +118,8 @@ class NodeConnection < FlashConnection
   def queue_id
     "node-#{@network.key}"
   end
+
+  # TODO: redundant code
   def to_s 
     "node connection #{@network.key || 'uncoupled'}"
   end

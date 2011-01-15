@@ -36,7 +36,7 @@ class FlashConnection < EventMachine::Connection
     p ex, ex.backtrace
   end
 
-
+  # TODO: redundant code
   def log text
     puts "#{self}: #{text}" if Rails.env != "production" || $DEBUG
   end

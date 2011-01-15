@@ -54,6 +54,16 @@ class HttpConnection < EM::Connection
     @response.send_response
     # autosubscribe
   end
+  #
+
+  # TODO: redundant code
+  def log text
+    puts "#{self.class.name}: #{text}" if Rails.env != "production" || $DEBUG
+  end
+  
+  def to_s
+    "http connection #{inspect}"
+  end
 end 
 
 
