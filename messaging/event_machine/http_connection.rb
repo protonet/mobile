@@ -33,7 +33,7 @@ class HttpConnection < EM::Connection
   # end
 
   def send_json json
-    @response.send_data '<script>test</script>'
+    @response.send_data "<script>#{json}</script>"
   end
 
   def process_http_request
