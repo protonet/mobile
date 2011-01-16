@@ -47,8 +47,6 @@
   user-select: none;
   padding: 4px 0;
   margin-top: -4px;
-  display: inline;
-  right: 0;
   width: 20px;
   text-align: center;
   color: #fff;
@@ -56,21 +54,22 @@
   text-shadow: #000 0 0 2px;
   position: absolute;
   left: -9999px;
+  z-index: 3;
   font-size: 14px;
 }
-
+.meep .detail-link:hover,
 .meep .detail-link:active,
 .meep:focus .detail-link {
   left: auto;
+  right: 0;
 }
 
-.meep .detail-link:active,
-.meep .detail-link:hover {
-  margin-top: -5px;
+.meep .detail-link:hover,
+.meep .detail-link:active {
   font-size: 20px;
 }
 
-.meep:focus .detail-link:active {
+.meep .detail-link:active {
   color: black;
 }
 
@@ -170,7 +169,7 @@
   float: right;
 }
 
-.meep .separator:after {
+.meep.separator:after {
   right: 0;
   left: 0;
   content: " ";
@@ -179,7 +178,7 @@
   position: absolute;
 }
 
-.meep .error .status {
+.meep.error .status {
   color: red;
 }
 
