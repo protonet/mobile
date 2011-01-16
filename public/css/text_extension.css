@@ -179,6 +179,7 @@
   display: none;
 }
 
+.text-extension-results.flash .media a:active:after,
 .text-extension-results.flash .media a:hover:after {
   background: #487bff;
   -webkit-transform: scale(1.2);
@@ -186,8 +187,7 @@
 }
 
 .text-extension-results.flash .media a:active:after {
-  -webkit-transform: scale(1);
-  -moz-transform: scale(1);
+  background: #000;
 }
 
 /* =LINK TEXT EXTENSION
