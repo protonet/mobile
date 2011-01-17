@@ -6,22 +6,9 @@ class FlashConnection < EventMachine::Connection
     
     set_comm_inactivity_timeout 60
   end
-  
-  def post_init
-    log "connected"
-  end
-  
   # JSON packets
   def send_json json
     send_data json.to_json + "\0"
-  end
-  
-  def receive_json json
-    log "Received JSON: #{json.inspect}"
-    
-    if json['trigger'] == 'meep.receive' then
-      publish 'channels', "channels.#{json['channel_uuid']}", json.to_json
-    end
   end
   
   # Null-terminated lines
@@ -49,7 +36,7 @@ class FlashConnection < EventMachine::Connection
     p ex, ex.backtrace
   end
 
-
+  # TODO: redundant code
   def log text
     puts "#{self}: #{text}" if Rails.env != "production" || $DEBUG
   end
