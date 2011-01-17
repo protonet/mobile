@@ -13,17 +13,16 @@ class HttpConnection < EM::Connection
     @tracker = tracker
   end
 
-  def autosubscribe
-    # currently for debugging purposes
-    auth_data = {}
-    auth_data['user_id'] = 43
-    auth_data['token'] = 'HU2sa9FBr8II22Ihd_8E'
-    if json_authenticate(auth_data)
-        @subscribed = true # don't resubscribe
-        bind_socket_to_system_queue
-        bind_socket_to_user_queues
-        add_to_online_users
-        send_channel_subscriptions
+  def autosubscribe auth_data
+    if auth_data && json_authenticate(auth_data)
+      @subscribed = true # don't resubscribe
+      bind_socket_to_system_queue
+      bind_socket_to_user_queues
+      add_to_online_users
+      send_channel_subscriptions
+      true
+    else
+      false
     end
   end
 
@@ -59,7 +58,10 @@ class HttpConnection < EM::Connection
       @response.xhr_streaming_enable true
       @response.send_response
 
-      autosubscribe
+      if @http_post_content && autosubscribe(JSON.parse(@http_post_content))
+        return
+      end
+      @response.close_connection
     end
   end
   #
