@@ -2,8 +2,8 @@
 
 protonet.utils.Behaviors.add({
   "[data-meep-id]:click": function(element, event) {
-    var meepId = element.data("meep-id");
-    protonet.window.Meep.show(meepId);
+    var data = element.parents("article").data("meep");
+    protonet.window.Meep.show(data);
     event.preventDefault();
   }
 });

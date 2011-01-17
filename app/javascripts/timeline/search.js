@@ -25,7 +25,7 @@ protonet.timeline.Search = {
   
   _observe: function() {
     protonet.Notifications.bind("channel.change", function() {
-      if (this.modalWindow.getClassName() == "search") {
+      if (this.modalWindow.getClassName() == "search-window") {
         this.modalWindow.hide();
       }
     }.bind(this));
@@ -63,7 +63,7 @@ protonet.timeline.Search = {
     
     this.modalWindow.update({
       headline: this.bigInput
-    }).show("search");
+    }).show("search-window");
     
     this.input.val("");
     this.bigInput
