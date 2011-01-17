@@ -25,13 +25,16 @@ exports.proxy = function(params, headers, response) {
   
   function sendImage(fileName) {
     // once done send all
-    image_requests[fileName].forEach(function (r) {
-      child.exec("file --mime -b " + fileName, function(error, stdout, stderr) {
-        if(stdout && stdout.match(/(.*);/)) {
-          r.writeHead(200, {'Content-Type': stdout.match(/(.*);/)[1], 'Content-Length': fs.lstatSync(fileName).size});
-        } else {
-          r.writeHead(200, {'Content-Length': fs.lstatSync(fileName).size});
-        }
+    child.exec("file --mime -b " + fileName, function(error, stdout, stderr) {
+      var header = {};
+      if(stdout && stdout.match(/(.*);/)) {
+        header = {'Content-Type': stdout.match(/(.*);/)[1], 'Content-Length': fs.lstatSync(fileName).size};
+      } else {
+        header = {'Content-Length': fs.lstatSync(fileName).size};
+      }
+      image_requests[fileName].forEach(function (r) {
+        r.writeHead(200, header);
+
         fs.createReadStream(fileName)
           .addListener('data', function(data){
             r.write(data, 'binary');
@@ -49,7 +52,7 @@ exports.proxy = function(params, headers, response) {
       r.writeHead(404);
       r.end("NOT FOUND!");
     });
-  }
+  };
   
   function resizeImage(from, to, size, successCallback, failureCallback) {
     if(fs.lstatSync(from) && fs.lstatSync(from).size > 0) {
