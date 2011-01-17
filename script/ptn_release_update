@@ -7,6 +7,8 @@ shift 1
 . $HOME/.profile
 
 cd $HOME/deploy
+git reset --hard
+git checkout master
 git pull
 
 # git co 20de6c3a36a97183cdb58836fc9b831e9c77926c
