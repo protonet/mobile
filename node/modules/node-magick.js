@@ -63,8 +63,8 @@ var magickCommand = function(obj) {
   obj.__run = function (cmd, args, successCallback, errorCallback) {
     args.unshift(cmd);
     cmd = "convert";
-    sys.puts("running command: " + cmd + " " + args.join(" "));
-    var p = childProcess.exec((cmd + " " + args.join(" ")), function(error, stdout, stderr) {
+    sys.puts("running command: " + args.join(" "));
+    var p = childProcess.exec((args.join(" ")), function(error, stdout, stderr) {
       if (error !== null) {
         errorCallback();
       } else {
