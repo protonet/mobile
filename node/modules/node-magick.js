@@ -1,5 +1,12 @@
 var sys = require('sys');
 var childProcess = require('child_process');
+var command = "";
+childProcess.exec("which gm", function(error, stdout, stderr) {
+  if (!(error !== null)) {
+    console.log("graphicsmagick exists, configuring use.")
+    command = "gm";
+  }
+});
 
 exports.createCommand = function(input) { 
   return magickCommand({input: input}); 
@@ -33,10 +40,18 @@ var magickCommand = function(obj) {
     return obj.makeArgs(["-background", color], null);
   };
   obj.stripMetaData = function() {
-    return obj.makeArgs(["-strip"], null);
+    if(command == "gm") {
+      return obj;
+    } else {
+      return obj.makeArgs(["-strip"], null);
+    }
   };
   obj.resample = function(dpi) {
-    return obj.makeArgs(["-resample", dpi], null);
+    if(command == "gm") {
+      return obj;
+    } else {
+      return obj.makeArgs(["-resample", dpi], null);
+    }
   };
   obj.colorSpace = function(space) {
     return obj.makeArgs(["-colorspace", space], null);
@@ -62,9 +77,9 @@ var magickCommand = function(obj) {
   };
   obj.__run = function (cmd, args, successCallback, errorCallback) {
     args.unshift(cmd);
-    cmd = "convert";
-    sys.puts("running command: " + args.join(" "));
-    var p = childProcess.exec((args.join(" ")), function(error, stdout, stderr) {
+    
+    console.log("running command: "+ command + " " + args.join(" "));
+    var p = childProcess.exec(( command + " " + args.join(" ") ), function(error, stdout, stderr) {
       if (error !== null) {
         errorCallback();
       } else {
