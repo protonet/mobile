@@ -19,7 +19,7 @@ var magickCommand = function(obj) {
     return obj.crop(width, height).resize(width, height);
   };
   obj.resizeMagick = function(width, height) {
-    return obj.stripMetaData().colorSpace('RGB').resample(72).resize(width, height).extent(width, height).gravity("center").background("none");
+    return obj.stripMetaData().colorSpace('RGB').resample(72).gravity("center").resize(width, height).extent(width, height).background("none");
   };
   obj.resize = function(width, height) {
     var wh = width + "x" + height + "^";
@@ -41,7 +41,7 @@ var magickCommand = function(obj) {
   };
   obj.stripMetaData = function() {
     if(command == "gm") {
-      return obj;
+      return obj.makeArgs(["+profile", '"*"'], null);
     } else {
       return obj.makeArgs(["-strip"], null);
     }
