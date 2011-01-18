@@ -17,8 +17,8 @@ jgs .'      ```--.....--'''    ' `:_ o       :
 
 = PROTONET
 
-Core Contributors: christopher (tiff), dudemeister (dudemeister), m0rk (m0rk), reza (fishman)
-Past Contributors: actionJackson (dreewill), alto(alto), comes (ppeszko)
+Core Contributors: christopher (tiff), dudemeister (dudemeister), reza (fishman), philly-mac (philly-mac)
+Past Contributors: actionJackson (dreewill), alto(alto), comes (ppeszko), danopia (danopia), m0rk (m0rk)
 
 == DESCRIPTION:
 
@@ -71,12 +71,12 @@ rake db:setup
 
 Install our messaging broker:
 
+brew install rabbitmq
+
+or
+
 sudo port selfupdate
 sudo port install rabbitmq-server
-
-If you want to run our whole testsuite:
-sudo rabbitmqctl add_vhost /test
-sudo rabbitmqctl set_permissions -p /test guest ".*" ".*" ".*"
 
 == NODE.JS
 
@@ -119,10 +119,22 @@ bash -c "`wget -O - babushka.me/up`"
 babushka sources -a dudemeister git://github.com/dudemeister/babushka-deps.git
 # this is the licence key: 83489kjdfj734732snfnfdsns98jsnld
 babushka "dudemeister:protonet babushka"
+# if you've got a full node with wifi capabilities you want to have taken over by protonet
+babushka protonet:node-preparations
+# otherwise use
 babushka protonet:vm-preparations
+# this will installa all features minus wifi and networking stuff
 
 === OTHER STUFF
 These things are not needed if you just want to do some basic development:
+
+== RUNNNING TESTS
+
+If you want to run our whole testsuite you'll need to add a vhost:
+sudo rabbitmqctl add_vhost /test
+sudo rabbitmqctl set_permissions -p /test guest ".*" ".*" ".*"
+
+
 
 == COMPILING THE SOCKET:
 
