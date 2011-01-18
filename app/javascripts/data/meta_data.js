@@ -7,6 +7,7 @@
  * 
  * Supports:
  *  - meta tags
+ *  - dublin core meta tags
  *  - title
  *  - microformats (hcard)
  *  - facebook/digg share standard
@@ -70,7 +71,10 @@ protonet.data.MetaData = {
         var key = metaTag.property.substr(3).toLowerCase();
         if (key == "image") {
           key = "image_src";
-        } 
+        }
+        if (key == "video") {
+          key = "video_src";
+        }
         data[key] = $.trim(metaTag.content);
       }
     });

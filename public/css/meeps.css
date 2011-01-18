@@ -58,6 +58,7 @@
   z-index: 3;
   font-size: 14px;
 }
+
 .meep .detail-link:hover,
 .meep .detail-link:active,
 .meep:focus .detail-link {
