@@ -17,13 +17,14 @@ require File.dirname(__FILE__) + '/client_tracker.rb'
 EventMachine::run do
   host = '0.0.0.0'
   port = configatron.socket.port rescue 5000
+  longpolling_port = configatron.longpolling.port rescue 8000
   
   tracker = ClientTracker.new
   NodeConnection.tracker = tracker
   
   EventMachine.epoll if RUBY_PLATFORM =~ /linux/ #sky is the limit
   EventMachine::start_server host, port, ClientConnection, tracker
-  EventMachine::start_server host, 8000, HttpConnection, tracker
+  EventMachine::start_server host, longpolling_port, HttpConnection, tracker
 
   
   puts "Started socket server on #{host}:#{port}..."
