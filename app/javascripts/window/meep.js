@@ -15,13 +15,13 @@ protonet.window.Meep = (function() {
     
     next      = next     || $("<a>", { className: "next" });
     previous  = previous || $("<a>", { className: "previous" });
-    meepList  = meepList ? meepList.html("") : $("<ul>", { className: "meeps" });
+    meepList  = meepList ? meepList.html("") : _getMeepList();
     
     title.text(protonet.t("MEEP_WINDOW_HEADLINE").replace("{id}", "#" + data.id));
     
     protonet.ui.ModalWindow.update({ content: meepList.add(border).add(next).add(previous) }).show(CLASS_NAME);
     
-    data.channel_id = "detail_view";
+    data.channel_id = null;
     currentMeep = new protonet.timeline.Meep(data).render(meepList);
     
     loading();
@@ -40,7 +40,8 @@ protonet.window.Meep = (function() {
     return this;
   }
   
-  function adjust() {
+  function adjust(duration) {
+    duration = $.type(duration) == "number" ? duration : 500;
     var meepHeight          = currentMeep.element.outerHeight(),
         newBorderMarginTop  = -(meepHeight + border.outerHeight() - border.height()) / 2,
         newMarginTop        = -currentMeep.element.outerHeight() / 2;
@@ -50,7 +51,7 @@ protonet.window.Meep = (function() {
     border.animate({
       marginTop: newBorderMarginTop.px(),
       height:    meepHeight.px()
-    }, 500, function() {
+    }, duration, function() {
       loadingEnd();
       currentMeep.element.css("z-index", 5);
     });
@@ -58,8 +59,13 @@ protonet.window.Meep = (function() {
     return this;
   }
   
+  function _getMeepList() {
+    return $("<ul>", { className: "meeps" }).bind("text_extension.show_flash text_extension.hide_flash", function() { adjust(0); });
+  }
+  
   return {
     show:       show,
+    adjust:     adjust, 
     loading:    loading,
     loadingEnd: loadingEnd
   };

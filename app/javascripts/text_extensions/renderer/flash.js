@@ -19,14 +19,17 @@ protonet.text_extensions.render.flash = (function() {
       var callback = function(event) {
         var flashElement = event.ref;
         if (flashElement) {
+          flashElement = $(flashElement).trigger("text_extension.show_flash");
           $("<a>", {
             className: "flash-close-link close-link",
             html: "X",
             mousedown: false, // ensure that meep isn't accidentally focused
             click: function() {
               $(this).remove();
-              $(flashElement).replaceWith(anchor);
-              anchor.css("visibility", "");
+              flashElement.replaceWith(anchor);
+              anchor
+                .css("visibility", "")
+                .trigger("text_extension.hide_flash");
             }
           }).insertBefore(flashElement);
         }
