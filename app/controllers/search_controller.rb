@@ -16,7 +16,7 @@ class SearchController < ApplicationController
       format.html {}
     end
   end
-
+  
   def more_tweets
     respond_to do |format|
       format.json do

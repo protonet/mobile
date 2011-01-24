@@ -36,7 +36,13 @@ class TweetsController < ApplicationController
       render :text => ''
     end
   end
-
+  
+  def get_before
+    tweet = Tweet.find(params[:id])
+    count = params[:count]
+    # todo...
+  end
+  
   def create
     channel_id = params[:tweet].delete(:channel_id)
     params[:tweet].reject! {|k,v| !Tweet.valid_attributes.include?(k)}

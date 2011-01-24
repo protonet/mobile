@@ -164,21 +164,13 @@ input.search {
 }
 
 .meep-window .next {
-  border-color: transparent transparent rgba(72, 123, 255, 0.8) transparent;
+  border-color: transparent transparent rgb(72, 123, 255) transparent;
   top: -45px;
 }
 
-.meep-window .next:hover {
-  border-color: transparent transparent rgb(72, 123, 255) transparent;
-}
-
 .meep-window .previous {
-  border-color: rgba(72, 123, 255, 0.8) transparent transparent transparent;
-  bottom: -47px;
-}
-
-.meep-window .previous:hover {
   border-color: rgb(72, 123, 255) transparent transparent transparent;
+  bottom: -47px;
 }
 
 .meep-window .border.loading {

@@ -1,9 +1,10 @@
 protonet.text_extensions.render.flash = (function() {
-  var index = 1, swfObjectParams = {
-    allowfullscreen: true,
-    wmode: "opaque",
-    allowscriptaccess: "samedomain" // for security reasons, see http://kb2.adobe.com/cps/164/tn_16494.html
-  };
+  var index = 1,
+      swfObjectParams = {
+        allowfullscreen: true,
+        wmode: "opaque",
+        allowscriptaccess: "samedomain" // for security reasons, see http://kb2.adobe.com/cps/164/tn_16494.html
+      };
   
   return function(data) {
     var anchor = protonet.text_extensions.render.image(data, true),

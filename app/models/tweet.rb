@@ -78,7 +78,23 @@ class Tweet < ActiveRecord::Base
       :channel_id => channel_id
     })
   end
-
+  
+  def before(count)
+    Tweet.all(:include => [:says],
+      :conditions => ["tweets.id < ? AND says.channel_id = ?", id, channels.first.id],
+      :order => "tweets.created_at DESC",
+      :limit => count
+    )
+  end
+  
+  def after(count)
+    Tweet.all(:include => [:says],
+      :conditions => ["tweets.id > ? AND says.channel_id = ?", id, channels.first.id],
+      :order => "tweets.created_at DESC",
+      :limit => count
+    )
+  end
+  
   private
 
   def from_minutes(opts)
