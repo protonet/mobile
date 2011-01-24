@@ -102,7 +102,7 @@
   padding-left: 25px;
 }
 
-.meep .own article:nth-last-child(2) {
+.own.meep article:nth-last-child(2) {
   background-image: url("/img/icn_own_message_arrow.png");
 }
 
