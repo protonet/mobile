@@ -49,17 +49,14 @@ git submodule update
 # if you don't have bundler install it first:
 (sudo) gem install bundler
 
-# if you don't have imagemagick install it first:
-(sudo) port install imagemagick
+# we'll be using homebrew to manage dependencies (this is what you should use on OS X anyways)
+ruby -e "$(curl -fsSL https://gist.github.com/raw/323731/install_homebrew.rb)"
 
-# if not:
-cd /tmp
-curl -LO ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz
-tar xzf uuid-1.6.2.tar.gz
-cd uuid-1.6.2/
-./configure
-make
-sudo make install
+# if you don't have imagemagick or graphicsmagick, install it first:
+brew install graphicsmagick
+
+# get your uuid stuff:
+brew install ossp-uuid
 
 # install the needed gems:
 bundle install
@@ -70,28 +67,18 @@ rake db:setup
 == MESSAGING
 
 Install our messaging broker:
-
 brew install rabbitmq
-
-or
-
-sudo port selfupdate
-sudo port install rabbitmq-server
 
 == NODE.JS
 
-Install node.js by downloading it from http://nodejs.org/#download (== 0.2.6)
-then extract it and execute:
-
-./configure
-make
-(sudo) make install
+Install node.js:
+brew install node
 
 === START THE SYSTEM
 
 # After installing all dependencies you can get the system running by doing these steps:
 # start the messaging broker
-(sudo) rabbitmq-server
+rabbitmq-server
 
 # and start the rails server (it will start and shutdown the js dispatcher and node.js automatically)
 script/server
@@ -123,7 +110,7 @@ babushka "dudemeister:protonet babushka"
 babushka protonet:node-preparations
 # otherwise use
 babushka protonet:vm-preparations
-# this will installa all features minus wifi and networking stuff
+# this will install all features minus wifi and networking stuff
 
 === OTHER STUFF
 These things are not needed if you just want to do some basic development:
@@ -131,10 +118,8 @@ These things are not needed if you just want to do some basic development:
 == RUNNNING TESTS
 
 If you want to run our whole testsuite you'll need to add a vhost:
-sudo rabbitmqctl add_vhost /test
-sudo rabbitmqctl set_permissions -p /test guest ".*" ".*" ".*"
-
-
+rabbitmqctl add_vhost /test
+rabbitmqctl set_permissions -p /test guest ".*" ".*" ".*"
 
 == COMPILING THE SOCKET:
 
