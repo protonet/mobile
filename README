@@ -52,7 +52,7 @@ git submodule update
 # if you don't have imagemagick install it first:
 (sudo) port install imagemagick
 
-#if not:
+# if not:
 cd /tmp
 curl -LO ftp://ftp.ossp.org/pkg/lib/uuid/uuid-1.6.2.tar.gz
 tar xzf uuid-1.6.2.tar.gz
@@ -80,7 +80,7 @@ sudo port install rabbitmq-server
 
 == NODE.JS
 
-Install node.js by downloading it from http://nodejs.org/#download (== 0.2.1)
+Install node.js by downloading it from http://nodejs.org/#download (== 0.2.6)
 then extract it and execute:
 
 ./configure
