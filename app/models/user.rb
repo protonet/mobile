@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
 
   after_create :create_ldap_user if configatron.ldap.active == true
   after_create :send_create_notification
-  after_create :listen_to_home
+  after_create :listen_to_channels
 
   after_destroy :move_tweets_to_anonymous
   after_destroy :move_owned_channels_to_anonymous
@@ -70,6 +70,8 @@ class User < ActiveRecord::Base
       find_by_login(login.downcase) || begin
         generated_password = ActiveSupport::SecureRandom.base64(10)
         user = User.new({:login => login, :password => generated_password, :password_confirmation => generated_password})
+        user.channels = [Channel.home]
+        user.roles = [Role.find_by_title('user')]
         user if user.save
       end
     end
@@ -99,7 +101,7 @@ class User < ActiveRecord::Base
   def self.stranger(session_id)
     u = find_or_create_by_temporary_identifier(session_id)  do |u|
       u.name = "stranger_#{session_id[0,10]}"
-      u.listen_to_home
+      u.channels = [Channel.home]
     end
     u
   end
@@ -140,13 +142,8 @@ class User < ActiveRecord::Base
     channels.all(:conditions => ['listens.flags = 1'])
   end
 
-  def listen_to_home
-    return if listening_to_home?
-    subscribe(Channel.home)
-  end
-
-  def listening_to_home?
-    channels.try(:include?, Channel.home)
+  def listen_to_channels
+    channels.each { |channel | subscribe(channel) } 
   end
 
   # skip validation if the user is a logged out (stranger) user
@@ -218,6 +215,14 @@ class User < ActiveRecord::Base
   
   def can_be_edited_by?(user)
     self.id != 0 && !user.stranger? && (user.admin? || user.id == self.id)
+  end
+  
+  def accept_invitation(invitation)
+    self.channels = Channel.find(invitation.channel_ids)
+    self.roles = [Role.find_by_title('invitee')]
+    invitation.accepted_at = Time.now
+    invitation.invitee = self
+    invitation.save
   end
   
 end

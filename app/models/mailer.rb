@@ -1,9 +1,9 @@
 class Mailer < ActionMailer::Base
   
   def invitation(invitation)
-    subject    'Awesome buddy'
+    subject    'Join the Protonet'
     recipients invitation.email
-    from       invitation.user.login
+    from       invitation.user.display_name
     sent_on    Time.now
     body       :invitation => invitation
   end

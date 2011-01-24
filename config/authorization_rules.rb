@@ -4,6 +4,10 @@ authorization do
     #has_permission_on :conferences, :to => :read
   end
   
+  role :invitee do
+    # has_permission_on :channels, :to => :read
+  end
+  
   # permissions on other roles, such as
   role :admin do
     has_permission_on :invitations, :to => :manage

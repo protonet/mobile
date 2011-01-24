@@ -15,7 +15,13 @@ class RegistrationsController < ApplicationController
   def create
     build_resource
 
-    if resource.save
+    if resource.valid?
+      if session[:invitation_id] && invitation = Invitation.find(session[:invitation_id])
+        session[:invitation_id] = nil if resource.accept_invitation(invitation)
+      else
+        resource.channels = [Channel.home]
+      end
+      resource.save
       set_flash_message :notice, :signed_up
       sign_in_and_redirect(resource_name, resource)
     else
@@ -54,7 +60,8 @@ class RegistrationsController < ApplicationController
     end
     
     def check_stranger_setting
-      redirect_to "/login" and return unless !!System::Preferences.allow_registrations_for_strangers
+      session[:invitation_id] = Invitation.find_by_token(params[:token]).try(:id) if params[:token]
+      redirect_to "/login" and return unless (!!System::Preferences.allow_registrations_for_strangers || session[:invitation_id])
     end
     
 end

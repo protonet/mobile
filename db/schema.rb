@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110113160826) do
+ActiveRecord::Schema.define(:version => 20110121153542) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -44,6 +44,7 @@ ActiveRecord::Schema.define(:version => 20110113160826) do
     t.datetime "accepted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "invitee_id"
   end
 
   create_table "listens", :force => true do |t|

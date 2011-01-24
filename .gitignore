@@ -28,3 +28,4 @@ solr/data
 RELEASE
 TYPE
 .project
+erl_crash.dump

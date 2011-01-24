@@ -1,1 +1,20 @@
-Testing
+<div id="system-settings">
+  <% form_tag system_preferences_update_path do -%>
+    <fieldset>
+      <legend>
+        <strong>System Settings</strong>
+      </legend>
+      <ul>
+        <li>
+          <%= label_tag 'preferences[public_host]', 'Public Host' %>
+          <%= text_field_tag 'preferences[public_host]', System::Preferences.public_host %>
+        </li>
+      </ul>
+    </fieldset>
+    <button type="submit">
+      <span>
+        <em>Update</em>
+      </span>
+    </button>
+  <%- end -%>
+</div>

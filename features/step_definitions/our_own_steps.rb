@@ -143,3 +143,7 @@ Given /^(?:|I )store \/([^\/]*)\/ within "([^\"]*)" into "([^\"]*)"$/ do |regexp
   text = find(:css, selector).text.match(regexp).to_a.last
   instance_variable_set("@#{variable}", text)
 end
+
+Given /^I ccept the invitation with the token "([^\"]*)"$/ do |token|
+  visit accept_invitation_path(:token => token)
+end

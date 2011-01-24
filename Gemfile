@@ -44,5 +44,9 @@ group :cucumber do
   gem "capybara", "0.3.9"
   gem "database_cleaner", "0.5.2"
   gem "pickle", "0.3.0"
+  # As of 1.0 email-spec is no longer backwards compatible wit Rails 2.x.
+  # So use the 0.6.x gems.
+  # gem "email_spec", "~> 0.6.3"
+  gem "cucumber_factory"
 end
 
