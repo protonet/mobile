@@ -22,6 +22,7 @@ protonet.text_extensions.render.flash = (function() {
           $("<a>", {
             className: "flash-close-link close-link",
             html: "X",
+            mousedown: false, // ensure that meep isn't accidentally focused
             click: function() {
               $(this).remove();
               $(flashElement).replaceWith(anchor);
