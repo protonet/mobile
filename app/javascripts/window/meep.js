@@ -53,7 +53,7 @@ protonet.window.Meep = (function() {
       height:    meepHeight.px()
     }, duration, function() {
       loadingEnd();
-      currentMeep.element.css("z-index", 5);
+      currentMeep.element.addClass("selected");
     });
     
     return this;
