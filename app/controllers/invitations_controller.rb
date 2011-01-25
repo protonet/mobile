@@ -1,4 +1,5 @@
 class InvitationsController < ApplicationController
+  layout false
   filter_resource_access
   
   def new

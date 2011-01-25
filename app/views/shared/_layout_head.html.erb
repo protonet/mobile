@@ -3,8 +3,8 @@
   <title>
     <%= strip_tags(yield(:page_title)) || 'protonet - it\'s yours' %>
   </title>
-  <link rel="shortcut icon" href="img/favicon.png" type="image/png">
-  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="shortcut icon" href="/img/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
   <%= stylesheet_link_tag(stylesheets, :cache => (configatron.avoid_caching != false)) %>
   <script>
     var protonet = protonet || {};

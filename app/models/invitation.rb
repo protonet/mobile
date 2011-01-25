@@ -11,6 +11,8 @@ class Invitation < ActiveRecord::Base
   before_validation :generate_token, :on => :create
   after_create  :send_email
   
+  named_scope :unaccepted, :conditions => { :accepted_at => nil }
+  
   private
   
   def generate_token

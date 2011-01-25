@@ -16,7 +16,7 @@ class RegistrationsController < ApplicationController
     build_resource
 
     if resource.valid?
-      if session[:invitation_id] && invitation = Invitation.find(session[:invitation_id])
+      if session[:invitation_id] && invitation = Invitation.unaccepted.find(session[:invitation_id])
         session[:invitation_id] = nil if resource.accept_invitation(invitation)
       else
         resource.channels = [Channel.home]
@@ -60,7 +60,7 @@ class RegistrationsController < ApplicationController
     end
     
     def check_stranger_setting
-      session[:invitation_id] = Invitation.find_by_token(params[:token]).try(:id) if params[:token]
+      session[:invitation_id] = Invitation.unaccepted.find_by_token(params[:token]).try(:id) if params[:token]
       redirect_to "/login" and return unless (!!System::Preferences.allow_registrations_for_strangers || session[:invitation_id])
     end
     
