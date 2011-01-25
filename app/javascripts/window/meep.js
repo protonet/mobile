@@ -1,5 +1,7 @@
 protonet.window.Meep = (function() {
   var CLASS_NAME = "meep-window",
+      URL        = "/tweets/{position}",
+      COUNT      = 4,
       data       = {},
       currentMeep,
       border,
@@ -15,12 +17,13 @@ protonet.window.Meep = (function() {
     
     next      = next     || $("<a>", { className: "next" });
     previous  = previous || $("<a>", { className: "previous" });
-    meepList  = meepList ? meepList.html("") : _getMeepList();
+    meepList  = _getMeepList();
     
     title.text(protonet.t("MEEP_WINDOW_HEADLINE").replace("{id}", "#" + data.id));
     
     protonet.ui.ModalWindow.update({ content: meepList.add(border).add(next).add(previous) }).show(CLASS_NAME);
     
+    // Make sure that it doesn't conflict with channels
     data.channel_id = null;
     currentMeep = new protonet.timeline.Meep(data).render(meepList);
     
@@ -54,9 +57,47 @@ protonet.window.Meep = (function() {
     }, duration, function() {
       loadingEnd();
       currentMeep.element.addClass("selected");
+      if (duration > 0) {
+        currentMeep.element.hide().fadeIn(duration);
+      }
     });
     
+    _loadAndRender("before", currentMeep);
+    _loadAndRender("after", currentMeep);
+    
     return this;
+  }
+  
+  function _loadAndRender(position, currentMeep) {
+    $.ajax({
+      data:     { id: currentMeep.data.id, count: COUNT },
+      url:      URL.replace("{position}", position),
+      success:  function(data) {
+        if (!data.length) {
+          return;
+        }
+        var tempContainer = $("<ul>");
+        data.reverse().chunk(function(meepData) {
+          return new protonet.timeline.Meep(meepData).render(tempContainer);
+        }, function() {
+          if (position == "after") {
+            var oldMeepListHeight     = meepList.outerHeight(),
+                oldMeepListMarginTop  = parseInt(meepList.css("margin-top"), 10),
+                newMeepListHeight,
+                diffMeepListHeight;
+            meepList.prepend(tempContainer.children());
+            newMeepListHeight = meepList.outerHeight();
+            diffMeepListHeight = newMeepListHeight - oldMeepListHeight;
+            meepList.css("margin-top", (oldMeepListMarginTop - diffMeepListHeight).px());
+          } else {
+            meepList.append(tempContainer.children());
+          }
+        });
+      },
+      error:    function() {
+        protonet.Notifications.trigger("flash_message.error", protonet.t("DETAIL_VIEW_LOADING_ERROR"));
+      }
+    });
   }
   
   function _getMeepList() {

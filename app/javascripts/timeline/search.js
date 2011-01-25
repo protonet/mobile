@@ -137,7 +137,7 @@ protonet.timeline.Search = {
       return;
     }
     
-    data.reverse().chunk(function(meepData, i) {
+    data.reverse().chunk(function(meepData) {
       return new protonet.timeline.Meep(meepData).render(container);
     }, function(meeps) {
       meeps.chunk(function(meep) { meep.highlight(this.keyword); }.bind(this), callback);

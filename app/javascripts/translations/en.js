@@ -21,5 +21,6 @@ protonet.translations = {
   PUBLISH_FILES_CONFIRM: "Your files have been uploaded successfully. Do you want to publish them?",
   SEARCH_ERROR: "Search for '{keyword}' failed. Please try again later.",
   MEEP_WINDOW_HEADLINE: "Message {id}",
-  MODAL_WINDOW_LOADING: "Loading ..."
+  MODAL_WINDOW_LOADING: "Loading ...",
+  DETAIL_VIEW_LOADING_ERROR: "Something went wrong while loading the context for the current message."
 };

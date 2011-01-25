@@ -56,11 +56,12 @@ protonet.ui.ModalWindow = (function($) {
   }
   
   function _unobserve() {
-    $window.unbind(".modal_window");
-    $document.unbind(".modal_window");
-    elements.shadow.unbind(".modal_window");
-    elements.closeLink.unbind(".modal_window");
-    elements.dialog.unbind(".modal_window");
+    $window
+      .add($document)
+      .add(elements.shadow)
+      .add(elements.closeLink)
+      .add(elements.dialog)
+      .unbind(".modal_window");
   }
   
   /**

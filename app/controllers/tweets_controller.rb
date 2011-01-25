@@ -37,10 +37,14 @@ class TweetsController < ApplicationController
     end
   end
   
-  def get_before
-    tweet = Tweet.find(params[:id])
-    count = params[:count]
-    # todo...
+  def before
+    meep = Tweet.find(params[:id])
+    render :json => Tweet.prepare_for_frontend(meep.channels.first, meep.before(params[:count]))
+  end
+  
+  def after
+    meep = Tweet.find(params[:id])
+    render :json => Tweet.prepare_for_frontend(meep.channels.first, meep.after(params[:count]))
   end
   
   def create

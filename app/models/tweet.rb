@@ -83,6 +83,7 @@ class Tweet < ActiveRecord::Base
     Tweet.all(:include => [:says],
       :conditions => ["tweets.id < ? AND says.channel_id = ?", id, channels.first.id],
       :order => "tweets.created_at DESC",
+      :joins => "LEFT JOIN images_avatars on images_avatars.user_id = tweets.user_id",
       :limit => count
     )
   end
@@ -91,6 +92,7 @@ class Tweet < ActiveRecord::Base
     Tweet.all(:include => [:says],
       :conditions => ["tweets.id > ? AND says.channel_id = ?", id, channels.first.id],
       :order => "tweets.created_at DESC",
+      :joins => "LEFT JOIN images_avatars on images_avatars.user_id = tweets.user_id",
       :limit => count
     )
   end

@@ -14,6 +14,8 @@ ActionController::Routing::Routes.draw do |map|
 
   # tweets
   map.sync_tweets 'tweets/sync', :controller => 'tweets', :action => 'sync'
+  map.tweets_before 'tweets/before', :controller => 'tweets', :action => 'before'
+  map.tweets_after 'tweets/after', :controller => 'tweets', :action => 'after'
   map.resources   :tweets
   map.more_tweets '/more_tweets/:tweet_id/:channel_id/:later/:earlier/:pos.:format',
     :controller => 'search', :action => 'more_tweets'

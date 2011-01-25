@@ -58,18 +58,6 @@
 
 /* =MODAL WINDOWS CONTAINING MEEPS
 =========================================================================== */
-.search-window .meeps,
-.meep-window .meeps {
-  margin: 0 -20px;
-  width: 650px;
-}
-
-.search-window .modal-window-content,
-.meep-window .modal-window-content {
-  padding-left: 45px;
-  margin-left: -25px;
-}
-
 .search-window li.meep:last-child {
   margin-bottom: 0;
 }
@@ -79,6 +67,16 @@
 =========================================================================== */
 #search-form {
   margin-bottom: 20px;
+}
+
+.search-window .meeps {
+  margin: 0 -20px;
+  width: 650px;
+}
+
+.search-window .modal-window-content {
+  padding-left: 45px;
+  margin-left: -25px;
 }
 
 input.search {
@@ -110,12 +108,24 @@ input.search {
 
 /* =MODAL WINDOW: MEEP DETAILS
 =========================================================================== */
+.meep-window .modal-window-content {
+  padding-left: 75px;
+  margin-left: -55px;
+}
+
+.meep-window .meeps {
+  margin: 0 -20px;
+  width: 650px;
+}
+
 .meep-window h2 {
   display: none;
 }
 
 .meep-window .modal-window-content {
   overflow: hidden;
+  margin-right: -30px !important;
+  position: relative;
 }
 
 .meep-window .meeps {
@@ -126,7 +136,7 @@ input.search {
 .meep-window .border {
   height: 90px;
   border: 20px solid rgb(72, 123, 255);
-  border-width: 24px 20px;
+  border-width: 22px 20px;
   -webkit-box-shadow: 0 0 8px #000;
   -moz-box-shadow: 0 0 8px #000;
   box-shadow: 0 0 8px #000;
@@ -134,9 +144,9 @@ input.search {
   -moz-border-radius: 1.2em;
   border-radius: 1.2em;
   position: absolute;
-  left: -50px;
+  left: 5px;
   top: 50%;
-  padding: 10px;
+  padding: 7px;
   margin-top: -70px;
   width: 660px;
   background: #fff;
@@ -155,6 +165,7 @@ input.search {
 
 .meep-window .selected.meep {
   z-index: 5;
+  opacity: 1;
 }
 
 .meep-window .next {
@@ -181,9 +192,10 @@ input.search {
 
 .meep-window h5 {
   position: absolute;
-  top: -24px;
+  top: -22px;
   color: #fff;
   line-height: 24px;
+  font-size: 11px;
   left: 30px;
 }
 
