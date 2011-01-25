@@ -23,6 +23,7 @@ Feature: Invitations
 
   @javascript
   Scenario: Invitee accepts invitation  
+    Given I go unauthenticated to the start page
     Given an invitation exists with token: "1234567890", email: "friend@protonet.com", channel_ids: "1", user: user "dudemeister"
     When I accept the invitation with the token "1234567890"
     Then I should see "Get started by signing up"
