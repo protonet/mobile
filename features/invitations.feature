@@ -1,8 +1,8 @@
 @wip
 Feature: Invitations
   Background:
-    Given a user exists with login: "dudemeister"
-    Given a user exists with login: "someotherdude"
+    Given a user with the login "dudemeister"
+    Given a user with the login "someotherdude"
     And "dudemeister" is an admin
 
   @javascript

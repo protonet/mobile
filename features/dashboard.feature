@@ -20,13 +20,13 @@ Feature: Using the protonet dashboard
 
   @javascript
   Scenario: Writing a meep containing an username
-    Given a user exists with login: "dudemeister"
+    Given a user with the login "dudemeister"
     And I send the message "Hallo @dudemeister!"
     Then I should see "dudemeister" within "#timeline .reply"
 
   @javascript
   Scenario: Writing a meep containing my username
-    Given a user exists with login: "dudemeister"
+    Given a user with the login "dudemeister"
     And I am logged in as "dudemeister"
     And I go to the start page
     And I send the message "Hallo @dudemeister!"
@@ -34,7 +34,7 @@ Feature: Using the protonet dashboard
 
   @javascript
   Scenario: Writing a meep containing the beginning of a username
-    Given a user exists with login: "dudemeister"
+    Given a user with the login "dudemeister"
     And I go to the start page
     And I fill in "message" with "Hallo @dudemei"
     Then the message field should contain "Hallo @dudemeister"
@@ -49,14 +49,14 @@ Feature: Using the protonet dashboard
   @javascript
   Scenario: Writing a meep containing the beginning of a username should take precedence
     And a channel exists with name: "duderino"
-    Given a user exists with login: "dudemeister"
+    Given a user with the login "dudemeister"
     And I go to the start page
     And I fill in "message" with "Hallo @dude"
     Then the message field should contain "Hallo @dudemeister"
 
   @javascript
   Scenario: Seeing my subscribed channels
-    Given a user exists with login: "dudemeister"
+    Given a user with the login "dudemeister"
     And a channel exists with name: "cool-channel"
     And "dudemeister" is listening to "cool-channel"
     And I am logged in as "dudemeister"
@@ -65,7 +65,7 @@ Feature: Using the protonet dashboard
   @javascript
     Scenario: Subscribing to a channel thru a meep mention
     Given a channel exists with name: "cool-channel"
-    And a user exists with login: "dudemeister"
+    And a user with the login "dudemeister"
     And I am logged in as "dudemeister"
     Given I send the message "@cool-channel"
     And I click on "cool-channel" within "#timeline"

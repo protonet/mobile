@@ -2,7 +2,7 @@ Feature: Using the protonet search
 
   @javascript
   Scenario: Writing a meep and searching for it
-    Given a user exists with login: "dudemeister"
+    Given a user with the login "dudemeister"
     And I go to the start page
     And I am logged in as "dudemeister"
     Given I send the message "foobar"

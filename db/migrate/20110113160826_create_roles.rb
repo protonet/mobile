@@ -14,8 +14,8 @@ class CreateRoles < ActiveRecord::Migration
     admin_role = Role.create(:title => "admin")
     user_role  = Role.create(:title => "user")
     User.all.each do |user|
-      user.roles << user_role unless user.stranger?
-      user.roles << admin_role if user.admin?
+      user.add_to_role('user') unless user.stranger?
+      user.add_to_role('admin') if user.admin
     end
   end
 

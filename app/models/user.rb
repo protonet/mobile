@@ -200,10 +200,24 @@ class User < ActiveRecord::Base
     !!avatar
   end
   
+  def add_to_role(role_name)
+    role = Role.find_by_title!(role_name.to_s)
+    self.roles << role unless roles.include?(role)
+  end
+  
+  def remove_from_role(role_name)
+    role = Role.find_by_title!(role_name.to_s)
+    self.roles -= [role]
+  end
+  
+  def admin?
+    role_symbols.include?(:admin)
+  end
+  
   def make_admin(key)
     return :admin_already_set if System::Preferences.admin_set == true
     if key == System::Preferences.admin_key
-      (update_attribute(:admin, true) && System::Preferences.admin_set = true) ? :ok : :error
+      (add_to_role(:admin) && System::Preferences.admin_set = true) ? :ok : :error
     else
       :key_error
     end
