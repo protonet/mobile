@@ -15,11 +15,11 @@ Feature: Invitations
     And I press "Send invitation"
     Then I should see "Invitation was successfully created"
     # Invitation mail
-    # And "friend@protonet.com" should receive an email with subject "Join the Protonet"
-    # When "friend@protonet.com" opens the email with subject "Join the Protonet"
-    # Then they should see "dudemeister invited you to the Protonet" in the email body
-    # And they should see "Come join us" in the email body
-    # And they should see /\/join\/(.*){10}/ in the email body
+    And "friend@protonet.com" should receive an email with subject "Join the Protonet"
+    When "friend@protonet.com" opens the email with subject "Join the Protonet"
+    Then they should see "dudemeister invited you to the Protonet" in the email body
+    And they should see "Come join us" in the email body
+    And they should see /\/join\/(.*){10}/ in the email body
 
   @javascript
   Scenario: Invitee accepts invitation  

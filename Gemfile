@@ -46,9 +46,8 @@ group :cucumber do
   gem "pickle", "0.3.0"
   gem "launchy"
   # As of 1.0 email-spec is no longer backwards compatible wit Rails 2.x.
-  # So use the 0.6.x gems.
-  # gem "rspec", "~> 1.3.1", :require => 'spec'
-  # gem "rspec-rails", "~> 1.3.3"
-  # gem "email_spec", "~> 0.6.5"
+  # Use the 0.6.3 gem, because the other versions have problems with the rspec dependency
+  gem "rspec-rails", "~> 1.3.3"
+  gem "email_spec", "0.6.3"
 end
 
