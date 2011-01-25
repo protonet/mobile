@@ -47,8 +47,8 @@ group :cucumber do
   gem "launchy"
   # As of 1.0 email-spec is no longer backwards compatible wit Rails 2.x.
   # So use the 0.6.x gems.
-  # gem "mcmire-matchy"
-  # gem "email_spec", :git => "git://github.com/basiszwo/email-spec.git"
+  # gem "rspec", "~> 1.3.1", :require => 'spec'
   # gem "rspec-rails", "~> 1.3.3"
+  # gem "email_spec", "~> 0.6.5"
 end
 

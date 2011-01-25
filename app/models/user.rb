@@ -144,7 +144,7 @@ class User < ActiveRecord::Base
   end
 
   def listen_to_channels
-    channels_to_subscribe.each { |channel | subscribe(channel) } 
+    (channels_to_subscribe || []).each { |channel | subscribe(channel) } 
   end
 
   # skip validation if the user is a logged out (stranger) user
