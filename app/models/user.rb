@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   validates_length_of       :name,     :maximum => 100, :unless => :skip_validation
 
   attr_accessible :login, :email, :name, :password, :password_confirmation
+  attr_accessor :channels_to_subscribe
 
   has_many  :tweets
   has_many  :listens,  :dependent => :destroy
@@ -70,7 +71,7 @@ class User < ActiveRecord::Base
       find_by_login(login.downcase) || begin
         generated_password = ActiveSupport::SecureRandom.base64(10)
         user = User.new({:login => login, :password => generated_password, :password_confirmation => generated_password})
-        user.channels = [Channel.home]
+        user.channels_to_subscribe = [Channel.home]
         user.roles = [Role.find_by_title('user')]
         user if user.save
       end
@@ -101,7 +102,7 @@ class User < ActiveRecord::Base
   def self.stranger(session_id)
     u = find_or_create_by_temporary_identifier(session_id)  do |u|
       u.name = "stranger_#{session_id[0,10]}"
-      u.channels = [Channel.home]
+      u.channels_to_subscribe = [Channel.home]
     end
     u
   end
@@ -143,7 +144,7 @@ class User < ActiveRecord::Base
   end
 
   def listen_to_channels
-    channels.each { |channel | subscribe(channel) } 
+    channels_to_subscribe.each { |channel | subscribe(channel) } 
   end
 
   # skip validation if the user is a logged out (stranger) user
@@ -232,7 +233,7 @@ class User < ActiveRecord::Base
   end
   
   def accept_invitation(invitation)
-    self.channels = Channel.find(invitation.channel_ids)
+    self.channels_to_subscribe = Channel.find(invitation.channel_ids)
     self.roles = [Role.find_by_title('invitee')]
     invitation.accepted_at = Time.now
     invitation.invitee = self

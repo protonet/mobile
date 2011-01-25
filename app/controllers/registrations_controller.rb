@@ -19,7 +19,7 @@ class RegistrationsController < ApplicationController
       if session[:invitation_id] && invitation = Invitation.unaccepted.find(session[:invitation_id])
         session[:invitation_id] = nil if resource.accept_invitation(invitation)
       else
-        resource.channels = [Channel.home]
+        resource.channels_to_subscribe = [Channel.home]
       end
       resource.save
       set_flash_message :notice, :signed_up

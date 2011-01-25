@@ -5,7 +5,7 @@ Given /^an? ([^"]*) with the login "([^"]*)"$/ do |role_name, login|
   # FIXME: This could be improved. We want users to be subscribed to
   # the home channel automatically, but this might not be the right
   # place to assign this.
-  user.channels << Channel.home if role_name == 'user'
+  user.channels_to_subscribe = [Channel.home] if role_name == 'user'
   user.save!
 end
 
