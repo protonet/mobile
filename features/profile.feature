@@ -1,6 +1,7 @@
 Feature: Managing your profile
 Background:
-  Given a user exists with login: "dudemeister"
+  Given a user with the login "dudemeister"
+  And a role exists with title: "admin" 
   And I go unauthenticated to the start page
   And I am logged in as "dudemeister"
   And I go to the preferences page

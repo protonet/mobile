@@ -1,16 +1,16 @@
 Feature: Using our user feature
 Background:
-  Given a user exists with login: "dudemeister"
-  Given a user exists with login: "someotherdude"
+  Given a user with the login "dudemeister"
+  And a user with the login "someotherdude"
   And I go unauthenticated to the start page
   And I am logged in as "dudemeister"
   And I go to the users page
 
   @javascript
   Scenario: Admin: seeing the general settings
-    And "dudemeister" is an admin
+    Given "dudemeister" is an admin
     And I go to the users page
-    And I follow "general settings" within "#users-page"
+    When I follow "general settings" within "#users-page"
     Then I should see "Logged out users get to see dashboard?" within "#users-details"
 
   @javascript

@@ -48,6 +48,8 @@ Rails::Initializer.run do |config|
   config.cache_store = :mem_cache_store
 end
 
+ActionMailer::Base.default_url_options[:host] = System::Preferences.public_host
+
 # json settings
 ActiveSupport::JSON.backend = 'JSONGem'
 

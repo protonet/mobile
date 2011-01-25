@@ -8,6 +8,7 @@ ENV["RAILS_ENV"] ||= "cucumber"
 require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
 
 require 'cucumber/formatter/unicode' # Remove this line if you don't want Cucumber Unicode support
+# require 'cucumber/rails/rspec'
 require 'cucumber/rails/world'
 require 'cucumber/rails/active_record'
 require 'cucumber/web/tableish'
@@ -16,6 +17,9 @@ require 'capybara/rails'
 require 'capybara/cucumber'
 require 'capybara/session'
 require 'cucumber/rails/capybara_javascript_emulation' # Lets you click links with onclick javascript handlers without using @culerity or @javascript
+
+# Make sure this require is after you require cucumber/rails/world.
+# require 'email_spec/cucumber'
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
 # order to ease the transition to Capybara we set the default here. If you'd

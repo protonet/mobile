@@ -2,8 +2,8 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
 
   @javascript
   Scenario: Writing a meep
-    Given a user exists with login: "dudemeister"
-      And a user exists with login: "batman"
+    Given a user with the login "dudemeister"
+      And a user with the login "batman"
       And a channel exists with name: "cool-channel"
     And I am using the first browser
       And go unauthenticated to the start page
@@ -20,7 +20,7 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
       
   @javascript
   Scenario: Creating a user and seeing him in the userlist and the autocompletion
-    Given a user exists with login: "dudemeister"
+    Given a user with the login "dudemeister"
     And I am using the first browser
       And go unauthenticated to the start page
       And I am logged in as "dudemeister"
@@ -34,8 +34,8 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
       
   @javascript
   Scenario: Keeping the user list updated
-    Given a user exists with login: "dudemeister"
-    And a user exists with login: "batman"
+    Given a user with the login "dudemeister"
+    And a user with the login "batman"
     # seeing strangers in the user list
     And I am using the first browser
       And go unauthenticated to the start page

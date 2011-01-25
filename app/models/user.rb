@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
   validates_length_of       :name,     :maximum => 100, :unless => :skip_validation
 
   attr_accessible :login, :email, :name, :password, :password_confirmation
+  attr_accessor :channels_to_subscribe
 
   has_many  :tweets
   has_many  :listens,  :dependent => :destroy
@@ -33,7 +34,7 @@ class User < ActiveRecord::Base
 
   after_create :create_ldap_user if configatron.ldap.active == true
   after_create :send_create_notification
-  after_create :listen_to_home
+  after_create :listen_to_channels
 
   after_destroy :move_tweets_to_anonymous
   after_destroy :move_owned_channels_to_anonymous
@@ -70,6 +71,8 @@ class User < ActiveRecord::Base
       find_by_login(login.downcase) || begin
         generated_password = ActiveSupport::SecureRandom.base64(10)
         user = User.new({:login => login, :password => generated_password, :password_confirmation => generated_password})
+        user.channels_to_subscribe = [Channel.home]
+        user.roles = [Role.find_by_title('user')]
         user if user.save
       end
     end
@@ -99,7 +102,7 @@ class User < ActiveRecord::Base
   def self.stranger(session_id)
     u = find_or_create_by_temporary_identifier(session_id)  do |u|
       u.name = "stranger_#{session_id[0,10]}"
-      u.listen_to_home
+      u.channels_to_subscribe = [Channel.home]
     end
     u
   end
@@ -140,13 +143,8 @@ class User < ActiveRecord::Base
     channels.all(:conditions => ['listens.flags = 1'])
   end
 
-  def listen_to_home
-    return if listening_to_home?
-    subscribe(Channel.home)
-  end
-
-  def listening_to_home?
-    channels.try(:include?, Channel.home)
+  def listen_to_channels
+    (channels_to_subscribe || []).each { |channel | subscribe(channel) } 
   end
 
   # skip validation if the user is a logged out (stranger) user
@@ -203,10 +201,24 @@ class User < ActiveRecord::Base
     !!avatar
   end
   
+  def add_to_role(role_name)
+    role = Role.find_by_title!(role_name.to_s)
+    self.roles << role unless roles.include?(role)
+  end
+  
+  def remove_from_role(role_name)
+    role = Role.find_by_title!(role_name.to_s)
+    self.roles -= [role]
+  end
+  
+  def admin?
+    role_symbols.include?(:admin)
+  end
+  
   def make_admin(key)
     return :admin_already_set if System::Preferences.admin_set == true
     if key == System::Preferences.admin_key
-      (update_attribute(:admin, true) && System::Preferences.admin_set = true) ? :ok : :error
+      (add_to_role(:admin) && System::Preferences.admin_set = true) ? :ok : :error
     else
       :key_error
     end
@@ -218,6 +230,14 @@ class User < ActiveRecord::Base
   
   def can_be_edited_by?(user)
     self.id != 0 && !user.stranger? && (user.admin? || user.id == self.id)
+  end
+  
+  def accept_invitation(invitation)
+    self.channels_to_subscribe = Channel.find(invitation.channel_ids)
+    self.roles = [Role.find_by_title('invitee')]
+    invitation.accepted_at = Time.now
+    invitation.invitee = self
+    invitation.save
   end
   
 end

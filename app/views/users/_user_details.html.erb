@@ -9,7 +9,7 @@
 <p><%= user.created_at %></p>
 
 <h4>Admin?</h4>
-<p class="admin"><%= user.admin ? "yes" : "no" %></p>
+<p class="admin"><%= user.admin? ? "yes" : "no" %></p>
 
 <% if user.can_be_edited_by?(current_user) %>
   <br>
@@ -28,7 +28,7 @@
   </div>
 <% end %>
 
-<%- if user.can_be_edited_by?(current_user) && current_user.admin -%>
+<%- if user.can_be_edited_by?(current_user) && current_user.admin? -%>
   <h5>Admin settings:</h5>
   <% form_tag({:action => 'update_user_admin_flag'}, {:id => 'admin-setting'}) do %>
     <%= hidden_field_tag      :user_id, user.id %>
@@ -41,7 +41,7 @@
   <% end %>
 <%- end -%>
 
-<%- if user.can_be_edited_by?(current_user) && current_user.admin && user != current_user -%>  
+<%- if user.can_be_edited_by?(current_user) && current_user.admin? && user != current_user -%>  
   <h5>Password reset:</h5>
   <% form_tag({:action => 'generate_new_password'}, {:id => 'password-reset'}) do %>
     <%= hidden_field_tag      :user_id, user.id %>
@@ -51,7 +51,7 @@
   <% end %>
 <%- end -%>
 
-<%- if user.can_be_edited_by?(current_user) && current_user.admin && user != current_user -%>  
+<%- if user.can_be_edited_by?(current_user) && current_user.admin? && user != current_user -%>  
   <h5>Delete User:</h5>
   <% form_tag({:action => 'delete'}, {:id => 'user-delete'}) do %>
     <%= hidden_field_tag      :user_id, user.id %>

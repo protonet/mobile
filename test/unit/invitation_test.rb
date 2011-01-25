@@ -1,8 +1,12 @@
 require 'test_helper'
 
 class InvitationTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  setup do
+    @invitation = Invitation.new
+  end
+  
+  test "validation should require token" do
+    assert !@invitation.valid?
+    assert @invitation.errors.on(:token)
   end
 end

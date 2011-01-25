@@ -1,3 +1,14 @@
+Given /^an? ([^"]*) with the login "([^"]*)"$/ do |role_name, login|
+  role = Role.find_or_create_by_title(role_name)
+  user = Factory.build(:user, :login => login, :email => "#{login}@protonet.com")
+  user.roles << role
+  # FIXME: This could be improved. We want users to be subscribed to
+  # the home channel automatically, but this might not be the right
+  # place to assign this.
+  user.channels_to_subscribe = [Channel.home] if role_name == 'user'
+  user.save!
+end
+
 Then /^wait (\d+) seconds?$/ do |seconds|
   sleep seconds.to_i
   true
@@ -133,13 +144,18 @@ Given /^administrator claiming key is "([^\"]*)"$/ do |key|
   System::Preferences.admin_key = key
 end
 
-Given /^"([^\"]*)" is an admin$/ do |username|
-  user = User.find_by_login(username)
-  user.update_attribute(:admin, true)
+Given /^"([^\"]*)" is an admin$/ do |login|
+  user = User.find_by_login!(login)
+  Role.find_or_create_by_title('admin') # ensure the role exists
+  user.add_to_role('admin')
 end
 
 Given /^(?:|I )store \/([^\/]*)\/ within "([^\"]*)" into "([^\"]*)"$/ do |regexp, selector, variable|
   regexp = Regexp.new(regexp)
   text = find(:css, selector).text.match(regexp).to_a.last
   instance_variable_set("@#{variable}", text)
+end
+
+When /^I accept the invitation with the token "([^\"]*)"$/ do |token|
+  visit accept_invitation_path(:token => token)
 end

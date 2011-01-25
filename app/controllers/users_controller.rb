@@ -62,7 +62,13 @@ class UsersController < ApplicationController
   def update_user_admin_flag
     if current_user.admin? && current_user.valid_password?(params[:admin_password])
       user = User.find(params[:user_id])
-      user.update_attribute(:admin, params[:admin]) && flash[:notice] = "Successfully made #{user.login} an admin!"
+      if params[:admin] == 'true'
+        user.add_to_role(:admin)
+        flash[:notice] = "Successfully made #{user.login} an admin!"
+      else
+        user.remove_from_role(:admin)
+        flash[:notice] = "Successfully removed #{user.login} from the list of admins!"
+      end
     end
     redirect_to :action => 'index', :anchor => params[:user_id]
   end
