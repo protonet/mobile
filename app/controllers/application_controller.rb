@@ -4,7 +4,7 @@
 class ApplicationController < ActionController::Base
   
   helper :all # include all helpers, all the time
-  helper_method :logged_in?
+  helper_method :logged_in?, :allow_signup?
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
   # hack for reload problem in development
   before_filter :set_backend_for_development, :captive_check, :current_user, :set_current_user_for_authorization, :guest_login
@@ -76,6 +76,11 @@ class ApplicationController < ActionController::Base
   # controller#current_user method.  It is called as a before_filter.
   def set_current_user_for_authorization
     Authorization.current_user = current_user
+  end
+  
+  def allow_signup?
+    configatron.ldap.single_authentication != true && (
+      System::Preferences.allow_registrations_for_strangers == true || session[:invitation_id])
   end
   
 end

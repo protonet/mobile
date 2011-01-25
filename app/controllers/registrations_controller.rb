@@ -1,8 +1,9 @@
 class RegistrationsController < ApplicationController
-  prepend_before_filter :require_no_authentication, :only => [ :new, :create ]
+  prepend_before_filter :require_no_authentication, :only => [:new, :create]
   prepend_before_filter :authenticate_scope!, :only => [:edit, :update, :destroy]
-  before_filter :check_stranger_setting, :only => [ :new, :create ]
-
+  before_filter :find_invitation, :only => [:new]
+  before_filter :check_stranger_setting, :only => [:new, :create]
+  
   include Devise::Controllers::InternalHelpers
 
   # GET /resource/sign_in
@@ -16,14 +17,23 @@ class RegistrationsController < ApplicationController
     build_resource
 
     if resource.valid?
-      if session[:invitation_id] && invitation = Invitation.unaccepted.find(session[:invitation_id])
-        session[:invitation_id] = nil if resource.accept_invitation(invitation)
+      if session[:invitation_id]
+        invitation = Invitation.unaccepted.find(session[:invitation_id])
+        session[:invitation_id] = nil
+        if invitation
+          resource.accept_invitation!(invitation)
+          set_flash_message :notice, :signed_up
+          sign_in_and_redirect(resource_name, resource)
+        else
+          flash.now[:error] = "The invitation token has already been used."
+          render_with_scope :new
+        end
       else
         resource.channels_to_subscribe = [Channel.home]
+        resource.save
+        set_flash_message :notice, :signed_up
+        sign_in_and_redirect(resource_name, resource)
       end
-      resource.save
-      set_flash_message :notice, :signed_up
-      sign_in_and_redirect(resource_name, resource)
     else
       render_with_scope :new
     end
@@ -59,9 +69,12 @@ class RegistrationsController < ApplicationController
       self.resource = send(:"current_#{resource_name}").dup
     end
     
-    def check_stranger_setting
+    def find_invitation
       session[:invitation_id] = Invitation.unaccepted.find_by_token(params[:token]).try(:id) if params[:token]
-      redirect_to "/login" and return unless (!!System::Preferences.allow_registrations_for_strangers || session[:invitation_id])
     end
     
+    def check_stranger_setting
+      redirect_to "/login" and return unless allow_signup?
+    end
+
 end

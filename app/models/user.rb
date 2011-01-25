@@ -232,9 +232,10 @@ class User < ActiveRecord::Base
     self.id != 0 && !user.stranger? && (user.admin? || user.id == self.id)
   end
   
-  def accept_invitation(invitation)
+  def accept_invitation!(invitation)
     self.channels_to_subscribe = Channel.find(invitation.channel_ids)
     self.roles = [Role.find_by_title('invitee')]
+    self.save!
     invitation.accepted_at = Time.now
     invitation.invitee = self
     invitation.save
