@@ -1,6 +1,6 @@
 Given /^an? ([^"]*) with the login "([^"]*)"$/ do |role_name, login|
   role = Role.find_or_create_by_title(role_name)
-  user = Factory.build(:user, :login => login)
+  user = Factory.build(:user, :login => login, :email => "#{login}@protonet.com")
   user.roles << role
   # FIXME: This could be improved. We want users to be subscribed to
   # the home channel automatically, but this might not be the right
@@ -156,6 +156,6 @@ Given /^(?:|I )store \/([^\/]*)\/ within "([^\"]*)" into "([^\"]*)"$/ do |regexp
   instance_variable_set("@#{variable}", text)
 end
 
-Given /^I ccept the invitation with the token "([^\"]*)"$/ do |token|
+When /^I accept the invitation with the token "([^\"]*)"$/ do |token|
   visit accept_invitation_path(:token => token)
 end

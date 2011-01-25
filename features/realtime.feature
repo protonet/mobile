@@ -28,7 +28,6 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
       And go unauthenticated to the start page
       And I register as "justadded"
     Given I am using the first browser
-      And wait 5 seconds
       Then I should see /justadded/ within "#user-widget ul"
       And I fill in "message" with "Hallo @just"
       Then the message field should contain "Hallo @justadded"

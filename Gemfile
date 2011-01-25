@@ -46,6 +46,8 @@ group :cucumber do
   gem "pickle", "0.3.0"
   # As of 1.0 email-spec is no longer backwards compatible wit Rails 2.x.
   # So use the 0.6.x gems.
-  # gem "email_spec", "~> 0.6.3"
+  # gem "mcmire-matchy"
+  # gem "email_spec", :git => "git://github.com/basiszwo/email-spec.git"
+  # gem "rspec-rails", "~> 1.3.3"
 end
 
