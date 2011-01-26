@@ -22,9 +22,9 @@ Feature: Invitations
     And they should see /\/join\/(.*){10}/ in the email body
 
   @javascript
-  Scenario: Invitee accepts invitation  
-    Given I go unauthenticated to the start page
+  Scenario: Invitee accepts invitation
     Given an invitation exists with token: "1234567890", email: "friend@protonet.com", channel_ids: "1", user: user "dudemeister"
+    And I go unauthenticated to the start page
     When I accept the invitation with the token "1234567890"
     Then I should see "Get started by signing up"
     When I fill in "user_login" with "friend"
@@ -34,3 +34,11 @@ Feature: Invitations
     Then I should see "friend" within ".welcome"
     And I should see "You have signed up successfull"
     And I should see "Home" within "#channels"
+    
+  @javascript
+  Scenario: Invitee tries to accept an invitation that has already been accepted 
+    Given an invitation exists with token: "1122334455", email: "friend@protonet.com", channel_ids: "1", user: user "dudemeister", accepted_at: "2011-01-15 10:00:00"
+    And I go unauthenticated to the start page
+    When I accept the invitation with the token "1122334455"
+    Then I should be on the login page
+    And I should see "The invitation token is invalid"

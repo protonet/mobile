@@ -70,11 +70,18 @@ class RegistrationsController < ApplicationController
     end
     
     def find_invitation
-      session[:invitation_id] = Invitation.unaccepted.find_by_token(params[:token]).try(:id) if params[:token]
+      if params[:token]
+        invitation = Invitation.unaccepted.find_by_token(params[:token])
+        session[:invitation_id] = invitation.try(:id)
+        unless invitation
+          flash[:error] = "The invitation token is invalid."
+          redirect_to login_path and return
+        end
+      end
     end
     
     def check_stranger_setting
-      redirect_to "/login" and return unless allow_signup?
+      redirect_to login_path and return unless allow_signup?
     end
 
 end
