@@ -30,15 +30,12 @@ gem "devise", "1.0.8"
 gem "dudemeister-uuid4r", "0.1.3"
 gem "declarative_authorization", "0.5.2"
 
-group :test do
+group :test, :cucumber do
   gem "jeremymcanally-context", "0.5.5"
   gem "faker", "0.3.1"
   gem "random_data", "1.5.1"
   gem "mocha", "0.9.8"
   gem "factory_girl", "1.2.4"
-end
-
-group :cucumber do
   gem "cucumber", "0.8.5"
   gem "cucumber-rails", "0.3.2"
   gem "capybara", "0.3.9"
