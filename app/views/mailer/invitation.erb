@@ -5,7 +5,7 @@ Hey there!
 <%= @invitation.message %>
 
 Please follow this link to sign up:
-<%= accept_invitation_url(:token => @invitation.token) %>
+<%= accept_invitation_url(:invitation_token => @invitation.token) %>
 
 Have fun using the Protonet :)
  

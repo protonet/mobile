@@ -16,7 +16,7 @@ class Invitation < ActiveRecord::Base
   private
   
   def generate_token
-    self.token = ActiveSupport::SecureRandom.base64(10)
+    self.token ||= ActiveSupport::SecureRandom.base64(10)
   end
   
   def send_email

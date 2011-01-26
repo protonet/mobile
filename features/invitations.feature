@@ -1,6 +1,9 @@
 Feature: Invitations
   Background:
-    Given a user "dudemeister" exists with login: "dudemeister"
+    Given strangers are not allowed to register
+    And a role exists with title: "user"
+    And a role exists with title: "invitee"
+    And a user "dudemeister" exists with login: "dudemeister"
     And "dudemeister" is an admin
 
   @javascript

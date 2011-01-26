@@ -80,7 +80,8 @@ class ApplicationController < ActionController::Base
   
   def allow_signup?
     configatron.ldap.single_authentication != true && (
-      System::Preferences.allow_registrations_for_strangers == true || session[:invitation_id])
+      System::Preferences.allow_registrations_for_strangers == true || 
+      params[:invitation_token] && Invitation.unaccepted.find_by_token(params[:invitation_token]))
   end
   
 end

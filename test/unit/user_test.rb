@@ -2,6 +2,10 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class UserTest < Test::Unit::TestCase
   
+  before do
+    Role.find_or_create_by_title("user")
+  end
+  
   context "Calling the class method anonymous" do
     it "should return an user with the id 0" do
       assert_equal 0, User.anonymous.id

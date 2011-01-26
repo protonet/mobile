@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
   validates_length_of       :name,     :maximum => 100, :unless => :skip_validation
 
   attr_accessible :login, :email, :name, :password, :password_confirmation
-  attr_accessor :channels_to_subscribe
+  attr_accessor :channels_to_subscribe, :invitation_token
 
   has_many  :tweets
   has_many  :listens,  :dependent => :destroy
@@ -32,10 +32,13 @@ class User < ActiveRecord::Base
   named_scope :registered, :conditions => {:temporary_identifier => nil}
   named_scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"
 
+  after_validation_on_create :assign_roles_and_channels
+  
   after_create :create_ldap_user if configatron.ldap.active == true
   after_create :send_create_notification
   after_create :listen_to_channels
-
+  after_create :mark_invitation_as_accepted, :if => :invitation_token
+  
   after_destroy :move_tweets_to_anonymous
   after_destroy :move_owned_channels_to_anonymous
 
@@ -70,10 +73,7 @@ class User < ActiveRecord::Base
     if ldap.bind # will return false if authentication is NOT successful
       find_by_login(login.downcase) || begin
         generated_password = ActiveSupport::SecureRandom.base64(10)
-        user = User.new({:login => login, :password => generated_password, :password_confirmation => generated_password})
-        user.channels_to_subscribe = [Channel.home]
-        user.roles = [Role.find_by_title('user')]
-        user if user.save
+        User.create({:login => login, :password => generated_password, :password_confirmation => generated_password})
       end
     end
   end
@@ -102,7 +102,6 @@ class User < ActiveRecord::Base
   def self.stranger(session_id)
     u = find_or_create_by_temporary_identifier(session_id)  do |u|
       u.name = "stranger_#{session_id[0,10]}"
-      u.channels_to_subscribe = [Channel.home]
     end
     u
   end
@@ -141,10 +140,6 @@ class User < ActiveRecord::Base
 
   def verified_channels
     channels.all(:conditions => ['listens.flags = 1'])
-  end
-
-  def listen_to_channels
-    (channels_to_subscribe || []).each { |channel | subscribe(channel) } 
   end
 
   # skip validation if the user is a logged out (stranger) user
@@ -232,13 +227,30 @@ class User < ActiveRecord::Base
     self.id != 0 && !user.stranger? && (user.admin? || user.id == self.id)
   end
   
-  def accept_invitation!(invitation)
-    self.channels_to_subscribe = Channel.find(invitation.channel_ids)
-    self.roles = [Role.find_by_title('invitee')]
-    self.save!
+  def assign_roles_and_channels
+    if invitation_token
+      if invitation = Invitation.unaccepted.find_by_token(invitation_token)
+        self.channels_to_subscribe = Channel.all(invitation.channel_ids)
+        self.roles = [Role.find_by_title('invitee')]
+      else
+        errors.add_to_base("The invitation token is invalid.")
+        return false
+      end
+    else
+      self.channels_to_subscribe = [Channel.home]
+      self.roles = [Role.find_by_title('user')]
+    end
+  end
+
+  def mark_invitation_as_accepted
+    invitation = Invitation.unaccepted.find_by_token(invitation_token)
     invitation.accepted_at = Time.now
     invitation.invitee = self
     invitation.save
+  end
+
+  def listen_to_channels
+    (channels_to_subscribe || []).each { |channel | subscribe(channel) }
   end
   
 end

@@ -54,7 +54,7 @@ ActionController::Routing::Routes.draw do |map|
   map.logout 'logout', :controller => 'sessions', :action => 'destroy', :conditions => { :method => :get }
   map.register '/register', :controller => 'users', :action => 'create'
   map.signup '/signup', :controller => 'users', :action => 'new'
-  map.accept_invitation '/join/:token', :controller => 'registrations', :action => 'new'
+  map.accept_invitation '/join/:invitation_token', :controller => 'registrations', :action => 'new'
 
   # TODO what is this?
   map.search '/search.:format', :controller => 'search', :action => 'index'

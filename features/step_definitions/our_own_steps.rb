@@ -1,12 +1,6 @@
 Given /^an? ([^"]*) with the login "([^"]*)"$/ do |role_name, login|
-  role = Role.find_or_create_by_title(role_name)
-  user = Factory.build(:user, :login => login, :email => "#{login}@protonet.com")
-  user.roles << role
-  # FIXME: This could be improved. We want users to be subscribed to
-  # the home channel automatically, but this might not be the right
-  # place to assign this.
-  user.channels_to_subscribe = [Channel.home] if role_name == 'user'
-  user.save!
+  user = Factory(:user, :login => login, :email => "#{login}@protonet.com")
+  user.add_to_role(role_name)
 end
 
 Then /^wait (\d+) seconds?$/ do |seconds|
@@ -144,6 +138,10 @@ Given /^administrator claiming key is "([^\"]*)"$/ do |key|
   System::Preferences.admin_key = key
 end
 
+Given /^strangers are not allowed to register$/ do
+  System::Preferences.allow_registrations_for_strangers = false
+end
+
 Given /^"([^\"]*)" is an admin$/ do |login|
   user = User.find_by_login!(login)
   Role.find_or_create_by_title('admin') # ensure the role exists
@@ -157,5 +155,5 @@ Given /^(?:|I )store \/([^\/]*)\/ within "([^\"]*)" into "([^\"]*)"$/ do |regexp
 end
 
 When /^I accept the invitation with the token "([^\"]*)"$/ do |token|
-  visit accept_invitation_path(:token => token)
+  visit accept_invitation_path(:invitation_token => token)
 end

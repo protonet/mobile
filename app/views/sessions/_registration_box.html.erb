@@ -7,6 +7,7 @@
 
 <%- if allow_signup? %>
   <%- form_for :user, :url => users_path, :html => { :class => "sign-up form" } do |f| %>
+    <%= hidden_field_tag :invitation_token, params[:invitation_token] if params[:invitation_token] %>
     <fieldset>
       <legend>Get started by <strong>signing up</strong> (it's free)</legend>
       <div>
