@@ -40,9 +40,9 @@ class ChannelsController < ApplicationController
     channel = Channel.find(params[:channel][:id])
     success = channel && channel.update_attributes(params[:channel])
     if success && channel.errors.empty?
-      flash[:notice] = "Successfully updated channel '#{h(params[:channel][:name])}'"
+      flash[:notice] = "Successfully updated channel '#{channel.name}'"
     else
-      flash[:error] = "Could not update channel '#{h(params[:channel][:name])}'"
+      flash[:error] = "Could not update channel '#{channel.name}'"
     end
     redirect_to :action => 'index', :anchor => channel.id
   end
@@ -54,7 +54,7 @@ class ChannelsController < ApplicationController
       if success && channel.errors.empty?
         flash[:notice] = "Successfully deleted channel '#{channel.name}'"
       else
-        flash[:error] = "Could not delete channel '#{h(channel.name)}'"
+        flash[:error] = "Could not delete channel '#{channel.name}'"
       end
     end
     redirect_to :action => 'index'
