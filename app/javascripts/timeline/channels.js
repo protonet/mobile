@@ -73,7 +73,12 @@ protonet.timeline.Channels = {
         },
         success: function(data) {
           if (data.success) {
-            location.href = "?channel_id=" + id;
+            if (data.public_channel) {
+              location.href = "?channel_id=" + id;
+            } else {
+              // Strip channel_id from URL
+              location.href = location.href.substring(0, location.href.indexOf('?'));
+            }
           } else {
             error();
           }

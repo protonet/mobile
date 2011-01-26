@@ -18,7 +18,7 @@ class ListensController < ApplicationController
     end
     
     respond_to do |format|
-      format.json { render :json => { :success => true }.to_json }
+      format.json { render :json => { :success => true, :public_channel => !!channel.try(:public?) }.to_json }
       format.html { redirect_to :controller => 'channels', :action => 'index', :anchor => channel.try(:id) }
     end
   end
