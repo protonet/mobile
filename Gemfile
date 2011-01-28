@@ -30,27 +30,7 @@ gem "devise", "1.0.8"
 gem "dudemeister-uuid4r", "0.1.3"
 gem "declarative_authorization", "0.5.2"
 
-group :cucumber do
-  gem "jeremymcanally-context", "0.5.5"
-  gem "faker", "0.3.1"
-  gem "random_data", "1.5.1"
-  gem "mocha", "0.9.8"
-  gem "factory_girl", "1.2.4"
-  gem "cucumber", "0.8.5"
-  gem "cucumber-rails", "0.3.2"
-  gem "capybara", "0.3.9"
-  gem "database_cleaner", "0.5.2"
-  gem "pickle", "0.3.0"
-  gem "launchy"
-  # As of 1.0 email-spec is no longer backwards compatible wit Rails 2.x.
-  # Use the 0.6.3 gem, because the other versions have problems with the rspec dependency
-  gem "rspec-rails", "~> 1.3.3"
-  gem "email_spec", "0.6.3"
-end
-
-#  this is duplicated since bundler 0.9.26 doesn't handle the --without statements correctly when installing
-# go back to group :test, :cucumber once we've moved up to a more recent version
-group :test do
+group :test, :cucumber do
   gem "jeremymcanally-context", "0.5.5"
   gem "faker", "0.3.1"
   gem "random_data", "1.5.1"
