@@ -24,6 +24,7 @@ exports.proxy = function(params, headers, response) {
   }
   
   function sendImage(fileName) {
+    console.log("sending: " + fileName)
     // once done send all
     child.exec("file --mime -b " + fileName, function(error, stdout, stderr) {
       var header = {};
@@ -32,7 +33,8 @@ exports.proxy = function(params, headers, response) {
       } else {
         header = {'Content-Length': fs.lstatSync(fileName).size};
       }
-      image_requests[fileName].forEach(function (r) {
+      while (image_requests[fileName].length > 0) {
+        var r = image_requests[fileName].pop();
         r.writeHead(200, header);
 
         fs.createReadStream(fileName)
@@ -42,20 +44,21 @@ exports.proxy = function(params, headers, response) {
           .addListener('end', function(){
             r.end();
           });
-      });
+      };
     });
   }
   
   function send404(fileName) {
     console.log("sending 404 for " + fileName);
-    image_requests[fileName].forEach(function (r) {
+    while (image_requests[fileName].length > 0) {
+      var r = image_requests[fileName].pop();
       r.writeHead(404);
       r.end("NOT FOUND!");
-    });
+    };
   };
   
   function resizeImage(from, to, size, successCallback, failureCallback) {
-    if(fs.lstatSync(from) && fs.lstatSync(from).size > 0) {
+    if(fs.lstatSync(from).size > 0) {
       if(size["height"] && size["width"]) {
         magick
           .createCommand(from)
@@ -85,9 +88,12 @@ exports.proxy = function(params, headers, response) {
   var baseFileName  = resultingfileName(params, true);
   
   // handle concurrency
-  if(image_requests[fileName]){
+  if(image_requests[fileName] && image_requests[fileName].length > 0){
+    console.log("concurrent")
     image_requests[fileName].push(response);
+    return;
   } else {
+    console.log("new")
     image_requests[fileName] = [response];
   }
   
