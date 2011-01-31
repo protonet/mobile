@@ -25,7 +25,7 @@ class InstrumentsController < ApplicationController
       render :json => channels.map { |channel|
         meeps = channel.tweets.recent.all(:limit => 25, :include => [:avatar])
         
-        { :id => channel.id, :name => channel.name, :meeps  => Tweet.prepare_for_frontend(channel, meeps) }
+        { :id => channel.id, :name => channel.name, :meeps  => Tweet.prepare_for_frontend(meeps, { :channel_id => channel.id }) }
       }.to_json
     end
 end

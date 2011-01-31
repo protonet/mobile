@@ -11,7 +11,7 @@ class TweetsController < ApplicationController
       meeps  = []
     end
     
-    render :json => Tweet.prepare_for_frontend(channel, meeps)
+    render :json => Tweet.prepare_for_frontend(meeps, { :channel_id => channel.id })
   end
   
   # request: { :channel_states => { 1 => 123123, 2 => 213123 } }
@@ -20,7 +20,10 @@ class TweetsController < ApplicationController
     result = {}
     params[:channel_states].each do |channel_id, first_meep_id|
       channel = Channel.find(channel_id)
-      result[channel_id] = Tweet.prepare_for_frontend(channel, channel.tweets.all(:conditions => ["tweets.id > ?", first_meep_id], :order => "tweets.id ASC", :limit => 100, :include => [:avatar]))
+      result[channel_id] = Tweet.prepare_for_frontend(
+        channel.tweets.all(:conditions => ["tweets.id > ?", first_meep_id], :order => "tweets.id ASC", :limit => 100, :include => [:avatar]),
+        { :channel_id => channel_id }
+      )
     end
     render :json => result
   end
@@ -39,12 +42,12 @@ class TweetsController < ApplicationController
   
   def before
     meep = Tweet.find(params[:id])
-    render :json => Tweet.prepare_for_frontend(meep.channels.first, meep.before(params[:count]))
+    render :json => Tweet.prepare_for_frontend(meep.before(params[:count]), { :channel_id => meep.channels.first.id })
   end
   
   def after
     meep = Tweet.find(params[:id])
-    render :json => Tweet.prepare_for_frontend(meep.channels.first, meep.after(params[:count]))
+    render :json => Tweet.prepare_for_frontend(meep.after(params[:count]), { :channel_id => meep.channels.first.id })
   end
   
   def create
@@ -52,6 +55,8 @@ class TweetsController < ApplicationController
     params[:tweet].reject! {|k,v| !Tweet.valid_attributes.include?(k)}
     
     author = current_user.display_name
+    # TODO: Following lines can be removed
+    # See https://github.com/protonet/dashboard/issues#issue/25
     channel_ids = params[:mentioned_channel_ids] ? 
       ([channel_id] | params[:mentioned_channel_ids]) : [channel_id]
     channels = Channel.find(:all, :conditions => ["id in (?)",  channel_ids])

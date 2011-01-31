@@ -77,7 +77,9 @@ protonet.timeline.Search = {
           clearTimeout(this.timeout);
         }.bind(this),
         keyup:     function() {
-          this.timeout = setTimeout(function() { this.search(this.bigInput.val()); }.bind(this), 200);
+          this.timeout = setTimeout(function() {
+            this.search(this.bigInput.val());
+          }.bind(this), 200);
         }.bind(this)
       })
       .val(keyword)

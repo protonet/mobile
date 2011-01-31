@@ -47,8 +47,10 @@ protonet.window.Meep = (function() {
     duration = $.type(duration) == "number" ? duration : 500;
     var meepHeight          = currentMeep.element.outerHeight(),
         newBorderMarginTop  = -(meepHeight + border.outerHeight() - border.height()) / 2,
-        newMarginTop        = -currentMeep.element.outerHeight() / 2;
+        prevSiblings        = currentMeep.element.prevAll(),
+        newMarginTop        = -meepHeight / 2;
     
+    prevSiblings.each(function(i, element) { newMarginTop -= $(element).outerHeight(true); });
     meepList.css("margin-top", newMarginTop.px());
     
     border.animate({
