@@ -140,7 +140,7 @@ protonet.ui.ModalWindow = (function($) {
   
   function resize(immediately) {
     var height = ($window.height() - 2 * offset - elements.headline.outerHeight());
-    height = Math.max(150, height).px();
+    height = Math.max(175, height).px();
     if (immediately === true) {
       elements.content.css("height", height);
     } else {

@@ -30,6 +30,10 @@ protonet.timeline.Search = {
       }
     }.bind(this));
     
+    protonet.Notifications.bind("modal_window.hidden", function() {
+      this.keyword = null;
+    }.bind(this));
+    
     this.form.bind({
      keydown: function() {
         var value = this.input.val();
@@ -62,7 +66,8 @@ protonet.timeline.Search = {
     this.bigInput = this.bigInput || $("<input />", { className: "search" });
     
     this.modalWindow.update({
-      headline: this.bigInput
+      headline: this.bigInput,
+      content:  ""
     }).show("search-window");
     
     this.input.val("");

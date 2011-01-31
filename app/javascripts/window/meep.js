@@ -101,7 +101,11 @@ protonet.window.Meep = (function() {
   }
   
   function _getMeepList() {
-    return $("<ul>", { className: "meeps" }).bind("text_extension.show_flash text_extension.hide_flash", function() { adjust(0); });
+    return $("<ul>", {
+      className: "meeps"
+    }).bind("text_extension.show_flash text_extension.hide_flash", function() {
+      adjust(0);
+    });
   }
   
   return {
