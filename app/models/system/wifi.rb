@@ -13,17 +13,25 @@ ht_capab=[HT40-][SHORT-GI-40][DSSS_CCK-40]",
       :single =>
 "ssid=private
 interface=wlan0
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
 wpa=2
+wpa_passphrase=hheg45$%00
 wpa_key_mgmt=WPA-PSK
-wpa_pairwise=CCMP
-wpa_passphrase=hheg45$%00",
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP",
       :dual => 
 "ssid=private
 interface=wlan0
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
 wpa=2
-wpa_key_mgmt=WPA-PSK
-wpa_pairwise=CCMP
 wpa_passphrase=hheg45$%00
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP
 bss=wlan1
 ssid=public
 bssid=00:13:10:95:fe:0b"
@@ -57,8 +65,8 @@ bssid=00:13:10:95:fe:0b"
         System::Preferences.wifi_mode = type
         (type == :single ? {'wlan0' => '10.42.0.1'} : {'wlan0' => '10.42.0.1', 'wlan1' => '10.43.0.1'}).each do |interface, ip|
           System::Dnsmasq.add_interface(interface, ip)
+          System::Dnsmasq.restart(interface)
         end
-        System::Dnsmasq.restart
         restart
       end
       
