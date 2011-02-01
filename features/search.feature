@@ -6,7 +6,6 @@ Feature: Using the protonet search
     And I go to the start page
     And I am logged in as "dudemeister"
     Given I send the message "foobar"
-    Then debug
     Then I should see "foobar" in the timeline
     # And I go to the search page
     # And I fill in "search form" with "foo"
