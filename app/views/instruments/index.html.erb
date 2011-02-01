@@ -14,7 +14,7 @@
       </output>
     </div>
     <div class="avatar">
-      <img src="<%= current_user.active_avatar_url %>" width="36" height="36" title="That's you!">
+      <%= avatar(current_user, :width => 36, :height => 36, :title => "That's you!") %>
     </div>
   <%- end -%>
   <div id="channels">

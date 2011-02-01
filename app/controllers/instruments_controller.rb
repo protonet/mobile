@@ -23,7 +23,7 @@ class InstrumentsController < ApplicationController
     # TODO -> this doesn't belong here, move to tweets (meeps) controller
     def get_meeps_as_json(channels)
       render :json => channels.map { |channel|
-        meeps = channel.tweets.recent.all(:limit => 25, :include => [:avatar])
+        meeps = channel.tweets.recent.all(:limit => 25)
         
         { :id => channel.id, :name => channel.name, :meeps  => Tweet.prepare_for_frontend(meeps, { :channel_id => channel.id }) }
       }.to_json

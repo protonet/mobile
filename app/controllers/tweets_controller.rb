@@ -4,9 +4,9 @@ class TweetsController < ApplicationController
     channel = Channel.find(:first, :conditions => {:id => params[:channel_id]})
     
     if    params[:last_id] && channel
-      meeps = channel.tweets.all(:conditions => ["tweets.id < ?", params[:last_id]], :order => "tweets.id DESC", :limit => 25, :include => [:avatar])
+      meeps = channel.tweets.all(:conditions => ["tweets.id < ?", params[:last_id]], :order => "tweets.id DESC", :limit => 25)
     elsif params[:first_id] && channel
-      meeps  = channel.tweets.all(:conditions => ["tweets.id > ?", params[:first_id]], :order => "tweets.id DESC", :limit => 100, :include => [:avatar])
+      meeps  = channel.tweets.all(:conditions => ["tweets.id > ?", params[:first_id]], :order => "tweets.id DESC", :limit => 100)
     else
       meeps  = []
     end
@@ -21,7 +21,7 @@ class TweetsController < ApplicationController
     params[:channel_states].each do |channel_id, first_meep_id|
       channel = Channel.find(channel_id)
       result[channel_id] = Tweet.prepare_for_frontend(
-        channel.tweets.all(:conditions => ["tweets.id > ?", first_meep_id], :order => "tweets.id ASC", :limit => 100, :include => [:avatar]),
+        channel.tweets.all(:conditions => ["tweets.id > ?", first_meep_id], :order => "tweets.id ASC", :limit => 100),
         { :channel_id => channel_id }
       )
     end

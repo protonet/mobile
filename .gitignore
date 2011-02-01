@@ -20,6 +20,7 @@ public/avatars/*
 public/images/avatars/*
 public/externals/*
 public/images/externals/*
+public/system
 mkmf.log
 node/screenshots/*
 node.pid.lock

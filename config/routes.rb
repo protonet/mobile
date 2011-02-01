@@ -78,7 +78,7 @@ ActionController::Routing::Routes.draw do |map|
 
   # images
   map.namespace :images do |images|
-    images.resources :avatars
+    images.resources :avatars, :only => [:new, :create]
     #  crazy resizing on the fly, I had to slightly uglify the url so the rails caching can handle it
     # examples:
     # /images/externals/resize/0/0/http://www.goddesscruise.com/parts_of_boat.gif      -> for original size

@@ -6,7 +6,7 @@
   <% channel.listens.all(:include => :user).each do |listen| %>
     <% if !listen.user.stranger? && user = listen.user %>
       <li>
-    <img src="<%= user.active_avatar_url || '/img/user_picture.png' %>" width="20" height="20" alt="Userpicture Mini" /> 
+    <%= avatar(user, :width => 20, :height => 20) %>
     <span><%= user.display_name %><% if channel.owned_by(listen.user) %> (owner)<% end %></span>
     <% if channel.owned_by(current_user) %>
       <% if !channel.owned_by(listen.user) %>

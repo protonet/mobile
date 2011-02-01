@@ -1,5 +1,5 @@
 <p>
-  <%= image_tag current_user.active_avatar_url %>
+  <%= avatar(current_user, :width => 36, :height => 36) %>
 </p>
 <p>
   <b>Name:</b>
@@ -14,7 +14,15 @@
   </span>
 </button>
 <div id="avatar-upload" style="display:none;">
-  <%= render new_images_avatar_path %>
+  <% form_tag images_avatars_path, :multipart => true do %>
+    <p>
+      <b>Upload Image</b><br />
+      <%= file_field_tag :avatar_file %>
+    </p>
+    <p>
+      <%= submit_tag "Upload" %>
+    </p>
+  <% end %>
 </div>
 
 <br>

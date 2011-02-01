@@ -18,10 +18,10 @@
             <li class="welcome">
               <a href="<%= preferences_path %>">
                 <strong><%=h current_user.display_name %></strong>
-                <img src="<%= current_user.active_avatar_url %>" width="16" height="16">
+                <%= avatar(current_user, :width => 16, :height => 16) %>
               </a>
             </li>
-            <%- unless current_user.has_avatar? %>
+            <%- unless current_user.avatar.file? %>
               <li class="change-avatar" tabindex="-1">
                 <%= link_to("upload avatar", preferences_path) %>
               </li>

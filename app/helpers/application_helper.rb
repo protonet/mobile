@@ -23,9 +23,12 @@ module ApplicationHelper
       "#{search_highlight_start_tag}#{$1}#{search_highlight_end_tag}"
     end
   end
-
-  def avatar_url(avatar)
-    avatar ? "/images/avatars/#{avatar.id}" : '/img/user_picture.png'
+  
+  def avatar(user, opts = {})
+    opts[:alt]    ||= ""
+    opts[:width]  ||= 36
+    opts[:height] ||= opts[:width]
+    image_tag(user.active_avatar_url(opts).html_safe, opts)
   end
   
   def server_name

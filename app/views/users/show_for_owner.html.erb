@@ -1,6 +1,6 @@
 <% if @avatar %>
   <p>
-    <%= image_tag current_user.active_avatar_url %>
+    <%= avatar(current_user, :width => 36, :height => 36) %>
   </p>
   <p>
     <b>Name:</b>

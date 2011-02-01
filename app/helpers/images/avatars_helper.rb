@@ -1,2 +1,0 @@
-module Images::AvatarsHelper  
-end
