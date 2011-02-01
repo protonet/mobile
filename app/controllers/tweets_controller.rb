@@ -55,18 +55,15 @@ class TweetsController < ApplicationController
     params[:tweet].reject! {|k,v| !Tweet.valid_attributes.include?(k)}
     
     author = current_user.display_name
-    # TODO: Following lines can be removed
-    # See https://github.com/protonet/dashboard/issues#issue/25
-    channel_ids = params[:mentioned_channel_ids] ? 
-      ([channel_id] | params[:mentioned_channel_ids]) : [channel_id]
-    channels = Channel.find(:all, :conditions => ["id in (?)",  channel_ids])
+    
+    # TODO: Restrict user from posting to channels he has not subscribed or is not verified to post to
+    
     # current user is nil when not logged in, that's ok
-    @tweet = Tweet.new(params[:tweet].merge({:author => author, :user => current_user, :channels => channels}))
-    @tweet.save
+    @tweet = Tweet.create(params[:tweet].merge({:author => author, :user => current_user, :channel_ids => [channel_id] }))
     
     respond_to do |format|
       format.js  { render :text => @tweet.id }
-      format.html { redirect_to :controller => :instruments, :channel_id => channels.first.id }
+      format.html { redirect_to :controller => :instruments, :channel_id => channel_id }
     end
   end
   

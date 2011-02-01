@@ -64,6 +64,9 @@ class Selenium::WebDriver::Remote::Bridge
   end
 end
 
+# Cleanup cached sprocket files
+FileUtils.rm_rf(RAILS_ROOT + "/public/sprockets/*")
+
 # start services
 System::Services.start_all
 
