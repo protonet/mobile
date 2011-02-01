@@ -8,8 +8,27 @@ authorization do
     # has_permission_on :channels, :to => :read
   end
   
-  # permissions on other roles, such as
+  role :user do
+    has_permission_on :listens, :to => [:create]
+    has_permission_on :listens do
+      to [:read, :delete, :update]
+      if_attribute :user => is {user}
+    end
+    has_permission_on :listens do
+      to [:accept, :delete]
+      if_attribute :channel => { :owner => is {user} }
+    end
+    
+    has_permission_on :channels, :to => [:read, :create]
+    has_permission_on :channels do
+      to :manage
+      if_attribute :owner => is {user}
+    end
+  end
+  
   role :admin do
+    has_permission_on :channels, :to => :manage
+    has_permission_on :listens, :to => [:manage, :accept]
     has_permission_on :invitations, :to => :manage
     has_permission_on :authorization_rules, :to => :read
   end
@@ -22,4 +41,5 @@ privileges do
   privilege :create, :includes => :new
   privilege :update, :includes => :edit
   privilege :delete, :includes => :destroy
+  privilege :accept # used for listens
 end

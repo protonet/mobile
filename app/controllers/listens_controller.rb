@@ -1,6 +1,6 @@
 class ListensController < ApplicationController
-  include ERB::Util
   
+  filter_resource_access
   before_filter :only_registered
   
   def index
@@ -12,9 +12,9 @@ class ListensController < ApplicationController
     
     if channel
       current_user.subscribe(channel)
-      flash[:notice] = "you started listening to #{h(channel.name)}#{' (pending verification)' if !channel.public?}"
+      flash[:notice] = "you started listening to #{channel.name}#{' (pending verification)' if !channel.public?}"
     else
-      flash[:error] = "could not subscribe to channel with identifier #{h(params[:channel_id].to_s)}"
+      flash[:error] = "could not subscribe to channel with identifier #{params[:channel_id].to_s}"
     end
     
     respond_to do |format|
@@ -28,7 +28,7 @@ class ListensController < ApplicationController
     channel = listen.channel
     if listen.user == current_user || channel.owner == current_user
       listen.user.unsubscribe(channel)
-      flash[:notice] = "you stopped listening to '#{h(channel.name)}'"
+      flash[:notice] = "you stopped listening to '#{channel.name}'"
     else
       flash[:notice] = "you have no right to this operation"
     end

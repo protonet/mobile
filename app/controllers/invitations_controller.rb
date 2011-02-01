@@ -1,6 +1,7 @@
 class InvitationsController < ApplicationController
-  layout false
+  
   filter_resource_access
+  layout false
   
   def new
     @invitation = current_user.invitations.new
