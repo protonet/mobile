@@ -1,10 +1,11 @@
 Feature: Managing your profile
-Background:
-  Given a user with the login "dudemeister"
-  And a role exists with title: "admin" 
-  And I go unauthenticated to the start page
-  And I am logged in as "dudemeister"
-  And I go to the preferences page
+
+  Background:
+    Given a user with the login "dudemeister"
+    And a role exists with title: "admin" 
+    And I go unauthenticated to the start page
+    And I am logged in as "dudemeister"
+    And I go to the preferences page
 
   @javascript
   Scenario: Changing my password
@@ -34,14 +35,14 @@ Background:
     Given I follow "your profile" within "#preferences-page"
     Then I should see "Name: dudemeister" within "#preferences-details"
     # standard image
-    Then I should see an image with the url "/img/user_picture.png" within "#preferences-details"
+    Then I should see the image "user_picture.png" within "#preferences-details"
     And I should see "change user image" within "#preferences-details"
     And I press "change user image" within "#preferences-details"
-    Then I should see "Upload" within "#new_images_avatar"
-    And I attach "profile_pic.png" to "images_avatar[image_file]"
-    And I press "Upload" within "#new_images_avatar"
-    # custom avatars are stored at /images/avatars/*
-    Then I should see an image with the url "/images/avatars" within "#preferences-details"
+    Then I should see "Upload" within "#avatar-upload"
+    And I attach "profile_pic.png" to "avatar_file"
+    And I press "Upload" within "#avatar-upload"
+    Then I should see the image "profile_pic.png" within "#preferences-details"
+    And I should see the image "profile_pic.png" within ".welcome"
 
   @javascript
   Scenario: Claiming administrator rights

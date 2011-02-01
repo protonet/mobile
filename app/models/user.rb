@@ -26,7 +26,6 @@ class User < ActiveRecord::Base
   has_many  :channels,          :through => :listens
   has_many  :owned_channels,    :class_name => 'Channel', :foreign_key => :owner_id
   has_many  :invitations
-  has_one   :fleximage_avatar, :class_name => 'Images::Avatar', :dependent => :destroy
   has_and_belongs_to_many  :roles
   has_attached_file :avatar
   

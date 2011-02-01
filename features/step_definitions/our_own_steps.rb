@@ -126,6 +126,17 @@ Then /^(?:|I )should see an image with the url "([^\"]*)"(?: within "([^\"]*)")?
   end
 end
 
+Then /^I should see the image "([^"]*)"(?: within "([^"]*)")?$/ do |image_name, selector|
+  image_selector = "img[src*='#{image_name}']"
+  with_scope(selector) do
+    if page.respond_to? :should
+      page.should have_css(image_selector)
+    else
+      assert page.has_css?(image_selector)
+    end
+  end
+end
+
 Given /^administrator rights have not been claimed$/ do
   System::Preferences.admin_set = false
 end
