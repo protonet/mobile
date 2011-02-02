@@ -1,4 +1,7 @@
 //= require "dispatcher/dispatcher.js"
+//= require "ui/modal_window.js"
+//= require "window/meep.js"
+//= require "window/search.js"
 //= require "timeline/timeline.js"
 //= require "text_extensions/text_extensions.js"
 //= require "effects/clouds.js"
@@ -11,6 +14,7 @@
 $(function() {
   protonet.dispatcher.initialize();
   protonet.timeline.initialize();
+  protonet.window.Search.initialize();
   
   // Init widgets
   new protonet.controls.UserWidget();

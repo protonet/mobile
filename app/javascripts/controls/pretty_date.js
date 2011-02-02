@@ -3,22 +3,22 @@
 protonet.controls.PrettyDate = (function() {
   var SELECTOR        = "time",
       ATTRIBUTE       = "datetime",
-      INTERVAL        = 30000,
-      elementRegistry = [];
+      INTERVAL_TIME   = 30000,
+      elementRegistry = [],
+      interval;
   
-  function initialize() {
-    setInterval(updateAll, INTERVAL);
+  protonet.Notifications.bind("meep.rendered", function(e, meepElement, meepData, instance) {
+    if (instance.merged) {
+      return;
+    }
+    var timeElement = meepElement.find(SELECTOR);
+    register(timeElement);
+    update(timeElement);
     
-    protonet.Notifications.bind("meep.rendered", function(e, meepElement, meepData, instance) {
-      if (instance.merged) {
-        return;
-      }
-      
-      var timeElement = meepElement.find("time");
-      register(timeElement);
-      update(timeElement);
-    });
-  }
+    if (!interval) {
+      interval = setInterval(updateAll, INTERVAL_TIME);
+    }
+  });
   
   function register(element) {
     elementRegistry.push(element);
@@ -36,7 +36,6 @@ protonet.controls.PrettyDate = (function() {
   }
   
   return {
-    initialize: initialize,
     register:   register,
     updateAll:  updateAll,
     update:     update

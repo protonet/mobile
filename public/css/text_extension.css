@@ -169,8 +169,8 @@
 
 .text-extension-results.flash .media .flash-close-link {
   position: absolute;
-  top: -14px;
-  right: -14px;
+  top: -16px;
+  right: -16px;
   line-height: 19px;
   -webkit-transform: scale(0.75);
   -moz-transform: scale(0.75);

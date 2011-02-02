@@ -77,14 +77,15 @@ protonet.ui.ModalWindow = (function($) {
     return this;
   }
   
-  function show(className) {
+  function show(className, historyEntry) {
+    var isAlreadyVisible = elements.shadow.is(":visible");
     currentClassName = className;
     
     if (!elements.shadow) {
       _create();
     }
     
-    if (!elements.shadow.is(":visible")) {
+    if (!isAlreadyVisible) {
       elements.shadow.fadeIn("fast");
     }
     
@@ -120,6 +121,9 @@ protonet.ui.ModalWindow = (function($) {
         "overflow-y": "",
         "padding-right": ""
       });
+    
+    // TODO: This doesn't work for all cases!
+    protonet.utils.History.register("/");
     
     _unobserve();
     protonet.Notifications.trigger("modal_window.hidden");
