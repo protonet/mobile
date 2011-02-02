@@ -112,6 +112,9 @@ input.search {
 .meep-window .modal-window-content {
   padding-left: 75px;
   margin-left: -55px;
+  overflow: hidden;
+  margin-right: -30px !important;
+  position: relative;
 }
 
 .meep-window .meeps {
@@ -121,12 +124,6 @@ input.search {
 
 .meep-window h2 {
   display: none;
-}
-
-.meep-window .modal-window-content {
-  overflow: hidden;
-  margin-right: -30px !important;
-  position: relative;
 }
 
 .meep-window .meeps {

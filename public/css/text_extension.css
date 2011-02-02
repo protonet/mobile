@@ -169,10 +169,16 @@
 
 .text-extension-results.flash .media .flash-close-link {
   position: absolute;
-  right: 0;
-  top: -10px;
-  right: -10px;
+  top: -14px;
+  right: -14px;
   line-height: 19px;
+  -webkit-transform: scale(0.75);
+  -moz-transform: scale(0.75);
+}
+
+.text-extension-results.flash .media .flash-close-link:hover {
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
 }
 
 .text-extension-results.flash .media .flash-close-link:after {
