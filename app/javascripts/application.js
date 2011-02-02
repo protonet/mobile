@@ -9,6 +9,7 @@
 //= require "behaviors/main.js"
 //= require "user/user.js"
 //= require "translations/translations.js"
+//= require "utils/history.js"
 //= require "utils/inline_hint.js"
 //= require "ui/flash_message.js"
 //= require "ui/logo.js"

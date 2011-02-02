@@ -19,7 +19,10 @@ protonet.window.Meep = (function() {
     previous  = previous || $("<a>", { className: "previous" });
     meepList  = _getMeepList();
     
-    title.text(protonet.t("MEEP_WINDOW_HEADLINE").replace("{id}", "#" + data.id));
+    var titleText = protonet.t("MEEP_WINDOW_HEADLINE")
+      .replace("{id}", "#" + data.id)
+      .replace("{channel_name}", protonet.timeline.Channels.getChannelName(data.channel_id));
+    title.text(titleText);
     
     protonet.ui.ModalWindow.update({ content: meepList.add(border).add(next).add(previous) }).show(CLASS_NAME);
     
