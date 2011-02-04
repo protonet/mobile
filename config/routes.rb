@@ -1,6 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
 
   map.connect 'captive', :controller => 'system/captive', :action => 'index'
+  map.connect "captive/login", :controller => 'system/captive', :action => 'login'  
 
   # channels
   map.connect 'channels/search', :controller => 'channels', :action => 'search'
@@ -132,4 +133,9 @@ ActionController::Routing::Routes.draw do |map|
   # consider removing the them or commenting them out if you're using named routes and resources.
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
+
+  # this is needed otherwise url's with path are redirected to not found page.
+  # 404 are handled by this action, but nicer would be to solve this in rack. So not Rails handles 404
+  map.connect '*path', :controller => 'system/captive', :action => 'catchall'
+
 end

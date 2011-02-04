@@ -10,17 +10,15 @@
  *    channel.subscribe       - Call this when you want to subscribe a new channel by id
  */
 protonet.timeline.Channels = {
+  availableChannels: protonet.config.availableChannels || {},
+  
   initialize: function(data) {
     this.container          = $("#timeline");
     this.channelLinks       = $("#channels li>a");
     this.data               = data || [];
-    this.availableChannels  = protonet.config.availableChannels || {};
     this.subscribedChannels = $.map(this.data, function(channel) { return channel.id; });
     
     protonet.Notifications.trigger("channels.data_available", [this.data, this.availableChannels, this.subscribedChannels]);
-    
-    protonet.text_extensions.initialize(this.selected);
-    protonet.controls.PrettyDate.initialize();
     
     this._observe();
     this._renderChannelLists();
