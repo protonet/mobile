@@ -71,4 +71,7 @@ Feature: Using the protonet dashboard
     And I click on "cool-channel" within "#timeline"
     And wait 3 seconds
     Then I should see "Cool-channel" within "#channels"
-    
+
+  @wip
+  @javascript
+    Scenario: Trying to subscribe to a private channel thru a meep mention
