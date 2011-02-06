@@ -111,7 +111,7 @@ exports.make_and_send = function(url, response) {
         console.log('stdout: ' + stdout);
         console.log('stderr: ' + stderr);
 
-        if (stderr !== null || error !== null) {
+        if (stderr != "" || error !== null) {
           console.log('exec error: ' + error);
           writeDefaultImage(sanitizedUrl, fileName, sendScreenshot)
         } else {

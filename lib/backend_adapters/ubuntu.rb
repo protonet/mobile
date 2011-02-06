@@ -90,7 +90,7 @@ module BackendAdapters
       
     def grant_internet_access(ip)
       # Add PC to the firewall
-      `sudo iptables -I internet 1 -t nat -m mac --mac-source #{get_mac_for_ip(ip)} -j RETURN`
+      `/usr/bin/sudo /sbin/iptables -I unknown_user 1 -t nat -m mac --mac-source #{get_mac_for_ip(ip)} -j RETURN`
 
       # The following line removes connection tracking for the PC
       # This clears any previous (incorrect) route info for the redirection

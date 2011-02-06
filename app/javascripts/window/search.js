@@ -1,5 +1,5 @@
-//= require "../ui/modal_window.js"
 //= require "../utils/escape_html.js"
+//= require "../utils/parse_query_string.js"
 //= require "../lib/jquery.inview/jquery.inview.js"
 
 /**
@@ -9,7 +9,7 @@
  *  - Show messages in context
  *  - Speed!
  */
-protonet.timeline.Search = {
+protonet.window.Search = {
   RESULTS_COUNT: 10,
   
   currentXhrs: [],
@@ -21,15 +21,10 @@ protonet.timeline.Search = {
     this.modalWindow = protonet.ui.ModalWindow;
     
     this._observe();
+    this._initHistory();
   },
   
   _observe: function() {
-    protonet.Notifications.bind("channel.change", function() {
-      if (this.modalWindow.getClassName() == "search-window") {
-        this.modalWindow.hide();
-      }
-    }.bind(this));
-    
     protonet.Notifications.bind("modal_window.hidden", function() {
       this.keyword = null;
     }.bind(this));
@@ -120,6 +115,9 @@ protonet.timeline.Search = {
       return;
     }
     
+    // Create history entry
+    protonet.utils.History.register("?search=" + encodeURIComponent(keyword));
+    
     this.page    = 1;
     this.keyword = keyword;
     
@@ -182,5 +180,13 @@ protonet.timeline.Search = {
         }.bind(this));
       }.bind(this));
     }.bind(this));
+  },
+  
+  _initHistory: function() {
+    var queryParams = protonet.utils.parseQueryString(protonet.utils.History.getCurrentPath()),
+        search      = queryParams.search;
+    if (search) {
+      this.show(search);
+    }
   }
 };

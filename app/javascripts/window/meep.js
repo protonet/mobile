@@ -1,8 +1,9 @@
+//= require "../utils/parse_query_string.js"
+
 protonet.window.Meep = (function() {
   var CLASS_NAME = "meep-window",
-      URL        = "/tweets/{position}",
+      URL        = "/tweets/{action}",
       COUNT      = 4,
-      data       = {},
       currentMeep,
       border,
       title,
@@ -10,27 +11,50 @@ protonet.window.Meep = (function() {
       next,
       previous;
   
-  function show(data) {
+  function show(dataOrId) {
     border = border || (function() {
       return $("<div>", { className: "border" }).append(title = $("<h5>"));
     })();
-    
     next      = next     || $("<a>", { className: "next" });
     previous  = previous || $("<a>", { className: "previous" });
     meepList  = _getMeepList();
     
-    title.text(protonet.t("MEEP_WINDOW_HEADLINE").replace("{id}", "#" + data.id));
-    
     protonet.ui.ModalWindow.update({ content: meepList.add(border).add(next).add(previous) }).show(CLASS_NAME);
+    loading();
     
-    // Make sure that it doesn't conflict with channels
+    if ($.type(dataOrId) == "object") {
+      _show(dataOrId);
+    } else {
+      _loadMeep(dataOrId, _show);
+    }
+    
+    return this;
+  }
+  
+  function _show(data) {
+    var titleText = protonet.t("MEEP_WINDOW_HEADLINE")
+      .replace("{id}", "#" + data.id)
+      .replace("{channel_name}", protonet.timeline.Channels.getChannelName(data.channel_id));
+    title.text(titleText);
+    
+    // Make sure that the meep doesn't conflict with channels
     data.channel_id = null;
     currentMeep = new protonet.timeline.Meep(data).render(meepList);
     
-    loading();
-    adjust();
+    // Create history entry
+    protonet.utils.History.register("?meep_id=" +  data.id);
     
-    return this;
+    adjust();
+  }
+  
+  function _loadMeep(id, callback) {
+    $.ajax({
+      url:      URL.replace("{action}", id),
+      success:  callback,
+      error:    function() {
+        protonet.Notifications.trigger("flash_message.error", protonet.t("DETAIL_VIEW_LOADING_ERROR"));
+      }
+    });
   }
   
   function loading() {
@@ -73,7 +97,7 @@ protonet.window.Meep = (function() {
   function _loadAndRender(position, currentMeep) {
     $.ajax({
       data:     { id: currentMeep.data.id, count: COUNT },
-      url:      URL.replace("{position}", position),
+      url:      URL.replace("{action}", position),
       success:  function(data) {
         if (!data.length) {
           return;
@@ -108,6 +132,13 @@ protonet.window.Meep = (function() {
     }).bind("text_extension.show_flash text_extension.hide_flash", function() {
       adjust(0);
     });
+  }
+  
+  // Check whether we need to open a modal window for this immediately
+  var queryParams = protonet.utils.parseQueryString(protonet.utils.History.getCurrentPath()),
+      meepId      = +queryParams.meep_id;
+  if (meepId) {
+    show(meepId);
   }
   
   return {

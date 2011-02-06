@@ -32,21 +32,20 @@ class TweetsController < ApplicationController
   end
 
   def show
-    tweet = Tweet.find(params[:id])
-    if tweet
-      render :partial => 'tweet_list', :locals => {:tweets => [tweet], :channel => Channel.find(tweet.channels.first.id)}
-    else
-      render :text => ''
-    end
+    meep = Tweet.find(params[:id])
+    return head(404) if meep.nil?
+    render :json => Tweet.prepare_for_frontend([meep], { :channel_id => meep.channels.first.id }).first
   end
   
   def before
-    meep = Tweet.find(params[:id])
+    meep = Tweet.find(params[:id]) rescue head(404)
+    return head(404) if meep.nil?
     render :json => Tweet.prepare_for_frontend(meep.before(params[:count]), { :channel_id => meep.channels.first.id })
   end
   
   def after
     meep = Tweet.find(params[:id])
+    return head(404) if meep.nil?
     render :json => Tweet.prepare_for_frontend(meep.after(params[:count]), { :channel_id => meep.channels.first.id })
   end
   

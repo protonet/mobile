@@ -25,12 +25,16 @@ Feature: Using the protonet image proxy
     # you'll need to login first upload an image and then have it published
     Then proxying "https://localhost/foobar" should work
     
-  Scenario: Resizing should work
+  Scenario: Resizing
     Then resizing "http://media.ebaumsworld.com/picture/mzeBONE/BackToTheFutureII.gif" should work
     
-  Scenario: Resizing a screenshot should work
+  Scenario: Resizing a screenshot
     Then screenshot resizing "http://www.google.de" should work
     
   @wip
   Scenario: Proxying an image that causes webkit2png errors
     Then screenshooting "foobar" should not work
+    
+  @wip
+  Scenario: Screenshooting problematic pages
+    Then screenshooting "http://soundcloud.com/" should work

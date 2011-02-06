@@ -1,5 +1,3 @@
-//= require "../window/meep.js"
-
 protonet.utils.Behaviors.add({
   "[data-meep-id]:click": function(element, event) {
     var data = element.parents("article").data("meep");
