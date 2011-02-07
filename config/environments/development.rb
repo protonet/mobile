@@ -20,11 +20,11 @@ config.action_mailer.delivery_method = :sendmail
 System::Backend.backend_connection = BackendAdapters::DevelopmentMock.new
 puts "Backend '#{System::Backend.backend_connection.info}' connected successfully!"
 
-if File.exists?(File.join(RAILS_ROOT,'tmp', 'debug.txt'))
+if File.exists?(File.join(Rails.root, 'tmp', 'debug.txt'))
   require 'ruby-debug'
   Debugger.wait_connection = true
   Debugger.start_remote
-  File.delete(File.join(RAILS_ROOT,'tmp', 'debug.txt'))
+  File.delete(File.join(Rails.root, 'tmp', 'debug.txt'))
 end
 
 configatron.user_file_path = RAILS_ROOT + "/../shared/user-files"

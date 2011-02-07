@@ -1,6 +1,6 @@
 class MakeAllChannelPublic < ActiveRecord::Migration
   def self.up
-    Channel.find(:all).each do |c|
+    Channel.all.each do |c|
       c.public = true
       c.save
     end

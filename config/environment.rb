@@ -19,7 +19,7 @@ require 'uuid4r'
 require 'ip'
 
 #  hack this needs to be removed
-require "#{RAILS_ROOT}/lib/rack_ext.rb" if defined?(Rack) && !defined?(PhusionPassenger)
+require "#{Rails.root}/lib/rack_ext.rb" if defined?(Rack) && !defined?(PhusionPassenger)
 
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here.
@@ -27,8 +27,8 @@ Rails::Initializer.run do |config|
   # -- all .rb files in that directory are automatically loaded.
 
   # Add additional load paths for your own custom dirs
-  # config.load_paths += %W( #{RAILS_ROOT}/extras )
-  config.load_paths += %W( #{RAILS_ROOT}/app/middleware )
+  # config.load_paths += %W( #{Rails.root}/extras )
+  config.load_paths += %W( #{Rails.root}/app/middleware )
 
   # Only load the plugins named here, in the order given (default is alphabetical).
   # :all can be used as a placeholder for all plugins not explicitly named
@@ -73,7 +73,7 @@ end
 
 if defined?(PhusionPassenger)
   PhusionPassenger.on_event(:starting_worker_process) do |forked|
-    require "#{RAILS_ROOT}/lib/rack_ext.rb" # overwrite multipart parsing
+    require "#{Rails.root}/lib/rack_ext.rb" # overwrite multipart parsing
     if forked
       # We're in smart spawning mode.
       Thread.new{ EM.run() }

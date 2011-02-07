@@ -5,7 +5,7 @@ class System::CaptiveController < ApplicationController
   
   # this works fine, but nicer would be to solve this in rack. So not Rails handles 404
   def catchall
-    render :file => "#{RAILS_ROOT}/public/404.html", :status => 404
+    render :file => "#{Rails.root}/public/404.html", :status => 404
   end
   
   def login

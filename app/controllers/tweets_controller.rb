@@ -1,7 +1,7 @@
 class TweetsController < ApplicationController
   
   def index
-    channel = Channel.find(:first, :conditions => {:id => params[:channel_id]})
+    channel = Channel.where(:id => params[:channel_id]).first
     
     if    params[:last_id] && channel
       meeps = channel.tweets.all(:conditions => ["tweets.id < ?", params[:last_id]], :order => "tweets.id DESC", :limit => 25)

@@ -32,7 +32,7 @@
 <% else %>
   <h4>Edit Channel Options:</h4>
   <div id="edit-<%= channel.id %>" class="edit section">
-   <% form_for channel, :url => { :action => 'update' } do |f| -%>
+   <%= form_for channel, :url => { :action => 'update' } do |f| -%>
      <fieldset>
        <%= f.hidden_field :id, { :value => channel.id, :id => "channel-id-#{channel.id}" } %>
        <%= f.label :public, "public (users can subscribe without verification)?" %>

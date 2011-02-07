@@ -117,7 +117,7 @@ Then /^I should be logged in as "([^\"]*)"$/ do |username|
 end
 
 When /^I attach "([^\"]*)" to "([^\"]*)"$/ do |file, field|
-  attach_file(field, "#{RAILS_ROOT}/features/upload_files/#{file}")
+  attach_file(field, "#{Rails.root}/features/upload_files/#{file}")
 end
 
 Then /^(?:|I )should see an image with the url "([^\"]*)"(?: within "([^\"]*)")?$/ do |url, selector|

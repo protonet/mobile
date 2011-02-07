@@ -1,7 +1,7 @@
 class AddGuestFlagToUser < ActiveRecord::Migration
   def self.up
     add_column :users, :guest, :boolean, :default => true
-    User.find(:all, :conditions => {:admin => true}).each do |user|
+    User.all.where(:admin => true).each do |user|
       user.update_attribute(:guest, false)
     end
   end

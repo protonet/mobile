@@ -47,7 +47,7 @@ ALUserNetLdap.establish_connection(config.merge(:adapter => "net-ldap"))
 
 def search_al_ldap
   count = 0
-  ALUserLdap.find(:all).each do |e|
+  ALUserLdap.all.each do |e|
     count += 1
   end
   count
@@ -55,7 +55,7 @@ end
 
 def search_al_net_ldap
   count = 0
-  ALUserNetLdap.find(:all).each do |e|
+  ALUserNetLdap.all.each do |e|
     count += 1
   end
   count

@@ -29,8 +29,8 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many  :roles
   has_attached_file :avatar
   
-  named_scope :registered, :conditions => {:temporary_identifier => nil}
-  named_scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"
+  scope :registered, :conditions => {:temporary_identifier => nil}
+  scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"
 
   after_validation_on_create :assign_roles_and_channels
   

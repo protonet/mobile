@@ -13,12 +13,12 @@ class Channel < ActiveRecord::Base
   validates_uniqueness_of   :name, :uuid
   validates_length_of       :name,     :maximum => 30
 
-  before_validation_on_create :normalize_name
+  before_validation :normalize_name, :on => :create
   after_create  :generate_uuid,   :if => lambda {|c| c.uuid.blank? }
   after_create  :create_folder,   :if => lambda {|c| !c.home?}
   after_create  :subscribe_owner, :if => lambda {|c| !c.home?}
 
-  named_scope :public,   :conditions => {:public => true}
+  scope :public,   :conditions => {:public => true}
 
   # privacy
   #   public  = everyone can subscribe and listen to channel immedietly

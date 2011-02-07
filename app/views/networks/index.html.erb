@@ -142,7 +142,7 @@
 }
 
 </style>
-<% javascript_tag do %>
+<%= javascript_tag do %>
   var networks = <%= @networks.to_json %>;
 <% end %>
 <section class="sub main">
@@ -168,7 +168,7 @@
 	  <%= link_to 'add a network', "#", :class => "create", :rel => "create" %>
 
 	  <div id="create" class="create section hidden">
-	    <%- form_for :network, :url => networks_path, :action => 'post', :html => { :id => "new-network-form" } do |f| -%>
+	    <%= form_for :network, :url => networks_path, :action => 'post', :html => { :id => "new-network-form" } do |f| -%>
 	      <fieldset>
 	        <%= f.text_field :name, { :title => 'Name of the network…' } %>
 	        <%= f.text_field :description, { :title => 'Description of the network…' } %>

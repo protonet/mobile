@@ -14,7 +14,7 @@
   </span>
 </button>
 <div id="avatar-upload" style="display:none;">
-  <% form_tag images_avatars_path, :multipart => true do %>
+  <%= form_tag images_avatars_path, :multipart => true do %>
     <p>
       <b>Upload Image</b><br />
       <%= file_field_tag :avatar_file %>
@@ -31,7 +31,7 @@
 <h4>Change your password:</h4>
   <%= error_messages_for @user %>
 
-  <% form_tag({:action => 'change_password', :controller => 'users'}, :id => 'change-password') do %>
+  <%= form_tag({:action => 'change_password', :controller => 'users'}, :id => 'change-password') do %>
     <%= label_tag      :current_password,          'Current password:' %>&nbsp;
     <%= password_field_tag :current_password, nil %><br>
     <%= label_tag      :password,              'New password:' %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -51,7 +51,7 @@
 <h4>Admin status:</h4>
 <p>
   Enter admin key to become an admin, this can only be done once from the command-line (rake reset_admin_key):
-  <% form_tag({:action => 'request_admin_flag', :controller => 'users'}, :id => 'admin-request') do %>
+  <%= form_tag({:action => 'request_admin_flag', :controller => 'users'}, :id => 'admin-request') do %>
     <%= text_field_tag :key, nil, :size => 16, :maxlength => 16 %>
     <%= button "submit" %>
   <% end %>

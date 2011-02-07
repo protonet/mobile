@@ -4,11 +4,11 @@ module System
     class << self
 
       def current_version
-        @current_version ||= (File.readlines("#{RAILS_ROOT}/RELEASE")[0].to_i rescue 0)
+        @current_version ||= (File.readlines("#{Rails.root}/RELEASE")[0].to_i rescue 0)
       end
       
       def current_type
-        @current_type ||= (File.readlines("#{RAILS_ROOT}/TYPE")[0] rescue 'STABLE')
+        @current_type ||= (File.readlines("#{Rails.root}/TYPE")[0] rescue 'STABLE')
       end
 
       def latest_version
