@@ -19,7 +19,10 @@ protonet.window.Meep = (function() {
     previous  = previous || $("<a>", { className: "previous" });
     meepList  = _getMeepList();
     
-    protonet.ui.ModalWindow.update({ content: meepList.add(border).add(next).add(previous) }).show(CLASS_NAME);
+    protonet.ui.ModalWindow
+      .update({ content: meepList.add(border).add(next).add(previous) })
+      .show({ className: CLASS_NAME });
+    
     loading();
     
     if ($.type(dataOrId) == "object") {
@@ -134,12 +137,7 @@ protonet.window.Meep = (function() {
     });
   }
   
-  // Check whether we need to open a modal window for this immediately
-  var queryParams = protonet.utils.parseQueryString(protonet.utils.History.getCurrentPath()),
-      meepId      = +queryParams.meep_id;
-  if (meepId) {
-    show(meepId);
-  }
+  protonet.utils.History.observe(/(?:\?|&)meep_id=(\d+)/, show);
   
   return {
     show:       show,

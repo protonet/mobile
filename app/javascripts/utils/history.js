@@ -1,6 +1,7 @@
 protonet.utils.History = (function() {
   var HASH_PREFIX = "#history:",
       $window     = $(window),
+      observers   = [],
       history     = window.history,
       location    = window.location;
   
@@ -14,6 +15,7 @@ protonet.utils.History = (function() {
     } else {
       location.hash = HASH_PREFIX + path;
     }
+    return this;
   }
   
   function getHash() {
@@ -37,12 +39,29 @@ protonet.utils.History = (function() {
     protonet.Notifications.bind("history.change", function(e, path) {
       callback(path);
     });
+    return this;
+  }
+  
+  function observe(regExp, method) {
+    observers.push([regExp, method]);
+    return this;
   }
   
   function _triggerChange(path) {
     protonet.Notifications.trigger("history.change", path);
+    _triggerObservers(path);
   }
   
+  function _triggerObservers(path) {
+    path = path || getCurrentPath();
+    $.each(observers, function(i, value) {
+      var match = path.match(value[0]);
+      if (match) {
+        match.shift();
+        value[1].apply(window, match);
+      }
+    });
+  }
   
   // Observe
   $window
@@ -59,10 +78,17 @@ protonet.utils.History = (function() {
       }
     });
   
+  // Unless the hashchange event the 'onpostate' event is fired initially at the beginning
+  // We have to emulate the same with the 'onhashchange' event
+  if (getHash()) {
+    $window.trigger("hashchange");
+  }
+  
   return {
     register:       register,
     onChange:       onChange,
     getHash:        getHash,
-    getCurrentPath: getCurrentPath
+    getCurrentPath: getCurrentPath,
+    observe:        observe
   };
 })();

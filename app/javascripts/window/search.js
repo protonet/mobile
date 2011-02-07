@@ -21,10 +21,11 @@ protonet.window.Search = {
     this.modalWindow = protonet.ui.ModalWindow;
     
     this._observe();
-    this._initHistory();
   },
   
   _observe: function() {
+    protonet.utils.History.observe(/(?:\?|&)search=(.*?)(?:&|#|$)/, this.show.bind(this));
+    
     protonet.Notifications.bind("modal_window.hidden", function() {
       this.keyword = null;
     }.bind(this));
@@ -63,7 +64,7 @@ protonet.window.Search = {
     this.modalWindow.update({
       headline: this.bigInput,
       content:  ""
-    }).show("search-window");
+    }).show({ className: "search-window" });
     
     this.input.val("");
     this.bigInput
@@ -180,13 +181,5 @@ protonet.window.Search = {
         }.bind(this));
       }.bind(this));
     }.bind(this));
-  },
-  
-  _initHistory: function() {
-    var queryParams = protonet.utils.parseQueryString(protonet.utils.History.getCurrentPath()),
-        search      = queryParams.search;
-    if (search) {
-      this.show(search);
-    }
   }
 };

@@ -4,9 +4,14 @@
  * Modal Window
  * 
  * @example
- *    protonet.ui.ModalWindow.update({ content: "foobar", headline: "Listen up!" }).show("my-modal-window"); 
- *    // "my-modal-window" is a css class name which should be set on the dialog element
- *    // in order to make it targetable via css selectors
+ *    protonet.ui.ModalWindow.update({
+ *      content: "foobar",
+ *      headline: "Listen up!"
+ *    }).show({
+ *      // "my-modal-window" is a css class name which should be set on the dialog element
+ *      // in order to make it targetable via css selectors
+ *      className:    "my-modal-window"
+ *    });
  */
 protonet.ui.ModalWindow = (function($) {
   var elements          = {},
@@ -20,10 +25,10 @@ protonet.ui.ModalWindow = (function($) {
   
   function _create() {
     $.extend(elements, {
-      shadow:     $("<div />", { className: "modal-window-shadow" }),
-      dialog:     $("<div />", { className: originalClassName = "modal-window-dialog" }),
+      shadow:     $("<div />",    { className: "modal-window-shadow" }),
+      dialog:     $("<div />",    { className: originalClassName = "modal-window-dialog" }),
       content:    $("<output />", { className: "modal-window-content" }),
-      closeLink:  $("<a />", { className: "modal-window-close-link close-link", html: "X" }),
+      closeLink:  $("<a />",      { className: "modal-window-close-link close-link", html: "X" }),
       headline:   $("<h2 />")
     });
     
@@ -77,9 +82,9 @@ protonet.ui.ModalWindow = (function($) {
     return this;
   }
   
-  function show(className, historyEntry) {
+  function show(options) {
     var isAlreadyVisible = elements.shadow.is(":visible");
-    currentClassName = className;
+    currentClassName = options.className;
     
     if (!elements.shadow) {
       _create();
