@@ -1,2 +1,0 @@
-module Images::ExternalsHelper
-end
