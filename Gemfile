@@ -2,6 +2,8 @@ source :gemcutter
 source 'http://gems.github.com/'
 
 gem "rails", "2.3.5"
+gem "bundler", "1.0.10"
+
 gem "configatron", "2.6.3"
 gem "sprockets", "1.0.2"
 gem "ruby-debug", "0.10.3"
@@ -15,7 +17,6 @@ gem "ruby-net-ldap", "0.0.4"
 gem "rack", "1.0.1"
 gem "capistrano", "2.5.19"
 gem "capistrano-ext", "1.2.1"
-gem "bundler", "0.9.26"
 gem "daemon_controller", "0.2.5"
 gem "sunspot_rails", "1.1.0", :require => 'sunspot/rails'
 gem "sunspot_index_queue"
