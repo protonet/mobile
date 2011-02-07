@@ -17,8 +17,8 @@
   position: relative;
   width: 650px;
   margin: 0 auto;
-  border-bottom: 4px solid #999;
-  border-top: 4px solid #999;
+  border-bottom: 5px solid #999;
+  border-top: 5px solid #999;
 }
 
 .modal-window-content {
@@ -153,8 +153,8 @@ input.search {
 .meep-window .next,
 .meep-window .previous {
   position: absolute;
-  width: 0px;
-  height: 0px;
+  width: 0;
+  height: 0;
   border-style: solid;
   border-width: 20px;
   left: 50%;

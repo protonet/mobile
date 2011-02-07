@@ -3,7 +3,7 @@
 protonet.window.Meep = (function() {
   var CLASS_NAME = "meep-window",
       URL        = "/tweets/{action}",
-      COUNT      = 4,
+      COUNT      = 5,
       currentMeep,
       border,
       title,
@@ -103,7 +103,7 @@ protonet.window.Meep = (function() {
           return;
         }
         var tempContainer = $("<ul>");
-        data.reverse().chunk(function(meepData) {
+        data.chunk(function(meepData) {
           return new protonet.timeline.Meep(meepData).render(tempContainer);
         }, function() {
           if (position == "after") {
