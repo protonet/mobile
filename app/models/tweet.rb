@@ -84,13 +84,13 @@ class Tweet < ActiveRecord::Base
       :conditions => ["tweets.id < ? AND says.channel_id = ?", id, channels.first.id],
       :order => "tweets.created_at DESC",
       :limit => count
-    )
+    ).reverse
   end
+  
   
   def after(count)
     Tweet.all(:include => [:says],
       :conditions => ["tweets.id > ? AND says.channel_id = ?", id, channels.first.id],
-      :order => "tweets.created_at DESC",
       :limit => count
     )
   end
