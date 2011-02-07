@@ -51,9 +51,6 @@ end
 # json settings
 ActiveSupport::JSON.backend = 'JSONGem'
 
-# fleximage monkey patch
-require "#{RAILS_ROOT}/lib/fleximage_ext.rb"
-
 # amqp settings
 require 'mq'
 AMQP.settings[:vhost] = configatron.amqp.vhost.nil? ? '/' : configatron.amqp.vhost
