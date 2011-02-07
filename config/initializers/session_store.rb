@@ -6,7 +6,7 @@
 # no regular words or you'll be exposed to dictionary attacks.
 ActionController::Base.session = {
   :key         => '_rails_dashboard_session',
-  :secret      => '48a0979d9654a895f7fce47d1ddda8a23b6c2314835b509e3f5daaaa18e6ef1661829ea4b0d4d9f88022b24cb7f5a5513bc3669f75c163dde1df66160f4ff3df'
+  :secret      => ((System::Preferences.session_secret ||= ActiveSupport::SecureRandom.base64(120)) rescue ActiveSupport::SecureRandom.base64(120))
 }
 
 # Use the database for sessions instead of the cookie-based default,
