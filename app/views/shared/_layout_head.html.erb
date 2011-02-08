@@ -17,7 +17,7 @@
       user_name:                "<%= current_user.display_name %>",
       user_id:                  "<%= current_user.id %>",
       user_channel_ids:         "<%= current_user.channels && current_user.channels.map {|c| c.id}.to_json %>",
-      user_icon_url:            "<%= current_user.active_avatar_url %>",
+      user_icon_url:            "<%= current_user.avatar.url %>",
       user_is_admin:            <%= current_user.admin?.to_json %>, 
       session_id:               "<%= cookies['_rails_dashboard_session'] %>",
       authenticity_token:       "<%= form_authenticity_token %>",
