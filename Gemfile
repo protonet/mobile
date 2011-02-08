@@ -27,6 +27,7 @@ gem "devise", "1.0.8"
 gem "dudemeister-uuid4r", "0.1.3"
 gem "declarative_authorization", "~> 0.5.2"
 gem "paperclip", "~> 2.3.8"
+gem "newrelic_rpm"
 
 group :test, :cucumber do
   gem "jeremymcanally-context", "0.5.5"
