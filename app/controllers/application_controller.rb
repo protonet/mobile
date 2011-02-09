@@ -3,9 +3,11 @@
 
 class ApplicationController < ActionController::Base
   
+  protect_from_forgery
+  
   helper :all # include all helpers, all the time
   helper_method :logged_in?, :allow_signup?
-  protect_from_forgery # See ActionController::RequestForgeryProtection for details
+  
   # hack for reload problem in development
   before_filter :set_backend_for_development, :captive_check, :current_user, :set_current_user_for_authorization, :guest_login
   

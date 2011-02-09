@@ -5,6 +5,7 @@ gem "rails", "~> 3.0.4"
 gem "bundler", "1.0.10"
 gem "mysql"
 gem "devise", "~> 1.1.5"
+gem "memcache-client"
 
 gem "configatron", "2.6.3"
 gem "ruby-debug", "0.10.3"
@@ -28,6 +29,7 @@ gem "declarative_authorization", "~> 0.5.2"
 gem "paperclip", "~> 2.3.8"
 gem "newrelic_rpm"
 gem "sprockets_rails3"
+gem "activeldap" #, :git => "git://github.com/pdf/ruby-activeldap.git", :branch => "rails3", :require => 'active_ldap'
 
 group :test, :cucumber do
   gem "jeremymcanally-context", "0.5.5"

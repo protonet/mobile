@@ -50,10 +50,10 @@ Dashboard::Application.routes.draw do
   match '/navigation' => 'navigation#index', :as => :navigation
   
   # Users
-  match 'users' => '#index', :as => :devise_for, :path_names => { :sign_in => 'login', :sign_out => 'logout' }
-  match 'login' => 'sessions#new', :as => :new_user_session, :via => get
-  match 'login' => 'sessions#create', :as => :login, :via => post
-  match 'logout' => 'sessions#destroy', :as => :logout, :via => get
+  match 'users' => 'sessions#index', :as => :devise_for, :path_names => { :sign_in => 'login', :sign_out => 'logout' }
+  get 'login' => 'sessions#new', :as => :new_user_session
+  post 'login' => 'sessions#create', :as => :login
+  get 'logout' => 'sessions#destroy', :as => :logout
   match '/register' => 'users#create', :as => :register
   match '/signup' => 'users#new', :as => :signup
   match 'users/delete_stranger_older_than_two_days' => 'users#delete_stranger_older_than_two_days', :as => :delete_stranger_older_than_two_days
