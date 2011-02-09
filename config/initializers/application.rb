@@ -1,3 +1,17 @@
+if Rails.env.development?
+  # TODO: RAILS 3
+  require "#{Rails.root}/lib/backend_adapters/development_mock"
+  System::Backend.backend_connection = BackendAdapters::DevelopmentMock.new
+  puts "Backend '#{System::Backend.backend_connection.info}' connected successfully!"
+  
+  if File.exists?(File.join(Rails.root, 'tmp', 'debug.txt'))
+    require 'ruby-debug'
+    Debugger.wait_connection = true
+    Debugger.start_remote
+    File.delete(File.join(Rails.root, 'tmp', 'debug.txt'))
+  end
+end
+  
 # json settings
 ActiveSupport::JSON.backend = 'JSONGem'
 

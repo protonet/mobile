@@ -18,17 +18,6 @@ Dashboard::Application.configure do
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.delivery_method = :sendmail
   
-  # TODO: RAILS 3
-  # System::Backend.backend_connection = BackendAdapters::DevelopmentMock.new
-  # puts "Backend '#{System::Backend.backend_connection.info}' connected successfully!"
-  # 
-  # if File.exists?(File.join(Rails.root, 'tmp', 'debug.txt'))
-  #   require 'ruby-debug'
-  #   Debugger.wait_connection = true
-  #   Debugger.start_remote
-  #   File.delete(File.join(Rails.root, 'tmp', 'debug.txt'))
-  # end
-  
   config.active_support.deprecation = :log
   
   configatron.user_file_path = Rails.root + "/../shared/user-files"
