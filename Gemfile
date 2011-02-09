@@ -28,7 +28,7 @@ gem "dudemeister-uuid4r", "0.1.3"
 gem "declarative_authorization", "~> 0.5.2"
 gem "paperclip", "~> 2.3.8"
 gem "newrelic_rpm"
-gem "sprockets_rails3"
+gem "sprockets_rails", :git => "git://github.com/cice/sprockets-rails.git"
 gem "activeldap" #, :git => "git://github.com/pdf/ruby-activeldap.git", :branch => "rails3", :require => 'active_ldap'
 
 group :test, :cucumber do

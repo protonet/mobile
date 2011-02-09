@@ -1,65 +1,66 @@
-:default:
-  :asset_root: public
-  :load_path:
-    - app/javascripts
-    - vendor/sprockets/*/src
-    - vendor/plugins/*/javascripts
-  :source_files:
-    - app/javascripts/application.js
-    # - app/javascripts/**/*.js
-:instruments:
-  :asset_root: public
-  :load_path:
-    - app/javascripts
-    - vendor/sprockets/*/src
-    - vendor/plugins/*/javascripts
-  :source_files:
-    - app/javascripts/instruments.js
-:files:
-  :asset_root: public
-  :load_path:
-    - app/javascripts
-    - vendor/sprockets/*/src
-    - vendor/plugins/*/javascripts
-  :source_files:
-    - app/javascripts/files.js
-:users:
-  :asset_root: public
-  :load_path:
-    - app/javascripts
-    - vendor/sprockets/*/src
-    - vendor/plugins/*/javascripts
-  :source_files:
-    - app/javascripts/users.js
-:channels:
-  :asset_root: public
-  :load_path:
-    - app/javascripts
-    - vendor/sprockets/*/src
-    - vendor/plugins/*/javascripts
-  :source_files:
-    - app/javascripts/channels.js
-:preferences:
-  :asset_root: public
-  :load_path:
-    - app/javascripts
-    - vendor/sprockets/*/src
-    - vendor/plugins/*/javascripts
-  :source_files:
-    - app/javascripts/preferences.js
-:networks:
-  :asset_root: public
-  :load_path:
-    - app/javascripts
-    - vendor/sprockets/*/src
-    - vendor/plugins/*/javascripts
-  :source_files:
-    - app/javascripts/networks.js
-:search:
-  :asset_root: public
-  :load_path:
-    - app/javascripts
-    - vendor/sprockets/*/src
-    - vendor/plugins/*/javascripts
-  :source_files:
-    - app/javascripts/search.js
+packages:
+  default:
+    asset_root: public
+    load_path:
+      - app/javascripts
+      - vendor/sprockets/*/src
+      - vendor/plugins/*/javascripts
+    source_files:
+      - app/javascripts/application.js
+      # - app/javascripts/**/*.js
+  instruments:
+    asset_root: public
+    load_path:
+      - app/javascripts
+      - vendor/sprockets/*/src
+      - vendor/plugins/*/javascripts
+    source_files:
+      - app/javascripts/instruments.js
+  files:
+    asset_root: public
+    load_path:
+      - app/javascripts
+      - vendor/sprockets/*/src
+      - vendor/plugins/*/javascripts
+    source_files:
+      - app/javascripts/files.js
+  users:
+    asset_root: public
+    load_path:
+      - app/javascripts
+      - vendor/sprockets/*/src
+      - vendor/plugins/*/javascripts
+    source_files:
+      - app/javascripts/users.js
+  channels:
+    asset_root: public
+    load_path:
+      - app/javascripts
+      - vendor/sprockets/*/src
+      - vendor/plugins/*/javascripts
+    source_files:
+      - app/javascripts/channels.js
+  preferences:
+    asset_root: public
+    load_path:
+      - app/javascripts
+      - vendor/sprockets/*/src
+      - vendor/plugins/*/javascripts
+    source_files:
+      - app/javascripts/preferences.js
+  networks:
+    asset_root: public
+    load_path:
+      - app/javascripts
+      - vendor/sprockets/*/src
+      - vendor/plugins/*/javascripts
+    source_files:
+      - app/javascripts/networks.js
+  search:
+    asset_root: public
+    load_path:
+      - app/javascripts
+      - vendor/sprockets/*/src
+      - vendor/plugins/*/javascripts
+    source_files:
+      - app/javascripts/search.js

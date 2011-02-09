@@ -50,7 +50,8 @@ Dashboard::Application.routes.draw do
   match '/navigation' => 'navigation#index', :as => :navigation
   
   # Users
-  match 'users' => 'sessions#index', :as => :devise_for, :path_names => { :sign_in => 'login', :sign_out => 'logout' }
+  devise_for :users
+  #match 'users' => 'sessions#index', :as => :devise_for, :path_names => { :sign_in => 'login', :sign_out => 'logout' }
   get 'login' => 'sessions#new', :as => :new_user_session
   post 'login' => 'sessions#create', :as => :login
   get 'logout' => 'sessions#destroy', :as => :logout
@@ -81,10 +82,13 @@ Dashboard::Application.routes.draw do
     resources :avatars
   end
   
+  # TODO: RAILS 3
   # Sprockets
   # SprocketsApplication.routes(map, :resources)
   
-  match '/' => 'instruments#index'
+  root :to => 'instruments#index'
   match '/:controller(/:action(/:id))'
   match '*path' => 'system/captive#catchall'
+  
+  
 end

@@ -1,5 +1,4 @@
 if Rails.env.development?
-  # TODO: RAILS 3
   require "#{Rails.root}/lib/backend_adapters/development_mock"
   System::Backend.backend_connection = BackendAdapters::DevelopmentMock.new
   puts "Backend '#{System::Backend.backend_connection.info}' connected successfully!"
@@ -16,6 +15,8 @@ end
 ActiveSupport::JSON.backend = 'JSONGem'
 
 # amqp settings
+require 'lib/rabbit'
+
 require 'mq'
 AMQP.settings[:vhost] = configatron.amqp.vhost.nil? ? '/' : configatron.amqp.vhost
 
