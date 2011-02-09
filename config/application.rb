@@ -1,6 +1,12 @@
 # Put this in config/application.rb
 require File.expand_path('../boot', __FILE__)
 
+require 'rails/all'
+
+# If you have a Gemfile, require the gems listed there, including any gems
+# you've limited to :test, :development, or :production.
+Bundler.require(:default, Rails.env) if defined?(Bundler)
+
 module Dashboard
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
@@ -8,8 +14,8 @@ module Dashboard
     # -- all .rb files in that directory are automatically loaded.
   
     # Add additional load paths for your own custom dirs
-    # config.load_paths += %W( #{Rails.root}/extras )
-    config.load_paths += %W( #{Rails.root}/app/middleware )
+    # config.autoload_paths += %W( #{Rails.root}/extras )
+    config.autoload_paths += %W( #{Rails.root}/app/middleware )
   
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named
@@ -24,9 +30,15 @@ module Dashboard
   
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}')]
-    # config.i18n.default_locale = :de
+    config.i18n.default_locale = :en
   
     config.cache_store = :mem_cache_store
+    
+    # Configure the default encoding used in templates for Ruby 1.9.
+    config.encoding = "utf-8"
+
+    # Configure sensitive parameters which will be filtered from the log file.
+    config.filter_parameters += [:password]
   end
   
   # json settings

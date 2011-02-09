@@ -20,6 +20,6 @@ class Invitation < ActiveRecord::Base
   end
   
   def send_email
-    Mailer.deliver_invitation(self)
+    Mailer.invitation(self).deliver
   end
 end

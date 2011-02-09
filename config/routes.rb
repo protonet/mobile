@@ -1,141 +1,90 @@
-ActionController::Routing::Routes.draw do |map|
-
-  map.connect 'captive', :controller => 'system/captive', :action => 'index'
-  map.connect "captive/login", :controller => 'system/captive', :action => 'login'  
-
-  # channels
-  map.connect 'channels/search', :controller => 'channels', :action => 'search'
-
-  map.list_channels 'channels/list.:format', :controller => 'channels', :action => 'list'
-  map.list_user_channels 'users/list_channels.:format', :controller => 'users', :action => 'list_channels'
-  map.resources :channels do |channels|
-    channels.resources :tweets
+Dashboard::Application.routes.draw do
+  
+  # Captive
+  match 'captive' => 'system/captive#index'
+  match 'captive/login' => 'system/captive#login'
+  
+  # Channels
+  match 'channels/search' => 'channels#search'
+  match 'channels/list.:format' => 'channels#list', :as => :list_channels
+  match 'users/list_channels.:format' => 'users#list_channels', :as => :list_user_channels
+  
+  resources :channels do
+    resources :tweets
   end
-  map.destroy_channel 'channels/:id/destroy', :controller => 'channels', :action => 'destroy'
-
-  # tweets
-  map.sync_tweets 'tweets/sync', :controller => 'tweets', :action => 'sync'
-  map.tweets_before 'tweets/before', :controller => 'tweets', :action => 'before'
-  map.tweets_after 'tweets/after', :controller => 'tweets', :action => 'after'
-  map.resources   :tweets
-  map.more_tweets '/more_tweets/:tweet_id/:channel_id/:later/:earlier/:pos.:format',
-    :controller => 'search', :action => 'more_tweets'
-
-  # listens
-  map.listen_to_channel  'listens/create', :controller => 'listens', :action => 'create'
-  map.resources   :listens do |listen|
-    listen.accept '/accept', :controller => 'listens', :action => 'accept'
+  match 'channels/:id/destroy' => 'channels#destroy', :as => :destroy_channel
+  
+  # Tweets
+  match 'tweets/sync' => 'tweets#sync', :as => :sync_tweets
+  match 'tweets/before' => 'tweets#before', :as => :tweets_before
+  match 'tweets/after' => 'tweets#after', :as => :tweets_after
+  
+  resources :tweets
+  
+  match '/more_tweets/:tweet_id/:channel_id/:later/:earlier/:pos.:format' => 'search#more_tweets', :as => :more_tweets
+  match 'listens/create' => 'listens#create', :as => :listen_to_channel
+  
+  # Listens
+  resources :listens do
+    match '/accept' => 'listens#accept', :as => :accept
   end
   
-  map.resources  :invitations, :only => [:new, :create]
-
-  # networks
-  map.negotiate_network 'networks/negotiate.:format', :controller => 'networks', :action => 'negotiate'
-  map.resources   :networks do |networks|
-    networks.map      'map',       :controller => 'networks', :action => 'map'
-    networks.couple   'couple',    :controller => 'networks', :action => 'couple'
-    networks.decouple 'decouple',  :controller => 'networks', :action => 'decouple'
-    networks.join     'join',    :controller => 'networks', :action => 'join'
-    networks.leave    'leave',   :controller => 'networks', :action => 'leave'
-    
-    networks.resources :channels
-  end
-
-  # preferences
-  map.preferences '/preferences', :controller => 'preferences', :action => 'index'
-  map.vpn_preferences '/preferences/get_vpn.:format', :controller => 'preferences', :action => 'get_vpn'
-
-  # navigation
-  map.navigation '/navigation', :controller => 'navigation', :action => 'index'
+  # Invitations
+  resources :invitations
+  match '/join/:invitation_token' => 'registrations#new', :as => :accept_invitation
   
-  # session / login / logout stuff
-  map.devise_for :users, :path_names => { :sign_in => 'login', :sign_out => 'logout' }
-  map.new_user_session 'login', :controller => 'sessions', :action => 'new', :conditions => { :method => :get }
-  map.login 'login', :controller => 'sessions', :action => 'create', :conditions => { :method => :post }
-  map.logout 'logout', :controller => 'sessions', :action => 'destroy', :conditions => { :method => :get }
-  map.register '/register', :controller => 'users', :action => 'create'
-  map.signup '/signup', :controller => 'users', :action => 'new'
-  map.accept_invitation '/join/:invitation_token', :controller => 'registrations', :action => 'new'
-
+  # Networks
+  match 'networks/negotiate.:format' => 'networks#negotiate', :as => :negotiate_network
+  resources :networks do
+    match 'map' => 'networks#map', :as => :map
+    match 'couple' => 'networks#couple', :as => :couple
+    match 'decouple' => 'networks#decouple', :as => :decouple
+    match 'join' => 'networks#join', :as => :join
+    match 'leave' => 'networks#leave', :as => :leave
+    resources :channels
+  end
+  
+  # Preferences
+  match '/preferences' => 'preferences#index', :as => :preferences
+  match '/preferences/get_vpn.:format' => 'preferences#get_vpn', :as => :vpn_preferences
+  match '/navigation' => 'navigation#index', :as => :navigation
+  
+  # Users
+  match 'users' => '#index', :as => :devise_for, :path_names => { :sign_in => 'login', :sign_out => 'logout' }
+  match 'login' => 'sessions#new', :as => :new_user_session, :via => get
+  match 'login' => 'sessions#create', :as => :login, :via => post
+  match 'logout' => 'sessions#destroy', :as => :logout, :via => get
+  match '/register' => 'users#create', :as => :register
+  match '/signup' => 'users#new', :as => :signup
+  match 'users/delete_stranger_older_than_two_days' => 'users#delete_stranger_older_than_two_days', :as => :delete_stranger_older_than_two_days
+  
+  resources :users
+  
   # TODO what is this?
-  map.search '/search.:format', :controller => 'search', :action => 'index'
+  match '/search.:format' => 'search#index', :as => :search
   
-  # user stuff
-  map.delete_stranger_older_than_two_days 'users/delete_stranger_older_than_two_days', :controller => 'users', :action => 'delete_stranger_older_than_two_days'
-  map.resources :users, :has_one => 'setting'
-
-  # system
-  map.namespace :system do |system|
-    system.foundations            'foundations', :controller => 'foundations'
-    system.files_create_directory 'files/create_directory', :controller => 'files', :action => 'create_directory'
-    system.resources              :files
-    system.vpn_on                 'vpn/on',   :controller => 'vpn',   :action => 'on'
-    system.vpn_off                'vpn/off',  :controller => 'vpn',   :action => 'off'
-    system.wifi_on                'wifi/on',  :controller => 'wifi',  :action => 'on'
-    system.wifi_off               'wifi/off', :controller => 'wifi',  :action => 'off'
-    system.preferences_update     'preferences/update', :controller => 'preferences', :action => 'update'
-    system.release_update         'releases/update',    :controller => 'releases',    :action => 'update'
+  # System
+  namespace :system do
+    match 'foundations' => 'foundations#index', :as => :foundations
+    match 'files/create_directory' => 'files#create_directory', :as => :files_create_directory
+    resources :files
+    match 'vpn/on' => 'vpn#on', :as => :vpn_on
+    match 'vpn/off' => 'vpn#off', :as => :vpn_off
+    match 'wifi/on' => 'wifi#on', :as => :wifi_on
+    match 'wifi/off' => 'wifi#off', :as => :wifi_off
+    match 'preferences/update' => 'preferences#update', :as => :preferences_update
+    match 'releases/update' => 'releases#update', :as => :release_update
   end
-
-  # images
-  map.namespace :images do |images|
-    images.resources :avatars, :only => [:new, :create]
-    #  crazy resizing on the fly, I had to slightly uglify the url so the rails caching can handle it
-    # examples:
-    # /images/externals/resize/0/0/http://www.goddesscruise.com/parts_of_boat.gif      -> for original size
-    # /images/externals/resize/100/100/http://www.goddesscruise.com/parts_of_boat.gif  -> any other size ;)
-    images.connect  'externals/show',       :controller => 'externals', :action => 'show'
-    images.connect  'externals/is_available', :controller => 'externals', :action => 'is_available'
-    images.resources :externals
+  
+  # Images
+  namespace :images do
+    resources :avatars
   end
-
-  # sprockets
-  SprocketsApplication.routes(map, :resources)
-
-  # The priority is based upon order of creation: first created -> highest priority.
-
-  # Sample of regular route:
-  #   map.connect 'products/:id', :controller => 'catalog', :action => 'view'
-  # Keep in mind you can assign values other than :controller and :action
-
-  # Sample of named route:
-  #   map.purchase 'products/:id/purchase', :controller => 'catalog', :action => 'purchase'
-  # This route can be invoked with purchase_url(:id => product.id)
-
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   map.resources :products
-
-  # Sample resource route with options:
-  #   map.resources :products, :member => { :short => :get, :toggle => :post }, :collection => { :sold => :get }
-
-  # Sample resource route with sub-resources:
-  #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
-
-  # Sample resource route with more complex sub-resources
-  #   map.resources :products do |products|
-  #     products.resources :comments
-  #     products.resources :sales, :collection => { :recent => :get }
-  #   end
-
-  # Sample resource route within a namespace:
-  #   map.namespace :admin do |admin|
-  #     # Directs /admin/products/* to Admin::ProductsController (app/controllers/admin/products_controller.rb)
-  #     admin.resources :products
-  #   end
-
-  # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
-  map.root :controller => "instruments"
-
-  # See how all your routes lay out with "rake routes"
-
-  # Install the default routes as the lowest priority.
-  # Note: These default routes make all actions in every controller accessible via GET requests. You should
-  # consider removing the them or commenting them out if you're using named routes and resources.
-  map.connect ':controller/:action/:id'
-  map.connect ':controller/:action/:id.:format'
-
-  # this is needed otherwise url's with path are redirected to not found page.
-  # 404 are handled by this action, but nicer would be to solve this in rack. So not Rails handles 404
-  map.connect '*path', :controller => 'system/captive', :action => 'catchall'
-
+  
+  # Sprockets
+  # SprocketsApplication.routes(map, :resources)
+  
+  match '/' => 'instruments#index'
+  match '/:controller(/:action(/:id))'
+  match '*path' => 'system/captive#catchall'
 end
