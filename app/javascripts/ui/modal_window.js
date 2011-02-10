@@ -14,14 +14,16 @@
  *    });
  */
 protonet.ui.ModalWindow = (function($) {
-  var elements          = {},
-      scrollbarWidth    = 0,
-      offset            = 50,
-      currentClassName  = null,
-      originalClassName = null,
-      $document         = $(document),
-      $window           = $(window),
-      $body             = $(document.body);
+  var elements              = {},
+      initialPath           = protonet.utils.History.getCurrentPath(),
+      scrollbarWidth        = 0,
+      offset                = 50,
+      currentClassName      = null,
+      originalClassName     = null,
+      historyBeforeOpening  = null,
+      $document             = $(document),
+      $window               = $(window),
+      $body                 = $(document.body);
   
   function _create() {
     $.extend(elements, {
@@ -83,7 +85,8 @@ protonet.ui.ModalWindow = (function($) {
   }
   
   function show(options) {
-    var isAlreadyVisible = elements.shadow.is(":visible");
+    var isAlreadyVisible = elements.shadow.is(":visible"),
+        currentPath      = protonet.utils.History.getCurrentPath();
     currentClassName = options.className;
     
     if (!elements.shadow) {
@@ -91,6 +94,8 @@ protonet.ui.ModalWindow = (function($) {
     }
     
     if (!isAlreadyVisible) {
+      // Needed to restore url when modal window gets closed
+      historyBeforeOpening = initialPath == currentPath ? "/" : currentPath;
       elements.shadow.fadeIn("fast");
     }
     
@@ -128,7 +133,7 @@ protonet.ui.ModalWindow = (function($) {
       });
     
     // TODO: This doesn't work for all cases!
-    protonet.utils.History.register("/");
+    protonet.utils.History.register(historyBeforeOpening);
     
     _unobserve();
     protonet.Notifications.trigger("modal_window.hidden");
