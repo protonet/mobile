@@ -93,30 +93,30 @@ protonet.ui.ModalWindow = (function($) {
       _create();
     }
     
-    if (!isAlreadyVisible) {
-      // Needed to restore url when modal window gets closed
-      historyBeforeOpening = initialPath == currentPath ? "/" : currentPath;
-      elements.shadow.fadeIn("fast");
-    }
-    
     elements.dialog.attr({ "class": originalClassName }).addClass(currentClassName);
     
     _observe();
     position(true);
     resize(true);
     
-    var originalPaddingRight = $body.css("padding-right");
-    scrollbarWidth = scrollbarWidth || protonet.utils.getScrollbarWidth();
-    
-    $body
-      .css({
-        "overflow-y": "hidden",
-        "padding-right": (parseInt(originalPaddingRight, 10) + scrollbarWidth).px()
-      });
-    
-    elements.content.css("margin-right", (-scrollbarWidth).px());
-    
-    protonet.Notifications.trigger("modal_window.shown");
+    if (!isAlreadyVisible) {
+      // Needed to restore url when modal window gets closed
+      historyBeforeOpening = initialPath == currentPath ? "/" : currentPath;
+      elements.shadow.fadeIn("fast");
+      
+      var originalPaddingRight = $body.css("padding-right");
+      scrollbarWidth = scrollbarWidth || protonet.utils.getScrollbarWidth();
+      
+      $body
+        .css({
+          "overflow-y": "hidden",
+          "padding-right": (parseInt(originalPaddingRight, 10) + scrollbarWidth).px()
+        });
+
+      elements.content.css("margin-right", (-scrollbarWidth).px());
+
+      protonet.Notifications.trigger("modal_window.shown");
+    }
     
     return this;
   }

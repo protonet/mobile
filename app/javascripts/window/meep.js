@@ -11,6 +11,14 @@ protonet.window.Meep = (function() {
       next,
       previous;
   
+  protonet.Notifications.bind("modal_window.shown", function() {
+    _observe();
+  });
+  
+  protonet.Notifications.unbind("modal_window.hidden", function() {
+    _unobserve();
+  });
+  
   function show(dataOrId) {
     border = border || (function() {
       return $("<div>", { className: "border" }).append(title = $("<h5>"));
@@ -20,12 +28,12 @@ protonet.window.Meep = (function() {
     meepList  = _getMeepList();
     
     var content = meepList.add(border).add(next).add(previous);
-    
     protonet.ui.ModalWindow
       .update({ content: content })
       .show({ className: CLASS_NAME });
     
     loading();
+    _observe();
     
     if ($.type(dataOrId) == "object") {
       _show(dataOrId);
@@ -49,7 +57,10 @@ protonet.window.Meep = (function() {
     // Create history entry
     protonet.utils.History.register("?meep_id=" +  data.id);
     
-    adjust();
+    adjust(500, 0);
+    
+    _loadAndRender("before", currentMeep);
+    _loadAndRender("after", currentMeep);
   }
   
   function _loadMeep(id, callback) {
@@ -72,29 +83,29 @@ protonet.window.Meep = (function() {
     return this;
   }
   
-  function adjust(duration) {
-    duration = $.type(duration) == "number" ? duration : 500;
+  function adjust(borderAnimationDuration, meepListAnimationDuration) {
+    borderAnimationDuration   = borderAnimationDuration || 0;
+    meepListAnimationDuration = meepListAnimationDuration || 0;
     var meepHeight          = currentMeep.element.outerHeight(),
         newBorderMarginTop  = -(meepHeight + border.outerHeight() - border.height()) / 2,
         prevSiblings        = currentMeep.element.prevAll(),
         newMarginTop        = -meepHeight / 2;
-    
     prevSiblings.each(function(i, element) { newMarginTop -= $(element).outerHeight(true); });
-    meepList.css("margin-top", newMarginTop.px());
     
-    border.animate({
+    meepList.children().removeClass("selected");
+    loading();
+    
+    meepList.stop(false, false).animate({
+      marginTop: newMarginTop.px()
+    }, meepListAnimationDuration);
+    
+    border.stop(false, false).animate({
       marginTop: newBorderMarginTop.px(),
       height:    meepHeight.px()
-    }, duration, function() {
+    }, borderAnimationDuration, function() {
       loadingEnd();
       currentMeep.element.addClass("selected");
-      if (duration > 0) {
-        currentMeep.element.hide().fadeIn(duration);
-      }
     });
-    
-    _loadAndRender("before", currentMeep);
-    _loadAndRender("after", currentMeep);
     
     return this;
   }
@@ -132,6 +143,54 @@ protonet.window.Meep = (function() {
     });
   }
   
+  function scrollByOffset(offset) {
+    var meepElementToScrollTo;
+    if (offset == 0) {
+      return this;
+    } else if (offset > 0) {
+      meepElementToScrollTo = currentMeep.element.prevAll().eq(offset - 1);
+    } else if (offset < 0) {
+      meepElementToScrollTo = currentMeep.element.nextAll().eq(-offset - 1);
+    }
+    
+    if (meepElementToScrollTo.length) {
+      scrollTo(meepElementToScrollTo);
+    }
+    
+    return this;
+  }
+  
+  function scrollTo(meepElement) {
+    currentMeep = meepElement.data("instance");
+    adjust(500, 500);
+    return this;
+  }
+  
+  function _observe() {
+    var contentElement = protonet.ui.ModalWindow.get("content");
+    if (protonet.user.Browser.SUPPORTS_EVENT("DOMMouseScroll")) {
+      contentElement.bind("DOMMouseScroll.meep_window", function(event) {
+        event = event.originalEvent;
+        if (event.axis == event.VERTICAL_AXIS && event.detail != 0) {
+          scrollByOffset(event.detail < 0 ? 1 : -1);
+        }
+        event.preventDefault();
+      });
+    } else if (protonet.user.Browser.SUPPORTS_EVENT("mousewheel")) {
+      contentElement.bind("mousewheel.meep_window", function(event) {
+        event = event.originalEvent;
+        if (event.wheelDeltaY != 0) {
+          scrollByOffset(event.wheelDeltaY < 0 ? -1 : 1);
+        }
+        event.preventDefault();
+      });
+    }
+  }
+  
+  function _unobserve() {
+    protonet.ui.ModalWindow.get("content").unbind(".meep_window");
+  }
+  
   function _getMeepList() {
     return $("<ul>", {
       className: "meeps"
@@ -143,9 +202,11 @@ protonet.window.Meep = (function() {
   protonet.utils.History.observe(/(?:\?|&)meep_id=(\d+)/, show);
   
   return {
-    show:       show,
-    adjust:     adjust, 
-    loading:    loading,
-    loadingEnd: loadingEnd
+    show:             show,
+    adjust:           adjust,
+    scrollTo:         scrollTo,
+    scrollByOffset:   scrollByOffset,
+    loading:          loading,
+    loadingEnd:       loadingEnd
   };
 })();

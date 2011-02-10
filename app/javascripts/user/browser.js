@@ -73,5 +73,17 @@ protonet.user.Browser = {
   
   SUPPORTS_NOTIFICATIONS: function() {
     return "webkitNotifications" in window;
+  },
+  
+  SUPPORTS_EVENT: function(eventName) {
+    testElement = document.createElement("div");
+    eventName = "on" + eventName;
+    var isSupported = (eventName in testElement);
+    if (!isSupported) {
+      testElement.setAttribute(eventName, "return;");
+      isSupported = typeof(testElement[eventName]) == "function";
+    }
+    testElement = null;
+    return isSupported;
   }
 };

@@ -150,6 +150,13 @@ input.search {
   background: #fff;
 }
 
+.meep-window .border.loading {
+  background-color: rgba(255, 255, 255, 0.5);
+  background-image: url(/img/icn_loading_big.gif);
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .meep-window .next,
 .meep-window .previous {
   position: absolute;
@@ -180,12 +187,6 @@ input.search {
   box-shadow: none;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
-}
-
-.meep-window .border.loading {
-  background-image: url(/img/icn_loading_big.gif);
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .meep-window h5 {
