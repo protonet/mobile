@@ -19,8 +19,10 @@ protonet.window.Meep = (function() {
     previous  = previous || $("<a>", { className: "previous" });
     meepList  = _getMeepList();
     
+    var content = meepList.add(border).add(next).add(previous);
+    
     protonet.ui.ModalWindow
-      .update({ content: meepList.add(border).add(next).add(previous) })
+      .update({ content: content })
       .show({ className: CLASS_NAME });
     
     loading();
@@ -107,6 +109,7 @@ protonet.window.Meep = (function() {
         }
         var tempContainer = $("<ul>");
         data.chunk(function(meepData) {
+          meepData.channel_id = null;
           return new protonet.timeline.Meep(meepData).render(tempContainer);
         }, function() {
           if (position == "after") {

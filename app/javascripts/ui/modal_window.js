@@ -132,7 +132,6 @@ protonet.ui.ModalWindow = (function($) {
         "padding-right": ""
       });
     
-    // TODO: This doesn't work for all cases!
     protonet.utils.History.register(historyBeforeOpening);
     
     _unobserve();
