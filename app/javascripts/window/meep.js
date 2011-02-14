@@ -1,10 +1,13 @@
 //= require "../utils/parse_query_string.js"
 
+// TODO: This is certainly not the best piece of code I ever wrote
+// but I'm pretty good at drinking beer. (tiff)
 protonet.window.Meep = (function() {
-  var CLASS_NAME = "meep-window",
-      URL        = "/tweets/{action}",
-      COUNT      = 5,
-      $document  = $(document),
+  var CLASS_NAME          = "meep-window",
+      URL                 = "/tweets/{action}",
+      COUNT               = 5,
+      $document           = $(document),
+      currentChannelName  = "unknown",
       currentMeep,
       border,
       title,
@@ -38,19 +41,11 @@ protonet.window.Meep = (function() {
   }
   
   function _show(data) {
-    var titleText = protonet.t("MEEP_WINDOW_HEADLINE")
-      .replace("{id}", "#" + data.id)
-      .replace("{channel_name}", protonet.timeline.Channels.getChannelName(data.channel_id));
-    title.text(titleText);
+    currentChannelName = protonet.timeline.Channels.getChannelName(data.channel_id);
     
     // Make sure that the meep doesn't conflict with channels
     data.channel_id = null;
-    currentMeep = new protonet.timeline.Meep(data).render(meepList);
-    
-    // Create history entry
-    protonet.utils.History.register("?meep_id=" +  data.id);
-    
-    adjust(500, 0);
+    select(new protonet.timeline.Meep(data).render(meepList), 500, 0);
     
     _loadAndRender("before", currentMeep);
     _loadAndRender("after", currentMeep);
@@ -64,6 +59,23 @@ protonet.window.Meep = (function() {
         protonet.Notifications.trigger("flash_message.error", protonet.t("DETAIL_VIEW_LOADING_ERROR"));
       }
     });
+  }
+  
+  function select(meep, borderAnimationDuration, meepListAnimationDuration) {
+    currentMeep = meep;
+    
+    // Change title text
+    var titleText = protonet.t("MEEP_WINDOW_HEADLINE")
+      .replace("{id}", "#" + meep.data.id)
+      .replace("{channel_name}", currentChannelName);
+    title.text(titleText);
+    
+    // Create history entry
+    protonet.utils.History.register("?meep_id=" +  meep.data.id);
+    
+    adjust(borderAnimationDuration, meepListAnimationDuration);
+    
+    return this;
   }
   
   function loading() {
@@ -155,8 +167,7 @@ protonet.window.Meep = (function() {
   }
   
   function scrollTo(meepElement) {
-    currentMeep = meepElement.data("instance");
-    adjust(500, 500);
+    select(meepElement.data("instance"), 500, 500);
     return this;
   }
   
@@ -236,6 +247,7 @@ protonet.window.Meep = (function() {
     adjust:           adjust,
     scrollTo:         scrollTo,
     scrollByOffset:   scrollByOffset,
+    select:           select,
     loading:          loading,
     loadingEnd:       loadingEnd
   };
