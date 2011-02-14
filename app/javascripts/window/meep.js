@@ -33,7 +33,6 @@ protonet.window.Meep = (function() {
       .show({ className: CLASS_NAME });
     
     loading();
-    _observe();
     
     if ($.type(dataOrId) == "object") {
       _show(dataOrId);
@@ -167,12 +166,20 @@ protonet.window.Meep = (function() {
   }
   
   function _observe() {
-    var contentElement = protonet.ui.ModalWindow.get("content");
+    var contentElement  = protonet.ui.ModalWindow.get("content"),
+        timeout         = null,
+        spawnScrolling  = function(offset) {
+          clearTimeout(timeout);
+          timeout = setTimeout(function() {
+            scrollByOffset(offset);
+          }, 100);
+        };
+    
     if (protonet.user.Browser.SUPPORTS_EVENT("DOMMouseScroll")) {
       contentElement.bind("DOMMouseScroll.meep_window", function(event) {
         event = event.originalEvent;
         if (event.axis == event.VERTICAL_AXIS && event.detail != 0) {
-          scrollByOffset(event.detail < 0 ? 1 : -1);
+          spawnScrolling(event.detail < 0 ? 1 : -1);
         }
         event.preventDefault();
       });
@@ -180,7 +187,7 @@ protonet.window.Meep = (function() {
       contentElement.bind("mousewheel.meep_window", function(event) {
         event = event.originalEvent;
         if (event.wheelDeltaY != 0) {
-          scrollByOffset(event.wheelDeltaY < 0 ? -1 : 1);
+          spawnScrolling(event.wheelDeltaY < 0 ? -1 : 1);
         }
         event.preventDefault();
       });
