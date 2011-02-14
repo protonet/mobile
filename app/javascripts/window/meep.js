@@ -4,20 +4,13 @@ protonet.window.Meep = (function() {
   var CLASS_NAME = "meep-window",
       URL        = "/tweets/{action}",
       COUNT      = 5,
+      $document  = $(document),
       currentMeep,
       border,
       title,
       meepList,
       next,
       previous;
-  
-  protonet.Notifications.bind("modal_window.shown", function() {
-    _observe();
-  });
-  
-  protonet.Notifications.unbind("modal_window.hidden", function() {
-    _unobserve();
-  });
   
   function show(dataOrId) {
     border = border || (function() {
@@ -33,6 +26,7 @@ protonet.window.Meep = (function() {
       .show({ className: CLASS_NAME });
     
     loading();
+    _observe();
     
     if ($.type(dataOrId) == "object") {
       _show(dataOrId);
@@ -175,6 +169,15 @@ protonet.window.Meep = (function() {
           }, 100);
         };
     
+    $document.bind("keydown.meep_window", function(event) {
+      var keyCode = event.keyCode;
+      if (keyCode == 40) { // arrow down
+        scrollByOffset(-1);
+      } else if (keyCode == 38) { // arrow up
+        scrollByOffset(1);
+      }
+    });
+    
     if (protonet.user.Browser.SUPPORTS_EVENT("DOMMouseScroll")) {
       contentElement.bind("DOMMouseScroll.meep_window", function(event) {
         event = event.originalEvent;
@@ -192,18 +195,40 @@ protonet.window.Meep = (function() {
         event.preventDefault();
       });
     }
+    
+    meepList
+      .delegate("li", "mousedown.meep_window", function(event) {
+        event.preventDefault();
+      })
+      .delegate("li:not(.selected)", "click.meep_window", function(event) {
+        scrollTo($(this));
+        event.preventDefault();
+      })
+      .delegate("li", "text_extension.show_flash", function() {
+        var meepElement = $(this);
+        if (meepElement.is(".selected")) {
+          adjust();
+        } else {
+          scrollTo(meepElement);
+        }
+      })
+      .delegate("li", "text_extension.hide_flash", function() {
+        adjust();
+      });
+    
+    protonet.Notifications.one("modal_window.hidden", _unobserve);
   }
   
   function _unobserve() {
-    protonet.ui.ModalWindow.get("content").unbind(".meep_window");
+    protonet.ui.ModalWindow.get("content")
+      .add($document)
+      .add(meepList)
+      .unbind(".meep_window")
+      .unbind("text_extension");
   }
   
   function _getMeepList() {
-    return $("<ul>", {
-      className: "meeps"
-    }).bind("text_extension.show_flash text_extension.hide_flash", function() {
-      adjust(0);
-    });
+    return $("<ul>", { className: "meeps" });
   }
   
   protonet.utils.History.observe(/(?:\?|&)meep_id=(\d+)/, show);
