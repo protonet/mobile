@@ -197,10 +197,7 @@ protonet.window.Meep = (function() {
     }
     
     meepList
-      .delegate("li", "mousedown.meep_window", function(event) {
-        event.preventDefault();
-      })
-      .delegate("li:not(.selected)", "click.meep_window", function(event) {
+      .delegate("li:not(.selected)", "mousedown.meep_window", function(event) {
         scrollTo($(this));
         event.preventDefault();
       })
