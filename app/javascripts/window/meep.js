@@ -98,6 +98,7 @@ protonet.window.Meep = (function() {
     }, borderAnimationDuration, function() {
       loadingEnd();
       currentMeep.element.addClass("selected");
+      border.css("overflow", "");
     });
     
     return this;

@@ -47,9 +47,6 @@ protonet.ui.ModalWindow = (function($) {
     $document
       .bind("keydown.modal_window", function(event) {
         switch (event.keyCode) {
-          case 27: // escape
-            hide();
-            break;
           case 38: // arrow down
           case 40: // arrow up
             event.preventDefault();
@@ -67,7 +64,13 @@ protonet.ui.ModalWindow = (function($) {
       });
     
     elements.closeLink.bind("click.modal_window", hide);
-    elements.dialog.bind("mousedown.modal_window mousewheel.modal_window keydown.modal_window", function(event) { event.stopPropagation(); });
+    elements.dialog.bind("mousedown.modal_window mousewheel.modal_window", function(event) { event.stopPropagation(); });
+    elements.dialog.bind("keydown.modal_window", function(event) {
+      if (event.keyCode == 27) {
+        hide();
+      }
+      event.stopPropagation();
+    });
   }
   
   function _unobserve() {
@@ -104,8 +107,6 @@ protonet.ui.ModalWindow = (function($) {
     elements.dialog.attr({ "class": originalClassName }).addClass(currentClassName);
     
     _observe();
-    position(true);
-    resize(true);
     
     if (!isAlreadyVisible) {
       // Needed to restore url when modal window gets closed
@@ -125,6 +126,9 @@ protonet.ui.ModalWindow = (function($) {
 
       protonet.Notifications.trigger("modal_window.shown");
     }
+    
+    position(true);
+    resize(true);
     
     return this;
   }

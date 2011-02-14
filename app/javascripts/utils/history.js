@@ -1,5 +1,5 @@
 protonet.utils.History = (function() {
-  var HASH_PREFIX = "#history:",
+  var HASH_PREFIX = "#!", // HASHBANG-IN-YO-FACE!
       $window     = $(window),
       observers   = [],
       current     = null,
@@ -14,11 +14,7 @@ protonet.utils.History = (function() {
     if (history.pushState) {
       history.pushState({ path: path }, "", path);
     } else {
-      if (path == "/") {
-        location.hash = "";
-      } else {
-        location.hash = HASH_PREFIX + path;
-      }
+      location.hash = HASH_PREFIX + path;
     }
     current = getCurrentPath();
     return this;
@@ -29,7 +25,7 @@ protonet.utils.History = (function() {
     if (hash.startsWith(HASH_PREFIX)) {
       return hash.substr(HASH_PREFIX.length);
     }
-    return "/";
+    return "";
   }
   
   function getCurrentPath() {
@@ -53,14 +49,6 @@ protonet.utils.History = (function() {
     return this;
   }
   
-  function _triggerChange(path) {
-    if (path == current) {
-      return;
-    }
-    protonet.Notifications.trigger("history.change", path);
-    _triggerObservers(path);
-  }
-  
   function _triggerObservers(path) {
     path = path || getCurrentPath();
     $.each(observers, function(i, value) {
@@ -70,6 +58,14 @@ protonet.utils.History = (function() {
         value[1].apply(window, match);
       }
     });
+  }
+  
+  function _triggerChange(path) {
+    if (path == current) {
+      return;
+    }
+    protonet.Notifications.trigger("history.change", path);
+    _triggerObservers(path);
   }
   
   // Observe
@@ -89,9 +85,13 @@ protonet.utils.History = (function() {
   
   // Unless the hashchange event the 'onpostate' event is fired initially at the beginning
   // We have to emulate the same with the 'onhashchange' event
-  if (getHash()) {
+  if (!window.pushState) {
     $(function() {
-      $window.trigger("hashchange");
+      var hash = getHash(),
+          historyEntry = hash || (location.pathname + location.search);
+      if (historyEntry) {
+        _triggerChange(historyEntry);
+      }
     });
   }
   
