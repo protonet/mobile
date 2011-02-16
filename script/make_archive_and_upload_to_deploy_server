@@ -52,10 +52,12 @@ cd /tmp
 rm -rf deploy
 git clone git@github.com:philly-mac/deploy.git
 rm -rf deploy/.git
+# rename to deployer
+mv deploy deployer
 
 #  now create the deployer archive
 cd /tmp
-tar -pczf $DEPLOYER_ARCHIVE deploy/
+tar -pczf $DEPLOYER_ARCHIVE deployer/
 
 # create directory for the new release and upload it
 ssh protonet-live "mkdir -p ~/code-dispatcher/releases/$last_version"
