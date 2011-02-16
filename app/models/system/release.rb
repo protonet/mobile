@@ -29,7 +29,7 @@ module System
       
       def update!(password=nil)
         return false if Rails.env != 'production'
-        return false unless File.exist?("/home/protonet/deploy") && File.exist?(configatron.deploy_config_file_path)
+        return false unless File.exist?("/home/protonet/deployer") && File.exist?(configatron.deploy_config_file_path)
         license_key = File.read(configatron.deploy_config_file_path).match(/:key, \"(.*)\"/)[1]
         babushka_update     = system("export HISTIGNORE=\"*ptn_babushka_update*\"; #{configatron.current_file_path}/script/ptn_babushka_update #{license_key}")
         babushka_migrations = system("export HISTIGNORE=\"*ptn_babushka_migrations*\"; #{configatron.current_file_path}/script/ptn_babushka_migrations '#{password}'")
