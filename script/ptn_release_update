@@ -9,4 +9,4 @@ shift 1
 babushka "protonet:protonet babushka update"
 cd $HOME/deployer
 bundle check 2>&1 > /dev/null ; if [ $? -ne 0 ] ; then sh -c "bundle install --without test" ; fi
-bundle exec bin/deploy -r protonet -e production -m deploy -c $SHARED_PATH/config/protonet.d/deploy_config 2>&1 > /tmp/ptn_release_update
+bundle exec bin/dep -r protonet -e production -m deploy -c $SHARED_PATH/config/protonet.d/deploy_config 2>&1 > /tmp/ptn_release_update
