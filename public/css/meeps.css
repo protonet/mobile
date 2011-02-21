@@ -92,7 +92,7 @@
 .meep article {
   border-bottom: 1px solid rgb(220, 220, 220);
   display: block;
-  padding: 5px 0 5px;
+  padding: 5px 10px 5px 0;
 }
 
 .meep article:nth-last-child(2) {

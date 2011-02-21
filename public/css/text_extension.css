@@ -111,7 +111,7 @@
 --------------------------------------------------------------------------- */
 .text-extension-results .media iframe {
   border: 1px solid #999;
-  width: 561px;
+  width: 551px;
   height: 200px;
 }
 
@@ -123,7 +123,7 @@
 --------------------------------------------------------------------------- */
 .text-extension-results.flash object {
   height: 280px;
-  width: 563px;
+  width: 553px;
   margin-bottom: 5px;
 }
 
@@ -172,6 +172,7 @@
   top: -16px;
   right: -16px;
   line-height: 19px;
+  z-index: 5;
   -webkit-transform: scale(0.75);
   -moz-transform: scale(0.75);
 }

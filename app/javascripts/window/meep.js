@@ -46,9 +46,6 @@ protonet.window.Meep = (function() {
     // Make sure that the meep doesn't conflict with channels
     data.channel_id = null;
     select(new protonet.timeline.Meep(data).render(meepList), 500, 0);
-    
-    _loadAndRender("before", currentMeep);
-    _loadAndRender("after", currentMeep);
   }
   
   function _loadMeep(id, callback) {
@@ -223,6 +220,12 @@ protonet.window.Meep = (function() {
       })
       .delegate("li", "text_extension.hide_flash", function() {
         adjust();
+      })
+      .delegate("li:first", "inview.meep_window", function(event) {
+        _loadAndRender("after", $(this).data("instance"));
+      })
+      .delegate("li:last", "inview.meep_window", function() {
+        _loadAndRender("before", $(this).data("instance"));
       });
     
     protonet.Notifications.one("modal_window.hidden", _unobserve);
