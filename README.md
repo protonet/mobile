@@ -131,19 +131,19 @@ DEPLOYING ON UBUNTU
 
 this is the licence key: 83489kjdfj734732snfnfdsns98jsnld
 
-  babushka "dudemeister:protonet babushka"
+    babushka "dudemeister:protonet babushka"
 
 now do some sourcing (to add missing paths and all that)
 
-  . ~/profile
+    . ~/profile
 
 if you've got a full node with wifi capabilities you want to have taken over by protonet
 
-  babushka protonet:node-preparations
+    babushka protonet:node-preparations
 
 otherwise use
 
-  babushka protonet:vm-preparations
+    babushka protonet:vm-preparations
 
 this will install all features minus wifi and networking stuff
 
