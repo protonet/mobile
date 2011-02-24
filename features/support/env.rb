@@ -75,4 +75,7 @@ at_exit do
   $browsers && $browsers.each { |id, browser| browser[:driver].quit rescue nil }
   
   System::Services.stop_all unless ENV["NOSTOP"].to_i == 1
+  
+  # Cleanup cached sprocket files
+  FileUtils.rm_rf(RAILS_ROOT + "/public/sprockets/*")
 end
