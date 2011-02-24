@@ -119,16 +119,6 @@ exports.proxy = function(params, headers, response) {
         }
         else {
           sys.puts("NO base file exists :(");
-          // get the port
-          var secure = false;
-          if(!parsedUrl.port) {
-            if(parsedUrl.protocol == 'https:') {
-              parsedUrl.port = 443;
-              secure = true;
-            } else {
-              parsedUrl.port = 80;
-            }
-          }
           
           var fileStream = fs.createWriteStream(baseFileName);
           r = request({"uri": url, "headers": {"Cookie": cookie}}, function() {
