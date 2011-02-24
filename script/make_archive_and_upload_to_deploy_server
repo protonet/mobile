@@ -9,7 +9,7 @@ export DEPLOYER_ARCHIVE=deployer.tar.gz
 export COPYFILE_DISABLE=true
 
 #  is this a beta or a stable release?
-select release_type in BETA STABLE
+select release_type in BETA STABLE "OVERWRITE LAST"
 do 
   break;
 done
@@ -18,7 +18,10 @@ done
 
 #  generate a new version
 export last_version=`curl http://releases.protonet.info/release/version`
-let "last_version += 1"
+
+if [ "$release_type" != "OVERWRITE LAST" ]; then
+   let "last_version += 1"
+fi
 
 #  get the dashboard
 cd /tmp
@@ -49,11 +52,10 @@ tar -pczf $BABUSHKA_ARCHIVE babushka/
 
 #  get the deployer
 cd /tmp
-rm -rf deploy
-git clone git@github.com:philly-mac/deploy.git
-rm -rf deploy/.git
-# rename to deployer
-mv deploy deployer
+rm -rf deployer
+git clone git@github.com:philly-mac/deploy.git deployer
+rm -rf deployer/.git
+rm -rf deployer/Gemfile.lock
 
 #  now create the deployer archive
 cd /tmp
@@ -64,7 +66,7 @@ ssh protonet-live "mkdir -p ~/code-dispatcher/releases/$last_version"
 scp $APP_ARCHIVE $BABUSHKA_ARCHIVE $DEPLOYER_ARCHIVE protonet-live:~/code-dispatcher/releases/$last_version
 
 # if this is a stable release then link that thing to stable
-if [ $release_type = "STABLE" ]; then
+if [ "$release_type" = "STABLE" ]; then
    ssh protonet-live "rm -f ~/code-dispatcher/stable; ln -s ~/code-dispatcher/releases/$last_version ~/code-dispatcher/stable"
 fi
 
