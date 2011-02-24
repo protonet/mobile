@@ -36,14 +36,7 @@ exports.proxy = function(params, headers, response) {
       while (image_requests[fileName].length > 0) {
         var r = image_requests[fileName].pop();
         r.writeHead(200, header);
-
-        fs.createReadStream(fileName)
-          .addListener('data', function(data){
-            r.write(data, 'binary');
-          })
-          .addListener('end', function(){
-            r.end();
-          });
+        fs.createReadStream(fileName).pipe(r);
       };
     });
   }
