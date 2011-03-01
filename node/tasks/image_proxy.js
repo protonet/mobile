@@ -114,18 +114,21 @@ exports.proxy = function(params, headers, response) {
           sys.puts("NO base file exists :(");
           
           var fileStream = fs.createWriteStream(baseFileName);
-          r = request({"uri": url, "headers": {"Cookie": cookie}}, function() {
-            if(r.response.statusCode == 200) {
+          r = request({"uri": url, "maxSockets": 20, "headers": {"Cookie": cookie}}, function(error, response, body) {
+            console.log("opening: " + url)
+            if(response.statusCode == 200) {
               fileStream.on("close", function(){
                 resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
               });
             } else {
-              console.log(url + ' returned a ', r.response.statusCode);
-              fs.unlinkSync(baseFileName);
+              console.log(url + ' returned a ', response.statusCode);
+              fileStream.on("drain", function(){
+                fs.unlinkSync(baseFileName);
+              });
               send404(fileName);
             }
           });
-          r.pipe(fileStream)
+          r.pipe(fileStream);
         }
       });
     }
