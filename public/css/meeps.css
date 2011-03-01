@@ -3,8 +3,9 @@
 .meep {
   -moz-border-radius: 1em;
   -webkit-border-radius: 1em;
-  background: -moz-linear-gradient(100% 100% 90deg, rgba(0, 0, 0, 0.1), transparent);
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.1)));
+  background-color: #fff;
+  background-image: -moz-linear-gradient(100% 100% 90deg, rgba(0, 0, 0, 0.1), transparent);
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.1)));
   border: 1px solid rgb(180, 180, 180);
   border-radius: 1em;
   margin: 0 20px 15px 45px;

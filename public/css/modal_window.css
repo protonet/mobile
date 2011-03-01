@@ -1,7 +1,7 @@
 /* =GENERAL
 =========================================================================== */
 .modal-window-shadow {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
   top: 0;
   left: 0;
@@ -10,33 +10,35 @@
 }
 
 .modal-window-dialog {
-  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 1);
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 1);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 1);
-  background: #fff;
+  -moz-box-shadow: 0 0 15px #000;
+  -webkit-box-shadow: 0 0 15px #000;
+  box-shadow: 0 0 15px #000;
+  background: #fff url(/img/modal_window_monster.png) 103% 104% no-repeat;
   position: relative;
-  width: 650px;
+  width: 90%;
   margin: 0 auto;
   border-bottom: 5px solid #999;
   border-top: 5px solid #999;
 }
 
 .modal-window-content {
-  margin-right: -17px;
-  padding: 15px 20px;
-  height: 20px;
-  overflow-y: auto;
+  overflow: hidden;
+  margin: 0 auto;
+  max-width: 650px;
+  height: 40px;
 }
 
 .modal-window-dialog > h2 {
-  background: rgba(72, 123, 255, 0.5);
-  background: -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 0.6), rgba(72, 123, 255, 0.3));
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.3)), to(rgba(72, 123, 255, 0.6)));
+  background-color: rgb(72, 123, 255);
+  background: -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 0.8), rgba(72, 123, 255, 0.5));
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.5)), to(rgba(72, 123, 255, 0.8)));
   -webkit-box-shadow: 0 0 10px #999;
   -moz-box-shadow: 0 0 10px #999;
   box-shadow: 0 0 10px #999;
   padding: 20px;
   color: white;
+  position: relative;
+  z-index: 1;
 }
 
 .modal-window-shadow {
@@ -63,6 +65,17 @@
   margin-bottom: 0;
 }
 
+.modal-window-content .meeps {
+  width: 650px;
+}
+
+.modal-window-content .meep .avatar {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+
 
 /* =MODAL WINDOW: SEARCH
 =========================================================================== */
@@ -70,14 +83,10 @@
   margin-bottom: 20px;
 }
 
-.search-window .meeps {
-  margin: 0 -20px;
-  width: 650px;
-}
-
 .search-window .modal-window-content {
+  background: rgba(255, 255, 255, 0.8);
   padding-left: 45px;
-  margin-left: -25px;
+  overflow-y: auto;
 }
 
 input.search {
@@ -89,17 +98,27 @@ input.search {
   -webkit-appearance: none;
 }
 
-.modal-window-dialog input.search {
-  width: 572px;
-  background-position: 580px;
+.search-window h2 {
+  text-align: center;
+}
+
+.search-window input.search {
+  width: 616px;
+  background-position: 624px;
 }
 
 .search-window .no-meeps-available {
   display: block;
 }
 
+.search-window .meeps,
+.search-window .no-meeps-available,
 .search-window .meep-loading-indicator {
   margin-top: 15px;
+}
+
+.search-window .meeps {
+  margin-bottom: 15px;
 }
 
 .modal-window-dialog.loading input.search {
@@ -110,20 +129,8 @@ input.search {
 /* =MODAL WINDOW: MEEP DETAILS
 =========================================================================== */
 .meep-window .modal-window-content {
-  padding-left: 75px;
-  margin-left: -55px;
-  overflow: hidden;
-  margin-right: -30px !important;
+  padding-left: 40px;
   position: relative;
-}
-
-.meep-window .meeps {
-  margin: 0 -20px;
-  width: 650px;
-}
-
-.meep-window h2 {
-  display: none;
 }
 
 .meep-window .meeps {
@@ -133,16 +140,15 @@ input.search {
 
 .meep-window .border {
   height: 90px;
-  border: 20px solid rgb(72, 123, 255);
-  border-width: 22px 20px;
-  -webkit-box-shadow: 0 0 8px #000;
-  -moz-box-shadow: 0 0 8px #000;
-  box-shadow: 0 0 8px #000;
+  border: 7px solid rgb(72, 123, 255);
+  -webkit-box-shadow: 0 0 4px #000;
+  -moz-box-shadow: 0 0 4px #000;
+  box-shadow: 0 0 4px #000;
   -webkit-border-radius: 1.2em;
   -moz-border-radius: 1.2em;
   border-radius: 1.2em;
   position: absolute;
-  left: 5px;
+  margin-left: -37px;
   top: 50%;
   padding: 7px;
   margin-top: -70px;
@@ -151,10 +157,16 @@ input.search {
 }
 
 .meep-window .border.loading {
-  background-color: rgba(255, 255, 255, 0.5);
-  background-image: url(/img/icn_loading_big.gif);
-  background-position: center;
-  background-repeat: no-repeat;
+  background: transparent url(/img/icn_loading_big.gif) center center no-repeat;
+}
+
+.meep-window h2 img {
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+  border: 2px solid #fff;
+  margin-top: -2px;
+  vertical-align: middle;
 }
 
 .meep-window .next,
@@ -166,6 +178,16 @@ input.search {
   border-width: 20px;
   left: 50%;
   margin-left: -20px;
+}
+
+.meep-window .meep {
+  opacity: 0.4;
+}
+
+
+.meep-window .meep .detail-link,
+.meep-window .meep:before {
+  display: none !important;
 }
 
 .meep-window .selected.meep {
@@ -181,21 +203,6 @@ input.search {
 .meep-window .previous {
   border-color: rgb(72, 123, 255) transparent transparent transparent;
   bottom: -47px;
-}
-
-.meep-window .selected.meep .avatar {
-  box-shadow: none;
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-}
-
-.meep-window h5 {
-  position: absolute;
-  top: -22px;
-  color: #fff;
-  line-height: 24px;
-  font-size: 11px;
-  left: 30px;
 }
 
 .meep-window input {

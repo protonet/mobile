@@ -20,7 +20,7 @@ protonet.translations = {
   UPLOAD_IN_PROGRESS: "An upload is currently in progress which would be broken up. Are you sure?",
   PUBLISH_FILES_CONFIRM: "Your files have been uploaded successfully. Do you want to publish them?",
   SEARCH_ERROR: "Search for '{keyword}' failed. Please try again later.",
-  MEEP_WINDOW_HEADLINE: "Message {id} in channel '{channel_name}'",
+  MEEP_WINDOW_HEADLINE: "{avatar} Message {id} in channel '{channel_name}'",
   MODAL_WINDOW_LOADING: "Loading ...",
   DETAIL_VIEW_LOADING_ERROR: "Something went wrong while loading the context for the current message."
 };

@@ -11,9 +11,15 @@ protonet.utils.History = (function() {
       path = location.pathname + path;
     }
     
+    if (path == current) {
+      return;
+    }
+    
     if (history.pushState) {
       history.pushState({ path: path }, "", path);
     } else {
+      // Following line is needed for Firefox to avoid onhashchange fuckup
+      current = path;
       location.hash = HASH_PREFIX + path;
     }
     current = getCurrentPath();
@@ -64,6 +70,7 @@ protonet.utils.History = (function() {
     if (path == current) {
       return;
     }
+    current = path;
     protonet.Notifications.trigger("history.change", path);
     _triggerObservers(path);
   }

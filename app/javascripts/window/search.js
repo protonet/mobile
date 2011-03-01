@@ -59,6 +59,7 @@ protonet.window.Search = {
   },
   
   show: function(keyword) {
+    this.keyword = null;
     this.bigInput = this.bigInput || $("<input />", { className: "search" });
     
     this.modalWindow.update({
@@ -66,7 +67,6 @@ protonet.window.Search = {
       content:  ""
     }).show({ className: "search-window" });
     
-    this.input.val("");
     this.bigInput
       .bind({
         keydown:   function() {

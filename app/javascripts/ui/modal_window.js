@@ -31,7 +31,7 @@ protonet.ui.ModalWindow = (function($) {
       dialog:     $("<div />",    { className: originalClassName = "modal-window-dialog" }),
       content:    $("<output />", { className: "modal-window-content" }),
       closeLink:  $("<a />",      { className: "modal-window-close-link close-link", html: "X" }),
-      headline:   $("<h2 />")
+      headline:   $("<h2 />",     { html: "&nbsp;" })
     });
     
     elements.shadow.append(elements.dialog).appendTo($body);
@@ -69,7 +69,6 @@ protonet.ui.ModalWindow = (function($) {
       if (event.keyCode == 27) {
         hide();
       }
-      event.stopPropagation();
     });
   }
   
@@ -91,7 +90,7 @@ protonet.ui.ModalWindow = (function($) {
     }
     
     $.each(components, function(key, value) { elements[key].html(value); });
-    
+    resize(true);
     return this;
   }
   
@@ -121,9 +120,7 @@ protonet.ui.ModalWindow = (function($) {
           "overflow-y": "hidden",
           "padding-right": (parseInt(originalPaddingRight, 10) + scrollbarWidth).px()
         });
-
-      elements.content.css("margin-right", (-scrollbarWidth).px());
-
+      
       protonet.Notifications.trigger("modal_window.shown");
     }
     
@@ -170,7 +167,7 @@ protonet.ui.ModalWindow = (function($) {
       elements.content.css("height", height);
     } else {
       elements.content.stop(true).delay(500).animate({ height: height }, 500, function() {
-        elements.content.css({ overflowX: "", overflowY: "" });
+        elements.content.css({ overflow: "" });
       });
     }
     return this;
