@@ -9,12 +9,12 @@
  *    * http://www.salsitasoft.com/blog/2008/05/21/mozilla-prism-update/
  */
 (function() {
-  if (!window.platform || !window.platform.showNotification) {
+  var prism = window.webrunner || window.platform;
+  if (!prism || !prism.showNotification) {
     return;
   }
   
-  var prism           = window.platform,
-      icon            = prism.icon(),
+  var icon            = prism.icon(),
       unreadMessages  = 0;
   
   protonet.Notifications.bind("meep.receive", function(e, meepData) {
