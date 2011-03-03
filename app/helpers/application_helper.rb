@@ -33,8 +33,9 @@ module ApplicationHelper
   end
   
   def image_proxy(url, opts)
+    url = CGI::escape("#{(request.protocol + request.host_with_port) if opts[:local]}#{url}")
     request.protocol + request.host + 
-      ":#{configatron.nodejs.port}/image_proxy?url=#{(request.protocol + request.host_with_port) if opts[:local]}#{url}&width=#{opts[:width]}&height=#{opts[:height]}"
+      ":#{configatron.nodejs.port}/image_proxy?url=#{url}&width=#{opts[:width]}&height=#{opts[:height]}"
   end
   
   def server_name
