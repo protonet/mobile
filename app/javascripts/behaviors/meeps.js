@@ -21,7 +21,7 @@ protonet.utils.Behaviors.add({
       return;
     }
     
-    var parameters = protonet.utils.parseQueryString(link.search);
+    var parameters = protonet.utils.parseQueryString(link.hash || link.search);
     if (!parameters.meep_id) {
       return;
     }

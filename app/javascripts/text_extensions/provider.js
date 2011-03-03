@@ -17,5 +17,6 @@ protonet.text_extensions.provider = {};
 //= require "provider/github_commit.js"
 //= require "provider/github_repository.js"
 //= require "provider/image.js"
+//= require "provider/meep.js"
 //= require "provider/link.js"
 

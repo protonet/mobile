@@ -184,6 +184,9 @@ input.search {
   opacity: 0.4;
 }
 
+.meep-window .meep:not(.selected) a {
+  cursor: default !important;
+}
 
 .meep-window .meep .detail-link,
 .meep-window .meep:before {
