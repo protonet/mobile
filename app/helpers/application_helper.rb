@@ -29,11 +29,13 @@ module ApplicationHelper
     opts[:width]  ||= 36
     opts[:height] ||= opts[:width]
     opts[:local]    = true
+    opts[:escape] ||= true
     image_tag(image_proxy(user.avatar.url, opts).html_safe, opts)
   end
   
   def image_proxy(url, opts)
-    url = CGI::escape("#{(request.protocol + request.host_with_port) if opts[:local]}#{url}")
+    url = "#{(request.protocol + request.host_with_port) if opts[:local]}#{url}"
+    url = CGI::escape(url) if opts[:escape]
     request.protocol + request.host + 
       ":#{configatron.nodejs.port}/image_proxy?url=#{url}&width=#{opts[:width]}&height=#{opts[:height]}"
   end
