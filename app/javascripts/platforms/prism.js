@@ -3,7 +3,10 @@
 /**
  * Mozilla Prism turns any web page turns any web app into a desktop app
  * It offers a rich javascript api to interact with the desktop
- * More https://developer.mozilla.org/en/prism
+ * More:
+ *    * https://developer.mozilla.org/en/prism
+ *    * http://mxr.mozilla.org/mozillasvn/source/projects/webrunner/components/public/nsIPlatformGlue.idl
+ *    * http://www.salsitasoft.com/blog/2008/05/21/mozilla-prism-update/
  */
 (function() {
   if (!window.platform || !window.platform.showNotification) {
