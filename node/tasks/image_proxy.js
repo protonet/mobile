@@ -36,7 +36,14 @@ exports.proxy = function(params, headers, response) {
       while (image_requests[fileName].length > 0) {
         var r = image_requests[fileName].pop();
         r.writeHead(200, header);
-        fs.createReadStream(fileName).pipe(r);
+
+        fs.createReadStream(fileName)
+          .addListener('data', function(data){
+            r.write(data, 'binary');
+          })
+          .addListener('end', function(){
+            r.end();
+          });
       };
     });
   }
@@ -112,23 +119,31 @@ exports.proxy = function(params, headers, response) {
         }
         else {
           sys.puts("NO base file exists :(");
-          
-          var fileStream = fs.createWriteStream(baseFileName);
-          r = request({"uri": url, "maxSockets": 20, "headers": {"Cookie": cookie}}, function(error, response, body) {
-            console.log("opening: " + url)
-            if(response.statusCode == 200) {
-              fileStream.on("close", function(){
-                resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
-              });
+          // get the port
+          var secure = false;
+          if(!parsedUrl.port) {
+            if(parsedUrl.protocol == 'https:') {
+              parsedUrl.port = 443;
+              secure = true;
             } else {
-              console.log(url + ' returned a ', response.statusCode);
-              fileStream.on("drain", function(){
-                fs.unlinkSync(baseFileName);
-              });
+              parsedUrl.port = 80;
+            }
+          }
+          
+          // request the image
+          var fileStream = fs.createWriteStream(baseFileName);
+
+          request({"uri": url, "headers": {"Cookie": cookie}, "responseBodyStream": fileStream}, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+              fileStream.end();
+              resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
+            } else {
+              console.log(url + ' returned a ', response);
+              fs.unlinkSync(baseFileName);
               send404(fileName);
             }
           });
-          r.pipe(fileStream);
+
         }
       });
     }
