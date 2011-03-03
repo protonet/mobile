@@ -27,6 +27,7 @@ class ApplicationController < ActionController::Base
   end
   
   def captive_check
+    return true
     requested_uri = request.protocol + request.host_with_port + request.fullpath
     return true if System::Backend.requested_host_local?(request.host)
     # otherwise redirect to captive? and the url

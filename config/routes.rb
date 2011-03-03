@@ -85,6 +85,8 @@ Dashboard::Application.routes.draw do
   # TODO: RAILS 3
   # Sprockets
   # SprocketsApplication.routes(map, :resources)
+  # debugger
+  resources :sprockets, :only => :show
   
   root :to => 'instruments#index'
   match '/:controller(/:action(/:id))'

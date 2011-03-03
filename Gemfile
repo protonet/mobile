@@ -18,8 +18,8 @@ gem "ruby-net-ldap", "0.0.4"
 gem "capistrano", "2.5.19"
 gem "capistrano-ext", "1.2.1"
 gem "daemon_controller", "0.2.5"
-gem "sunspot", :git => "https://github.com/isaac/sunspot.git"
-gem "sunspot_rails", :git => "https://github.com/isaac/sunspot.git"
+gem "sunspot"
+gem "sunspot_rails", :require => 'sunspot/rails'
 gem "sunspot_index_queue"
 gem "will_paginate", "3.0.pre2"
 gem "ruby-ip", "0.9.0"
@@ -28,7 +28,8 @@ gem "dudemeister-uuid4r", "0.1.3"
 gem "declarative_authorization", "~> 0.5.2"
 gem "paperclip", "~> 2.3.8"
 gem "newrelic_rpm"
-gem "sprockets_rails", :git => "git://github.com/cice/sprockets-rails.git"
+gem "sprockets"
+gem "dm-sprockets-rails", :require => "sprockets-rails"
 gem "activeldap" #, :git => "git://github.com/pdf/ruby-activeldap.git", :branch => "rails3", :require => 'active_ldap'
 
 group :test, :cucumber do
