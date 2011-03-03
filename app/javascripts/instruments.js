@@ -8,7 +8,8 @@
 //= require "controls/file_widget.js"
 //= require "controls/user_widget.js"
 //= require "controls/pretty_date.js"
-//= require "controls/fluid.js"
+//= require "platforms/fluid.js"
+//= require "platforms/prism.js"
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
 $(function() {
@@ -31,9 +32,4 @@ $(function() {
       animated:         false
     });
   }, 100);
-
-  // Initialize fluid if the app is running in a fluid container
-  if (protonet.user.Browser.SUPPORTS_FLUID()) {
-    new protonet.controls.Fluid();
-  }
 });

@@ -67,10 +67,6 @@ protonet.user.Browser = {
     return navigator.userAgent.indexOf("Safari") != -1 && navigator.userAgent.indexOf("Chrome") == -1;
   },
   
-  SUPPORTS_FLUID: function() {
-    return !!window.fluid;
-  },
-  
   SUPPORTS_NOTIFICATIONS: function() {
     return "webkitNotifications" in window;
   },
