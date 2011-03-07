@@ -96,6 +96,7 @@ protonet.window.Meep = (function() {
           newBorderMarginTop      = -(meepHeight + border.outerHeight() - border.height()) / 2,
           prevSiblings            = currentMeep.element.prevAll(),
           newMarginTop            = -meepHeight / 2,
+          additionalOffset        = $.browser.mozilla ? 0.2 : 0, // Don't ask. Needed for firefox
           nextIfAnimationComplete = function() {
             // :animated is removed after the complete callback is fired
             setTimeout(function() {
@@ -105,7 +106,9 @@ protonet.window.Meep = (function() {
               next();
             }, 0);
           };
-      prevSiblings.each(function(i, element) { newMarginTop -= $(element).outerHeight(true); });
+          
+      
+      prevSiblings.each(function(i, element) { newMarginTop -= $(element).outerHeight(true) - additionalOffset; });
 
       meepList.children().removeClass("selected");
       loading();
@@ -118,14 +121,15 @@ protonet.window.Meep = (function() {
         duration: meepListAnimationDuration,
         complete: nextIfAnimationComplete
       });
-
+      
       border.animate({
         marginTop: newBorderMarginTop.px(),
         height:    meepHeight.px()
       }, {
-        queue:      false,
-        duration:   borderAnimationDuration,
-        complete:   function() {
+        easing:   "linear",
+        queue:    false,
+        duration: borderAnimationDuration,
+        complete: function() {
           loadingEnd();
           currentMeep.element.addClass("selected");
           nextIfAnimationComplete();

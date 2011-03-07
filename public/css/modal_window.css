@@ -201,7 +201,7 @@ input.search {
 }
 
 .meep-window .meep {
-  opacity: 0.4;
+  opacity: 0.5;
 }
 
 .meep-window .meep:not(.selected) a {
