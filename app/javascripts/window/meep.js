@@ -202,7 +202,6 @@ protonet.window.Meep = (function() {
             scrollByOffset(offset);
           }, 10);
         };
-    
     $document.bind("keydown.meep_window", function(event) {
       var keyCode = event.keyCode;
       if (keyCode == 40) { // arrow down
