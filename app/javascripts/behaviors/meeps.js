@@ -16,6 +16,11 @@ protonet.utils.Behaviors.add({
    * <a href="http://host.com?meep_id=12">open detail view for meep #12</a>
    */
   "a[href*='meep_id=']:click": function(link, event) {
+    // Make sure that it doesn't conflict with the behavior above
+    if (link.data("meep-id")) {
+      return;
+    }
+    
     link = link[0];
     if (link.host != location.host) {
       return;

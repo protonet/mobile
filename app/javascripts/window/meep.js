@@ -22,7 +22,9 @@ protonet.window.Meep = (function() {
     previous  = previous || $("<a>", { className: "previous" });
     meepList  = _getMeepList();
     
-    var content = meepList.add(border).add(next).add(previous);
+    border.append(next).append(previous);
+    
+    var content = meepList.add(border);
     protonet.ui.ModalWindow
       .update({ content: content })
       .show({ className: CLASS_NAME });
@@ -95,12 +97,13 @@ protonet.window.Meep = (function() {
           prevSiblings            = currentMeep.element.prevAll(),
           newMarginTop            = -meepHeight / 2,
           nextIfAnimationComplete = function() {
+            // :animated is removed after the complete callback is fired
             setTimeout(function() {
               if (meepList.is(":animated") || border.is(":animated")) {
                 return;
               }
               next();
-            }, 10);
+            }, 0);
           };
       prevSiblings.each(function(i, element) { newMarginTop -= $(element).outerHeight(true); });
 
@@ -125,7 +128,6 @@ protonet.window.Meep = (function() {
         complete:   function() {
           loadingEnd();
           currentMeep.element.addClass("selected");
-          border.css("overflow", "");
           nextIfAnimationComplete();
         }
       });
@@ -208,7 +210,7 @@ protonet.window.Meep = (function() {
       if (keyCode == 40) { // arrow down
         scrollByOffset(-1);
       } else if (keyCode == 38) { // arrow up
-        scrollByOffset(1);
+        scrollByOffset(+1);
       }
     });
     
@@ -229,6 +231,14 @@ protonet.window.Meep = (function() {
         event.preventDefault();
       });
     }
+    
+    next.bind("click.meep_window", function() {
+      scrollByOffset(+1);
+    });
+    
+    previous.bind("click.meep_window", function() {
+      scrollByOffset(-1);
+    });
     
     meepList
       .delegate("li:not(.selected)", "click.meep_window", function(event) {
@@ -266,6 +276,8 @@ protonet.window.Meep = (function() {
   
   function _unobserve() {
     protonet.ui.ModalWindow.get("content")
+      .add(next)
+      .add(previous)
       .add($document)
       .add(meepList)
       .add(protonet.ui.ModalWindow.get("dialog"))
