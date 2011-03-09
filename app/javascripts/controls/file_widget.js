@@ -102,6 +102,7 @@ protonet.controls.FileWidget.prototype = {
           var anchor    = $(this),
               fileName  = anchor.text(),
               fileUrl   = this.href;
+          // Enable dragging of files to desktop
           dataTransfer.setData("DownloadURL", "application/octet-stream:" + fileName + ":" + fileUrl);
           dataTransfer.setData("text/plain", fileUrl + " ");
         }
