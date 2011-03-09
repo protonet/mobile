@@ -26,6 +26,24 @@ EventMachine::run do
   EventMachine::start_server host, port, ClientConnection, tracker
   EventMachine::start_server host, longpolling_port, HttpConnection, tracker
 
+  # async solr indexing
+  # Use the default queue settings.
+  queue = Sunspot::IndexQueue.new
+  EventMachine::PeriodicTimer.new(30) do
+    begin
+      puts "==== solr index queue processing ===="
+      queue.process
+    rescue Exception => e
+      puts "==== solr indexing exception ===="
+      # If Solr isn't responding, wait a while to give it time to get back up
+      if e.is_a?(Sunspot::IndexQueue::SolrNotResponding)
+        # sleep(30)
+      else
+        Rails.logger.error(e)
+      end
+    end
+  end
+
   
   puts "Started socket server on #{host}:#{port}..."
   puts $$

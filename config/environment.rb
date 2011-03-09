@@ -82,7 +82,3 @@ if defined?(PhusionPassenger)
     end
   end
 end
-
-# solr_queue
-require 'solr_queue' unless defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER
-

@@ -53,7 +53,7 @@ GENERAL
 
 if you don't have bundler install it first:
 
-    (sudo) gem install bundler
+    (sudo) gem install bundler -v 0.9.26
 
 we'll be using homebrew to manage dependencies (this is what you should use on OS X anyways)
 

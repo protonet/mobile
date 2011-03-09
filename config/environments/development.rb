@@ -27,7 +27,8 @@ if File.exists?(File.join(RAILS_ROOT,'tmp', 'debug.txt'))
   File.delete(File.join(RAILS_ROOT,'tmp', 'debug.txt'))
 end
 
-configatron.user_file_path = RAILS_ROOT + "/../shared/user-files"
+configatron.user_file_path = RAILS_ROOT + "/tmp/development/shared/user-files"
+FileUtils.mkdir_p(configatron.user_file_path)
 configatron.images.avatars_path   = "public/avatars"
 configatron.images.externals_path = "public/externals"
 configatron.socket.port = 5000
