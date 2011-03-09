@@ -1,32 +1,33 @@
 var http      = require("http"),
+    https     = require("https"),
     parseUrl  = require("url").parse,
     sys       = require("sys");
 
 exports.get = function(url, callback) {
   var urlObj  = parseUrl(url),
-      proxy   = http.createClient(80, urlObj.host),
-      body    = [],
-      path    = (urlObj.pathname || "/") + (urlObj.search || "");
+      path    = (urlObj.pathname || "/") + (urlObj.search || ""),
+      client  = urlObj.protocol === "https:" ? https : http,
+      options = {
+        host: urlObj.host,
+        path: path
+      };
       
   sys.puts("http_proxy fetching: " + url);
   sys.puts("http_proxy path: " + path);
-  
-  var request = proxy.request("GET", path, {
-    "Host": urlObj.host
-  });
-  
-  request.addListener("response", function(response) {
-    sys.puts("http_proxy response received - status code: " + response.statusCode);
-    
-    response.setEncoding("utf8");
+
+  client.get(options, function(response) {
+    var body = [];
+    console.log("Got response: " + response.statusCode);
     response.addListener("data", function(chunk) {
-      sys.puts("http_proxy data received - length: " + chunk.length);
+      console.log("http_proxy data received - length: " + chunk.length);
       body.push(chunk);
     });
     response.addListener("end", function() {
-      sys.puts("http_proxy response end received.");
-      callback({ body: body.join(""), statusCode: response.statusCode }, "http_proxy");
+      var responseText = body.join("");
+      console.log("http_proxy response end received - data:" + responseText);
+      callback({ body: responseText, statusCode: response.statusCode }, "http_proxy");
     });
+  }).on('error', function(e) {
+    console.log("Got error: " + e.message);
   });
-  request.end();
 };

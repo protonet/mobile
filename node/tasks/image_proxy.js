@@ -138,7 +138,7 @@ exports.proxy = function(params, headers, response) {
               fileStream.end();
               resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
             } else {
-              console.log(url + ' returned a ', response);
+              console.log(url + ' returned an error ', response.statusCode);
               fs.unlinkSync(baseFileName);
               send404(fileName);
             }
