@@ -55,6 +55,11 @@ exports.proxy = function(params, headers, response) {
       r.writeHead(404);
       r.end("NOT FOUND!");
     };
+    // and cleanup
+    try {
+      console.log('unlink');
+      fs.unlinkSync(baseFileName);
+    } catch(err) { console.log('unlink fail', err) };
   };
   
   function resizeImage(from, to, size, successCallback, failureCallback) {
@@ -132,14 +137,12 @@ exports.proxy = function(params, headers, response) {
           
           // request the image
           var fileStream = fs.createWriteStream(baseFileName);
-
-          request({"uri": url, "headers": {"Cookie": cookie}, "responseBodyStream": fileStream}, function (error, response, body) {
+          request({"uri": encodeURI(url), "headers": {"Cookie": cookie}, "responseBodyStream": fileStream}, function (error, response, body) {
             if (!error && response.statusCode == 200) {
               fileStream.end();
               resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
             } else {
-              console.log(url + ' returned a ', response);
-              fs.unlinkSync(baseFileName);
+              console.log(url + ' returned a ', response);              
               send404(fileName);
             }
           });
