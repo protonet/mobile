@@ -6,6 +6,7 @@ protonet.user = {
     name:                   protonet.config.user_name,
     id:                     Number(protonet.config.user_id),
     is_admin:               protonet.config.user_is_admin,
+    is_stranger:            protonet.config.user_is_stranger,
     subscribed_channel_ids: protonet.config.user_channel_ids,
     avatar:                 protonet.config.user_icon_url,
     session_id:             protonet.config.session_id,

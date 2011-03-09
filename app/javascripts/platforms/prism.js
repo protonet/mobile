@@ -22,9 +22,13 @@
       return;
     }
     
-    unreadMessages++;
-    prism.getAttention();
+    if (unreadMessages === 0) {
+      // Only request attention for the first incoming message while being idle
+      // otherwise this will cause a blinky behavior on Windows
+      prism.getAttention();
+    }
     prism.showNotification(meepData.author, meepData.message, protonet.config.base_url + "/" + meepData.avatar);
+    unreadMessages++;
     icon.badgeText = unreadMessages;
     // This would play a sound (we don't need this)
     // prism.sound().beep();

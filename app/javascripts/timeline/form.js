@@ -65,8 +65,16 @@ protonet.timeline.Form = {
      * Focus input after channel switch
      * and update hidden channel id
      */
+    var preventFocus = protonet.user.data.is_stranger;
     protonet.Notifications.bind("channel.change", function(e, channelId) {
-      this.input.focus();
+      // When loading the page a "channel.change" event is initially fired
+      // This causes problems when the user already focused the login form and started to type
+      // in his password. Uygar from XING even almost accidentally submitted her password
+      if (!preventFocus) {
+        this.input.focus();
+      }
+      
+      preventFocus = false;
       this.channelIdInput.val(channelId);
     }.bind(this));
     
