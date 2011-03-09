@@ -49,6 +49,7 @@ connection.addListener("ready", function() {
         // require("./tasks/screenshot").make_and_publish(message.url, publish);
         break;
       case "http_proxy":
+        console.log(message);
         require("./tasks/http_proxy").get(message.url, publish);
         break;
     }
