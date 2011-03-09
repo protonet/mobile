@@ -1,4 +1,5 @@
 //= require "../utils/is_window_focused.js"
+//= require "../media/proxy.js"
 
 /**
  * Mozilla Prism turns any web page turns any web app into a desktop app
@@ -27,9 +28,13 @@
       // otherwise this will cause a blinky behavior on Windows
       prism.getAttention();
     }
-    prism.showNotification(meepData.author, meepData.message, protonet.config.base_url + "/" + meepData.avatar);
-    unreadMessages++;
-    icon.badgeText = unreadMessages;
+    
+    var avatar = protonet.config.base_url + "/" + meepData.avatar;
+    // Crop image, otherwise Windows will display it in it's original size (which could be huge as a black man's dick)
+    avatar = protonet.media.Proxy.getImageUrl(avatar, { width: 36, height: 36 });
+    prism.showNotification(meepData.author, meepData.message, avatar);
+    icon.badgeText = ++unreadMessages;
+    
     // This would play a sound (we don't need this)
     // prism.sound().beep();
   });
