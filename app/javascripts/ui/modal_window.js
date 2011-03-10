@@ -65,10 +65,8 @@ protonet.ui.ModalWindow = (function($) {
     
     elements.closeLink.bind("click.modal_window", hide);
     elements.dialog.bind("mousedown.modal_window mousewheel.modal_window", function(event) { event.stopPropagation(); });
-    elements.dialog.bind("keydown.modal_window", function(event) {
-      if (event.keyCode == 27) {
-        hide();
-      }
+    $document.bind("keydown.modal_window", function(event) {
+      if (event.keyCode == 27) { hide(); }
     });
   }
   

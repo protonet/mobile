@@ -99,6 +99,7 @@ protonet.window.Meep = (function() {
           additionalOffset        = $.browser.mozilla ? 0.2 : 0, // Don't ask. Needed for firefox
           nextIfAnimationComplete = function() {
             // :animated is removed after the complete callback is fired
+            // therefore the timeout
             setTimeout(function() {
               if (meepList.is(":animated") || border.is(":animated")) {
                 return;
@@ -113,20 +114,18 @@ protonet.window.Meep = (function() {
       meepList.children().removeClass("selected");
       loading();
       
-      meepList.animate({
+      meepList.stop().animate({
         marginTop: newMarginTop.px(),
       }, {
-        easing:   "linear",
         queue:    false,
         duration: meepListAnimationDuration,
         complete: nextIfAnimationComplete
       });
       
-      border.animate({
+      border.stop().animate({
         marginTop: newBorderMarginTop.px(),
         height:    meepHeight.px()
       }, {
-        easing:   "linear",
         queue:    false,
         duration: borderAnimationDuration,
         complete: function() {

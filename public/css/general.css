@@ -273,6 +273,7 @@ header .logo {
 }
 
 header .monster {
+  outline: 0;
   position: absolute;
   bottom: -4px;
   left: 136px;

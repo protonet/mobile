@@ -128,6 +128,11 @@ input.search {
 
 /* =MODAL WINDOW: MEEP DETAILS
 =========================================================================== */
+.meep-window {
+  /* Experimental hardware accerlation */
+  -webkit-transform: translateZ(0);
+}
+
 .meep-window .modal-window-content {
   padding-left: 40px;
   padding-right: 40px;
@@ -202,6 +207,16 @@ input.search {
 
 .meep-window .meep {
   opacity: 0.5;
+}
+
+.meep-window .meep:not(.selected) {
+  background-color: #ededed;
+  background-image: none; /* removes gradient, for a faster scrolling performance */
+}
+
+.meep-window .own.meep:not(.selected) {
+  background-color: #f9f3f0;
+  background-image: none;
 }
 
 .meep-window .meep:not(.selected) a {
