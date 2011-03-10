@@ -71,15 +71,26 @@ protonet.user.Browser = {
     return "webkitNotifications" in window;
   },
   
-  SUPPORTS_EVENT: function(eventName) {
-    testElement = document.createElement("div");
-    eventName = "on" + eventName;
-    var isSupported = (eventName in testElement);
-    if (!isSupported) {
-      testElement.setAttribute(eventName, "return;");
-      isSupported = typeof(testElement[eventName]) == "function";
-    }
-    testElement = null;
-    return isSupported;
-  }
+  SUPPORTS_EVENT: (function() {
+    // Some events are hard/impossible to feature-detect
+    var browserSniffing = {
+      "DOMMouseScroll": $.browser.mozilla
+    };
+    
+    return function(eventName) {
+      if (browserSniffing[eventName]) {
+        return true;
+      }
+      
+      testElement = document.createElement("div");
+      eventName = "on" + eventName;
+      var isSupported = (eventName in testElement);
+      if (!isSupported) {
+        testElement.setAttribute(eventName, "return;");
+        isSupported = typeof(testElement[eventName]) == "function";
+      }
+      testElement = null;
+      return isSupported;
+    };
+  })()
 };
