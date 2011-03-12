@@ -17,7 +17,7 @@ gem "daemons", "1.0.10"
 gem "ruby-net-ldap", "0.0.4"
 gem "capistrano", "2.5.19"
 gem "capistrano-ext", "1.2.1"
-gem "daemon_controller", "0.2.5"
+gem "daemon_controller", "~> 0.2.6"
 gem "sunspot"
 gem "sunspot_rails", :require => 'sunspot/rails'
 gem "sunspot_index_queue"
@@ -46,4 +46,3 @@ group :test, :cucumber do
   gem "rspec-rails"
   gem "email_spec"
 end
-

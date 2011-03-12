@@ -28,7 +28,7 @@ unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || (defined?(Phusi
 end
 
 # Check systems in script/server mode (stuff like passenger runs them some other way?)
-if (ENV['SERVER_SOFTWARE'].try(:match, /nginx/) && Rails.env != 'production' || ENV['_'].match(/script\/server/)) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER)
+if (ENV['SERVER_SOFTWARE'].try(:match, /nginx/) && !Rails.env.production? || ENV['_'].match(/rails/)) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER)
   System::Services.start_all
 
   at_exit do
