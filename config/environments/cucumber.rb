@@ -10,8 +10,10 @@ Dashboard::Application.configure do
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
   
+  config.active_support.deprecation = :stderr
+  
   # Show full error reports and disable caching
-  config.action_controller.consider_all_requests_local = true
+  config.consider_all_requests_local                   = true
   config.action_controller.perform_caching             = true
   
   # Disable request forgery protection in test environment

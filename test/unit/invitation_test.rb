@@ -14,19 +14,19 @@ class InvitationTest < Test::Unit::TestCase
     
     it "should require at least one channel id" do
       assert !@invitation.valid?
-      assert @invitation.errors.on(:channel_ids)
+      assert @invitation.errors[:channel_ids]
     end
     
     it "should require a valid email address" do
       @invitation.email = "test"
       assert !@invitation.valid?
-      assert @invitation.errors.on(:email)
+      assert @invitation.errors[:email]
       @invitation.email = "test@test"
       assert !@invitation.valid?
-      assert @invitation.errors.on(:email)
+      assert @invitation.errors[:email]
       @invitation.email = "test@test.com"
       @invitation.valid?
-      assert !@invitation.errors.on(:email)
+      assert !@invitation.errors[:email]
     end
     
   end
