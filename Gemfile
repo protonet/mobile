@@ -24,13 +24,13 @@ gem "sunspot_index_queue"
 gem "will_paginate", "3.0.pre2"
 gem "ruby-ip", "0.9.0"
 gem "hoptoad_notifier"
-gem "dudemeister-uuid4r", "0.1.3"
+gem "uuid4r" #gem "dudemeister-uuid4r", "0.1.3"
 gem "declarative_authorization", "~> 0.5.2"
 gem "paperclip", "~> 2.3.8"
 gem "newrelic_rpm"
 gem "sprockets"
 gem "dm-sprockets-rails", :require => "sprockets-rails"
-gem "activeldap" #, :git => "git://github.com/pdf/ruby-activeldap.git", :branch => "rails3", :require => 'active_ldap'
+gem "activeldap" #, :git => "git://github.com/asynchrony/activeldap.git", :branch => "rails3"
 
 group :test, :cucumber do
   gem "jeremymcanally-context", "0.5.5"
