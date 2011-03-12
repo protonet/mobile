@@ -23,11 +23,11 @@ module System
     def self.cleared_path(path)
       # todo aj: test cleaning of paths
       path.gsub!(/\.\./, '') if path
-      public_path + path.to_s
+      public_path.to_s + path
     end
 
     def self.public_path
-      @uploads_path ||= configatron.user_file_path
+      @uploads_path ||= Rails.root.to_s + configatron.user_file_path
     end
 
   end  
