@@ -15,7 +15,7 @@ end
 ActiveSupport::JSON.backend = 'JSONGem'
 
 # amqp settings
-require 'lib/rabbit'
+require 'rabbit'
 
 require 'mq'
 AMQP.settings[:vhost] = configatron.amqp.vhost.nil? ? '/' : configatron.amqp.vhost
