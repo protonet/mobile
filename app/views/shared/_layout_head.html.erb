@@ -22,7 +22,7 @@
       session_id:               "<%= cookies['_rails_dashboard_session'] %>",
       authenticity_token:       "<%= form_authenticity_token %>",
       server:                   "<%= server_software %>",
-      availableChannels:        <%= get_channel_mapping_as_json %>,
+      availableChannels:        <%= raw(get_channel_mapping_as_json) %>,
       debugMode:                <%= configatron.log_event_notifications.to_json %>
     };
   </script>
