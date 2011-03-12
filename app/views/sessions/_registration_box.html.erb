@@ -6,7 +6,7 @@
 <h1>Welcome guest</h1>
 
 <%- if allow_signup? %>
-  <%- form_for :user, :url => users_path, :html => { :class => "sign-up form" } do |f| %>
+  <%= form_for :user, :url => users_path, :html => { :class => "sign-up form" } do |f| %>
     <%= hidden_field_tag :invitation_token, params[:invitation_token] if params[:invitation_token] %>
     <fieldset>
       <legend>Get started by <strong>signing up</strong> (it's free)</legend>
@@ -38,7 +38,7 @@
   <%- end %>
 <%- end %>
 
-<%- form_tag user_session_path, { :class => "login form #{'no-register' if configatron.ldap.single_authentication == true || System::Preferences.allow_registrations_for_strangers == false}" } do -%>
+<%= form_tag user_session_path, { :class => "login form #{'no-register' if configatron.ldap.single_authentication == true || System::Preferences.allow_registrations_for_strangers == false}" } do -%>
   <fieldset>
     <%- if configatron.ldap.single_authentication == true %>
       <legend><strong>Log in</strong> with your ldap credentials</legend>

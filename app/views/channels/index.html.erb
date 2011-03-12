@@ -169,7 +169,7 @@
     <%= link_to 'create a channel', "#", :class => "create", :rel => "create" %>
 
     <div id="create" class="create section hidden">
-      <%- form_for :channel, :url => channels_path, :action => 'post' do |f| -%>
+      <%= form_for :channel, :url => channels_path, :action => 'post' do |f| -%>
         <fieldset>
           <%= f.text_field :name, { :title => 'Name of the channel…' } %>
           <%= f.text_field :description, { :title => 'Description of the channel…' } %>

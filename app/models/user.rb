@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
   scope :registered, :conditions => {:temporary_identifier => nil}
   scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"
 
-  after_validation_on_create :assign_roles_and_channels
+  after_validation :assign_roles_and_channels, :on => :create
   
   after_create :create_ldap_user if configatron.ldap.active == true
   after_create :send_create_notification
