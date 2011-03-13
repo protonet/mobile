@@ -1,7 +1,6 @@
 class LdapUser  < ActiveLdap::Base
   ldap_mapping :dn_attribute => 'uid', :prefix => 'ou=People', :classes => ['top', 'account', 'posixAccount', 'shadowAccount']
-  belongs_to :groups, :class => 'LdapGroup', :many => 'memberUid', :foreign_key => 'uid'
-
+  belongs_to :groups, :class => 'LdapGroup', :many => 'memberUid', :primary_key => 'uid'
 
   # REFACTORE THIS! ;) I just hacked that - aj
   def self.create_for_user(user)

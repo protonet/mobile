@@ -6,8 +6,8 @@ class NetworkTest < ActiveSupport::TestCase
   end
   
   test "the local method creates the local network if it doesn't exist" do
-    assert Network.all([1]).empty?
+    assert Network.where(:id => 1).empty?
     Network.local
-    assert !Network.all([1]).empty?
+    assert !Network.where(:id => 1).empty?
   end
 end

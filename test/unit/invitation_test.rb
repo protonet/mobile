@@ -20,13 +20,13 @@ class InvitationTest < Test::Unit::TestCase
     it "should require a valid email address" do
       @invitation.email = "test"
       assert !@invitation.valid?
-      assert @invitation.errors[:email]
+      assert @invitation.errors[:email].any?
       @invitation.email = "test@test"
       assert !@invitation.valid?
-      assert @invitation.errors[:email]
+      assert @invitation.errors[:email].any?
       @invitation.email = "test@test.com"
       @invitation.valid?
-      assert !@invitation.errors[:email]
+      assert @invitation.errors[:email].empty?
     end
     
   end

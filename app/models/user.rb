@@ -35,8 +35,8 @@ class User < ActiveRecord::Base
   after_validation :assign_roles_and_channels, :on => :create
   
   after_create :create_ldap_user if configatron.ldap.active == true
-  after_create :send_create_notification
-  after_create :listen_to_channels
+  after_create :send_create_notification, :unless => :anonymous?
+  after_create :listen_to_channels, :unless => :anonymous?
   after_create :mark_invitation_as_accepted, :if => :invitation_token
   
   after_destroy :move_tweets_to_anonymous
@@ -48,7 +48,7 @@ class User < ActiveRecord::Base
     rescue ActiveRecord::RecordNotFound
       user = new(:name => 'Anonymous', :login => 'Anonymous')
       # no callback for this one
-      user.send(:create_without_callbacks) && update_all("id = 0", "id = #{user.id}")
+      user.save && update_all("id = 0", "id = #{user.id}")
       find(0)
     end
   end
@@ -121,7 +121,11 @@ class User < ActiveRecord::Base
   def self.delete_strangers_older_than_two_days!
     destroy_all(["temporary_identifier IS NOT NULL AND updated_at < ?", Time.now - 2.days]).each {|user| user.tweets.each {|t| t.update_attribute(:user_id, 0)}}
   end
-
+  
+  def anonymous?
+    id == 0
+  end
+  
   def stranger?
     !temporary_identifier.blank? || id == 1
   end

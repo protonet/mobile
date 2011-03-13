@@ -30,7 +30,7 @@ gem "paperclip", "~> 2.3.8"
 gem "newrelic_rpm"
 gem "sprockets"
 gem "dm-sprockets-rails", :require => "sprockets-rails"
-gem "activeldap" #, :git => "git://github.com/asynchrony/activeldap.git", :branch => "rails3"
+gem "activeldap3", :require => "active_ldap" #, :git => "git://github.com/asynchrony/activeldap.git", :branch => "rails3"
 
 group :test, :cucumber do
   gem "jeremymcanally-context", "0.5.5"

@@ -103,7 +103,7 @@ class SystemPreferences < ActiveRecord::Base
   end
 
   def self.object_scoped
-    Preferences.scoped_by_object_type_and_object_id(object_type, object_id)
+    SystemPreferences.scoped_by_object_type_and_object_id(object_type, object_id)
   end
 
   #Deprecated!

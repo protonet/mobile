@@ -13,9 +13,9 @@ class UserTest < Test::Unit::TestCase
     
     it "should create an entry for the anonymous user if it doesn't exist" do
       User.delete_all
-      assert User.all([0]).empty?
+      assert User.where(:id => 0).empty?
       User.anonymous
-      assert !User.all([0]).empty?
+      assert !User.where(:id => 0).empty?
     end
     
   end
