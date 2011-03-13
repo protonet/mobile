@@ -218,6 +218,7 @@ protonet.window.Meep = (function() {
     });
     
     if (protonet.user.Browser.SUPPORTS_EVENT("DOMMouseScroll")) {
+      // Firefox 4 only supports DOMMouseScroll on the $document object
       $document.bind("DOMMouseScroll.meep_window", function(event) {
         event = event.originalEvent;
         if (event.axis == event.VERTICAL_AXIS && event.detail != 0) {
@@ -226,7 +227,7 @@ protonet.window.Meep = (function() {
         event.preventDefault();
       });
     } else if (protonet.user.Browser.SUPPORTS_EVENT("mousewheel")) {
-      $document.bind("mousewheel.meep_window", function(event) {
+      dialogElement.bind("mousewheel.meep_window", function(event) {
         event = event.originalEvent;
         if (event.wheelDeltaY != 0) {
           spawnScrolling(event.wheelDeltaY < 0 ? -1 : 1);

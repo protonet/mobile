@@ -24,6 +24,8 @@ protonet.window.Search = {
   },
   
   _observe: function() {
+    var isTouchDevice = protonet.user.Browser.IS_TOUCH_DEVICE();
+    
     protonet.utils.History.observe(/(?:\?|&)search=(.*?)(?:&|#|$)/, this.show.bind(this));
     
     protonet.Notifications.bind("modal_window.hidden", function() {
@@ -31,7 +33,11 @@ protonet.window.Search = {
     }.bind(this));
     
     this.form.bind({
-     keydown: function() {
+      keydown: function() {
+        if (isTouchDevice) {
+          return;
+        }
+        
         var value = this.input.val();
         if (value.length < 1) {
           return;

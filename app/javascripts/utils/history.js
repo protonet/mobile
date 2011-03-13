@@ -90,22 +90,13 @@ protonet.utils.History = (function() {
       }
     });
   
-  // Firefox doesn't fire the popstate anymore onload, therefore we manually have to fire it
-  if (history.state && history.state.path) {
-    $(function() { _triggerChange(history.state.path); });
-  }
-  
-  // Unless the hashchange event the 'onpostate' event is fired initially at the beginning
-  // We have to emulate the same with the 'onhashchange' event
-  if (!history.pushState) {
-    $(function() {
-      var hash = getHash(),
-          historyEntry = hash || (location.pathname + location.search);
-      if (historyEntry) {
-        _triggerChange(historyEntry);
-      }
-    });
-  }
+  $(function() {
+    var hash = getHash(),
+        historyEntry = hash || (location.pathname + location.search);
+    if (historyEntry) {
+      _triggerChange(historyEntry);
+    }
+  });
   
   return {
     register:       register,

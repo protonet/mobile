@@ -128,11 +128,6 @@ input.search {
 
 /* =MODAL WINDOW: MEEP DETAILS
 =========================================================================== */
-.meep-window {
-  /* Experimental hardware accerlation */
-  -webkit-transform: translateZ(0);
-}
-
 .meep-window .modal-window-content {
   padding-left: 40px;
   padding-right: 40px;

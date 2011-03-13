@@ -92,5 +92,14 @@ protonet.user.Browser = {
       testElement = null;
       return isSupported;
     };
-  })()
+  })(),
+  
+  IS_TOUCH_DEVICE: function() {
+    try {
+      document.createEvent("TouchEvent");
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 };
