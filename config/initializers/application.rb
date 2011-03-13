@@ -1,8 +1,10 @@
-if Rails.env.development?
+unless Rails.env.test?
   require "#{Rails.root}/lib/backend_adapters/development_mock"
   SystemBackend.backend_connection = BackendAdapters::DevelopmentMock.new
   puts "Backend '#{SystemBackend.backend_connection.info}' connected successfully!"
-  
+end
+
+if Rails.env.development?
   if File.exists?(File.join(Rails.root, 'tmp', 'debug.txt'))
     require 'ruby-debug'
     Debugger.wait_connection = true
@@ -10,7 +12,7 @@ if Rails.env.development?
     File.delete(File.join(Rails.root, 'tmp', 'debug.txt'))
   end
 end
-  
+
 # json settings
 ActiveSupport::JSON.backend = 'JSONGem'
 

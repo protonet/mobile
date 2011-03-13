@@ -24,9 +24,6 @@ Dashboard::Application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
   
-  SystemBackend.backend_connection = BackendAdapters::DevelopmentMock.new
-  puts "Backend '#{SystemBackend.backend_connection.info}' connected successfully!"
-  
   configatron.user_file_path = "/tmp"
   configatron.images.avatars_path   = "public/avatars"
   configatron.images.externals_path = "public/externals"
