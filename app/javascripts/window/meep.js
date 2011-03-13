@@ -8,6 +8,7 @@ protonet.window.Meep = (function() {
       COUNT               = 5,
       $document           = $(document),
       currentChannelName  = "unknown",
+      isTouchDevice       = protonet.user.Browser.IS_TOUCH_DEVICE(),
       currentMeep,
       border,
       meepList,
@@ -92,6 +93,12 @@ protonet.window.Meep = (function() {
     meepList.queue(function(next) {
       borderAnimationDuration   = borderAnimationDuration || 0;
       meepListAnimationDuration = meepListAnimationDuration || 0;
+      
+      if (isTouchDevice) {
+        // iPad is unbelievable slow that's why we force it to immediately adjust
+        borderAnimationDuration = meepListAnimationDuration = 0;
+      }
+      
       var meepHeight              = currentMeep.element.outerHeight(),
           newBorderMarginTop      = -(meepHeight + border.outerHeight() - border.height()) / 2,
           prevSiblings            = currentMeep.element.prevAll(),

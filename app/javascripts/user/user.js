@@ -1,4 +1,3 @@
-//= require "../behaviors/users.js"
 //= require "../ui/context_menu.js"
 
 protonet.user = {
