@@ -90,9 +90,9 @@ protonet.utils.History = (function() {
       }
     });
   
+  // Check for history entries initially
   $(function() {
-    var hash = getHash(),
-        historyEntry = hash || (location.pathname + location.search);
+    var historyEntry = getCurrentPath();
     if (historyEntry) {
       _triggerChange(historyEntry);
     }
