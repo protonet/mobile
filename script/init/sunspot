@@ -4,7 +4,11 @@ begin
   require 'tempfile'
   require 'tmpdir'
   require 'optparse'
-  require "#{ENV["GEM_HOME"]}/gems/sunspot-1.1.0/lib/sunspot/server"
+  begin
+    require "#{ENV["GEM_HOME"]}/gems/sunspot-1.1.0/lib/sunspot/server"
+  rescue LoadError
+    require "#{`bundle show sunspot`.strip}/lib/sunspot/server"
+  end
 rescue LoadError => e
   if require 'rubygems'
     retry
