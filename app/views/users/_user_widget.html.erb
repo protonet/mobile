@@ -1,33 +1,8 @@
 <% users = User.registered.all -%>
 <div id="user-widget" class="widget">
   <h3><%= link_to("Users", :controller => :users, :action => :index) %> <output class="count">(0/<%= users.size %>)</output> <span class="loading-hint">loading ...</span></h3>
-  <ul class="touch-scroll">
+  <ul>
     <!-- tabindex="-1" ensures that the element is focusable via css -->
-    <% users.each do |user| -%>
-      <li data-user-id="<%= user.id %>" title="<%=h user.display_name %>" <%= 'class="myself"' if user.id == current_user.id %>>
-        <a href="#" tabindex="-1"><%=h user.display_name %></a>
-      </li>
-    <% end -%>
-    <% users.each do |user| -%>
-      <li data-user-id="<%= user.id %>" title="<%=h user.display_name %>" <%= 'class="myself"' if user.id == current_user.id %>>
-        <a href="#" tabindex="-1"><%=h user.display_name %></a>
-      </li>
-    <% end -%>
-    <% users.each do |user| -%>
-      <li data-user-id="<%= user.id %>" title="<%=h user.display_name %>" <%= 'class="myself"' if user.id == current_user.id %>>
-        <a href="#" tabindex="-1"><%=h user.display_name %></a>
-      </li>
-    <% end -%>
-    <% users.each do |user| -%>
-      <li data-user-id="<%= user.id %>" title="<%=h user.display_name %>" <%= 'class="myself"' if user.id == current_user.id %>>
-        <a href="#" tabindex="-1"><%=h user.display_name %></a>
-      </li>
-    <% end -%>
-    <% users.each do |user| -%>
-      <li data-user-id="<%= user.id %>" title="<%=h user.display_name %>" <%= 'class="myself"' if user.id == current_user.id %>>
-        <a href="#" tabindex="-1"><%=h user.display_name %></a>
-      </li>
-    <% end -%>
     <% users.each do |user| -%>
       <li data-user-id="<%= user.id %>" title="<%=h user.display_name %>" <%= 'class="myself"' if user.id == current_user.id %>>
         <a href="#" tabindex="-1"><%=h user.display_name %></a>
