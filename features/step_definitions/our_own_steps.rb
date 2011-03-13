@@ -12,6 +12,16 @@ Then /^debug$/ do
   debugger
 end
 
+When /^(?:|I )go unauthenticated to the start page$/ do
+  visit "/logout"
+  sleep 1
+end
+
+# When /^(?:|I )go to (.+)$/ do |page_name|
+#   visit path_to(page_name)
+#   sleep 1
+# end
+
 Then /^I wait for the autocompletion$/ do
   sleep 0.5
 end
