@@ -148,7 +148,7 @@ class User < ActiveRecord::Base
   end
 
   def create_ldap_user
-    Ldap::User.create_for_user(self) unless stranger?
+    LdapUser.create_for_user(self) unless stranger?
   end
 
   def send_create_notification
@@ -210,9 +210,9 @@ class User < ActiveRecord::Base
   end
   
   def make_admin(key)
-    return :admin_already_set if System::Preferences.admin_set == true
-    if key == System::Preferences.admin_key
-      (add_to_role(:admin) && System::Preferences.admin_set = true) ? :ok : :error
+    return :admin_already_set if SystemPreferences.admin_set == true
+    if key == SystemPreferences.admin_key
+      (add_to_role(:admin) && SystemPreferences.admin_set = true) ? :ok : :error
     else
       :key_error
     end

@@ -61,7 +61,7 @@ class UserTest < Test::Unit::TestCase
     end
     
     it "should not create an ldap user" do
-      Ldap::User.expects(:create_for_user).never
+      LdapUser.expects(:create_for_user).never
       User.stranger('foobar')
     end
     
@@ -70,7 +70,7 @@ class UserTest < Test::Unit::TestCase
   context "Getting a communication authentication token" do
     
     before do
-      Ldap::User.stubs(:create_for_user)
+      LdapUser.stubs(:create_for_user)
       @user = Factory.build(:user)
     end
       

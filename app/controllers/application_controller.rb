@@ -23,20 +23,20 @@ class ApplicationController < ActionController::Base
   end
   
   def set_backend_for_development
-    System::Backend.backend_connection = BackendAdapters::DevelopmentMock.new unless System::Backend.backend_connection
+    SystemBackend.backend_connection = BackendAdapters::DevelopmentMock.new unless SystemBackend.backend_connection
   end
   
   def captive_check
     return true
     requested_uri = request.protocol + request.host_with_port + request.fullpath
-    return true if System::Backend.requested_host_local?(request.host)
+    return true if SystemBackend.requested_host_local?(request.host)
     # otherwise redirect to captive? and the url
     redirect_to "http://protonet/captive?req=" + URI.escape(requested_uri)
   end
   
   def only_registered
     if current_user.stranger?
-      if System::Preferences.allow_dashboard_for_strangers == false
+      if SystemPreferences.allow_dashboard_for_strangers == false
         flash[:error] = "Please authenticate :) !"
         return redirect_to("/login")
       else
@@ -76,7 +76,7 @@ class ApplicationController < ActionController::Base
   
   def allow_signup?
     configatron.ldap.single_authentication != true && (
-      System::Preferences.allow_registrations_for_strangers == true || 
+      SystemPreferences.allow_registrations_for_strangers == true || 
       params[:invitation_token] && Invitation.unaccepted.find_by_token(params[:invitation_token]))
   end
   

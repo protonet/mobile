@@ -38,11 +38,11 @@
   <%- end %>
 <%- end %>
 
-<%= form_tag user_session_path, { :class => "login form #{'no-register' if configatron.ldap.single_authentication == true || System::Preferences.allow_registrations_for_strangers == false}" } do -%>
+<%= form_tag user_session_path, { :class => "login form #{'no-register' if configatron.ldap.single_authentication == true || SystemPreferences.allow_registrations_for_strangers == false}" } do -%>
   <fieldset>
     <%- if configatron.ldap.single_authentication == true %>
       <legend><strong>Log in</strong> with your ldap credentials</legend>
-    <%- elsif System::Preferences.allow_registrations_for_strangers == false -%>
+    <%- elsif SystemPreferences.allow_registrations_for_strangers == false -%>
       <legend>Please <strong>log in!</strong></legend>
     <%- else %>
       <legend>or <strong>logging in</strong></legend>

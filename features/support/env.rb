@@ -68,11 +68,11 @@ end
 FileUtils.rm_rf(Rails.root + "/public/sprockets/*")
 
 # start services
-System::Services.start_all
+SystemServices.start_all
 
 at_exit do
   # multiuser support
   $browsers && $browsers.each { |id, browser| browser[:driver].quit rescue nil }
   
-  System::Services.stop_all unless ENV["NOSTOP"].to_i == 1
+  SystemServices.stop_all unless ENV["NOSTOP"].to_i == 1
 end

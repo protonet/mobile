@@ -47,7 +47,7 @@
 <p>congrats bro! you're an ADMIN! Check out your users <%= link_to 'here', :controller => :users, :action => :index %>.</p>  
 <%- end -%>
 
-<%- unless System::Preferences.admin_set -%>
+<%- unless SystemPreferences.admin_set -%>
 <h4>Admin status:</h4>
 <p>
   Enter admin key to become an admin, this can only be done once from the command-line (rake reset_admin_key):

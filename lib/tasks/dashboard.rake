@@ -13,17 +13,17 @@ end
 
 desc 'Reset admin getting key'
 task :reset_admin_key => :environment do
-  System::Preferences.admin_set = false
-  System::Preferences.admin_key = ActiveSupport::SecureRandom.base64(10)
-  puts "\n\nUse this key to become an admin, can only be used once:\n\n#{System::Preferences.admin_key}\n\nbe careful!"
+  SystemPreferences.admin_set = false
+  SystemPreferences.admin_key = ActiveSupport::SecureRandom.base64(10)
+  puts "\n\nUse this key to become an admin, can only be used once:\n\n#{SystemPreferences.admin_key}\n\nbe careful!"
 end
 
 desc 'Reset admin getting key AND all admin users'
 task :reset_admin_key_and_users => :environment do
-  System::Preferences.admin_set = false
-  System::Preferences.admin_key = ActiveSupport::SecureRandom.base64(10)
+  SystemPreferences.admin_set = false
+  SystemPreferences.admin_key = ActiveSupport::SecureRandom.base64(10)
   User.update_all("admin = 0", "admin = 1")
-  puts "\n\nUse this key to become an admin, can only be used once:\n\n#{System::Preferences.admin_key}\n\nbe careful!"
+  puts "\n\nUse this key to become an admin, can only be used once:\n\n#{SystemPreferences.admin_key}\n\nbe careful!"
 end
 
 

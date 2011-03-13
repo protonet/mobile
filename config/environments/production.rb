@@ -26,8 +26,8 @@ Dashboard::Application.configure do
   
   # Enable threaded mode
   # config.threadsafe!
-  System::Backend.backend_connection = BackendAdapters::Ubuntu.new
-  puts "Backend '#{System::Backend.backend_connection.info}' connected successfully!"
+  SystemBackend.backend_connection = BackendAdapters::Ubuntu.new
+  puts "Backend '#{SystemBackend.backend_connection.info}' connected successfully!"
   
   configatron.current_file_path = "/home/protonet/dashboard/current"
   configatron.shared_file_path  = "/home/protonet/dashboard/shared"

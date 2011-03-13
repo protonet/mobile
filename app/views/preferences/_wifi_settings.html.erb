@@ -1,13 +1,13 @@
 <p>Current config:</p>
 <br>
 <pre style="background:white;font-size:10px;">
-<%= System::Wifi.config %>
+<%= SystemWifi.config %>
 </pre>
 <br>
-<p>Status: <bold><%= System::Wifi.status %></bold></p>
+<p>Status: <bold><%= SystemWifi.status %></bold></p>
 <p>
   <%= link_to 'on', system_wifi_on_path %><br>
   <%= link_to 'off', system_wifi_off_path %>
 </p>
 <br>
-<p>Iptables ready: <bold><%= System::Networking.iptables_rules_ready %></bold></p>
+<p>Iptables ready: <bold><%= SystemNetworking.iptables_rules_ready %></bold></p>

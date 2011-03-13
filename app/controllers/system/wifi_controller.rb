@@ -2,7 +2,7 @@ module System
   class WifiController < ApplicationController
     
     def on
-      System::Wifi.start
+      SystemWifi.start
       respond_to do |format|
         format.html {redirect_to :controller => '/preferences', :action => 'index', :anchor => 'wifi_settings'}
         format.js  { render :json => {:status => 'on'} }
@@ -10,7 +10,7 @@ module System
     end
     
     def off
-      System::Wifi.stop
+      SystemWifi.stop
       respond_to do |format|
         format.html {redirect_to :controller => '/preferences', :action => 'index', :anchor => 'wifi_settings'}
         format.js  { render :json => {:status => 'off'} }

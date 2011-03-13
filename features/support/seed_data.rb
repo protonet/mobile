@@ -6,7 +6,7 @@ Before do
   Role.find_or_create_by_title('invitee')
   User.anonymous
   Channel.home
-  System::Preferences.vpn = {:identifier => Network.local.uuid, :password => ActiveSupport::SecureRandom.base64(10)}
+  SystemPreferences.vpn = {:identifier => Network.local.uuid, :password => ActiveSupport::SecureRandom.base64(10)}
 end
 
 After do
@@ -19,6 +19,6 @@ After do
   end
 
   # reset connection tracker
-  # `kill -2 #{System::Services.services["js_dispatching_server"][2].pid}`
+  # `kill -2 #{SystemServices.services["js_dispatching_server"][2].pid}`
 
 end

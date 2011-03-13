@@ -32,11 +32,11 @@ class PreferencesController < ApplicationController
   end
   
   def network_settings
-    @interfaces = System::Backend.get_interfaces
+    @interfaces = SystemBackend.get_interfaces
     render :partial => 'network_settings'
   end
   def interface
-    render :text => System::Backend.get_interface_information(params[:id]).inspect.gsub(',', ',<br/> &nbsp; ')
+    render :text => SystemBackend.get_interface_information(params[:id]).inspect.gsub(',', ',<br/> &nbsp; ')
   end
   
   def wifi_settings
@@ -62,8 +62,8 @@ class PreferencesController < ApplicationController
   def get_vpn
     render :json => {
       'description' => Network.local.name,
-      'community' => System::Preferences.vpn[:identifier],
-      'key' => System::Preferences.vpn[:password]
+      'community' => SystemPreferences.vpn[:identifier],
+      'key' => SystemPreferences.vpn[:password]
     }
   end
 

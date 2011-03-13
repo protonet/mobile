@@ -138,19 +138,19 @@ Then /^I should see the image "([^"]*)"(?: within "([^"]*)")?$/ do |image_name, 
 end
 
 Given /^administrator rights have not been claimed$/ do
-  System::Preferences.admin_set = false
+  SystemPreferences.admin_set = false
 end
 
 Given /^administrator rights have been claimed$/ do
-  System::Preferences.admin_set = true
+  SystemPreferences.admin_set = true
 end
 
 Given /^administrator claiming key is "([^\"]*)"$/ do |key|
-  System::Preferences.admin_key = key
+  SystemPreferences.admin_key = key
 end
 
 Given /^strangers are not allowed to register$/ do
-  System::Preferences.allow_registrations_for_strangers = false
+  SystemPreferences.allow_registrations_for_strangers = false
 end
 
 Given /^"([^\"]*)" is an admin$/ do |login|

@@ -1,6 +1,6 @@
 class Mailer < ActionMailer::Base
   
-  default_url_options[:host] = System::Preferences.public_host
+  default_url_options[:host] = SystemPreferences.public_host
   
   def invitation(invitation)
     @invitation = invitation

@@ -68,7 +68,7 @@ class Channel < ActiveRecord::Base
 
   def create_folder
     begin
-      path = System::FileSystem.cleared_path("/#{id.to_s}")
+      path = SystemFileSystem.cleared_path("/#{id.to_s}")
       FileUtils.mkdir(path)
     rescue Errno::EEXIST
       logger.warn("A path for the #{name} already exists at #{path}") and return true

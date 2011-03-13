@@ -1,11 +1,11 @@
 update your nodes software<br>
-you are running on release  : <bold><%= System::Release.current_version %>/<%= System::Release.current_type %></bold><br>
-latest stable release is    : <bold><%= System::Release.latest_version %></bold><br>
-latest beta   release is    : <bold><%= System::Release.latest_beta_version %></bold><br>
-software update is available: <bold><%= !System::Release.most_recent? %></bold><br>
+you are running on release  : <bold><%= SystemRelease.current_version %>/<%= SystemRelease.current_type %></bold><br>
+latest stable release is    : <bold><%= SystemRelease.latest_version %></bold><br>
+latest beta   release is    : <bold><%= SystemRelease.latest_beta_version %></bold><br>
+software update is available: <bold><%= !SystemRelease.most_recent? %></bold><br>
 <br />
 <%= form_tag(system_release_update_path) do %>
   <%= label_tag          :password,          'Enter your *NODE* password:' %><br />
   <%= password_field_tag :password, nil %><br />
-  and hit <%= button(System::Release.most_recent? ? "reinstall" : "update") %>
+  and hit <%= button(SystemRelease.most_recent? ? "reinstall" : "update") %>
 <% end %>

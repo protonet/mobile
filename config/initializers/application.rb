@@ -1,7 +1,7 @@
 if Rails.env.development?
   require "#{Rails.root}/lib/backend_adapters/development_mock"
-  System::Backend.backend_connection = BackendAdapters::DevelopmentMock.new
-  puts "Backend '#{System::Backend.backend_connection.info}' connected successfully!"
+  SystemBackend.backend_connection = BackendAdapters::DevelopmentMock.new
+  puts "Backend '#{SystemBackend.backend_connection.info}' connected successfully!"
   
   if File.exists?(File.join(Rails.root, 'tmp', 'debug.txt'))
     require 'ruby-debug'
@@ -29,10 +29,10 @@ end
 
 # Check systems in script/server mode (stuff like passenger runs them some other way?)
 if (ENV['SERVER_SOFTWARE'].try(:match, /nginx/) && !Rails.env.production? || ENV['_'].match(/rails/)) && !(defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER)
-  System::Services.start_all
+  SystemServices.start_all
 
   at_exit do
-    System::Services.stop_all
+    SystemServices.stop_all
   end
 end
 

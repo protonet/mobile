@@ -5,7 +5,7 @@ module System
     before_filter :only_registered, :check_channel_membership
     
     def index
-      raw_files = FileSystem.all("/" + params[:channel_id] + params['path'])
+      raw_files = SystemFileSystem.all("/" + params[:channel_id] + params['path'])
       
       respond_to do |format|
         format.html
@@ -17,7 +17,7 @@ module System
       if params[:directory_name] && params[:file_path] && params[:channel_id]
         begin
           full_directory_path = "/#{params[:channel_id]}#{params[:file_path]}#{params[:directory_name]}"
-          FileUtils.mkdir(System::FileSystem.cleared_path(full_directory_path))
+          FileUtils.mkdir(SystemFileSystem.cleared_path(full_directory_path))
           
           channel = Channel.find(params[:channel_id])
           publish 'files', ['channel', channel.uuid],
@@ -38,7 +38,7 @@ module System
     def delete_directory
       if params[:file_path] && params[:channel_id]
         full_path = "/#{params[:channel_id]}#{params[:file_path]}"
-        FileUtils.rm_rf(System::FileSystem.cleared_path(full_path))
+        FileUtils.rm_rf(SystemFileSystem.cleared_path(full_path))
           
         channel = Channel.find(params[:channel_id])
         publish 'files', ['channel', channel.uuid],
@@ -63,7 +63,7 @@ module System
         end
         
         full_file_path    = "/#{params[:channel_id]}#{params[:file_path]}#{filename}"
-        cleared_file_path = System::FileSystem.cleared_path(full_file_path)
+        cleared_file_path = SystemFileSystem.cleared_path(full_file_path)
         target_file       = cleared_file_path
         FileUtils.mv(params[:file].path, target_file)
         
@@ -82,7 +82,7 @@ module System
     def show
       if params[:file_path]
         mime_type = Mime::Type.lookup_by_extension((m = params[:file_path].match(/.*\.(.*)/)) && m[1].downcase) || Mime::Type.lookup("text/plain")
-        send_file(System::FileSystem.cleared_path(params[:file_path]), :type => mime_type, :disposition => (params[:download] == 1 ? 'attachment': 'inline')) rescue head(:error)
+        send_file(SystemFileSystem.cleared_path(params[:file_path]), :type => mime_type, :disposition => (params[:download] == 1 ? 'attachment': 'inline')) rescue head(:error)
       else
         return head(:error)
       end
@@ -92,7 +92,7 @@ module System
     def delete
       if params[:file_path] && params[:channel_id]
         full_path = "/#{params[:channel_id]}#{params[:file_path]}"
-        FileUtils.rm(System::FileSystem.cleared_path(full_path))
+        FileUtils.rm(SystemFileSystem.cleared_path(full_path))
         
         channel = Channel.find(params[:channel_id])
         publish 'files', ['channel', channel.uuid],
