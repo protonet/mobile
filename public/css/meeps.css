@@ -55,15 +55,8 @@
   text-shadow: #000 0 0 2px;
   position: absolute;
   right: 0;
-  display: none;
   z-index: 3;
   font-size: 14px;
-}
-
-.meep .detail-link:hover,
-.meep .detail-link:active,
-.meep:focus .detail-link {
-  display: inline;
 }
 
 .meep .detail-link:hover,

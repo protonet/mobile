@@ -32,3 +32,26 @@ protonet.utils.Behaviors.add({
     });
   }
 });
+
+if (protonet.user.Browser.IS_TOUCH_DEVICE()) {
+  
+  protonet.utils.Behaviors.add({
+    "[tabindex]:touchstart": function(element, event) {
+      if (element.is(":focus")) {
+        event.stopImmediatePropagation();
+      }
+    },
+    
+    "[tabindex]:touchend": function(element) {
+      if (element.is("a, input, select, textarea, :focus")) {
+        return;
+      }
+      
+      element.addClass("focus").trigger("focus");
+      $(document).one("touchstart", function() {
+        element.removeClass("focus").trigger("blur");
+      });
+    }
+  });
+  
+}

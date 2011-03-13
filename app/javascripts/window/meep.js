@@ -252,7 +252,7 @@ protonet.window.Meep = (function() {
     });
     
     meepList
-      .delegate("li:not(.selected)", "click.meep_window", function(event) {
+      .delegate("li:not(.selected)", "click.modal_window", function(event) {
         scrollTo($(this));
         event.preventDefault();
       })

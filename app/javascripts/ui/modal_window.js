@@ -16,6 +16,7 @@
 protonet.ui.ModalWindow = (function($) {
   var elements              = {},
       initialPath           = protonet.utils.History.getCurrentPath(),
+      isTouchDevice         = protonet.user.Browser.IS_TOUCH_DEVICE(),
       scrollbarWidth        = 0,
       offset                = 50,
       currentClassName      = null,
@@ -108,7 +109,12 @@ protonet.ui.ModalWindow = (function($) {
     if (!isAlreadyVisible) {
       // Needed to restore url when modal window gets closed
       historyBeforeOpening = initialPath == currentPath ? "/" : currentPath;
-      elements.shadow.fadeIn("fast");
+      
+      if (isTouchDevice) {
+        elements.shadow.show();
+      } else {
+        elements.shadow.fadeIn("fast");
+      }
       
       var originalPaddingRight = $body.css("padding-right");
       scrollbarWidth = scrollbarWidth || protonet.utils.getScrollbarWidth();
@@ -148,18 +154,20 @@ protonet.ui.ModalWindow = (function($) {
   }
   
   function position(immediately) {
-    var top = ($window.scrollTop() + offset).px();
+    immediately = immediately || isTouchDevice; // iPad is very slow... let's skip the effect
+    var top      = ($window.scrollTop() + offset).px();
     if (immediately === true) {
       elements.dialog.css("top", top);
     } else {
-      elements.dialog.stop(true).delay(500).animate({ top: top }, 500);
+      elements.dialog.stop(true).delay(500).animate({ top: top }, duration);
     }
     
     return this;
   }
   
   function resize(immediately) {
-    var height = ($window.height() - 2 * offset - elements.headline.outerHeight());
+    immediately = immediately || isTouchDevice; // iPad is very slow... let's skip the effect
+    var height   = ($window.height() - 2 * offset - elements.headline.outerHeight());
     height = Math.max(175, height).px();
     if (immediately === true) {
       elements.content.css("height", height);
