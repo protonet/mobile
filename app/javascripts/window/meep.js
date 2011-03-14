@@ -12,6 +12,7 @@ protonet.window.Meep = (function() {
       currentMeep,
       border,
       meepList,
+      shareButton,
       next,
       previous;
   
@@ -19,11 +20,12 @@ protonet.window.Meep = (function() {
     border = border || (function() {
       return $("<div>", { className: "border" });
     })();
-    next      = next     || $("<a>", { className: "next" });
-    previous  = previous || $("<a>", { className: "previous" });
-    meepList  = _getMeepList();
+    next        = next        || $("<a>", { className: "next" });
+    previous    = previous    || $("<a>", { className: "previous" });
+    shareButton = shareButton || $("<a>", { className: "share", title: "Share!" });
+    meepList    = _getMeepList();
     
-    border.append(next).append(previous);
+    border.append(next).append(previous).append(shareButton);
     
     var content = meepList.add(border);
     protonet.ui.ModalWindow
@@ -206,6 +208,8 @@ protonet.window.Meep = (function() {
   }
   
   function _observe() {
+    _unobserve();
+    
     var dialogElement  = protonet.ui.ModalWindow.get("dialog"),
         timeout         = null,
         spawnScrolling  = function(offset) {
@@ -251,6 +255,12 @@ protonet.window.Meep = (function() {
       scrollByOffset(-1);
     });
     
+    shareButton.bind("click.meep_window", function() {
+      var meepUrl = currentMeep.getUrl();
+      protonet.ui.ModalWindow.hide();
+      protonet.Notifications.trigger("form.fill", meepUrl);
+    });
+    
     meepList
       .delegate("li:not(.selected)", "click.modal_window", function(event) {
         scrollTo($(this));
@@ -289,6 +299,7 @@ protonet.window.Meep = (function() {
     protonet.ui.ModalWindow.get("content")
       .add(next)
       .add(previous)
+      .add(shareButton)
       .add($document)
       .add(meepList)
       .add(protonet.ui.ModalWindow.get("dialog"))

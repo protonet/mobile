@@ -171,20 +171,30 @@ input.search {
   vertical-align: middle;
 }
 
+.meep-window .share {
+  background: transparent url(/img/share_arrow.png) 0 0 no-repeat;
+  right: -8px;
+  bottom: -13px;
+  z-index: 10;
+  position: absolute;
+  width: 100px;
+  height: 40px;
+}
+
 .meep-window .next,
 .meep-window .previous {
   position: absolute;
   width: 0;
   height: 0;
-  right: -40px;
+  right: -50px;
   top: 50%;
   border-style: solid;
-  border-width: 15px;
+  border-width: 20px;
 }
 
 .meep-window .next {
   border-color: transparent transparent rgba(0, 0, 0, 0.5) transparent;
-  margin-top: -35px;
+  margin-top: -40px;
 }
 
 .meep-window .next:hover {

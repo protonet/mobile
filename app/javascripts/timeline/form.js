@@ -107,6 +107,14 @@ protonet.timeline.Form = {
       this.form.submit();
     }.bind(this));
     
+    protonet.Notifications.bind("form.fill", function(e, message) {
+      var value = this.input.focus().val();
+      this.input.val(value + ((value.slice(-1) == " " || !value.length) ? "" : " ") + message);
+      
+      // Invoke text extension checker
+      this.input.trigger("paste");
+    }.bind(this));
+    
     /**
      * Update input value
      */

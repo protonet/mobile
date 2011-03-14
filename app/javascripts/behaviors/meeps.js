@@ -1,4 +1,5 @@
 //= require "../utils/parse_query_string.js"
+//= require "../utils/template.js"
 
 protonet.utils.Behaviors.add({
   "li.meep:focus": function(element) {
