@@ -155,11 +155,11 @@ protonet.ui.ModalWindow = (function($) {
   
   function position(immediately) {
     immediately = immediately || isTouchDevice; // iPad is very slow... let's skip the effect
-    var top      = ($window.scrollTop() + offset).px();
+    var top = ($window.scrollTop() + offset).px();
     if (immediately === true) {
       elements.dialog.css("top", top);
     } else {
-      elements.dialog.stop(true).delay(500).animate({ top: top }, duration);
+      elements.dialog.stop(true).delay(500).animate({ top: top }, 500);
     }
     
     return this;
@@ -167,8 +167,8 @@ protonet.ui.ModalWindow = (function($) {
   
   function resize(immediately) {
     immediately = immediately || isTouchDevice; // iPad is very slow... let's skip the effect
-    var height   = ($window.height() - 2 * offset - elements.headline.outerHeight());
-    height = Math.max(175, height).px();
+    var height = ($window.height() - 2 * offset - elements.headline.outerHeight());
+    height = Math.max(180, height).px();
     if (immediately === true) {
       elements.content.css("height", height);
     } else {
