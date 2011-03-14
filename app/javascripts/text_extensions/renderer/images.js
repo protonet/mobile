@@ -7,9 +7,12 @@ protonet.text_extensions.render.images = function(data) {
   $.each(data.image, function(i) {
     images = images.add(
       protonet.text_extensions.render.image({
-        image:      data.image[i],
-        imageTitle: data.imageTitle[i],
-        imageHref:  data.imageHref[i] || data.url
+        image:              data.image[i],
+        imageTitle:         data.imageTitle[i],
+        imageHref:          data.imageHref[i] || data.url,
+        imageWidth:         data.imageWidth,
+        imageHeight:        data.imageHeight,
+        preventHoverEffect: data.preventHoverEffect
       })
     );
   });
