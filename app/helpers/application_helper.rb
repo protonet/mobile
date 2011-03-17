@@ -48,10 +48,6 @@ module ApplicationHelper
     end
   end
   
-  def server_software
-    request.env['SERVER_SOFTWARE'] && request.env['SERVER_SOFTWARE'].match(/^\w*/)[0]
-  end
-
   private
   
     def extract_file_name(path)
