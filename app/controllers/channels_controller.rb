@@ -18,10 +18,10 @@ class ChannelsController < ApplicationController
   def show
     respond_to do |format|
       format.json do
-        render :text => 'json'
+        render :partial => "channel_details", :locals => {:channel => Channel.find(params[:id])}
       end
       format.html do
-        render :partial => "channel_details", :locals => {:channel => Channel.find(params[:id])}
+        render :text => 'text'
       end
     end
   end
