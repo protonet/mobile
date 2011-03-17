@@ -103,7 +103,7 @@ exports.proxy = function(params, headers, response) {
   }
   
   // handle local requests
-  if(parsedUrl.host.replace(/:.*/, '') == headers.host.replace(/:.*/, '')) {
+  if(parsedUrl.host.replace(/:.*/, '') == headers.host.replace(/:.*/, '') || headers.host.replace(/:.*/, '') == "127.0.0.1") {
     cookie             = headers.cookie; // only send cookie if its a local request
   }
 
