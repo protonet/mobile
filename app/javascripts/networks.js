@@ -6,13 +6,11 @@
 //= require "timeline/timeline.js"
 //= require "effects/clouds.js"
 //= require "controls/pretty_date.js"
-//= require "controls/fluid.js"
 //= require "networkmonitor.js"
 
 // Initialize communication stuff
 $(function() {
   protonet.dispatcher.initialize();
-  //protonet.globals.dispatcher = new protonet.dispatching.DispatchingSystem();
 });
 
 /////////////////////////////////
