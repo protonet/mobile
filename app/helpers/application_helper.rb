@@ -48,7 +48,7 @@ module ApplicationHelper
   end
   
   def node_base_url
-    request.server_software != 'apache' ? "'#{request.protocol}#{server_name}:8124'" : "#{request.protocol}#{server_name}/node"
+    request.server_software != 'apache' ? "#{request.protocol}#{server_name}:8124" : "#{request.protocol}#{server_name}/node"
   end
   
   private
