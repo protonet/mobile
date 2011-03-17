@@ -118,7 +118,7 @@ exports.proxy = function(params, headers, response) {
       path.exists(baseFileName, function(exists) {
         // if the base file exists
         if(exists) {
-          sys.puts("base file exists :)");
+          sys.puts("base file exists :) " + baseFileName);
           //only apply size manipulation and then send
           resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
         }
@@ -137,7 +137,8 @@ exports.proxy = function(params, headers, response) {
           
           // request the image
           var fileStream = fs.createWriteStream(baseFileName);
-          request({"uri": encodeURI(url), "headers": {"Cookie": cookie}, "responseBodyStream": fileStream}, function (error, response, body) {
+
+          request({"uri": url, "headers": {"Cookie": cookie}, "responseBodyStream": fileStream}, function (error, response, body) {
             if (!error && response.statusCode == 200) {
               fileStream.end();
               resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
