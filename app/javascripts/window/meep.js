@@ -265,6 +265,7 @@ protonet.window.Meep = (function() {
       .delegate("li:not(.selected)", "click.modal_window", function(event) {
         scrollTo($(this));
         event.preventDefault();
+        event.stopPropagation();
       })
       .delegate("li", "text_extension.show_flash", function() {
         var meepElement = $(this);

@@ -2,17 +2,27 @@
 //= require "../utils/template.js"
 
 protonet.utils.Behaviors.add({
-  "li.meep:focus": function(element) {
+  "li.meep:focus": function(element, event) {
+    if (protonet.globals.preventFocus) {
+      return;
+    }
     // One .meep can consistent out of multiple meeps
-    var subMeepParagaphs = element.find("article > p");
+    var subMeepParagaphs = element.find("article");
     subMeepParagaphs.each(function(i, subMeepParagaph) {
       subMeepParagaph = $(subMeepParagaph);
       var meepId         = subMeepParagaph.parent().data("meep").id,
           detailViewLink = new protonet.utils.Template("meep-detail-view-link-template", { id: meepId }).toElement();
-      detailViewLink
-        .appendTo(subMeepParagaph)
-        .bind("mousedown", false);
+      detailViewLink.appendTo(subMeepParagaph);
     });
+  },
+  
+  "li.meep a:mousedown": function(element) {
+    protonet.globals.preventFocus = true;
+    setTimeout(function() { protonet.globals.preventFocus = false; }, 0);
+    
+    // if (!element.is(".detail-link")) {
+    //       element.parents("article").find(".detail-link").remove();
+    //     }
   },
   
   "li.meep:blur": function(element) {

@@ -111,7 +111,7 @@
 --------------------------------------------------------------------------- */
 .text-extension-results .media iframe {
   border: 1px solid #999;
-  width: 551px;
+  width: 549px;
   height: 200px;
 }
 
@@ -123,7 +123,7 @@
 --------------------------------------------------------------------------- */
 .text-extension-results.flash object {
   height: 280px;
-  width: 553px;
+  width: 551px;
   margin-bottom: 5px;
 }
 
@@ -304,6 +304,10 @@ pre .dec { color: #606; }
 
 .text-extension-results.Meep .domain {
   display: none;
+}
+
+.text-extension-results.Meep .description {
+  color: #000;
 }
 
 .text-extension-results.Meep img {
