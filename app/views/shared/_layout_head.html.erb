@@ -10,7 +10,7 @@
     var protonet = protonet || {};
     protonet.config = {
       base_url:                 location.protocol + "//" + location.host,
-      node_base_url:            <%= request.server_software != 'apache' ? "'#{request.protocol}#{server_name}:8124'" : 'location.protocol + "//" + location.host + "/node"' %>,
+      node_base_url:            "<%= node_base_url %>",
       dispatching_server:       "<%= server_name %>",
       dispatching_server_port:  "<%= configatron.socket.port %>",
       token:                    "<%= current_user.communication_token %>",
