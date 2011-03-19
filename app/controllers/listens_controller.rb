@@ -1,5 +1,6 @@
 class ListensController < ApplicationController
   
+  before_filter :set_listen_id
   filter_resource_access
   before_filter :only_registered
   
@@ -36,7 +37,7 @@ class ListensController < ApplicationController
   end
 
   def accept
-    listen = Listen.find(params[:listen_id])
+    listen = Listen.find(params[:id])
     channel = listen.channel
     if current_user == channel.owner
       listen.verified = true
@@ -46,5 +47,12 @@ class ListensController < ApplicationController
     end
     redirect_to :controller => 'channels', :action => 'index', :anchor => channel.id
   end
+
+  private
+  def set_listen_id
+    params[:id] = params[:listen_id] if params[:listen_id]
+    true
+  end
+
 
 end

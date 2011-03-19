@@ -57,6 +57,10 @@ Given /^I click on "([^"]*)" within "([^"]*)"$/ do |linktext, selector|
   end
 end
 
+Given /^I click on the element "([^\"]*)"$/ do |selector|
+  find(:css, selector).click
+end
+
 Given /^I leave the page$/ do
   visit "http://www.google.com"
 end
@@ -76,6 +80,26 @@ Then /^I should see "([^\"]*)" in the channel details pane$/ do |text|
     assert page.has_xpath?('//*', :text => text, :visible => true)
   end
 end
+
+Then /^I click verify user "([^\"]*)" in users list$/ do |user|
+  with_scope("#channel-subscribers") do
+    find(:xpath, "//a[contains(.,'verify listener')]").click
+  end
+end
+
+Then /^I should not see "([^\"]*)" in the channel selector list$/ do |channel_name|
+  with_scope("#channels") do
+    assert !page.has_xpath?('//*', :text => channel_name)
+  end
+end
+
+Then /^I should see "([^"]*)" in the channel selector list$/ do |channel_name|
+  with_scope("#channels") do
+    assert page.has_xpath?('//*', :text => channel_name, :visible => true)
+  end
+end
+
+
 
 Then /^I should see "([^\"]*)" in the timeline$/ do |text|
   with_scope('#timeline') do

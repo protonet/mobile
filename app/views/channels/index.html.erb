@@ -53,6 +53,10 @@
   float: right;
 }
 
+#channels-page a {
+  text-decoration: none;
+}
+
 #channels-page a.create {
   display: block;
   font-size: 1.2em;
@@ -155,10 +159,12 @@
         <ul>
           <%- n.channels.each do |c| -%>
             <li id="channel-<%= c.id %>" class="channel">
+              <a href="#">
               <% if current_user.subscribed?(c) %>
                 <img src="/images/bullet_green.png" width="16" height="16" alt="" class="channel-indicator" />
               <% end %>
               <%= "#{h c.name} <span>(#{h c.description})</span>" %>
+              </a>
            </li>
          <%- end -%>
         </ul>
