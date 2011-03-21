@@ -2,7 +2,6 @@
 //= require "../utils/parse_url.js"
 //= require "../utils/escape_for_css_query.js"
 //= require "../ui/resizer.js"
-//= require "../lib/jquery-ui-1.8.4.highlight-effect.min.js"
 //= require "../lib/plupload.min.js"
 //= require "../lib/plupload.html5.min.js"
 //= require "../lib/plupload.flash.min.js"

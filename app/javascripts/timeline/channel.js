@@ -23,8 +23,8 @@ protonet.timeline.Channel = function(data, link) {
   this.data         = data;
   this.$window      = $(window);
   
-  this.unreadReplies = 0;
-  this.unreadMeeps   = 0;
+  this.unreadReplies = window.localStorage[this.data.id + ":unread_replies"]  || 0;
+  this.unreadMeeps   = window.localStorage[this.data.id + ":unread_meeps"]    || 0;
   
   this._observe();
 };
@@ -146,6 +146,14 @@ protonet.timeline.Channel.prototype = {
       this._initEndlessScroller();
       this._initNoMeepsHint();
     }.bind(this));
+    
+    /**
+     * Store number of unread meeps/replies in local storage
+     */
+    this.$window.bind("beforeunload", function() {
+      window.localStorage[this.data.id + ":unread_meeps"]   = this.unreadMeeps;
+      window.localStorage[this.data.id + ":unread_replies"] = this.unreadReplies;
+    }.bind(this));
   },
   
   /**
@@ -153,7 +161,7 @@ protonet.timeline.Channel.prototype = {
    * should be displayed, based on the number
    * of unread meeps
    */
-  _toggleBadge: function() {
+  _toggleBadge: function(preventEffect) {
     if (!this.badge) {
       this.badge = $("<span />", {
         className: "badge",
@@ -163,6 +171,9 @@ protonet.timeline.Channel.prototype = {
     
     if (this.unreadMeeps > 0) {
       this.badge.text(this.unreadMeeps).show();
+      if (!this.badge.is(":animated") && !preventEffect) {
+        this.badge.effect("bounce", { times: 3, distance: 12 }, 125);
+      }
     } else {
       this.badge.hide();
     }
@@ -202,7 +213,7 @@ protonet.timeline.Channel.prototype = {
     }
     
     this._toggleReplyBadge();
-    this._toggleBadge();
+    this._toggleBadge(true);
   },
   
   /**
