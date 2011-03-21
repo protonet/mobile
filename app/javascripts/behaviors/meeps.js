@@ -6,7 +6,7 @@ protonet.utils.Behaviors.add({
     clearTimeout(element.data("blur_timeout"));
     
     var target = $(event.target);
-    if (!target.is("li.meep")) {
+    if (!target.is("li.meep") && !target.is(".detail-link")) {
       element.trigger("blur");
       return;
     }

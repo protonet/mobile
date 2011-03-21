@@ -128,6 +128,12 @@ protonet.ui.ModalWindow = (function($) {
     position(true);
     resize(true);
     
+    // Make sure that focused element is within modal window
+    var focusedElement = $(":focus");
+    if (focusedElement.length && !$.contains(elements.shadow[0], focusedElement[0])) {
+      focusedElement.blur();
+    }
+    
     return this;
   }
   
