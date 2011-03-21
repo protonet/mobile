@@ -42,15 +42,15 @@ protonet.ui.ModalWindow = (function($) {
   }
   
   function _observe() {
-    /**
-     * Close when user hits esc key
-     */
     $document
       .bind("keydown.modal_window", function(event) {
         switch (event.keyCode) {
           case 38: // arrow down
           case 40: // arrow up
             event.preventDefault();
+            break;
+          case 27: // esc
+            hide();
         }
       });
     
@@ -66,9 +66,6 @@ protonet.ui.ModalWindow = (function($) {
     
     elements.closeLink.bind("click.modal_window", hide);
     elements.dialog.bind("mousedown.modal_window mousewheel.modal_window", function(event) { event.stopPropagation(); });
-    $document.bind("keydown.modal_window", function(event) {
-      if (event.keyCode == 27) { hide(); }
-    });
   }
   
   function _unobserve() {

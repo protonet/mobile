@@ -47,9 +47,9 @@ if (protonet.user.Browser.IS_TOUCH_DEVICE()) {
         return;
       }
       
-      element.addClass("focus").trigger("focus");
+      element.trigger("focus");
       $(document).one("touchstart", function() {
-        element.removeClass("focus").trigger("blur");
+        element.trigger("blur");
       });
     }
   });

@@ -181,6 +181,9 @@ protonet.dispatcher = {
   },
   
   sendData: function(data) {
+    if (!this.socket) {
+      return;
+    }
     this.socket.sendData(JSON.stringify(data));
   }
 };

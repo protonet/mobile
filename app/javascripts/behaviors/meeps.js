@@ -3,9 +3,27 @@
 
 protonet.utils.Behaviors.add({
   "li.meep:focus": function(element, event) {
-    if (protonet.globals.preventFocus) {
+    clearTimeout(element.data("blur_timeout"));
+    
+    var target = $(event.target);
+    if (!target.is("li.meep")) {
+      element.trigger("blur");
       return;
     }
+    
+    if (element.is(".focus")) {
+      return;
+    }
+    
+    // Needed for webkit
+    element.unbind("mouseup.meep_focus").bind("mouseup.meep_focus", function() {
+      setTimeout(function() {
+        if (element.is(":hidden")) {
+          element.trigger("blur");
+        }
+      }, 0);
+    });
+    
     // One .meep can consistent out of multiple meeps
     var subMeepParagaphs = element.find("article");
     subMeepParagaphs.each(function(i, subMeepParagaph) {
@@ -14,19 +32,33 @@ protonet.utils.Behaviors.add({
           detailViewLink = new protonet.utils.Template("meep-detail-view-link-template", { id: meepId }).toElement();
       detailViewLink.appendTo(subMeepParagaph);
     });
-  },
-  
-  "li.meep a:mousedown": function(element) {
-    protonet.globals.preventFocus = true;
-    setTimeout(function() { protonet.globals.preventFocus = false; }, 0);
     
-    // if (!element.is(".detail-link")) {
-    //       element.parents("article").find(".detail-link").remove();
-    //     }
+    element.addClass("focus");
   },
   
-  "li.meep:blur": function(element) {
-    element.find(".detail-link").remove();
+  "li.meep:blur": function(element, event) {
+    element.data("blur_timeout", setTimeout(function() {
+      element.removeClass("focus").find(".detail-link").remove();
+    }, 0));
+  },
+  
+  "li.meep:keydown": function(element, event) {
+    var nextElement;
+    if (event.keyCode === 38) {
+      nextElement = element.prev();
+    } else if (event.keyCode === 40 || event.keyCode === 9) {
+      nextElement = element.next();
+    } else if (event.keyCode === 13) {
+      element.find(".detail-link").trigger("click").end().trigger("blur");
+    } else {
+      return;
+    }
+    
+    if (nextElement.length) {
+      element.trigger("blur");
+      nextElement.trigger("focus");
+    }
+    event.preventDefault();
   },
   
   /**
@@ -50,7 +82,7 @@ protonet.utils.Behaviors.add({
     }
     
     link = link[0];
-    if (link.host != location.host) {
+    if (link.host !== location.host) {
       return;
     }
     

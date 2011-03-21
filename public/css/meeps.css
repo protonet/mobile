@@ -20,13 +20,13 @@
   box-shadow: 0 0 2px #999;
 }
 
-.meep:focus {
+.meep.focus {
   -webkit-box-shadow: 0 0 4px #666;
   -moz-box-shadow: 0 0 4px #666;
   box-shadow: 0 0 4px #666;
 }
 
-.meep:focus:before {
+.meep.focus:before {
   content: " ";
   background: rgba(72, 123, 255, 0.5);
   background: -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 0.7), rgba(72, 123, 255, 0.3));
