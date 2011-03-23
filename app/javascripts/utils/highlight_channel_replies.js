@@ -11,6 +11,7 @@
  */
 protonet.utils.highlightChannelReplies = (function() {
   var REG_EXP         = /(\s|^|\()@([\w\.\-_@]+)/g,
+      TRAILING_CHARS  = /[\.\-_]+$/,
       channelMapping  = {};
   
   protonet.Notifications.bind("channels.data_available", function(e, channelData, availableChannels) {
@@ -22,7 +23,10 @@ protonet.utils.highlightChannelReplies = (function() {
   return function(str) {
     var result = arguments.callee.result = [];
     return str.replace(REG_EXP, function(original, $1, $2) {
-      var channelId = channelMapping[$2.toLowerCase()];
+      var trailingChars = ($2.match(TRAILING_CHARS) || [""])[0],
+          channelName   = trailingChars ? $2.replace(TRAILING_CHARS, "") : $2,
+          channelId     = channelMapping[channelName.toLowerCase()];
+      
       if (!channelId) {
         return original;
       }
@@ -30,8 +34,8 @@ protonet.utils.highlightChannelReplies = (function() {
       result.push(channelId);
       return $1 + new protonet.utils.Template("channel-reply-template", {
         channel_id:   channelId,
-        channel_name: $2
-      });
+        channel_name: channelName
+      }) + trailingChars;
     });
   };
 })();

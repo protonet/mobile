@@ -111,7 +111,7 @@
 --------------------------------------------------------------------------- */
 .text-extension-results .media iframe {
   border: 1px solid #999;
-  width: 561px;
+  width: 549px;
   height: 200px;
 }
 
@@ -123,7 +123,7 @@
 --------------------------------------------------------------------------- */
 .text-extension-results.flash object {
   height: 280px;
-  width: 563px;
+  width: 551px;
   margin-bottom: 5px;
 }
 
@@ -172,6 +172,7 @@
   top: -16px;
   right: -16px;
   line-height: 19px;
+  z-index: 5;
   -webkit-transform: scale(0.75);
   -moz-transform: scale(0.75);
 }
@@ -286,4 +287,41 @@ pre .dec { color: #606; }
 
 .text-extension-results.GithubCommit .media div.removed strong {
   background-position: 0 -80px;
+}
+
+/* =MEEP TEXT EXTENSION
+--------------------------------------------------------------------------- */
+.text-extension-results.Meep {
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+  background-color: #fff;
+  background-image: -moz-linear-gradient(100% 100% 90deg, rgba(0, 0, 0, 0.1), transparent);
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.1)));
+  border: 1px solid rgb(180, 180, 180);
+  border-radius: 1em;
+  padding: 6px 8px;
+}
+
+.text-extension-results.Meep .domain {
+  display: none;
+}
+
+.text-extension-results.Meep .description {
+  color: #000;
+}
+
+.text-extension-results.Meep img {
+  outline: 2px solid #fff;
+  border: 1px solid #666;
+  width: 24px !important;
+  height: 24px !important;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+.text-extension-results.Meep .media,
+.text-extension-results.Meep .media a {
+  width: 26px !important;
+  height: 26px !important;
 }

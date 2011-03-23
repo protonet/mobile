@@ -7,7 +7,10 @@ protonet.text_extensions.render.image = function(data, preventResizing) {
     target: "_blank"
   });
   
-  var imageSize = protonet.text_extensions.config.IMAGE_SIZE;
+  var imageSize = {
+    width:  Math.min(protonet.text_extensions.config.IMAGE_SIZE.width, data.imageWidth  || Infinity),
+    height: Math.min(protonet.text_extensions.config.IMAGE_SIZE.height, data.imageHeight || Infinity)
+  };
   
   var image = $("<img />", $.extend({
     src:    protonet.media.Proxy.getImageUrl(data.image, imageSize),
@@ -15,7 +18,7 @@ protonet.text_extensions.render.image = function(data, preventResizing) {
     title:  data.imageTitle
   }, imageSize));
   
-  if (!preventResizing) {
+  if (!preventResizing && !data.preventHoverEffect) {
     var hoverImageSize = protonet.text_extensions.config.HOVER_IMAGE_SIZE;
     new protonet.effects.HoverResize(image, {
       newSize:    hoverImageSize,

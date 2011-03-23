@@ -1,6 +1,5 @@
 //= require "../ui/resizer.js"
 //= require "../ui/notification.js"
-//= require "../lib/jquery-ui-1.8.4.highlight-effect.min.js"
 
 protonet.controls.UserWidget = function() {
   this.container = $("#user-widget");

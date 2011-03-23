@@ -1,6 +1,6 @@
 <li class="meep" tabindex="0">
   <article>
-    <p>#{converted_message} <a href="?meep_id=#{id}" data-meep-id="#{id}" class="detail-link" title="Show detail view" tabindex="-1">&#x25CF;</a></p>
+    <div class="text">#{converted_message}</div>
     <output class="text-extension-container"></output>
     <div class="author">
       #{author}
@@ -10,6 +10,6 @@
     </div>
   </article>
   <div class="avatar">
-    <img src="#{avatar}" width="36" height="36" data-user-name="#{author}">
+    <img src="<%= image_proxy("#\{avatar\}", {:width => 36, :height => 36, :local => true, :escape => false}) %>" width="36" height="36" data-user-name="#{author}">
   </div>
 </li>

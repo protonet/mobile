@@ -1,0 +1,25 @@
+#!/usr/bin/expect
+
+log_file -noappend /tmp/ptn_update_deployer.log
+
+# never time out
+set timeout -1
+
+# This spawns the babushka protonet migration
+spawn babushka "protonet:app deployer update"
+set license [lindex $argv 0]
+# The script expects Password any number of times and answers with the correct password
+expect {
+  -re ".*Please enter your protonet license key.*\?"  {
+    send "$license\r"
+    exp_continue
+  }
+  -re ".*file a bug report for that now*\? " {
+    send "n\r"
+    exp_continue
+  }
+}
+# puts $expect_out(buffer)
+log_file
+
+# call like script/ptn_deployer_update LICENSEKEY make sure to do a export HISTIGNORE="*ptn_babushka_update*" to make sure the command is not stored in the shell history

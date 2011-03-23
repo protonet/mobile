@@ -3,6 +3,7 @@ Feature: Invitations
     Given strangers are not allowed to register
     And a role exists with title: "user"
     And a role exists with title: "invitee"
+    And a channel exists with name: "notpublic"
     And a user "dudemeister" exists with login: "dudemeister"
     And "dudemeister" is an admin
 
@@ -37,6 +38,7 @@ Feature: Invitations
     Then I should see "friend" within ".welcome"
     And I should see "You have signed up successfull"
     And I should see "Home" within "#channels"
+    And I should not see "Notpublic" within "#channels"
     
   @javascript
   Scenario: Invitee tries to accept an invitation that has already been accepted 

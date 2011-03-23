@@ -2,7 +2,6 @@
 //= require "../utils/parse_url.js"
 //= require "../utils/escape_for_css_query.js"
 //= require "../ui/resizer.js"
-//= require "../lib/jquery-ui-1.8.4.highlight-effect.min.js"
 //= require "../lib/plupload.min.js"
 //= require "../lib/plupload.html5.min.js"
 //= require "../lib/plupload.flash.min.js"
@@ -102,6 +101,7 @@ protonet.controls.FileWidget.prototype = {
           var anchor    = $(this),
               fileName  = anchor.text(),
               fileUrl   = this.href;
+          // Enable dragging of files to desktop
           dataTransfer.setData("DownloadURL", "application/octet-stream:" + fileName + ":" + fileUrl);
           dataTransfer.setData("text/plain", fileUrl + " ");
         }

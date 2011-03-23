@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   has_many  :owned_channels,    :class_name => 'Channel', :foreign_key => :owner_id
   has_many  :invitations
   has_and_belongs_to_many  :roles
-  has_attached_file :avatar
+  has_attached_file :avatar, :default_url => '/img/user_picture.png'
   
   scope :registered, :conditions => {:temporary_identifier => nil}
   scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"
@@ -190,14 +190,6 @@ class User < ActiveRecord::Base
   def password_required_with_logged_out_user?
     skip_validation ? false : password_required_without_logged_out_user?
   end
-  #alias_method_chain :password_required?, :logged_out_user
-
-  def active_avatar_url(opts = {})
-    opts[:width]  ||= 36
-    opts[:height] ||= opts[:width]
-    url = "http://localhost:3000#{avatar.file? ? avatar.url : '/img/user_picture.png'}"
-    "http://localhost:8124/image_proxy?url=#{url}&width=#{opts[:width]}&height=#{opts[:height]}"
-  end
   
   def add_to_role(role_name)
     role = Role.find_by_title!(role_name.to_s)
@@ -233,7 +225,7 @@ class User < ActiveRecord::Base
   def assign_roles_and_channels
     if invitation_token
       if invitation = Invitation.unaccepted.find_by_token(invitation_token)
-        self.channels_to_subscribe = Channel.all(invitation.channel_ids)
+        self.channels_to_subscribe = Channel.find(invitation.channel_ids).to_a
         self.roles = [Role.find_by_title('invitee')]
       else
         errors.add_to_base("The invitation token is invalid.")

@@ -12,7 +12,7 @@ class SystemCaptiveController < ApplicationController
     local_filename = 'tmp/captive_users'
     doc = request.remote_ip + "\t" + SystemBackend.get_mac_for_ip(request.remote_ip) + "\t"  + Time.now().strftime("%d.%m.%y") + "\n"
     
-    File.open(local_filename, 'w') {|f| f.write(doc) }
+    File.open(local_filename, 'a') {|f| f.write(doc) }
     
     SystemBackend.grant_internet_access(request.remote_ip)
     sleep 3

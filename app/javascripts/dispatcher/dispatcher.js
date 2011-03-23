@@ -65,7 +65,10 @@ protonet.dispatcher = {
     }
     
     this.socket = this.socket || swfobject.getObjectById(this.SOCKET_ID);
-    this.socket.connectSocket(this.server, this.serverPort);
+    
+    if (this.socket) {
+      this.socket.connectSocket(this.server, this.serverPort);
+    }
   },
   
   connectSocketCallback: function(status) {
@@ -86,6 +89,10 @@ protonet.dispatcher = {
   },
   
   disconnectSocket: function(event) {
+    if (!this.socket) {
+      return;
+    }
+    
     this.socket.closeSocket();
     this.stopSocketCheck();
     
@@ -174,6 +181,9 @@ protonet.dispatcher = {
   },
   
   sendData: function(data) {
+    if (!this.socket) {
+      return;
+    }
     this.socket.sendData(JSON.stringify(data));
   }
 };

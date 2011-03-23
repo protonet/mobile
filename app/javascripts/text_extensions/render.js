@@ -18,6 +18,9 @@
  *   imageHref:              ["http://foo.de/bar.html"]  // array of link urls (pls provide same order as image array)
  *   imageTitle:             "nice pic"                  // title (hover text) of the image
  *   imageTitle:             ["nice pic"]                // array of titles (pls provide same order as image array)
+ *   imageWidth:             100,                        // width of image(s)
+ *   imageHeight:            75,                         // height of image(s)
+ *   preventHoverEffect:     true,                       // whether the image should be resized on hover
  *   flash:                  "http://foo.de/bar.swf",    // url to the flash movie that should be rendered
  *   iframe:                 "http://foo.de/bar.html",   // url that should be rendered in an iframe
  *   iframeRefreshInterval:  60,                         // interval (seconds) how often iframe should be refreshed

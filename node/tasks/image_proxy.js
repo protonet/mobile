@@ -55,6 +55,11 @@ exports.proxy = function(params, headers, response) {
       r.writeHead(404);
       r.end("NOT FOUND!");
     };
+    // and cleanup
+    try {
+      console.log('unlink');
+      fs.unlinkSync(baseFileName);
+    } catch(err) { console.log('unlink fail', err) };
   };
   
   function resizeImage(from, to, size, successCallback, failureCallback) {
@@ -98,7 +103,7 @@ exports.proxy = function(params, headers, response) {
   }
   
   // handle local requests
-  if(parsedUrl.host.replace(/:.*/, '') == headers.host.replace(/:.*/, '')) {
+  if(parsedUrl.host.replace(/:.*/, '') == headers.host.replace(/:.*/, '') || headers.host.replace(/:.*/, '') == "127.0.0.1") {
     cookie             = headers.cookie; // only send cookie if its a local request
   }
 
@@ -113,7 +118,7 @@ exports.proxy = function(params, headers, response) {
       path.exists(baseFileName, function(exists) {
         // if the base file exists
         if(exists) {
-          sys.puts("base file exists :)");
+          sys.puts("base file exists :) " + baseFileName);
           //only apply size manipulation and then send
           resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
         }
@@ -139,7 +144,6 @@ exports.proxy = function(params, headers, response) {
               resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
             } else {
               console.log(url + ' returned a ', response);
-              fs.unlinkSync(baseFileName);
               send404(fileName);
             }
           });

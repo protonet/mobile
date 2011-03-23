@@ -28,7 +28,15 @@ module ApplicationHelper
     opts[:alt]    ||= ""
     opts[:width]  ||= 36
     opts[:height] ||= opts[:width]
-    image_tag(user.active_avatar_url(opts).html_safe, opts)
+    opts[:local]    = true
+    opts[:escape] ||= true
+    image_tag(image_proxy(user.avatar.url, opts).html_safe, opts)
+  end
+  
+  def image_proxy(url, opts)
+    url = "#{(request.protocol + request.host_with_port) if opts[:local]}#{url}"
+    url = CGI::escape(url) if opts[:escape]
+    "#{node_base_url}/image_proxy?url=#{url}&width=#{opts[:width]}&height=#{opts[:height]}"
   end
   
   def server_name
@@ -39,10 +47,10 @@ module ApplicationHelper
     end
   end
   
-  def server_software
-    request.env['SERVER_SOFTWARE'] && request.env['SERVER_SOFTWARE'].match(/^\w*/)[0]
+  def node_base_url
+    request.server_software != 'apache' ? "#{request.protocol}#{server_name}:8124" : "#{request.protocol}#{server_name}/node"
   end
-
+  
   private
   
     def extract_file_name(path)

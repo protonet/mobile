@@ -43,7 +43,7 @@ class Tweet < ActiveRecord::Base
         :socket_id    => socket_id,
         :channel_id   => channel.id,
         :channel_uuid => channel.uuid,
-        :avatar       => user.active_avatar_url,
+        :avatar       => user.avatar.url,
         :network_uuid => network.uuid,
         :trigger      => 'meep.receive'
       })
@@ -53,7 +53,7 @@ class Tweet < ActiveRecord::Base
   def self.prepare_for_frontend(meeps, additional_attributes)
     meeps.map do |m|
       m.text_extension = JSON.parse(m.text_extension) rescue nil
-      m.attributes.merge({ :avatar => m.user.active_avatar_url }).merge(additional_attributes || {})
+      m.attributes.merge({ :avatar => m.user.avatar.url }).merge(additional_attributes || {})
     end
   end
   
@@ -84,13 +84,13 @@ class Tweet < ActiveRecord::Base
       :conditions => ["tweets.id < ? AND says.channel_id = ?", id, channels.first.id],
       :order => "tweets.created_at DESC",
       :limit => count
-    )
+    ).reverse
   end
+  
   
   def after(count)
     Tweet.all(:include => [:says],
       :conditions => ["tweets.id > ? AND says.channel_id = ?", id, channels.first.id],
-      :order => "tweets.created_at DESC",
       :limit => count
     )
   end

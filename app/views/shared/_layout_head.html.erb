@@ -10,19 +10,20 @@
     var protonet = protonet || {};
     protonet.config = {
       base_url:                 location.protocol + "//" + location.host,
-      node_base_url:            <%= server_software != 'nginx' ? "'http://#{server_name}:8124'" : 'location.protocol + "//" + location.host' %>,
+      node_base_url:            "<%= node_base_url %>",
       dispatching_server:       "<%= server_name %>",
       dispatching_server_port:  "<%= configatron.socket.port %>",
       token:                    "<%= current_user.communication_token %>",
       user_name:                "<%= current_user.display_name %>",
       user_id:                  "<%= current_user.id %>",
       user_channel_ids:         "<%= current_user.channels && current_user.channels.map {|c| c.id}.to_json %>",
-      user_icon_url:            "<%= current_user.active_avatar_url %>",
+      user_icon_url:            "<%= current_user.avatar.url %>",
       user_is_admin:            <%= current_user.admin?.to_json %>, 
+      user_is_stranger:         <%= current_user.stranger?.to_json %>,
       session_id:               "<%= cookies['_rails_dashboard_session'] %>",
       authenticity_token:       "<%= form_authenticity_token %>",
-      server:                   "<%= server_software %>",
       availableChannels:        <%= raw(get_channel_mapping_as_json) %>,
+      server:                   "<%= request.server_software %>",
       debugMode:                <%= configatron.log_event_notifications.to_json %>
     };
   </script>

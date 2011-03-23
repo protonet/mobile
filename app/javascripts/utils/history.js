@@ -1,6 +1,8 @@
 protonet.utils.History = (function() {
-  var HASH_PREFIX = "#history:",
+  var HASH_PREFIX = "#!", // HASHBANG-IN-YO-FACE!
       $window     = $(window),
+      observers   = [],
+      current     = null,
       history     = window.history,
       location    = window.location;
   
@@ -9,11 +11,19 @@ protonet.utils.History = (function() {
       path = location.pathname + path;
     }
     
+    if (path == current) {
+      return;
+    }
+    
     if (history.pushState) {
       history.pushState({ path: path }, "", path);
     } else {
+      // Following line is needed for Firefox to avoid onhashchange fuckup
+      current = path;
       location.hash = HASH_PREFIX + path;
     }
+    current = getCurrentPath();
+    return this;
   }
   
   function getHash() {
@@ -37,12 +47,33 @@ protonet.utils.History = (function() {
     protonet.Notifications.bind("history.change", function(e, path) {
       callback(path);
     });
+    return this;
+  }
+  
+  function observe(regExp, method) {
+    observers.push([regExp, method]);
+    return this;
+  }
+  
+  function _triggerObservers(path) {
+    path = path || getCurrentPath();
+    $.each(observers, function(i, value) {
+      var match = path.match(value[0]);
+      if (match) {
+        match.shift();
+        value[1].apply(window, match);
+      }
+    });
   }
   
   function _triggerChange(path) {
+    if (path == current) {
+      return;
+    }
+    current = path;
     protonet.Notifications.trigger("history.change", path);
+    _triggerObservers(path);
   }
-  
   
   // Observe
   $window
@@ -59,10 +90,19 @@ protonet.utils.History = (function() {
       }
     });
   
+  // Check for history entries initially
+  $(function() {
+    var historyEntry = getCurrentPath();
+    if (historyEntry) {
+      _triggerChange(historyEntry);
+    }
+  });
+  
   return {
     register:       register,
     onChange:       onChange,
     getHash:        getHash,
-    getCurrentPath: getCurrentPath
+    getCurrentPath: getCurrentPath,
+    observe:        observe
   };
 })();

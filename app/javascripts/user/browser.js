@@ -67,11 +67,39 @@ protonet.user.Browser = {
     return navigator.userAgent.indexOf("Safari") != -1 && navigator.userAgent.indexOf("Chrome") == -1;
   },
   
-  SUPPORTS_FLUID: function() {
-    return !!window.fluid;
-  },
-  
   SUPPORTS_NOTIFICATIONS: function() {
     return "webkitNotifications" in window;
+  },
+  
+  SUPPORTS_EVENT: (function() {
+    // Some events are hard/impossible to feature-detect
+    var browserSniffing = {
+      "DOMMouseScroll": $.browser.mozilla
+    };
+    
+    return function(eventName) {
+      if (browserSniffing[eventName]) {
+        return true;
+      }
+      
+      testElement = document.createElement("div");
+      eventName = "on" + eventName;
+      var isSupported = (eventName in testElement);
+      if (!isSupported) {
+        testElement.setAttribute(eventName, "return;");
+        isSupported = typeof(testElement[eventName]) == "function";
+      }
+      testElement = null;
+      return isSupported;
+    };
+  })(),
+  
+  IS_TOUCH_DEVICE: function() {
+    try {
+      document.createEvent("TouchEvent");
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 };

@@ -7,5 +7,6 @@
   SystemPreferences.defaults[:allow_dashboard_for_strangers] = true
   SystemPreferences.defaults[:allow_registrations_for_strangers] = true
   SystemPreferences.defaults[:public_host] = "localhost:3000"
+  SystemPreferences.defaults[:public_host_https]  = false
   
 # end

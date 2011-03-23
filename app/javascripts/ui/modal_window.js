@@ -4,27 +4,35 @@
  * Modal Window
  * 
  * @example
- *    protonet.ui.ModalWindow.update({ content: "foobar", headline: "Listen up!" }).show("my-modal-window"); 
- *    // "my-modal-window" is a css class name which should be set on the dialog element
- *    // in order to make it targetable via css selectors
+ *    protonet.ui.ModalWindow.update({
+ *      content: "foobar",
+ *      headline: "Listen up!"
+ *    }).show({
+ *      // "my-modal-window" is a css class name which should be set on the dialog element
+ *      // in order to make it targetable via css selectors
+ *      className:    "my-modal-window"
+ *    });
  */
 protonet.ui.ModalWindow = (function($) {
-  var elements          = {},
-      scrollbarWidth    = 0,
-      offset            = 50,
-      currentClassName  = null,
-      originalClassName = null,
-      $document         = $(document),
-      $window           = $(window),
-      $body             = $(document.body);
+  var elements              = {},
+      initialPath           = protonet.utils.History.getCurrentPath(),
+      isTouchDevice         = protonet.user.Browser.IS_TOUCH_DEVICE(),
+      scrollbarWidth        = 0,
+      offset                = 50,
+      currentClassName      = null,
+      originalClassName     = null,
+      historyBeforeOpening  = null,
+      $document             = $(document),
+      $window               = $(window),
+      $body                 = $(document.body);
   
   function _create() {
     $.extend(elements, {
-      shadow:     $("<div />", { className: "modal-window-shadow" }),
-      dialog:     $("<div />", { className: originalClassName = "modal-window-dialog" }),
+      shadow:     $("<div />",    { className: "modal-window-shadow" }),
+      dialog:     $("<div />",    { className: originalClassName = "modal-window-dialog" }),
       content:    $("<output />", { className: "modal-window-content" }),
-      closeLink:  $("<a />", { className: "modal-window-close-link close-link", html: "X" }),
-      headline:   $("<h2 />")
+      closeLink:  $("<a />",      { className: "modal-window-close-link close-link", html: "X" }),
+      headline:   $("<h2 />",     { html: "&nbsp;" })
     });
     
     elements.shadow.append(elements.dialog).appendTo($body);
@@ -34,12 +42,17 @@ protonet.ui.ModalWindow = (function($) {
   }
   
   function _observe() {
-    /**
-     * Close when user hits esc key
-     */
-    $document.bind("keydown.modal_window", function(event) {
-      if (event.keyCode == 27) { hide(); }
-    });
+    $document
+      .bind("keydown.modal_window", function(event) {
+        switch (event.keyCode) {
+          case 38: // arrow down
+          case 40: // arrow up
+            event.preventDefault();
+            break;
+          case 27: // esc
+            hide();
+        }
+      });
     
     $window
       .bind("mousewheel.modal_window", false)
@@ -73,40 +86,53 @@ protonet.ui.ModalWindow = (function($) {
     }
     
     $.each(components, function(key, value) { elements[key].html(value); });
-    
+    resize(true);
     return this;
   }
   
-  function show(className, historyEntry) {
-    var isAlreadyVisible = elements.shadow.is(":visible");
-    currentClassName = className;
+  function show(options) {
+    var isAlreadyVisible = elements.shadow.is(":visible"),
+        currentPath      = protonet.utils.History.getCurrentPath();
+    currentClassName = options.className;
     
     if (!elements.shadow) {
       _create();
     }
     
-    if (!isAlreadyVisible) {
-      elements.shadow.fadeIn("fast");
-    }
-    
     elements.dialog.attr({ "class": originalClassName }).addClass(currentClassName);
     
     _observe();
+    
+    if (!isAlreadyVisible) {
+      // Needed to restore url when modal window gets closed
+      historyBeforeOpening = initialPath == currentPath ? "/" : currentPath;
+      
+      if (isTouchDevice) {
+        elements.shadow.show();
+      } else {
+        elements.shadow.fadeIn("fast");
+      }
+      
+      var originalPaddingRight = $body.css("padding-right");
+      scrollbarWidth = scrollbarWidth || protonet.utils.getScrollbarWidth();
+      
+      $body
+        .css({
+          "overflow-y": "hidden",
+          "padding-right": (parseInt(originalPaddingRight, 10) + scrollbarWidth).px()
+        });
+      
+      protonet.Notifications.trigger("modal_window.shown");
+    }
+    
     position(true);
     resize(true);
     
-    var originalPaddingRight = $body.css("padding-right");
-    scrollbarWidth = scrollbarWidth || protonet.utils.getScrollbarWidth();
-    
-    $body
-      .css({
-        "overflow-y": "hidden",
-        "padding-right": (parseInt(originalPaddingRight, 10) + scrollbarWidth).px()
-      });
-    
-    elements.content.css("margin-right", (-scrollbarWidth).px());
-    
-    protonet.Notifications.trigger("modal_window.shown");
+    // Make sure that focused element is within modal window
+    var focusedElement = $(":focus");
+    if (focusedElement.length && !$.contains(elements.shadow[0], focusedElement[0])) {
+      focusedElement.blur();
+    }
     
     return this;
   }
@@ -122,8 +148,7 @@ protonet.ui.ModalWindow = (function($) {
         "padding-right": ""
       });
     
-    // TODO: This doesn't work for all cases!
-    protonet.utils.History.register("/");
+    protonet.utils.History.register(historyBeforeOpening);
     
     _unobserve();
     protonet.Notifications.trigger("modal_window.hidden");
@@ -132,6 +157,7 @@ protonet.ui.ModalWindow = (function($) {
   }
   
   function position(immediately) {
+    immediately = immediately || isTouchDevice; // iPad is very slow... let's skip the effect
     var top = ($window.scrollTop() + offset).px();
     if (immediately === true) {
       elements.dialog.css("top", top);
@@ -143,13 +169,14 @@ protonet.ui.ModalWindow = (function($) {
   }
   
   function resize(immediately) {
+    immediately = immediately || isTouchDevice; // iPad is very slow... let's skip the effect
     var height = ($window.height() - 2 * offset - elements.headline.outerHeight());
-    height = Math.max(175, height).px();
+    height = Math.max(180, height).px();
     if (immediately === true) {
       elements.content.css("height", height);
     } else {
       elements.content.stop(true).delay(500).animate({ height: height }, 500, function() {
-        elements.content.css({ overflowX: "", overflowY: "" });
+        elements.content.css({ overflow: "" });
       });
     }
     return this;

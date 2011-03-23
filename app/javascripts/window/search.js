@@ -21,16 +21,23 @@ protonet.window.Search = {
     this.modalWindow = protonet.ui.ModalWindow;
     
     this._observe();
-    this._initHistory();
   },
   
   _observe: function() {
+    var isTouchDevice = protonet.user.Browser.IS_TOUCH_DEVICE();
+    
+    protonet.utils.History.observe(/(?:\?|&)search=(.*?)(?:&|#|$)/, this.show.bind(this));
+    
     protonet.Notifications.bind("modal_window.hidden", function() {
       this.keyword = null;
     }.bind(this));
     
     this.form.bind({
-     keydown: function() {
+      keydown: function() {
+        if (isTouchDevice) {
+          return;
+        }
+        
         var value = this.input.val();
         if (value.length < 1) {
           return;
@@ -58,14 +65,14 @@ protonet.window.Search = {
   },
   
   show: function(keyword) {
+    this.keyword = null;
     this.bigInput = this.bigInput || $("<input />", { className: "search" });
     
     this.modalWindow.update({
       headline: this.bigInput,
       content:  ""
-    }).show("search-window");
+    }).show({ className: "search-window" });
     
-    this.input.val("");
     this.bigInput
       .bind({
         keydown:   function() {
@@ -180,13 +187,5 @@ protonet.window.Search = {
         }.bind(this));
       }.bind(this));
     }.bind(this));
-  },
-  
-  _initHistory: function() {
-    var queryParams = protonet.utils.parseQueryString(protonet.utils.History.getCurrentPath()),
-        search      = queryParams.search;
-    if (search) {
-      this.show(search);
-    }
   }
 };

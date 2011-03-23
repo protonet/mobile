@@ -10,6 +10,13 @@ process.argv.forEach(function(val){
   }
 });
 
+var Hoptoad = require('./modules/node-hoptoad/hoptoad-notifier').Hoptoad;
+Hoptoad.key = 'e0e395c06aa4a6756b5d585fee266999';
+
+// process.addListener('uncaughtException', function(error) {
+//   Hoptoad.notify(error);
+// });
+
 /*----------------------------------- SOCKET TASKS -----------------------------------*/
 var amqp = require('./modules/node-amqp/amqp');
 connection = amqp.createConnection({ host: "localhost", vhost: "/" });
@@ -42,6 +49,7 @@ connection.addListener("ready", function() {
         // require("./tasks/screenshot").make_and_publish(message.url, publish);
         break;
       case "http_proxy":
+        console.log(message);
         require("./tasks/http_proxy").get(message.url, publish);
         break;
     }

@@ -65,8 +65,16 @@ protonet.timeline.Form = {
      * Focus input after channel switch
      * and update hidden channel id
      */
+    var preventFocus = protonet.user.data.is_stranger;
     protonet.Notifications.bind("channel.change", function(e, channelId) {
-      this.input.focus();
+      // When loading the page a "channel.change" event is initially fired
+      // This causes problems when the user already focused the login form and started to type
+      // in his password. Uygar from XING even almost accidentally submitted her password
+      if (!preventFocus) {
+        this.input.focus();
+      }
+      
+      preventFocus = false;
       this.channelIdInput.val(channelId);
     }.bind(this));
     
@@ -97,6 +105,14 @@ protonet.timeline.Form = {
         this.textExtensionInput.val(JSON.stringify(textExtension));
       }
       this.form.submit();
+    }.bind(this));
+    
+    protonet.Notifications.bind("form.fill", function(e, message) {
+      var value = this.input.focus().val();
+      this.input.val(value + ((value.slice(-1) == " " || !value.length) ? "" : " ") + message);
+      
+      // Invoke text extension checker
+      this.input.trigger("paste");
     }.bind(this));
     
     /**

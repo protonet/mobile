@@ -12,10 +12,12 @@ protonet.text_extensions.provider = {};
 //= require "provider/flickr_photo_set.js"
 //= require "provider/flickr_search.js"
 //= require "provider/twitpic.js"
-//= require "provider/code_snippet.js"
+//= require "provider/pastie.js"
+//= require "provider/gist.js"
 //= require "provider/github_issue.js"
 //= require "provider/github_commit.js"
 //= require "provider/github_repository.js"
 //= require "provider/image.js"
+//= require "provider/meep.js"
 //= require "provider/link.js"
 

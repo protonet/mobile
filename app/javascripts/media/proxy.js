@@ -12,9 +12,8 @@ protonet.media.Proxy = (function() {
       onFailure();
     }, HTTP_TIMEOUT);
     
-    protonet.Notifications.bind("http_proxy.workdone", function(event, response) {
+    protonet.Notifications.one("http_proxy.workdone", function(event, response) {
       clearTimeout(timeout);
-      protonet.Notifications.unbind("http_proxy.workdone");
       if (response.result && response.result.statusCode == 200) {
         onSuccess(response.result.body);
       } else {
