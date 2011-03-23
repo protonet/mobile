@@ -55,13 +55,14 @@ module BackendAdapters
     def local_hosts
       @local_hosts ||= ([
         System::Preferences.public_host.gsub(/\:[0-9]*/, ''),
-        hostname, 
+        hostname,
+        "local.protonet.info",
         "#{hostname}.local",
-        'localhost',
-        '127.0.0.1',
-        '10.42.0.1',
-        '10.43.0.1',
-        'protonet'
+        "localhost",
+        "127.0.0.1",
+        "10.42.0.1",
+        "10.43.0.1",
+        "protonet"
       ] | LinuxCommands.ifconfig.map { |i, data| data['inet addr'] }).compact
     end
     
