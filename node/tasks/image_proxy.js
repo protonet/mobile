@@ -138,7 +138,7 @@ exports.proxy = function(params, headers, response) {
           // request the image
           var fileStream = fs.createWriteStream(baseFileName);
 
-          request({"uri": url, "headers": {"Cookie": cookie}, "responseBodyStream": fileStream}, function (error, response, body) {
+          request({"uri": encodeURI(url), "headers": {"Cookie": cookie}, "responseBodyStream": fileStream}, function (error, response, body) {
             if (!error && response.statusCode == 200) {
               fileStream.end();
               resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
