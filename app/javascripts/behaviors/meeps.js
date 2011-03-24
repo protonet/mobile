@@ -40,9 +40,9 @@ protonet.utils.Behaviors.add({
   
   "li.meep:keydown": function(element, event) {
     var nextElement;
-    if (event.keyCode === 38) {
+    if (event.keyCode === 38 || (event.keyCode === 9 && event.shiftKey)) {
       nextElement = element.prev();
-    } else if (event.keyCode === 40 || event.keyCode === 9) {
+    } else if (event.keyCode === 40 || (event.keyCode === 9 && !event.shiftKey)) {
       nextElement = element.next();
     } else if (event.keyCode === 13) {
       element.find(".detail-link").trigger("click").end().trigger("blur");
