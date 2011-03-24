@@ -3,8 +3,6 @@
 
 protonet.utils.Behaviors.add({
   "li.meep:focus": function(element, event) {
-    clearTimeout(element.data("blur_timeout"));
-    
     var target = $(event.target);
     if (!target.is("li.meep") && !target.is(".detail-link")) {
       element.trigger("blur");
@@ -37,9 +35,7 @@ protonet.utils.Behaviors.add({
   },
   
   "li.meep:blur": function(element, event) {
-    element.data("blur_timeout", setTimeout(function() {
-      element.removeClass("focus").find(".detail-link").remove();
-    }, 0));
+    element.removeClass("focus").find(".detail-link").remove();
   },
   
   "li.meep:keydown": function(element, event) {
