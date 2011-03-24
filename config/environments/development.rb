@@ -20,7 +20,7 @@ Dashboard::Application.configure do
   
   config.active_support.deprecation = :log
   
-  configatron.user_file_path = Rails.root + "/tmp/development/shared/user-files"
+  configatron.user_file_path = Rails.root.to_s + "/tmp/development/shared/user-files"
   FileUtils.mkdir_p(configatron.user_file_path)
   configatron.images.avatars_path   = "public/avatars"
   configatron.images.externals_path = "public/externals"
@@ -31,4 +31,5 @@ Dashboard::Application.configure do
   configatron.log_event_notifications = true
   configatron.avoid_caching = true
   configatron.nodejs.port = 8124
+  
 end

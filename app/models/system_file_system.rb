@@ -26,7 +26,7 @@ class SystemFileSystem
   end
 
   def self.public_path
-    @uploads_path ||= Rails.root.to_s + configatron.user_file_path
+    @uploads_path ||= configatron.user_file_path
   end
 
 end
