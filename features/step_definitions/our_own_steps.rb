@@ -31,10 +31,10 @@ Given /^I am logged in as "([^\"]*)"(?: with "([^\"]*)")?$/ do|username, passwor
   within("form.login") do
     fill_in 'login_login', :with => username
     fill_in 'login_password', :with => password
-    click('login')
+    click_button('login')
   end
   within('#user-navigation') do
-    assert page.has_content?(username)
+    page.has_content?(username).should == true
   end
 end
 
@@ -43,17 +43,18 @@ Given /^I register as "([^\"]*)"$/ do |username|
     fill_in 'user_login',    :with => username
     fill_in 'user_password', :with => '123456'
     fill_in 'user_password_confirmation', :with => '123456'
-    click('sign up')
+    click_button('sign up')
   end
   within('#user-navigation') do
-    assert page.has_content?(username)
+    page.has_content?(username).should == true
   end
 end
 
 Then /^the message field should contain "([^\"]*)"$/ do |value|
   with_scope("#message-form") do
     field = find_field("tweet[message]")
-    assert_match(/#{value}/, field.value)
+    field.value.should match(/#{value}/)
+    # assert_match(/#{value}/, field.value)
   end
 end
 
@@ -81,13 +82,13 @@ end
 
 Then /^I should see "([^\"]*)" in the channel list$/ do |channel_name|
   with_scope(".channel-list") do
-    assert page.has_xpath?('//*', :text => channel_name, :visible => true)
+    page.has_xpath?('//*', :text => channel_name, :visible => true).should == true
   end
 end
 
 Then /^I should see "([^\"]*)" in the channel details pane$/ do |text|
   with_scope("#channels-details") do
-    assert page.has_xpath?('//*', :text => text, :visible => true)
+    page.has_xpath?('//*', :text => text, :visible => true).should == true
   end
 end
 
@@ -99,13 +100,13 @@ end
 
 Then /^I should not see "([^\"]*)" in the channel selector list$/ do |channel_name|
   with_scope("#channels") do
-    assert !page.has_xpath?('//*', :text => channel_name)
+    !page.has_xpath?('//*', :text => channel_name).should == true
   end
 end
 
 Then /^I should see "([^"]*)" in the channel selector list$/ do |channel_name|
   with_scope("#channels") do
-    assert page.has_xpath?('//*', :text => channel_name, :visible => true)
+    page.has_xpath?('//*', :text => channel_name, :visible => true).should == true
   end
 end
 
@@ -113,12 +114,12 @@ end
 
 Then /^I should see "([^\"]*)" in the timeline$/ do |text|
   with_scope('#timeline') do
-    assert page.has_xpath?('//*', :text => text, :visible => true)
+    page.has_xpath?('//*', :text => text, :visible => true).should == true
   end
 end
 
 Then /^I should see the login form$/ do
-  assert page.has_xpath?('//form[@action="/users/login"]', :visible => true)
+  page.has_xpath?('//form[@action="/users/sign_in"]', :visible => true).should == true
 end
 
 Given /^I send the message "([^\"]*)"$/ do |text|
@@ -129,24 +130,24 @@ Given /^I send the message "([^\"]*)"$/ do |text|
 end
 
 Then /^I should see one stranger online$/ do
-  assert !!find(:css, "#user-widget .stranger")
+  !!find(:css, "#user-widget .stranger").should == true
 end
 
 Then /^I should see no strangers online$/ do
-  assert !find(:css, "#user-widget .stranger")
+  !find(:css, "#user-widget .stranger").should == true
 end
 
 Then /^I should find "([^\"]*)" on the page$/ do |selector|
-  assert !!find(:css, selector)
+  !!find(:css, selector).should == true
 end
 
 Then /^I should not find "([^\"]*)" on the page$/ do |selector|
-  assert !find(:css, selector)
+  !find(:css, selector).should == true
 end
 
 Then /^I should be logged in as "([^\"]*)"$/ do |username|
   within('#user-navigation') do
-    assert page.has_content?(username)
+    page.has_content?(username).should == true
   end
 end
 
@@ -156,7 +157,7 @@ end
 
 Then /^(?:|I )should see an image with the url "([^\"]*)"(?: within "([^\"]*)")?$/ do |url, selector|
   with_scope(selector) do
-    assert page.has_xpath?("//img[starts-with(@src, #{url})]", :visible => true)
+    page.has_xpath?("//img[starts-with(@src, #{url})]", :visible => true).should == true
   end
 end
 

@@ -8,16 +8,16 @@ Then /^proxying "([^"]*)" should work$/ do |url|
   #cleanup
   `rm #{Rails.root}/public/externals/image_proxy/#{Digest::MD5.hexdigest(url)} 2>&1 > /dev/null`
   request = open("http://127.0.0.1:#{configatron.nodejs.port}/image_proxy?url=#{url}")
-  assert request.content_type.match(/image/)
-  assert request.status == ["200", "OK"]
+  request.content_type.should match(/image/)
+  request.status.should == ["200", "OK"]
 end
 
 Then /^resizing "([^"]*)" should work$/ do |url|
 #cleanup
   `rm #{Rails.root}/public/externals/image_proxy/#{Digest::MD5.hexdigest(url)}_100_100 2>&1 > /dev/null`
   request = open("http://127.0.0.1:#{configatron.nodejs.port}/image_proxy?height=100&width=100&url=#{url}")
-  assert request.content_type.match(/image/)
-  assert request.status == ["200", "OK"]
+  request.content_type.should match(/image/)
+  request.status.should == ["200", "OK"]
 end
 
 Then /^screenshot resizing "([^"]*)" should work$/ do |url|
@@ -29,6 +29,6 @@ Then /^screenshot resizing "([^"]*)" should work$/ do |url|
   
   url = "http://127.0.0.1:#{configatron.nodejs.port}/image_proxy?height=100&width=100&url=http://127.0.0.1:#{configatron.nodejs.port}/screenshooter?url=#{url}"
   request = open(url)
-  assert request.content_type.match(/image/)
-  assert request.status == ["200", "OK"]
+  request.content_type.should match(/image/)
+  request.status.should == ["200", "OK"]
 end
