@@ -65,6 +65,13 @@ end
 # Cleanup cached sprocket files
 FileUtils.rm_rf(Rails.root + "/public/sprockets/*")
 
+# HAAAAACKKKKK!
+Devise::Controllers::InternalHelpers.class_eval do
+  def is_devise_resource?
+    @devise_mapping = Devise.mappings[:user]
+  end
+end
+
 at_exit do
   # multiuser support
   $browsers && $browsers.each { |id, browser| browser[:driver].quit rescue nil }
