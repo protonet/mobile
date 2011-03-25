@@ -99,9 +99,9 @@ class User < ActiveRecord::Base
   end
 
   # create a user with a session id
-  def self.stranger(session_id)
-    u = find_or_create_by_temporary_identifier(session_id)  do |u|
-      u.name = "stranger_#{session_id[0,10]}"
+  def self.stranger(identifier)
+    u = find_or_create_by_temporary_identifier(identifier)  do |u|
+      u.name = "stranger_#{identifier[0,10]}"
     end
     u
   end
