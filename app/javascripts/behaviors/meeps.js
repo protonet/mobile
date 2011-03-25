@@ -3,8 +3,6 @@
 
 protonet.utils.Behaviors.add({
   "li.meep:focus": function(element, event) {
-    clearTimeout(element.data("blur_timeout"));
-    
     var target = $(event.target);
     if (!target.is("li.meep") && !target.is(".detail-link")) {
       element.trigger("blur");
@@ -37,16 +35,14 @@ protonet.utils.Behaviors.add({
   },
   
   "li.meep:blur": function(element, event) {
-    element.data("blur_timeout", setTimeout(function() {
-      element.removeClass("focus").find(".detail-link").remove();
-    }, 0));
+    element.removeClass("focus").find(".detail-link").remove();
   },
   
   "li.meep:keydown": function(element, event) {
     var nextElement;
-    if (event.keyCode === 38) {
+    if (event.keyCode === 38 || (event.keyCode === 9 && event.shiftKey)) {
       nextElement = element.prev();
-    } else if (event.keyCode === 40 || event.keyCode === 9) {
+    } else if (event.keyCode === 40 || (event.keyCode === 9 && !event.shiftKey)) {
       nextElement = element.next();
     } else if (event.keyCode === 13) {
       element.find(".detail-link").trigger("click").end().trigger("blur");
