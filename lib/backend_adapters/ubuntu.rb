@@ -33,11 +33,11 @@ module BackendAdapters
     end
     
     def get_interfaces
-      LinuxCommands.ifconfig
+      ::Linux::Commands.ifconfig
     end
 
     def get_interface_information(iface) # TODO: take 'information' off the name
-      LinuxCommands.ifconfig :adapter => iface
+      ::Linux::Commands.ifconfig :adapter => iface
     end
     
     def get_hostname_for_ip(ip)
@@ -63,7 +63,7 @@ module BackendAdapters
         "10.42.0.1",
         "10.43.0.1",
         "protonet"
-      ] | LinuxCommands.ifconfig.map { |i, data| data['inet addr'] }).compact
+      ] | ::Linux::Commands.ifconfig.map { |i, data| data['inet addr'] }).compact
     end
     
     def check_locality(host)

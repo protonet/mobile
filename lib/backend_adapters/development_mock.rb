@@ -32,11 +32,11 @@ module BackendAdapters
     end
     
     def get_interfaces
-      LinuxCommands.ifconfig :source => "#{Rails.root}/lib/backend_adapters/utilities/ifconfig_parser_development_mock"
+      ::Linux::Commands.ifconfig :source => "#{Rails.root}/lib/backend_adapters/utilities/ifconfig_parser_development_mock"
     end
 
     def get_interface_information(iface) # TODO: take 'information' off the name
-      LinuxCommands.ifconfig :source => "#{Rails.root}/lib/backend_adapters/utilities/ifconfig_parser_development_mock", :adapter => iface
+      ::Linux::Commands.ifconfig :source => "#{Rails.root}/lib/backend_adapters/utilities/ifconfig_parser_development_mock", :adapter => iface
     end
     
     def hostname
