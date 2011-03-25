@@ -66,7 +66,7 @@ end
 FileUtils.rm_rf(Rails.root + "/public/sprockets/*")
 
 # start services
-SystemServices.start_all
+# SystemServices.start_all
 
 at_exit do
   # multiuser support

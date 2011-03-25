@@ -1,8 +1,8 @@
-unless Rails.env.test?
+# unless Rails.env.test?
   require "#{Rails.root}/lib/backend_adapters/development_mock"
   SystemBackend.backend_connection = BackendAdapters::DevelopmentMock.new
   puts "Backend '#{SystemBackend.backend_connection.info}' connected successfully!"
-end
+# end
 
 if Rails.env.development?
   if File.exists?(File.join(Rails.root, 'tmp', 'debug.txt'))

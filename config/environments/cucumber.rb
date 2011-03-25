@@ -24,7 +24,9 @@ Dashboard::Application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
   
-  configatron.user_file_path = "/tmp"
+  configatron.user_file_path = Rails.root.to_s + "/tmp/test/shared/user-files"
+  FileUtils.mkdir_p(configatron.user_file_path)
+
   configatron.images.avatars_path   = "public/avatars"
   configatron.images.externals_path = "public/externals"
   

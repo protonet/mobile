@@ -19,7 +19,8 @@ class ApplicationController < ActionController::Base
   end
 
   def login_as_guest
-    User.stranger(session[:session_id])
+    session[:stranger_id] ||= ActiveSupport::SecureRandom.base64(20)
+    User.stranger(session[:stranger_id])
   end
   
   def set_backend_for_development
