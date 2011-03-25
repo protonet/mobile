@@ -36,7 +36,7 @@ if (ENV['SERVER_SOFTWARE'].try(:match, /nginx/) && !Rails.env.production? || ENV
   SystemServices.start_all
 
   at_exit do
-    SystemServices.stop_all
+    SystemServices.stop_all unless ENV["NOSTOP"].to_i == 1
   end
 end
 
