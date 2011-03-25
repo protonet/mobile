@@ -7,11 +7,6 @@ class SystemPreferences < ActiveRecord::Base
   cattr_accessor :defaults
   @@defaults = {}.with_indifferent_access
 
-  # Support old plugin
-  if defined?(PreferencesDefaults::DEFAULTS)
-    @@defaults = PreferencesDefaults::DEFAULTS.with_indifferent_access
-  end
-
   #get or set a variable with the variable as the called method
   def self.method_missing(method, *args)
     method_name = method.to_s
