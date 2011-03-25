@@ -38,7 +38,7 @@ group :test, :cucumber do
   gem "random_data", "1.5.1"
   gem "mocha", "0.9.8"
   gem "factory_girl_rails"
-  gem 'cucumber-rails', '~> 0.4.0.beta.1'
+  gem 'cucumber-rails', '~> 0.4.0'
   gem 'capybara', '~> 0.4.1.2'
   gem "database_cleaner"
   gem "pickle"
