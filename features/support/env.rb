@@ -76,8 +76,6 @@ at_exit do
   # multiuser support
   $browsers && $browsers.each { |id, browser| browser[:driver].quit rescue nil }
   
-  SystemServices.stop_all unless ENV["NOSTOP"].to_i == 1
-  
   # Cleanup cached sprocket files
   FileUtils.rm_rf(Rails.root + "/public/sprockets/*")
   FileUtils.rm_rf(Rails.root + "/tmp/test")
