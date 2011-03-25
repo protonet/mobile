@@ -4,6 +4,8 @@
   puts "Backend '#{SystemBackend.backend_connection.info}' connected successfully!"
 # end
 
+require "#{Rails.root}/lib/linux/commands"
+
 if Rails.env.development?
   if File.exists?(File.join(Rails.root, 'tmp', 'debug.txt'))
     require 'ruby-debug'
