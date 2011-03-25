@@ -23,7 +23,7 @@ $(function() {
       // now initiate controls
       $("#preferences-details").trigger(preference);
     })
-    $("#preferences ul li.clicked").toggleClass("clicked");
+    $("#preferences-page ul li.clicked").toggleClass("clicked");
     $(this).toggleClass("clicked");
     location.hash = preference;
   });
