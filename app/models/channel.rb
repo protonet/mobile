@@ -33,7 +33,7 @@ class Channel < ActiveRecord::Base
     begin
       find(1)
     rescue ActiveRecord::RecordNotFound
-      channel = Channel.new(:name => 'home', :description => 'your homebase - your node :)', :owner_id => User.anonymous.id)
+      channel = Channel.new(:name => 'home', :description => 'your homebase - your node :)', :owner_id => -1)
       channel.id = 1
       channel.save
       channel.reload
