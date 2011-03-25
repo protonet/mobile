@@ -8,14 +8,14 @@ class UserTest < Test::Unit::TestCase
   
   context "Calling the class method anonymous" do
     it "should return an user with the id 0" do
-      assert_equal 0, User.anonymous.id
+      assert_equal -1, User.anonymous.id
     end
     
     it "should create an entry for the anonymous user if it doesn't exist" do
       User.delete_all
-      assert User.where(:id => 0).empty?
+      assert User.where(:id => -1).empty?
       User.anonymous
-      assert !User.where(:id => 0).empty?
+      assert !User.where(:id => -1).empty?
     end
     
   end

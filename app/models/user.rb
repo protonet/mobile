@@ -44,12 +44,12 @@ class User < ActiveRecord::Base
 
   def self.anonymous
     begin
-      find(0)
+      find(-1)
     rescue ActiveRecord::RecordNotFound
       user = new(:name => 'Anonymous', :login => 'Anonymous')
-      # no callback for this one
-      user.save && update_all("id = 0", "id = #{user.id}")
-      find(0)
+      user.id = -1
+      user.save!
+      find(-1)
     end
   end
 

@@ -33,9 +33,10 @@ class Channel < ActiveRecord::Base
     begin
       find(1)
     rescue ActiveRecord::RecordNotFound
-      channel = Channel.new(:name => 'home', :description => 'your homebase - your node :)', :owner_id => 0)
-      channel.save && update_all("id = 1", "id = #{channel.id}")
-      channel = find(1)
+      channel = Channel.new(:name => 'home', :description => 'your homebase - your node :)', :owner_id => User.anonymous.id)
+      channel.id = 1
+      channel.save
+      channel.reload
       channel.create_folder
       channel
     end
