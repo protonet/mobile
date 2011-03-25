@@ -75,7 +75,7 @@ at_exit do
   SystemServices.stop_all unless ENV["NOSTOP"].to_i == 1
   
   # Cleanup cached sprocket files
-  FileUtils.rm_rf(RAILS_ROOT + "/public/sprockets/*")
-  FileUtils.rm_rf(RAILS_ROOT + "/tmp/test")
+  FileUtils.rm_rf(Rails.root + "/public/sprockets/*")
+  FileUtils.rm_rf(Rails.root + "/tmp/test")
 end
 
