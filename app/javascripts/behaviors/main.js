@@ -13,7 +13,7 @@ protonet.utils.Behaviors.add({
   
   // this behaviour is the first ajax form behaviour we're using
   // we've bound it's implementation to the invitation form usage
-  "form[data-remote]:submit": function(form, event) {
+  "form[data-protonet-remote]:submit": function(form, event) {
     event.preventDefault();
     $.ajax({
       "type": form.attr("method"),
