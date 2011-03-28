@@ -53,7 +53,7 @@ Background:
     Then I should see "no" within "#users-details .admin"
     And I fill in "admin_password" with "123456" within "#password-reset"
     And press "Generate New Password" within "#password-reset"
-    And I store /"(.*)"/ within ".flash-message p" into "password"
+    And I store /"(.*)"/ from ".flash-message p" into "password"
     And I go unauthenticated to the start page
     And I am logged in as "someotherdude"
 

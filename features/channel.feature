@@ -40,19 +40,18 @@ Feature: Using the protonet channel management
         And go unauthenticated to the start page
         And I am logged in as "batman"
         And I go to the channels page
-        And I click on "privatechannel" within "#channels-page"
+        And I select the channel "privatechannel" in the channel list
         # need to wait for appearance of listen in chanels-details
         And wait 1 seconds 
         Then I click on the element "#channels-details .listen p"
         Then I go to the start page
-        Then I should not see "Privatechannel" in the channel selector list
+        Then I should not see "Privatechannel" in the channel selector
     #dudemeister verifies batman
           And I am using the first browser
           And I go to the channels page
-            Then I click on "privatechannel" within "#channels-page"
-            Then I click verify user "batman" in users list
+            Then I verify the user "batman" for the channel "privatechannel"
     #batman goes start page checks channel appears
               And I am using the second browser
               And I go to the start page
-                Then I should see "Privatechannel" in the channel selector list
+                Then I should see "Privatechannel" in the channel selector
   

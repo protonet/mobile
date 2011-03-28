@@ -89,21 +89,5 @@ module UsersHelper
       link_to_login_with_IP content_text, options
     end
   end
-  
-  # from http://snipplr.com/view.php?codeview&id=1247
-  def pronoucable_password
-    c = %w( b c d f g h j k l m n p qu r s t v w x z ) +
-        %w( ch cr fr nd ng nk nt ph pr rd sh sl sp st th tr )
-    v = %w( a e i o u y )
-    f, r = true, ''
-    6.times do
-      r << ( f ? c[ rand * c.size ] : v[ rand * v.size ] )
-      f = !f
-    end
-    2.times do
-      r << ( rand( 9 ) + 1 ).to_s
-    end
-    r
-  end
-  
+
 end

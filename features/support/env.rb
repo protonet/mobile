@@ -79,5 +79,6 @@ at_exit do
   # Cleanup cached sprocket files
   FileUtils.rm_rf(Rails.root + "/public/sprockets/*")
   FileUtils.rm_rf(Rails.root + "/tmp/test")
+  FileUtils.mkdir_p(Rails.root + "/tmp/test")
 end
 

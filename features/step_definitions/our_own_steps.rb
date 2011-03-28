@@ -51,11 +51,7 @@ Given /^I register as "([^\"]*)"$/ do |username|
 end
 
 Then /^the message field should contain "([^\"]*)"$/ do |value|
-  with_scope("#message-form") do
-    field = find_field("tweet[message]")
-    field.value.should match(/#{value}/)
-    # assert_match(/#{value}/, field.value)
-  end
+  find("#message-form textarea[name='tweet[message]']").value.should match(/#{value}/)
 end
 
 Given /^"([^"]*)" is listening to "([^"]*)"$/ do |username, channelname|
@@ -63,9 +59,9 @@ Given /^"([^"]*)" is listening to "([^"]*)"$/ do |username, channelname|
 end
 
 Given /^I click on "([^"]*)" within "([^"]*)"$/ do |linktext, selector|
-  with_scope(selector) do
-    find(:xpath, "//a[contains(.,'#{linktext}')]").click
-  end
+  puts 'foo'
+  debugger
+  find(:css, "#{selector} a", :text => linktext, :visible => true)
 end
 
 Given /^I click on the element "([^\"]*)"$/ do |selector|
@@ -80,42 +76,45 @@ Given /^I log out$/ do
   visit "/logout"
 end
 
+Given /^I select the channel "([^"]*)" in the channel list$/ do |linktext|
+  find(:css, "#channels-page a", :text => linktext, :visible => true).click
+end
+
 Then /^I should see "([^\"]*)" in the channel list$/ do |channel_name|
-  with_scope(".channel-list") do
-    page.has_xpath?('//*', :text => channel_name, :visible => true).should == true
-  end
+  find(:css, '.channel-list li', :text => channel_name, :visible => true)
 end
 
-Then /^I should see "([^\"]*)" in the channel details pane$/ do |text|
-  with_scope("#channels-details") do
-    page.has_xpath?('//*', :text => text, :visible => true).should == true
-  end
+Then /^I should see "([^\"]*)" in the channel details pane$/ do |channel_name|
+  find(:css, '#channels-details h3', :text => channel_name, :visible => true)
 end
 
-Then /^I click verify user "([^\"]*)" in users list$/ do |user|
+Then /^I verify the user "([^"]*)" for the channel "([^"]*)"$/ do |user_name, channel|
+  Given "I select the channel \"#{channel}\" in the channel list"
+  user = User.find_by_login(user_name)
+  find(:css, "#channel-subscribers li[data-cucumber-user-id='#{user.id}'] a.channel-verify-listener").click
+end
+
+Then /^I click verify the user "([^\"]*)" in users list$/ do |user|
+  
   with_scope("#channel-subscribers") do
     find(:xpath, "//a[contains(.,'verify listener')]").click
   end
 end
 
-Then /^I should not see "([^\"]*)" in the channel selector list$/ do |channel_name|
-  with_scope("#channels") do
-    !page.has_xpath?('//*', :text => channel_name).should == true
-  end
+Then /^I should not see "([^\"]*)" in the channel selector$/ do |channel_name|
+  all(:css, '#channels li', :text => channel_name, :visible => true).empty?.should == true
 end
 
-Then /^I should see "([^"]*)" in the channel selector list$/ do |channel_name|
-  with_scope("#channels") do
-    page.has_xpath?('//*', :text => channel_name, :visible => true).should == true
-  end
+Then /^I should see "([^"]*)" in the channel selector$/ do |channel_name|
+  find(:css, '#channels li', :text => channel_name, :visible => true)
 end
-
-
 
 Then /^I should see "([^\"]*)" in the timeline$/ do |text|
-  with_scope('#timeline') do
-    page.has_xpath?('//*', :text => text, :visible => true).should == true
-  end
+  find(:css, "#timeline li", :text => text, :visible => true)
+end
+
+Then /^I click on "([^\"]*)" in the timeline$/ do |text|
+  find(:css, "#timeline li", :text => text, :visible => true).click
 end
 
 Then /^I should see the login form$/ do
@@ -135,6 +134,18 @@ end
 
 Then /^I should see no strangers online$/ do
   all(:css, "#user-widget .stranger").empty?.should == true
+end
+
+Then /^I should see "([^\"]*)" online in the user widget$/ do |username|
+  find(:css, "#user-widget .stranger").empty?.should == false
+end
+
+Then /^I should see "([^\"]*)" online in the user widget$/ do |username|
+  all(:css, "#user-widget ul .online", :text => username).empty?.should == false
+end
+
+Then /^I should not see "([^\"]*)" online in the user widget$/ do |username|
+  all(:css, "#user-widget ul .online", :text => username).empty?.should == true
 end
 
 Then /^I should find "([^\"]*)" on the page$/ do |selector|
@@ -161,16 +172,16 @@ Then /^(?:|I )should see an image with the url "([^\"]*)"(?: within "([^\"]*)")?
   end
 end
 
-Then /^I should see the image "([^"]*)"(?: within "([^"]*)")?$/ do |image_name, selector|
-  image_selector = "img[src*='#{image_name}']"
-  with_scope(selector) do
-    if page.respond_to? :should
-      page.should have_css(image_selector)
-    else
-      assert page.has_css?(image_selector)
-    end
-  end
+Then /^I should see the profile image "([^"]*)" in my profile details$/ do |image_name|
+  image_selector = "#preferences-details img[src*='#{image_name}']"
+  find(:css, image_selector)
 end
+
+Then /^I should see the profile image "([^"]*)" in the top right navi$/ do |image_name|
+  image_selector = ".welcome img[src*='#{image_name}']"
+  find(:css, image_selector)
+end
+
 
 Given /^administrator rights have not been claimed$/ do
   SystemPreferences.admin_set = false
@@ -194,7 +205,7 @@ Given /^"([^\"]*)" is an admin$/ do |login|
   user.add_to_role('admin')
 end
 
-Given /^(?:|I )store \/([^\/]*)\/ within "([^\"]*)" into "([^\"]*)"$/ do |regexp, selector, variable|
+Given /^(?:|I )store \/([^\/]*)\/ from "([^\"]*)" into "([^\"]*)"$/ do |regexp, selector, variable|
   regexp = Regexp.new(regexp)
   text = find(:css, selector).text.match(regexp).to_a.last
   instance_variable_set("@#{variable}", text)

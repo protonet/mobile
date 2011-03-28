@@ -3,7 +3,7 @@ Feature: Using the protonet preferences
   @wip
   Scenario: No update functionality if you're no admin
     Give I am no admin
-    And I click on "software updates"
+    And I click "software updates"
     Then I should not see the any update button
   
   

@@ -52,4 +52,4 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
       And I leave the page
     # the second user should now be alone
     Given I am using the second browser
-      Then I should not see /dudemeister/ within "#user-widget ul .online"
+      Then I should not see "dudemeister" online in the user widget

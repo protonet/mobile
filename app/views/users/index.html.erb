@@ -192,7 +192,7 @@
       <%- @users.each do |u| -%>
         <li id="user-<%= u.id %>">
           <div class="index section">
-            <a href="#"><%= h u.display_name %><%= "<span> <- that's you!</span>" if u.id == current_user.id %></a>
+            <a href="#"><%= h u.display_name %><%= raw("<span> <- that's you!</span>") if u.id == current_user.id %></a>
           </div>
         </li>
       <%- end -%>

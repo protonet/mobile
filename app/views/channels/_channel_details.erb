@@ -5,15 +5,15 @@
 <ul id="channel-subscribers">
   <% channel.listens.all(:include => :user).each do |listen| %>
     <% if !listen.user.stranger? && user = listen.user %>
-      <li>
+      <li data-cucumber-user-id="<%= listen.user.id %>">
     <%= avatar(user, :width => 20, :height => 20) %>
     <span><%= user.display_name %><% if channel.owned_by(listen.user) %> (owner)<% end %></span>
     <% if channel.owned_by(current_user) %>
       <% if !channel.owned_by(listen.user) %>
-        <%= link_to('remove listener', listen_path(listen), :method => :delete, :class => "channel-remove-listner") %>
+        <%= link_to('remove listener', listen_path(listen), :method => :delete, :class => "channel-remove-listener") %>
       <% end %>
       <% if !channel.public? && !listen.verified? && !channel.owned_by(listen.user) %>
-        (<%= link_to('verify listener', listen_accept_path(listen), :method => :post, :class => "channel-verify-listner") %>)
+        (<%= link_to('verify listener', listen_accept_path(listen), :method => :post, :class => "channel-verify-listener") %>)
       <% end %>
     <% end %>
     </li>
