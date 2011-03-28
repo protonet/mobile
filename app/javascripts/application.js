@@ -16,6 +16,7 @@
 //= require "ui/flash_message.js"
 //= require "ui/logo.js"
 //= require "utils/toggle_element.js"
+//= require "utils/rails.js"
 
 //---------------------------- INITIALIZE APPLICATION ----------------------------
 
