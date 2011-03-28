@@ -130,19 +130,19 @@ Given /^I send the message "([^\"]*)"$/ do |text|
 end
 
 Then /^I should see one stranger online$/ do
-  !!find(:css, "#user-widget .stranger").should == true
+  all(:css, "#user-widget .stranger").empty?.should == false
 end
 
 Then /^I should see no strangers online$/ do
-  !find(:css, "#user-widget .stranger").should == true
+  all(:css, "#user-widget .stranger").empty?.should == true
 end
 
 Then /^I should find "([^\"]*)" on the page$/ do |selector|
-  !!find(:css, selector).should == true
+  all(:css, selector).empty?.should == false
 end
 
 Then /^I should not find "([^\"]*)" on the page$/ do |selector|
-  !find(:css, selector).should == true
+  all(:css, selector).empty?.should == true
 end
 
 Then /^I should be logged in as "([^\"]*)"$/ do |username|
