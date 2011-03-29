@@ -36,7 +36,7 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
             type:     "web"
           },
           queryParams         = encodeURIComponent(JSON.stringify(authenticationData)),
-          url                 = location.protocol + "//" + location.hostname + ":8000?" + queryParams,
+          url                 = protonet.config.xhr_streaming_url + "?" + queryParams,
           connected;
 
       this.ajax = new win.XMLHttpRequest();
