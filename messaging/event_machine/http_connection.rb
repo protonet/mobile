@@ -11,6 +11,8 @@ class HttpConnection < EM::Connection
     super()
     
     @tracker = tracker
+    
+    close_after_timeout
   end
 
   def autosubscribe auth_data
@@ -55,17 +57,18 @@ class HttpConnection < EM::Connection
 
       # generate http response object but don't close afterwards
       @response = EM::DelegatedHttpResponse.new(self)
-      # TODO: this is needed for cross domain requests
-      # and has to be changed to avoid security issues
-      @response.headers['Access-Control-Allow-Origin'] = '*';
+      if Rails.env != 'production'
+        # ensure that every host can acess this via cross domain ajax request in no-production mode
+        # https://developer.mozilla.org/en/http_access_control
+        @response.headers['Access-Control-Allow-Origin'] = '*';
+      end
+      @response.content_type 'text/plain'
       @response.xhr_streaming_enable true
       @response.send_response
       
-      # for debugging:
-      @params = CGI::unescape(@http_query_string || '')
-      
       begin
-        if autosubscribe(JSON.parse(@params))
+        @params = JSON.parse(CGI::unescape(@http_query_string || ''))
+        if autosubscribe(@params)
           return
         end
       rescue
@@ -83,6 +86,12 @@ class HttpConnection < EM::Connection
   
   def to_s
     "http connection #{inspect}"
+  end
+  
+  def close_after_timeout
+    # this is to ensure that you don't end up with
+    # stray request, so we reopen it from the frontend
+    EventMachine::add_timer( 120 ) { @response.close_connection }
   end
 end 
 

@@ -1,3 +1,5 @@
+//= require "../utils/is_window_focused.js"
+
 /**
  * Use this for notifying users about a failed or succeeded operation
  * Much more fancier than alert()!
@@ -51,7 +53,14 @@ protonet.ui.FlashMessage = {
     
     // also non stickies auto hide after TIMEOUT seconds
     if (!this.element.hasClass("sticky")) {
-      this.timeout = setTimeout(this.hide.bind(this), this.TIMEOUT);
+      // auto hide after 5 sec (but only if the user has already seen it)
+      if (protonet.utils.isWindowFocused()) {
+        this.timeout = setTimeout(this.hide.bind(this), this.TIMEOUT);
+      } else {
+        $(window).focus(function() {
+          this.timeout = setTimeout(this.hide.bind(this), this.TIMEOUT);
+        }.bind(this));
+      }
     }
   },
   
