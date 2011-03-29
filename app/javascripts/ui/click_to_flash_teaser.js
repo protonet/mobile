@@ -3,7 +3,6 @@ $(window).load(function() {
   setTimeout(function() {
     var flashPlaceholder = $("div.ujs_flashblock_placeholder, div[bginactive][bgactive]");
     flashPlaceholder.css({
-      "background-color":   "black",
       "border":             "5px solid white",
       "box-sizing":         "content-box",
       "-moz-box-sizing":    "content-box",
