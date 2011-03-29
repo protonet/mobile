@@ -11,6 +11,8 @@ class HttpConnection < EM::Connection
     super()
     
     @tracker = tracker
+    
+    close_after_timeout
   end
 
   def autosubscribe auth_data
@@ -84,6 +86,12 @@ class HttpConnection < EM::Connection
   
   def to_s
     "http connection #{inspect}"
+  end
+  
+  def close_after_timeout
+    # this is to ensure that you don't end up with
+    # stray request, so we reopen it from the frontend
+    EventMachine::add_timer( 120 ) { @response.close_connection }
   end
 end 
 
