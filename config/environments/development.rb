@@ -25,7 +25,7 @@ Dashboard::Application.configure do
   configatron.images.avatars_path   = "public/avatars"
   configatron.images.externals_path = "public/externals"
   configatron.socket.port = 5000
-  configatron.longpolling.port = 8000
+  configatron.xhr_streaming.port = 8000
   
   # Log all js event notifications
   configatron.log_event_notifications = true

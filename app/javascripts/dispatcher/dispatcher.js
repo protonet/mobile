@@ -1,130 +1,113 @@
 protonet.dispatcher = {
-  SOCKET_ID: "flash-socket",
-  
   initialize: function() {
-    this.server           = protonet.config.dispatching_server;
-    this.serverPort       = protonet.config.dispatching_server_port;
-    this.userAuthToken    = protonet.config.token;
-    this.userId           = protonet.config.user_id;
-    
     this._observe();
-    this.createSocket();
+    this.create();
   },
   
   _observe: function() {
-    protonet.Notifications
+    protonet
       .bind("socket.initialized", function() {
-        this.connectSocket();
+        this.connect();
       }.bind(this))
       
       .bind("socket.connected", function(e, status) {
-        this.connectSocketCallback(status);
+        this.connectCallback(status);
       }.bind(this))
-    
+      
       .bind("socket.send", function(e, data) {
-        this.sendData(data);
+        this.send(data);
       }.bind(this))
-    
+      
       .bind("socket.receive", function(e, data) {
-        this.receiveData(data);
+        this.receive(data);
       }.bind(this))
-    
+      
       .bind("socket.ping_received", function() {
-        this.pingSocketCallback();
+        this.pingCallback();
       }.bind(this))
       
       .bind("socket.reconnect", function() {
-        this.reconnectSocket();
+        this.reconnect();
       }.bind(this));
       
     $(window)
-      .bind("offline unload", this.disconnectSocket.bind(this))
-      .bind("online focus", this.connectSocket.bind(this));
+      .bind("offline unload", this.disconnect.bind(this))
+      .bind("online focus", this.connect.bind(this));
   },
   
-  createSocket: function() {
-    // We have to insert the flash outside the body in firefox, otherwise the flash gets reloaded as soon as you
-    // change the css overflow property of the body element
-    // see https://bugzilla.mozilla.org/show_bug.cgi?id=90268
-    var container   = $("<div />", { id: "socket-container" }).appendTo($.browser.mozilla ? "html" : "body"),
-        attributes  = { id: this.SOCKET_ID },
-        params      = { allowscriptaccess: "sameDomain", wmode: "opaque" };
+  create: function() {
+    for (var i in this.provider) {
+      if (this.provider[i].isSupported()) {
+        this.currentProvider = this.provider[i];
+        break;
+      }
+    }
     
-    // Fires "socket.initialized" when ready
-    swfobject.embedSWF(
-      "/flash/socket.swf?" + new Date().getTime(),
-      "socket-container",
-      "auto", "auto", "8",
-      null, {}, params, attributes
-    );
+    this.currentProvider.initialize();
   },
   
-  connectSocket: function() {
+  connect: function() {
     if (this.connected) {
       return;
     }
     
-    this.socket = this.socket || swfobject.getObjectById(this.SOCKET_ID);
-    
-    if (this.socket) {
-      this.socket.connectSocket(this.server, this.serverPort);
-    }
+    this.currentProvider.connect();
   },
   
-  connectSocketCallback: function(status) {
+  connectCallback: function(status) {
     if (status) {
       this.connected = true;
-      this.authenticateUser();
-      this.startSocketCheck();
-      if (this.reconnect) {
-        this.reconnect = false;
-        protonet.Notifications
+      this.startCheck();
+      if (this._reconnect) {
+        this._reconnect = false;
+        protonet
           .trigger("flash_message.notice", protonet.t("SOCKET_RECONNECTED"))
           .trigger("monster.jump")
           .trigger("socket.reconnected");
       }
     } else {
-      this.disconnectSocket();
+      this.disconnect();
     }
   },
   
-  disconnectSocket: function(event) {
-    if (!this.socket) {
-      return;
-    }
+  disconnect: function(event) {
+    this.currentProvider.disconnect();
     
-    this.socket.closeSocket();
-    this.stopSocketCheck();
+    this.stopCheck();
     
-    this.startSocketReconnect();
+    this.startReconnect();
     
     // Don't show a flash message when user closes the window
-    var isUnload = event && event.type == "unload";
+    var isUnload = (event || {}).type == "unload";
     
     // ... also only shout it to the world when the socket has been online before
-    if (this.connected && !isUnload) {
-      protonet.Notifications
+    if (this.connected === true && !isUnload) {
+      protonet
         .trigger("flash_message.error", protonet.t("SOCKET_DISCONNECTED"))
         .trigger("socket.disconnected");
+    }
+    
+    if (this.connected === undefined && !isUnload) {
+      protonet.trigger("flash_message.error", protonet.t("SOCKET_FAILURE"));
     }
     
     this.connected = false;
   },
   
-  stopSocketReconnect: function() {
-    this.reconnect = false;
+  stopReconnect: function() {
+    this._reconnect = false;
     clearTimeout(this.reconnectTimeout);
   },
   
-  startSocketReconnect: function() {
-    this.stopSocketReconnect();
-    this.reconnect = true;
-    this.reconnectTimeout = setTimeout(this.connectSocket.bind(this), 5000);
+  startReconnect: function() {
+    this.stopReconnect();
+    this._reconnect = true;
+    this.reconnectTimeout = setTimeout(this.connect.bind(this), 5000);
   },
   
-  reconnectSocket: function() {
-    this.disconnectSocket();
-    setTimeout(this.connectSocket(), 1000);
+  reconnect: function() {
+    this.disconnect();
+    setTimeout(this.connect(), 1000);
   },
   
   /**
@@ -132,58 +115,46 @@ protonet.dispatcher = {
    * If no answer is received after 5 seconds the socket appears to be offline
    * Try to reconnect after 5 seconds
    */
-  startSocketCheck: function() {
-    this.stopSocketCheck();
-    this.socketCheckInterval = setInterval(this.pingSocket.bind(this), 20000);
+  startCheck: function() {
+    this.stopCheck();
+    this.checkInterval = setInterval(this.ping.bind(this), 20000);
   },
   
-  stopSocketCheck: function() {
-    clearInterval(this.socketCheckInterval);
+  stopCheck: function() {
+    clearInterval(this.checkInterval);
   },
   
-  pingSocket: function() {
-    clearTimeout(this.socketOfflineTimeout);
-    this.socketOfflineTimeout = setTimeout(this.disconnectSocket.bind(this), 5000);
+  ping: function() {
+    clearTimeout(this.offlineTimeout);
+    this.offlineTimeout = setTimeout(this.disconnect.bind(this), 5000);
     
-    protonet.Notifications.trigger("socket.send", { operation: "ping" });
+    protonet.trigger("socket.send", { operation: "ping" });
   },
   
-  pingSocketCallback: function(message) {
-    clearTimeout(this.socketOfflineTimeout);
+  pingCallback: function(message) {
+    clearTimeout(this.offlineTimeout);
   },
-  
-  authenticateUser: function() {
-    protonet.Notifications.trigger("socket.send", {
-      operation: "authenticate",
-      payload: {
-        user_id:  this.userId,
-        token:    this.userAuthToken,
-        type:     "web"
+
+  receive: function(data) {
+    var dataArr = this.currentProvider.receive(data);
+    
+    if (!dataArr) {
+      return;
+    }
+    
+    dataArr = $.makeArray(dataArr);
+    $.each(dataArr, function(i, data) {
+      if (data.trigger) {
+        protonet.trigger(data.trigger, [data]);
+      } else if (data.x_target) {
+        eval(data.x_target + "(data)");
       }
     });
   },
-
-  receiveData: function(rawData) {
-    /**
-     * Policy XML message
-     * FIXME: Handle this in the flash socket
-     */
-    if ($.trim(rawData).startsWith("<?xml")) {
-      return;
-    }
-    
-    var data = JSON.parse(rawData);
-    if (data.trigger) {
-      protonet.Notifications.trigger(data.trigger, [data]);
-    } else if (data.x_target) {
-      eval(data.x_target + "(data)");
-    }
-  },
   
-  sendData: function(data) {
-    if (!this.socket) {
-      return;
-    }
-    this.socket.sendData(JSON.stringify(data));
+  send: function(data) {
+    this.currentProvider.send(data);
   }
 };
+
+//= require "provider.js"

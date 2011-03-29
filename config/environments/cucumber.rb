@@ -33,7 +33,7 @@ Dashboard::Application.configure do
   FileUtils.mkdir_p(configatron.images.externals_path + "/screenshots")
   
   configatron.socket.port = 5001
-  configatron.longpolling.port = 8001
+  configatron.xhr_streaming.port = 8001
   configatron.nodejs.port = 8125
   configatron.js_dispatching_active = true
   configatron.messaging_bus_active  = true

@@ -201,7 +201,7 @@ pre {
   left: 0;
   right: 0;
   position: absolute;
-  z-index: 10;
+  z-index: 100000;
   color: #fff;
   padding: 8px;
   font-size: 16px;

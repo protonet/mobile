@@ -32,6 +32,7 @@ class HttpConnection < EM::Connection
   # end
 
   def send_json json
+    json = json.to_json
     @response.send_data "<script>#{json}</script>"
   end
 
@@ -54,13 +55,22 @@ class HttpConnection < EM::Connection
 
       # generate http response object but don't close afterwards
       @response = EM::DelegatedHttpResponse.new(self)
-      @response.content_type 'text/html'
+      # TODO: this is needed for cross domain requests
+      # and has to be changed to avoid security issues
+      @response.headers['Access-Control-Allow-Origin'] = '*';
       @response.xhr_streaming_enable true
       @response.send_response
-
-      if @http_post_content && autosubscribe(JSON.parse(@http_post_content))
-        return
+      
+      # for debugging:
+      @params = CGI::unescape(@http_query_string || '')
+      
+      begin
+        if autosubscribe(JSON.parse(@params))
+          return
+        end
+      rescue
       end
+      
       @response.close_connection
     end
   end

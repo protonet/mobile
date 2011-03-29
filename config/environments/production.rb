@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Dashboard::Application.configure do
   # Settings specified here will take precedence over those in config/environment.rb
   
@@ -36,7 +37,7 @@ Dashboard::Application.configure do
   
   configatron.ldap.active = false
   configatron.socket.port = 5000
-  configatron.longpolling.port = 8000
+  configatron.xhr_streaming.port = 8000
   configatron.nodejs.port = 8124
   # checks for stage specific config files
   stage_config = "#{Rails.root}/config/environments/stage.rb"
