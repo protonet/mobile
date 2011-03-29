@@ -60,6 +60,7 @@ class HttpConnection < EM::Connection
         # https://developer.mozilla.org/en/http_access_control
         @response.headers['Access-Control-Allow-Origin'] = '*';
       end
+      @response.content_type 'text/plain'
       @response.xhr_streaming_enable true
       @response.send_response
       
