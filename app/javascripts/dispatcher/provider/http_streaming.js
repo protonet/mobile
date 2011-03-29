@@ -38,7 +38,10 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
           queryParams         = encodeURIComponent(JSON.stringify(authenticationData)),
           url                 = protonet.config.xhr_streaming_url + "?" + queryParams,
           connected;
-
+          
+      // Make sure that an already running request is aborted
+      this.disconnect();
+      
       this.ajax = new win.XMLHttpRequest();
       this.ajax.open("GET", url, true);
       this.ajax.onreadystatechange = function() {
