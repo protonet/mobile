@@ -55,9 +55,11 @@ class HttpConnection < EM::Connection
 
       # generate http response object but don't close afterwards
       @response = EM::DelegatedHttpResponse.new(self)
-      # TODO: this is needed for cross domain requests
-      # and has to be changed to avoid security issues
-      @response.headers['Access-Control-Allow-Origin'] = '*';
+      if Rails.env != 'production'
+        # ensure that every host can acess this via cross domain ajax request in no-production mode
+        # https://developer.mozilla.org/en/http_access_control
+        @response.headers['Access-Control-Allow-Origin'] = '*';
+      end
       @response.xhr_streaming_enable true
       @response.send_response
       
