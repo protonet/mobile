@@ -10,6 +10,7 @@
 //= require "controls/pretty_date.js"
 //= require "platforms/fluid.js"
 //= require "platforms/prism.js"
+//= require "ui/click_to_flash_teaser.js"
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
 $(function() {

@@ -37,3 +37,9 @@ protonet.Notifications = (function() {
     one:     one
   };
 })();
+
+// shortcuts
+protonet.trigger  = protonet.Notifications.trigger;
+protonet.bind     = protonet.Notifications.bind;
+protonet.unbind   = protonet.Notifications.unbind;
+protonet.one      = protonet.Notifications.one;

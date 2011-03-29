@@ -8,6 +8,7 @@ protonet.translations = {
   CHANNEL_SUBSCRIPTION_ERROR: "could not subscribe to channel with identifier '{identifier}'",
   SOCKET_DISCONNECTED: "There has been a connection problem. Please wait a few seconds while our hard working monsters fix the problem.",
   SOCKET_RECONNECTED: "Ok, you are online again!",
+  SOCKET_FAILURE: "Oh, f*ck. Something is wrong. We weren't able to establish a connection with the socket backend.",
   FILE_DELETE_ERROR: "File couldn't be deleted",
   DIRECTORY_DELETE_ERROR: "Folder couldn't be deleted",
   DIRECTORY_DELETE_CONFIRM: "Are you sure? This will delete the folder including all contents. There's no undo.",
@@ -22,5 +23,6 @@ protonet.translations = {
   SEARCH_ERROR: "Search for '{keyword}' failed. Please try again later.",
   MEEP_WINDOW_HEADLINE: "{avatar} Message {id} in channel '{channel_name}'",
   MODAL_WINDOW_LOADING: "Loading ...",
-  DETAIL_VIEW_LOADING_ERROR: "Something went wrong while loading the context for the current message."
+  DETAIL_VIEW_LOADING_ERROR: "Something went wrong while loading the context for the current message.",
+  FLASH_DISABLED_MESSAGE: "Protonet requires the flash plugin. Please enable it by clicking below."
 };

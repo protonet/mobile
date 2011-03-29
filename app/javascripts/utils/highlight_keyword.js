@@ -25,7 +25,9 @@ protonet.utils.highlightKeyword = (function() {
     
     while (childNodesLength--) {
       var currentNode = childNodes[childNodesLength];
-      
+      if (!currentNode) {
+        continue;
+      }
       // nodeType 1 == element node
       if (currentNode.nodeType === 1 &&
           $.inArray(currentNode.nodeName.toLowerCase(), EXCLUDES) == -1) {
