@@ -29,6 +29,8 @@ Dashboard::Application.configure do
 
   configatron.images.avatars_path   = "public/avatars"
   configatron.images.externals_path = "public/externals"
+  FileUtils.mkdir_p(configatron.images.externals_path + "/image_proxy")
+  FileUtils.mkdir_p(configatron.images.externals_path + "/screenshots")
   
   configatron.socket.port = 5001
   configatron.longpolling.port = 8001
