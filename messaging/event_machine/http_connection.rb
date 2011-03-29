@@ -64,11 +64,9 @@ class HttpConnection < EM::Connection
       @response.xhr_streaming_enable true
       @response.send_response
       
-      # for debugging:
-      @params = CGI::unescape(@http_query_string || '')
-      
       begin
-        if autosubscribe(JSON.parse(@params))
+        @params = JSON.parse(CGI::unescape(@http_query_string || ''))
+        if autosubscribe(@params)
           return
         end
       rescue
