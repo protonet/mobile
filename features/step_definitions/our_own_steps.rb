@@ -13,7 +13,7 @@ Then /^debug$/ do
 end
 
 When /^(?:|I )go unauthenticated to the start page$/ do
-  visit "/logout"
+  visit "/users/sign_out"
   sleep 1
 end
 
@@ -73,7 +73,7 @@ Given /^I leave the page$/ do
 end
 
 Given /^I log out$/ do
-  visit "/logout"
+  visit "/users/sign_out"
 end
 
 Given /^I select the channel "([^"]*)" in the channel list$/ do |linktext|
