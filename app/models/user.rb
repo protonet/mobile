@@ -4,8 +4,8 @@ require 'net/ldap' if configatron.ldap.single_authentication == true
 class User < ActiveRecord::Base
   include Rabbit
 
-  NAME_REGEX    = /\A[^[:cntrl:]\\<>\/&]*\z/
-  BAD_NAME_MSG  = "use only letters, numbers, and .-_@ please."
+  NAME_REGEX    = /\A[\w\.\-\_]*\z/
+  BAD_NAME_MSG  = "use only letters, numbers, and .-_ please."
   BAD_EMAIL_MSG = "should look like an email address."
 
   devise :database_authenticatable, :registerable, :encryptable, :encryptor => :restful_authentication_sha1
