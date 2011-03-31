@@ -4,7 +4,7 @@ source 'http://gems.github.com/'
 gem "rails", "~> 3.0.4"
 gem "bundler", "1.0.10"
 gem "mysql"
-gem "devise", "~> 1.1.5"
+gem "devise", "1.2.1"
 gem "memcache-client"
 
 gem "configatron", "2.6.3"
@@ -29,7 +29,7 @@ gem "declarative_authorization", "~> 0.5.2"
 gem "paperclip", "~> 2.3.8"
 gem "newrelic_rpm"
 gem "sprockets"
-gem "dm-sprockets-rails", :require => "sprockets-rails"
+gem "sprockets-rails", :require => "sprockets-rails", :git => "git@github.com:dudemeister/sprockets-rails.git"
 gem "activeldap3", :require => "active_ldap" #, :git => "git://github.com/asynchrony/activeldap.git", :branch => "rails3"
 gem 'jquery-rails'
 

@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   BAD_NAME_MSG  = "use only letters, numbers, and .-_@ please."
   BAD_EMAIL_MSG = "should look like an email address."
 
-  devise :database_authenticatable, :registerable
+  devise :database_authenticatable, :registerable, :encryptable, :encryptor => :restful_authentication_sha1
 
   validates_presence_of     :login,    :unless => :skip_validation
   validates_length_of       :login,    :within => 3..40, :unless => :skip_validation
