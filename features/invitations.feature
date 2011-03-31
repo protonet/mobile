@@ -45,5 +45,5 @@ Feature: Invitations
     Given an invitation exists with token: "1122334455", email: "friend@protonet.com", channel_ids: "1", user: user "dudemeister", accepted_at: "2011-01-15 10:00:00"
     And I go unauthenticated to the start page
     When I accept the invitation with the token "1122334455"
-    Then I should be on the login page
+    Then I should be on the new_user_session page
     And I should see "The invitation token is invalid"
