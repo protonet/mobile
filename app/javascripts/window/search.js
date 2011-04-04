@@ -3,13 +3,6 @@
 //= require "../behaviors/search.js"
 //= require "../lib/jquery.inview/jquery.inview.js"
 
-/**
- * TODO:
- *  - Endless scrolling
- *  - Fix scrolling performance on webkit
- *  - Show messages in context
- *  - Speed!
- */
 protonet.window.Search = {
   RESULTS_COUNT: 10,
   
