@@ -5,8 +5,10 @@ $(function() {
 
 $(function() {
   $("#channels-page li.channel").click(function(event){
-    var channelId = event.currentTarget.id.match(/channel-(.*)/)[1];
-    var networkId = $(event.currentTarget).parent().parent().attr('id').match(/network-(.*)/)[1];
+    event.preventDefault();
+    var element = $(event.currentTarget);
+    var channelId = element.attr("id").match(/channel-(.*)/)[1];
+    var networkId = element.parent().parent().attr('id').match(/network-(.*)/)[1];
     $("#channels-details").load("/channels/" + channelId + '?network_id=' + networkId);
     $("#channels-page li.channel.clicked").toggleClass("clicked");
     $(this).toggleClass("clicked");
