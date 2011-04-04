@@ -7,7 +7,7 @@
     <div class="inner-body">
     
       <%- if current_user.stranger? -%>
-        <%= render :partial => 'sessions/registration_box' %>
+        <%= render :partial => 'devise/sessions/registration_box' %>
       <%- end -%>
 
       <header<%= " class=\"login\"" if current_user.stranger? %>>
@@ -33,7 +33,7 @@
               <a>settings</a>
             </li>
             <li class="logout" tabindex="-1">
-              <%= link_to("logout", destroy_user_session_path) %>
+              <%= link_to("logout", logout_path) %>
             </li>
           </ul>
         <%- end -%>

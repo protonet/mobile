@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
     if current_user.stranger?
       if SystemPreferences.allow_dashboard_for_strangers == false
         flash[:error] = "Please authenticate :) !"
-        return redirect_to("/login")
+        return redirect_to(new_user_session_path)
       else
         # check wether it is an allowed uri
         #  move to {:controller => '', :action => ''} scheme
