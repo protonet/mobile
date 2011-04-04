@@ -1,5 +1,6 @@
 //= require "../utils/escape_html.js"
 //= require "../utils/parse_query_string.js"
+//= require "../behaviors/search.js"
 //= require "../lib/jquery.inview/jquery.inview.js"
 
 /**
