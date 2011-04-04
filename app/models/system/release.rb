@@ -12,11 +12,16 @@ module System
       end
 
       def latest_version
-        Net::HTTP.get(URI.parse('http://releases.protonet.info/release/version')).to_i
+        @latest_version ||= Net::HTTP.get(URI.parse('http://releases.protonet.info/release/version')).to_i
       end
       
       def latest_beta_version
-        Net::HTTP.get(URI.parse('http://releases.protonet.info/beta/version')).to_i
+        @latest_beta_version ||= Net::HTTP.get(URI.parse('http://releases.protonet.info/beta/version')).to_i
+      end
+      
+      def last_releases
+        @release_list ||= Net::HTTP.get(URI.parse('http://releases.protonet.info/list'))
+        @release_list.split("<br>").map {|entry| entry.split("|")}
       end
 
       def most_recent?
