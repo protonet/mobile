@@ -1,6 +1,12 @@
 Feature: Using the protonet preferences
   
   @wip
+  Scenario: Only profile settings if you're no admin
+  
+  @wip
+  Scenario: all settings if you're an admin
+  
+  @wip
   Scenario: No update functionality if you're no admin
     Give I am no admin
     And I click on "software updates"
