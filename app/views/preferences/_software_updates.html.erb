@@ -7,6 +7,6 @@ software update is available: <bold><%= !System::Release.most_recent? %></bold><
 <% form_tag(system_release_update_path) do %>
   <%= label_tag          :password,          'Enter your *NODE* password:' %><br />
   <%= password_field_tag :password, nil %><br />
-  <%= select_tag :release, options_for_select(System::Release.last_releases.reverse.map{|c| ["#{c[0]} / #{c[1]}", c[0]] if c[0].to_i > System::Release.current_version}.compact, System::Release.last_releases.reverse.find {|release| release[1].strip! == "STABLE"}[0]) %>
+  <%= select_tag :release, options_for_select(System::Release.last_releases.reverse.map{|c| ["#{c[0]} / #{c[1]}", c[0]] if c[0].to_i >= System::Release.current_version}.compact, System::Release.last_releases.reverse.find {|release| release[1].strip! == "STABLE"}[0]) %>
   and hit <%= button(System::Release.most_recent? ? "reinstall" : "update") %>
 <% end %> 
