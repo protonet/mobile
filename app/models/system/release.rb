@@ -12,20 +12,20 @@ module System
       end
 
       def latest_version
-        @latest_version ||= Net::HTTP.get(URI.parse('http://releases.protonet.info/release/version')).to_i
+        Net::HTTP.get(URI.parse('http://releases.protonet.info/release/version')).to_i
       end
       
       def latest_beta_version
-        @latest_beta_version ||= Net::HTTP.get(URI.parse('http://releases.protonet.info/beta/version')).to_i
+        Net::HTTP.get(URI.parse('http://releases.protonet.info/beta/version')).to_i
       end
       
       def last_releases
-        @release_list ||= Net::HTTP.get(URI.parse('http://releases.protonet.info/list'))
-        @release_list.split("<br>").map {|entry| entry.split("|")}
+        release_list = Net::HTTP.get(URI.parse('http://releases.protonet.info/list'))
+        release_list.split("<br>").map {|entry| entry.split("|")}
       end
 
       def most_recent?
-        latest_version == current_version
+        latest_version <= current_version
       end
       
       def password_correct?(password)
