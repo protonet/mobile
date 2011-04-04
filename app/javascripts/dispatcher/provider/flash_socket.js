@@ -33,6 +33,10 @@ protonet.dispatcher.provider.FlashSocket = {
   
   connect: function() {
     this.socket = this.socket || swfobject.getObjectById("flash-socket");
+    if (!this.socket) {
+      // User is probably using a flash blocker
+      return;
+    }
     this.socket.connectSocket(protonet.config.dispatching_server, protonet.config.dispatching_server_port);
     // the flash socket will trigger the socket.connected event
     protonet.bind("socket.connected", this._authenticate.bind(this));

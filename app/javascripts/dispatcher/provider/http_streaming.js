@@ -38,28 +38,49 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
           queryParams         = encodeURIComponent(JSON.stringify(authenticationData)),
           url                 = protonet.config.xhr_streaming_url + "?" + queryParams,
           connected;
-
+          
+      // Make sure that an already running request is aborted
+      this.disconnect();
+      
       this.ajax = new win.XMLHttpRequest();
+      this.ajax.activeSince = new Date();
       this.ajax.open("GET", url, true);
       this.ajax.onreadystatechange = function() {
         if (this.ajax.readyState >= 3 && connected === undefined) {
           connected = (this.ajax.status == 200);
           protonet.trigger("socket.connected", connected);
         }
+        
         if (!connected) {
           return;
         }
-
-        if (this.ajax.readyState === 3 || this.ajax.readyState === 4) {
+        
+        if (this._hasReceivedData(this.ajax)) {
           var responseText = this.ajax.responseText || "";
               rawData      = responseText.substring(byteOffset);
           byteOffset = responseText.length;
           protonet.trigger("socket.receive", rawData);
         }
+        
+        if (this._shouldReconnect(this.ajax)) {
+          this._connect(win);
+        }
       }.bind(this);
       this.ajax.send(null);
     },
-
+    
+    _shouldReconnect: function(ajaxObj) {
+      var now = new Date();
+      return  ajaxObj.readyState  === 4 &&
+              ajaxObj.status      === 200 &&
+              // only reconnect when the old ajaxObj was active for more than 10 sec
+              (now - ajaxObj.activeSince) > 10000;
+    },
+    
+    _hasReceivedData: function(ajaxObj) {
+      return ajaxObj.readyState === 3 || ajaxObj.readyState === 4;
+    },
+    
     disconnect: function() {
       this.ajax && this.ajax.abort();
     },
