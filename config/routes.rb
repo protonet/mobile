@@ -84,7 +84,7 @@ Dashboard::Application.routes.draw do
   
   root :to => 'instruments#index'
   match '/:controller(/:action(/:id))'
-  match '*path' => 'system/captive#catchall'
+  match '*path' => 'system/captive#catchall', :constraints => System::CaptiveController
   
   
 end
