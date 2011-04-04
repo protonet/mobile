@@ -38,3 +38,6 @@ Feature: Using the protonet image proxy
   @wip
   Scenario: Screenshooting problematic pages
     Then screenshooting "http://soundcloud.com/" should work
+    
+  @wip
+  Scenario: Proxying an image that contains whitespaces or other special chars

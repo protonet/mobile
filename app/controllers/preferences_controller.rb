@@ -2,7 +2,7 @@ class PreferencesController < ApplicationController
   before_filter :only_registered
   
   def index
-    @preferences = [
+    @preferences = current_user.roles.include?(Role.find_by_title!('admin')) ? [
       {:url => 'profile', :name => 'your profile'},
       {:url => 'node_settings', :name => 'node settings'},
       {:url => 'network_settings', :name => 'network settings'},
@@ -10,6 +10,8 @@ class PreferencesController < ApplicationController
       {:url => 'system_overview', :name => 'system overview'},
       {:url => 'vpn_settings', :name => 'vpn settings'},
       {:url => 'software_updates', :name => 'software updates'}
+    ] : [
+      {:url => 'profile', :name => 'your profile'}
     ]
   end
   

@@ -18,13 +18,15 @@ $(function() {
   
   // add clickabilty to menus
   $("#preferences-page ul li").click(function(event){
-    var preference = event.currentTarget.id;
+    event.preventDefault();
+    var element = $(event.currentTarget);
+    var preference = element.attr("id");
     $("#preferences-details").load("/preferences/" + preference, function(){
       // now initiate controls
       $("#preferences-details").trigger(preference);
     })
     $("#preferences-page ul li.clicked").toggleClass("clicked");
-    $(this).toggleClass("clicked");
+    element.toggleClass("clicked");
     location.hash = preference;
   });
   
