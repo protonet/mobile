@@ -19,6 +19,10 @@ module System
       sleep 3
       redirect_to params[:req]
     end
+    
+    def self.matches?(url)
+      false
+    end
 
   end
 end
