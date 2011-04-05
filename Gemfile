@@ -2,7 +2,7 @@ source :gemcutter
 source 'http://gems.github.com/'
 
 gem "rails", "~> 3.0.4"
-gem "bundler", "1.0.10"
+gem "bundler", "1.0.11"
 gem "mysql"
 gem "devise", "1.2.1"
 gem "memcache-client"
