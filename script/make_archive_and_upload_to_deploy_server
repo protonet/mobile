@@ -17,7 +17,7 @@ done
 #  prepare the basics
 
 #  generate a new version
-export last_version=`curl http://releases.protonet.info/release/version`
+export last_version=`curl http://releases.protonet.info/beta/version`
 
 if [ "$release_type" != "OVERWRITE LAST" ]; then
    let "last_version += 1"
