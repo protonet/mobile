@@ -22,7 +22,7 @@
 }
 
 .modal-window-content {
-  overflow: hidden;
+  overflow: auto;
   margin: 0 auto;
   max-width: 650px;
   height: 40px;
@@ -86,6 +86,7 @@
 .search-window .modal-window-content {
   background: rgba(255, 255, 255, 0.8);
   padding-left: 45px;
+  overflow: hidden;
   overflow-y: auto;
 }
 
@@ -129,6 +130,7 @@ input.search {
 /* =MODAL WINDOW: MEEP DETAILS
 =========================================================================== */
 .meep-window .modal-window-content {
+  overflow: hidden;
   padding-left: 40px;
   padding-right: 40px;
   position: relative;

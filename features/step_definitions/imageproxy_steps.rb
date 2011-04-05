@@ -13,9 +13,9 @@ Then /^proxying "([^"]*)" should work$/ do |url|
 end
 
 Then /^resizing "([^"]*)" should work$/ do |url|
-#cleanup
-  `rm #{Rails.root}/public/externals/image_proxy/#{Digest::MD5.hexdigest(url)}_100_100 2>&1 > /dev/null`
-  request = open("http://127.0.0.1:#{configatron.nodejs.port}/image_proxy?height=100&width=100&url=#{url}")
+  #cleanup
+  `rm #{Rails.root}/public/externals/image_proxy/#{Digest::MD5.hexdigest(url)}* 2>&1 > /dev/null`
+  request = open("http://127.0.0.1:8125/image_proxy?height=100&width=100&url=http://media.ebaumsworld.com/picture/mzeBONE/BackToTheFutureII.gif")
   request.content_type.should match(/image/)
   request.status.should == ["200", "OK"]
 end

@@ -29,7 +29,7 @@
       prism.getAttention();
     }
     
-    var avatar = protonet.config.base_url + "/" + meepData.avatar;
+    var avatar = protonet.config.base_url + meepData.avatar;
     // Crop image, otherwise Windows will display it in it's original size (which could be huge as a black man's dick)
     avatar = protonet.media.Proxy.getImageUrl(avatar, { width: 36, height: 36 });
     prism.showNotification(meepData.author, meepData.message, avatar);

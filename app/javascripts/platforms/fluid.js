@@ -1,4 +1,5 @@
 //= require "../utils/is_window_focused.js"
+//= require "../media/proxy.js"
 
 /**
  * Fluid turns any web page turns any web app into a desktop app
@@ -18,6 +19,9 @@
       return;
     }
     
+    var avatar = protonet.config.base_url + meepData.avatar;
+    avatar = protonet.media.Proxy.getImageUrl(avatar, { width: 36, height: 36 });
+    
     unreadMessages++;
     fluid.dockBadge = unreadMessages;
     fluid.showGrowlNotification({
@@ -26,7 +30,7 @@
       priority:     1,
       sticky:       false,
       identifier:   "protonet-message-" + meepData.id,
-      icon:         protonet.config.base_url + "/" + meepData.avatar
+      icon:         avatar
     });
   });
   

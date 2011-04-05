@@ -2,7 +2,7 @@
 
 export SHARED_PATH=$1
 export HOME=$SHARED_PATH/../..
-shift 1
+
 . $HOME/.bashrc
 . $HOME/.profile
 

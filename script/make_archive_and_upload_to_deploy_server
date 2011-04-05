@@ -9,7 +9,7 @@ export DEPLOYER_ARCHIVE=deployer.tar.gz
 export COPYFILE_DISABLE=true
 
 #  is this a beta or a stable release?
-select release_type in BETA STABLE "OVERWRITE LAST"
+select release_type in UNSTABLE STABLE "OVERWRITE LAST"
 do 
   break;
 done
@@ -64,6 +64,10 @@ tar -pczf $DEPLOYER_ARCHIVE deployer/
 # create directory for the new release and upload it
 ssh protonet-live "mkdir -p ~/code-dispatcher/releases/$last_version"
 scp $APP_ARCHIVE $BABUSHKA_ARCHIVE $DEPLOYER_ARCHIVE protonet-live:~/code-dispatcher/releases/$last_version
+if [ "$release_type" != "OVERWRITE LAST" ]; then
+   scp /tmp/dashboard/TYPE protonet-live:~/code-dispatcher/releases/$last_version
+fi
+
 
 # if this is a stable release then link that thing to stable
 if [ "$release_type" = "STABLE" ]; then

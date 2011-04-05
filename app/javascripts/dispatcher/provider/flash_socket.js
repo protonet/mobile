@@ -20,7 +20,11 @@ protonet.dispatcher.provider.FlashSocket = {
     );
   },
   
-  _authenticate: function() {
+  _authenticate: function(e, connected) {
+    if (!connected) {
+      return false;
+    }
+    
     this.send({
       operation: "authenticate",
       payload: {
@@ -37,6 +41,11 @@ protonet.dispatcher.provider.FlashSocket = {
       // User is probably using a flash blocker
       return;
     }
+    
+    if (!this.socket.connectSocket) {
+      protonet.trigger("socket.connected", false);
+    }
+    
     this.socket.connectSocket(protonet.config.dispatching_server, protonet.config.dispatching_server_port);
     // the flash socket will trigger the socket.connected event
     protonet.bind("socket.connected", this._authenticate.bind(this));
