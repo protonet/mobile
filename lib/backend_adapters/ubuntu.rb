@@ -54,7 +54,7 @@ module BackendAdapters
     
     def local_hosts
       @local_hosts ||= ([
-        System::Preferences.public_host.gsub(/\:[0-9]*/, ''),
+        SystemPreferences.public_host.gsub(/\:[0-9]*/, ''),
         hostname,
         "local.protonet.info",
         "#{hostname}.local",
