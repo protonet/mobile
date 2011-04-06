@@ -4,4 +4,4 @@
 # If you change this key, all old signed cookies will become invalid!
 # Make sure the secret is at least 30 characters and all random,
 # no regular words or you'll be exposed to dictionary attacks.
-Dashboard::Application.config.secret_token = ((System::Preferences.session_secret ||= ActiveSupport::SecureRandom.base64(120)) rescue ActiveSupport::SecureRandom.base64(120))
+Dashboard::Application.config.secret_token = ((SystemPreferences.session_secret ||= ActiveSupport::SecureRandom.base64(120)) rescue ActiveSupport::SecureRandom.base64(120))
