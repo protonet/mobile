@@ -99,7 +99,7 @@ start the messaging broker
 
 and start the rails server (it will start and shutdown the js dispatcher and node.js automatically)
 
-    script/server
+    rails s
 
 goto http://localhost:3000 and enjoy the ride!
 
