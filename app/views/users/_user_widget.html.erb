@@ -4,7 +4,7 @@
   <ul>
     <!-- tabindex="-1" ensures that the element is focusable via css -->
     <% users.each do |user| -%>
-      <li data-user-id="<%= user.id %>" title="<%=h user.display_name %>" <%= 'class="myself"' if user.id == current_user.id %>>
+      <li data-user-id="<%= user.id %>" title="<%=h user.display_name %>" <%= raw 'class="myself"' if user.id == current_user.id %>>
         <a href="#" tabindex="-1"><%=h user.display_name %></a>
       </li>
     <% end -%>
