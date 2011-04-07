@@ -82,7 +82,7 @@ protonet.user.Browser = {
         return true;
       }
       
-      testElement = document.createElement("div");
+      var testElement = document.createElement("div");
       eventName = "on" + eventName;
       var isSupported = (eventName in testElement);
       if (!isSupported) {
