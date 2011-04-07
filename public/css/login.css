@@ -29,6 +29,14 @@ header.login {
   width: auto;
 }
 
+#single-login .form .field_with_errors {
+  display: inline;
+}
+
+#single-login .sign-up .field_with_errors input {
+  border: 1px solid red;
+}
+
 #login .form legend {
   color: #666;
   font-size: 17px;
