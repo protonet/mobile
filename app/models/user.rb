@@ -48,7 +48,7 @@ class User < ActiveRecord::Base
     rescue ActiveRecord::RecordNotFound
       user = new(:name => 'Anonymous', :login => 'Anonymous')
       user.id = -1
-      user.save!
+      user.save!(false)
       find(-1)
     end
   end

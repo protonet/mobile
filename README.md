@@ -53,7 +53,7 @@ GENERAL
 
 if you don't have bundler install it first:
 
-    (sudo) gem install bundler -v 0.9.26
+    (sudo) gem install bundler -v 1.0.11
 
 we'll be using homebrew to manage dependencies (this is what you should use on OS X anyways)
 
@@ -85,7 +85,7 @@ Install our messaging broker:
 NODE.JS
 -------
 
-Install node.js (0.4.1):
+Install node.js (0.2.6):
 
     brew install node
 
