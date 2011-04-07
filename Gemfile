@@ -29,7 +29,7 @@ gem "declarative_authorization", "~> 0.5.2"
 gem "paperclip", "~> 2.3.8"
 gem "newrelic_rpm"
 gem "sprockets"
-gem "sprockets-rails", :require => "sprockets-rails", :git => "git@github.com:dudemeister/sprockets-rails.git"
+gem "sprockets-rails", :require => "sprockets-rails", :git => "https://github.com/dudemeister/sprockets-rails.git"
 gem "activeldap3", :require => "active_ldap" #, :git => "git://github.com/asynchrony/activeldap.git", :branch => "rails3"
 gem 'jquery-rails'
 

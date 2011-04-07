@@ -4,10 +4,11 @@ log_file -noappend /tmp/ptn_update_migrations.log
 
 # never time out
 set timeout -1
+set password [lindex $argv 0]
 
 # This spawns the babushka protonet migration
-spawn babushka protonet:up.migration
-set password [lindex $argv 0]
+spawn sudo su - protonet -c "babushka protonet:up.migration"
+
 # The script expects Password any number of times and answers with the correct password
 expect {
   -re "\[Pp]assword.*:"  {
@@ -15,6 +16,7 @@ expect {
     exp_continue
   }
 }
+
 # puts $expect_out(buffer)
 log_file
 
