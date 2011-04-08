@@ -51,3 +51,7 @@ if defined?(PhusionPassenger)
     end
   end
 end
+
+# load this object for pre rails3 sessions
+# TODO remove after all nodes are on rails3
+ActionController::Flash::FlashHash
