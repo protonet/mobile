@@ -76,15 +76,19 @@ Dashboard::Application.routes.draw do
     resources :avatars
   end
   
-  # TODO: RAILS 3
-  # Sprockets
-  # SprocketsApplication.routes(map, :resources)
-  # debugger
+  # js
   resources :sprockets, :only => :show
+  
+  # namespace "api/v1" do
+  #   match 'meeps' => "api/meeps#index"
+  # end
+  
+  match "api/v1/meeps"        => "api_v1/meeps#index"
+  match "api/v1/meeps/create" => "api_v1/meeps#create"
+
   
   root :to => 'instruments#index'
   match '/:controller(/:action(/:id))'
   match '*path' => 'system/captive#catchall', :constraints => System::CaptiveController
-  
   
 end
