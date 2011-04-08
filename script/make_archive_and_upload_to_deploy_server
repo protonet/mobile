@@ -4,6 +4,7 @@ export HOST=protonet-live
 export APP_ARCHIVE=dashboard.tar.gz
 export BABUSHKA_ARCHIVE=babushka.tar.gz
 export DEPLOYER_ARCHIVE=deployer.tar.gz
+export PROJECT_DIR=`pwd`
 
 # for os x tells tar not to include resource forks
 export COPYFILE_DISABLE=true
@@ -26,8 +27,12 @@ fi
 #  get the dashboard
 cd /tmp
 rm -rf dashboard
-git clone git@github.com:protonet/dashboard.git
+git clone $PROJECT_DIR dashboard
 cd dashboard
+git checkout master
+git reset --hard
+git clean -f
+git pull
 git submodule init
 git submodule update
 rm -rf .git
