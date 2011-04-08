@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   BAD_NAME_MSG  = "use only letters, numbers, and .-_ please."
   BAD_EMAIL_MSG = "should look like an email address."
 
-  devise :database_authenticatable, :validatable, :registerable, :encryptable, :encryptor => :restful_authentication_sha1
+  devise :database_authenticatable, :registerable, :encryptable, :encryptor => :restful_authentication_sha1
 
   validates_presence_of     :login,    :unless => :skip_validation
   validates_length_of       :login,    :within => 3..40, :unless => :skip_validation
@@ -17,6 +17,12 @@ class User < ActiveRecord::Base
 
   validates_format_of       :name,     :with => NAME_REGEX,  :message => BAD_NAME_MSG, :allow_nil => true, :unless => :skip_validation
   validates_length_of       :name,     :maximum => 100, :unless => :skip_validation
+
+  with_options :unless => :skip_validation do |v|
+    v.validates_presence_of     :password
+    v.validates_confirmation_of :password
+    v.validates_length_of       :password, :within => 6..20, :allow_blank => true
+  end
 
   attr_accessible :login, :email, :name, :password, :password_confirmation
   attr_accessor :channels_to_subscribe, :invitation_token
