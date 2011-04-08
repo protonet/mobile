@@ -7,10 +7,14 @@ set timeout -1
 set password [lindex $argv 0]
 
 # This spawns the babushka protonet migration
-spawn bash
-exp_send "source /home/protonet/.bashrc\n"
-exp_send "source /home/protonet/.profile\n"
-exp_send "babushka protonet:up.migration\n"
+spawn bash -l
+exp_send "source /home/protonet/.bashrc\\n"
+exp_send "source /home/protonet/.profile\\n"
+exp_send "unset RUBYOPT;unset GEM_HOME; unset GEM_PATH; unset BUNDLE_GEMFILE"
+exp_send "export GEM_PATH=/usr/lib/ruby/gems/1.8\\n"
+exp_send "export GEM_HOME=/usr/lib/ruby/gems/1.8\\n"
+exp_send "babushka protonet:up.migration\\n"
+exp_send "exit\\n"
 
 # The script expects Password any number of times and answers with the correct password
 expect {
