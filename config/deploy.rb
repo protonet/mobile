@@ -87,7 +87,7 @@ namespace :bundler do
   
   task :bundle_new_release, :roles => :app do
     bundler.create_symlink
-    run "cd #{release_path}; bundle check 2>&1 > /dev/null ; if [ $? -ne 0 ] ; then sh -c \"bundle install --without test:cucumber\" ; fi"
+    run "cd #{release_path}; bundle install --without test:cucumber"
   end
   
   task :lock, :roles => :app do
