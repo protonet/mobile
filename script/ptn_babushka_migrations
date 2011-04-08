@@ -7,7 +7,10 @@ set timeout -1
 set password [lindex $argv 0]
 
 # This spawns the babushka protonet migration
-spawn sudo su - protonet -c "babushka protonet:up.migration"
+spawn bash
+exp_send "source /home/protonet/.bashrc\n"
+exp_send "source /home/protonet/.profile\n"
+exp_send "babushka protonet:up.migration\n"
 
 # The script expects Password any number of times and answers with the correct password
 expect {
