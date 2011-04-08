@@ -44,10 +44,9 @@ INSTALL
 GENERAL
 -------
     git clone git@github.com:protonet/dashboard.git
-    mkdir -p shared/user-files
-    mkdir -p dashboard/public/externals/image_proxy
-    mkdir -p dashboard/public/externals/screenshots
     cd dashboard
+    mkdir -p public/externals/image_proxy
+    mkdir -p public/externals/screenshots
     git submodule init
     git submodule update
 
@@ -55,7 +54,7 @@ if you don't have bundler install it first:
 
     (sudo) gem install bundler -v 1.0.11
 
-we'll be using homebrew to manage dependencies (this is what you should use on OS X anyways)
+we'll be using homebrew (>= 0.8) to manage dependencies (this is what you should use on OS X anyways)
 
     ruby -e "$(curl -fsSL https://gist.github.com/raw/323731/install_homebrew.rb)"
 
@@ -87,7 +86,11 @@ NODE.JS
 
 Install node.js (0.2.6):
 
-    brew install node
+    download the 0.2.6 version of node at
+    http://nodejs.org/dist/node-v0.2.6.tar.gz
+    ./configure
+    make
+    sudo make install
 
 START THE SYSTEM
 ----------------

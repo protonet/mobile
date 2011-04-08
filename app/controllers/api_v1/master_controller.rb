@@ -3,8 +3,12 @@ class ApiV1::MasterController < ApplicationController
   before_filter :authenticate
   
   def authenticate
-    authenticate_or_request_with_http_basic("VersaCommerce API") do |application_key, password|
-      application_key == 'test' && password == 'test'
+    authenticate_or_request_with_http_basic("VersaCommerce API") do |username, password|
+      
+      user = User.find_by_login(username) rescue nil
+      @current_user = user if user && user.valid_password?(password)
+
+
       # password can be api key or user password
       
       

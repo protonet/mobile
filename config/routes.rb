@@ -85,6 +85,7 @@ Dashboard::Application.routes.draw do
   
   match "api/v1/meeps"        => "api_v1/meeps#index"
   match "api/v1/meeps/create" => "api_v1/meeps#create"
+  match "api/v1/meeps/show"   => "api_v1/meeps#show"
 
   
   root :to => 'instruments#index'
