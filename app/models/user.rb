@@ -107,7 +107,7 @@ class User < ActiveRecord::Base
   def generate_new_communication_token
     self.communication_token = Devise.friendly_token
     self.communication_token_expires_at = Time.now + 5.day
-    save(false)
+    save(:validate => false)
     # todo: propagate
   end
 
