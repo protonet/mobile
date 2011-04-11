@@ -61,25 +61,25 @@ module ActionController
   end
 end
 
+ActiveSupport::MessageVerifier
+
 module ActiveSupport
   class MessageVerifier
-    class InvalidSignature
       
-      def verify(signed_message)
-        raise InvalidSignature if signed_message.blank?
+    def verify(signed_message)
+      raise InvalidSignature if signed_message.blank?
 
-        data, digest = signed_message.split("--")
-        if data.present? && digest.present? && secure_compare(digest, generate_digest(data))
-          begin
-            Marshal.load(ActiveSupport::Base64.decode64(data))
-          rescue ArgumentError
-            raise InvalidSignature
-          end
-        else
+      data, digest = signed_message.split("--")
+      if data.present? && digest.present? && secure_compare(digest, generate_digest(data))
+        begin
+          Marshal.load(ActiveSupport::Base64.decode64(data))
+        rescue ArgumentError
           raise InvalidSignature
         end
+      else
+        raise InvalidSignature
       end
-      
     end
+      
   end
 end
