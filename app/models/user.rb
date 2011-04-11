@@ -10,19 +10,21 @@ class User < ActiveRecord::Base
 
   devise :database_authenticatable, :registerable, :encryptable, :encryptor => :restful_authentication_sha1
 
-  validates_presence_of     :login,    :unless => :skip_validation
-  validates_length_of       :login,    :within => 3..40, :unless => :skip_validation
-  validates_uniqueness_of   :login,    :unless => :skip_validation
-  validates_format_of       :login,    :with => NAME_REGEX, :message => BAD_NAME_MSG, :unless => :skip_validation
-
-  validates_format_of       :name,     :with => NAME_REGEX,  :message => BAD_NAME_MSG, :allow_nil => true, :unless => :skip_validation
-  validates_length_of       :name,     :maximum => 100, :unless => :skip_validation
-
-  with_options :unless => :skip_validation do |v|
+  with_options :unless => :skip_credentials_validation? do |v|
+    validates_presence_of       :login
+    validates_uniqueness_of     :login
+    validates_length_of         :login,    :within => 3..40
+    validates_format_of         :login,    :with => NAME_REGEX, :message => BAD_NAME_MSG
+    validates_format_of         :name,     :with => NAME_REGEX,  :message => BAD_NAME_MSG, :allow_nil => true
+    validates_length_of         :name,     :maximum => 100
+  end
+  
+  with_options :unless => :skip_password_validation? do |v|
     v.validates_presence_of     :password
     v.validates_confirmation_of :password
     v.validates_length_of       :password, :within => 6..20, :allow_blank => true
   end
+  
 
   attr_accessible :login, :email, :name, :password, :password_confirmation
   attr_accessor :channels_to_subscribe, :invitation_token
@@ -145,11 +147,11 @@ class User < ActiveRecord::Base
   end
   
   def anonymous?
-    id == 0
+    id == -1
   end
   
   def stranger?
-    !temporary_identifier.blank? || id == -1
+    !temporary_identifier.blank?
   end
 
   def login=(value)
@@ -167,9 +169,14 @@ class User < ActiveRecord::Base
   def verified_channels
     channels.all(:conditions => ['listens.flags = 1'])
   end
+  
 
+  def skip_password_validation?
+    !new_record? || stranger?
+  end
+  
   # skip validation if the user is a logged out (stranger) user
-  def skip_validation
+  def skip_credentials_validation?
     stranger?
   end
 
