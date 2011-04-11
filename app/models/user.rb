@@ -11,12 +11,12 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :encryptable, :encryptor => :restful_authentication_sha1
 
   with_options :unless => :skip_credentials_validation? do |v|
-    validates_presence_of       :login
-    validates_uniqueness_of     :login
-    validates_length_of         :login,    :within => 3..40
-    validates_format_of         :login,    :with => NAME_REGEX, :message => BAD_NAME_MSG
-    validates_format_of         :name,     :with => NAME_REGEX,  :message => BAD_NAME_MSG, :allow_nil => true
-    validates_length_of         :name,     :maximum => 100
+    v.validates_presence_of       :login
+    v.validates_uniqueness_of     :login
+    v.validates_length_of         :login,    :within => 3..40
+    v.validates_format_of         :login,    :with => NAME_REGEX, :message => BAD_NAME_MSG
+    v.validates_format_of         :name,     :with => NAME_REGEX,  :message => BAD_NAME_MSG, :allow_nil => true
+    v.validates_length_of         :name,     :maximum => 100
   end
   
   with_options :unless => :skip_password_validation? do |v|
