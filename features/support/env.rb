@@ -72,9 +72,15 @@ Devise::Controllers::InternalHelpers.class_eval do
   end
 end
 
+SystemServices.start_all
+
 at_exit do
   # multiuser support
   $browsers && $browsers.each { |id, browser| browser[:driver].quit rescue nil }
+
+  # stop services
+  SystemServices.stop_all unless ENV["NOSTOP"].to_i == 1
+
   
   # Cleanup cached sprocket files
   FileUtils.rm_rf(Rails.root + "/public/sprockets/*")
