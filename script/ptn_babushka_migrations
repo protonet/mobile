@@ -22,6 +22,10 @@ expect {
     send "$password\r"
     exp_continue
   }
+  -re "password for.*:" {
+    send "$password\r"
+    exp_continue
+  }
 }
 
 # puts $expect_out(buffer)
