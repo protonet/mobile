@@ -38,4 +38,8 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
   
+  def is_devise_resource?
+    @devise_mapping = Devise.mappings[:user]
+  end
+  
 end

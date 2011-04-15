@@ -65,13 +65,6 @@ end
 # Cleanup cached sprocket files
 FileUtils.rm_rf(Rails.root + "/public/sprockets/*")
 
-# HAAAAACKKKKK!
-Devise::Controllers::InternalHelpers.class_eval do
-  def is_devise_resource?
-    @devise_mapping = Devise.mappings[:user]
-  end
-end
-
 SystemServices.start_all
 
 at_exit do
