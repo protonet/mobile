@@ -6,7 +6,7 @@ gem "bundler", "1.0.11"
 gem "mysql"
 gem "devise", "1.2.1"
 gem "memcache-client"
-
+gem "httparty", "0.7.4"
 gem "configatron", "2.6.3"
 gem "ruby-debug", "0.10.3"
 gem "eventmachine", "0.12.10"

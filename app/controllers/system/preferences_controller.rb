@@ -7,7 +7,7 @@ module System
         SystemPreferences[k] = v
       end
       respond_to do |format|
-        format.html { redirect_to preferences_path(:anchor => 'system_overview') }
+        format.html { redirect_to preferences_path(:anchor => params[:anchor]) }
         format.js { head :ok }
       end
     end
