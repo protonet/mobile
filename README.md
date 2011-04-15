@@ -132,7 +132,7 @@ DEPLOYING ON UBUNTU
     bash -c "`wget -O - babushka.me/up`"
     babushka sources -a dudemeister git://github.com/dudemeister/babushka-deps.git
 
-this is the licence key: 83489kjdfj734732snfnfdsns98jsnld
+this is the license key: 83489kjdfj734732snfnfdsns98jsnld
 
     babushka "dudemeister:protonet babushka"
 
