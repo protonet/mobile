@@ -1,0 +1,28 @@
+#!/bin/bash
+
+export CURRENT_PATH=$1
+export SHARED=$CURRENT_PATH/../shared
+export HOME=$CURRENT_PATH/../..
+shift 1
+. $HOME/../.bashrc
+. $HOME/../.profile
+cd $SHARED
+export SHARED=`pwd`
+export AUTOSSH_PIDFILE=$SHARED/pids/publish_to_web.pid
+export PORT=$1
+shift 1
+case $1 in
+   start)
+      /usr/bin/autossh -M 0 directory.protonet.info -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22666 -nNT -R $PORT:127.0.0.1:80
+      ;;
+    stop)  
+      kill `cat $AUTOSSH_PIDFILE`
+      ;;
+    status)
+      kill -0 `cat $AUTOSSH_PIDFILE`
+      ;;
+      
+    *)  
+      echo "usage: publish_to_web rails-app-path remote_port {start|stop|status}" ;;
+esac
+exit 0
