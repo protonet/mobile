@@ -4,6 +4,7 @@
   puts "Backend '#{SystemBackend.backend_connection.info}' connected successfully!"
 # end
 
+require 'uuid4r'
 require "#{Rails.root}/lib/linux/commands"
 
 if Rails.env.development?
