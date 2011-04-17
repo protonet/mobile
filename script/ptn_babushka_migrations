@@ -10,7 +10,7 @@ set password [lindex $argv 0]
 spawn bash -l
 exp_send "source /home/protonet/.bashrc\\n"
 exp_send "source /home/protonet/.profile\\n"
-exp_send "unset RUBYOPT;unset GEM_HOME; unset GEM_PATH; unset BUNDLE_GEMFILE"
+exp_send "unset RUBYOPT;unset GEM_HOME; unset GEM_PATH; unset BUNDLE_GEMFILE\\n"
 exp_send "export GEM_PATH=/usr/lib/ruby/gems/1.8\\n"
 exp_send "export GEM_HOME=/usr/lib/ruby/gems/1.8\\n"
 exp_send "babushka protonet:up.migration\\n"
@@ -22,7 +22,7 @@ expect {
     send "$password\r"
     exp_continue
   }
-  -re "password for.*:" {
+  -re ".*password for.*:" {
     send "$password\r"
     exp_continue
   }
