@@ -513,3 +513,18 @@ section.sub {
 .sub form {
   margin-bottom: 20px;
 }
+
+/* =BOX
+=========================================================================== */
+section.box {
+  margin: 30px auto;
+  padding: 10px;
+  position: relative;
+  top: 100px;
+  width: 608px; /* sizes are adapted to be as big as the auto width login box below - sorry */
+}
+div.box-wrapper {
+  margin: 0px auto;
+  width: 890px;
+}
+/* ================================================================ BOX = */

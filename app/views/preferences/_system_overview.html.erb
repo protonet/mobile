@@ -1,0 +1,8 @@
+<%= raw Redcarpet.new(SystemPreferences.captive_portal_greeting).to_html %>
+
+<%= form_tag(system_preferences_update_path) do %>
+  <%= hidden_field_tag('anchor', 'system_overview') %>
+  <%= text_area_tag 'preferences[captive_portal_greeting]', SystemPreferences.captive_portal_greeting, :rows => 10, :cols => 45 %>
+  <%= submit_tag %>
+<% end %>
+

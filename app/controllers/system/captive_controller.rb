@@ -2,6 +2,7 @@ module System
   class CaptiveController < ApplicationController
   
     def index
+      render :layout => "registrations"
     end
   
     # this works fine, but nicer would be to solve this in rack. So not Rails handles 404
