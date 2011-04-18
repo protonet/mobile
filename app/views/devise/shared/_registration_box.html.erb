@@ -16,6 +16,11 @@
         <span class="hint">min. 3 characters</span>
       </div>
       <div>
+        <%= f.label :email, "email" %>
+        <%= f.text_field :email, :title => "email" %>
+        <span class="hint">a valid email address</span>
+      </div>
+      <div>
         <%= f.label :password, "password" %>
         <%= f.password_field :password, :title => "password" %>
         <span class="hint">min. 6 characters</span>

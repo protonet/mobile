@@ -5,16 +5,18 @@ class User < ActiveRecord::Base
   include Rabbit
 
   NAME_REGEX    = /\A[\w\.\-\_]*\z/
+  EMAIL_REGEX   = /\A([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})\z/i
   BAD_NAME_MSG  = "use only letters, numbers, and .-_ please."
   BAD_EMAIL_MSG = "should look like an email address."
 
   devise :database_authenticatable, :registerable, :encryptable, :encryptor => :restful_authentication_sha1
 
   with_options :unless => :skip_credentials_validation? do |v|
-    v.validates_presence_of       :login
-    v.validates_uniqueness_of     :login
+    v.validates_presence_of       :login, :email
+    v.validates_uniqueness_of     :login, :email
     v.validates_length_of         :login,    :within => 3..40
     v.validates_format_of         :login,    :with => NAME_REGEX, :message => BAD_NAME_MSG
+    v.validates_format_of         :email,    :with => EMAIL_REGEX, :message => BAD_NAME_MSG, :allow_nil => false
     v.validates_format_of         :name,     :with => NAME_REGEX,  :message => BAD_NAME_MSG, :allow_nil => true
     v.validates_length_of         :name,     :maximum => 100
   end

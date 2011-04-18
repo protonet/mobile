@@ -26,3 +26,10 @@ Feature: Using the protonet preferences
     And I click on "software updates"
     And there is no new version available
     Then I should see the reinstall button
+
+  @wip
+  Scenario: User updates account data
+    Given Foo
+    And I update email
+    And I update username
+    # check that the inline hints are enabled, the email field doesn't show it

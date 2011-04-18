@@ -14,18 +14,7 @@
 <% if user.can_be_edited_by?(current_user) %>
   <br>
   <h4>Edit</h4>
-
-  <h5>Basic Userdata:</h5>
-  <div id="edit-<%= user.id %>" class="edit section">
-  <%= form_for user, :url => { :action => 'update' } do |f| -%>
-    <fieldset>
-      <%= f.hidden_field :id, { :value => user.id, :id => "user-id-#{user.id}" } %>
-      <%= f.text_field :login, { :value => user.login, :id => "user-login-#{user.id}", :title => "Login of the user…" } %><br>
-      <%= f.text_field :email, { :value => user.email, :id => "user-email-#{user.id}", :title => "E-Mail of the user…" } %>
-      <%= button "Update" %>
-    </fieldset>
-  <% end %>
-  </div>
+  <%= render :partial => "user_basic_data_form", :locals => {:user => user} %>
 <% end %>
 
 <%- if user.can_be_edited_by?(current_user) && current_user.admin? -%>
