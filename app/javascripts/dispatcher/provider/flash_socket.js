@@ -1,6 +1,6 @@
 protonet.dispatcher.provider.FlashSocket = {
   isSupported: function() {
-    return location.search.indexOf("noflash=1") == -1 && window.swfobject && swfobject.hasFlashPlayerVersion("8");
+    return !protonet.config.force_xhr_streaming && location.search.indexOf("noflash=1") == -1 && window.swfobject && swfobject.hasFlashPlayerVersion("8");
   },
   
   initialize: function() {

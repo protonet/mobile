@@ -10,6 +10,10 @@ class SystemPublishToWeb
       SystemMonit.remove(:publish_to_web) if SystemMonit.exists?(:publish_to_web)
     end
     
+    def status
+      
+    end
+    
     private
     def ssh_keys
       SystemPreferences.proxy_ssh_keys ||= create_keys
@@ -21,10 +25,8 @@ class SystemPublishToWeb
       `rm #{filename}*`
       # and generate
       `/usr/bin/ssh-keygen -t dsa -f #{filename} -N ''`
+      `/bin/chmod og-rwx #{filename}`
       keys = {"private" => File.read(filename), "public" => File.read(filename + ".pub")}
-      # cleanup after
-      `rm #{filename}*`
-      keys
     end
     
     def port
@@ -32,10 +34,11 @@ class SystemPublishToWeb
       url = "http://directory.protonet.info/show?node_name=#{SystemPreferences.publish_to_web_name}&license_key=#{license_key}"
       response = HTTParty.get(url).body
       if response.match(/error/)
-        register_url = "http://directory.protonet.info/register?node_name=#{SystemPreferences.publish_to_web_name}&license_key=#{license_key}&public_key=#{ssh_keys["public"]}&uuid=#{Network.local.uuid}"
-        register_response = HTTParty.get(url).body
+        register_options = {:node_name => SystemPreferences.publish_to_web_name, :license_key => license_key, :public_key => ssh_keys["public"], :uuid => Network.local.uuid}
+        register_url = "http://directory.protonet.info/register"
+        register_response = HTTParty.post(register_url, :body => register_options).body
         if register_response.match(/error/)
-          raise RuntimeError
+          raise RuntimeError, register_response
         else
           return JSON.parse(register_response)["port"]
         end

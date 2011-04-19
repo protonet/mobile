@@ -15,6 +15,7 @@
       xhr_streaming_url:        "<%= xhr_streaming_url %>",
       dispatching_server:       "<%= server_name %>",
       dispatching_server_port:  "<%= configatron.socket.port %>",
+      force_xhr_streaming:      <%= raw(request.env["HTTP_X_FORWARDED_FOR"] ? "true" : "false") %>,
       token:                    "<%= current_user.communication_token %>",
       user_name:                "<%= current_user.display_name %>",
       user_id:                  "<%= current_user.id %>",

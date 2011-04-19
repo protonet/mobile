@@ -8,10 +8,10 @@ class SystemPreferencesObserver < ActiveRecord::Observer
   
   private
   def turn_on_publishing
-    
+    SystemPublishToWeb.publish
   end
   
   def turn_off_publishing
-    
+    SystemPublishToWeb.unpublish
   end
 end
