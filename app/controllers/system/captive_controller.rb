@@ -2,6 +2,7 @@ module System
   class CaptiveController < ApplicationController
   
     def index
+      flash[:sticky] = "you've now got access to the internet!"
       render :layout => "registrations"
     end
   
