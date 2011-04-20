@@ -14,7 +14,7 @@ exp_send "unset RUBYOPT;unset GEM_HOME; unset GEM_PATH; unset BUNDLE_GEMFILE\n"
 exp_send "export GEM_PATH=/usr/lib/ruby/gems/1.8\n"
 exp_send "export GEM_HOME=/usr/lib/ruby/gems/1.8\n"
 exp_send "babushka protonet:up.migration\n"
-exp_send "exit\r"
+exp_send "exit\n"
 
 # The script expects Password any number of times and answers with the correct password
 expect {
@@ -24,6 +24,10 @@ expect {
   }
   -re ".*password for.*:" {
     send "$password\r"
+    exp_continue
+  }
+  -re "protonet@.*\$ $" {
+    send "exit\r"
     exp_continue
   }
 }
