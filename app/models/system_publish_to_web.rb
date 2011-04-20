@@ -48,7 +48,7 @@ class SystemPublishToWeb
     end
     
     def monitor_service
-      return if SystemMonit.exists?(:publish_to_web)
+      return if SystemMonit.exists?(:publish_to_web) && SystemMonit.start(:publish_to_web)
       start = "#{service_command} start"
       stop  = "#{service_command} stop"
       pid_file = "#{configatron.current_file_path}/tmp/pids/publish_to_web.pid"
