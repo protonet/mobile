@@ -70,9 +70,9 @@
         <li>
           Publish to web
           <%= label_tag 'preferences[publish_to_web]', 'OFF' %>
-          <%= radio_button_tag 'preferences[publish_to_web]', false, !SystemPreferences.publish_to_web %>
+          <%= radio_button_tag 'preferences[publish_to_web]', false, !SystemPublishToWeb.status %>
           <%= label_tag 'preferences[publish_to_web]', 'ON' %>
-          <%= radio_button_tag 'preferences[publish_to_web]', true, SystemPreferences.publish_to_web %>
+          <%= radio_button_tag 'preferences[publish_to_web]', true, SystemPublishToWeb.status %>
         </li>
       </ul>
     </fieldset>

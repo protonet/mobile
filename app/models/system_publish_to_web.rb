@@ -11,7 +11,7 @@ class SystemPublishToWeb
     end
     
     def status
-      
+      system("#{service_command} status")
     end
     
     private
@@ -32,7 +32,7 @@ class SystemPublishToWeb
     def port
       license_key = File.read(configatron.deploy_config_file_path).match(/:key, \"(.*)\"/)[1]
       url = "http://directory.protonet.info/show?node_name=#{SystemPreferences.publish_to_web_name}&license_key=#{license_key}"
-      response = HTTParty.get(url).body
+      response = HTTParty.get(url, :timeout => 10).body
       if response.match(/error/)
         register_options = {:node_name => SystemPreferences.publish_to_web_name, :license_key => license_key, :public_key => ssh_keys["public"], :uuid => Network.local.uuid}
         register_url = "http://directory.protonet.info/register"
@@ -49,10 +49,14 @@ class SystemPublishToWeb
     
     def monitor_service
       return if SystemMonit.exists?(:publish_to_web)
-      start = "#{configatron.current_file_path}/script/init/publish_to_web #{configatron.current_file_path} #{port} start"
-      stop  = "#{configatron.current_file_path}/script/init/publish_to_web #{configatron.current_file_path} #{port} stop"
+      start = "#{service_command} start"
+      stop  = "#{service_command} stop"
       pid_file = "#{configatron.current_file_path}/tmp/pids/publish_to_web.pid"
       SystemMonit.add(:publish_to_web, start, stop, pid_file)
+    end
+    
+    def service_command
+      "#{configatron.current_file_path}/script/init/publish_to_web #{configatron.current_file_path} #{port}"
     end
     
   end

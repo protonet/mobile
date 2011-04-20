@@ -19,9 +19,19 @@ case $1 in
       kill `cat $AUTOSSH_PIDFILE`
       ;;
     status)
-      kill -0 `cat $AUTOSSH_PIDFILE`
+      if [ -f $AUTOSSH_PIDFILE ]; then
+        if ( kill -0 `cat $AUTOSSH_PIDFILE` 2> /dev/null ); then
+          echo "The proxying is running."
+          exit 0
+        else
+          echo "The proxying is not running."
+          exit 1
+        fi
+      else
+        echo "No pidfile exist, service is probably not running."
+        exit 1
+      fi
       ;;
-      
     *)  
       echo "usage: publish_to_web rails-app-path remote_port {start|stop|status}" ;;
 esac
