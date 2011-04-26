@@ -10,7 +10,7 @@ class SystemDnsmasq
     end
     
     def restart(interface)
-      `sudo /home/protonet/dashboard/current/script/init/dnsmasq /home/protonet/dashboard/current restart #{interface}`
+      `/usr/bin/sudo /home/protonet/dashboard/current/script/init/dnsmasq /home/protonet/dashboard/current restart #{interface}`
     end
     
     def config_file(interface)

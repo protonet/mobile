@@ -104,7 +104,7 @@ module BackendAdapters
 
       # The following line removes connection tracking for the PC
       # This clears any previous (incorrect) route info for the redirection
-      `sudo rmtrack #{ip}`
+      `/usr/bin/sudo rmtrack #{ip}`
     end
     
     def revoke_internet_access(ip)
