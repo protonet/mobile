@@ -15,10 +15,6 @@ class PreferencesController < ApplicationController
     ]
   end
   
-  def profile
-    render :partial => 'profile'
-  end
-  
   def node_settings
     @node = Network.local
     
@@ -33,32 +29,8 @@ class PreferencesController < ApplicationController
     render :partial => 'node_settings'
   end
   
-  def network_settings
-    @interfaces = SystemBackend.get_interfaces
-    render :partial => 'network_settings'
-  end
   def interface
     render :text => SystemBackend.get_interface_information(params[:id]).inspect.gsub(',', ',<br/> &nbsp; ')
-  end
-  
-  def wifi_settings
-    render :partial => 'wifi_settings'
-  end
-  
-  def captive_settings
-    render :partial => 'captive_settings'
-  end
-  
-  def vpn_settings
-    render :partial => 'vpn_settings'
-  end
-  
-  def user_settings
-    render :partial => 'user_settings'
-  end
-  
-  def software_updates
-    render :partial => 'software_updates'
   end
   
   def get_vpn
@@ -67,6 +39,14 @@ class PreferencesController < ApplicationController
       'community' => SystemPreferences.vpn[:identifier],
       'key' => SystemPreferences.vpn[:password]
     }
+  end
+  
+  def method_missing(method, *args)
+    methods = ["profile", "node_settings", "network_settings", "wifi_settings", "captive_settings", "vpn_settings", "user_settings", "software_updates"]
+    if methods.include?(method.to_s)
+      return render :partial => method.to_s
+    end
+    super(method, *args) 
   end
 
 end
