@@ -42,34 +42,47 @@
   border-radius: 0 0.95em 0.95em 0;
 }
 
-.meep .detail-link {
+[data-meep-action] {
+  background-image: url(/img/spr_meep_options.png);
+  background-repeat: no-repeat;
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
   cursor: pointer;
-  padding: 4px 0;
   width: 20px;
-  text-align: center;
-  color: #fff;
-  text-decoration: none;
-  text-shadow: #000 0 0 2px;
-  margin-top: -22px;
+  height: 15px;
   position: absolute;
   right: 0;
   z-index: 3;
-  font-size: 14px;
 }
 
-.meep article:last-of-type .detail-link {
-  margin-top: -43px;
+[data-meep-action='detail-view'] {
+  background-position: 1px 1px;
+  margin-top: -25px;
 }
 
-.meep .detail-link:hover,
-.meep .detail-link:active {
-  font-size: 20px;
+[data-meep-action='detail-view']:active {
+  background-position: 1px -39px;
 }
 
-.meep .detail-link:active {
+.meep article:last-of-type [data-meep-action='detail-view'] {
+  margin-top: -40px;
+}
+
+[data-meep-action='share'] {
+  background-position: 1px -24px;
+  margin-top: -9px;
+}
+
+[data-meep-action='share']:active {
+  background-position: 1px -64px;
+}
+
+.meep article:last-of-type [data-meep-action='share'] {
+  margin-top: -24px;
+}
+
+[data-meep-action]:active {
   color: black;
 }
 

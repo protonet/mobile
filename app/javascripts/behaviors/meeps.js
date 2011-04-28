@@ -4,7 +4,7 @@
 protonet.utils.Behaviors.add({
   "li.meep:focus": function(element, event) {
     var target = $(event.target);
-    if (!target.is("li.meep") && !target.is(".detail-link")) {
+    if (!target.is("li.meep") && !target.is("[data-meep-action]")) {
       element.trigger("blur");
       return;
     }
@@ -13,13 +13,26 @@ protonet.utils.Behaviors.add({
       return;
     }
     
-    // Needed for webkit
-    element.unbind("mouseup.meep_focus").bind("mouseup.meep_focus", function() {
-      setTimeout(function() {
-        if (element.is(":hidden")) {
-          element.trigger("blur");
+    var body = $("body");
+    
+    var blur = function() {
+      body.add(target).unbind(".meep_focus");
+      element.removeClass("focus").find("[data-meep-action]").remove();
+    };
+    
+    body
+      .unbind(".meep_focus")
+      .bind("focusin.meep_focus", function(event) {
+        if (!$.contains(element[0], event.target)) {
+          blur();
         }
-      }, 0);
+      })
+      .bind("focusout.meep_focus", function() {
+        blur();
+      });
+    
+    target.bind("blur.meep_focus", function() {
+      blur();
     });
     
     // One .meep can consistent out of multiple meeps
@@ -27,15 +40,11 @@ protonet.utils.Behaviors.add({
     subMeepParagaphs.each(function(i, subMeepParagaph) {
       subMeepParagaph = $(subMeepParagaph);
       var meepId         = subMeepParagaph.parent().data("meep").id,
-          detailViewLink = new protonet.utils.Template("meep-detail-view-link-template", { id: meepId }).toElement();
+          detailViewLink = new protonet.utils.Template("meep-actions-template", { id: meepId }).toElement();
       detailViewLink.appendTo(subMeepParagaph);
     });
     
     element.addClass("focus");
-  },
-  
-  "li.meep:blur": function(element, event) {
-    element.removeClass("focus").find(".detail-link").remove();
   },
   
   "li.meep:keydown": function(element, event) {
@@ -45,14 +54,15 @@ protonet.utils.Behaviors.add({
     } else if (event.keyCode === 40 || (event.keyCode === 9 && !event.shiftKey)) {
       nextElement = element.next();
     } else if (event.keyCode === 13) {
-      element.find(".detail-link").trigger("click").end().trigger("blur");
+      element.find("[data-meep-action='detail-view']").trigger("click").end().trigger("blur");
+      return;
     } else {
       return;
     }
     
     if (nextElement.length) {
-      element.trigger("blur");
-      nextElement.trigger("focus");
+      element.trigger("blur").trigger("focusout");
+      nextElement.trigger("focus").trigger("focusin");
     }
     event.preventDefault();
   },
@@ -60,10 +70,21 @@ protonet.utils.Behaviors.add({
   /**
    * Meep links within .meep elements
    * <a data-meep-id="12">show</a>
+   * Optionally specify an action
+   * <a data-meep-id="12" data-meep-action="share">share</a>
    */
   "[data-meep-id]:click": function(element, event) {
-    var data = element.parents("article").data("meep");
-    protonet.window.Meep.show(data);
+    var action = element.data("meep-action");
+    switch(action) {
+      case "share":
+        var meep = element.parents("article").data("instance");
+        protonet.Notifications.trigger("form.fill", meep.getUrl());
+        break;
+      default:
+        var data = element.parents("article").data("meep");
+        protonet.window.Meep.show(data);
+    }
+    
     event.preventDefault();
   },
   

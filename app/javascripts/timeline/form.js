@@ -107,10 +107,13 @@ protonet.timeline.Form = {
       this.form.submit();
     }.bind(this));
     
-    protonet.Notifications.bind("form.fill", function(e, message) {
+    protonet.Notifications.bind("form.fill", function(e, message, mark) {
       var value = this.input.focus().val();
-      this.input.val(value + ((value.slice(-1) == " " || !value.length) ? "" : " ") + message);
-      
+      // add a white space before message if neccessary
+      message = ((value.slice(-1) == " " || !value.length) ? "" : " ") + message;
+      this.input.val(value + message);
+      this.input[0].selectionStart = value.length;
+      this.input[0].selectionEnd = value.length + message.length;
       // Invoke text extension checker
       this.input.trigger("paste");
     }.bind(this));
