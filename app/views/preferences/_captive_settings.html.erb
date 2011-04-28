@@ -1,7 +1,23 @@
 <%= raw Redcarpet.new(SystemPreferences.captive_portal_greeting).to_html %>
 
 <%= form_tag(system_preferences_update_path) do %>
-  <%= hidden_field_tag('anchor', 'system_overview') %>
+  <%= hidden_field_tag(:anchor, 'captive_settings') %>
   <%= text_area_tag 'preferences[captive_portal_greeting]', SystemPreferences.captive_portal_greeting, :rows => 10, :cols => 45 %>
   <%= submit_tag %>
 <% end %>
+<br />
+Captive rules ready?
+<%= SystemNetworking.iptables_rules_ready? %>
+
+<%= form_tag system_preferences_update_path do -%>
+  <%= hidden_field_tag(:anchor, 'captive_settings') %>
+  in
+  <%= select_tag :in, options_for_select([['All', 0]]) %>
+  out
+  <%= select_tag :out, options_for_select([['All', 0]]) %>
+  start captive stuff
+  <%= label_tag 'preferences[captive_portal]', 'OFF' %>
+  <%= radio_button_tag 'preferences[captive_portal]', false, !SystemNetworking.captive_status %>
+  <%= label_tag 'preferences[captive_portal]', 'ON' %>
+  <%= radio_button_tag 'preferences[captive_portal]', true, SystemNetworking.captive_status %>
+<%- end -%>

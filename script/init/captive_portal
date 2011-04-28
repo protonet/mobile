@@ -1,0 +1,31 @@
+#!/bin/bash
+
+export CURRENT_PATH=$1
+export SHARED=$CURRENT_PATH/../shared
+export HOME=$CURRENT_PATH/../..
+shift 1
+. $HOME/../.bashrc
+. $HOME/../.profile
+cd $SHARED
+export SHARED=`pwd`
+export PIDFILE=$SHARED/pids/captive_portal.pid
+export PUBIF=$1
+export EXTIF=$2
+shift 2
+case $1 in
+    start)
+      $SHARED/config/ifconfig.d/iptables
+      ;;
+    status)
+      if [ -z "`iptables -L -n | grep unknown_user`" ]; then
+        echo "Couldn't find the unknown_user chain, probably down."
+        exit 1
+      else
+        echo "Firewall rules seem to be active."
+        exit 0
+      fi
+      ;;
+    *)  
+      echo "usage: captive_portal rails-app-path public_interface external_interface {start|status}" ;;
+esac
+exit 0

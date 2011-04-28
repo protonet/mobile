@@ -30,6 +30,7 @@ IPT=/sbin/iptables
 EXTIF="eth0"
 PUBIF="wlan1"
 PRVIF="wlan0"
+REDIRECTION_TARGET="10.43.0.1"
 # all INTERNAL interfaces
 ALLINTIFS=( $PUBIF $PRVIF )
 
@@ -51,11 +52,12 @@ echo "   Creating our unknown_user chain (handles traffic from public interface)
   $IPT -N unknown_user -t nat
 
 echo "   manage traffic coming from the public interface.."
-  # accept allow tcp:80, udp:67 (dhcp) and udp:53 (dns) and tcp:5000 (protonet-socket) requests
-  $IPT -t nat -A PREROUTING -i $PUBIF -p tcp -m tcp --destination 10.43.0.1 --dport 80 -j ACCEPT
-  $IPT -t nat -A PREROUTING -i $PUBIF -p udp -m udp --destination 10.43.0.1 --dport 67 -j ACCEPT
-  $IPT -t nat -A PREROUTING -i $PUBIF -p udp -m udp --destination 10.43.0.1 --dport 53 -j ACCEPT
-  $IPT -t nat -A PREROUTING -i $PUBIF -p tcp -m tcp --destination 10.43.0.1 --dport 5000 -j ACCEPT
+  # accept allow tcp:80, tcp:443, udp:67 (dhcp) and udp:53 (dns) and tcp:5000 (protonet-socket) requests
+  $IPT -t nat -A PREROUTING -i $PUBIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 80   -j ACCEPT
+  $IPT -t nat -A PREROUTING -i $PUBIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 443  -j ACCEPT
+  $IPT -t nat -A PREROUTING -i $PUBIF -p udp -m udp --destination $REDIRECTION_TARGET --dport 67   -j ACCEPT
+  $IPT -t nat -A PREROUTING -i $PUBIF -p udp -m udp --destination $REDIRECTION_TARGET --dport 53   -j ACCEPT
+  $IPT -t nat -A PREROUTING -i $PUBIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 5000 -j ACCEPT
 
 echo "   send all public traffic to the unknown_user chain"
   $IPT -t nat -A PREROUTING -i $PUBIF -j unknown_user
@@ -70,8 +72,8 @@ echo "   allow traffic from all stored (and authorized) mac addresses"
 echo "   mark all traffic from the unknown_user chain as 99 (untrusted)"
   $IPT -t nat -A unknown_user -j MARK --set-mark 99
   
-echo "   redirect all traffic to 10.43.0.1"
-  $IPT -t nat -A unknown_user -m mark --mark 99 -p tcp --dport 80 -j DNAT --to-destination 10.43.0.1
+echo "   redirect all traffic to $REDIRECTION_TARGET"
+  $IPT -t nat -A unknown_user -m mark --mark 99 -p tcp --dport 80 -j DNAT --to-destination $REDIRECTION_TARGET
 
 echo "   setup connection sharing.."
   # allowing established connections + outbound stuff, log the rest
@@ -85,92 +87,3 @@ echo "   setup connection sharing.."
 
 echo "   Enabling SNAT (MASQUERADE) functionality on $EXTIF"
   $IPT -t nat -A POSTROUTING -o $EXTIF -j MASQUERADE
-
-
-# the stuff below works
-  # sudo iptables -P INPUT ACCEPT
-  # sudo iptables -F INPUT 
-  # sudo iptables -P OUTPUT ACCEPT
-  # sudo iptables -F OUTPUT
-  # sudo iptables -P FORWARD DROP
-  # sudo iptables -F FORWARD
-  # sudo iptables -F unknown_user
-  # sudo iptables -F known_user_internet_allowed 
-  # sudo iptables -t nat -F
-  # 
-  # sudo iptables -N unknown_user -t nat
-  # sudo iptables -N known_user_internet_allowed
-  # 
-  # sudo iptables -t nat -A PREROUTING -i wlan1 -p tcp -m tcp --destination 10.43.0.1 --dport 80 -j ACCEPT
-  # sudo iptables -t nat -A PREROUTING -i wlan1 -p udp -m udp --destination 10.43.0.1 --dport 67 -j ACCEPT
-  # sudo iptables -t nat -A PREROUTING -i wlan1 -p udp -m udp --destination 10.43.0.1 --dport 53 -j ACCEPT
-  # sudo iptables -t nat -A PREROUTING -i wlan1 -p tcp -m tcp --destination 10.43.0.1 --dport 5000 -j ACCEPT
-  # 
-  # sudo iptables -t nat -A PREROUTING -i wlan1 -j unknown_user
-  # sudo iptables -t filter -A FORWARD -i wlan1 -m mark --mark 99 -j DROP
-  # 
-  # # allowed users
-  # sudo iptables -t nat -A unknown_user -m mac --mac-source "00:1d:fe:b4:79:61" -j RETURN
-  # 
-  # # mark and drop
-  # sudo iptables -t nat -A unknown_user -j MARK --set-mark 99
-  # sudo iptables -t nat -A unknown_user -m mark --mark 99 -p tcp --dport 80 -j DNAT --to-destination 10.43.0.1
-  # 
-  # # and forwarding
-  # sudo iptables -A FORWARD -i eth0 -o wlan1 -m state --state ESTABLISHED,RELATED -j ACCEPT
-  # sudo iptables -A FORWARD -i wlan1 -o eth0 -j ACCEPT
-  # sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-  # 
-  # 
-  # 
-  # 
-  # sudo iptables -I unknown_user 1 -t nat -m mac --mac-source "00:1d:fe:b4:79:61" -j RETURN
-  # 
-  # 
-  # IPTABLES=/sbin/iptables
-  # 
-  # EXTIF="eth0"
-  # PRVIF="wlan0"
-  # PUBIF="wlan1"
-  # 
-  # # Set the default policy to drop all forwarded packets
-  # iptables -P FORWARD DROP
-  # 
-  # # Create internet chain
-  # # This is used to authenticate users who have already signed up
-  # iptables -N internet -t nat
-  # 
-  # 
-  # # Accept all local traffic
-  # iptables -t nat -A PREROUTING -i eth0 --destination 10.0.0.0/16 -j ACCEPT
-  # 
-  # # First send all traffic via newly created internet chain
-  # # At the prerouting NAT stage this will DNAT them to the local
-  # # webserver for them to signup if they aren't authorised
-  # # Packets for unauthorised users are marked for dropping later
-  # iptables -t nat -A PREROUTING -j internet
-  # 
-  # 
-  # # Now that we've got to the forward filter, drop all packets
-  # # marked 99 - these are unknown users. We can't drop them earlier
-  # # as there's no filter table
-  # iptables -t filter -A FORWARD -m mark --mark 99 -j DROP
-  # 
-  # ###### INTERNET CHAIN ##########
-  # # Allow authorised clients in, redirect all others to login webserver
-  # # Add known users to the NAT table to stop their dest being rewritten
-  # # Ignore MAC address with a * - these users are blocked
-  # # This awk script goes through the /var/lib/users flat file line by line
-  # awk 'BEGIN { FS="\t"; } { system("iptables -t nat -A internet -m mac --mac-source "$4" -j RETURN"); }' /var/lib/users
-  # 
-  # # MAC address not found. Mark the packet 99
-  # iptables -t nat -A internet -j MARK --set-mark 99
-  # # Redirects web requests from Unauthorised users to logon Web Page
-  # iptables -t nat -A internet -m mark --mark 99 -p tcp --dport 80 -j DNAT --to-destination 10.0.0.1
-  # ################################
-  # 
-  # 
-  # # Enable Internet connection sharing
-  # iptables -A FORWARD -i ppp0 -o eth0 -m state --state ESTABLISHED,RELATED -j ACCEPT
-  # iptables -A FORWARD -i eth0 -o ppp0 -j ACCEPT
-  # iptables -t nat -A POSTROUTING -o ppp0 -j MASQUERADE
