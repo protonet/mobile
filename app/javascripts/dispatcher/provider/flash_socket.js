@@ -47,8 +47,12 @@ protonet.dispatcher.provider.FlashSocket = {
     }
     
     this.socket.connectSocket(protonet.config.dispatching_server, protonet.config.dispatching_server_port);
+    
     // the flash socket will trigger the socket.connected event
-    protonet.bind("socket.connected", this._authenticate.bind(this));
+    this._authenticateMethod = this._authenticateMethod || this._authenticate.bind(this);
+    // Make sure that we unbind old listeners first
+    protonet.unbind("socket.connected", this._authenticateMethod);
+    protonet.bind("socket.connected", this._authenticateMethod);
   },
   
   disconnect: function() {
