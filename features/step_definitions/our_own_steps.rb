@@ -70,7 +70,7 @@ Given /^I click on the element "([^\"]*)"$/ do |selector|
 end
 
 Given /^I leave the page$/ do
-  visit "http://www.google.com"
+  visit "http://blanksite.com/"
 end
 
 Given /^I log out$/ do

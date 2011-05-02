@@ -18,7 +18,10 @@ After do
   $browsers && $browsers.each do |id, browser|
     check_selenium_browsers
     set_selenium_browser(id)
-    browser[:session].visit("http://blanksite.com/") rescue nil
+    begin
+      browser[:session].visit("http://blanksite.com/") unless browser[:session].current_url == "http://blanksite.com/"
+    rescue 
+    end
     sleep 0.5
   end
 
