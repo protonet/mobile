@@ -1,15 +1,16 @@
 Before do
   load Rails.root + "db/seeds.rb"
+  # we're adding lo for hudson
   SystemPreferences.defaults[:privacy] = {
     "lo0" => {
       "allow_dashboard_for_strangers" => true,
       "allow_registrations_for_strangers" => true
     },
-    "eth0" => {
+    "lo" => {
       "allow_dashboard_for_strangers" => true,
       "allow_registrations_for_strangers" => true
     }
-  }
+  } 
 end
 
 After do

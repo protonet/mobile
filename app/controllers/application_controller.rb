@@ -91,9 +91,7 @@ class ApplicationController < ActionController::Base
       end
       interface_mapping 
     end
-    foo = mapping[IP.new("#{request.remote_addr}/24").network.to_s]
-    puts "======================== #{foo} ======================="
-    foo
+    mapping[IP.new("#{request.remote_addr}/24").network.to_s]
   end
   
   def node_privacy_settings
