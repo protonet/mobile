@@ -17,8 +17,14 @@ case $1 in
       ;;
     status)
       kill -0 `cat $SHARED/pids/hostapd.pid`
+      if [ $? != 0 ]; then
+        echo "Hostapd is not running."
+        exit 1
+      else
+        echo "Hostapd is running."
+        exit 0
+      fi
       ;;
-      
     *)  
       echo "usage: wifi rails-app-path {start|stop|status}" ;;
 esac

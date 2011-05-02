@@ -1,4 +1,4 @@
-class SystemNetworking
+class SystemCaptivePortal
   
   class << self
     

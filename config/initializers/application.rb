@@ -1,11 +1,18 @@
-# unless Rails.env.test?
-  require "#{Rails.root}/lib/backend_adapters/development_mock"
-  SystemBackend.backend_connection = BackendAdapters::DevelopmentMock.new
-  puts "Backend '#{SystemBackend.backend_connection.info}' connected successfully!"
-# end
+system_backend = case Rails.env
+  when "production"
+    "ubuntu"
+  else
+    "development_mock"
+end
+  
+require "#{Rails.root}/lib/backend_adapters/#{system_backend}"
+SystemBackend.backend_connection = "BackendAdapters::#{system_backend.camelize}".constantize.new
+puts "Backend '#{SystemBackend.backend_connection.info}' connected successfully!"
 
 require 'uuid4r'
 require "#{Rails.root}/lib/linux/commands"
+require 'ifconfig'
+require 'ip'
 
 if Rails.env.development?
   if File.exists?(File.join(Rails.root, 'tmp', 'debug.txt'))

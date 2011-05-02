@@ -11,6 +11,7 @@ class SystemPublishToWeb
     end
     
     def status
+      return false unless Rails.env == 'production'
       system("#{service_command} status")
     end
     

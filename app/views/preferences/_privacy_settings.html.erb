@@ -1,0 +1,22 @@
+<h2>Please select the privacy settings for your interfaces:</h2>
+<% (SystemBackend.get_interfaces.collect(&:name) | ["published_to_web"]).each do |interface| %>
+  <h3><%= interface %></h3>
+  <div>
+    <%= form_tag(preferences_privacy_update_path, {:id => 'allow-dashboard', :style => 'margin-bottom:0px;'}) do %>
+      <%= hidden_field_tag 'anchor', 'privacy'  %>
+      <%= hidden_field_tag 'interface', interface  %>
+      <%= hidden_field_tag 'preferences[allow_dashboard_for_strangers]', false  %>
+      Logged out users get to see dashboard? <%= check_box_tag 'preferences[allow_dashboard_for_strangers]', true, (SystemPreferences.privacy[interface]["allow_dashboard_for_strangers"] rescue false) %>
+    <% end %>
+  </div>
+  <div>
+    <%= form_tag(preferences_privacy_update_path, {:id => 'allow-registrations', :style => 'margin-bottom:0px;'}) do %>
+      <%= hidden_field_tag 'anchor', 'privacy'  %>
+      <%= hidden_field_tag 'interface', interface  %>
+      <%= hidden_field_tag 'preferences[allow_registrations_for_strangers]', false  %>
+      Strangers are allowed to register (without invitation)? <%= check_box_tag 'preferences[allow_registrations_for_strangers]', true, (SystemPreferences.privacy[interface]["allow_registrations_for_strangers"] rescue false) %>
+    <% end %>
+  </div>
+  <br>
+<% end %>
+You're currently using: <%= incoming_interface %>

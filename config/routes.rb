@@ -57,6 +57,11 @@ Dashboard::Application.routes.draw do
   
   # TODO what is this?
   match '/search.:format' => 'search#index', :as => :search
+
+  # Preferences
+  namespace :preferences do
+    match 'privacy/update' => 'privacy#update', :as => :privacy_update
+  end
   
   # System
   namespace :system do

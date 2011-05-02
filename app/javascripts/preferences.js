@@ -1,10 +1,11 @@
 //= require "preferences/vpn"
 //= require "preferences/node"
+//= require "preferences/privacy"
 
 $(function() {
   // 
   
-  $("#preferences-details").bind("vpn_settings node_settings", function(event){
+  $("#preferences-details").bind("vpn_settings node_settings privacy_settings", function(event){
     switch(event.type)
     {
     case 'vpn_settings':
@@ -12,6 +13,9 @@ $(function() {
       break;
     case 'node_settings':
       new protonet.preferences.Node();
+      break;
+    case 'privacy_settings':
+      new protonet.preferences.Privacy();
       break;
     }
   })

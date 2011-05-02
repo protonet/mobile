@@ -3,6 +3,8 @@ class SystemPreferencesObserver < ActiveRecord::Observer
     case system_preference.var
     when "publish_to_web"
       system_preference.value ? turn_on_publishing : turn_off_publishing
+    when "node_name", "node_description", "node_supernode", "node_key", "node_uuid"
+      Network.update_local_from_preferences
     end
   end
   

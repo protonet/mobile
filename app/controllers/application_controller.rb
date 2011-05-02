@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   
   helper :all # include all helpers, all the time
-  helper_method :logged_in?, :allow_signup?
+  helper_method :logged_in?, :allow_signup?, :node_privacy_settings, :incoming_interface
   
   # hack for reload problem in development
   before_filter :set_backend_for_development, :captive_check, :current_user, :set_current_user_for_authorization, :guest_login
@@ -37,7 +37,7 @@ class ApplicationController < ActionController::Base
   
   def only_registered
     if current_user.stranger?
-      if SystemPreferences.allow_dashboard_for_strangers == false
+      if node_privacy_settings["allow_dashboard_for_strangers"] != true
         flash[:error] = "Please authenticate :) !"
         return redirect_to(new_user_session_path)
       else
@@ -77,8 +77,25 @@ class ApplicationController < ActionController::Base
   
   def allow_signup?
     configatron.ldap.single_authentication != true && (
-      SystemPreferences.allow_registrations_for_strangers == true || 
+      node_privacy_settings["allow_registrations_for_strangers"] == true || 
       params[:invitation_token] && Invitation.unaccepted.find_by_token(params[:invitation_token]))
+  end
+  
+  def incoming_interface
+    return "published_to_web" if request.env["HTTP_X_FORWARDED_FOR"]
+    mapping = Rails.cache.fetch("system.interfaces", {:expires_in => 15.minutes}) do
+      interface_mapping = {}
+      SystemBackend.get_interfaces.each do |interface|
+        network = (IP.new("#{interface.addresses("inet")}/24").network.to_s rescue nil)
+        interface_mapping[network] = interface.name if network
+      end
+      interface_mapping 
+    end
+    mapping[IP.new("#{request.remote_addr}/24").network.to_s]
+  end
+  
+  def node_privacy_settings
+    @privacy_settings ||= Hash.new(false).merge(SystemPreferences.privacy[incoming_interface] || {})
   end
   
 end

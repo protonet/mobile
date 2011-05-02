@@ -54,7 +54,7 @@ module ApplicationHelper
   def xhr_streaming_url
     request.server_software != 'apache' ? "#{request.protocol}#{server_name}:#{configatron.xhr_streaming.port}" : "#{request.protocol}#{server_name}/xhr"
   end
-  
+
   private
   
     def extract_file_name(path)
@@ -70,3 +70,5 @@ module ApplicationHelper
       "</span>"
     end
 end
+
+

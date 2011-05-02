@@ -11,10 +11,15 @@ class Network < ActiveRecord::Base
     begin
       find(1)
     rescue ActiveRecord::RecordNotFound
-      network = new(:id => 1, :name => "protonet-#{ActiveSupport::SecureRandom.base64(6)}", :description => 'this is your own node', :key => 'encryptme', :supernode => 'localhost')
+      network = new(:id => 1)
       network.save && update_all("id = 1", "id = #{network.id}")
+      update_local_from_preferences
       find(1)
     end
+  end
+  
+  def self.update_local_from_preferences
+    local.update_attributes({:name => SystemPreferences.node_name, :description => SystemPreferences.node_description, :key => SystemPreferences.node_key, :supernode => SystemPreferences.node_supernode, :uuid => SystemPreferences.node_uuid})
   end
   
   def local?

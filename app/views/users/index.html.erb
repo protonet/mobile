@@ -183,13 +183,6 @@
   <div id="users-page" class="users options">
     <%= link_to "delete strangers older than 2 days (#{@strangers_count} in DB)", { :action => "delete_stranger_older_than_two_days" }, :class => "cleanup" %>
     <ul>
-      <%- if current_user.admin? -%>
-        <li id="user-general-settings">
-          <div class="index section">
-            <a href="#">general settings</a>
-          </div>
-        </li>
-      <%- end -%>
       <%- @users.each do |u| -%>
         <li id="user-<%= u.id %>">
           <div class="index section">

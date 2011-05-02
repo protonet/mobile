@@ -33,11 +33,11 @@ module BackendAdapters
     end
     
     def get_interfaces
-      ::Linux::Commands.ifconfig
+      ::IfconfigWrapper.new(nil, IO.popen("/sbin/ifconfig -a"){ |f| f.readlines.join }).parse
     end
 
-    def get_interface_information(iface) # TODO: take 'information' off the name
-      ::Linux::Commands.ifconfig :adapter => iface
+    def get_interface_information(iface)
+      get_interfaces[iface]
     end
     
     def get_hostname_for_ip(ip)

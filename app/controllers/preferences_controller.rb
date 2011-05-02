@@ -1,18 +1,8 @@
 class PreferencesController < ApplicationController
   before_filter :only_registered
+  before_filter :set_available_preferences
   
   def index
-    @preferences = current_user.roles.include?(Role.find_by_title!('admin')) ? [
-      {:url => 'profile', :name => 'your profile'},
-      {:url => 'node_settings', :name => 'node settings'},
-      {:url => 'network_settings', :name => 'network settings'},
-      {:url => 'wifi_settings', :name => 'wifi settings'}, 
-      {:url => 'captive_settings', :name => 'captive settings'},
-      {:url => 'vpn_settings', :name => 'vpn settings'},
-      {:url => 'software_updates', :name => 'software updates'}
-    ] : [
-      {:url => 'profile', :name => 'your profile'}
-    ]
   end
   
   def node_settings
@@ -40,9 +30,24 @@ class PreferencesController < ApplicationController
       'key' => SystemPreferences.vpn[:password]
     }
   end
-  
+
+  def set_available_preferences
+    @preferences = current_user.roles.include?(Role.find_by_title!('admin')) ? [
+      {:url => 'profile', :name => 'your profile'},
+      {:url => 'node_settings', :name => 'node settings'},
+      {:url => 'network_settings', :name => 'network settings'},
+      {:url => 'wifi_settings', :name => 'wifi settings'}, 
+      {:url => 'captive_settings', :name => 'captive settings'},
+      {:url => 'privacy_settings', :name => 'privacy settings'},
+      {:url => 'vpn_settings', :name => 'vpn settings'},
+      {:url => 'software_updates', :name => 'software updates'}
+    ] : [
+      {:url => 'profile', :name => 'your profile'}
+    ]
+  end
+
   def method_missing(method, *args)
-    methods = ["profile", "node_settings", "network_settings", "wifi_settings", "captive_settings", "vpn_settings", "user_settings", "software_updates"]
+    methods = @preferences.collect {|preference| preference[:url]}
     if methods.include?(method.to_s)
       return render :partial => method.to_s
     end

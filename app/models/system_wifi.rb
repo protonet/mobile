@@ -45,7 +45,7 @@ bssid=00:13:10:95:fe:0b"
   
     def stop
       return unless Rails.env == 'production'
-      SystemMonit.stop(:wifi)
+      SystemMonit.remove(:wifi) if SystemMonit.exists?(:wifi)
     end
     
     def restart
@@ -55,7 +55,7 @@ bssid=00:13:10:95:fe:0b"
   
     def status
       return 'off' unless Rails.env == 'production'
-      "on or off who knows"
+      system(service_command("status")) ? 'on' : 'off'
     end
   
     def switch_mode(type)
@@ -72,8 +72,8 @@ bssid=00:13:10:95:fe:0b"
     def monitor_service
       return if SystemMonit.exists?(:wifi)
       switch_mode(SystemPreferences.wifi_mode)
-      start = "/usr/bin/sudo #{configatron.current_file_path}/script/init/wifi #{configatron.current_file_path} start"
-      stop  = "/usr/bin/sudo #{configatron.current_file_path}/script/init/wifi #{configatron.current_file_path} stop"
+      start = service_command("start")
+      stop  = service_command("stop")
       pid_file = "#{configatron.current_file_path}/tmp/pids/hostapd.pid"
       SystemMonit.add(:wifi, start, stop, pid_file)
     end
@@ -88,6 +88,10 @@ bssid=00:13:10:95:fe:0b"
       config_file = "#{configatron.shared_file_path}/config/hostapd.d/config"
       generate_config(SystemPreferences.wifi_mode) unless File.exists?(config_file)
       File.read(config_file)
+    end
+    
+    def service_command(argument)
+      "/usr/bin/sudo #{configatron.current_file_path}/script/init/wifi #{configatron.current_file_path} #{argument}"
     end
     
   end
