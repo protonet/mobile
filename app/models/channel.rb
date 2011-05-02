@@ -72,8 +72,9 @@ class Channel < ActiveRecord::Base
       path = SystemFileSystem.cleared_path("/#{id.to_s}")
       FileUtils.mkdir(path)
     rescue Errno::EEXIST
-      logger.warn("A path for the #{name} already exists at #{path}") and return true
+      logger.warn("A path for the #{name} already exists at #{path}")
     end
+    true
   end
   
   def generate_uuid
