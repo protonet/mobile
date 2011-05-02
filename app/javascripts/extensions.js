@@ -122,3 +122,39 @@ String.prototype.isEmail = (function() {
 Number.prototype.px = function() {
   return this + "px";
 };
+
+
+//---------------------------- AUDIO ------------------------------
+(function() {
+  var userAgent    = navigator.userAgent.toLowerCase(),
+      // Safari sometimes randomly crashes when playing sound
+      audioIsBuggy = (userAgent.indexOf("safari") !== -1 && userAgent.indexOf("chrome") === -1);
+  if (!window.Audio || audioIsBuggy) {
+    window.Audio = function(src) {
+      this.src = src;
+    };
+    
+    window.Audio.prototype = {
+      play: (function() {
+        var audioHost;
+        return function() {
+          try { audioHost.parentNode.removeChild(audioHost); } catch(e) {}
+          
+          audioHost = document.createElement("embed");
+          audioHost.setAttribute("src", this.src);
+          audioHost.setAttribute("hidden", true);
+          document.body.appendChild(audioHost);
+        };
+      })(),
+      
+      canPlayType: function(type) {
+        switch(type) {
+          case "audio/wav":
+            return true;
+          default:
+            return false;
+        }
+      }
+    };
+  }
+})();

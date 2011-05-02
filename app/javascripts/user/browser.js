@@ -63,6 +63,15 @@ protonet.user.Browser = {
     return canPlayOgg != "no" && canPlayOgg != "";
   },
   
+  SUPPORTS_HTML5_AUDIO_WAV: function() {
+    if (!this.SUPPORTS_HTML5_AUDIO()) {
+      return false;
+    }
+    
+    var canPlayWav = new window.Audio().canPlayType("audio/wav");
+    return canPlayWav != "no" && canPlayWav != "";
+  },
+  
   HAS_FILE_UPLOAD_ENCODING_ISSUES: function() {
     return navigator.userAgent.indexOf("Safari") != -1 && navigator.userAgent.indexOf("Chrome") == -1;
   },

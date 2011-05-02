@@ -394,6 +394,8 @@ protonet.timeline.Channel.prototype = {
         new Audio("/sounds/notification.ogg").play();
       } else if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_MP3()) {
         new Audio("/sounds/notification.mp3").play();
+      } else if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_WAV()) {
+        new Audio("/sounds/notification.wav").play();
       }
     }
     
