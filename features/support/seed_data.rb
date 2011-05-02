@@ -1,5 +1,5 @@
 Before do
-  require Rails.root + "/db/seeds"
+  load Rails.root + "db/seeds.rb"
 end
 
 After do

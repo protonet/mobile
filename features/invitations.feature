@@ -32,6 +32,7 @@ Feature: Invitations
     When I accept the invitation with the token "1234567890"
     Then I should see "Get started by signing up"
     When I fill in "user_login" with "friend"
+    When I fill in "user_email" with "friend@protonet.com"
     And I fill in "user_password" with "friendly"
     And I fill in "user_password_confirmation" with "friendly"
     And I press "sign up"

@@ -41,6 +41,7 @@ end
 Given /^I register as "([^\"]*)"$/ do |username|
   within("form.sign-up") do
     fill_in 'user_login',    :with => username
+    fill_in 'user_email',    :with => "#{username}@foo.com"
     fill_in 'user_password', :with => '123456'
     fill_in 'user_password_confirmation', :with => '123456'
     click_button('sign up')
@@ -196,7 +197,7 @@ Given /^administrator claiming key is "([^\"]*)"$/ do |key|
 end
 
 Given /^strangers are not allowed to register$/ do
-  SystemPreferences.allow_registrations_for_strangers = false
+  SystemPreferences.privacy = {"lo0" => {"allow_registrations_for_strangers" => false}}
 end
 
 Given /^"([^\"]*)" is an admin$/ do |login|
