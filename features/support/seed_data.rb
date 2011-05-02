@@ -1,5 +1,15 @@
 Before do
   load Rails.root + "db/seeds.rb"
+  SystemPreferences.defaults[:privacy] = {
+    "lo0" => {
+      "allow_dashboard_for_strangers" => true,
+      "allow_registrations_for_strangers" => true
+    },
+    "eth0" => {
+      "allow_dashboard_for_strangers" => true,
+      "allow_registrations_for_strangers" => true
+    }
+  }
 end
 
 After do
