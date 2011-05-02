@@ -21,6 +21,7 @@ Feature: Using the protonet dashboard
   @javascript
   Scenario: Writing a meep containing an username
     Given a user with the login "dudemeister"
+    Given I go to the start page
     And I send the message "Hallo @dudemeister!"
     Then I should see "dudemeister" within "#timeline .reply"
 

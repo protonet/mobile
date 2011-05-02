@@ -14,7 +14,7 @@ end
 
 When /^(?:|I )go unauthenticated to the start page$/ do
   visit "/users/sign_out"
-  sleep 1
+  find(:css, "body")
 end
 
 # When /^(?:|I )go to (.+)$/ do |page_name|
