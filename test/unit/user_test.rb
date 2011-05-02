@@ -71,7 +71,7 @@ class UserTest < Test::Unit::TestCase
     
     before do
       LdapUser.stubs(:create_for_user)
-      @user = Factory.build(:user)
+      @user = Factory.create(:user)
     end
       
     should "be possible" do

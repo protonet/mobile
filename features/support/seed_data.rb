@@ -18,7 +18,7 @@ After do
   $browsers && $browsers.each do |id, browser|
     check_selenium_browsers
     set_selenium_browser(id)
-    browser[:session].visit("http://www.google.de") rescue nil
+    browser[:session].visit("http://blanksite.com/") rescue nil
     sleep 0.5
   end
 
