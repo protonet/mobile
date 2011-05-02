@@ -42,7 +42,7 @@
   <% end %>
 <%- end -%>
 
-<%= render :partial => "/users/user_basic_data_form", :locals => {:user => current_user} %>
+<%= render :partial => "/users/user_basic_data_form", :locals => {:user => current_user, :anchor => 'profile'} %>
 
 <%- if current_user.admin? -%>
 <h4>Admin status:</h4>

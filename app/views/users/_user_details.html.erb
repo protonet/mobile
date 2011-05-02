@@ -14,7 +14,7 @@
 <% if user.can_be_edited_by?(current_user) %>
   <br>
   <h4>Edit</h4>
-  <%= render :partial => "user_basic_data_form", :locals => {:user => user} %>
+  <%= render :partial => "user_basic_data_form", :locals => { :user => user, :anchor => user.id} %>
 <% end %>
 
 <%- if user.can_be_edited_by?(current_user) && current_user.admin? -%>

@@ -23,7 +23,7 @@ class UsersController < ApplicationController
     else
       flash[:error] = "Could not update user '#{user.login}'"
     end
-    redirect_to :back
+    redirect_to request.referer + "##{params[:anchor]}"
   end
 
   def delete_stranger_older_than_two_days

@@ -7,13 +7,6 @@ Background:
   And I go to the users page
 
   @javascript
-  Scenario: Admin: seeing the general settings
-    Given "dudemeister" is an admin
-    And I go to the users page
-    When I follow "general settings" within "#users-page"
-    Then I should see "Logged out users get to see dashboard?" within "#users-details"
-
-  @javascript
   Scenario: Seeing the anonymous users profile
     And I follow "Anonymous" within "#users-page"
     Then I should see "Anonymous" within "#users-details"

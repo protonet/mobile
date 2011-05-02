@@ -1,10 +1,17 @@
 Feature: Using the protonet preferences
+Background:
+  Given a user with the login "dudemeister"
+  And I go unauthenticated to the start page
+  And I am logged in as "dudemeister"
   
-  @wip
   Scenario: Only profile settings if you're no admin
+    And I go to the preferences page
+    Then I should only see my profile settings
   
-  @wip
   Scenario: all settings if you're an admin
+    Given "dudemeister" is an admin
+    And I go to the preferences page
+    Then I should see all settings
   
   @wip
   Scenario: No update functionality if you're no admin
