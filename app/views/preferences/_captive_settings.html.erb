@@ -8,13 +8,13 @@
 <br />
 Captive rules ready?
 <%= SystemNetworking.iptables_rules_ready? %>
-
+<% captive_interfaces = SystemBackend.get_interfaces.collect {|i| i.name} %>
 <%= form_tag system_preferences_update_path do -%>
   <%= hidden_field_tag(:anchor, 'captive_settings') %>
   in
-  <%= select_tag :in, options_for_select([['All', 0]]) %>
+  <%= select_tag :in, options_for_select(captive_interfaces) %>
   out
-  <%= select_tag :out, options_for_select([['All', 0]]) %>
+  <%= select_tag :out, options_for_select(captive_interfaces) %>
   start captive stuff
   <%= label_tag 'preferences[captive_portal]', 'OFF' %>
   <%= radio_button_tag 'preferences[captive_portal]', false, !SystemCaptivePortal.captive_status %>

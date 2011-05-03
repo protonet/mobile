@@ -7,6 +7,14 @@ Dashboard::Application.config.to_prepare do
     "lo0" => {
       "allow_dashboard_for_strangers" => true,
       "allow_registrations_for_strangers" => true
+    },
+    "eth0" => {
+      "allow_dashboard_for_strangers" => true,
+      "allow_registrations_for_strangers" => true
+    },
+    "wlan0" => {
+      "allow_dashboard_for_strangers" => true,
+      "allow_registrations_for_strangers" => true
     }
   }
   SystemPreferences.defaults[:allow_dashboard_for_strangers] = true
