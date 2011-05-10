@@ -12,7 +12,7 @@ Captive rules ready?
 <%= form_tag system_preferences_update_path do -%>
   <%= hidden_field_tag(:anchor, 'captive_settings') %>
   in
-  <%= select_tag :in, options_for_select(captive_interfaces) %>
+  <%= select_tag :in, options_for_select(captive_interfaces), :disabled => SystemCaptivePortal.captive_status %>
   out
   <%= select_tag :out, options_for_select(captive_interfaces) %>
   start captive stuff
