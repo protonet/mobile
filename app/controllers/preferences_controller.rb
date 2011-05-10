@@ -36,6 +36,7 @@ class PreferencesController < ApplicationController
       {:url => 'profile', :name => 'your profile'},
       {:url => 'node_settings', :name => 'node settings'},
       {:url => 'network_settings', :name => 'network settings'},
+      {:url => 'pppoe_settings', :name => 'pppoe settings'},
       {:url => 'wifi_settings', :name => 'wifi settings'}, 
       {:url => 'captive_settings', :name => 'captive settings'},
       {:url => 'privacy_settings', :name => 'privacy settings'},

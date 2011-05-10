@@ -14,7 +14,7 @@ Captive rules ready?
   in
   <%= select_tag :in, options_for_select(captive_interfaces), :disabled => SystemCaptivePortal.captive_status %>
   out
-  <%= select_tag :out, options_for_select(captive_interfaces) %>
+  <%= select_tag :out, options_for_select(captive_interfaces), :disabled => SystemCaptivePortal.captive_status %>
   start captive stuff
   <%= label_tag 'preferences[captive_portal]', 'OFF' %>
   <%= radio_button_tag 'preferences[captive_portal]', false, !SystemCaptivePortal.captive_status %>

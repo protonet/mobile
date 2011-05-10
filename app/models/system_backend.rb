@@ -15,7 +15,8 @@ class SystemBackend
     :get_hostname_for_ip,
     :get_mac_for_ip,
     :hostname,
-    :requested_host_local?
+    :requested_host_local?,
+    :current_internet_interface
     ].freeze
 
   class << self

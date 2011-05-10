@@ -1,11 +1,12 @@
 //= require "preferences/vpn"
 //= require "preferences/node"
 //= require "preferences/privacy"
+//= require "preferences/profile"
+//= require "preferences/wifi"
 
 $(function() {
   // 
-  
-  $("#preferences-details").bind("vpn_settings node_settings privacy_settings", function(event){
+  $("#preferences-details").bind("vpn_settings node_settings privacy_settings profile wifi_settings", function(event){
     switch(event.type)
     {
     case 'vpn_settings':
@@ -16,6 +17,12 @@ $(function() {
       break;
     case 'privacy_settings':
       new protonet.preferences.Privacy();
+      break;
+    case 'profile':
+      new protonet.preferences.Profile();
+      break;
+    case 'wifi_settings':
+      new protonet.preferences.Wifi();
       break;
     }
   })

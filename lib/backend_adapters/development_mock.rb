@@ -52,5 +52,9 @@ module BackendAdapters
       '7c:c5:37:45:7f:85'
     end
     
+    def current_internet_interface
+      'dev0'
+    end
+    
   end
 end

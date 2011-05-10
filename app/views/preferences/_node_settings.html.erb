@@ -65,7 +65,7 @@
       <ul>
         <li>
           <%= label_tag 'preferences[publish_to_web_name]', 'public name (under what address can your node be reached for the outside)' %>
-          <%= text_field_tag 'preferences[publish_to_web_name]', SystemPreferences.publish_to_web_name %>.protonet.info
+          <%= text_field_tag 'preferences[publish_to_web_name]', SystemPreferences.publish_to_web_name, :disabled => SystemPublishToWeb.status %>.protonet.info
         </li>
         <li>
           Publish to web

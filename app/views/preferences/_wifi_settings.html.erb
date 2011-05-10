@@ -4,17 +4,47 @@
 <%= SystemWifi.config %>
 </pre>
 <br>
+<p>Iptables ready: <bold><%= SystemNetworking.iptables_rules_ready? %></bold></p>
+<br>
+
+<h3>Private WiFi</h3>
+ <%= text_field_tag "foobar", nil, {:size => 12, :title => "password (empty for unsecured)"} %>
+
+ <p>Status: <bold><%= SystemWifi.status %></bold><br>
+   <bold>
+     <%= link_to 'on', system_wifi_on_path %><br>
+     <%= link_to 'off', system_wifi_off_path %>
+    </bold>
+  </p>
+
+ <p>Share internet Connection: <bold>on|off</bold></p>
+ <bold>
+   <%= link_to 'on', system_wifi_on_path %><br>
+   <%= link_to 'off', system_wifi_off_path %>
+  </bold>
+
+<h3>Public WiFi</h3>
+ <%= text_field_tag "foobar", nil, {:size => 12, :title => "password (empty for unsecured)"} %>
+
+ <p>Status: <bold><%= SystemWifi.status %></bold><br>
+   <bold>
+     <%= link_to 'on', system_wifi_on_path %><br>
+     <%= link_to 'off', system_wifi_off_path %>
+    </bold>
+  </p>
+
+ <p>Share internet Connection: <bold>on|off</bold></p>
+ <bold>
+   <%= link_to 'on', system_wifi_on_path %><br>
+   <%= link_to 'off', system_wifi_off_path %>
+  </bold>
+
+<h3>Old Stuff</h3>
 <p>Status: <bold><%= SystemWifi.status %></bold></p>
 <p>
   <%= link_to 'on', system_wifi_on_path %><br>
   <%= link_to 'off', system_wifi_off_path %>
 </p>
 <br>
-<p>Iptables ready: <bold><%= SystemNetworking.iptables_rules_ready? %></bold></p>
-<p>private wifi</p>
- password (empty for unsecured password, otherwise it's wpa2 psk security)<br>
- on | off<br>
-<p>public wifi</p>
- password (empty for unsecured password, otherwise it's wpa2 psk security)<br>
- on | off<br>
+
  

@@ -1,13 +1,15 @@
-system_backend = case Rails.env
-  when "production"
-    "ubuntu"
-  else
-    "development_mock"
-end
+Dashboard::Application.config.to_prepare do
+  system_backend = case Rails.env
+    when "production"
+      "ubuntu"
+    else
+      "development_mock"
+  end
   
-require "#{Rails.root}/lib/backend_adapters/#{system_backend}"
-SystemBackend.backend_connection = "BackendAdapters::#{system_backend.camelize}".constantize.new
-puts "Backend '#{SystemBackend.backend_connection.info}' connected successfully!"
+  require "#{Rails.root}/lib/backend_adapters/#{system_backend}"
+  SystemBackend.backend_connection = "BackendAdapters::#{system_backend.camelize}".constantize.new
+  puts "Backend '#{SystemBackend.backend_connection.info}' connected successfully!"
+end
 
 require 'uuid4r'
 require "#{Rails.root}/lib/linux/commands"
