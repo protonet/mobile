@@ -61,14 +61,14 @@ Dashboard::Application.routes.draw do
   # Preferences
   namespace :preferences do
     match 'privacy/update' => 'privacy#update', :as => :privacy_update
+    match 'vpn/on' => 'vpn#on', :as => :vpn_on
+    match 'vpn/off' => 'vpn#off', :as => :vpn_off
   end
   
   # System
   namespace :system do
     match 'files/create_directory' => 'files#create_directory', :as => :files_create_directory
     resources :files
-    match 'vpn/on' => 'vpn#on', :as => :vpn_on
-    match 'vpn/off' => 'vpn#off', :as => :vpn_off
     match 'wifi/on' => 'wifi#on', :as => :wifi_on
     match 'wifi/off' => 'wifi#off', :as => :wifi_off
     match 'preferences/update' => 'preferences#update', :as => :preferences_update
