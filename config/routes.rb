@@ -60,11 +60,12 @@ Dashboard::Application.routes.draw do
 
   # Preferences
   namespace :preferences do
-    match 'privacy/update' => 'privacy#update', :as => :privacy_update
-    match 'vpn/on' => 'vpn#on', :as => :vpn_on
-    match 'vpn/off' => 'vpn#off', :as => :vpn_off
-    match 'wifi/on' => 'wifi#on', :as => :wifi_on
-    match 'wifi/off' => 'wifi#off', :as => :wifi_off
+    match 'privacy/update'  => 'privacy#update', :as => :privacy_update
+    match 'wifi/update'     => 'wifi#update', :as => :wifi_update
+    match 'vpn/on'    => 'vpn#on', :as => :vpn_on
+    match 'vpn/off'   => 'vpn#off', :as => :vpn_off
+    match 'wifi/on'   => 'wifi#on', :as => :wifi_on
+    match 'wifi/off'  => 'wifi#off', :as => :wifi_off
     match 'releases/update' => 'releases#update', :as => :release_update
   end
   
