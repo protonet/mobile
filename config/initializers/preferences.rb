@@ -17,6 +17,19 @@ Dashboard::Application.config.to_prepare do
       "allow_registrations_for_strangers" => true
     }
   }
+  SystemPreferences.defaults[:wifi] = {
+    "mode" => :dual,
+    "wlan0" => {
+      "password" => ActiveSupport::SecureRandom.base64(10),
+      "sharing"  => true,
+      "ip" => "10.42.0.1"
+    },
+    "wlan1" => {
+      "password" => "",
+      "sharing"  => false,
+      "ip" => "10.43.0.1"
+    }
+  }
   SystemPreferences.defaults[:allow_dashboard_for_strangers] = true
   SystemPreferences.defaults[:allow_registrations_for_strangers] = true
   SystemPreferences.defaults[:public_host] = "localhost:3000"

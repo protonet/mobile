@@ -1,0 +1,30 @@
+#!/bin/bash
+
+export CURRENT_PATH=$1
+export SHARED=$CURRENT_PATH/../shared
+export HOME=$CURRENT_PATH/../..
+shift 1
+. $HOME/../.bashrc
+. $HOME/../.profile
+
+export INTERFACE=$2
+export PIDFILE=$CURRENT_PATH/tmp/pids/dnsmasq_$INTERFACE.pid
+
+cd $SHARED
+export SHARED=`pwd`
+export CONFIG_FILE=$SHARED/config/dnsmasq.d/$INTERFACE
+
+case $1 in
+   start)
+      start-stop-daemon --start --make-pidfile --pidfile $PIDFILE --background --exec /usr/sbin/dnsmasq -C $CONFIG_FILE
+      ;;
+    stop)
+      start-stop-daemon --stop --pidfile $PIDFILE
+      ;;
+    status)
+      kill -0 `cat $PIDFILE`
+      ;;
+    *)  
+      echo "usage: dnsmasq rails-app-path {start|stop|status} interface" ;;
+esac
+exit 0
