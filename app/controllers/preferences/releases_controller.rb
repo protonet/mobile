@@ -1,4 +1,4 @@
-module System
+module Preferences
   class ReleasesController < ApplicationController
     
     def update
