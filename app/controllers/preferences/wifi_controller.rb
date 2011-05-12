@@ -1,5 +1,9 @@
-module System
+module Preferences
   class WifiController < ApplicationController
+    
+    def update
+      # handle single, dual stuff
+    end
     
     def on
       SystemWifi.start
