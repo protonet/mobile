@@ -65,7 +65,6 @@ Dashboard::Application.routes.draw do
   
   # System
   namespace :system do
-    match 'foundations' => 'foundations#index', :as => :foundations
     match 'files/create_directory' => 'files#create_directory', :as => :files_create_directory
     resources :files
     match 'vpn/on' => 'vpn#on', :as => :vpn_on
