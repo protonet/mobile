@@ -1,8 +1,7 @@
 #!/bin/bash
 
-export CURRENT_PATH=$1
+export CURRENT_PATH=$(cd `dirname $0` && cd ../.. && pwd)
 export HOME=$CURRENT_PATH/../..
-shift 1
 . $HOME/../.bashrc
 . $HOME/../.profile
 

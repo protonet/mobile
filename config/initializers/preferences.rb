@@ -20,11 +20,13 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:wifi] = {
     "mode" => :dual,
     "wlan0" => {
+      "name" => "private",
       "password" => ActiveSupport::SecureRandom.base64(10),
       "sharing"  => true,
       "ip" => "10.42.0.1"
     },
     "wlan1" => {
+      "name" => "public",
       "password" => "",
       "sharing"  => false,
       "ip" => "10.43.0.1"

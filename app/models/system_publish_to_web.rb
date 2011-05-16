@@ -57,7 +57,7 @@ class SystemPublishToWeb
     end
     
     def service_command
-      "#{configatron.current_file_path}/script/init/publish_to_web #{configatron.current_file_path} #{port}"
+      "#{configatron.current_file_path}/script/init/publish_to_web #{port}"
     end
     
   end

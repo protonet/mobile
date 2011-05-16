@@ -8,7 +8,7 @@
 <br>
 
 <h2>Wifi settings:</h2>
-<%= form_tag(preferences_wifi_update_path, {:id => 'allow-dashboard', :style => 'margin-bottom:0px;'}) do %>
+<%= form_tag(preferences_wifi_update_path, {:id => 'detailed-wifi-setting', :style => 'margin-bottom:0px;'}) do %>
   <%= hidden_field_tag 'anchor', 'wifi_settings'  %>
   <% {"private" => "wlan0", "public" => "wlan1"}.each do |type, interface| %>
     <h3><%= type %>(<%= interface %>)</h3>

@@ -1,23 +1,64 @@
 #!/bin/bash
 
-export CURRENT_PATH=$1
+export CURRENT_PATH=$(cd `dirname $0` && cd ../.. && pwd)
 export SHARED=$CURRENT_PATH/../shared
 export HOME=$CURRENT_PATH/../..
-shift 1
 . $HOME/../.bashrc
 . $HOME/../.profile
 cd $SHARED
 export SHARED=`pwd`
-export PIDFILE=$SHARED/pids/captive_portal.pid
-export PUBIF=$1
-export EXTIF=$2
+export IPT=/sbin/iptables
+export EXTIF=$1
+export INTIF=$2
+export REDIRECTION_TARGET=$3
 shift 2
 case $1 in
-    start)
-      $SHARED/config/ifconfig.d/iptables
+    start)      
+      echo "   External Interface:          $EXTIF"
+      echo "   Internal Interface:          $INTIF"
+      
+      echo "   Creating our unknown_user chain (handles traffic from public interface)"
+      $IPT -N unknown_user -t nat
+      
+      echo "   manage traffic coming from the public interface.."
+      # accept allow tcp:80, tcp:443, udp:67 (dhcp) and udp:53 (dns) and tcp:5000 (protonet-socket) requests
+      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 80   -j ACCEPT
+      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 443  -j ACCEPT
+      $IPT -t nat -A PREROUTING -i $INTIF -p udp -m udp --destination $REDIRECTION_TARGET --dport 67   -j ACCEPT
+      $IPT -t nat -A PREROUTING -i $INTIF -p udp -m udp --destination $REDIRECTION_TARGET --dport 53   -j ACCEPT
+      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 5000 -j ACCEPT
+
+      echo "   send all public traffic to the unknown_user chain"
+      $IPT -t nat -A PREROUTING -i $INTIF -j unknown_user
+
+      echo "   and drop all forward pakets marked 99"
+      $IPT -t filter -A FORWARD -i $INTIF -m mark --mark 99 -j DROP
+
+
+      echo "   allow traffic from all stored (and authorized) mac addresses"
+      awk 'BEGIN { FS="\t"; } { system("$IPT -t nat -A unknown_user -m mac --mac-source "$4" -j RETURN"); }' $SHARED/config/ifconfig.d/allowed_clients
+
+      echo "   mark all traffic from the unknown_user chain as 99 (untrusted)"
+      $IPT -t nat -A unknown_user -j MARK --set-mark 99
+
+      echo "   redirect all traffic to $REDIRECTION_TARGET"
+      $IPT -t nat -A unknown_user -m mark --mark 99 -p tcp --dport 80 -j DNAT --to-destination $REDIRECTION_TARGET
+      # create file
+      ;;
+    stop)
+      $IPT -F
+      $IPT -X
+      $IPT -t nat -F
+      $IPT -t nat -X
+      $IPT -t mangle -F
+      $IPT -t mangle -X
+      $IPT -P INPUT ACCEPT
+      $IPT -P FORWARD ACCEPT
+      $IPT -P OUTPUT ACCEPT
+      # remove file
       ;;
     status)
-      if [ -z "`iptables -L -n | grep unknown_user`" ]; then
+      if [ -z "`$IPT -L -n | grep unknown_user`" ]; then
         echo "Couldn't find the unknown_user chain, probably down."
         exit 1
       else
@@ -26,6 +67,6 @@ case $1 in
       fi
       ;;
     *)  
-      echo "usage: captive_portal rails-app-path public_interface external_interface {start|status}" ;;
+      echo "usage: captive_portal public_interface external_interface {start|status}" ;;
 esac
 exit 0

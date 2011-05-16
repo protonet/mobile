@@ -1,0 +1,45 @@
+#!/bin/bash
+
+export CURRENT_PATH=$(cd `dirname $0` && cd ../.. && pwd)
+export SHARED=$CURRENT_PATH/../shared
+export HOME=$CURRENT_PATH/../..
+. $HOME/../.bashrc
+. $HOME/../.profile
+cd $SHARED
+export SHARED=`pwd`
+export IPT=/sbin/iptables
+export COMMAND=$1
+shift 1
+export EXTIF=$1
+export INTIF=$2
+
+case $COMMAND in
+   start)
+      echo "Setup connection sharing for $INTIF over $EXTIF"
+      $IPT -A FORWARD -i $EXTIF -o $INTIF -m state --state ESTABLISHED,RELATED -j ACCEPT
+      $IPT -A FORWARD -i $INTIF -o $EXTIF -j ACCEPT
+      if $IPT -t nat --list POSTROUTING -v | grep -q "MASQUERADE.*all.*--.*any.*$EXTIF.*anywhere.*anywhere"; then
+        echo "Masquerade rules already in place"
+      else
+        $IPT -t nat -A POSTROUTING -o $EXTIF -j MASQUERADE
+      fi
+      ;;
+    stop)
+      $IPT -D FORWARD -i $EXTIF -o $INTIF -m state --state ESTABLISHED,RELATED -j ACCEPT
+      $IPT -D FORWARD -i $INTIF -o $EXTIF -j ACCEPT
+      rm -rf $SHARED/config/ifconfig.d/connection_sharing_$INTIF
+      if [ -e $SHARED/config/ifconfig.d/connection_sharing* ]; then
+        echo "Another interface is sharing its connection so we're not shutting that down."
+      else
+        echo "Removing masquerade configuration."
+        $IPT -t nat -D POSTROUTING -o $EXTIF -j MASQUERADE
+      fi
+      ;;
+    status)
+      exit 1
+      ;;
+    *)  
+      echo "usage: connection_sharing {start|stop|status} extinterface intinterface" ;;
+esac
+exit 0
+

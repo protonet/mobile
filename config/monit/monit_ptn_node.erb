@@ -35,8 +35,8 @@ check process apache2 with pidfile /var/run/apache2.pid
   
 check process node.js with pidfile <%= shared_path %>/pids/node_8124.pid
   group daemons
-  start program = "<%= current_path %>/script/init/node <%= current_path %> start"
-  stop program  = "<%= current_path %>/script/init/node <%= current_path %> stop"
+  start program = "<%= current_path %>/script/init/node start"
+  stop program  = "<%= current_path %>/script/init/node stop"
   if 3 restarts within 5 cycles then timeout
   if totalmem > 200.0 MB for 2 cycles then restart
 
@@ -49,8 +49,8 @@ check process js_dispatcher with pidfile <%= shared_path %>/pids/js_dispatcher_p
 
 check process solr with pidfile <%= shared_path %>/pids/sunspot-solr.pid
   group solr
-  start program = "<%= current_path %>/script/init/solr <%= current_path %> start"
-  stop program  = "<%= current_path %>/script/init/solr <%= current_path %> stop"
+  start program = "<%= current_path %>/script/init/solr start"
+  stop program  = "<%= current_path %>/script/init/solr stop"
   if 3 restarts within 5 cycles then timeout
 
 <% if false && jabber_bridge_active %>

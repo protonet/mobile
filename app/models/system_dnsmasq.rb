@@ -8,11 +8,15 @@ class SystemDnsmasq
         SystemMonit.restart(service_name(interface))
       else
         monitor_service(interface)
+        SystemNetworking.setup_interface_script("dnsmasq", interface, "start #{interface}", "stop #{interface}")
       end
     end
     
     def stop(interface)
-      SystemMonit.remove(service_name(interface)) if SystemMonit.exists?(service_name(interface))
+      if SystemMonit.exists?(service_name(interface))
+        SystemMonit.remove(service_name(interface))
+        SystemNetworking.remove_interface_script("dnsmasq", interface)
+      end
     end
 
     def status(interface)
@@ -34,7 +38,7 @@ class SystemDnsmasq
     end
     
     def service_command(command, interface)
-      "/usr/bin/sudo #{configatron.current_file_path}/script/init/dnsmasq #{configatron.current_file_path} #{command} #{interface}"
+      "/usr/bin/sudo #{configatron.current_file_path}/script/init/dnsmasq #{command} #{interface}"
     end
 
     def configure(interface)
