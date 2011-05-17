@@ -24,7 +24,6 @@ public/system
 mkmf.log
 node/screenshots/*
 node.pid.lock
-Gemfile.lock
 solr/data
 RELEASE
 TYPE
