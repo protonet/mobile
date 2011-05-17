@@ -92,6 +92,10 @@ Dashboard::Application.routes.draw do
   match "api/v1/meeps/create" => "api_v1/meeps#create"
   match "api/v1/meeps/show"   => "api_v1/meeps#show"
 
+  match "api/v1/channels"        => "api_v1/channels#index"
+  match "api/v1/channels/create" => "api_v1/channels#create"
+  match "api/v1/channels/show"   => "api_v1/channels#show"
+
   
   root :to => 'instruments#index'
   match '/:controller(/:action(/:id))'
