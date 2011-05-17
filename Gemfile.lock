@@ -117,6 +117,9 @@ GEM
     ffi (1.0.7)
       rake (>= 0.8.7)
     fishman-eventmachine_httpserver (0.2.2)
+    foreman (0.16.0)
+      term-ansicolor (~> 1.0.5)
+      thor (>= 0.13.6)
     gherkin (2.3.5)
       json (>= 1.4.6)
     highline (1.6.1)
@@ -252,6 +255,7 @@ DEPENDENCIES
   factory_girl_rails
   faker
   fishman-eventmachine_httpserver (= 0.2.2)
+  foreman
   hoptoad_notifier
   httparty (= 0.7.4)
   jeremymcanally-context (= 0.5.5)

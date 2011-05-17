@@ -106,6 +106,19 @@ and start the rails server (it will start and shutdown the js dispatcher and nod
 
 goto http://localhost:3000 and enjoy the ride!
 
+
+ALTERNATIVELY YOU CAN USE FOREMAN
+---------------------------------
+
+    foreman start
+    
+foreman uses port 5000 as a standard. if you need an onther port specify it
+
+    foreman start -p3000
+
+goto http://localhost:5000 (or specified port) and enjoy the ride!
+
+
 DEPLOYING ON TARGET SYSTEMS
 ---------------------------
 

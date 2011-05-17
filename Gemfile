@@ -35,6 +35,10 @@ gem "ruby-ifconfig", :git => 'https://github.com/jeffWelling/ruby-ifconfig.git'
 gem 'jquery-rails'
 gem 'redcarpet'
 
+group :development do
+  gem 'foreman'
+end
+
 group :test, :cucumber do
   gem "jeremymcanally-context", "0.5.5"
   gem "faker"
