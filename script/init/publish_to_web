@@ -12,7 +12,7 @@ export PORT=$1
 shift 1
 case $1 in
    start)
-      /usr/bin/autossh -M 0 localtunnel@directory.protonet.info -o ServerAliveInterval=15 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22666 -R $PORT:127.0.0.1:80 -i $SHARED/config/protonet.d/proxy_dsa
+      /usr/bin/autossh -M 0 localtunnel@directory.protonet.info -o ServerAliveInterval=15 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22666 -R $PORT:127.0.0.1:80 -i $SHARED/config/protonet.d/proxy_dsa -nT
       ;;
     stop)  
       kill `cat $AUTOSSH_PIDFILE`
