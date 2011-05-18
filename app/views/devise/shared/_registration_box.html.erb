@@ -60,6 +60,10 @@
       <%= label :login, :password, "password" %>
       <%= password_field :user, :password, :value => nil, :title => "password", :id => "login_password" %>
     </div>
+    <div>
+      <%= check_box :user, :remember_me %>
+      <%= label :user, :remember_me, "Keep logged in?", :class => "hint", :style => "display:inline;" %>
+    </div>
     <!-- TODO:<div class="forgot-password">
         <a href="" class="hint" title="shit happens!">forgot password?</a>
     </div>-->
