@@ -22,7 +22,7 @@ case $1 in
 esac
 exit 0
 EOS
-      file_path = "#{configatron.shared_file_path}/ifconfig.d/#{script_name}_#{interface}"
+      file_path = "#{configatron.shared_file_path}/config/ifconfig.d/#{script_name}_#{interface}"
       File.open(file_path, 'w') {|f| f.write(config) }
     end
     

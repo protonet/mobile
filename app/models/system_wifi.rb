@@ -44,14 +44,15 @@ class SystemWifi
       "/usr/bin/sudo #{configatron.current_file_path}/script/init/wifi #{argument}"
     end
     
-    def reconfigure
+    def reconfigure!
+      settings = ""
       case SystemPreferences.wifi["mode"]
       when :dual
-        settings =+ default_settings
-        settings =+ "ssid=#{SystemPreferences.wifi["wlan0"]["name"]}\ninterface=wlan0\n"
-        settings =+ wpa_settings(SystemPreferences.wifi["wlan0"]["password"])
-        settings =+ "bss=wlan1\nssid=#{SystemPreferences.wifi["wlan1"]["name"]}\nbssid=00:13:10:95:fe:0b"
-        settings =+ wpa_settings(SystemPreferences.wifi["wlan1"]["password"])
+        settings += default_settings
+        settings += "\nssid=#{SystemPreferences.wifi["wlan0"]["name"]}\ninterface=wlan0\n"
+        settings += wpa_settings(SystemPreferences.wifi["wlan0"]["name"], SystemPreferences.wifi["wlan0"]["password"])
+        settings += "\nbss=wlan1\nssid=#{SystemPreferences.wifi["wlan1"]["name"]}\nbssid=00:13:10:95:fe:0b"
+        settings += wpa_settings(SystemPreferences.wifi["wlan0"]["name"], SystemPreferences.wifi["wlan1"]["password"])
         generate_config(settings)
         start
         ["wlan0", "wlan1"].each do |interface|
@@ -59,18 +60,18 @@ class SystemWifi
           SystemConnectionSharing.start(interface) if SystemPreferences.wifi[interface]["sharing"]
         end
       when "wlan0"
-        settings =+ default_settings
-        settings =+ "ssid=#{SystemPreferences.wifi["wlan0"]["name"]}\ninterface=wlan0\n"
-        settings =+ wpa_settings(SystemPreferences.wifi["wlan0"]["password"])
+        settings += default_settings
+        settings += "\nssid=#{SystemPreferences.wifi["wlan0"]["name"]}\ninterface=wlan0\n"
+        settings += wpa_settings(SystemPreferences.wifi["wlan0"]["name"], SystemPreferences.wifi["wlan0"]["password"])
         generate_config(settings)
         start
         SystemDnsmasq.start("wlan0")
         SystemConnectionSharing.start("wlan0") if SystemPreferences.wifi[interface]["sharing"]
       when "wlan1"
         # we're still using the same interface only the settings change
-        settings =+ default_settings
-        settings =+ "ssid=#{SystemPreferences.wifi["wlan1"]["name"]}\ninterface=wlan0\n"
-        settings =+ wpa_settings(SystemPreferences.wifi["wlan1"]["password"])
+        settings += default_settings
+        settings += "\nssid=#{SystemPreferences.wifi["wlan1"]["name"]}\ninterface=wlan0\n"
+        settings += wpa_settings(SystemPreferences.wifi["wlan1"]["name"], SystemPreferences.wifi["wlan1"]["password"])
         generate_config(settings)
         start
         SystemDnsmasq.start("wlan0")
@@ -87,25 +88,27 @@ class SystemWifi
     
     private
     def default_settings
+      # whitespaces are important
       "ctrl_interface=/var/run/hostapd
-      driver=nl80211
-      hw_mode=g
-      channel=3
-      wme_enabled=1
-      ieee80211n=1
-      ht_capab=[HT40-][SHORT-GI-40][DSSS_CCK-40]"
+driver=nl80211
+hw_mode=g
+channel=3
+wme_enabled=1
+ieee80211n=1
+ht_capab=[HT40-][SHORT-GI-40][DSSS_CCK-40]"
     end
     
-    def wpa_settings(passphrase = "hheg45$%00")
-      return "\n" unless passphrase
+    def wpa_settings(ssid_name, password)
+      return "\n" if password.blank?
+      # whitespaces are important
       "macaddr_acl=0
-      auth_algs=1
-      ignore_broadcast_ssid=0
-      wpa=2
-      wpa_passphrase=#{passphrase}
-      wpa_key_mgmt=WPA-PSK
-      wpa_pairwise=TKIP
-      rsn_pairwise=CCMP\n"
+auth_algs=1
+ignore_broadcast_ssid=0
+wpa=2
+wpa_psk=#{SystemBackend.wpa_passphrase(ssid_name, password)}
+wpa_key_mgmt=WPA-PSK
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP\n"
     end
     
     def generate_config(config)

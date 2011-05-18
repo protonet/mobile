@@ -76,6 +76,10 @@ module BackendAdapters
       local_hosts.include?(host) || check_locality(host)
     end
     
+    def wpa_passphrase(ssid, passphrase)
+      `/usr/bin/wpa_passphrase #{ssid} #{passphrase}`.match(/\tpsk=(.*)$/)[1].strip
+    end
+    
     # private
       def parse_raw_ifconfig raw, keys=nil
         data = {}
