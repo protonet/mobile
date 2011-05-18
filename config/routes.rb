@@ -99,6 +99,7 @@ Dashboard::Application.routes.draw do
   match "api/v1/users"        => "api_v1/users#index"
   match "api/v1/users/create" => "api_v1/users#create"
   match "api/v1/users/show"   => "api_v1/users#show"
+  match "api/v1/users/login_token"   => "api_v1/users#login_token"
 
   
   root :to => 'instruments#index'

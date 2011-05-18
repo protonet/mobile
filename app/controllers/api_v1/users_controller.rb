@@ -1,7 +1,8 @@
 class ApiV1::UsersController < ApiV1::MasterController
   
   before_filter :set_defaults
-  
+
+  # LIST USERS
   def index
     if params[:user_id]
       users = User.find(params[:user_id].to_a)
@@ -11,23 +12,30 @@ class ApiV1::UsersController < ApiV1::MasterController
     render :json => users
   end
   
-  # CREATE A CHANNEL
+  # CREATE A USER
   def create
-    return if params[:name].blank?
-    channel = Channel.new(:name => params[:name], :description => params[:description], :owner => @current_user)
-    if channel.save
-      render :json => {"channel_id" => channel.id}
+    return unless @current_user.admin?
+    return if params[:login].blank?
+    user = User.new(:login => params[:login], :password => (params[:password] || ActiveSupport::SecureRandom.base64(10)), :email => (params[:email] || "foo@bar.com"))
+    if user.save
+      render :json => {"user_id" => user.id}
     else
-      render :json => channel.errors, :status => :unprocessable_entity
+      render :json => user.errors, :status => :unprocessable_entity
     end
   end
   
-  # GET A SPECIFIC CHANNEL
-  def show
-    render :json => Channel.find(params[:id])
+  # use auth_token parameter when logging in via token e.g. http://localhost:3000/?auth_token=tokencomeshere
+  def login_token
+    return unless params[:user_id]
+    user = User.find(params[:user_id]).reset_authentication_token!
+    render :json => {"token" => user.authentication_token}
   end
   
-  # LIST CHANNELS FOR USER
+  # GET A SPECIFIC USER
+  def show
+    render :json => User.find(params[:id])
+  end
+  
   private
   
   def set_defaults
