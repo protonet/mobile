@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   BAD_NAME_MSG  = "use only letters, numbers, and .-_ please."
   BAD_EMAIL_MSG = "should look like an email address."
 
-  devise :database_authenticatable, :registerable, :encryptable, :rememberable, :encryptor => :restful_authentication_sha1
+  devise :database_authenticatable, :registerable, :encryptable, :rememberable, :token_authenticatable, :encryptor => :restful_authentication_sha1
 
   with_options :unless => :skip_credentials_validation? do |v|
     v.validates_presence_of       :login, :email
@@ -277,6 +277,10 @@ class User < ActiveRecord::Base
 
   def listen_to_channels
     (channels_to_subscribe || []).each { |channel | subscribe(channel) }
+  end
+  
+  def after_token_authentication
+    update_attribute(:authentication_token, nil)
   end
   
 end

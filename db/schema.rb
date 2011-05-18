@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110325171226) do
+ActiveRecord::Schema.define(:version => 20110518131345) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -153,8 +153,10 @@ ActiveRecord::Schema.define(:version => 20110325171226) do
     t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
+    t.string   "authentication_token"
   end
 
+  add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true
   add_index "users", ["login"], :name => "index_users_on_login", :unique => true
 
 end
