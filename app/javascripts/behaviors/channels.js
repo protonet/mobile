@@ -9,7 +9,7 @@ protonet.utils.Behaviors.add({
   },
   
   "a[data-channel-id]:dragstart": function(element, event) {
-    if (event.originalEvent.dataTransfer)  {
+    if (event.originalEvent.dataTransfer) {
       var channelId = element.attr("data-channel-id");
       event.originalEvent.dataTransfer.setData("text/plain", "@" + protonet.timeline.Channels.getChannelName(channelId) + " ");
     }

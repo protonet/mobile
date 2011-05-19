@@ -30,4 +30,11 @@
       debugMode:                <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>
     };
   </script>
+  
+  <%# Ensure HTML5 support in IE < 9 %>
+  <!--[if lt IE 9]>
+    <script>
+      "abbr article aside audio canvas details figcaption figure footer header hgroup mark meter nav output progress section summary time video".replace(/\w+/g, function(t){ document.createElement(t); });
+    </script>
+  <![endif]-->
 </head>
