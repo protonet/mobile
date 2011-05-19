@@ -5,7 +5,7 @@
   </title>
   <link rel="shortcut icon" href="/img/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <%= stylesheet_link_tag(stylesheets, :cache => (configatron.avoid_caching != false)) %>
+  <%= custom_stylesheet || stylesheet_link_tag(stylesheets, :cache => (configatron.avoid_caching != false)) %>
   <%= csrf_meta_tag %>
   <script>
     var protonet = protonet || {};

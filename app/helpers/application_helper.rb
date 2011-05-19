@@ -12,6 +12,12 @@ module ApplicationHelper
   def stylesheets
     ['/css/reset', '/css/general', '/css/login', '/css/channels', '/css/meeps', '/css/form', '/css/text_extension', '/css/widget', '/css/modal_window']
   end
+  
+  def custom_stylesheet
+    return unless SystemPreferences.overwrite_css
+    "<style type=\"text/css\">#{SystemPreferences.overwrite_css}</style>"
+  end
+  
 
   def search_highligh_tag(phrase)
     "#{search_highlight_start_tag}#{phrase}#{search_highlight_end_tag}"

@@ -83,4 +83,24 @@
     </button>
   <%- end -%>
   
+  <%= form_tag system_preferences_update_path do -%>
+    <fieldset>
+      <legend>
+        <strong>CSS Overwrite</strong>
+      </legend>
+      <ul>
+        <li>
+          <%= label_tag 'preferences[overwrite_css]', 'Your CSS' %>
+          <%= text_area_tag 'preferences[overwrite_css]', SystemPreferences.overwrite_css, {:rows => 7, :cols => 55} %>
+        </li>
+      </ul>
+    </fieldset>
+    <button type="submit">
+      <span>
+        <em>Update</em>
+      </span>
+    </button>
+  <%- end -%>
+  
+  
 </div>
