@@ -90,6 +90,7 @@
       </legend>
       <ul>
         <li>
+          <%= hidden_field_tag 'anchor', 'node_settings'  %>
           <%= label_tag 'preferences[overwrite_css]', 'Your CSS' %>
           <%= text_area_tag 'preferences[overwrite_css]', SystemPreferences.overwrite_css, {:rows => 7, :cols => 55} %>
         </li>
@@ -102,5 +103,44 @@
     </button>
   <%- end -%>
   
+  <%= form_tag system_preferences_update_path do -%>
+    <fieldset>
+      <legend>
+        <strong>Title</strong>
+      </legend>
+      <ul>
+        <li>
+          <%= hidden_field_tag 'anchor', 'node_settings'  %>
+          <%= label_tag 'preferences[browser_title]', 'Browser Title' %>
+          <%= text_field_tag 'preferences[browser_title]', SystemPreferences.browser_title %>
+        </li>
+      </ul>
+    </fieldset>
+    <button type="submit">
+      <span>
+        <em>Update</em>
+      </span>
+    </button>
+  <%- end -%>
+  
+  <%= form_tag system_preferences_update_path do -%>
+    <fieldset>
+      <legend>
+        <strong>Show User Navigation</strong>
+      </legend>
+      <ul>
+        <li>
+          <%= hidden_field_tag 'anchor', 'node_settings'  %>
+          <%= hidden_field_tag 'preferences[show_user_navigation]', false, {:id => nil}  %>
+          <%= label_tag 'preferences[show_user_navigation]', 'Show User Navigation?' %> <%= check_box_tag 'preferences[show_user_navigation]', true, SystemPreferences.show_user_navigation %>
+        </li>
+      </ul>
+    </fieldset>
+    <button type="submit">
+      <span>
+        <em>Update</em>
+      </span>
+    </button>
+  <%- end -%>
   
 </div>

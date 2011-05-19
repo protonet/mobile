@@ -37,4 +37,5 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:public_host] = "localhost:3000"
   SystemPreferences.defaults[:public_host_https]  = false
   SystemPreferences.defaults[:captive_portal_greeting] = "Das ist das Captive Portal, Hallo!"
+  SystemPreferences.defaults[:show_user_navigation] = true
 end
