@@ -30,7 +30,9 @@ protonet.user.Config = {
   initialize: function() {
     this._storage = window.localStorage;
     
-    this._renderConfigs();
+    if (protonet.config.show_user_navigation) {
+      this._renderConfigs();
+    }
   },
   
   set: function(key, value) {

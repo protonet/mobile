@@ -15,7 +15,8 @@ protonet.user = {
   initialize: function() {
     this.usersData = {};
     
-    this.Config.initialize();
+    protonet.user.Config.initialize();
+    
     this._observe();
     this._createContextMenu();
     

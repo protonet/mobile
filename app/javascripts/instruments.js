@@ -17,24 +17,32 @@ $(function() {
   protonet.dispatcher.initialize();
   protonet.timeline.initialize();
   
-  new protonet.pages.Search();
-  new protonet.pages.Meep();
+  if (protonet.config.allow_modal_views) {
+    new protonet.pages.Search();
+    new protonet.pages.Meep();
+    new protonet.Page("users");
+  }
   
   // Init widgets
-  new protonet.controls.UserWidget();
-  new protonet.controls.FileWidget();
+  if (protonet.config.show_user_widget) {
+    new protonet.controls.UserWidget();
+  }
   
-  new protonet.Page("users");
+  if (protonet.config.show_file_widget) {
+    new protonet.controls.FileWidget();
+  }
   
-  // Frickin' stunning cloud graphics (makes your squirrel run in circles!!)
-  setTimeout(function() {
-    new protonet.effects.Clouds($("#cloud-container"), {
-      minStartPosition: -10,
-      maxStartPosition: 90,
-      minSize:          10,
-      maxSize:          50,
-      amount:           25,
-      animated:         false
-    });
-  }, 100);
+  if (protonet.config.show_clouds) {
+    // Frickin' stunning cloud graphics (makes your squirrel run in circles!!)
+    setTimeout(function() {
+      new protonet.effects.Clouds($("#cloud-container"), {
+        minStartPosition: -10,
+        maxStartPosition: 90,
+        minSize:          10,
+        maxSize:          50,
+        amount:           25,
+        animated:         false
+      });
+    }, 100);
+  }
 });
