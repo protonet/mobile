@@ -91,8 +91,9 @@
       <ul>
         <li>
           <%= hidden_field_tag 'anchor', 'node_settings'  %>
-          <%= label_tag 'preferences[overwrite_css]', 'Your CSS' %>
-          <%= text_area_tag 'preferences[overwrite_css]', SystemPreferences.overwrite_css, {:rows => 7, :cols => 55} %>
+          <%= label_tag 'preferences[custom_css]', 'Your CSS' %>
+          <%= text_area_tag 'preferences[custom_css]', SystemPreferences.custom_css, {:rows => 7, :cols => 55} %>
+          <%= select_tag 'preferences[custom_css_type]', options_for_select([["append", "append"], ["overwrite", "overwrite"]], SystemPreferences.custom_css_type) %>
         </li>
       </ul>
     </fieldset>

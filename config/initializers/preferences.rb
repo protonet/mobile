@@ -47,4 +47,6 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:default_registered_user_group] = "user"
   SystemPreferences.defaults[:default_stranger_user_group] = "guest"
   SystemPreferences.defaults[:allow_modal_views] = true
+  SystemPreferences.defaults[:custom_css_type] = "append"
+
 end

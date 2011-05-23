@@ -5,7 +5,16 @@
   </title>
   <link rel="shortcut icon" href="/img/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <%= custom_stylesheet || stylesheet_link_tag(stylesheets, :cache => (configatron.avoid_caching != false)) %>
+  <%- if custom_stylesheet -%>
+    <%- if SystemPreferences.custom_css_type == "append" -%>
+      <%= stylesheet_link_tag(stylesheets, :cache => (configatron.avoid_caching != false)) %>
+      <%= raw custom_stylesheet %>
+    <%- else -%>
+      <%= raw custom_stylesheet %>
+    <%- end -%>
+  <%- else -%>
+    <%= stylesheet_link_tag(stylesheets, :cache => (configatron.avoid_caching != false)) %>
+  <%- end -%>
   <%= csrf_meta_tag %>
   <script>
     var protonet = protonet || {};

@@ -14,8 +14,8 @@ module ApplicationHelper
   end
   
   def custom_stylesheet
-    return unless SystemPreferences.overwrite_css
-    "<style type=\"text/css\">#{SystemPreferences.overwrite_css}</style>"
+    return unless SystemPreferences.custom_css
+    "<style type=\"text/css\">#{SystemPreferences.custom_css}</style>"
   end
   
 
