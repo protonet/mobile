@@ -64,7 +64,7 @@ protonet.ui.ContextMenu.prototype = {
           event.stopPropagation();
         })
         .fadeIn(500, function() {
-          this.trigger("open");
+          this.trigger("open", target);
         }.bind(this));
       
       $window.bind("resize.context_menu", function() {
@@ -98,7 +98,7 @@ protonet.ui.ContextMenu.prototype = {
   },
   
   trigger: function(eventName) {
-    this.list.trigger("context_menu:" + eventName);
+    this.list.trigger("context_menu:" + eventName, target);
     return this;
   }
 };

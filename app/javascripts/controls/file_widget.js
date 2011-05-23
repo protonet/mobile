@@ -191,7 +191,7 @@ protonet.controls.FileWidget.prototype = {
         this.createFolderInput();
         closeContextMenu();
       }.bind(this),
-      "Upload file": function(li, closeContextMenu) {}
+      "Upload file": $.noop
     });
     
     var refresh = function() {

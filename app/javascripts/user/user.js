@@ -39,6 +39,10 @@ protonet.user = {
   },
   
   _createContextMenu: function() {
+    // TODO: One day we should combine the context menu logic with our behaviors. FO SHIZZLE.
+    // By the way: "Taylor Swift - The Best Day" is a really good song.
+    // U have to check it out http://grooveshark.com/#/s/The+Best+Day/2fZAWg
+    // kkthxbai
     var contextOptions = {
       "send reply": function(link, closeContextMenu) {
         var user = this.usersData[+link.attr("data-user-id")];
@@ -47,10 +51,9 @@ protonet.user = {
           closeContextMenu();
         }
       }.bind(this),
-      "show profile": function() {
-        alert("Sorry, profiles are not available yet ...");
-      }
+      '<a>show profile</a>': $.noop
     };
+    
     if(protonet.user.data.is_admin) {
       contextOptions["give internet access"] = function(link, closeContextMenu) {
         var user = this.usersData[+link.attr("data-user-id")];
@@ -61,7 +64,11 @@ protonet.user = {
         }
       }.bind(this);
     }
-    new protonet.ui.ContextMenu("[data-user-id]", contextOptions);
+    
+    var contextMenu = new protonet.ui.ContextMenu("[data-user-id]", contextOptions);
+    contextMenu.bind("open", function(e, link) {
+      contextMenu.list.find("li > a").attr("href", "/users/" + link.attr("data-user-id"));
+    });
   },
   
   getUserName: function(userId) {

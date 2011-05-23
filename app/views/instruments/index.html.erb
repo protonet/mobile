@@ -13,9 +13,9 @@
         <a href="#" title="Delete attachment [ESC]" class="hint remove">remove <strong>x</strong></a>
       </output>
     </div>
-    <div class="avatar">
+    <a href="/users/<%= current_user.id %>" class="avatar" target="_blank">
       <%= avatar(current_user, :width => 36, :height => 36, :title => "That's you!") %>
-    </div>
+    </a>
   <%- end -%>
   <div id="channels">
     <ul>

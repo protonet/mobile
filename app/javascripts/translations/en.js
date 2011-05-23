@@ -24,5 +24,6 @@ protonet.translations = {
   MEEP_WINDOW_HEADLINE: "{avatar} Message {id} in channel '{channel_name}'",
   MODAL_WINDOW_LOADING: "Loading ...",
   DETAIL_VIEW_LOADING_ERROR: "Something went wrong while loading the context for the current message.",
+  PAGE_LOADING_ERROR: "Page couldn't be loaded.",
   FLASH_DISABLED_MESSAGE: "Protonet requires the flash plugin. Please enable it by clicking below."
 };

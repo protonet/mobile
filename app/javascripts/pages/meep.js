@@ -11,7 +11,7 @@ protonet.pages.Meep = Class.create(protonet.Page, {
     this.meepList     = $("<ul>",   { className: "meeps" });
     this.border.append(this.next).append(this.previous).append(this.shareButton);
     
-    $super("meep", { meepsPerRequest: 5 });
+    $super("meep", { meepsPerRequest: 5, request: false });
   },
   
   show: function($super, id) {
@@ -203,7 +203,7 @@ protonet.pages.Meep = Class.create(protonet.Page, {
   },
   
   _loadMeep: function(id, callback) {
-    $.ajax({
+    this.ajaxRequest = $.ajax({
       url:      "/tweets/" + id,
       success:  callback,
       error:    function() {

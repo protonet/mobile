@@ -12,7 +12,8 @@ protonet.pages.Search = Class.create(protonet.Page, {
     
     $super("search", {
       url:            "/search?search_term={state}",
-      resultsPerPage: 10
+      resultsPerPage: 10,
+      request:        false
     });
   },
   

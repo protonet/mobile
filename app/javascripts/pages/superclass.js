@@ -35,7 +35,7 @@ protonet.Page = Class.create(protonet.ui.ModalWindow, {
     $super(pageName + "-page");
   },
   
-  show: function($super, state) {
+  show: function($super, state, href) {
     $("html").data("page", this);
     this._trigger("show");
     state = state || this.getState();
@@ -43,6 +43,11 @@ protonet.Page = Class.create(protonet.ui.ModalWindow, {
     if (typeof(state) !== "undefined") {
       this.setState(state);
     }
+    
+    if (this.config.request) {
+      this.load(href);
+    }
+    
     $super();
     return this;
   },
@@ -50,6 +55,10 @@ protonet.Page = Class.create(protonet.ui.ModalWindow, {
   hide: function($super, fromHistory) {
     if (!this.visible) {
       return;
+    }
+    
+    if (this.ajaxRequest) {
+      this.ajaxRequest.abort();
     }
     
     this.state = null;
@@ -61,6 +70,18 @@ protonet.Page = Class.create(protonet.ui.ModalWindow, {
     
     $super();
     return this;
+  },
+  
+  load: function(url) {
+    this.ajaxRequest = $.ajax({
+      url: url,
+      success: function(data) {
+        this.content(data);
+      }.bind(this),
+      error:  function() {
+        protonet.trigger("flash_message.error", protonet.t("PAGE_LOADING_ERROR"));
+      }
+    });
   },
   
   setState: function(state) {
@@ -102,7 +123,7 @@ protonet.Page = Class.create(protonet.ui.ModalWindow, {
         var match = path.match(regExp);
         if (match) {
           var state = decodeURIComponent(match[1]);
-          this.show(state);
+          this.show(state, path);
         } else {
           this.hide(true);
         }
@@ -122,7 +143,7 @@ protonet.Page = Class.create(protonet.ui.ModalWindow, {
           return;
         }
         
-        this.show(decodeURIComponent(match[1]));
+        this.show(decodeURIComponent(match[1]), element.href);
         event.preventDefault();
       }.bind(this));
     }

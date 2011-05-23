@@ -24,6 +24,8 @@ $(function() {
   new protonet.controls.UserWidget();
   new protonet.controls.FileWidget();
   
+  new protonet.Page("users");
+  
   // Frickin' stunning cloud graphics (makes your squirrel run in circles!!)
   setTimeout(function() {
     new protonet.effects.Clouds($("#cloud-container"), {
