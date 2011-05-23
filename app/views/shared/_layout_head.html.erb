@@ -1,7 +1,7 @@
 <head>
   <meta charset="UTF-8">
   <title>
-    <%= SystemPreferences.browser_title || "protonet - it's yours" %>
+    <%= SystemPreferences.browser_title %>
   </title>
   <link rel="shortcut icon" href="/img/favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
@@ -23,6 +23,7 @@
       user_icon_url:            "<%= current_user.avatar.url %>",
       user_is_admin:            <%= current_user.admin?.to_json %>, 
       user_is_stranger:         <%= current_user.stranger?.to_json %>,
+      show_only_online_users:   <%= SystemPreferences.show_only_online_users.to_json %>,
       session_id:               "<%= cookies['_rails_dashboard_session'] %>",
       authenticity_token:       "<%= form_authenticity_token %>",
       availableChannels:        <%= raw(get_channel_mapping_as_json) %>,

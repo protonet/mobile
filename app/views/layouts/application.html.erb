@@ -3,7 +3,9 @@
   <%= render :partial => 'shared/layout_head' %>
   <body>
     <%= render :partial => 'shared/layout_basic_body' %>
-    <div id="cloud-container"><!-- container for fluffy clouds (call it "the sky") --></div>
+    <%- if SystemPreferences.show_clouds -%>
+      <div id="cloud-container"><!-- container for fluffy clouds (call it "the sky") --></div>
+    <%- end -%>
     <div class="inner-body">
     
       <%- if current_user.stranger? -%>
@@ -13,29 +15,8 @@
       <header<%= raw(" class=\"login\"") if current_user.stranger? %>>
         <a href="<%= root_path %>" class="logo">protonet – it's yours</a>
         <a href="<%= root_path %>" class="monster default">change character</a>
-        <%- unless current_user.stranger? -%>
-          <ul id="user-navigation">
-            <li class="welcome">
-              <a href="<%= preferences_path %>">
-                <strong><%=h current_user.display_name %></strong>
-                <%= avatar(current_user, :width => 16, :height => 16) %>
-              </a>
-            </li>
-            <%- unless current_user.avatar.file? %>
-              <li class="change-avatar" tabindex="-1">
-                <%= link_to("upload avatar", preferences_path) %>
-              </li>
-            <%- end %>
-            <li class="account" tabindex="-1">
-              <%= link_to("account", preferences_path) %>
-            </li>
-            <li class="settings" tabindex="-1">
-              <a>settings</a>
-            </li>
-            <li class="logout" tabindex="-1">
-              <%= link_to("logout", destroy_user_session_path) %>
-            </li>
-          </ul>
+        <%- if SystemPreferences.show_user_navigation -%>
+          <%= render :partial => 'shared/user_navigation.html.erb' %>
         <%- end -%>
       </header>
     

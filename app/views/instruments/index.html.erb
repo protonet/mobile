@@ -31,18 +31,26 @@
     </ul>
     <div id="manage-channels">
       <%= link_to "invite", new_invitation_path, "data-lightbox" => "true", "data-lightbox-title" => "Invite your awesome buddy!" if permitted_to?(:create, :invitations) %>
-      <%= link_to "add/manage channels", "/channels" if permitted_to?(:create, :listens) or permitted_to?(:create, :channels) %>      
+      <%= link_to "add/manage channels", "/channels" if permitted_to?(:create, :listens) or permitted_to?(:create, :channels) %>
     </div>
   </div>
   <output id="timeline"></output>
   <div id="timeline-loading-indicator" class="meep-loading-indicator"></div>
 </section>
 
-<aside id="side">
-  <%= render :partial => 'search/search_form' %>
-  <%= render :partial => 'users/user_widget' %>
-  <%= render :partial => 'system/files/file_widget' %>
-</aside>
+<%- if SystemPreferences.show_search_widget || SystemPreferences.show_user_widget || SystemPreferences.show_file_widget -%>
+  <aside id="side">
+    <%- if SystemPreferences.show_search_widget -%>
+      <%= render :partial => 'search/search_form' %>
+    <%- end -%>
+    <%- if SystemPreferences.show_user_widget -%>
+      <%= render :partial => 'users/user_widget' %>
+    <%- end -%>
+    <%- if SystemPreferences.show_file_widget -%>
+      <%= render :partial => 'system/files/file_widget' %>
+    <%- end -%>
+  </aside>
+<%- end -%>
 
 <script type="protonet/template" id="meep-template">
   <%= render :partial => 'meeps/meep' %>
