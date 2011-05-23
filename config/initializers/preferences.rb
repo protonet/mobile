@@ -44,5 +44,7 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:show_user_widget] = true
   SystemPreferences.defaults[:show_file_widget] = true
   SystemPreferences.defaults[:show_only_online_users] = false
+  SystemPreferences.defaults[:default_registered_user_group] = "user"
+  SystemPreferences.defaults[:default_stranger_user_group] = "guest"
   SystemPreferences.defaults[:allow_modal_views] = true
 end
