@@ -1,0 +1,21 @@
+<div id="system-settings">
+  <%= form_tag system_preferences_update_path do -%>
+    <%= return_anchor_path %>
+    <fieldset>
+      <legend>
+        <strong>Webhook Settings</strong>
+      </legend>
+      <ul>
+        <li>
+          <%= label_tag 'preferences[check_internet_access_url]', 'Check internet access' %>
+          <%= text_field_tag 'preferences[check_internet_access_url]', SystemPreferences.check_internet_access_url %>
+        </li>
+      </ul>
+    </fieldset>
+    <button type="submit">
+      <span>
+        <em>Update</em>
+      </span>
+    </button>
+  <%- end -%>
+</div>

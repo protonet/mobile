@@ -103,12 +103,23 @@ module BackendAdapters
       end
       
     def grant_internet_access(ip)
+      # Add computer addresses to file
+      captivefile = "#{configatron.shared_file_path}/config/ifconfig.d/allowed_clients"
+      doc = ip + "\t" + get_mac_for_ip(ip) + "\t"  + Time.now().strftime("%d.%m.%y") + "\n"
+      File.open(captivefile, 'a') {|f| f.write(doc) }
+    
       # Add PC to the firewall
       `/usr/bin/sudo /sbin/iptables -I unknown_user 1 -t nat -m mac --mac-source #{get_mac_for_ip(ip)} -j RETURN`
 
       # The following line removes connection tracking for the PC
       # This clears any previous (incorrect) route info for the redirection
       `/usr/bin/sudo rmtrack #{ip}`
+    end
+
+    def is_internet_access_granted(ip)
+      # check computer address in file
+      captivefile = 'tmp/captive_users'
+      open(captivefile).grep(/#{ip}/).size > 0
     end
     
     def revoke_internet_access(ip)

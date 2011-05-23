@@ -39,6 +39,7 @@ class PreferencesController < ApplicationController
       {:url => 'pppoe_settings', :name => 'pppoe settings'},
       {:url => 'wifi_settings', :name => 'wifi settings'}, 
       {:url => 'captive_settings', :name => 'captive settings'},
+      {:url => 'webhook_settings', :name => 'webhook settings'},
       {:url => 'privacy_settings', :name => 'privacy settings'},
       {:url => 'vpn_settings', :name => 'vpn settings'},
       {:url => 'software_updates', :name => 'software updates'}

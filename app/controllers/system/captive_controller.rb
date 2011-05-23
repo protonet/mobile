@@ -12,14 +12,15 @@ module System
     end
   
     def login
-      local_filename = "#{configatron.shared_file_path}/config/ifconfig.d/allowed_clients"
-      doc = request.remote_ip + "\t" + SystemBackend.get_mac_for_ip(request.remote_ip) + "\t"  + Time.now().strftime("%d.%m.%y") + "\n"
-    
-      File.open(local_filename, 'a') {|f| f.write(doc) }
-    
       SystemBackend.grant_internet_access(request.remote_ip)
       sleep 3
-      redirect_to params[:req]
+      
+      if params[:req]
+        redirect_to params[:req]
+      else
+        redirect_to request.referer
+      end
+      
     end
     
     def self.matches?(url)

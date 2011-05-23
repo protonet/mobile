@@ -75,6 +75,10 @@ module ApplicationHelper
     def search_highlight_end_tag
       "</span>"
     end
+    
+    def return_anchor_path
+      hidden_field_tag(:anchor, action_name)
+    end
 end
 
 
