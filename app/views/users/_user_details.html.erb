@@ -8,8 +8,8 @@
 <h4>Created</h4>
 <p><%= user.created_at %></p>
 
-<h4>Admin?</h4>
-<p class="admin"><%= user.admin? ? "yes" : "no" %></p>
+<h4>Roles</h4>
+<p><%= user.roles.map(&:title).join(" ") %></p>
 
 <% if user.can_be_edited_by?(current_user) %>
   <br>

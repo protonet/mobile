@@ -104,7 +104,7 @@
   <%- end -%>
   
   <%= form_tag system_preferences_update_path do -%>
-    <%= hidden_field_tag 'anchor', 'node_settings'  %>
+    <%= return_anchor_path %>
     <fieldset>
       <legend>
         <strong>White-Label Settings</strong>
@@ -137,6 +137,10 @@
         <li>
           <%= hidden_field_tag 'preferences[show_only_online_users]', false, {:id => nil}  %>
           <%= label_tag 'preferences[show_only_online_users]', 'Show only online users?' %> <%= check_box_tag 'preferences[show_only_online_users]', true, SystemPreferences.show_only_online_users %>
+        </li>
+        <li>
+          <%= hidden_field_tag 'preferences[allow_modal_views]', false, {:id => nil}  %>
+          <%= label_tag 'preferences[allow_modal_views]', 'Allow modal views?' %> <%= check_box_tag 'preferences[allow_modal_views]', true, SystemPreferences.allow_modal_views %>
         </li>
       </ul>
     </fieldset>

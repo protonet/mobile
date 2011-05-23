@@ -44,4 +44,5 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:show_user_widget] = true
   SystemPreferences.defaults[:show_file_widget] = true
   SystemPreferences.defaults[:show_only_online_users] = false
+  SystemPreferences.defaults[:allow_modal_views] = true
 end
