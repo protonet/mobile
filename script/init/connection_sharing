@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export CURRENT_PATH=$(cd `dirname $0` && cd ../.. && pwd)
-export SHARED=$CURRENT_PATH/../shared
+export SHARED=$CURRENT_PATH/../../shared
 export HOME=$CURRENT_PATH/../..
 . $HOME/../.bashrc
 . $HOME/../.profile
@@ -12,12 +12,13 @@ export COMMAND=$1
 shift 1
 export EXTIF=$1
 export INTIF=$2
+export IDENT="sharing $EXTIF $INTIF"
 
 case $COMMAND in
    start)
-      echo "Setup connection sharing for $INTIF over $EXTIF"
-      $IPT -A FORWARD -i $EXTIF -o $INTIF -m state --state ESTABLISHED,RELATED -j ACCEPT
-      $IPT -A FORWARD -i $INTIF -o $EXTIF -j ACCEPT
+      echo "Setup connection sharing for $EXTIF over $INTIF"
+      $IPT -A FORWARD -i $EXTIF -o $INTIF -m state --state ESTABLISHED,RELATED -j ACCEPT -m comment --comment "$IDENT"
+      $IPT -A FORWARD -i $INTIF -o $EXTIF -j ACCEPT -m comment --comment "$IDENT"
       if $IPT -t nat --list POSTROUTING -v | grep -q "MASQUERADE.*all.*--.*any.*$EXTIF.*anywhere.*anywhere"; then
         echo "Masquerade rules already in place"
       else
@@ -25,18 +26,25 @@ case $COMMAND in
       fi
       ;;
     stop)
-      $IPT -D FORWARD -i $EXTIF -o $INTIF -m state --state ESTABLISHED,RELATED -j ACCEPT
-      $IPT -D FORWARD -i $INTIF -o $EXTIF -j ACCEPT
+      echo "Remove connection sharing for $EXTIF over $INTIF"
+      CMD="$IPT -L -v --line-numbers | awk '/$IDENT/ {print \"$IPT -D FORWARD \" \$1}' | sort -r | bash"
+      echo $CMD | bash
       rm -rf $SHARED/config/ifconfig.d/connection_sharing_$INTIF
       if [ -e $SHARED/config/ifconfig.d/connection_sharing* ]; then
-        echo "Another interface is sharing its connection so we're not shutting that down."
+        echo "Another interface is sharing its connection so we're not shutting masquerade down."
       else
         echo "Removing masquerade configuration."
         $IPT -t nat -D POSTROUTING -o $EXTIF -j MASQUERADE
       fi
       ;;
     status)
-      exit 1
+      if $IPT -L -v  | grep -q "$IDENT"; then
+        echo "Active"
+        exit 0
+      else
+        echo "Not Active"
+        exit 1
+      fi
       ;;
     *)  
       echo "usage: connection_sharing {start|stop|status} extinterface intinterface" ;;
