@@ -104,11 +104,14 @@ protonet.user.Browser = {
   })(),
   
   IS_TOUCH_DEVICE: function() {
+    var returnValue;
     try {
       document.createEvent("TouchEvent");
-      return true;
+      returnValue = true;
     } catch (e) {
-      return false;
+      returnValue = false;
     }
+    this.IS_TOUCH_DEVICE = function() { return returnValue; };
+    return returnValue;
   }
 };

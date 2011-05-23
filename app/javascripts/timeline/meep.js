@@ -41,7 +41,7 @@
  * TODO: Need for speed. Creating & rendering a meep should be fast as hell
  */
 protonet.timeline.Meep = function(dataOrForm) {
-  var isFormElement = dataOrForm.jquery && dataOrForm.attr;
+  var isFormElement = (dataOrForm instanceof jQuery);
   if (isFormElement) {
     this.data = this._parseForm(dataOrForm);
   } else {

@@ -4,7 +4,10 @@ protonet.utils.escapeHtml = (function() {
     '<': '&lt;',
     '>': '&gt;'
   };
+  
+  var REG_EXP = /[&<>]/g;
+  
   return function(str) {
-    return str.replace(/[&<>]/g, function(c) { return MAP[c]; });
+    return str.replace(REG_EXP, function(c) { return MAP[c]; });
   };
 })();

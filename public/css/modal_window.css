@@ -61,12 +61,12 @@
 
 /* =MODAL WINDOWS CONTAINING MEEPS
 =========================================================================== */
-.search-window li.meep:last-child {
-  margin-bottom: 0;
+.modal-window-content li.meep {
+  margin-right: 0;
 }
 
 .modal-window-content .meeps {
-  width: 650px;
+  width: 630px;
 }
 
 .modal-window-content .meep .avatar {
@@ -83,7 +83,11 @@
   margin-bottom: 20px;
 }
 
-.search-window .modal-window-content {
+.search-page li.meep:last-child {
+  margin-bottom: 0;
+}
+
+.search-page .modal-window-content {
   background: rgba(255, 255, 255, 0.8);
   padding-left: 45px;
   overflow: hidden;
@@ -99,26 +103,26 @@ input.search {
   -webkit-appearance: none;
 }
 
-.search-window h2 {
+.search-page h2 {
   text-align: center;
 }
 
-.search-window input.search {
+.search-page input.search {
   width: 616px;
   background-position: 624px;
 }
 
-.search-window .no-meeps-available {
+.search-page .no-meeps-available {
   display: block;
 }
 
-.search-window .meeps,
-.search-window .no-meeps-available,
-.search-window .meep-loading-indicator {
+.search-page .meeps,
+.search-page .no-meeps-available,
+.search-page .meep-loading-indicator {
   margin-top: 15px;
 }
 
-.search-window .meeps {
+.search-page .meeps {
   margin-bottom: 15px;
 }
 
@@ -129,19 +133,19 @@ input.search {
 
 /* =MODAL WINDOW: MEEP DETAILS
 =========================================================================== */
-.meep-window .modal-window-content {
+.meep-page .modal-window-content {
   overflow: hidden;
   padding-left: 40px;
   padding-right: 40px;
   position: relative;
 }
 
-.meep-window .meeps {
+.meep-page .meeps {
   position: absolute;
   top: 50%;
 }
 
-.meep-window .border {
+.meep-page .border {
   height: 90px;
   border: 7px solid rgb(72, 123, 255);
   -webkit-box-shadow: 0 0 4px #000;
@@ -160,11 +164,11 @@ input.search {
   background: #fff;
 }
 
-.meep-window .border.loading {
+.meep-page .border.loading {
   background: transparent url(/img/icn_loading_big.gif) center center no-repeat;
 }
 
-.meep-window h2 img {
+.meep-page h2 img {
   display: inline-block;
   height: 16px;
   width: 16px;
@@ -173,7 +177,7 @@ input.search {
   vertical-align: middle;
 }
 
-.meep-window .share {
+.meep-page .share {
   background: transparent url(/img/share_arrow.png) 0 0 no-repeat;
   right: -8px;
   bottom: -13px;
@@ -183,8 +187,8 @@ input.search {
   height: 40px;
 }
 
-.meep-window .next,
-.meep-window .previous {
+.meep-page .next,
+.meep-page .previous {
   position: absolute;
   width: 0;
   height: 0;
@@ -194,53 +198,53 @@ input.search {
   border-width: 20px;
 }
 
-.meep-window .next {
+.meep-page .next {
   border-color: transparent transparent rgba(0, 0, 0, 0.5) transparent;
   margin-top: -40px;
 }
 
-.meep-window .next:hover {
+.meep-page .next:hover {
   border-color: transparent transparent rgb(72, 123, 255) transparent;
 }
 
-.meep-window .previous {
+.meep-page .previous {
   border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;
   margin-top: 5px;
 }
 
-.meep-window .previous:hover {
+.meep-page .previous:hover {
   border-color: rgb(72, 123, 255) transparent transparent transparent;
 }
 
-.meep-window .meep {
+.meep-page .meep {
   opacity: 0.5;
 }
 
-.meep-window .meep:not(.selected) {
+.meep-page .meep:not(.selected) {
   background-color: #ededed;
   background-image: none; /* removes gradient, for a faster scrolling performance */
 }
 
-.meep-window .own.meep:not(.selected) {
+.meep-page .own.meep:not(.selected) {
   background-color: #f9f3f0;
   background-image: none;
 }
 
-.meep-window .meep:not(.selected) a {
+.meep-page .meep:not(.selected) a {
   cursor: default !important;
 }
 
-.meep-window .meep .detail-link,
-.meep-window .meep:before {
+.meep-page .meep [data-meep-action],
+.meep-page .meep:before {
   display: none !important;
 }
 
-.meep-window .selected.meep {
+.meep-page .selected.meep {
   z-index: 5;
   opacity: 1;
 }
 
-.meep-window input {
+.meep-page input {
   border: 1px inset #999;
   color: #333;
   font-size: 10px;

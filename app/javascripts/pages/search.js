@@ -1,30 +1,38 @@
-//= require "../utils/escape_html.js"
-//= require "../utils/parse_query_string.js"
-//= require "../behaviors/search.js"
+//= require "../pages/superclass.js"
 //= require "../lib/jquery.inview/jquery.inview.js"
 
-protonet.window.Search = {
-  RESULTS_COUNT: 10,
-  
-  currentXhrs: [],
-  
-  initialize: function() {
+
+protonet.pages.Search = Class.create(protonet.Page, {
+  initialize: function($super) {
     this.form        = $("#search-form");
     this.input       = this.form.find("input.search");
-    this.meepList    = $("<ul />", { className: "meeps" });
-    this.modalWindow = protonet.ui.ModalWindow;
     
-    this._observe();
+    this.meepList    = $("<ul />",  { className: "meeps" });
+    this.bigInput    = $("<input>", { className: "search" });
+    
+    $super("search", {
+      url:            "/search?search_term={state}",
+      resultsPerPage: 10
+    });
   },
   
-  _observe: function() {
+  _observe: function($super) {
+    this.bigInput.bind({
+      keydown:   function() {
+        clearTimeout(this.timeout);
+      }.bind(this),
+      keyup:     function() {
+        this.timeout = setTimeout(function() {
+          this.search(this.bigInput.val());
+        }.bind(this), 200);
+      }.bind(this)
+    });
+    
+    $super();
+  },
+  
+  _initDependencies: function($super) {
     var isTouchDevice = protonet.user.Browser.IS_TOUCH_DEVICE();
-    
-    protonet.utils.History.observe(/(?:\?|&)search=(.*?)(?:&|#|$)/, this.show.bind(this));
-    
-    protonet.Notifications.bind("modal_window.hidden", function() {
-      this.keyword = null;
-    }.bind(this));
     
     this.form.bind({
       keydown: function() {
@@ -37,8 +45,11 @@ protonet.window.Search = {
           return;
         }
         
-        this.input.val("");
-        this.show(value);
+        setTimeout(function() {
+          this.show(this.input.val());
+          this.input.val("").blur();
+        }.bind(this), 0);
+        
       }.bind(this),
       submit:   function(event) {
         var value = this.input.val();
@@ -47,57 +58,48 @@ protonet.window.Search = {
         event.preventDefault();
       }.bind(this)
     });
+    
+    $super();
+  },
+  
+  show: function($super, keyword) {
+    if (!this.visible) {
+      $super(keyword);
+      this.keyword = null;
+      this.headline(this.bigInput);
+    }
+    
+    this.update(keyword);
+  },
+  
+  update: function(keyword) {
+    this.bigInput.val(keyword).focus();
+    this.search(keyword);
   },
   
   _cancel: function() {
-    $.each(this.currentXhrs, function(i, xhr) {
-      xhr.aborted = true;
-      xhr.abort();
-    });
+    if (!this.currentXhr) {
+      return;
+    }
     
-    this.currentXhrs = [];
+    this.currentXhr.aborted = true;
+    this.currentXhr.abort();
+    this.currentXhr = null;
   },
   
-  show: function(keyword) {
-    this.keyword = null;
-    this.bigInput = this.bigInput || $("<input />", { className: "search" });
-    
-    this.modalWindow.update({
-      headline: this.bigInput,
-      content:  ""
-    }).show({ className: "search-window" });
-    
-    this.bigInput
-      .bind({
-        keydown:   function() {
-          clearTimeout(this.timeout);
-        }.bind(this),
-        keyup:     function() {
-          this.timeout = setTimeout(function() {
-            this.search(this.bigInput.val());
-          }.bind(this), 200);
-        }.bind(this)
-      })
-      .val(keyword)
-      .get(0)
-      .focus();
-    
-    this.bigInput.trigger("keyup");
-  },
-  
-  load: function(keyword, page, callback) {
+  load: function(keyword, pageNum, callback) {
     this._cancel();
     
-    this.currentXhrs.push($.ajax({
+    this.currentXhr = $.ajax({
       data: {
         search_term:    keyword,
-        results_count:  this.RESULTS_COUNT,
+        results_count:  this.config.resultsPerPage,
         channel_id:     0,
-        page:           page || 1
+        page:           pageNum || 1
       },
       url: "/search",
       beforeSend: function() {
-        this.modalWindow.get("dialog").addClass("loading");
+        this.elements.dialog.addClass("loading");
       }.bind(this),
       success: function(data) {
         callback && callback(data);
@@ -106,30 +108,28 @@ protonet.window.Search = {
         if (xhr.aborted) {
           return;
         }
-        this.modalWindow.get("dialog").removeClass("loading");
+        this.elements.dialog.removeClass("loading");
       }.bind(this)
-    }));
+    });
   },
   
-  search: function(keyword, callback) {
+  search: function(keyword) {
     if (keyword == this.keyword) {
       return;
     }
     
-    // Create history entry
-    protonet.utils.History.register("?search=" + encodeURIComponent(keyword));
-    
-    this.page    = 1;
+    this.pageNum = 1;
     this.keyword = keyword;
+    this.setState(keyword);
     
     if (!keyword) {
       this.renderHint("Please enter a keyword");
       return;
     }
     
-    this.modalWindow.update({ content: this.meepList.html("") });
+    this.content(this.meepList.html(""));
     
-    this.load(keyword, this.page, function(data) {
+    this.load(keyword, this.pageNum, function(data) {
       this.render(this.meepList, data, this._afterRendering.bind(this));
     }.bind(this));
   },
@@ -138,7 +138,7 @@ protonet.window.Search = {
    * TODO: Need for speed here, OPTIMIZE the shit out of this (cblum)
    */
   render: function(container, data, callback) {
-    if (!data.length && this.page == 1) {
+    if (!data.length && this.pageNum == 1) {
       this.renderHint("No results found");
       return;
     }
@@ -151,9 +151,7 @@ protonet.window.Search = {
   },
   
   renderHint: function(hint) {
-    this.modalWindow.update({
-      content: $("<p />", { html: hint, className: "no-meeps-available" })
-    });
+    this.content($("<p />", { html: hint, className: "no-meeps-available" }));
   },
   
   _afterRendering: function(meeps) {
@@ -172,7 +170,7 @@ protonet.window.Search = {
       
       this.indicator = (this.indicator || $("<div>", { className: "meep-loading-indicator" })).insertAfter(this.meepList).show();
       
-      this.load(this.keyword, ++this.page, function(data) {
+      this.load(this.keyword, ++this.pageNum, function(data) {
         var tempContainer = $("<ul>");
         this.render(tempContainer, data, function(meeps) {
           this.meepList.append(tempContainer.children());
@@ -182,4 +180,4 @@ protonet.window.Search = {
       }.bind(this));
     }.bind(this));
   }
-};
+});

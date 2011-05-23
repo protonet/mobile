@@ -9,6 +9,7 @@ protonet.utils            = protonet.utils            || {};
 protonet.user             = protonet.user             || {};
 protonet.data             = protonet.data             || {};
 protonet.media            = protonet.media            || {};
+protonet.pages            = protonet.pages            || {};
 protonet.effects          = protonet.effects          || {};
 protonet.text_extensions  = protonet.text_extensions  || {};
 protonet.timeline         = protonet.timeline         || {};

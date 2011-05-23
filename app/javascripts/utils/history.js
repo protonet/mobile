@@ -1,10 +1,11 @@
 protonet.utils.History = (function() {
-  var HASH_PREFIX = "#!", // HASHBANG-IN-YO-FACE!
-      $window     = $(window),
-      observers   = [],
-      current     = null,
-      history     = window.history,
-      location    = window.location;
+  var HASH_PREFIX   = "#!", // HASHBANG-IN-YO-FACE!
+      $window       = $(window),
+      observers     = [],
+      current       = null,
+      history       = window.history,
+      location      = window.location,
+      usePushState  = history.pushState && false; // Set this to true, to use buggy HTML5 history.pushState
   
   function register(path) {
     if (path.startsWith("?")) {
@@ -15,12 +16,15 @@ protonet.utils.History = (function() {
       return;
     }
     
-    if (history.pushState) {
+    if (usePushState) {
       history.pushState({ path: path }, "", path);
     } else {
       // Following line is needed for Firefox to avoid onhashchange fuckup
       current = path;
       location.hash = HASH_PREFIX + path;
+      if (!path || path === location.pathname) {
+        try { history.replaceState({}, "", location.pathname); } catch(e) {}
+      }
     }
     current = getCurrentPath();
     return this;
@@ -44,7 +48,7 @@ protonet.utils.History = (function() {
   }
   
   function onChange(callback) {
-    protonet.Notifications.bind("history.change", function(e, path) {
+    protonet.bind("history.change", function(e, path) {
       callback(path);
     });
     return this;
@@ -61,6 +65,7 @@ protonet.utils.History = (function() {
       var match = path.match(value[0]);
       if (match) {
         match.shift();
+        match = $.map(match, function(str) { return decodeURIComponent(str); })
         value[1].apply(window, match);
       }
     });
@@ -71,31 +76,36 @@ protonet.utils.History = (function() {
       return;
     }
     current = path;
-    protonet.Notifications.trigger("history.change", path);
+    protonet.trigger("history.change", path);
     _triggerObservers(path);
   }
   
   // Observe
-  $window
-    .bind("popstate", function(event) {
+  if (usePushState) {
+    $window.bind("popstate", function(event) {
       var path = location.pathname + location.search;
       if ($.type(path) == "string") {
         _triggerChange(path);
       }
-    })
-    .bind("hashchange", function() {
-      var hash = getHash();
-      if ($.type(hash) == "string") {
-        _triggerChange(hash);
-      }
     });
+  }
+  
+  $window.bind("hashchange", function() {
+    var hash = getHash();
+    if ($.type(hash) == "string") {
+      _triggerChange(hash);
+    }
+  });
   
   // Check for history entries initially
   $(function() {
-    var historyEntry = getCurrentPath();
-    if (historyEntry) {
-      _triggerChange(historyEntry);
-    }
+    // Timeout in order to let everything which is done ondomready initialize
+    setTimeout(function() {
+      var historyEntry = getCurrentPath();
+      if (historyEntry) {
+        _triggerChange(historyEntry);
+      }
+    }, 10);
   });
   
   return {

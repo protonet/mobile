@@ -90,6 +90,10 @@ String.prototype.endsWith = function(str) {
   return d >= 0 && this.lastIndexOf(str) === d;
 };
 
+String.prototype.capitalize = function() {
+  return this.substr(0, 1).toUpperCase() + this.substr(1);
+};
+
 String.prototype.truncate = function(length) {
   var truncation = "...";
   return this.length > length ? this.slice(0, length - truncation.length) + truncation : String(this);

@@ -65,50 +65,5 @@ protonet.utils.Behaviors.add({
       nextElement.trigger("focus").trigger("focusin");
     }
     event.preventDefault();
-  },
-  
-  /**
-   * Meep links within .meep elements
-   * <a data-meep-id="12">show</a>
-   * Optionally specify an action
-   * <a data-meep-id="12" data-meep-action="share">share</a>
-   */
-  "[data-meep-id]:click": function(element, event) {
-    var action = element.data("meep-action");
-    switch(action) {
-      case "share":
-        var meep = element.parents("article").data("instance");
-        protonet.Notifications.trigger("form.fill", meep.getUrl());
-        break;
-      default:
-        var data = element.parents("article").data("meep");
-        protonet.window.Meep.show(data);
-    }
-    
-    event.preventDefault();
-  },
-  
-  /**
-   * Meep links
-   * <a href="http://host.com?meep_id=12">open detail view for meep #12</a>
-   */
-  "a[href*='meep_id=']:click": function(link, event) {
-    // Make sure that it doesn't interfere with the [data-meep-id] behavior above
-    if (link.data("meep-id")) {
-      return;
-    }
-    
-    link = link[0];
-    if (link.host !== location.host) {
-      return;
-    }
-    
-    var parameters = protonet.utils.parseQueryString(link.hash || link.search);
-    if (!parameters.meep_id) {
-      return;
-    }
-    
-    protonet.window.Meep.show(+parameters.meep_id);
-    event.preventDefault();
   }
 });

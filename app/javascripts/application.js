@@ -3,6 +3,7 @@
 //= require "lib/jquery-ui-1.8.11.custom.min.js"
 //= require "lib/json.min.js"
 //= require "lib/swfobject-2.2.js"
+//= require "lib/jquery-class-create/class.js"
 //= require "extensions.js"
 //= require "protonet.js"
 //= require "notifications/notifications.js"

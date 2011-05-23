@@ -1,3 +1,6 @@
 [submodule "app/javascripts/lib/jquery.inview"]
 	path = app/javascripts/lib/jquery.inview
 	url = git@github.com:protonet/jquery.inview.git
+[submodule "app/javascripts/lib/jquery-class-create"]
+	path = app/javascripts/lib/jquery-class-create
+	url = git@github.com:protonet/jquery-class-create.git

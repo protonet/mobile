@@ -4,11 +4,11 @@ protonet.utils.Behaviors.add({
   },
   
   "a[data-lightbox]:click": function(link, event) {
-    event.preventDefault();
-    var headline = link.data("lightbox-title") || "Hello my friend!";
-    $.get(link.attr('href'), function(response){
-      protonet.ui.ModalWindow.update({ "content": response, "headline": headline }).show({ className: "my-modal-window" });
+    var headline = link.data("lightbox-title");
+    $.get(link.attr("href"), function(response) {
+      new protonet.ui.ModalWindow("my-modal-window").content(response).headline(headline).show();
     });
+    event.preventDefault();
   },
   
   // this behaviour is the first ajax form behaviour we're using
