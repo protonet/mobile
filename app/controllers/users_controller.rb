@@ -8,7 +8,12 @@ class UsersController < ApplicationController
   end
 
   def show
-    render :partial => "user_details", :locals => {:user => User.find(params[:id])}
+    user = User.find(params[:id]
+    if user.external_profile_url
+      return redirect_to user.external_profile_url
+    else
+      render :partial => "user_details", :locals => {:user => user)}
+    end
   end
   
   def new
