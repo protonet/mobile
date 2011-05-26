@@ -12,9 +12,9 @@ class SystemDnsmasq
       end
     end
     
-    def stop(interface)
+    def stop(interface, do_reload = true)
       if SystemMonit.exists?(service_name(interface))
-        SystemMonit.remove(service_name(interface))
+        SystemMonit.remove(service_name(interface), do_reload)
         SystemNetworking.remove_interface_script("dnsmasq", interface)
       end
     end

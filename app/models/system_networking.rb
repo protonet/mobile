@@ -24,6 +24,7 @@ exit 0
 EOS
       file_path = "#{configatron.shared_file_path}/config/ifconfig.d/#{script_name}_#{interface}"
       File.open(file_path, 'w') {|f| f.write(config) }
+      `/bin/chmod +x #{file_path}`
     end
     
     def remove_interface_script(script_name, interface)

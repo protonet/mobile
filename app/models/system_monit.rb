@@ -12,13 +12,14 @@ class SystemMonit
       EOS
       File.open(service_config_path(service), 'w') {|f| f.write(config) }
       reload!
+      monit_command("monitor #{service}")
     end
     
-    def remove(service)
+    def remove(service, do_reload = true)
       raise NoSuchServiceError unless exists?(service)
       stop(service)
       FileUtils.rm(service_config_path(service))
-      reload!
+      reload! if do_reload
     end
     
     def start(service)

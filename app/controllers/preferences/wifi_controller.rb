@@ -9,20 +9,24 @@ module Preferences
       
       wifi_preferences = SystemPreferences.wifi
       
-      wifi_preferences["mode"] = if wifi_params["wlan0"] && wifi_params["wlan1"]
+      wifi_preferences["mode"] = if (wifi_params["wlan0"] == "true" && wifi_params["wlan1"] == "true")
         :dual
+      elsif wifi_params["wlan0"] == "true"
+        "wlan0"
+      elsif wifi_params["wlan1"] == "true"
+        "wlan1"
       else
-        wifi_params.find {|iface| iface[1]}.try(:[], 0)
+        nil
       end
       ["wlan0", "wlan1"].each do |iface|
-        wifi_preferences[iface] = {"password" => password_params[iface], "sharing" => sharing_params[iface]}
+        wifi_preferences[iface] = wifi_preferences[iface].merge({"password" => password_params[iface], "sharing" => sharing_params[iface]})
       end
       
       SystemPreferences.wifi = wifi_preferences # if check is ok
+      Rails.logger.info(SystemPreferences.wifi.inspect)
+      SystemWifi.reconfigure!
 
-      # SystemWifi.reconfigure!
-
-      render :text => "barbaz"
+      redirect_to :controller => '/preferences', :action => 'index', :anchor => 'wifi_settings'
     end
     
     def on

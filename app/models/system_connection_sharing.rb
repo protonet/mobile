@@ -19,7 +19,7 @@ class SystemConnectionSharing
     
     private
     def service_command(command, extif, intif)
-      "/usr/bin/sudo #{configatron.current_file_path}/script/init/connection_sharing #{command} #{extif} #{intif}"
+      `/usr/bin/sudo #{configatron.current_file_path}/script/init/connection_sharing #{command} #{extif} #{intif}`
     end
   end
 end

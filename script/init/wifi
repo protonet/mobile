@@ -10,8 +10,13 @@ export SHARED=`pwd`
 case $1 in
    start)
       /usr/local/bin/hostapd -P $SHARED/pids/hostapd.pid -B $SHARED/config/hostapd.d/config
+      sleep 10
+      ifup --force wlan0
+      ifup --force wlan1
       ;;
     stop)  
+      ifdown --force wlan0
+      ifdown --force wlan1
       kill `cat $SHARED/pids/hostapd.pid`
       ;;
     status)
@@ -25,6 +30,6 @@ case $1 in
       fi
       ;;
     *)  
-      echo "usage: wifi rails-app-path {start|stop|status}" ;;
+      echo "usage: wifi {start|stop|status}" ;;
 esac
 exit 0

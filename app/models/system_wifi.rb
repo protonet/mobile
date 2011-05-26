@@ -4,7 +4,7 @@ class SystemWifi
     def start
       return unless Rails.env == 'production'
       if SystemMonit.exists?(:wifi)
-        SystemMonit.restart(:wifi)
+        SystemMonit.start(:wifi)
       else
         monitor_service
       end
@@ -17,12 +17,16 @@ class SystemWifi
     
     def restart
       return unless Rails.env == 'production'
-      SystemMonit.restart(:wifi)
+      if SystemMonit.exists?(:wifi)
+        SystemMonit.restart(:wifi)
+      else
+        monitor_service
+      end
     end
   
     def status(interface)
       return 'off' unless Rails.env == 'production'
-      system(service_command("status")) ? 'on' : 'off'
+      system(service_command("status"))
     end
       
     def monitor_service
@@ -45,6 +49,14 @@ class SystemWifi
     end
     
     def reconfigure!
+      ["wlan0", "wlan1"].each do |interface|
+        SystemDnsmasq.stop(interface, false) # reload set to false
+        SystemConnectionSharing.stop(interface)
+      end
+      # reload monit
+      SystemMonit.reload!
+      sleep 5
+      # and start with new config
       settings = ""
       case SystemPreferences.wifi["mode"]
       when :dual
@@ -54,7 +66,8 @@ class SystemWifi
         settings += "\nbss=wlan1\nssid=#{SystemPreferences.wifi["wlan1"]["name"]}\nbssid=00:13:10:95:fe:0b"
         settings += wpa_settings(SystemPreferences.wifi["wlan0"]["name"], SystemPreferences.wifi["wlan1"]["password"])
         generate_config(settings)
-        start
+        restart
+        sleep 15
         ["wlan0", "wlan1"].each do |interface|
           SystemDnsmasq.start(interface)
           SystemConnectionSharing.start(interface) if SystemPreferences.wifi[interface]["sharing"]
@@ -64,25 +77,23 @@ class SystemWifi
         settings += "\nssid=#{SystemPreferences.wifi["wlan0"]["name"]}\ninterface=wlan0\n"
         settings += wpa_settings(SystemPreferences.wifi["wlan0"]["name"], SystemPreferences.wifi["wlan0"]["password"])
         generate_config(settings)
-        start
+        restart
+        sleep 15
         SystemDnsmasq.start("wlan0")
-        SystemConnectionSharing.start("wlan0") if SystemPreferences.wifi[interface]["sharing"]
+        SystemConnectionSharing.start("wlan0") if SystemPreferences.wifi["wlan0"]["sharing"]
       when "wlan1"
         # we're still using the same interface only the settings change
         settings += default_settings
         settings += "\nssid=#{SystemPreferences.wifi["wlan1"]["name"]}\ninterface=wlan0\n"
         settings += wpa_settings(SystemPreferences.wifi["wlan1"]["name"], SystemPreferences.wifi["wlan1"]["password"])
         generate_config(settings)
-        start
+        restart
+        sleep 15
         SystemDnsmasq.start("wlan0")
-        SystemConnectionSharing.start("wlan0") if SystemPreferences.wifi[interface]["sharing"]
+        SystemConnectionSharing.start("wlan0") if SystemPreferences.wifi["wlan0"]["sharing"]
       when nil
         #  shut down both
         stop
-        ["wlan0", "wlan1"].each do |interface|
-          SystemDnsmasq.stop(interface)
-          SystemConnectionSharing.stop(interface)
-        end
       end
     end
     

@@ -1,18 +1,9 @@
-<p>Current config:</p>
-<br>
-<pre style="background:white;font-size:10px;">
-<%= SystemWifi.config %>
-</pre>
-<br>
-<p>Iptables ready: <bold><%= SystemNetworking.iptables_rules_ready? %></bold></p>
-<br>
-
 <h2>Wifi settings:</h2>
 <%= form_tag(preferences_wifi_update_path, {:id => 'detailed-wifi-setting', :style => 'margin-bottom:0px;'}) do %>
   <%= hidden_field_tag 'anchor', 'wifi_settings'  %>
   <% {"private" => "wlan0", "public" => "wlan1"}.each do |type, interface| %>
     <h3><%= type %>(<%= interface %>)</h3>
-    <p>Status: <bold><%= SystemWifi.status(interface) %></bold></p>
+    <p>Status: <bold><%= SystemWifi.status(interface) %></bold> DNS/DHCP: <bold><%= SystemDnsmasq.status(interface) %></bold></p>
     <div>
       <%= label_tag "preferences[wifi][#{interface}]", 'OFF' %>
       <%= radio_button_tag "preferences[wifi][#{interface}]", false, !SystemWifi.status(interface) %>
