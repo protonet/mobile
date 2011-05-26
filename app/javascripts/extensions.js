@@ -119,6 +119,10 @@ String.prototype.isEmail = (function() {
   };
 })();
 
+String.prototype.count = function(str) {
+  return str.split(str).length - 1;
+};
+
 
 
 

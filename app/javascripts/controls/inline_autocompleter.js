@@ -20,10 +20,13 @@ protonet.controls.InlineAutocompleter = function(input, data, options) {
 
 protonet.controls.InlineAutocompleter.prototype = {
   _defaultOptions: {
-    maxChars:       1,              // which string length should be used for auto completion
-    lowerCase:      true,           // match in lower case mode
-    prefix:         "",             // only match when string starts with prefix
-    matchingChars:  /[\w_\-\.]/i    // only execute completion look up when one of these chars has been pressed
+    maxChars:       1,                                // which string length should be used for auto completion
+    lowerCase:      true,                             // match in lower case mode
+    prefix:         "",                               // only match when string starts with prefix
+    append:         " ",                              // string to append after selecting,
+    whiteSpace:     [" ", "\n", "\t", "[", "(", "{"], // array of strings to consider as white space (character before start of new word)
+    matchingChars:  /[\w_\-\.]/i,                     // only execute completion look up when one of these chars has been pressed,
+    onAutocomplete: $.noop
   },
   
   IGNORE_KEYS: [
@@ -62,6 +65,13 @@ protonet.controls.InlineAutocompleter.prototype = {
     this.input.keyup(this._keyup.bind(this)).keydown(this._keydown.bind(this));
   },
   
+  _getLastWhiteSpace: function(value) {
+    var args = $.map(this.options.whiteSpace, function(str) {
+      return value.lastIndexOf(str);
+    });
+    return Math.max.apply(Math, args);
+  },
+  
   _keyup: function(event) {
     /**
      * Completely ignore special characters like (shift, ctrl, ...)
@@ -69,24 +79,15 @@ protonet.controls.InlineAutocompleter.prototype = {
     if ($.inArray(event.which, this.IGNORE_KEYS) != -1) {
       return;
     }
-    
     this.autocompletionMode = false;
     
-    var enteredCharacter        = String.fromCharCode(event.which),
+    var enteredCharacter        = String.fromCharCode(event.which || event.keyCode),
         value                   = this.input.val(),
         caretPosition           = this.input.attr("selectionStart"),
         characterBeforeCaret    = value.substring(caretPosition - 1, caretPosition),
         valueUntilCaret         = value.substring(0, caretPosition),
         valueFromCaret          = value.substring(caretPosition),
-        lastWhiteSpace          = Math.max(
-          valueUntilCaret.lastIndexOf(" "),
-          valueUntilCaret.lastIndexOf("\n"),
-          valueUntilCaret.lastIndexOf("\t"),
-          // we also handle opening parenthesis and brackets as "white space"
-          valueUntilCaret.lastIndexOf("("),
-          valueUntilCaret.lastIndexOf("["),
-          valueUntilCaret.lastIndexOf("{")
-        ),
+        lastWhiteSpace          = this._getLastWhiteSpace(valueUntilCaret),
         currentlyTypedWordStart = lastWhiteSpace + 1,
         currentlyTypedWordEnd   = caretPosition,
         currentlyTypedWord      = valueUntilCaret.substring(currentlyTypedWordStart, currentlyTypedWordEnd);
@@ -130,7 +131,6 @@ protonet.controls.InlineAutocompleter.prototype = {
     if (!this.autocompletionMode) {
       return;
     }
-    
     switch(event.which) {
       case 40: // key down
         this.currentSuggestionIndex++;
@@ -148,9 +148,12 @@ protonet.controls.InlineAutocompleter.prototype = {
       case 39: // right arrow
         var value         = this.input.val(),
             selectionEnd  = this.input.attr("selectionEnd"),
-            newValue      = value.substr(0, selectionEnd) + " " + value.substr(selectionEnd);
-        this.input.val(newValue).attr("selectionEnd", selectionEnd + 1);
+            newValue      = value.substr(0, selectionEnd) + this.options.append + value.substr(selectionEnd);
+        this.input.val(newValue)
+          .attr("selectionEnd", selectionEnd + this.options.append.length)
+          .attr("selectionStart", selectionEnd + this.options.append.length);
         event.preventDefault();
+        this.options.onAutocomplete();
       default:
         return;
     }

@@ -1,13 +1,14 @@
 //= require "escape_for_reg_exp.js"
 //= require "template.js"
 
-
 /**
  * Replaces text smilies with images :-)
  *
  * @example
  *    protonet.utils.smilify("hey what's up, dudes! :-)");
  *      => 'hey what's up, dudes! <img src="..." class="grin">'
+ *    protonet.utils.smilify.shortcuts
+ *      => list of all supported smilies
  */
 protonet.utils.smilify = (function() {
   /**
@@ -36,7 +37,7 @@ protonet.utils.smilify = (function() {
     });
   });
   
-  return function(str) {
+  function smilify(str) {
     if (!protonet.user.Config.get("smilies")) {
       return str;
     }
@@ -53,4 +54,12 @@ protonet.utils.smilify = (function() {
     });
     return str;
   };
+  
+  var allShortcuts = [];
+  $.each(SMILIES, function(i, smilie) {
+    allShortcuts = allShortcuts.concat(smilie.shortcuts);
+  });
+  smilify.shortcuts = allShortcuts;
+  
+  return smilify;
 })();

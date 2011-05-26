@@ -1,4 +1,5 @@
 //= require "../controls/inline_autocompleter.js"
+//= require "../utils/smilify.js"
 
 
 /**
@@ -24,9 +25,43 @@ protonet.timeline.Form = {
   },
   
   _initAutocompleter: function() {
+    // @reply autocompleter
     this.autoCompleter = new protonet.controls.InlineAutocompleter(this.input, [], {
       maxChars: 2,
       prefix:   "@"
+    });
+    
+    // Markup autocompleter
+    var markupRegExp   = /((\{|\[)[a-z]+(\}|\]))\s*$/i,
+        onAutocomplete = function() {
+          var value           = this.input.val(),
+              selectionEnd    = this.input.attr("selectionEnd"),
+              beforeCaret     = value.substring(0, selectionEnd),
+              match           = beforeCaret.match(markupRegExp) || [],
+              openingTag      = match[1];
+          if (openingTag) {
+            var closingTag   = match[2] + "/" + openingTag.substring(1); // "{code}" becomes "{/code}"
+            this.input
+              .val(value.substring(0, selectionEnd) + closingTag + value.substring(selectionEnd))
+              .attr("selectionStart", selectionEnd)
+              .attr("selectionEnd", selectionEnd);
+          }
+        }.bind(this);
+    
+    new protonet.controls.InlineAutocompleter(this.input, [
+      "quote}", "/quote}", "code}", "/code}"
+    ], {
+      append:     "",
+      whiteSpace: ["{"],
+      onAutocomplete: onAutocomplete
+    });
+    
+    new protonet.controls.InlineAutocompleter(this.input, [
+      "code]", "/code]", "quote]", "/quote]"
+    ], {
+      append:     "",
+      whiteSpace: ["["],
+      onAutocomplete: onAutocomplete
     });
   },
   
