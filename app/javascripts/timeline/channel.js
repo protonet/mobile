@@ -40,7 +40,7 @@ protonet.timeline.Channel.prototype = {
      * Render new meep in selected channel
      * when event is triggered
      */
-    protonet.Notifications.bind("meep.send", function(e, dataOrForm, post) {
+    protonet.bind("meep.send", function(e, dataOrForm, post) {
       if (!this.isSelected) {
         return;
       }
@@ -51,7 +51,7 @@ protonet.timeline.Channel.prototype = {
     /**
      * Render meep when received
      */
-    protonet.Notifications.bind("meep.receive", function(e, meepData) {
+    protonet.bind("meep.receive", function(e, meepData) {
       if (meepData.channel_id != this.data.id) {
         return;
       }
@@ -66,7 +66,7 @@ protonet.timeline.Channel.prototype = {
      * Set fixed scroll position when user scrolled down in timeline
      * (eg. to watch a video) while new meep occurs
      */
-    protonet.Notifications.bind("meep.rendered", function(e, meepElement, meepData, instance) {
+    protonet.bind("meep.rendered", function(e, meepElement, meepData, instance) {
       if (meepData.channel_id != this.data.id) {
         return;
       }
@@ -84,7 +84,7 @@ protonet.timeline.Channel.prototype = {
     /**
      * Render meep in this channel if it contains a channel reply
      */
-    protonet.Notifications.bind("meep.sent", function(e, meepElement, meepData, instance) {
+    protonet.bind("meep.sent", function(e, meepElement, meepData, instance) {
       if (meepData.channel_id == this.data.id) {
         return;
       }
@@ -110,7 +110,7 @@ protonet.timeline.Channel.prototype = {
      * Make sure that the data object is up to date
      * by tracking incoming and outgoing meeps
      */
-    protonet.Notifications
+    protonet
       .bind("meep.sent", function(e, meepElement, meepData, instance) {
         if (meepData.channel_id == this.data.id) {
           this.data.meeps.push(meepData);
@@ -130,7 +130,7 @@ protonet.timeline.Channel.prototype = {
     /**
      * Set tab to active and store state
      */
-    protonet.Notifications.bind("channel.change", function(e, channelId) {
+    protonet.bind("channel.change", function(e, channelId) {
       this.isSelected = channelId == this.data.id;
       this.toggle();
     }.bind(this));
@@ -138,7 +138,7 @@ protonet.timeline.Channel.prototype = {
     /**
      * Init endless scroller and no meeps hint after meeps are rendered
      */
-    protonet.Notifications.bind("channel.rendered channel.rendered_more", function(e, channelList, data, instance) {
+    protonet.bind("channel.rendered channel.rendered_more", function(e, channelList, data, instance) {
       if (instance != this) {
         return;
       }
@@ -227,7 +227,7 @@ protonet.timeline.Channel.prototype = {
     }).data({ channel: this.data, instance: this });
     
     this._renderMeeps(this.data.meeps, this.channelList, function() {
-      protonet.Notifications.trigger("channel.rendered", [this.channelList, this.data, this]);
+      protonet.trigger("channel.rendered", [this.channelList, this.data, this]);
     }.bind(this));
     
     return this;
@@ -256,7 +256,7 @@ protonet.timeline.Channel.prototype = {
     var tempContainer = $("<ul />");
     this._renderMeeps(meepsData, tempContainer, function() {
       this.channelList.append(tempContainer.children());
-      protonet.Notifications.trigger("channel.rendered_more", [this.channelList, this.data, this]);
+      protonet.trigger("channel.rendered_more", [this.channelList, this.data, this]);
     }.bind(this));
   },
   
@@ -286,7 +286,7 @@ protonet.timeline.Channel.prototype = {
    * Load meeps for channel
    */
   _loadMeeps: function(parameters, callback) {
-    protonet.Notifications.trigger("timeline.loading_start");
+    protonet.trigger("timeline.loading_start");
     
     $.extend(parameters, { channel_id: this.data.id });
     $.ajax({
@@ -301,7 +301,7 @@ protonet.timeline.Channel.prototype = {
         (callback || $.noop)(response);
       },
       complete: function() {
-        protonet.Notifications.trigger("timeline.loading_end");
+        protonet.trigger("timeline.loading_end");
       }
     });
   },
@@ -358,7 +358,7 @@ protonet.timeline.Channel.prototype = {
       className: "no-meeps-available"
     }).hide().html(protonet.t("NO_MEEPS_AVAILABLE")).appendTo(this.container);
     
-    protonet.Notifications.bind("channel.change", function(e, id) {
+    protonet.bind("channel.change", function(e, id) {
       if (this.data.id == id && !this.data.meeps.length) {
         noMeepsHint.show();
       } else {
@@ -366,7 +366,7 @@ protonet.timeline.Channel.prototype = {
       }
     }.bind(this));
     
-    protonet.Notifications.bind("meep.rendered", function(e, meepElement, meepData) {
+    protonet.bind("meep.rendered", function(e, meepElement, meepData) {
       if (meepData.channel_id != this.data.id) {
         return;
       }

@@ -18,7 +18,7 @@ protonet.timeline.Channels = {
     this.data               = data || [];
     this.subscribedChannels = $.map(this.data, function(channel) { return channel.id; });
     
-    protonet.Notifications.trigger("channels.data_available", [this.data, this.availableChannels, this.subscribedChannels]);
+    protonet.trigger("channels.data_available", [this.data, this.availableChannels, this.subscribedChannels]);
     
     this._observe();
     this._renderChannelLists();
@@ -33,10 +33,10 @@ protonet.timeline.Channels = {
      * If the desired channel is not already subscribed this
      * will fire the channel.subscribe event
      */
-    protonet.Notifications.bind("channel.change", function(e, id, avoidHistoryChange) {
+    protonet.bind("channel.change", function(e, id, avoidHistoryChange) {
       id = +id; // + Makes sure that id is a Number
       if ($.inArray(id, this.subscribedChannels) == -1) {
-        protonet.Notifications.trigger("channel.subscribe", id);
+        protonet.trigger("channel.subscribe", id);
         return;
       }
       
@@ -50,16 +50,16 @@ protonet.timeline.Channels = {
     /**
      * Select initial channel when channels are rendered/initialized
      */
-    protonet.Notifications.bind("channels.initialized", this._selectChannel.bind(this));
+    protonet.bind("channels.initialized", this._selectChannel.bind(this));
     
     /**
      * Subscribe a new channel by id
      */
-    protonet.Notifications.bind("channel.subscribe", function(e, id) {
+    protonet.bind("channel.subscribe", function(e, id) {
       var error = function() {
         var identifier = this.getChannelName(+id) || id,
             message = protonet.t("CHANNEL_SUBSCRIPTION_ERROR").replace("{identifier}", identifier);
-        protonet.Notifications.trigger("flash_message.error", message);
+        protonet.trigger("flash_message.error", message);
       }.bind(this);
       
       $.ajax({
@@ -88,7 +88,7 @@ protonet.timeline.Channels = {
     /**
      * Logic for loading meeps that were send when the user was disconnected
      */
-    protonet.Notifications.bind("socket.reconnected", function(event) {
+    protonet.bind("socket.reconnected", function(event) {
       var channelStates = {};
       $.each(this.data, function(i, channel) {
         var latestMeepData = channel.meeps[channel.meeps.length - 1];
@@ -101,7 +101,7 @@ protonet.timeline.Channels = {
         success: function(response) {
           $.each(response, function(channelId, meeps) {
             $.each(meeps, function(i, meepData) {
-              protonet.Notifications.trigger("meep.receive", [meepData]);
+              protonet.trigger("meep.receive", [meepData]);
             });
           });
         }
@@ -120,7 +120,7 @@ protonet.timeline.Channels = {
       var link = this.channelLinks.filter("[data-channel-id='" + channelData.id + "']");
       new protonet.timeline.Channel(channelData, link).render(this.container);
     }.bind(this), function() {
-      protonet.Notifications.trigger("channels.initialized", [this.data]);
+      protonet.trigger("channels.initialized", [this.data]);
     }.bind(this));
   },
   
@@ -135,7 +135,7 @@ protonet.timeline.Channels = {
         selectedChannelId = urlChannelId || (this.data[0] ? this.data[0].id : null),
         alreadySelected   = this.selected == selectedChannelId;
     if (selectedChannelId && !alreadySelected) {
-      protonet.Notifications.trigger("channel.change", [selectedChannelId, true]);
+      protonet.trigger("channel.change", [selectedChannelId, true]);
     }
   },
   

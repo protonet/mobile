@@ -8,17 +8,17 @@ protonet.timeline = {
   _observe: function() {
     var loadingIndicator = $("#timeline-loading-indicator");
     
-    protonet.Notifications.bind("timeline.loading_start", function() {
+    protonet.bind("timeline.loading_start", function() {
       loadingIndicator.show();
     });
     
-    protonet.Notifications.bind("timeline.loading_end", function() {
+    protonet.bind("timeline.loading_end", function() {
       loadingIndicator.hide();
     });
   },
   
   load: function() {
-    protonet.Notifications.trigger("timeline.loading_start");
+    protonet.trigger("timeline.loading_start");
     
     $.ajax({
       url: "/",
@@ -28,10 +28,10 @@ protonet.timeline = {
       data: { ajax: 1 },
       success: this._initChannels.bind(this),
       complete: function() {
-        protonet.Notifications.trigger("timeline.loading_end");
+        protonet.trigger("timeline.loading_end");
       },
       error: function() {
-        protonet.Notifications.trigger("flash_message.error", protonet.t("LOADING_MEEPS_ERROR"));
+        protonet.trigger("flash_message.error", protonet.t("LOADING_MEEPS_ERROR"));
       }
     });
   },

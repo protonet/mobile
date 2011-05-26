@@ -151,7 +151,7 @@ protonet.timeline.Meep.prototype = {
     this.article = this.element.is("article") ? this.element : this.element.find("article");
     this.article.add(this.element).data(data);
     
-    protonet.Notifications.trigger("meep.rendered", [this.element, this.data, this]);
+    protonet.trigger("meep.rendered", [this.element, this.data, this]);
   },
   
   /**
@@ -188,10 +188,10 @@ protonet.timeline.Meep.prototype = {
         this.data.id = +response;
         
         (onSuccess || $.noop)();
-        protonet.Notifications.trigger("meep.sent", [this.element, this.data, this]);
+        protonet.trigger("meep.sent", [this.element, this.data, this]);
       }.bind(this),
       error:      function() {
-        protonet.Notifications.trigger("flash_message.error", protonet.t("MEEP_ERROR_LONG"));
+        protonet.trigger("flash_message.error", protonet.t("MEEP_ERROR_LONG"));
         
         var element = this.merged ? this.article : this.element;
         element.addClass("error").delay(5000).fadeOut();
@@ -201,7 +201,7 @@ protonet.timeline.Meep.prototype = {
         this.error = true;
         
         (onFailure || $.noop)();
-        protonet.Notifications.trigger("meep.error", [this.element, this.data, this]);
+        protonet.trigger("meep.error", [this.element, this.data, this]);
       }.bind(this)
     };
     
