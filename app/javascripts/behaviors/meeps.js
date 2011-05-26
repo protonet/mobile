@@ -54,7 +54,7 @@ protonet.utils.Behaviors.add({
     } else if (event.keyCode === 40 || (event.keyCode === 9 && !event.shiftKey)) {
       nextElement = element.next();
     } else if (event.keyCode === 13) {
-      element.find("[data-meep-action='detail-view']").trigger("click").end().trigger("blur");
+      element.find("[data-meep-action='detail-view']:last").trigger("click").end().trigger("blur");
       return;
     } else {
       return;
