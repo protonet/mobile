@@ -44,6 +44,7 @@ protonet.Page = Class.create(protonet.ui.ModalWindow, {
       this.setState(state);
     }
     
+    href = href || this._interpolate(this.config.url, true);
     if (this.config.request) {
       this.load(href);
     }

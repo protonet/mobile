@@ -20,14 +20,14 @@ protonet.user = {
     this._observe();
     this._createContextMenu();
     
-    protonet.Notifications.trigger("user.data_available", this.data);
+    protonet.trigger("user.data_available", this.data);
   },
   
   _observe: function() {
     /**
      * Highlight meep when sent by current user
      */
-    protonet.Notifications
+    protonet
       .bind("meep.rendered", function(e, element, data, instance) {
         if (data.author == this.data.name && !instance.merged) {
           element.addClass("own");
@@ -52,7 +52,13 @@ protonet.user = {
           closeContextMenu();
         }
       }.bind(this),
-      '<a>show profile</a>': $.noop
+      "show profile": function(link, closeContextMenu) {
+        try {
+          protonet.globals.pages.user.show(+link.attr("data-user-id"));
+        } catch(e) {} finally {
+          closeContextMenu();
+        }
+      }
     };
     
     if(protonet.user.data.is_admin) {
@@ -67,9 +73,6 @@ protonet.user = {
     }
     
     var contextMenu = new protonet.ui.ContextMenu("[data-user-id]", contextOptions);
-    contextMenu.bind("open", function(e, link) {
-      contextMenu.list.find("li > a").attr("href", "/users/" + link.attr("data-user-id"));
-    });
   },
   
   getUserName: function(userId) {
