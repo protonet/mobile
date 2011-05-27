@@ -18,6 +18,7 @@ class SystemMonit
     def remove(service, do_reload = true)
       raise NoSuchServiceError unless exists?(service)
       stop(service)
+      sleep 2
       FileUtils.rm(service_config_path(service))
       reload! if do_reload
     end
