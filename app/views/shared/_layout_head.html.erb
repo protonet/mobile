@@ -43,7 +43,7 @@
       authenticity_token:       "<%= form_authenticity_token %>",
       availableChannels:        <%= raw(get_channel_mapping_as_json) %>,
       server:                   "<%= request.server_software %>",
-      debugMode:                false, <%# (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>
+      debugMode:                <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>
     };
   </script>
   
