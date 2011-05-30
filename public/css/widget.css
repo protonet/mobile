@@ -1,4 +1,5 @@
 .widget {
+  border: 1px rgb(72, 123, 255) solid;
   border: 1px rgba(72, 123, 255, 0.8) solid;
   padding: 1px;
   position: relative;
@@ -19,6 +20,7 @@
   padding: 0 7px;
   font-size: 13px;
   line-height: 25px;
+  background: rgb(72, 123, 255);
   background: rgba(72, 123, 255, 0.65);
   background: -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 1), rgba(72, 123, 255, 0.6));
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.6)), to(rgba(72, 123, 255, 1)));
@@ -31,6 +33,7 @@
 
 .widget output {
   display: inline;
+  color: rgb(255, 255, 255);
   color: rgba(255, 255, 255, 0.8);
 }
 

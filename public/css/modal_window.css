@@ -88,6 +88,7 @@
 }
 
 .search-page .modal-window-content {
+  background: rgb(255, 255, 255);
   background: rgba(255, 255, 255, 0.8);
   padding-left: 45px;
   overflow: hidden;
@@ -199,21 +200,21 @@ input.search {
 }
 
 .meep-page .next {
-  border-color: transparent transparent rgba(0, 0, 0, 0.5) transparent;
+  border-color: transparent transparent #999 transparent;
   margin-top: -40px;
 }
 
 .meep-page .next:hover {
-  border-color: transparent transparent rgb(72, 123, 255) transparent;
+  border-color: transparent transparent #000 transparent;
 }
 
 .meep-page .previous {
-  border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;
+  border-color: #999 transparent transparent transparent;
   margin-top: 5px;
 }
 
 .meep-page .previous:hover {
-  border-color: rgb(72, 123, 255) transparent transparent transparent;
+  border-color: #000 transparent transparent transparent;
 }
 
 .meep-page .meep {

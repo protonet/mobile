@@ -28,6 +28,7 @@
 
 .meep.focus:before {
   content: " ";
+  background: rgb(72, 123, 255);
   background: rgba(72, 123, 255, 0.5);
   background: -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 0.7), rgba(72, 123, 255, 0.3));
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.3)), to(rgba(72, 123, 255, 0.7)));
@@ -290,10 +291,12 @@
 }
 
 .reply.channel {
+  background: rgb(72, 123, 255);
   background: rgba(72, 123, 255, 0.8);
 }
 
 .reply.channel:hover {
+  background: rgb(72, 123, 255);
   background: rgba(72, 123, 255, 1);
 }
 
@@ -305,19 +308,21 @@
 .reply.user.myself {
   color: #fff !important;
   border: 0;
+  background: rgb(255, 127, 49);
   background: rgba(255, 127, 49, 0.8);
 }
 
 .reply.user.myself:hover {
-  background: rgba(255, 127, 49, 1);
+  background: rgb(255, 127, 49);
 }
 
 .reply-from-channel a {
+  color: rgb(72, 123, 255);
   color: rgba(72, 123, 255, 0.8);
 }
 
 .reply-from-channel a:hover {
-  color: rgba(72, 123, 255, 1);
+  color: rgb(72, 123, 255);
 }
 
 /* ================================================================ MEEPS = */

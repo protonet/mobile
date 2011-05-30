@@ -29,6 +29,7 @@
   -moz-border-radius-topright: 10px;
   -webkit-border-top-left-radius: 10px;
   -webkit-border-top-right-radius: 10px;
+  background: #eee;
   background: rgba(0, 0, 0, 0.1);
   background: -moz-linear-gradient(100% 100% 90deg, rgba(0, 0, 0, 0.1), transparent);
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.1)));
