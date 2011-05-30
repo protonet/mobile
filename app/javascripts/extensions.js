@@ -1,5 +1,5 @@
 //---------------------------- CONSOLE ----------------------------
-if (typeof(console) == "undefined" || typeof(console.log) != "function") {
+if (typeof(console) == "undefined" || !console.log) {
   console = { log: function() {} };
 }
 
