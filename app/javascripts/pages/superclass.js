@@ -144,6 +144,10 @@ protonet.Page = Class.create(protonet.ui.ModalWindow, {
           return;
         }
         
+        if (element.getAttribute("data-avoid-ajax")) {
+          return;
+        }
+        
         this.show(decodeURIComponent(match[1]), element.href);
         event.preventDefault();
       }.bind(this));
