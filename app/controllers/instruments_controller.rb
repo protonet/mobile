@@ -4,12 +4,8 @@ class InstrumentsController < ApplicationController
   
   def index
     @channels = current_user.verified_channels
-    
-    respond_to do |format|
-      format.json do
-        get_meeps_as_json(@channels)
-      end
-      format.html
+    if request.xhr?
+      return get_meeps_as_json(@channels)
     end
   end
   

@@ -250,21 +250,19 @@ pre {
 }
 
 .flash-message.notice {
+  background: rgb(0, 204, 0);
   background: rgba(0, 204, 0, 0.7);
 }
 
 .flash-message.notice:hover {
+  background: rgb(0, 204, 0);
   background: rgba(0, 204, 0, 1);
 }
 
 .flash-message.warning,
 .flash-message.error {
+  background: rgb(231, 92, 121);
   background: rgba(231, 92, 121, 0.8);
-}
-
-.flash-message.warning:hover,
-.flash-message.error:hover {
-  background: rgba(231, 92, 121, 1);
 }
 
 .flash-message.sticky {

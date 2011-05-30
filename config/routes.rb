@@ -103,6 +103,9 @@ Dashboard::Application.routes.draw do
 
   
   root :to => 'instruments#index'
+  
+  match "channel_data" => "instruments#channel_data"
+  
   match '/:controller(/:action(/:id))'
   match '*path' => 'system/captive#catchall', :constraints => System::CaptiveController
   

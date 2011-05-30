@@ -44,6 +44,7 @@ protonet.dispatcher.provider.FlashSocket = {
     
     if (!this.socket.connectSocket) {
       protonet.trigger("socket.connected", false);
+      return;
     }
     
     this.socket.connectSocket(protonet.config.dispatching_server, protonet.config.dispatching_server_port);
@@ -56,7 +57,7 @@ protonet.dispatcher.provider.FlashSocket = {
   },
   
   disconnect: function() {
-    if (!this.socket) {
+    if (!this.socket || !this.socket.closeSocket) {
       return;
     }
     this.socket.closeSocket();
