@@ -51,6 +51,7 @@ protonet.timeline.Form = {
     new protonet.controls.InlineAutocompleter(this.input, [
       "quote}", "/quote}", "code}", "/code}"
     ], {
+      fromBeginning: false,
       append:     "",
       whiteSpace: ["{"],
       onAutocomplete: onAutocomplete
@@ -59,6 +60,7 @@ protonet.timeline.Form = {
     new protonet.controls.InlineAutocompleter(this.input, [
       "code]", "/code]", "quote]", "/quote]"
     ], {
+      fromBeginning: false,
       append:     "",
       whiteSpace: ["["],
       onAutocomplete: onAutocomplete
@@ -75,8 +77,8 @@ protonet.timeline.Form = {
      */
     protonet.Notifications.bind("users.data_available", function(e, userData) {
       var userNames = [];
-      $.each(userData, function(key, value) { userNames.push(value.name); });
-      userNames = userNames.sort(function(a, b) { return a.length - b.length > 0 ? 1 : -1; });
+      // Sort them by online state
+      $.each(userData, function(key, value) { value.isOnline ? userNames.unshift(value.name) : userNames.push(value.name); });
       this.autoCompleter.addData(userNames, true);
     }.bind(this));
     

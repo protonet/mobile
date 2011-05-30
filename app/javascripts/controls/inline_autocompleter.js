@@ -26,6 +26,7 @@ protonet.controls.InlineAutocompleter.prototype = {
     append:         " ",                              // string to append after selecting,
     whiteSpace:     [" ", "\n", "\t", "[", "(", "{"], // array of strings to consider as white space (character before start of new word)
     matchingChars:  /[\w_\-\.]/i,                     // only execute completion look up when one of these chars has been pressed,
+    fromBeginning:  true,                             // Whether it should also autocomplete when it's in the beginning of the input value
     onAutocomplete: $.noop
   },
   
@@ -91,6 +92,10 @@ protonet.controls.InlineAutocompleter.prototype = {
         currentlyTypedWordStart = lastWhiteSpace + 1,
         currentlyTypedWordEnd   = caretPosition,
         currentlyTypedWord      = valueUntilCaret.substring(currentlyTypedWordStart, currentlyTypedWordEnd);
+    
+    if (lastWhiteSpace === -1 && !this.options.fromBeginning) {
+      return;
+    }
     
     if (currentlyTypedWord.length < this.options.maxChars) {
       return;
