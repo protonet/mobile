@@ -192,6 +192,10 @@ protonet.controls.InlineAutocompleter.prototype = {
     }
   },
   
+  setData: function(data) {
+    this.data = this._prepareData($.makeArray(data));
+  },
+  
   getSuggestions: function(str) {
     str = this.options.lowerCase ? str.toLowerCase() : str;
     

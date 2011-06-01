@@ -61,7 +61,7 @@ protonet.user = {
       }
     };
     
-    if(protonet.user.data.is_admin) {
+    if (protonet.user.data.is_admin) {
       contextOptions["give internet access"] = function(link, closeContextMenu) {
         var user = this.usersData[+link.attr("data-user-id")];
         // todo add a && user.stranger()

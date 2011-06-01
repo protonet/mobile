@@ -72,29 +72,42 @@ protonet.timeline.Form = {
   },
   
   _observe: function() {
+    var userNames = [], channelNames = [];
+    
     /**
      * Add users to Autocompleter when loaded
      */
-    protonet.Notifications.bind("users.data_available", function(e, userData) {
-      var userNames = [];
-      // Sort them by online state
-      $.each(userData, function(key, value) { value.isOnline ? userNames.unshift(value.name) : userNames.push(value.name); });
-      this.autoCompleter.addData(userNames, true);
+    protonet.bind("users.data_available", function(e, users) {
+      $.each(users, function(key, value) { userNames.push(value.name); });
+      this.autoCompleter.setData(userNames.concat(channelNames));
     }.bind(this));
     
     /**
      * Add channel names to autocompleter when initialized
      */
-    protonet.Notifications.bind("channels.data_available", function(e, channelData, availableChannels) {
-      var availableChannelNames = [];
-      $.each(availableChannels, function(key, value) { availableChannelNames.push(key); });
-      this.autoCompleter.addData(availableChannelNames);
+    protonet.bind("channels.data_available", function(e, channelData, channels) {
+      $.each(channels, function(key, value) { channelNames.push(key); });
+      this.autoCompleter.setData(userNames.concat(channelNames));
+    }.bind(this));
+    
+    protonet.bind("users.update_status", function(e, data) {
+      // sort users by online status
+      var onlineUsers = data.online_users || {}, id, user, index;
+      for (id in onlineUsers) {
+        user  = onlineUsers[id];
+        index = userNames.indexOf(user.name);
+        if (index !== -1) {
+          userNames.splice(index, 1);
+        }
+        userNames.unshift(user.name);
+      }
+      this.autoCompleter.setData(userNames.concat(channelNames));
     }.bind(this));
     
     /**
      * Add newly registered user to auto completer
      */
-    protonet.Notifications.bind("user.added", function(e, user){
+    protonet.bind("user.added", function(e, user) {
       this.autoCompleter.addData(user.name, true);
     }.bind(this));
     
@@ -103,7 +116,7 @@ protonet.timeline.Form = {
      * and update hidden channel id
      */
     var preventFocus = protonet.user.data.is_stranger;
-    protonet.Notifications.bind("channel.change", function(e, channelId) {
+    protonet.bind("channel.change", function(e, channelId) {
       // When loading the page a "channel.change" event is initially fired
       // This causes problems when the user already focused the login form and started to type
       // in his password. Uygar from XING even almost accidentally submitted her password
