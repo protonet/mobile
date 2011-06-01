@@ -13,7 +13,7 @@
       <%- end -%>
 
       <header<%= raw(" class=\"login\"") if current_user.stranger? %>>
-        <a href="<%= root_path %>" class="logo">protonet – it's yours</a>
+        <a href="<%= root_path %>" class="logo"><%= SystemPreferences.browser_title %></a>
         <a href="<%= root_path %>" class="monster default">change character</a>
         <%- if SystemPreferences.show_user_navigation -%>
           <%= render :partial => 'shared/user_navigation.html.erb' %>
