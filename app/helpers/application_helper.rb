@@ -10,7 +10,7 @@ module ApplicationHelper
   end
   
   def stylesheets
-    ['/css/reset', '/css/general', '/css/login', '/css/channels', '/css/meeps', '/css/form', '/css/text_extension', '/css/widget', '/css/modal_window']
+    ['/css/reset', '/css/general', '/css/login', '/css/channels', '/css/meeps', '/css/form', '/css/text_extension', '/css/emoji.css', '/css/widget', '/css/modal_window']
   end
   
   def custom_stylesheet

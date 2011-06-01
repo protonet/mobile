@@ -1,0 +1,100 @@
+.emoji {
+  display: inline-block;
+  background: url(/img/emoji.png) top left no-repeat;
+  display: inline-block;
+  height: 20px;
+  text-indent: -9999px;
+  vertical-align: bottom;
+  width: 20px;
+}
+
+.emoji-e00e, .emoji-plus1       { background-position: 0px 0px; }
+.emoji-e00a, .emoji-iphone      { background-position: 0px -20px; }
+.emoji-e00f, .emoji-wait        { background-position: 0px -40px; }
+.emoji-e00d, .emoji-fist        { background-position: 0px -60px; }
+.emoji-e421, .emoji-minus1      { background-position: 0px -80px; }
+.emoji-e03c, .emoji-microphone  { background-position: 0px -100px; }
+.emoji-e03e, .emoji-music       { background-position: 0px -120px; }
+.emoji-e03f, .emoji-key         { background-position: 0px -140px; }
+.emoji-e04a, .emoji-sun         { background-position: 0px -160px; }
+.emoji-e04c, .emoji-moon        { background-position: 0px -180px; }
+.emoji-e05a, .emoji-turd        { background-position: 0px -200px; }
+.emoji-e008, .emoji-camera      { background-position: 0px -220px; }
+.emoji-e009, .emoji-telephone   { background-position: 0px -240px; }
+.emoji-e10a, .emoji-squid       { background-position: 0px -260px; }
+.emoji-e10b, .emoji-pig         { background-position: 0px -280px; }
+.emoji-e10c, .emoji-alien       { background-position: 0px -300px; }
+.emoji-e10d, .emoji-rocket      { background-position: 0px -320px; }
+.emoji-e10e, .emoji-crone       { background-position: 0px -340px; }
+.emoji-e10f, .emoji-light       { background-position: 0px -360px; }
+.emoji-e011, .emoji-victory     { background-position: 0px -380px; }
+.emoji-e11d, .emoji-fire        { background-position: 0px -400px; }
+.emoji-e012, .emoji-stop        { background-position: 0px -420px; }
+.emoji-e12a, .emoji-tv          { background-position: 0px -440px; }
+.emoji-e11b, .emoji-ghost       { background-position: 0px -460px; }
+.emoji-e11a, .emoji-devil       { background-position: 0px -480px; }
+.emoji-e11c, .emoji-scull       { background-position: 0px -500px; }
+.emoji-e12f, .emoji-money       { background-position: 0px -520px; }
+.emoji-e13c, .emoji-zzz         { background-position: 0px -540px; }
+.emoji-e13d, .emoji-flash       { background-position: 0px -560px; }
+.emoji-e13e, .emoji-shoe        { background-position: 0px -580px; }
+.emoji-e13f, .emoji-bath        { background-position: 0px -600px; }
+.emoji-e014, .emoji-golf        { background-position: 0px -620px; }
+.emoji-e14c, .emoji-muscle      { background-position: 0px -640px; }
+.emoji-e14e, .emoji-traffic     { background-position: 0px -660px; }
+.emoji-e015, .emoji-tennis      { background-position: 0px -680px; }
+.emoji-e016, .emoji-baseball    { background-position: 0px -700px; }
+.emoji-e017, .emoji-surfing     { background-position: 0px -720px; }
+.emoji-e018, .emoji-soccer      { background-position: 0px -740px; }
+.emoji-e020, .emoji-question    { background-position: 0px -760px; }
+.emoji-e021, .emoji-explamation { background-position: 0px -780px; }
+.emoji-e023, .emoji-brokenheart { background-position: 0px -800px; }
+.emoji-e030, .emoji-flower      { background-position: 0px -820px; }
+.emoji-e30a, .emoji-ipod        { background-position: 0px -840px; }
+.emoji-e30c, .emoji-beers       { background-position: 0px -860px; }
+.emoji-e30e, .emoji-smoking     { background-position: 0px -880px; }
+.emoji-e30f, .emoji-pill        { background-position: 0px -900px; }
+.emoji-e31c, .emoji-lipstick    { background-position: 0px -920px; }
+.emoji-e31d, .emoji-fingernails { background-position: 0px -940px; }
+.emoji-e31e, .emoji-massage     { background-position: 0px -960px; }
+.emoji-e032, .emoji-rose        { background-position: 0px -980px; }
+.emoji-e32f, .emoji-star        { background-position: 0px -1000px; }
+.emoji-e033, .emoji-xmastree    { background-position: 0px -1020px; }
+.emoji-e33e, .emoji-rice        { background-position: 0px -1040px; }
+.emoji-e33b, .emoji-fries       { background-position: 0px -1060px; }
+.emoji-e034, .emoji-ring        { background-position: 0px -1080px; }
+.emoji-e34b, .emoji-cake        { background-position: 0px -1100px; }
+.emoji-e035, .emoji-diamond     { background-position: 0px -1120px; }
+.emoji-e037, .emoji-church      { background-position: 0px -1140px; }
+.emoji-e041, .emoji-guitar      { background-position: 0px -1160px; }
+.emoji-e41c, .emoji-mouth       { background-position: 0px -1180px; }
+.emoji-e42a, .emoji-basketball  { background-position: 0px -1200px; }
+.emoji-e42b, .emoji-football    { background-position: 0px -1220px; }
+.emoji-e42c, .emoji-pool        { background-position: 0px -1240px; }
+.emoji-e045, .emoji-coffee      { background-position: 0px -1260px; }
+.emoji-e048, .emoji-snowman     { background-position: 0px -1280px; }
+.emoji-e049, .emoji-cloud       { background-position: 0px -1300px; }
+.emoji-e050, .emoji-tiger       { background-position: 0px -1320px; }
+.emoji-e051, .emoji-bear        { background-position: 0px -1340px; }
+.emoji-e052, .emoji-dog         { background-position: 0px -1360px; }
+.emoji-e52b, .emoji-cow         { background-position: 0px -1380px; }
+.emoji-e52c, .emoji-rabbit      { background-position: 0px -1400px; }
+.emoji-e52d, .emoji-snake       { background-position: 0px -1420px; }
+.emoji-e52e, .emoji-chicken     { background-position: 0px -1440px; }
+.emoji-e52f, .emoji-boar        { background-position: 0px -1460px; }
+.emoji-e053, .emoji-mouse       { background-position: 0px -1480px; }
+.emoji-e054, .emoji-whale       { background-position: 0px -1500px; }
+.emoji-e101, .emoji-post        { background-position: 0px -1520px; }
+.emoji-e109, .emoji-monkey      { background-position: 0px -1540px; }
+.emoji-e111, .emoji-kissing     { background-position: 0px -1560px; }
+.emoji-e113, .emoji-pistol      { background-position: 0px -1580px; }
+.emoji-e120, .emoji-burger      { background-position: 0px -1600px; }
+.emoji-e128, .emoji-radio       { background-position: 0px -1620px; }
+.emoji-e136, .emoji-bike        { background-position: 0px -1640px; }
+.emoji-e207, .emoji-adultsonly  { background-position: 0px -1660px; }
+.emoji-e208, .emoji-nosmoking   { background-position: 0px -1680px; }
+.emoji-e310, .emoji-balloon     { background-position: 0px -1700px; }
+.emoji-e311, .emoji-bomb        { background-position: 0px -1720px; }
+.emoji-e335, .emoji-star        { background-position: 0px -1740px; }
+.emoji-e426, .emoji-bow         { background-position: 0px -1760px; }
+.emoji-e448, .emoji-santa       { background-position: 0px -1780px; }

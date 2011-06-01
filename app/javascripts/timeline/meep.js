@@ -4,6 +4,7 @@
 //= require "../utils/escape_html.js"
 //= require "../utils/highlight_keyword.js"
 //= require "../utils/smilify.js"
+//= require "../utils/emojify.js"
 //= require "../utils/heartify.js"
 //= require "../utils/codify.js"
 //= require "../utils/quotify.js"
@@ -76,6 +77,7 @@ protonet.timeline.Meep.prototype = {
       protonet.utils.codify,
       protonet.utils.smilify,
       protonet.utils.heartify,
+      protonet.utils.emojify,
       protonet.utils.highlightChannelReplies,
       protonet.utils.highlightUserReplies,
       protonet.utils.autoLink,
