@@ -3,7 +3,11 @@
 Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:wifi_mode] = :dual
   SystemPreferences.defaults[:admin_key] = ActiveSupport::SecureRandom.base64(10)
-  SystemPreferences.defaults[:privacy] = {
+  SystemPreferences.privacy = {
+    "fallback" => {
+      "allow_dashboard_for_strangers" => true,
+      "allow_registrations_for_strangers" => true
+    },
     "lo0" => {
       "allow_dashboard_for_strangers" => true,
       "allow_registrations_for_strangers" => true

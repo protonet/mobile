@@ -1,4 +1,10 @@
 GIT
+  remote: https://github.com/dudemeister/ruby-ifconfig.git
+  revision: b3eb63311ceb1172cf20904213717aa12cec57d4
+  specs:
+    ruby-ifconfig (1.2.3)
+
+GIT
   remote: https://github.com/dudemeister/sprockets-rails.git
   revision: fad44692b2aa719cfb678e07a17c37fa93f4fc7d
   specs:
@@ -14,12 +20,6 @@ GIT
       rsolr (= 0.12.1)
     sunspot_rails (1.2.rc3)
       sunspot (= 1.2.rc3)
-
-GIT
-  remote: https://github.com/jeffWelling/ruby-ifconfig.git
-  revision: f0811138176d28f04867e3554f4bc4ca4aa50ccf
-  specs:
-    ruby-ifconfig (1.2.3)
 
 GEM
   remote: http://rubygems.org/

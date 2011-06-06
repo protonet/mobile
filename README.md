@@ -141,7 +141,31 @@ or any of our other targets
 
 DEPLOYING ON UBUNTU
 ------------------
+Make sure that we have a protonet user
 
+    sudo useradd protonet -m -s /bin/bash
+    sudo passwd protonet
+
+Make sure there is a protonet group
+
+    sudo groupadd -f admin
+
+And add the protonet user to that group
+
+    sudo usermod -a -G admin protonet
+    
+And make the admin group sudoable (as root)
+    echo '%admin  ALL=(ALL) ALL' >> '/etc/sudoers'
+
+Now install ruby:
+    sudo apt-get update
+    sudo apt-get install ruby-full build-essential
+or
+    sudo apt-get install build-essential
+    sudo apt-get install ruby rdoc libopenssl-ruby
+
+then
+    sudo su - protonet
     bash -c "`wget -O - babushka.me/up`"
     babushka sources -a dudemeister git://github.com/dudemeister/babushka-deps.git
 
@@ -151,7 +175,7 @@ this is the license key: 83489kjdfj734732snfnfdsns98jsnld
 
 now do some sourcing (to add missing paths and all that)
 
-    . ~/profile
+    . ~/.profile
 
 if you've got a full node with wifi capabilities you want to have taken over by protonet
 

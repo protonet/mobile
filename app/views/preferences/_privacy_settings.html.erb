@@ -1,5 +1,5 @@
 <h2>Please select the privacy settings for your interfaces:</h2>
-<% (SystemBackend.get_interfaces.collect(&:name) | ["published_to_web"]).each do |interface| %>
+<% (SystemBackend.get_interfaces.collect(&:name) | ["published_to_web", "fallback"]).each do |interface| %>
   <h3><%= interface %></h3>
   <div>
     <%= form_tag(preferences_privacy_update_path, {:id => 'allow-dashboard', :style => 'margin-bottom:0px;'}) do %>
