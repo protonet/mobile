@@ -2,168 +2,183 @@
 //= require "../utils/escape_for_reg_exp.js"
 //= require "../utils/escape_html.js"
 
-protonet.Page = Class.create(protonet.ui.ModalWindow, {
-  _defaultConfig: {
-    url:            "/{name}/{state}",
-    title:          "protonet - {name}",
-    state:          "",
-    request:        true,   // TODO
-    behavior:       true,
-    history:        true,
-    reloadOnSubmit: true,   // TODO
-    js:             null,   // TODO
-    css:            null,   // TODO
-    onInit:         $.noop,
-    onShow:         $.noop,
-    onState:        $.noop,
-    onHide:         $.noop,
-    onLoad:         $.noop, // TODO
-    onSubmit:       $.noop  // TODO
-  },
+protonet.Page = (function() {
+  var historyBeforeOpening,
+      currentPage;
   
-  initialize: function($super, pageName, config) {
-    this.name         = pageName;
-    this.config       = $.extend({}, this._defaultConfig, config);
-    this.state        = this.config.state;
-    this.history      = protonet.utils.History;
-    this.behaviors    = protonet.utils.Behaviors;
-    this.initialState = this.history.getCurrentPath();
-    
-    this._initDependencies();
-    this._trigger("init");
-    
-    $super(pageName + "-page");
-  },
+  return Class.create(protonet.ui.ModalWindow, {
+    _defaultConfig: {
+      url:            "/{name}/{state}",
+      title:          "protonet - {name}",
+      state:          "",
+      request:        true,   // TODO
+      behavior:       true,
+      history:        true,
+      reloadOnSubmit: true,   // TODO
+      js:             null,   // TODO
+      css:            null,   // TODO
+      onInit:         $.noop,
+      onShow:         $.noop,
+      onState:        $.noop,
+      onHide:         $.noop,
+      onLoad:         $.noop, // TODO
+      onSubmit:       $.noop  // TODO
+    },
   
-  show: function($super, state, href) {
-    $("html").data("page", this);
-    this._trigger("show");
-    state = state || this.getState();
+    initialize: function($super, pageName, config) {
+      this.name         = pageName;
+      this.config       = $.extend({}, this._defaultConfig, config);
+      this.state        = this.config.state;
+      this.history      = protonet.utils.History;
+      this.behaviors    = protonet.utils.Behaviors;
+      this.initialState = this.history.getCurrentPath();
     
-    if (typeof(state) !== "undefined") {
-      this.setState(state);
-    }
+      this._initDependencies();
+      this._trigger("init");
     
-    href = href || this._interpolate(this.config.url, true);
-    if (this.config.request) {
-      this.load(href);
-    }
+      $super(pageName + "-page");
+    },
     
-    $super();
-    return this;
-  },
-  
-  hide: function($super, fromHistory) {
-    if (!this.visible) {
-      return;
-    }
-    
-    if (this.ajaxRequest) {
-      this.ajaxRequest.abort();
-    }
-    
-    this.state = null;
-    $("html").data("page", null);
-    if (!fromHistory) {
-      this.history.register("");
-    }
-    this._trigger("hide");
-    
-    $super();
-    return this;
-  },
-  
-  load: function(url) {
-    this.ajaxRequest = $.ajax({
-      url: url,
-      success: function(data) {
-        this.content(data);
-      }.bind(this),
-      error:  function() {
-        protonet.trigger("flash_message.error", protonet.t("PAGE_LOADING_ERROR"));
-      }
-    });
-  },
-  
-  setState: function(state) {
-    if (state == this.state) {
-      return;
-    }
-    this.state = state;
-    this.history.register(this._interpolate(this.config.url, true));
-    this._trigger("state");
-  },
-  
-  getState: function() {
-    return this.state;
-  },
-  
-  toString: function() {
-    return this.name;
-  },
-  
-  _trigger: function(eventName) {
-    protonet.trigger("page." + eventName, this.name);
-    this.config["on" + eventName.capitalize()](this, this.name);
-  },
-  
-  _initDependencies: function() {
-    var url, selector, regExp;
-    
-    url = protonet.utils.escapeForRegExp(this.config.url)
-      .replace(/\\\{name\\\}/, encodeURIComponent(this.name))
-      .replace(/\\\{state\\\}/, "(.*?)(?:&|/|#|$)");
-    regExp = new RegExp(url);
-    
-    if (this.initialState.match(regExp)) {
-      this.initialState = "";
-    }
-    
-    if (this.history && this.config.history) {
-      this.history.onChange(function(path) {
-        var match = path.match(regExp);
-        if (match) {
-          var state = decodeURIComponent(match[1]);
-          this.show(state, path);
-        } else {
-          this.hide(true);
-        }
-      }.bind(this));
-    }
-    
-    if (this.behaviors) {
-      selector = typeof(this.config.selector) === "string" ? this.config.selector : "a[href]:click";
-      this.behaviors.add(selector, function(element, event) {
-        element = element[0];
-        if (element.host !== location.host) {
-          return;
-        }
-        
-        var match = element.href.match(regExp);
-        if (!match) {
-          return;
-        }
-        
-        if (element.getAttribute("data-avoid-ajax")) {
-          return;
-        }
-        
-        this.show(decodeURIComponent(match[1]), element.href);
-        event.preventDefault();
-      }.bind(this));
-    }
-  },
-  
-  _interpolate: (function() {
-    var NAME_REG_EXP  = /\{name\}/g,
-        STATE_REG_EXP = /\{state\}/g;
-    return function(str, isUrl) {
-      var name  = isUrl ? encodeURIComponent(this.name) : this.name,
-          state = isUrl ? encodeURIComponent(this.state || "") : (this.state || "");
+    show: function($super, state, href) {
+      $("html").data("page", this);
+      this._trigger("show");
+      state = state || this.getState();
       
-      return str
-        .replace(NAME_REG_EXP, name)
-        .replace(STATE_REG_EXP, state);
-    };
-  })()
-});
+      if (!currentPage) {
+        historyBeforeOpening = this.history.getCurrentPath();
+      }
+      
+      if (typeof(state) !== "undefined") {
+        this.setState(state);
+      }
+    
+      href = href || this._interpolate(this.config.url, true);
+      if (this.config.request) {
+        this.load(href);
+      }
+      currentPage = this;
+      
+      $super();
+      return this;
+    },
+  
+    hide: function($super, fromHistory) {
+      if (!this.visible) {
+        return;
+      }
+    
+      if (this.ajaxRequest) {
+        this.ajaxRequest.abort();
+      }
+    
+      this.state = null;
+      $("html").data("page", null);
+      
+      if (!fromHistory) {
+        protonet.utils.History.register(historyBeforeOpening || "");
+        historyBeforeOpening = null;
+      }
+      
+      this._trigger("hide");
+      
+      currentPage = null;
+      
+      $super();
+      return this;
+    },
+  
+    load: function(url) {
+      this.ajaxRequest = $.ajax({
+        url: url,
+        success: function(data) {
+          this.content(data);
+        }.bind(this),
+        error:  function() {
+          protonet.trigger("flash_message.error", protonet.t("PAGE_LOADING_ERROR"));
+        }
+      });
+    },
+  
+    setState: function(state) {
+      if (state == this.state) {
+        return;
+      }
+      this.state = state;
+      this.history.register(this._interpolate(this.config.url, true));
+      this._trigger("state");
+    },
+  
+    getState: function() {
+      return this.state;
+    },
+  
+    toString: function() {
+      return this.name;
+    },
+  
+    _trigger: function(eventName) {
+      protonet.trigger("page." + eventName, this.name);
+      this.config["on" + eventName.capitalize()](this, this.name);
+    },
+  
+    _initDependencies: function() {
+      var url, selector, regExp;
+    
+      url = protonet.utils.escapeForRegExp(this.config.url)
+        .replace(/\\\{name\\\}/, encodeURIComponent(this.name))
+        .replace(/\\\{state\\\}/, "(.*?)(?:&|/|#|$)");
+      regExp = new RegExp(url);
+    
+      if (this.initialState.match(regExp)) {
+        this.initialState = "";
+      }
+    
+      if (this.history && this.config.history) {
+        this.history.onChange(function(path) {
+          var match = path.match(regExp);
+          if (match) {
+            var state = decodeURIComponent(match[1]);
+            this.show(state, path);
+          } else {
+            this.hide(true);
+          }
+        }.bind(this));
+      }
+    
+      if (this.behaviors) {
+        selector = typeof(this.config.selector) === "string" ? this.config.selector : "a[href]:click";
+        this.behaviors.add(selector, function(element, event) {
+          element = element[0];
+          if (element.host !== location.host) {
+            return;
+          }
+        
+          var match = element.href.match(regExp);
+          if (!match) {
+            return;
+          }
+        
+          if (element.getAttribute("data-avoid-ajax")) {
+            return;
+          }
+        
+          this.show(decodeURIComponent(match[1]), element.href);
+          event.preventDefault();
+        }.bind(this));
+      }
+    },
+  
+    _interpolate: (function() {
+      var NAME_REG_EXP  = /\{name\}/g,
+          STATE_REG_EXP = /\{state\}/g;
+      return function(str, isUrl) {
+        var name  = isUrl ? encodeURIComponent(this.name) : this.name,
+            state = isUrl ? encodeURIComponent(this.state || "") : (this.state || "");
+      
+        return str
+          .replace(NAME_REG_EXP, name)
+          .replace(STATE_REG_EXP, state);
+      };
+    })()
+  });
+})();
