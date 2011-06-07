@@ -221,6 +221,6 @@ Then /^I should only see my profile settings$/ do
 end
 
 Then /^I should see all settings$/ do
-  all(:css, "#preferences-page li").size.should == 8
+  all(:css, "#preferences-page li").size.should == 10
 end
 

@@ -9,7 +9,7 @@
 <p><%= user.created_at %></p>
 
 <h4>Roles</h4>
-<p><%= user.roles.map(&:title).join(" ") %></p>
+<p id="roles"><%= user.roles.map(&:title).join(" ") %></p>
 
 <% if user.can_be_edited_by?(current_user) %>
   <br>
