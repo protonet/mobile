@@ -3,8 +3,7 @@
 //= require "../utils/escape_html.js"
 
 protonet.Page = (function() {
-  var historyBeforeOpening,
-      currentPage;
+  var historyBeforeOpening;
   
   return Class.create(protonet.ui.ModalWindow, {
     _defaultConfig: {
@@ -44,7 +43,7 @@ protonet.Page = (function() {
       this._trigger("show");
       state = state || this.getState();
       
-      if (!currentPage) {
+      if (!protonet.currentPage) {
         historyBeforeOpening = this.history.getCurrentPath();
       }
       
@@ -56,7 +55,8 @@ protonet.Page = (function() {
       if (this.config.request) {
         this.load(href);
       }
-      currentPage = this;
+      
+      protonet.currentPage = this;
       
       $super();
       return this;
@@ -81,7 +81,7 @@ protonet.Page = (function() {
       
       this._trigger("hide");
       
-      currentPage = null;
+      protonet.currentPage = null;
       
       $super();
       return this;

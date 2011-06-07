@@ -12,7 +12,6 @@
  */
 protonet.ui.ModalWindow = (function() {
   var elements,
-      current,
       scrollbarWidth,
       isTouchDevice = protonet.user.Browser.IS_TOUCH_DEVICE(),
       $body         = $(document.body),
@@ -98,11 +97,11 @@ protonet.ui.ModalWindow = (function() {
         return;
       }
       
-      if (current) {
+      if (protonet.ui.currentModalWindow) {
         var alreadyVisible = true;
-        current.cleanup();
+        protonet.ui.currentModalWindow.cleanup();
       }
-      current = this;
+      protonet.ui.currentModalWindow = this;
       
       this._create();
       this._observe();
@@ -152,7 +151,7 @@ protonet.ui.ModalWindow = (function() {
     },
     
     cleanup: function() {
-      current = null;
+      protonet.ui.currentModalWindow = null;
       this.headline("");
       this.content("");
       this._unobserve();

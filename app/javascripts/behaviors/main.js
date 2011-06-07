@@ -14,22 +14,24 @@ protonet.utils.Behaviors.add({
   // this behaviour is the first ajax form behaviour we're using
   // we've bound it's implementation to the invitation form usage
   "form[data-protonet-remote]:submit": function(form, event) {
-    event.preventDefault();
     $.ajax({
-      "type": form.attr("method"),
-      "url":  form.attr("action"),
-      "data": form.serialize(),
-      "beforeSend": function(){
+      type: form.attr("method"),
+      url:  form.attr("action"),
+      data: form.serialize(),
+      beforeSend: function(){
         form.find("input,textarea,select").attr("disabled", "disabled");
       },
-      "success":function(response, status){
-        protonet.ui.ModalWindow.hide();
+      success:function(response) {
+        if (protonet.ui.currentModalWindow) {
+          protonet.ui.currentModalWindow.hide();
+        }
         protonet.Notifications.trigger("flash_message.notice", response.flash);
       },
-      "error": function(response, status){
-        protonet.ui.ModalWindow.update({ "content": response.responseText });
+      error: function(response) {
+        protonet.ui.currentModalWindow.update({ content: response.responseText });
       }
     });
+    event.preventDefault();
   }
 });
 
