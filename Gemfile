@@ -1,6 +1,7 @@
 source :gemcutter
 source 'http://gems.github.com/'
 
+gem "rake", "0.8.7"
 gem "rails", "~> 3.0.4"
 gem "bundler", "1.0.11"
 gem "mysql"
@@ -52,5 +53,4 @@ group :test, :cucumber do
   gem "launchy"
   gem "rspec-rails"
   gem "email_spec"
-  gem "selenium-webdriver", '~> 0.2.1'
 end

@@ -184,7 +184,7 @@ GEM
       activesupport (= 3.0.5)
       rake (>= 0.8.7)
       thor (~> 0.14.4)
-    rake (0.9.2)
+    rake (0.8.7)
     random_data (1.5.1)
     redcarpet (1.8.2)
     rsolr (0.12.1)
@@ -268,6 +268,7 @@ DEPENDENCIES
   paperclip (~> 2.3.8)
   pickle
   rails (~> 3.0.4)
+  rake (= 0.8.7)
   random_data (= 1.5.1)
   redcarpet
   rspec-rails
@@ -275,7 +276,6 @@ DEPENDENCIES
   ruby-ifconfig!
   ruby-ip (= 0.9.0)
   ruby-net-ldap (= 0.0.4)
-  selenium-webdriver (~> 0.2.1)
   sprockets
   sprockets-rails!
   sunspot!
