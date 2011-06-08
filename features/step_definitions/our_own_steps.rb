@@ -13,7 +13,6 @@ Then /^debug$/ do
 end
 
 When /^(?:|I )go unauthenticated to the start page$/ do
-  sleep 0.5
   visit "/users/sign_out"
   find(:css, "body")
 end
