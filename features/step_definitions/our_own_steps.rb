@@ -129,6 +129,10 @@ Given /^I send the message "([^\"]*)"$/ do |text|
   end
 end
 
+Then /^wait for socket$/ do
+  find(:css, "#user-widget .online")
+end
+
 Then /^I should see one stranger online$/ do
   all(:css, "#user-widget .stranger").empty?.should == false
 end

@@ -39,6 +39,7 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
     # seeing strangers in the user list
     And I am using the first browser
       And go unauthenticated to the start page
+      And wait for socket
       Then I should see one stranger online
     # and then he's gone
     Given I am logged in as "dudemeister"
