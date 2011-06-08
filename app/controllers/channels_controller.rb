@@ -1,6 +1,6 @@
 class ChannelsController < ApplicationController
   
-  #filter_resource_access
+  filter_resource_access
   before_filter :only_registered
   
   def index
@@ -46,14 +46,6 @@ class ChannelsController < ApplicationController
       flash[:error] = "Could not update channel '#{channel.name}'"
     end
     redirect_to :action => 'index', :anchor => channel.id
-  end
-  
-  def sort
-    #@channel_order = params[:channel_order] .is_a?(Hash) ? params[:channel_order].values : params[:channel_order]
-    params[:channel_order].each_with_index do |channel_id, index|
-      @current_user.listens.where(:channel_id => channel_id.to_i).first.update_attribute(:order_number, index)
-    end
-    render :text => "ok"
   end
   
   def destroy

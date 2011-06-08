@@ -22,7 +22,7 @@
     <ul>
       <%- @channels.each_with_index do |c, index| -%>
         <li draggable="true">
-          <%= link_to "#{c.name.capitalize} #{c.id}", { :channel_id => c.id }, {
+          <%= link_to c.name.capitalize, { :channel_id => c.id }, {
             :title => c.description,
             :class => c.locally_hosted? ? (c.global? ? 'global-hosted' : 'local') : 'global',
             'data-channel-id' => c.id

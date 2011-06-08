@@ -34,14 +34,12 @@ protonet.timeline.Channels = {
 	      var channel_array = []
         $("#channels ul a").each(
           function(i, channel){
-            // var channel = {"channel_id": ($(channel).data("channel-id"))}; 
-            // channel_array.push(channel);
             channel_array.push($(channel).data("channel-id"));
           }
         );  
 	      
       $.ajax({
-         url: "/channels/sort" ,
+         url: "/users/sort_channels" ,
          type: "POST",
          data:     { "channel_order[]": channel_array},
          traditional: true

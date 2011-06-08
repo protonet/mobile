@@ -17,7 +17,7 @@
   margin-top: 3px;
   display: inline-block;
   vertical-align: bottom;
-/*  position: relative;*/
+  position: relative;
 }
 
 .html5sortable-state-highlight {
