@@ -8,7 +8,9 @@ class Listen < ActiveRecord::Base
   #   verified   = owner of channel has verified that user is allowed to listen to this channel
   #   unverified = unverified, this is the default
   has_flags 1 => :verified
+  default_scope :order => :order_number
   scope :verified, :conditions => {:verified => true}
+
   
   # if a channel is public we set the verified status to public
   after_create :auto_set_verification

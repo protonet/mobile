@@ -17,11 +17,12 @@
       <%= avatar(current_user, :width => 36, :height => 36, :title => "That's you!") %>
     </a>
   <%- end -%>
+
   <div id="channels">
     <ul>
       <%- @channels.each_with_index do |c, index| -%>
-        <li>
-          <%= link_to c.name.capitalize, { :channel_id => c.id }, {
+        <li draggable="true">
+          <%= link_to "#{c.name.capitalize} #{c.id}", { :channel_id => c.id }, {
             :title => c.description,
             :class => c.locally_hosted? ? (c.global? ? 'global-hosted' : 'local') : 'global',
             'data-channel-id' => c.id
