@@ -33,15 +33,13 @@ def set_selenium_browser(browser_id)
 end
 
 Given /^I am using the first browser$/ do
-  sleep 1
   check_selenium_browsers
   set_selenium_browser(1)
-  sleep 1
+  sleep 0.5
 end
 
 Given /^I am using the second browser$/ do
-  sleep 1
   check_selenium_browsers
   set_selenium_browser(2)
-  sleep 1
+  sleep 0.5
 end
