@@ -97,7 +97,7 @@ class ApplicationController < ActionController::Base
   end
   
   def node_privacy_settings
-    @privacy_settings ||= Hash.new(false).merge(SystemPreferences.privacy[incoming_interface] || {})
+    @privacy_settings ||= Hash.new(false).merge(SystemPreferences.privacy[incoming_interface] || SystemPreferences.privacy["fallback"])
   end
   
 end

@@ -1,7 +1,6 @@
 source :gemcutter
 source 'http://gems.github.com/'
 
-gem "rake", "0.8.7"
 gem "rails", "~> 3.0.4"
 gem "bundler", "1.0.11"
 gem "mysql"
