@@ -3,7 +3,7 @@
 Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:wifi_mode] = :dual
   SystemPreferences.defaults[:admin_key] = ActiveSupport::SecureRandom.base64(10)
-  SystemPreferences.privacy = {
+  SystemPreferences.defaults[:privacy] = {
     "fallback" => {
       "allow_dashboard_for_strangers" => true,
       "allow_registrations_for_strangers" => true
@@ -52,5 +52,5 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:default_stranger_user_group] = "guest"
   SystemPreferences.defaults[:allow_modal_views] = true
   SystemPreferences.defaults[:custom_css_type] = "append"
-  SystemPreferences.defaults[:publish_to_web_name] = SystemPreferences.node_name
+  SystemPreferences.defaults[:publish_to_web_name] = "protonet-#{ActiveSupport::SecureRandom.base64(6)}"
 end
