@@ -86,7 +86,7 @@ class ApplicationController < ActionController::Base
     mapping = Rails.cache.fetch("system.interfaces", {:expires_in => 15.minutes}) do
       interface_mapping = {}
       SystemBackend.get_interfaces.each do |interface|
-        network = (IP.new("#{interface.addresses("inet")}/24").network.to_s rescue nil)
+        network = (IP.new("#{interface.addresses("inet")}/16").network.to_s rescue nil)
         interface_mapping[network] = interface.name if network
       end
       interface_mapping 
