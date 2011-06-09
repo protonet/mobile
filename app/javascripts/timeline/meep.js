@@ -107,7 +107,7 @@ protonet.timeline.Meep.prototype = {
   },
   
   getUrl: function() {
-    return location.protocol + "//" + location.host + "/?meep_id=" + this.data.id;
+    return location.protocol + "//" + location.host + "/meep/" + this.data.id;
   },
   
   mergeWith: function(meepToMergeWith) {

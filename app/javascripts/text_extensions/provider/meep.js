@@ -7,7 +7,7 @@ protonet.text_extensions.provider.Meep = {
   URL:     "/tweets/{id}",
   REG_EXP: (function() {
     var escapedBaseUrl = protonet.utils.escapeForRegExp(protonet.config.base_url);
-    return new RegExp(escapedBaseUrl + "(\\/#\\!)?\\/\\?meep_id\\=(\\d+)", "i");
+    return new RegExp(escapedBaseUrl + "(\\/#\\!)?\\/meep/(\\d+)", "i");
   })(),
   
   loadData: function(url, onSuccess, onFailure) {
