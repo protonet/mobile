@@ -156,7 +156,7 @@ protonet.pages.Search = Class.create(protonet.Page, {
   },
   
   _afterRendering: function(meeps) {
-    if (meeps.length >= this.RESULTS_COUNT) {
+    if (meeps.length >= this.config.resultsPerPage) {
       this._initEndlessScrolling();
     }
   },
