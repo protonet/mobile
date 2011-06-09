@@ -63,6 +63,17 @@ class User < ActiveRecord::Base
     end
   end
 
+  # devise 1.2.1 calls this
+  def valid_password?(password)
+    if configatron.ldap.single_authentication == true
+      return !!self.class.ldap_authenticate(login, password)
+    else
+      super
+    end
+  end
+  
+  # created for an earlier version of devise
+  # TODO: check and remove if not used anymore
   def self.authenticate(*args)
     if configatron.ldap.single_authentication == true
       return nil if args[0][:login].blank? || args[0][:password].blank?
