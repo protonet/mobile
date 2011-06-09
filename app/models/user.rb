@@ -28,8 +28,8 @@ class User < ActiveRecord::Base
   end
   
 
-  attr_accessible :login, :email, :name, :password, :password_confirmation
-  attr_accessor :channels_to_subscribe, :invitation_token
+  attr_accessible :login, :email, :name, :password, :password_confirmation, :avatar_url
+  attr_accessor :channels_to_subscribe, :invitation_token, :avatar_url
 
   has_many  :tweets
   has_many  :listens,  :dependent => :destroy
@@ -41,7 +41,8 @@ class User < ActiveRecord::Base
   
   scope :registered, :conditions => {:temporary_identifier => nil}
   scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"
-
+  
+  before_validation :download_remote_avatar, :if => :avatar_url_provided?
   after_validation :assign_roles_and_channels, :on => :create
   
   after_create :create_ldap_user if configatron.ldap.active == true
@@ -292,6 +293,18 @@ class User < ActiveRecord::Base
   
   def after_token_authentication
     update_attribute(:authentication_token, nil)
+  end
+  
+  def avatar_url_provided?
+    !avatar_url.blank?
+  end
+  
+  def download_remote_avatar
+    # open a tempfile using the last 14 chars of the filename
+    t = Tempfile.new(avatar_url.parameterize.slice(-14, 14))
+    t.write(open(avatar_url).read)
+    t.flush
+    self.avatar = t
   end
   
 end

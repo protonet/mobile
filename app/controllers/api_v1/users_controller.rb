@@ -22,7 +22,7 @@ class ApiV1::UsersController < ApiV1::MasterController
       :password => (params[:password] || ActiveSupport::SecureRandom.base64(10)),
       :email => (params[:email] || "#{params[:login]}@user.local"),
       :profile_url => nil,
-      :avatar_url => nil
+      :avatar_url => params[:avatar_url]
     )
     if user.save
       render :json => {"user_id" => user.id}
@@ -32,10 +32,11 @@ class ApiV1::UsersController < ApiV1::MasterController
   end
   
   # use auth_token parameter when logging in via token e.g. http://localhost:3000/?auth_token=tokencomeshere
-  def login_token
+  def auth_token
     return head :unprocessable_entity unless @current_user.admin?
     return head :unprocessable_entity if params[:user_id].blank?
-    user = User.find(params[:user_id]).reset_authentication_token!
+    user = User.find(params[:user_id])
+    user.reset_authentication_token!
     render :json => {"token" => user.authentication_token}
   end
   
