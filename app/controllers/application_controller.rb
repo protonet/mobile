@@ -91,7 +91,7 @@ class ApplicationController < ActionController::Base
       end
       interface_mapping 
     end
-    interface = mapping[IP.new("#{request.remote_addr}/24").network.to_s] || "fallback"
+    interface = mapping[IP.new("#{request.remote_addr}/16").network.to_s] || "fallback"
     Rails.logger.info("request coming in on #{interface} with remote addr #{request.remote_addr}")
     interface
   end
