@@ -128,7 +128,6 @@ class User < ActiveRecord::Base
   def self.stranger(identifier)
     u = find_or_create_by_temporary_identifier(identifier)  do |u|
       u.name = "stranger_#{identifier[0,10]}"
-      u.roles ||= [Role.find_by_title(SystemPreferences.default_stranger_user_group)]
     end
     u
   end
@@ -265,7 +264,7 @@ class User < ActiveRecord::Base
       end
     else
       self.channels_to_subscribe = [Channel.home]
-      self.roles ||= [Role.find_by_title(SystemPreferences.default_registered_user_group)]
+      self.roles = [Role.find_by_title(stranger? ? SystemPreferences.default_stranger_user_group : SystemPreferences.default_registered_user_group)]
     end
   end
 
