@@ -15,7 +15,8 @@ class ApiV1::ChannelsController < ApiV1::MasterController
   
   # CREATE A CHANNEL
   def create
-    return if params[:name].blank?
+    return head :unprocessable_entity unless @current_user.admin?
+    return head :unprocessable_entity if params[:name].blank?
     channel = Channel.new(:name => params[:name], :description => params[:description], :owner => @current_user)
     if channel.save
       render :json => {"channel_id" => channel.id}
