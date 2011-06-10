@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
   end
   
 
-  attr_accessible :login, :email, :name, :password, :password_confirmation, :avatar_url
+  attr_accessible :login, :email, :name, :password, :password_confirmation, :avatar_url, :channels_to_subscribe
   attr_accessor :channels_to_subscribe, :invitation_token, :avatar_url
 
   has_many  :tweets
@@ -275,7 +275,7 @@ class User < ActiveRecord::Base
         return false
       end
     else
-      self.channels_to_subscribe = [Channel.home]
+      self.channels_to_subscribe ||= [Channel.home]
       self.roles = [Role.find_by_title(stranger? ? SystemPreferences.default_stranger_user_group : SystemPreferences.default_registered_user_group)]
     end
   end

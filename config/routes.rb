@@ -5,6 +5,7 @@ Dashboard::Application.routes.draw do
   match 'captive/login' => 'system/captive#login'
   
   # Channels
+  match 'channels/:id/guest/:token' => 'channels#guest_access', :as => :channel_guest_access
   match 'channels/search' => 'channels#search'
   match 'channels/list.:format' => 'channels#list', :as => :list_channels
   match 'users/list_channels.:format' => 'users#list_channels', :as => :list_user_channels
@@ -99,10 +100,10 @@ Dashboard::Application.routes.draw do
   match "api/v1/users"            => "api_v1/users#index"
   match "api/v1/users/create"     => "api_v1/users#create"
   match "api/v1/users/show"       => "api_v1/users#show"
-  match "api/v1/users/auth_token" => "api_v1/users#login_token"
+  match "api/v1/users/auth_token" => "api_v1/users#auth_token"
 
-  match "api/v1/listens/create"   => "api_v1/users#create"
-  match "api/v1/listens/destroy"  => "api_v1/users#destroy"
+  match "api/v1/listens/create"   => "api_v1/listens#create"
+  match "api/v1/listens/destroy"  => "api_v1/listens#destroy"
   
   root :to => 'instruments#index'
   

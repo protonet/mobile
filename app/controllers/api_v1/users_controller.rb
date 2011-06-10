@@ -16,13 +16,15 @@ class ApiV1::UsersController < ApiV1::MasterController
   def create
     return head :unprocessable_entity unless @current_user.admin?
     return head :unprocessable_entity if params[:login].blank?
+    
     user = User.new(
       :login => params[:login],
       :name => (params[:name] || params[:login]),
       :password => (params[:password] || ActiveSupport::SecureRandom.base64(10)),
       :email => (params[:email] || "#{params[:login]}@user.local"),
       :profile_url => nil,
-      :avatar_url => params[:avatar_url]
+      :avatar_url => params[:avatar_url],
+      :channels_to_subscribe => (params[:no_channels] == "true" ? [] : nil )
     )
     if user.save
       render :json => {"user_id" => user.id}
