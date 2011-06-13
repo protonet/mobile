@@ -25,7 +25,8 @@ protonet.utils.smilify = (function() {
     { shortcuts: ["B-)", "B)", "8-)", "8)"], className: "glasses" },
     { shortcuts: [";-)", ";)"], className: "wink" },
     { shortcuts: [":-/", ":/"], className: "struggled" },
-    { shortcuts: [":-*", ":*"], className: "kiss" }
+    { shortcuts: [":-*", ":*"], className: "kiss" },
+    { shortcuts: ["XD", "xD"], className: "lol" }
   ];
   
   var REG_EXP_TEMPLATE = "(^|[\\s(])({smilie})(?=$|[\\s!?.)])";
@@ -45,7 +46,7 @@ protonet.utils.smilify = (function() {
     $.each(SMILIES, function(i, smilie) {
       $.each(smilie.regExps, function(i, regExp) {
         str = str.replace(regExp, function(original, $1, $2) {
-          return $1 + new protonet.utils.Template("smilie-template", {
+          return $1 + new protonet.utils.Template("emoji-template", {
             type:     smilie.className,
             shortcut: $2
           });
