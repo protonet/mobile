@@ -94,7 +94,7 @@
 }
 
 .meep .author {
-  font: 10px/1.4em Verdana, sans-serif;
+  font-size: 10px;
   margin-top: 5px;
   color: #666;
 }
