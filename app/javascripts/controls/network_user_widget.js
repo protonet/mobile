@@ -29,6 +29,7 @@ protonet.controls.NetworkUserWidget.prototype = {
     $(clients).each(function(i, client){
       this.createElement(client["mac"], client["hostname"], client["ip"]);
     }.bind(this));
+    this.onlineUsersCount.html("(" + clients.length + ")")
   },
   
   createElement: function(mac, hostname, ip) {
@@ -36,7 +37,7 @@ protonet.controls.NetworkUserWidget.prototype = {
       "data-network-mac": mac,
       "data-network-hostname": hostname,
       "data-network-ip": ip,
-      title:          hostname
+      title:          mac
     }).append(
       $("<a />", {
         tabIndex: -1,
