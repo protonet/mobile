@@ -51,7 +51,7 @@ Dashboard::Application.routes.draw do
   match '/navigation' => 'navigation#index', :as => :navigation
   
   # Users
-  devise_for :users
+  devise_for :users, :controllers => { :registrations => "registrations" }
   match 'users/delete_stranger_older_than_two_days' => 'users#delete_stranger_older_than_two_days', :as => :delete_stranger_older_than_two_days
   
   resources :users
