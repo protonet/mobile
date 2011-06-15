@@ -1,4 +1,4 @@
-class ApiV1::MasterController < ApplicationController
+class ApiV1::MasterController < ActionController::Base
   
   before_filter :authenticate
   
