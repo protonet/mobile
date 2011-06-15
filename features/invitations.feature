@@ -4,6 +4,7 @@ Feature: Invitations
     And a role exists with title: "user"
     And a role exists with title: "invitee"
     And a channel exists with name: "notpublic"
+    And a channel exists with name: "public"
     And a user "dudemeister" exists with login: "dudemeister"
     And "dudemeister" is an admin
 
@@ -27,7 +28,7 @@ Feature: Invitations
 
   @javascript
   Scenario: Invitee accepts invitation
-    Given an invitation exists with token: "1234567890", email: "friend@protonet.com", channel_ids: "1", user: user "dudemeister"
+    Given an invitation exists with token: "1234567890", email: "friend@protonet.com", channel_ids: "3", user: user "dudemeister"
     And I go unauthenticated to the start page
     When I accept the invitation with the token "1234567890"
     Then I should see "Get started by signing up"
@@ -38,7 +39,7 @@ Feature: Invitations
     And I press "sign up"
     Then I should see "friend" within ".welcome"
     And I should see "You have signed up successfull"
-    And I should see "Home" within "#channels"
+    And I should see "Public" within "#channels"
     And I should not see "Notpublic" within "#channels"
     
   @javascript
