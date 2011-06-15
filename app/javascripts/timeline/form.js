@@ -65,6 +65,14 @@ protonet.timeline.Form = {
       whiteSpace: ["["],
       onAutocomplete: onAutocomplete
     });
+    
+    // emoji autocompleter
+    var emojis = [];
+    protonet.utils.emojify.shortcuts.replace(/\w+/g, function(match) {
+      emojis.push(":" + match + ":");
+    });
+    
+    new protonet.controls.InlineAutocompleter(this.input, emojis);
   },
   
   _initTextExtension: function() {
