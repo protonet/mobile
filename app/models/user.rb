@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
 
   has_many  :tweets
   has_many  :listens,  :dependent => :destroy
-  has_many  :channels,          :through => :listens
+  has_many  :channels,          :through => :listens, :order => :order_number
   has_many  :owned_channels,    :class_name => 'Channel', :foreign_key => :owner_id
   has_many  :invitations
   has_and_belongs_to_many  :roles

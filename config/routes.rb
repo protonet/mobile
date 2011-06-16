@@ -9,6 +9,7 @@ Dashboard::Application.routes.draw do
   match 'channels/search' => 'channels#search'
   match 'channels/list.:format' => 'channels#list', :as => :list_channels
   match 'users/list_channels.:format' => 'users#list_channels', :as => :list_user_channels
+  match 'users/sort_channels' => 'users#sort_channels', :via => [:post]
   
   resources :channels do
     resources :tweets

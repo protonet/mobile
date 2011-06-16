@@ -50,6 +50,13 @@ class UsersController < ApplicationController
     end
   end
   
+  def sort_channels
+    params[:channel_order].each_with_index do |channel_id, index|
+      @current_user.listens.where(:channel_id => channel_id.to_i).first.update_attribute(:order_number, index)
+    end
+    render :text => "ok"
+  end
+  
   def request_admin_flag
     case current_user.make_admin(params[:key])
     when :ok

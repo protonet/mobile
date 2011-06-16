@@ -1,6 +1,7 @@
 //= require "../utils/parse_query_string.js"
 //= require "../behaviors/channels.js"
 //= require "channel.js"
+//= require "../lib/jquery.html5sortable.js"
 
 /**
  * @events
@@ -20,10 +21,33 @@ protonet.timeline.Channels = {
     
     protonet.trigger("channels.data_available", [this.data, this.availableChannels, this.subscribedChannels]);
     
+	  this._makeChannelsSortable();
     this._observe();
     this._renderChannelLists();
   },
   
+
+  _makeChannelsSortable: function() {
+	  $('#channels ul').Html5Sortable({
+	    drop: function( p_srcLine, p_targetLine ) {return true;},
+	    dropend: function() {
+	      var channel_array = []
+        $("#channels ul a").each(
+          function(i, channel){
+            channel_array.push($(channel).data("channel-id"));
+          }
+        );  
+	      
+      $.ajax({
+         url: "/users/sort_channels" ,
+         type: "POST",
+         data:     { "channel_order[]": channel_array},
+         traditional: true
+       });
+      }
+	  });
+  },
+  	
   _observe: function() {
     /**
      * Track selected channel

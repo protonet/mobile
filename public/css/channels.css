@@ -20,6 +20,13 @@
   position: relative;
 }
 
+.html5sortable-state-highlight {
+}
+
+li.html5sortable-state-highlight + li{
+  padding-left: 51px;
+}
+
 #channels li:last-child {
   margin-right: 140px;
 }
