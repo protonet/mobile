@@ -63,22 +63,22 @@
 	                $('._dragging').removeClass('_dragging');
 	                $li.addClass('_dragging');
 	                return true;
-	            }).bind('dragend', function(ev) {
+	            }).bind('dragend', function(ev) {	              
 	                $('._dragging').removeClass('_dragging');
 	                $('li.'+_options.css).remove();
 	                try {if (JSON.parse( ev.originalEvent.dataTransfer.getData("Text") ).type!= _options.type) { return true; }}catch(e){return true;}
 	                return false;
 	            });
 	            
-	            $li.bind('dragenter', function(ev) {
+	            $li.bind('dragenter', function(ev) {	              
 	                try {if (ev.originalEvent.dataTransfer.getData("Text") && JSON.parse( ev.originalEvent.dataTransfer.getData("Text") ).type!= _options.type) { return true; }}catch(e){return true;}
 	                return false;
 	            }).bind('dragleave', function(ev) {
 	                try {if (ev.originalEvent.dataTransfer.getData("Text") && JSON.parse( ev.originalEvent.dataTransfer.getData("Text") ).type!= _options.type) { return true; }}catch(e){return true;}
-	                $('li.'+_options.css).remove();
+                  // $('li.'+_options.css).remove();
 	                return false;
 	            }).bind('drop', function(ev) {
-	                try {if (JSON.parse( ev.originalEvent.dataTransfer.getData("Text") ).type!= _options.type) { return true; }}catch(e){return true;}
+                  try {if (JSON.parse( ev.originalEvent.dataTransfer.getData("Text") ).type!= _options.type) { return true; }}catch(e){return true;}
 	                
 	                var $src = $('._dragging');
 	                $('li.'+_options.css).remove();
@@ -93,10 +93,10 @@
 	                _initLi( $line );
 	                
 	                // data not saved
-	                if ( !_options.drop( $src.get(0), $line.get(0) ) ) {
-	                    $line.remove();
-	                    return false;
-	                }
+                  if ( !_options.drop( $src.get(0), $line.get(0) ) ) {
+                      $line.remove();
+                      return false;
+                  }
 	                $src.remove();
 	                $line.animate( {'opacity':1, duration: 5000});
 	                _options.dropend();

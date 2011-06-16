@@ -21,10 +21,10 @@
 }
 
 .html5sortable-state-highlight {
-  margin-left:15px;
-  width: 3px;
-  height: 22px;
-  background-color:yellow;
+}
+
+li.html5sortable-state-highlight + li{
+  padding-left: 51px;
 }
 
 #channels li:last-child {

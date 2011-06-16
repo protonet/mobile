@@ -21,7 +21,7 @@
   <div id="channels">
     <ul>
       <%- @channels.each_with_index do |c, index| -%>
-        <li draggable="true">
+        <li>
           <%= link_to c.name.capitalize, { :channel_id => c.id }, {
             :title => c.description,
             :class => c.locally_hosted? ? (c.global? ? 'global-hosted' : 'local') : 'global',
