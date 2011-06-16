@@ -59,7 +59,6 @@
 	                   html:   _options.text( $li ),
 	                   type:   _options.type
 	                }) );
-	                //dt.setData("URL", _options.type );
 	                $('._dragging').removeClass('_dragging');
 	                $li.addClass('_dragging');
 	                return true;
@@ -75,7 +74,6 @@
 	                return false;
 	            }).bind('dragleave', function(ev) {
 	                try {if (ev.originalEvent.dataTransfer.getData("Text") && JSON.parse( ev.originalEvent.dataTransfer.getData("Text") ).type!= _options.type) { return true; }}catch(e){return true;}
-                  // $('li.'+_options.css).remove();
 	                return false;
 	            }).bind('drop', function(ev) {
                   try {if (JSON.parse( ev.originalEvent.dataTransfer.getData("Text") ).type!= _options.type) { return true; }}catch(e){return true;}
@@ -84,12 +82,7 @@
 	                $('li.'+_options.css).remove();
 	                
 	                var $line = $( JSON.parse( ev.originalEvent.dataTransfer.getData('Text') ).html ).animate( {'opacity':1} );
-	                
-	                // if ( ev.pageY - $(this).position().top > $(this).height() ) {
-	                //                       $line.insertAfter( this );
-	                //                   } else {
-	                    $line.insertBefore( this );
-	                // }
+	                $line.insertBefore( this );
 	                _initLi( $line );
 	                
 	                // data not saved
@@ -104,50 +97,13 @@
 	            }).bind('dragover', function(ev) { 
 	                try {if (ev.originalEvent.dataTransfer.getData("Text") && JSON.parse( ev.originalEvent.dataTransfer.getData("Text") ).type!= _options.type) { return true; }}catch(e){return true;}
 	                $('li.'+_options.css).remove();
-	                // if ( ev.pageY - $(this).position().top > $(this).height() ) {
-	                //                       $('<li class="'+_options.css+'"></li>').insertAfter( this );
-	                //                   } else {
-	                    $('<li class="'+_options.css+'"></li>').insertBefore( this );
-	                // }
+	                $('<li class="'+_options.css+'"></li>').insertBefore( this );
 	                return false; 
 	            });
             };
             $this.children('li').each( function(){ 
                 _initLi( $(this) ); 
             } );
-            
-        //     $this.bind('dragenter', function(ev) {
-        //         try {if (ev.originalEvent.dataTransfer.getData("Text") && JSON.parse( ev.originalEvent.dataTransfer.getData("Text") ).type!= _options.type) { return true; }}catch(e){return true;}
-        //         return false;
-        //     }).bind('dragleave', function(ev) {
-        //         try {if (ev.originalEvent.dataTransfer.getData("Text") && JSON.parse( ev.originalEvent.dataTransfer.getData("Text") ).type!= _options.type) { return true; }}catch(e){return true;}
-        //         $('li.'+_options.css).remove();
-        //         return false;
-        //     }).bind('drop', function(ev) {
-        //         try {if (JSON.parse( ev.originalEvent.dataTransfer.getData("Text") ).type!= _options.type) { return true; }}catch(e){return true;}
-        //         
-        //         var $src = $('._dragging');
-        //         $('li.'+_options.css).remove();
-        //         
-        //         var $line = $( JSON.parse( ev.originalEvent.dataTransfer.getData('Text') ).html ).animate( {'opacity':0} );
-        //         
-        //         $line.appendTo( this );
-        //         _initLi( $line );
-        //         
-        //         // data not saved
-        //         if ( !_options.drop( $src.get(0), $line.get(0) ) ) {
-        //             $line.remove();
-        //             return false;
-        //         }
-        //         $src.remove();
-        //         $line.animate( {'opacity':1, duration: 100});
-        //         return false;
-        //     }).bind('dragover', function(ev) { 
-        //         try {if (ev.originalEvent.dataTransfer.getData("Text") && JSON.parse( ev.originalEvent.dataTransfer.getData("Text") ).type!= _options.type) { return true; }}catch(e){return true;}
-        //         $('li.'+_options.css).remove();
-        //         $('<li class="'+_options.css+'"></li>').appendTo( this );
-        //         return false; 
-        //     });
         });
         
         return $this;
