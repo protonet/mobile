@@ -11,13 +11,16 @@
 
 #channels ul {
   margin: 0 0 -1px;
+  overflow:hidden;
 }
 
 #channels li {
   margin-top: 3px;
-  display: inline-block;
+  display: block;
+  float:left;
   vertical-align: bottom;
   position: relative;
+  margin:6px 4px 0px 0px;
 }
 
 .html5sortable-state-highlight {
@@ -43,6 +46,7 @@ li.html5sortable-state-highlight + li{
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   border: 1px solid #999;
+  bottom:0;
   color: #666;
   display: block;
   line-height: 22px;
@@ -67,6 +71,7 @@ li.html5sortable-state-highlight + li{
   border-bottom: 1px solid rgb(255, 255, 255);
   color: rgb(72, 123, 255);
   line-height: 26px;
+  margin-top: -4px;
 }
 
 #manage-channels {
