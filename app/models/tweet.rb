@@ -53,7 +53,8 @@ class Tweet < ActiveRecord::Base
   def self.prepare_for_frontend(meeps, additional_attributes)
     meeps.map do |m|
       m.text_extension = JSON.parse(m.text_extension) rescue nil
-      m.attributes.merge({ :avatar => m.user.avatar.url }).merge(additional_attributes || {})
+      avatar = m.user.avatar.url if m.user
+      m.attributes.merge({ :avatar => avatar }).merge(additional_attributes || {})
     end
   end
   
