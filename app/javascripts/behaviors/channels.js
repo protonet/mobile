@@ -6,11 +6,12 @@ protonet.utils.Behaviors.add({
     }
     protonet.Notifications.trigger("channel.change", id);
     event.preventDefault();
-  },
+  }
   
-  // "a[data-channel-id]:dragstart": function(element, event) {
+  // This doesn't work anymore due to a conflict with the jquery.html5sortable plugin
+  // ,"a[data-channel-id]:drag": function(element, event) {
   //   if (event.originalEvent.dataTransfer) {
-  //     var channelId = element.attr("data-channel-id");
+  //     var channelId = element.data("channel-id");
   //     event.originalEvent.dataTransfer.setData("text/plain", "@" + protonet.timeline.Channels.getChannelName(channelId) + " ");
   //   }
   // }

@@ -116,12 +116,22 @@ protonet.controls.UserWidget.prototype = {
           .animate({ "backgroundColor": "#ffffff" }, { duration: 1000 });
       }
       
-      user.isOnline ? user.element.addClass("online") : user.element.removeClass("online").removeClass("typing");
+      if (user.isOnline) {
+        user.element.addClass("online");
+      } else {
+        user.element.removeClass("online").removeClass("typing");
+        if (protonet.config.show_only_online_users) {
+          delete this.usersData[userId];
+          user.element.remove();
+        }
+      } 
     }
     
     this.sortEntries();
     this.cleanupStrangers();
     this.updateCount();
+    
+    protonet.Notifications.trigger("users.data_available", this.usersData);
   },
   
   /**

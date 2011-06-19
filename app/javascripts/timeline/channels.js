@@ -21,31 +21,29 @@ protonet.timeline.Channels = {
     
     protonet.trigger("channels.data_available", [this.data, this.availableChannels, this.subscribedChannels]);
     
-	  this._makeChannelsSortable();
+    this._makeChannelsSortable();
     this._observe();
     this._renderChannelLists();
   },
   
 
   _makeChannelsSortable: function() {
-	  $('#channels ul').Html5Sortable({
-	    drop: function( p_srcLine, p_targetLine ) {return true;},
-	    dropend: function() {
-	      var channel_array = []
-        $("#channels ul a").each(
-          function(i, channel){
-            channel_array.push($(channel).data("channel-id"));
-          }
-        );  
-	      
-      $.ajax({
-         url: "/users/sort_channels" ,
-         type: "POST",
-         data:     { "channel_order[]": channel_array},
-         traditional: true
-       });
+    $("#channels ul").Html5Sortable({
+      drop: function() {
+        return true;
+      },
+      dropend: function() {
+        var channelArray = $.map($("#channels ul a"), function(channel){
+          return $(channel).data("channel-id");
+        });
+        $.ajax({
+          url:      "/users/sort_channels" ,
+          type:     "POST",
+          data:     { "channel_order[]": channelArray },
+          traditional: true
+        });
       }
-	  });
+    });
   },
   	
   _observe: function() {

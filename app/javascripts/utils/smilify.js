@@ -26,7 +26,8 @@ protonet.utils.smilify = (function() {
     { shortcuts: [";-)", ";)"], className: "wink" },
     { shortcuts: [":-/", ":/"], className: "struggled" },
     { shortcuts: [":-*", ":*"], className: "kiss" },
-    { shortcuts: ["XD", "xD"], className: "lol" }
+    { shortcuts: ["XD", "xD"], className: "lol" },
+    { shortcuts: [";-P", ";P"], className: "cheek" }
   ];
   
   var REG_EXP_TEMPLATE = "(^|[\\s(])({smilie})(?=$|[\\s!?.)])";

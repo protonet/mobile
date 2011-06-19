@@ -1,7 +1,10 @@
 <% users = SystemPreferences.show_only_online_users ? [] : User.registered.all -%>
 <div id="user-widget" class="widget">
   <h3>
-    <%= link_to("Users", :controller => :users, :action => :index) %>
+    <% if SystemPreferences.show_only_online_users -%>
+      Online
+    <% end -%>
+    Users
     <% unless SystemPreferences.show_only_online_users -%>
       <output class="count">(0/<%= users.size %>)</output>
     <% end -%>
