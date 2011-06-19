@@ -2,11 +2,9 @@
 <div id="user-widget" class="widget">
   <h3>
     <% if SystemPreferences.show_only_online_users -%>
-      Online
-    <% end -%>
-    Users
-    <% unless SystemPreferences.show_only_online_users -%>
-      <output class="count">(0/<%= users.size %>)</output>
+      Online Users
+    <% else -%>
+      Users <output class="count">(0/<%= users.size %>)</output>
     <% end -%>
     <span class="loading-hint">loading ...</span>
   </h3>
