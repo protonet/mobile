@@ -8,11 +8,7 @@
 <br>
 
 <h4>Change user image:</h4>
-<button onclick="$('#avatar-upload').toggle()">
-  <span>
-    <em>change user image</em>
-  </span>
-</button>
+<button onclick="$('#avatar-upload').toggle()">change user image</button>
 <div id="avatar-upload" style="display:none;">
   <%= form_tag images_avatars_path, :multipart => true do %>
     <p>
