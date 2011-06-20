@@ -72,7 +72,11 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
     _shouldReconnect: function(ajaxObj) {
       var now = new Date();
       return  ajaxObj.readyState  === 4 &&
-              ajaxObj.status      === 200 &&
+              (
+                ajaxObj.status    === 200 ||
+                // 0 === request got aborted (iOS seems to have a request timeout after 60 sec)
+                ajaxObj.status    === 0
+              ) &&
               // only reconnect when the old ajaxObj was active for more than 10 sec
               (now - ajaxObj.activeSince) > 10000;
     },
