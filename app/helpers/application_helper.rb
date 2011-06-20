@@ -2,11 +2,7 @@
 module ApplicationHelper
 
   def button(name)
-    content_tag(:button,
-      content_tag(:span,
-        content_tag(:em, name)
-      ), :type => "submit", :name => "commit"
-    )
+    content_tag(:button, name, :type => "submit", :name => "commit")
   end
   
   def stylesheets
