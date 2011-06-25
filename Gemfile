@@ -1,7 +1,7 @@
 source :gemcutter
 source 'http://gems.github.com/'
 
-gem "rails", "~> 3.0.4"
+gem "rails", "3.0.5"
 gem "bundler", "1.0.11"
 gem "mysql"
 gem "devise", "1.2.1"
