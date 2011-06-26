@@ -11,7 +11,7 @@
       grey_light  #ccc      rgb(204, 204, 204)
       white       #fff      rgb(255, 255, 255)
 =========================================================================== */
-@font-face {
+/*@font-face {
   font-family: "Univers Light Condensed";
   src: url("/css/fonts/Univers Light Condensed.ttf");
 }
@@ -19,7 +19,7 @@
 @font-face {
   font-family: "Univers LT 47 CondensedLt";
   src: url("/css/fonts/Univers LT 47 Condensed Light.ttf");
-}
+}*/
 
 html,
 body {
@@ -284,7 +284,6 @@ header {
 }
 
 header .logo {
-  top: bottom: 0;
   left: -13px;
   position: absolute;
   background: url(/img/logo.png) no-repeat;
@@ -545,7 +544,7 @@ section.box {
   width: 608px; /* sizes are adapted to be as big as the auto width login box below - sorry */
 }
 div.box-wrapper {
-  margin: 0px auto;
+  margin: 0 auto;
   width: 890px;
 }
 /* ================================================================ BOX = */

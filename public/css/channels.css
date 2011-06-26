@@ -20,10 +20,10 @@
   float:left;
   vertical-align: bottom;
   position: relative;
-  margin:6px 4px 0px 0px;
+  margin: 6px 4px 0 0;
 }
 
-li.html5sortable-state-highlight + li{
+li.html5sortable-state-highlight + li {
   padding-left: 51px;
 }
 
