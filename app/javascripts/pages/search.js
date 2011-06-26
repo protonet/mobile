@@ -169,7 +169,7 @@ protonet.pages.Search = Class.create(protonet.Page, {
         return;
       }
       
-      this.indicator = (this.indicator || $("<div>", { className: "meep-loading-indicator" })).insertAfter(this.meepList).show();
+      this.indicator = (this.indicator || $("<div>", { "class": "meep-loading-indicator" })).insertAfter(this.meepList).show();
       
       this.load(this.keyword, ++this.pageNum, function(data) {
         var tempContainer = $("<ul>");

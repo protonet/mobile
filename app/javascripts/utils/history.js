@@ -49,7 +49,7 @@ protonet.utils.History = (function() {
   
   function onChange(callback) {
     protonet.bind("history.change", function(e, path) {
-      callback(path);
+      callback(path || "");
     });
     return this;
   }
