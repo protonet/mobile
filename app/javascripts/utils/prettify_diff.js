@@ -18,7 +18,7 @@ protonet.utils.prettifyDiff = (function() {
         return LINE_TEMPLATE.replace("{line}", line).replace("{color}", BLUE);
       }
       
-      return line + "<br />";
+      return line + "<br>";
     }).join("");
   };
 })();

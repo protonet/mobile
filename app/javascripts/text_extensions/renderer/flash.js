@@ -22,7 +22,7 @@ protonet.text_extensions.render.flash = (function() {
         if (flashElement) {
           flashElement = $(flashElement).trigger("text_extension.show_flash");
           $("<a>", {
-            className: "flash-close-link close-link",
+            "class": "flash-close-link close-link",
             html: "X",
             mousedown: false, // ensure that meep isn't accidentally focused
             click: function() {

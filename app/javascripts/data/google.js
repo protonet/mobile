@@ -3,13 +3,13 @@ protonet.data.Google = {
   TIMEOUT: 4000,
   
   search: function(query, onSuccess, onFailure) {
-    $.jsonp({
+    $.ajax({
       url: this.URL,
       data: {
         q: query
       },
+      dataType: "jsonp",
       cache: true,
-      pageCache: true,
       timeout: this.TIMEOUT,
       success: function(response) {
         var responseData = response.responseData;

@@ -5,10 +5,10 @@ protonet.data.YouTube = {
   URL: "http://gdata.youtube.com/feeds/api/videos/{id}?v=2&alt=json-in-script&format=5&fields=media%3Agroup%2Cyt%3Anoembed&callback=?",
   
   getVideo: function(id, onSuccess, onFailure) {
-    $.jsonp({
+    $.ajax({
       url: this.URL.replace("{id}", id),
+      dataType: "jsonp",
       cache: true,
-      pageCache: true,
       timeout: this.TIMEOUT,
       success: function(response) {
         var entry = response.entry;

@@ -35,7 +35,7 @@ protonet.timeline.Form = {
     var markupRegExp   = /((\{|\[)[a-z]+(\}|\]))\s*$/i,
         onAutocomplete = function() {
           var value           = this.input.val(),
-              selectionEnd    = this.input.attr("selectionEnd"),
+              selectionEnd    = this.input.prop("selectionEnd"),
               beforeCaret     = value.substring(0, selectionEnd),
               match           = beforeCaret.match(markupRegExp) || [],
               openingTag      = match[1];
@@ -43,8 +43,8 @@ protonet.timeline.Form = {
             var closingTag   = match[2] + "/" + openingTag.substring(1); // "{code}" becomes "{/code}"
             this.input
               .val(value.substring(0, selectionEnd) + closingTag + value.substring(selectionEnd))
-              .attr("selectionStart", selectionEnd)
-              .attr("selectionEnd", selectionEnd);
+              .prop("selectionStart", selectionEnd)
+              .prop("selectionEnd", selectionEnd);
           }
         }.bind(this);
     

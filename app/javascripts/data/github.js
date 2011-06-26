@@ -31,10 +31,10 @@ protonet.data.GitHub = (function() {
   }
   
   function _getJson(apiUrl, responseKey, onSuccess, onFailure) {
-    $.jsonp({
+    $.ajax({
       url: apiUrl,
       cache: true,
-      pageCache: true,
+      dataType: "jsonp",
       timeout: TIMEOUT,
       success: function(response) {
         var data = response[responseKey];

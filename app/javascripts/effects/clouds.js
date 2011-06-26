@@ -53,7 +53,7 @@ protonet.effects.Clouds.prototype = {
   },
   
   _createCloud: function(fromStart) {
-    var cloudElement = $("<img />", {
+    var cloudElement = $("<img>", {
       src: this.config.image
     });
     

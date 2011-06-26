@@ -12,7 +12,7 @@ protonet.controls.UserWidget = function() {
   
   this.list.children().each(function(i, li) {
     li = $(li);
-    this.usersData[+li.attr("data-user-id")] = {
+    this.usersData[+li.data("user-id")] = {
       element:              li,
       name:                 $.trim(li.text()),
       isViewer:             li.hasClass("myself"),
@@ -166,13 +166,13 @@ protonet.controls.UserWidget.prototype = {
   },
   
   createElement: function(userId, userName, isViewer, isStranger) {
-    return $("<li />", {
+    return $("<li>", {
       "data-user-id": userId,
       title:          userName,
-      className:      [isViewer ? "myself" : "", isStranger ? "stranger" : ""].join(" ")
+      "class":        [isViewer ? "myself" : "", isStranger ? "stranger" : ""].join(" ")
     }).append(
-      $("<a />", {
-        tabIndex: -1,
+      $("<a>", {
+        tabindex: -1,
         href:     "#",
         text:     userName
       })

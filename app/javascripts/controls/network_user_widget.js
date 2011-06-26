@@ -33,13 +33,13 @@ protonet.controls.NetworkUserWidget.prototype = {
   },
   
   createElement: function(mac, hostname, ip) {
-    return $("<li />", {
+    return $("<li>", {
       "data-network-mac": mac,
       "data-network-hostname": hostname,
       "data-network-ip": ip,
       title:          mac
     }).append(
-      $("<a />", {
+      $("<a>", {
         tabIndex: -1,
         href:     "#",
         text:     ( hostname == "?" ? ip : hostname )

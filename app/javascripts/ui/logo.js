@@ -64,8 +64,8 @@ protonet.ui.Logo = {
   },
   
   hearts: function(event) {
-    var hearts = $("<span />", {
-      className: "hearts",
+    var hearts = $("<span>", {
+      "class": "hearts",
       html: "&hearts; &hearts; &hearts;<br>&hearts; &hearts;"
     }).insertBefore(this.monster);
     

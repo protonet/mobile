@@ -4,11 +4,11 @@ protonet.pages.Meep = Class.create(protonet.Page, {
   initialize: function($super) {
     this.currentChannelName = "unknown";
     
-    this.border       = $("<div>",  { className: "border" });
-    this.next         = $("<a>",    { className: "next" });
-    this.previous     = $("<a>",    { className: "previous" });
-    this.shareButton  = $("<a>",    { className: "share", title: "Share!" });
-    this.meepList     = $("<ul>",   { className: "meeps" });
+    this.border       = $("<div>",  { "class": "border" });
+    this.next         = $("<a>",    { "class": "next" });
+    this.previous     = $("<a>",    { "class": "previous" });
+    this.shareButton  = $("<a>",    { "class": "share", title: "Share!" });
+    this.meepList     = $("<ul>",   { "class": "meeps" });
     this.border.append(this.next).append(this.previous).append(this.shareButton);
     
     $super("meep", { meepsPerRequest: 5, request: false });

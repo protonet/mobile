@@ -9,12 +9,12 @@ protonet.data.YQL.Query.prototype = {
   YQL_URL: "http://query.yahooapis.com/v1/public/yql?format=json&_maxage=3600&diagnostics=false&callback=?",
   
   execute: function(onSuccess, onFailure, timeout) {
-    $.jsonp({
+    $.ajax({
       url: this.YQL_URL,
       data: {
         q: this._query
       },
-      pageCache: true,
+      dataType: "jsonp",
       cache: true,
       timeout: timeout || this.DEFAULT_TIMEOUT,
       success: function(response) {

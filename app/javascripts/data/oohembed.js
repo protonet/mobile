@@ -3,10 +3,10 @@ protonet.data.Oohembed = {
   URL: "http://oohembed.com/oohembed/?url={url}&callback=?",
   
   get: function(url, onSuccess, onFailure) {
-    $.jsonp({
+    $.ajax({
       url: this.URL.replace("{url}", encodeURIComponent(url)),
       cache: true,
-      pageCache: true,
+      dataType: "jsonp",
       timeout: this.TIMEOUT,
       success: onSuccess,
       error: onFailure

@@ -12,7 +12,7 @@ class NetworksController < ApplicationController
   end
   
   def show
-    render :text => Network.find(params[:id]).attributes.to_a.join("<br/>")
+    render :text => Network.find(params[:id]).attributes.to_a.join("<br>")
   end
   
   # TODO: I don't think this is used anymore. Could be saved as non-JS backup?

@@ -32,8 +32,8 @@ protonet.ui.ContextMenu = function(selector, options) {
 
 protonet.ui.ContextMenu.prototype = {
   create: function() {
-    var template  = $("<li />",   { tabIndex: -1 });
-    this.list     = $("<menu />", { className: "context-menu" });
+    var template  = $("<li>",   { tabindex: -1 });
+    this.list     = $("<menu>", { "class": "context-menu" });
     
     $.each(this.options, function(name, callback) {
       template.clone().html(name).appendTo(this.list).data("callback", callback);

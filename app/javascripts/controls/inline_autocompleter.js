@@ -84,7 +84,7 @@ protonet.controls.InlineAutocompleter.prototype = {
     
     var enteredCharacter        = String.fromCharCode(event.which || event.keyCode),
         value                   = this.input.val(),
-        caretPosition           = this.input.attr("selectionStart"),
+        caretPosition           = this.input.prop("selectionStart"),
         characterBeforeCaret    = value.substring(caretPosition - 1, caretPosition),
         valueUntilCaret         = value.substring(0, caretPosition),
         valueFromCaret          = value.substring(caretPosition),
@@ -152,11 +152,11 @@ protonet.controls.InlineAutocompleter.prototype = {
       case 9:  // tab
       case 39: // right arrow
         var value         = this.input.val(),
-            selectionEnd  = this.input.attr("selectionEnd"),
+            selectionEnd  = this.input.prop("selectionEnd"),
             newValue      = value.substr(0, selectionEnd) + this.options.append + value.substr(selectionEnd);
         this.input.val(newValue)
-          .attr("selectionEnd", selectionEnd + this.options.append.length)
-          .attr("selectionStart", selectionEnd + this.options.append.length);
+          .prop("selectionEnd", selectionEnd + this.options.append.length)
+          .prop("selectionStart", selectionEnd + this.options.append.length);
         event.preventDefault();
         this.options.onAutocomplete();
       default:
@@ -169,12 +169,12 @@ protonet.controls.InlineAutocompleter.prototype = {
   },
   
   _markText: function(from, to) {
-    this.input.attr("selectionStart", from).attr("selectionEnd", to).focus();
+    this.input.prop("selectionStart", from).prop("selectionEnd", to).focus();
   },
   
   _replaceMarkedTextWith: function(str) {
-    var selectionStart = this.input.attr("selectionStart"),
-        selectionEnd   = this.input.attr("selectionEnd"),
+    var selectionStart = this.input.prop("selectionStart"),
+        selectionEnd   = this.input.prop("selectionEnd"),
         value          = this.input.val(),
         newValue       = value.substr(0, selectionStart) + str + value.substr(selectionEnd);
     

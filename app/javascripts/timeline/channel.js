@@ -169,8 +169,8 @@ protonet.timeline.Channel.prototype = {
    */
   _toggleBadge: function(preventEffect) {
     if (!this.badge) {
-      this.badge = $("<span />", {
-        className: "badge",
+      this.badge = $("<span>", {
+        "class":  "badge",
         text:      0
       }).appendTo(this.link);
     }
@@ -192,8 +192,8 @@ protonet.timeline.Channel.prototype = {
    */
   _toggleReplyBadge: function() {
     if (!this.replyBadge) {
-      this.replyBadge = $("<span />", {
-        className: "reply-badge",
+      this.replyBadge = $("<span>", {
+        "class":  "reply-badge",
         text:      0
       }).appendTo(this.link);
     }
@@ -227,7 +227,7 @@ protonet.timeline.Channel.prototype = {
    */
   render: function(container) {
     this.container = container;
-    this.channelList = $("<ul />", {
+    this.channelList = $("<ul>", {
       "class":            "meeps",
       "data-channel-id":  this.data.id
     }).data({ channel: this.data, instance: this });
@@ -259,7 +259,7 @@ protonet.timeline.Channel.prototype = {
    * render older meeps into the channel list
    */
   _renderMoreMeeps: function(meepsData) {
-    var tempContainer = $("<ul />");
+    var tempContainer = $("<ul>");
     this._renderMeeps(meepsData, tempContainer, function() {
       this.channelList.append(tempContainer.children());
       protonet.trigger("channel.rendered_more", [this.channelList, this.data, this]);
@@ -360,8 +360,8 @@ protonet.timeline.Channel.prototype = {
       return;
     }
     
-    var noMeepsHint = $("<div />", {
-      className: "no-meeps-available"
+    var noMeepsHint = $("<div>", {
+      "class": "no-meeps-available"
     }).hide().html(protonet.t("NO_MEEPS_AVAILABLE")).appendTo(this.container);
     
     protonet.bind("channel.change", function(e, id) {

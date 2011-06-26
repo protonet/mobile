@@ -3,10 +3,10 @@ protonet.data.Vimeo = {
   URL: "http://vimeo.com/api/v2/video/{id}.json?callback=?",
   
   getVideo: function(id, onSuccess, onFailure) {
-    $.jsonp({
+    $.ajax({
       url: this.URL.replace("{id}", id),
       cache: true,
-      pageCache: true,
+      dataType: "jsonp",
       timeout: this.TIMEOUT,
       success: function(response) {
         var entry = response[0];

@@ -78,7 +78,7 @@ protonet.controls.FileWidget.prototype = {
     
     this.container
       .delegate(".address-bar [data-directory-path]", "click", function(event) {
-        var path = $(event.currentTarget).attr("data-directory-path");
+        var path = $(event.currentTarget).data("directory-path");
         protonet.Notifications.trigger("files.load", [this.channelId, path]);
         event.preventDefault();
       }.bind(this))
@@ -119,7 +119,7 @@ protonet.controls.FileWidget.prototype = {
         closeContextMenu();
       },
       "publish": function(li, closeContextMenu) {
-        this.publish("/" +  this.channelId + li.attr("data-file-path"));
+        this.publish("/" +  this.channelId + li.data("file-path"));
         closeContextMenu();
       }.bind(this),
       "delete": function(li, closeContextMenu) {
@@ -130,7 +130,7 @@ protonet.controls.FileWidget.prototype = {
           url:        "system/files/delete",
           type:       "post",
           data:       {
-            file_path:  li.attr("data-file-path"),
+            file_path:  li.data("file-path"),
             channel_id: this.channelId
           },
           beforeSend: function() {
@@ -151,7 +151,7 @@ protonet.controls.FileWidget.prototype = {
      */
     new protonet.ui.ContextMenu("#file-widget ul [data-directory-path]", {
       "<strong>open</strong>":   function(li, closeContextMenu) {
-        var path = li.attr("data-directory-path");
+        var path = li.data("directory-path");
         protonet.Notifications.trigger("files.load", [this.channelId, path]);
         closeContextMenu();
       }.bind(this),
@@ -167,7 +167,7 @@ protonet.controls.FileWidget.prototype = {
           url:  "system/files/delete_directory",
           type: "post",
           data: {
-            file_path:  li.attr("data-directory-path"),
+            file_path:  li.data("directory-path"),
             channel_id: this.channelId
           },
           beforeSend: function() {
@@ -210,7 +210,7 @@ protonet.controls.FileWidget.prototype = {
         list          = this.uploadContextMenu.list,
         filesInQueue  = [],
         browseLink    = list.children(":eq(1)").attr("id", "browse:" + timestamp),
-        progress      = $("<span />", { className: "progress", text: "(0 %) " });
+        progress      = $("<span>", { "class": "progress", text: "(0 %) " });
     
     this.uploader = new plupload.Uploader({
       runtimes:       "html5,flash",
@@ -238,7 +238,7 @@ protonet.controls.FileWidget.prototype = {
         filesInQueue.push(file);
       }.bind(this));
       
-      this.list.attr("scrollTop", this.list.attr("scrollHeight"));
+      this.list.prop("scrollTop", this.list.prop("scrollHeight"));
       this.container.trigger("dragleave");
     }.bind(this));
     
@@ -342,7 +342,7 @@ protonet.controls.FileWidget.prototype = {
     var li = this.renderItem("directory", "", true);
     li.children().remove();
     
-    var input = $("<input />", {
+    var input = $("<input>", {
       value: protonet.t("DEFAULT_DIRECTORY")
     }).appendTo(li);
     
@@ -436,7 +436,7 @@ protonet.controls.FileWidget.prototype = {
     this.path = path;
     this.data = data;
     
-    this.list.attr("scrollTop", 0).children().remove();
+    this.list.prop("scrollTop", 0).children().remove();
     
     /**
      * Chunk it for performance reasons, we never know how many files have
@@ -463,11 +463,11 @@ protonet.controls.FileWidget.prototype = {
     var path = this.path + name,
         position = ensurePosition && this.list.find("." + type + ":last");
     
-    var li = $("<li />", {
+    var li = $("<li>", {
       title:      name,
-      className:  type
+      "class":  type
     }).attr("data-" + type + "-path", path).append(
-      $("<a />", {
+      $("<a>", {
         tabIndex:   -1,
         href:       this.getDownloadPath("/" + this.channelId + path),
         text:       name,
@@ -519,7 +519,7 @@ protonet.controls.FileWidget.prototype = {
   _toggleNavBar: function() {
     var isAddressBarVisible = this.addressBar.is(":visible"),
         paths               = "/",
-        rootLink            = $("<a />", {
+        rootLink            = $("<a>", {
           href:                   "#",
           "data-directory-path":  "/",
           text:                   "/"
@@ -534,7 +534,7 @@ protonet.controls.FileWidget.prototype = {
       
       paths += path + "/";
       
-      var pathLink = $("<a />", {
+      var pathLink = $("<a>", {
         href:                   "#",
         "data-directory-path":  paths,
         text:                   path

@@ -2,7 +2,7 @@
 //= require "../../effects/hover_resize.js"
 
 protonet.text_extensions.render.image = function(data, preventResizing) {
-  var anchor = $("<a />", {
+  var anchor = $("<a>", {
     href:   data.imageHref || data.url,
     target: "_blank"
   });
@@ -12,7 +12,7 @@ protonet.text_extensions.render.image = function(data, preventResizing) {
     height: Math.min(protonet.text_extensions.config.IMAGE_SIZE.height, data.imageHeight || Infinity)
   };
   
-  var image = $("<img />", $.extend({
+  var image = $("<img>", $.extend({
     src:    protonet.media.Proxy.getImageUrl(data.image, imageSize),
     alt:    data.imageTitle,
     title:  data.imageTitle

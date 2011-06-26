@@ -6,10 +6,10 @@ protonet.data.Facebook = (function() {
   function getOpenGraphData(id, onSuccess, onFailure) {
     var apiUrl = URL.replace("{id}", id);
     
-    $.jsonp({
+    $.ajax({
       url: apiUrl,
       cache: true,
-      pageCache: true,
+      dataType: "jsonp",
       timeout: TIMEOUT,
       success: function(data) {
         if (!data) {

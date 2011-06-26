@@ -47,7 +47,7 @@ protonet.text_extensions.Input.prototype = {
   _dragEnter: function(event) {
     event.preventDefault();
     var valueLength = this.input.val().length;
-    this.input.attr({
+    this.input.prop({
       "selectionEnd":   valueLength,
       "selectionStart": valueLength
     }).focus();

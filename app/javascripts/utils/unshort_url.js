@@ -33,11 +33,12 @@ protonet.utils.unshortUrl = (function() {
       callback(url);
     };
     
-    $.jsonp({
+    $.ajax({
       url: API_URL,
       data: {
         url: url
       },
+      dataType: "jsonp",
       success: function(response) {
         var longUrl = response["long-url"];
         longUrl ? callback(longUrl) : failure();

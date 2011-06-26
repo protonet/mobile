@@ -46,7 +46,7 @@ protonet.user = {
     // kkthxbai
     var contextOptions = {
       "send reply": function(link, closeContextMenu) {
-        var user = this.usersData[+link.attr("data-user-id")];
+        var user = this.usersData[+link.data("user-id")];
         if (user) {
           protonet.Notifications.trigger("form.create_reply", user.name);
           closeContextMenu();
@@ -54,7 +54,7 @@ protonet.user = {
       }.bind(this),
       "show profile": function(link, closeContextMenu) {
         try {
-          protonet.globals.pages.user.show(+link.attr("data-user-id"));
+          protonet.globals.pages.user.show(+link.data("user-id"));
         } catch(e) {} finally {
           closeContextMenu();
         }
@@ -63,7 +63,7 @@ protonet.user = {
     
     if (protonet.user.data.is_admin) {
       contextOptions["give internet access"] = function(link, closeContextMenu) {
-        var user = this.usersData[+link.attr("data-user-id")];
+        var user = this.usersData[+link.data("user-id")];
         // todo add a && user.stranger()
         if (user) {
           protonet.Notifications.trigger("system.give_internet_access", user);

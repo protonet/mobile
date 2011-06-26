@@ -66,7 +66,7 @@ protonet.user.Config = {
   
   _renderConfigs: function() {
     var container = $("#user-navigation .settings");
-        list = $("<ul />");
+        list = $("<ul>");
     $.each(this.configs, function(key, config) {
       this._getElement(key, config).appendTo(list);
     }.bind(this));
@@ -87,9 +87,9 @@ protonet.user.Config = {
   
   _getNotificationElement: function(key, config) {
     var value = String(this.get(key)),
-        item = $("<li />", {
+        item = $("<li>", {
           html:       config.labels[value],
-          className:  value,
+          "class":    value,
           click:      function(event) {
             event.preventDefault();
             var oldValue = this.get(key),
@@ -111,9 +111,9 @@ protonet.user.Config = {
   
   _getBooleanElement: function(key, config) {
     var value = String(this.get(key)),
-        item = $("<li />", {
+        item = $("<li>", {
           html:       config.labels[value],
-          className:  value,
+          "class":    value,
           click:      function(event) {
             event.preventDefault();
             var oldValue = this.get(key),

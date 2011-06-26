@@ -7,8 +7,8 @@ protonet.pages.Search = Class.create(protonet.Page, {
     this.form        = $("#search-form");
     this.input       = this.form.find("input.search");
     
-    this.meepList    = $("<ul />",  { className: "meeps" });
-    this.bigInput    = $("<input>", { className: "search" });
+    this.meepList    = $("<ul>",    { "class": "meeps" });
+    this.bigInput    = $("<input>", { "class": "search" });
     
     $super("search", {
       url:            "/search?search_term={state}",
@@ -152,7 +152,7 @@ protonet.pages.Search = Class.create(protonet.Page, {
   },
   
   renderHint: function(hint) {
-    this.content($("<p />", { html: hint, className: "no-meeps-available" }));
+    this.content($("<p>", { html: hint, "class": "no-meeps-available" }));
   },
   
   _afterRendering: function(meeps) {

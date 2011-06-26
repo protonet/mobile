@@ -4,11 +4,7 @@
  * Modal Window
  * 
  * @example
- *    new protonet.ui.ModalWindow().headline("My Headline").content("Lorem ipsum ...").show({
- *      // "my-modal-window" is a css class name which should be set on the dialog element
- *      // in order to make it targetable via css selectors
- *      className:    "my-modal-window"
- *    });
+ *    new protonet.ui.ModalWindow().headline("My Headline").content("Lorem ipsum ...").show();
  */
 protonet.ui.ModalWindow = (function() {
   var elements,
@@ -27,10 +23,10 @@ protonet.ui.ModalWindow = (function() {
     _create: function() {
       if (!elements) {
         elements = {
-          shadow:     $("<div>",    { className: "modal-window-shadow" }),
-          dialog:     $("<div>",    { className: "modal-window-dialog" }),
-          content:    $("<output>", { className: "modal-window-content" }),
-          closeLink:  $("<a>",      { className: "modal-window-close-link close-link", html: "X" }),
+          shadow:     $("<div>",    { "class": "modal-window-shadow" }),
+          dialog:     $("<div>",    { "class": "modal-window-dialog" }),
+          content:    $("<output>", { "class": "modal-window-content" }),
+          closeLink:  $("<a>",      { "class": "modal-window-close-link close-link", html: "X" }),
           headline:   $("<h2>",     { html: "&nbsp;" })
         };
         elements.shadow.append(elements.dialog).appendTo($body);

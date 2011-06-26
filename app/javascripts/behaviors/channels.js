@@ -1,6 +1,6 @@
 protonet.utils.Behaviors.add({
   "a[data-channel-id]:click": function(element, event) {
-    var id = +element.attr("data-channel-id");
+    var id = +element.data("channel-id");
     if (!id) {
       return;
     }
