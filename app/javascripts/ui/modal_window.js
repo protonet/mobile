@@ -126,8 +126,8 @@ protonet.ui.ModalWindow = (function() {
         focusedElement.blur();
       }
       
-      this.position();
-      this.resize();
+      this.position(true);
+      this.resize(true);
       
       this.visible = true;
       
