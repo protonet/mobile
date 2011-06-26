@@ -23,9 +23,6 @@
   margin:6px 4px 0px 0px;
 }
 
-.html5sortable-state-highlight {
-}
-
 li.html5sortable-state-highlight + li{
   padding-left: 51px;
 }
