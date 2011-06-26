@@ -17,13 +17,11 @@ $(function() {
   protonet.dispatcher.initialize();
   protonet.timeline.initialize();
   
-  if (protonet.config.allow_modal_views) {
-    protonet.globals.pages = {
-      search: new protonet.pages.Search(),
-      meep:   new protonet.pages.Meep(),
-      user:   new protonet.Page("users") 
-    };
-  }
+  protonet.globals.pages = {
+    search: new protonet.pages.Search(),
+    meep:   new protonet.pages.Meep(),
+    user:   new protonet.Page("users")
+  };
   
   // Init widgets
   if (protonet.config.show_user_widget) {

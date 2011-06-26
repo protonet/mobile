@@ -7,10 +7,7 @@
  * @example
  *    // Render a new, unselected, channel into "#channel-container"
  *    var channelData = { id: 1, name: "Ali Schmali", meeps: [{ ... }, { ... }, ...] };
- *    new protonet.timeline.Channels.Channel(channelData, "#tab-link").render("#channel-container");
- *
- *    // Render a new, selected, channel into "#channel-container"
- *    new protonet.timeline.Channels.Channel(channelData, "#tab-link", true).render("#channel-container");
+ *    new protonet.timeline.Channel(channelData).render("#channel-container");
  *
  *  @events
  *    channel.change        - Call this with the channel id if you want to switch the channel
@@ -18,11 +15,11 @@
  *    channel.rendered_more - Triggered when a bunch of new meeps are rendered into the channel (due to endless scrolling, etc.)
  *
  */
-protonet.timeline.Channel = function(data, link) {
-  this.link         = $(link);
+protonet.timeline.Channel = function(data) {
   this.data         = data;
   this.$window      = $(window);
   
+  this._getLink();
   this.unreadReplies = window.localStorage[this.data.id + ":unread_replies"]  || 0;
   this.unreadMeeps   = window.localStorage[this.data.id + ":unread_meeps"]    || 0;
   
@@ -35,82 +32,85 @@ protonet.timeline.Channel.prototype = {
     FETCH_MEEPS_URL:       "/tweets"
   },
   
+  _getLink: function() {
+    this.link = $("#channels [data-channel-id='" + this.data.id + "']");
+  },
+  
   _observe: function() {
-    /**
-     * Render new meep in selected channel
-     * when event is triggered
-     */
-    protonet.bind("meep.send", function(e, dataOrForm, post) {
-      if (!this.isSelected) {
-        return;
-      }
-      
-      this._renderMeep(dataOrForm, this.channelList, post);
-    }.bind(this));
-    
-    /**
-     * Render meep when received
-     */
-    protonet.bind("meep.receive", function(e, meepData) {
-      if (meepData.channel_id != this.data.id) {
-        return;
-      }
-      
-      var instance = this._renderMeep(meepData, this.channelList);
-      
-      this._notifications();
-      this._replyNotifications(meepData, instance);
-    }.bind(this));
-    
-    /**
-     * Set fixed scroll position when user scrolled down in timeline
-     * (eg. to watch a video) while new meep occurs
-     */
-    protonet.bind("meep.rendered", function(e, meepElement, meepData, instance) {
-      if (meepData.channel_id != this.data.id) {
-        return;
-      }
-      
-      var channelPositionTop = this.channelList.offset().top,
-          scrollPositionTop  = this.$window.scrollTop();
-          offset             = 40;
-      
-      if (scrollPositionTop > (channelPositionTop + offset)) {
-        var meepHeight = meepElement.outerHeight(true);
-        this.$window.scrollTop(scrollPositionTop + meepHeight);
-      }
-    }.bind(this));
-    
-    /**
-     * Render meep in this channel if it contains a channel reply
-     */
-    protonet.bind("meep.sent", function(e, meepElement, meepData, instance) {
-      if (meepData.channel_id == this.data.id) {
-        return;
-      }
-      
-      // Already a reply, avoid non-ending loop
-      if (meepData.reply_from) {
-        return;
-      }
-      
-      if ($.inArray(this.data.id, instance.channelReplies) == -1) {
-        return;
-      }
-      
-      var newMeepData = $.extend({}, meepData, {
-        reply_from: meepData.channel_id,
-        channel_id: this.data.id
-      });
-      
-      this._renderMeep(newMeepData, this.channelList, true);
-    }.bind(this));
-    
-    /**
-     * Make sure that the data object is up to date
-     * by tracking incoming and outgoing meeps
-     */
     protonet
+      /**
+       * Render new meep in selected channel
+       * when event is triggered
+       */
+      .bind("meep.send", function(e, dataOrForm, post) {
+        if (!this.isSelected) {
+          return;
+        }
+        this._renderMeep(dataOrForm, this.channelList, post);
+      }.bind(this))
+    
+      /**
+       * Render meep when received
+       */
+      .bind("meep.receive", function(e, meepData) {
+        if (meepData.channel_id != this.data.id) {
+          return;
+        }
+      
+        var instance = this._renderMeep(meepData, this.channelList);
+      
+        this._notifications();
+        this._replyNotifications(meepData, instance);
+      }.bind(this))
+    
+      /**
+       * Set fixed scroll position when user scrolled down in timeline
+       * (eg. to watch a video) while new meep occurs
+       */
+      .bind("meep.rendered", function(e, meepElement, meepData, instance) {
+        if (meepData.channel_id != this.data.id) {
+          return;
+        }
+      
+        var channelPositionTop = this.channelList.offset().top,
+            scrollPositionTop  = this.$window.scrollTop();
+            offset             = 40;
+      
+        if (scrollPositionTop > (channelPositionTop + offset)) {
+          var meepHeight = meepElement.outerHeight(true);
+          this.$window.scrollTop(scrollPositionTop + meepHeight);
+        }
+      }.bind(this))
+    
+      /**
+       * Render meep in this channel if it contains a channel reply
+       */
+      .bind("meep.sent", function(e, meepElement, meepData, instance) {
+        if (meepData.channel_id == this.data.id) {
+          return;
+        }
+      
+        // Already a reply, avoid non-ending loop
+        if (meepData.reply_from) {
+          return;
+        }
+      
+        if ($.inArray(this.data.id, instance.channelReplies) == -1) {
+          return;
+        }
+      
+        var newMeepData = $.extend({}, meepData, {
+          reply_from: meepData.channel_id,
+          channel_id: this.data.id
+        });
+      
+        this._renderMeep(newMeepData, this.channelList, true);
+      }.bind(this))
+    
+      /**
+       * Make sure that the data object is up to date
+       * by tracking incoming and outgoing meeps
+       */
       .bind("meep.sent", function(e, meepElement, meepData, instance) {
         if (meepData.channel_id == this.data.id) {
           this.data.meeps.push(meepData);
@@ -125,27 +125,33 @@ protonet.timeline.Channel.prototype = {
       
       .bind("channel.rendered_more", function(e, channelList, data) {
         Array.prototype.unshift.apply(this.data.meeps, data.meeps || []);
-      }.bind(this));
-    
-    /**
-     * Set tab to active and store state
-     */
-    protonet.bind("channel.change", function(e, channelId) {
-      this.isSelected = channelId == this.data.id;
-      this.toggle();
-    }.bind(this));
-    
-    /**
-     * Init endless scroller and no meeps hint after meeps are rendered
-     */
-    protonet.bind("channel.rendered channel.rendered_more", function(e, channelList, data, instance) {
-      if (instance != this) {
-        return;
-      }
+      }.bind(this))
       
-      this._initEndlessScroller();
-      this._initNoMeepsHint();
-    }.bind(this));
+      /**
+       * Set tab to active and store state
+       */
+      .bind("channel.change", function(e, channelId) {
+        this.isSelected = channelId == this.data.id;
+        this.toggle();
+      }.bind(this))
+    
+      /**
+       * Init endless scroller and no meeps hint after meeps are rendered
+       */
+      .bind("channel.rendered channel.rendered_more", function(e, channelList, data, instance) {
+        if (instance != this) {
+          return;
+        }
+      
+        this._initEndlessScroller();
+        this._initNoMeepsHint();
+      }.bind(this))
+      
+      /**
+       * Update reference to channel link after reordering
+       * since our jquery sortable jquery element destroys the dom strcuture
+       */
+      .bind("channels.reordered", this._getLink.bind(this));
     
     /**
      * Store number of unread meeps/replies in local storage

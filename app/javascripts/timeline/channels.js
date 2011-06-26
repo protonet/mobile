@@ -15,7 +15,6 @@ protonet.timeline.Channels = {
   
   initialize: function(data) {
     this.container          = $("#timeline");
-    this.channelLinks       = $("#channels li>a");
     this.data               = data || [];
     this.subscribedChannels = $.map(this.data, function(channel) { return channel.id; });
     
@@ -42,6 +41,7 @@ protonet.timeline.Channels = {
           data:     { "channel_order[]": channelArray },
           traditional: true
         });
+        protonet.trigger("channels.reordered");
       }
     });
   },
@@ -139,8 +139,7 @@ protonet.timeline.Channels = {
   
   _renderChannelLists: function() {
     this.data.chunk(function(channelData) {
-      var link = this.channelLinks.filter("[data-channel-id='" + channelData.id + "']");
-      new protonet.timeline.Channel(channelData, link).render(this.container);
+      new protonet.timeline.Channel(channelData).render(this.container);
     }.bind(this), function() {
       protonet.trigger("channels.initialized", [this.data]);
     }.bind(this));
