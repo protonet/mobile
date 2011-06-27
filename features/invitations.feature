@@ -20,8 +20,8 @@ Feature: Invitations
     And I press "Send invitation"
     Then I should see "Invitation was successfully created"
     # Invitation mail
-    And "friend@protonet.com" should receive an email with subject "Join the Protonet"
-    When "friend@protonet.com" opens the email with subject "Join the Protonet"
+    And "friend@protonet.com" should receive an email with subject "dudemeister wants you to join the Protonet"
+    When "friend@protonet.com" opens the email with subject "dudemeister wants you to join the Protonet"
     Then they should see "dudemeister invited you to the Protonet" in the email body
     And they should see "Come join us" in the email body
     And they should see /\/join\/(.*){10}/ in the email body
@@ -43,9 +43,12 @@ Feature: Invitations
     And I should not see "Notpublic" within "#channels"
     
   @javascript
-  Scenario: Invitee tries to accept an invitation that has already been accepted 
+  Scenario: Invitee tries to accept an invitation that has already been accepted
     Given an invitation exists with token: "1122334455", email: "friend@protonet.com", channel_ids: "1", user: user "dudemeister", accepted_at: "2011-01-15 10:00:00"
     And I go unauthenticated to the start page
     When I accept the invitation with the token "1122334455"
     Then I should be on the new_user_session page
     And I should see "The invitation token is invalid"
+    
+  @wip
+  Scenario: Send copy of Invitation to Inviter too
