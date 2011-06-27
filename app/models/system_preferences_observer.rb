@@ -7,6 +7,8 @@ class SystemPreferencesObserver < ActiveRecord::Observer
       Network.update_local_from_preferences
     when "custom_css", "browser_title"
       system_preference.destroy if system_preference.value.blank?
+    when "public_host_https"
+      ActionMailer::Base.default_url_options[:protocol] = (SystemPreferences.public_host_https ? 'https' : 'http')
     end
   end
   
