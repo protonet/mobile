@@ -12,7 +12,7 @@ class SystemPublishToWeb
     
     def status
       return false unless Rails.env == 'production'
-      system("#{service_command} status")
+      system(service_command(0, 'status'))
     end
     
     private
@@ -50,14 +50,15 @@ class SystemPublishToWeb
     
     def monitor_service
       return if SystemMonit.exists?(:publish_to_web) && SystemMonit.start(:publish_to_web)
-      start = "#{service_command} start"
-      stop  = "#{service_command} stop"
+      port = self.port
+      start = service_command(port, "start")
+      stop  = service_command(port, "stop")
       pid_file = "#{configatron.current_file_path}/tmp/pids/publish_to_web.pid"
       SystemMonit.add(:publish_to_web, start, stop, pid_file)
     end
     
-    def service_command
-      "#{configatron.current_file_path}/script/init/publish_to_web #{port}"
+    def service_command(port, argument)
+      "#{configatron.current_file_path}/script/init/publish_to_web #{port} #{argument}"
     end
     
   end
