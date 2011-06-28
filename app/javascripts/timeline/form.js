@@ -78,7 +78,7 @@ protonet.timeline.Form = {
   },
   
   _initTextExtension: function() {
-    this.textExtensionInput = new protonet.text_extensions.Input(this.input);
+    this.textExtension = new protonet.text_extensions.Input(this.input);
   },
   
   _initSnapshot: function() {
@@ -101,7 +101,7 @@ protonet.timeline.Form = {
             click: function() {
               button.attr("disabled", "disabled");
               webcam.snap(protonet.config.node_base_url + "/snapshooter", function(photoUrl) {
-                that.textExtensionInput.select(protonet.config.base_url + photoUrl);
+                that.textExtension.select(protonet.config.base_url + photoUrl);
                 modalWindow.hide();
               });
             }
