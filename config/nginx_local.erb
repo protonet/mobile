@@ -105,6 +105,14 @@ http {
           #proxy_cache_valid  404  1m;
         }
         
+        location /snapshooter {
+          proxy_pass http://localhost:8124;
+          
+          #proxy_cache protonet-cache;
+          #proxy_cache_valid  200 302 304  7d;
+          #proxy_cache_valid  404  1m;
+        }
+        
     }
     <% end %>
 }
