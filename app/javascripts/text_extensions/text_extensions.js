@@ -2,7 +2,7 @@
   var queue = [],
       currentChannelId;
   
-  protonet.Notifications
+  protonet
     .bind("channel.change", function(e, channelId) {
       currentChannelId = channelId;
       _renderQueue(channelId);

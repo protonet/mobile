@@ -78,13 +78,13 @@ protonet.text_extensions.Input.prototype = {
           shouldBeIgnored = $.inArray(url, this._ignoreUrls) != -1;
       
       if (!shouldBeIgnored && url.isUrl()) {
-        this._selectUrl(url);
+        this.select(url);
         break;
       }
     }
   },
   
-  _selectUrl: function(url) {
+  select: function(url) {
     this.url = url;
     this._show();
     

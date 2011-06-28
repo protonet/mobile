@@ -47,6 +47,7 @@ GENERAL
     cd dashboard
     mkdir -p public/externals/image_proxy
     mkdir -p public/externals/screenshots
+    mkdir -p public/externals/snapshots
     git submodule init
     git submodule update
 

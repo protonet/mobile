@@ -96,6 +96,11 @@ button:hover {
   background: rgb(255, 127, 49);
 }
 
+button:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
 button::-moz-focus-inner {
   padding: 0;
   border: 0 none;

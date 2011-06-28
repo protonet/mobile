@@ -60,9 +60,6 @@
   position: absolute;
   left: -54px;
   top: 5px;
-  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   height: 46px;
   width: 21px;
 }
@@ -70,4 +67,45 @@
 #message-form .avatar img {
   background: rgb(255, 255, 255);
   padding: 5px;
+}
+
+.take-snapshot:before,
+.take-snapshot:after {
+  content: "";
+  left: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+}
+
+.take-snapshot:after {
+  opacity: 0.5;
+  background: url(/img/icn_camera.png) no-repeat 3px 2px;
+}
+
+.take-snapshot:hover:after {
+  opacity: 1;
+}
+
+.take-snapshot:before {
+  border: 1px dotted #999;
+  background: #fff;
+}
+
+.take-snapshot,
+#message-form .avatar {
+  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.take-snapshot {
+  top: 56px;
+  left: -39px;
+  width: 9px;
+  height: 24px;
+  position: absolute;
+  background: #fff;
+  text-indent: -9999px;
 }

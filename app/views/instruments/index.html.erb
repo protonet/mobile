@@ -16,6 +16,7 @@
     <a href="/users/<%= current_user.id %>" class="avatar" target="_blank">
       <%= avatar(current_user, :width => 36, :height => 36, :title => "That's you!") %>
     </a>
+    <a class="take-snapshot" title="Attach a snapshot!">Take a snapshot!</a>
   <%- end -%>
 
   <div id="channels">
@@ -27,7 +28,7 @@
             :class => c.locally_hosted? ? (c.global? ? 'global-hosted' : 'local') : 'global',
             'data-channel-id' => c.id
           } %>
-				</li>
+        </li>
       <%- end -%>
     </ul>
     <div id="manage-channels">

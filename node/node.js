@@ -75,6 +75,9 @@ http.createServer(function(request, response) {
     case "image_proxy":
       require("./tasks/image_proxy").proxy(params, headers, response);
       break;
+    case "snapshooter":
+      require("./tasks/snapshot").save(request, response);
+      break;
     default:
       response.writeHead(200, {'Content-Type': 'text/plain'});
       response.end('WTF?\n');

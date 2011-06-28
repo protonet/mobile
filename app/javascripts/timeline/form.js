@@ -1,5 +1,6 @@
 //= require "../controls/inline_autocompleter.js"
 //= require "../utils/smilify.js"
+//= require "../lib/webcam.js"
 
 
 /**
@@ -20,6 +21,7 @@ protonet.timeline.Form = {
     
     this._initAutocompleter();
     this._initTextExtension();
+    this._initSnapshot();
     
     this._observe();
   },
@@ -76,7 +78,38 @@ protonet.timeline.Form = {
   },
   
   _initTextExtension: function() {
-    new protonet.text_extensions.Input(this.input);
+    this.textExtensionInput = new protonet.text_extensions.Input(this.input);
+  },
+  
+  _initSnapshot: function() {
+    if (!window.webcam) {
+      return;
+    }
+    
+    var modalWindow, that = this;
+    this.form.delegate("a.take-snapshot", "click", function() {
+      webcam.set_swf_url("/flash/webcam.swf");
+      webcam.set_shutter_sound(true, "/sounds/shutter.mp3");
+      webcam.set_api_url();
+      webcam.set_hook("onComplete", function(response) { alert(response); });
+      modalWindow = modalWindow || new protonet.ui.ModalWindow("snapshot-page");
+      
+      var container = $("<div>"),
+          lineBreak = $("<br>"),
+          button    = $("<button>", {
+            text: "Snap!",
+            click: function() {
+              button.attr("disabled", "disabled");
+              webcam.snap(protonet.config.node_base_url + "/snapshooter", function(photoUrl) {
+                that.textExtensionInput.select(protonet.config.base_url + photoUrl);
+                modalWindow.hide();
+              });
+            }
+          });
+      
+      container.append(webcam.get_html(400, 300, 800, 600)).append(lineBreak).append(button);
+      modalWindow.headline($(this).text()).content(container).show();
+    });
   },
   
   _observe: function() {
@@ -139,14 +172,14 @@ protonet.timeline.Form = {
     /**
      * Update socket id
      */
-    protonet.Notifications.bind("socket.update_id", function(e, data) {
+    protonet.bind("socket.update_id", function(e, data) {
       this.socketIdInput.val(data.socket_id);
     }.bind(this));
     
     /**
      * Create replies on demand
      */
-    protonet.Notifications.bind("form.create_reply", function(e, userName) {
+    protonet.bind("form.create_reply", function(e, userName) {
       var value = this.input.focus().val(),
           reply = "@" + userName + " ";
       this.input.val(value + ((value.slice(-1) == " " || !value.length) ? "" : " ") + reply);
@@ -155,7 +188,7 @@ protonet.timeline.Form = {
     /**
      * Submit form with custom message or textExtension
      */
-    protonet.Notifications.bind("form.custom_submit", function(e, message, textExtension) {
+    protonet.bind("form.custom_submit", function(e, message, textExtension) {
       if (message) {
         this.input.focus().val(message);
       }
@@ -165,7 +198,7 @@ protonet.timeline.Form = {
       this.form.submit();
     }.bind(this));
     
-    protonet.Notifications.bind("form.fill", function(e, message, mark) {
+    protonet.bind("form.fill", function(e, message, mark) {
       var value = this.input.focus().val();
       // add a white space before message if neccessary
       message = ((value.slice(-1) == " " || !value.length) ? "" : " ") + message;
@@ -179,7 +212,7 @@ protonet.timeline.Form = {
     /**
      * Update input value
      */
-    protonet.Notifications.bind("meep.error", function(e, element, data) {
+    protonet.bind("meep.error", function(e, element, data) {
       var value = this.input.focus().val();
       if (!$.trim(value)) {
         this.input.val(data.message);
@@ -220,8 +253,8 @@ protonet.timeline.Form = {
     
     this._typingEnd();
     
-    protonet.Notifications.trigger("meep.send", [this.form, true]);
-    protonet.Notifications.trigger("form.submitted", [this.form]);
+    protonet.trigger("meep.send", [this.form, true]);
+    protonet.trigger("form.submitted", [this.form]);
     
     this.input.val("");
   },
@@ -229,7 +262,7 @@ protonet.timeline.Form = {
   _typingStart: function() {
     if (!this.typing) {
       this.typing = true;
-      protonet.Notifications.trigger("socket.send", {
+      protonet.trigger("socket.send", {
         operation: "user.typing",
         payload: { user_id: protonet.user.data.id }
       });
@@ -243,7 +276,7 @@ protonet.timeline.Form = {
     if (this.typing) {
       this.typing = false;
       clearTimeout(this._typingTimeout);
-      protonet.Notifications.trigger("socket.send", {
+      protonet.trigger("socket.send", {
         operation: "user.typing_end",
         payload: { user_id: protonet.user.data.id }
       });

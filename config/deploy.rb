@@ -28,6 +28,7 @@ namespace :deploy do
     run "mkdir -p #{shared_path}/avatars; chmod 770 #{shared_path}/avatars"
     run "mkdir -p #{shared_path}/pids; chmod 770 #{shared_path}/pids"
     run "mkdir -p #{shared_path}/externals/screenshots"
+    run "mkdir -p #{shared_path}/externals/snapshots"
     run "mkdir -p #{shared_path}/externals/image_proxy"
     run "mkdir -p #{shared_path}/system"
     run "mkdir -p #{shared_path}/config/monit.d"

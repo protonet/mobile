@@ -31,6 +31,7 @@ Dashboard::Application.configure do
   configatron.images.externals_path = "public/externals"
   FileUtils.mkdir_p(configatron.images.externals_path + "/image_proxy")
   FileUtils.mkdir_p(configatron.images.externals_path + "/screenshots")
+  FileUtils.mkdir_p(configatron.images.externals_path + "/snapshots")
   
   configatron.socket.port = 5001
   configatron.xhr_streaming.port = 8001
