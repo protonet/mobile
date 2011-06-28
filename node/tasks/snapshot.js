@@ -3,7 +3,7 @@ var sys         = require("sys"),
     PUBLIC_DIR  = "./public";
 
 exports.save = function(request, response) {
-  var path  = "/externals/snapshots/" + new Date().getTime() + ".jpg",
+  var path  = "/externals/snapshots/snapshot_" + new Date().getTime() + ".jpg",
       image = fs.createWriteStream(PUBLIC_DIR + path);
   request.on("data", function(chunk) {
     image.write(chunk);

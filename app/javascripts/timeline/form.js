@@ -101,8 +101,9 @@ protonet.timeline.Form = {
             click: function() {
               button.attr("disabled", "disabled");
               webcam.snap(protonet.config.node_base_url + "/snapshooter", function(photoUrl) {
-                that.textExtension.select(protonet.config.base_url + photoUrl);
                 modalWindow.hide();
+                that.textExtension.select(protonet.config.base_url + photoUrl);
+                that.input.focus();
               });
             }
           });
