@@ -19,7 +19,7 @@ protonet.dispatcher = {
       }.bind(this))
       
       .bind("socket.receive", function(e, data) {
-        this.receive(data || "");
+        this.receive(data);
       }.bind(this))
       
       .bind("socket.ping_received", function() {
