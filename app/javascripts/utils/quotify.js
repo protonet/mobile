@@ -6,7 +6,7 @@
  *    protonet.utils.quotify("{quote}echo 'hello';{quote}");
  */
 protonet.utils.quotify = (function() {
-  var REG_EXP = /([\{\[]quote[\}\]])((.|\n)+?)([\{\[]\/?quote[\}\]])/g;
+  var REG_EXP = /([\{\[]quote[\}\]])([\s\S]+)([\{\[]\/?quote[\}\]])/g;
   
   return function(str) {
     return str.replace(REG_EXP, function(match, $1, $2) {

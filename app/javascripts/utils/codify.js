@@ -8,7 +8,7 @@
  *    protonet.utils.codify("{code}echo 'hello';{code}");
  */
 protonet.utils.codify = (function() {
-  var REG_EXP = /([\{\[]code[\}\]])((.|\n)+?)([\{\[]\/?code[\}\]])/g;
+  var REG_EXP = /([\{\[]code[\}\]])([\s\S]+)([\{\[]\/?code[\}\]])/g;
   
   return function(str) {
     return str.replace(REG_EXP, function(match, $1, $2) {
