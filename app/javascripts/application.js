@@ -1,5 +1,5 @@
 //= require "lib/shimprove.1-0-1.min.js"
-//= require "lib/jquery-1.6.1.min.js"
+//= require "lib/jquery-1.6.2.min.js"
 //= require "lib/jquery-ui-1.8.11.custom.min.js"
 //= require "lib/json.min.js"
 //= require "lib/swfobject-2.2.js"
