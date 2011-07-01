@@ -107,20 +107,27 @@ protonet.text_extensions.Input.prototype = {
   
   _request: function() {
     this._cancelRequest = false;
-    this.provider.loadData(this.originalUrl, this._render.bind(this), this._ignoreUrlAndReset.bind(this));
+    this.provider.loadData(this.originalUrl, function(data) {
+      if (!this._cancelRequest) {
+        data = $.extend({}, data, { type: this.providerName, url: this.originalUrl });
+        this.render(data);
+      }
+    }.bind(this), this._ignoreUrlAndReset.bind(this));
   },
   
-  _render: function(data) {
-    if (this._cancelRequest) {
-      return;
-    }
-    
-    this.data = $.extend({}, data, { type: this.providerName, url: this.originalUrl });
-    this.renderer = new protonet.text_extensions.render(this.container, this.data);
-    
-    this.setInput(this.data);
-    this.container.removeClass("loading-bar");
+  render: function(data) {
+    this._removeRenderer();
+    this.data = data;
+    this.renderer = new protonet.text_extensions.render(this.container, data);
+    this.setInput(data);
+    this.container.removeClass("loading-bar").show();
     this.expand();
+  },
+  
+  _removeRenderer: function() {
+    if (this.renderer && this.renderer.resultsElement) {
+      this.renderer.resultsElement.remove();
+    }
   },
   
   _show: function() {
@@ -147,10 +154,7 @@ protonet.text_extensions.Input.prototype = {
       opacity: 0
     }, 200, function() {
       this.container.hide();
-      
-      if (this.renderer && this.renderer.resultsElement) {
-        this.renderer.resultsElement.remove();
-      }
+      this._removeRenderer();
     }.bind(this));
   },
   
@@ -174,6 +178,14 @@ protonet.text_extensions.Input.prototype = {
   
   setInput: function(value) {
     this.hiddenInput.val(value && JSON.stringify(value));
+  },
+  
+  getInput: function() {
+    try {
+      return JSON.parse(this.hiddenInput.val());
+    } catch(e) {
+      return null;
+    }
   },
   
   reset: function() {

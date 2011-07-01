@@ -3,7 +3,7 @@
 <%= form_tag(system_preferences_update_path) do %>
   <%= hidden_field_tag(:anchor, 'captive_settings') %>
   <%= text_area_tag 'preferences[captive_portal_greeting]', SystemPreferences.captive_portal_greeting, :rows => 10, :cols => 45 %>
-  <%= submit_tag %>
+  <%= button('Save') %>
 <% end %>
 <br />
 <% captive_interfaces = SystemBackend.get_interfaces.collect {|i| i.name} %>

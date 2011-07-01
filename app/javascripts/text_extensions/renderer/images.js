@@ -4,7 +4,7 @@ protonet.text_extensions.render.images = function(data) {
   data.imageTitle = data.imageTitle || [];
   data.imageHref = data.imageHref || [];
   
-  $.each(data.image, function(i) {
+  $.each(data.image.slice(0, protonet.text_extensions.config.MAX_IMAGES), function(i) {
     images = images.add(
       protonet.text_extensions.render.image({
         image:              data.image[i],

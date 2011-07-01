@@ -88,27 +88,42 @@ protonet.timeline.Form = {
     
     var modalWindow, that = this;
     this.form.delegate("a.take-snapshot", "click", function() {
+      var container, button;
+      
       webcam.set_swf_url("/flash/webcam.swf");
       webcam.set_shutter_sound(true, "/sounds/shutter.mp3");
       webcam.set_api_url();
-      webcam.set_hook("onComplete", function(response) { alert(response); });
       modalWindow = modalWindow || new protonet.ui.ModalWindow("snapshot-page");
       
-      var container = $("<div>"),
-          lineBreak = $("<br>"),
-          button    = $("<button>", {
-            text: "Snap!",
-            click: function() {
-              button.attr("disabled", "disabled");
-              webcam.snap(protonet.config.node_base_url + "/snapshooter", function(photoUrl) {
-                modalWindow.hide();
-                that.textExtension.select(protonet.config.base_url + photoUrl);
-                that.input.focus();
+      container = $("<div>");
+      button    = $("<button>", {
+        text:  "Snap!",
+        click: function() {
+          button.addClass("loading");
+          webcam.snap(protonet.config.node_base_url + "/snapshooter", function(photoUrl) {
+            modalWindow.hide();
+            photoUrl = protonet.config.base_url + photoUrl;
+            var oldTextExtension = that.textExtension.getInput(),
+                newTextExtension = { type: "snapshot", url: photoUrl };
+            if (oldTextExtension && oldTextExtension.type === newTextExtension.type) {
+              $.extend(newTextExtension, {
+                imageHref: $.makeArray(oldTextExtension.imageHref).concat([photoUrl]),
+                image:     $.makeArray(oldTextExtension.image).concat([photoUrl]),
+                title:    "Snapshots by @" + protonet.config.user_name
+              });
+            } else {
+              $.extend(newTextExtension, {
+                imageHref:  photoUrl,
+                image:      photoUrl,
+                title:      "Snapshot by @" + protonet.config.user_name
               });
             }
+            that.textExtension.render(newTextExtension);
+            that.input.focus();
           });
-      
-      container.append(webcam.get_html(400, 300, 800, 600)).append(lineBreak).append(button);
+        }
+      });
+      container.append(webcam.get_html(500, 350)).append(button);
       modalWindow.headline($(this).text()).content(container).show();
     });
   },

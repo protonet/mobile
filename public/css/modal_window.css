@@ -258,9 +258,8 @@ input.search {
   right: 0;
 }
 
-.snapshot-page button {
-  margin-top: 5px;
-  font-size: 18px;
+.snapshot-page .modal-window-content button {
+  margin-top: 10px;
 }
 
 .snapshot-page .modal-window-content {
@@ -268,5 +267,8 @@ input.search {
 }
 
 .snapshot-page embed {
-  margin-top: 10px;
+  display: block;
+  margin: 10px auto 0;
+  border: 3px solid;
+  border-color: #666 #ccc #ccc #666;
 }
