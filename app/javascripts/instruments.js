@@ -7,6 +7,7 @@
 //= require "effects/clouds.js"
 //= require "controls/file_widget.js"
 //= require "controls/user_widget.js"
+//= require "controls/network_user_widget.js"
 //= require "controls/pretty_date.js"
 //= require "platforms/fluid.js"
 //= require "platforms/prism.js"
@@ -33,6 +34,11 @@ $(function() {
   if (protonet.config.show_file_widget) {
     new protonet.controls.FileWidget();
   }
+
+  if (protonet.config.show_user_widget) {
+    new protonet.controls.NetworkUserWidget();
+  }
+
   
   if (protonet.config.show_clouds) {
     // Frickin' stunning cloud graphics (makes your squirrel run in circles!!)

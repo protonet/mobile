@@ -54,3 +54,7 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
     # the second user should now be alone
     Given I am using the second browser
       Then I should not see "dudemeister" online in the user widget
+
+  @wip
+  @javascript
+  Scenario: Adding a new channel should be highlighted after creation
