@@ -8,5 +8,6 @@ protonet.text_extensions.config = {
   HOVER_IMAGE_SIZE:       {
     width:    320,
     height:   240
-  }
+  },
+  MAX_IMAGES: 10
 };

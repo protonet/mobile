@@ -38,7 +38,7 @@ protonet.text_extensions.render = (function() {
   var mediaTypeDetection = {
     flash:    function(data) { return data.flash && typeof(data.flash) == "string"; },
     image:    function(data) { return data.image && typeof(data.image) == "string"; },
-    images:   function(data) { return $.isArray(data.image) && data.image.length; },
+    images:   function(data) { return $.isArray(data.image) && data.image; },
     iframe:   function(data) { return data.iframe && typeof(data.iframe) == "string"; },
     code:     function(data) { return data.code && typeof(data.code) == "string"; },
     codes:    function(data) { return $.isArray(data.code) && data.code.length; }
