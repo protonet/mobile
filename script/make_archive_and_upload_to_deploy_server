@@ -60,7 +60,7 @@ tar -pczf $BABUSHKA_ARCHIVE babushka/
 #  get the deployer
 cd /tmp
 rm -rf deployer
-git clone git@github.com:philly-mac/deploy.git deployer
+git clone git@github.com:protonet/deploy.git deployer
 rm -rf deployer/.git
 rm -rf deployer/Gemfile.lock
 
