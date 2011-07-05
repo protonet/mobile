@@ -199,6 +199,7 @@ protonet.controls.FileWidget.prototype = {
     }.bind(this);
     
     this.uploadContextMenu.bind("open", refresh).bind("close", refresh);
+    this.uploadContextMenu.create();
   },
   
   _initFileUpload: function() {

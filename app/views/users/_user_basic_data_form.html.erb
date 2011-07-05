@@ -4,8 +4,8 @@
   <fieldset>
     <%= hidden_field_tag :anchor, anchor %>
     <%= f.hidden_field :id, { :value => user.id, :id => "user-id-#{user.id}" } %>
-    <%= f.text_field :login, { :value => user.login, :id => "user-login-#{user.id}", :title => "Login of the user…" } %><br>
-    <%= f.text_field :email, { :value => user.email, :id => "user-email-#{user.id}", :title => "E-Mail of the user…" } %>
+    <%= f.text_field :login, { :value => user.login, :id => "user-login-#{user.id}", :placeholder => "Login of the user…" } %><br>
+    <%= f.text_field :email, { :value => user.email, :id => "user-email-#{user.id}", :placeholder => "E-Mail of the user…" } %>
     <%= button "Update" %>
   </fieldset>
 <% end %>

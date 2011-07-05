@@ -13,7 +13,7 @@
     
     <p>Password:</p>
     <div>
-      <%= text_field_tag "preferences[password][#{interface}]", SystemPreferences.wifi[interface]["password"], {:size => 12, :title => "password (empty for unsecured)"} %>
+      <%= text_field_tag "preferences[password][#{interface}]", SystemPreferences.wifi[interface]["password"], {:size => 12, :placeholder => "password (empty for unsecured)"} %>
     </div>
     <p>Share internet Connection: <bold><%= false && SystemConnectionSharing.status(interface) %></bold></p>
     <div>

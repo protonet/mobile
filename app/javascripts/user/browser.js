@@ -1,6 +1,6 @@
 protonet.user.Browser = {
   SUPPORTS_HTML5_MULTIPLE_FILE_UPLOAD: function() {
-    var supportsMultipleAttribute = "multiple" in $('<input type="file" />')[0],
+    var supportsMultipleAttribute = "multiple" in $('<input type="file">')[0],
         supportsXhrUpload = "upload" in new XMLHttpRequest();
     
     return supportsXhrUpload && supportsMultipleAttribute;
@@ -113,5 +113,23 @@ protonet.user.Browser = {
     }
     this.IS_TOUCH_DEVICE = function() { return returnValue; };
     return returnValue;
-  }
+  },
+  
+  /**
+   * Whether the browser supports HTML5 placeholder attributes
+   * <input placeholder="Enter Text">
+   */
+  SUPPORTS_PLACEHOLDER: function() {
+    return "placeholder" in document.createElement("input");
+  },
+  
+  HAS_FLASH: (function() {
+    var cache = {};
+    return function(version) {
+      if (typeof(cache[version]) === "undefined") {
+        cache[version] = !!window.swfobject && swfobject.hasFlashPlayerVersion(version + "");
+      }
+      return cache[version];
+    };
+  })()
 };

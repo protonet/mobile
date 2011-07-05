@@ -1,36 +1,25 @@
-protonet.utils.InlineHint = function(input, text) {
-  if (!input || !input.length) {
-    throw new Error("InlineHint: Not able to find input element!");
-  }
-  if (!text) {
-    throw new Error("InlineHint: Text is empty or not set!");
-  }
+protonet.utils.InlineHint = (function() {
+  var CLASS_NAME = "inline-hint";
   
-  this._input = input;
-  this._text = text;
-  this._form = this._input.parents("form");
-  
-  this._set();
-  this._observe();
-};
-
-protonet.utils.InlineHint.prototype = {
-  CLASS_NAME: "inline-hint",
-  
-  _observe: function() {
-    this._form.submit(this._unset.bind(this));
-    this._input.focus(this._unset.bind(this)).blur(this._set.bind(this));
-  },
-  
-  _set: function() {
-    if (!this._input.val() || this._input.val() == this._text) {
-      this._input.val(this._text).addClass(this.CLASS_NAME);
+  return function(input, hint) {
+    var form = this._input.parents("form");
+    
+    var unset = function() {
+      if (input.val() == hint) {
+        input.val("").removeClass(CLASS_NAME);
+      }
+    };
+    
+    var set = function() {
+      if (!input.val() || input.val() == hint) {
+        input.val(hint).addClass(CLASS_NAME);
+      }
+    };
+    
+    if (form) {
+      form.submit(unset);
     }
-  },
-  
-  _unset: function() {
-    if (this._input.val() == this._text) {
-      this._input.val("").removeClass(this.CLASS_NAME);
-    }
-  }
-};
+    
+    input.blur(set).focus(unset);
+  };
+})();

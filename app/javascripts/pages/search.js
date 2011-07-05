@@ -5,10 +5,10 @@
 protonet.pages.Search = Class.create(protonet.Page, {
   initialize: function($super) {
     this.form        = $("#search-form");
-    this.input       = this.form.find("input.search");
+    this.input       = this.form.find("input[type=search]");
     
     this.meepList    = $("<ul>",    { "class": "meeps" });
-    this.bigInput    = $("<input>", { "class": "search" });
+    this.bigInput    = $("<input>", { "type":  "search" });
     
     $super("search", {
       url:            "/search?search_term={state}",

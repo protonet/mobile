@@ -20,7 +20,8 @@ protonet.utils.emojify = (function() {
     }
     // fix ::
     str = str.replace(REG_EXP_TEMPLATE, function(original, $1) {
-      if(DEFINED_EMOJIS.match(" " + $1 + " ")) {
+      $1 = $1.toLowerCase();
+      if (DEFINED_EMOJIS.indexOf(" " + $1 + " ") !== -1) {
         return new protonet.utils.Template("emoji-template", {
           type:     $1,
           shortcut: (":" + $1 + ":")

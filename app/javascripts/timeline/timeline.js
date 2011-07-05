@@ -47,5 +47,5 @@ protonet.timeline = {
   }
 };
 
-//= require "form.js"
+//= require "form/form.js"
 //= require "channels.js"

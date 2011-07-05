@@ -1,12 +1,15 @@
 //= require "../utils/unshort_url.js"
 
+/**
+ * @events
+ *    text_extension_input.render - trigger this with text extension data in order to attach a text extension
+ */
 protonet.text_extensions.Input = function(input) {
   this.input = input;
-  this.providers = protonet.text_extensions.provider;
-  this.container = $("#text-extension-preview");
-  this.hiddenInput = $("#text-extension-input");
-  this.removeLink = this.container.find("a.remove");
-  this._ignoreUrls = [];
+  this.container    = $("#text-extension-preview");
+  this.hiddenInput  = $("#text-extension-input");
+  this.removeLink   = this.container.find("a.remove");
+  this._ignoreUrls  = [];
   
   this.regExp = /(\b(((https?|ftp):\/\/)|(www\.))[-A-Z0-9+&@#\/%?=~_|!:,.;\[\]]*[-A-Z0-9+&@#\/%=~_|])/gi;
   
@@ -20,8 +23,12 @@ protonet.text_extensions.Input.prototype = {
       .bind("keyup", this._keyUp.bind(this))
       .bind("dragenter", this._dragEnter.bind(this))
       .bind("drop", this._drop.bind(this));
+    
     this.removeLink.bind("click", this._cancel.bind(this));
-    protonet.Notifications.bind("form.submitted", this._submitted.bind(this));
+    
+    protonet
+      .bind("form.submitted", this._submitted.bind(this))
+      .bind("text_extension_input.render", function(e, data) { this.render(data); }.bind(this));
   },
   
   _paste: function() {
@@ -96,11 +103,11 @@ protonet.text_extensions.Input.prototype = {
   },
   
   _getDataProvider: function(url) {
-    $.each(this.providers, function(key, value) {
+    $.each(protonet.text_extensions.provider, function(key, value) {
       if (value.REG_EXP.test(url)) {
         this.provider = value;
         this.providerName = key;
-        return false;
+        return false; // equivalent to "break;"
       }
     }.bind(this));
   },
@@ -178,14 +185,6 @@ protonet.text_extensions.Input.prototype = {
   
   setInput: function(value) {
     this.hiddenInput.val(value && JSON.stringify(value));
-  },
-  
-  getInput: function() {
-    try {
-      return JSON.parse(this.hiddenInput.val());
-    } catch(e) {
-      return null;
-    }
   },
   
   reset: function() {

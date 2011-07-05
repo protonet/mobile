@@ -2,7 +2,7 @@
 
 protonet.text_extensions.provider.Gist = {
   REG_EXP:  /gist\.github\.com\/(\d+)/,
-  TXT_URL:  "https://gist.github.com/{id}.txt",
+  TXT_URL:  "https://raw.github.com/gist/{id}",
   
   loadData: function(url, onSuccess, onFailure) {
     var id = url.match(this.REG_EXP)[1],

@@ -22,24 +22,28 @@
  *    });
  */
 
-protonet.ui.ContextMenu = function(selector, options) {
+protonet.ui.ContextMenu = function(selector, options, cssClass) {
   this.selector = selector;
-  this.options = options;
-  
-  this.create();
+  this.options  = options;
+  this.list     = $("<menu>", { "class": "context-menu " + cssClass });
   this.observe();
 };
 
 protonet.ui.ContextMenu.prototype = {
   create: function() {
+    if (this.created) {
+      return;
+    }
+    
+    this.created  = true;
     var template  = $("<li>",   { tabindex: -1 });
-    this.list     = $("<menu>", { "class": "context-menu" });
+    var list      = this.list;
     
     $.each(this.options, function(name, callback) {
-      template.clone().html(name).appendTo(this.list).data("callback", callback);
-    }.bind(this));
+      template.clone().html(name).appendTo(list).data("callback", callback);
+    });
     
-    this.list.appendTo("body");
+    list.appendTo("body");
   },
   
   observe: function() {
@@ -53,6 +57,8 @@ protonet.ui.ContextMenu.prototype = {
         }.bind(this);
     
     root.delegate(this.selector, "click", function(event) {
+      this.create();
+      
       var target = $(event.currentTarget);
       this.position(target);
       

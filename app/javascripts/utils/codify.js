@@ -10,9 +10,14 @@
 protonet.utils.codify = (function() {
   var REG_EXP = /([\{\[]code[\}\]])([\s\S]+)([\{\[]\/?code[\}\]])/g;
   
+  function trimEmptyLines(str) {
+    return str.replace(/^\s*?\n+/g, "").replace(/\s+$/g, "");
+  }
+  
   return function(str) {
     return str.replace(REG_EXP, function(match, $1, $2) {
-      return "<pre>" + prettyPrintOne($.trim($2)) + "</pre>";
+      $2 = trimEmptyLines($2);
+      return "<pre>" + prettyPrintOne($2) + "</pre>";
     });
   };
 })();

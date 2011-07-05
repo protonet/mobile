@@ -45,7 +45,7 @@ protonet.user = {
     // U have to check it out http://grooveshark.com/#/s/The+Best+Day/2fZAWg
     // kkthxbai
     var contextOptions = {
-      "send reply": function(link, closeContextMenu) {
+      "send @reply": function(link, closeContextMenu) {
         var user = this.usersData[+link.data("user-id")];
         if (user) {
           protonet.Notifications.trigger("form.create_reply", user.name);

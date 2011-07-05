@@ -12,28 +12,28 @@
       <legend>Get started by <strong>signing up</strong> (it's free)</legend>
       <div>
         <%= f.label :login, "username" %>
-        <%= f.text_field :login, :title => "user name" %>
+        <%= f.text_field :login, :placeholder => "user name" %>
         <span class="hint">min. 3 characters</span>
       </div>
       <div>
         <%= f.label :email, "email" %>
-        <%= f.text_field :email, :title => "email" %>
+        <%= f.text_field :email, :placeholder => "email" %>
         <span class="hint">a valid email address</span>
       </div>
       <div>
         <%= f.label :password, "password" %>
-        <%= f.password_field :password, :title => "password" %>
+        <%= f.password_field :password, :placeholder => "password" %>
         <span class="hint">min. 6 characters</span>
       </div>
       <div>
         <%= f.label :password_confirmation, "password confirmation" %>
-        <%= f.password_field :password_confirmation, :title => "password" %>
+        <%= f.password_field :password_confirmation, :placeholder => "password" %>
         <span class="hint">repeat for confirmation</span>
       </div>
       <div>
         <!-- TODO: Enable this -->
         <%#= f.label :signup_contact, "social media profile or email" %>
-        <%#= f.text_field :signup_contact, :title => "social media profile or email" %>
+        <%#= f.text_field :signup_contact, :placeholder => "social media profile or email" %>
         <!-- <span class="hint">(eg. http://www.facebook.com/john.doe)</span> -->
       </div>
       <div>
@@ -54,11 +54,11 @@
     <%- end %>
     <div>
       <%= label :login, :login, "login" %>
-      <%= text_field :user, :login, :value => @login, :title => "user name", :id => "login_login" %>
+      <%= text_field :user, :login, :value => @login, :placeholder => "user name", :id => "login_login" %>
     </div>
     <div>
       <%= label :login, :password, "password" %>
-      <%= password_field :user, :password, :value => nil, :title => "password", :id => "login_password" %>
+      <%= password_field :user, :password, :value => nil, :placeholder => "password", :id => "login_password" %>
     </div>
     <div>
       <%= check_box :user, :remember_me %>

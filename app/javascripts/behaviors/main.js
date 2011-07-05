@@ -1,8 +1,4 @@
 protonet.utils.Behaviors.add({
-  "input[type=text], input[type=password][title], textarea[title]": function(input) {
-    new protonet.utils.InlineHint(input, input.attr("title"));
-  },
-  
   "a[data-lightbox]:click": function(link, event) {
     var headline = link.data("lightbox-title");
     $.get(link.attr("href"), function(response) {
@@ -53,6 +49,16 @@ if (protonet.user.Browser.IS_TOUCH_DEVICE()) {
       $(document).one("touchstart", function() {
         element.trigger("blur");
       });
+    }
+  });
+  
+}
+
+if (!protonet.user.Browser.SUPPORTS_PLACEHOLDER()) {
+  
+  protonet.utils.Behaviors.add({
+    "input[placeholder], textarea[placeholder]": function(input) {
+      new protonet.utils.InlineHint(input, input.attr("placeholder"));
     }
   });
   

@@ -151,7 +151,7 @@
 	<div id="network" style="float:left;">
 	  <form id="network-search" action="/network/search" method="post">
 	    <fieldset>
-	      <input type="text" value="<%= params[:description] %>" name="description" title="search for networks ..."/>
+	      <input type="text" value="<%= params[:description] %>" name="description" placeholder="search for networks ..."/>
 	    </fieldset>
 	  </form>
 
@@ -170,9 +170,9 @@
 	  <div id="create" class="create section hidden">
 	    <%= form_for :network, :url => networks_path, :action => 'post', :html => { :id => "new-network-form" } do |f| -%>
 	      <fieldset>
-	        <%= f.text_field :name, { :title => 'Name of the network…' } %>
-	        <%= f.text_field :description, { :title => 'Description of the network…' } %>
-	        <%= f.text_field :supernode, { :title => 'What is the address of this nodes management…' } %>
+	        <%= f.text_field :name, { :placeholder => 'Name of the network…' } %>
+	        <%= f.text_field :description, { :placeholder => 'Description of the network…' } %>
+	        <%= f.text_field :supernode, { :placeholder => 'What is the address of this nodes management…' } %>
 	        <%= button 'Add' %>
 	      </fieldset>
 	    <%- end -%>

@@ -95,20 +95,20 @@
   overflow-y: auto;
 }
 
-input.search {
-  border-width: 3px;
+input[type=search] {
+  border: 3px solid;
+  border-color: #777 #ccc #ccc #777;
   padding: 5px 27px 5px 5px;
   font-size: 14px;
   width: 182px;
   background: #fff url(../img/icn_search.png) 190px center no-repeat;
-  -webkit-appearance: none;
 }
 
 .search-page h2 {
   text-align: center;
 }
 
-.search-page input.search {
+.search-page input[type=search] {
   width: 616px;
   background-position: 624px;
 }
@@ -127,7 +127,7 @@ input.search {
   margin-bottom: 15px;
 }
 
-.modal-window-dialog.loading input.search {
+.modal-window-dialog.loading input[type=search] {
   background-image: url(../img/icn_loading.gif);
 }
 
@@ -258,6 +258,8 @@ input.search {
   right: 0;
 }
 
+/* =MODAL WINDOW: SNAPSHOT
+=========================================================================== */
 .snapshot-page .modal-window-content button {
   margin-top: 10px;
 }

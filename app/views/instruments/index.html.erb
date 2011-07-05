@@ -7,8 +7,15 @@
     <%= f.hidden_field(:author, :value => current_user.display_name) %>
     <%= f.hidden_field(:text_extension, :id => 'text-extension-input', :value => "", :autocomplete => "off") %>
     <div id="textarea-wrapper">
-      <%= f.text_area(:message, :id => 'message', :title => message_hint) %>
-      <input type="submit" id="submit-message" value="" title="Send message [ENTER]">
+      <div id="textarea-wrapper-inner">
+        <menu>
+          <li data-extension="smiley">Insert emoticon</li>
+          <li data-extension="snapshot">Insert snapshot</li>
+          <li data-extension="file">Insert file</li>
+        </menu>
+        <%= f.text_area(:message, :id => 'message', :placeholder => message_hint) %>
+        <input type="submit" id="submit-message" value="" title="Send message [ENTER]">
+      </div>
       <output id="text-extension-preview">
         <a href="#" title="Delete attachment [ESC]" class="hint remove">remove <strong>x</strong></a>
       </output>
@@ -16,10 +23,9 @@
     <a href="/users/<%= current_user.id %>" class="avatar" target="_blank">
       <%= avatar(current_user, :width => 36, :height => 36, :title => "That's you!") %>
     </a>
-    <a class="take-snapshot" title="Attach a snapshot!">Take a snapshot!</a>
   <%- end -%>
 
-  <div id="channels">
+  <nav id="channels">
     <ul>
       <%- @channels.each_with_index do |c, index| -%>
         <li>
@@ -35,7 +41,7 @@
       <%= link_to "invite", new_invitation_path, "data-lightbox" => "true", "data-lightbox-title" => "Invite your awesome buddy!" if permitted_to?(:create, :invitations) %>
       <%= link_to "add/manage channels", "/channels" if permitted_to?(:create, :listens) or permitted_to?(:create, :channels) %>
     </div>
-  </div>
+  </nav>
   <output id="timeline"></output>
   <div id="timeline-loading-indicator" class="meep-loading-indicator"></div>
 </section>

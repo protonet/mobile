@@ -6,7 +6,7 @@
   opacity: 0;
   display: none;
   position: relative;
-  margin-top: 6px;
+  margin-top: 2px;
   border: 1px dotted #999;
   padding: 4px 50px 4px 4px;
 }
@@ -48,7 +48,7 @@
   position: relative;
 }
 
-.text-extension-results output:after {
+.text-extension-results:after {
   content: ".";
   display: block;
   height: 0;

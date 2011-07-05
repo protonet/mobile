@@ -11,16 +11,6 @@
       grey_light  #ccc      rgb(204, 204, 204)
       white       #fff      rgb(255, 255, 255)
 =========================================================================== */
-/*@font-face {
-  font-family: "Univers Light Condensed";
-  src: url("/css/fonts/Univers Light Condensed.ttf");
-}
-
-@font-face {
-  font-family: "Univers LT 47 CondensedLt";
-  src: url("/css/fonts/Univers LT 47 Condensed Light.ttf");
-}*/
-
 html,
 body {
   min-height: 100%;
@@ -207,6 +197,8 @@ input[type=password] {
   color: #999;
 }
 
+::-webkit-input-placeholder,
+:-moz-placeholder,
 .inline-hint {
   color: #ccc;
 }
@@ -490,69 +482,6 @@ header .hearts {
 #user-navigation .settings .off {
   color: #e75c79;
 }
-
-/* =CONTEXT MENU
-=========================================================================== */
-.context-menu {
-  background-color: #fff;
-  position: absolute;
-  display: none;
-  border: 1px solid #487bff;
-  border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  font-size: 10px;
-  box-shadow: 3px 3px 3px #999;
-  -webkit-box-shadow: 3px 3px 3px #999;
-  -moz-box-shadow: 3px 3px 3px #999;
-  z-index: 10;
-  margin-top: 2px;
-  min-width: 100px;
-}
-
-.context-menu:before {
-  content: " ";
-  display: block;
-  left: 50%;
-  position: absolute;
-  margin: -8px 0 0 -7px;
-  width: 0;
-  height: 0;
-  border-left: 7px solid transparent;
-  border-right: 7px solid transparent;
-  border-bottom: 7px solid #487bff;
-}
-
-.context-menu li {
-  cursor: pointer;
-  padding: 6px;
-  color: #487bff;
-  overflow: hidden;
-  border-bottom: 1px solid #ccc;
-}
-
-.context-menu li:hover,
-.context-menu li:focus {
-  background-color: rgba(0, 0, 0, 0.06);
-}
-
-.context-menu li:last-child {
-  border-bottom: 0;
-}
-
-/** Overrule styles, set by plupload.js */
-.context-menu li .plupload {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 500px !important;
-}
-
-.context-menu li .plupload input {
-  cursor: pointer;
-  font-size: 100px;
-}
-
 
 /* =SUB PAGES
 =========================================================================== */

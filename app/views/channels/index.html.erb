@@ -149,7 +149,7 @@
 
     <!-- <form action="/channels/search" class="search">
       <fieldset>
-        <input type="text" value="<%= params[:description] %>" name="description" title="search for interesting channels…"/>
+        <input type="text" value="<%= params[:description] %>" name="description" placeholder="search for interesting channels…"/>
       </fieldset>
     </form> -->
 
@@ -178,8 +178,8 @@
     <div id="create" class="create section hidden">
       <%= form_for :channel, :url => channels_path, :action => 'post' do |f| -%>
         <fieldset>
-          <%= f.text_field :name, { :title => 'Name of the channel…' } %>
-          <%= f.text_field :description, { :title => 'Description of the channel…' } %>
+          <%= f.text_field :name, { :placeholder => 'Name of the channel…' } %>
+          <%= f.text_field :description, { :placeholder => 'Description of the channel…' } %>
           <%= button 'Create' %>
         </fieldset>
       <%- end -%>
