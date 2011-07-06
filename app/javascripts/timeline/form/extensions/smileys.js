@@ -19,7 +19,9 @@ protonet.timeline.Form.extensions.Smileys = function(input) {
   });
   
   new protonet.controls.InlineAutocompleter(
-    input, emojis
+    input, emojis, {
+      lowerCase: false
+    }
   );
   
   new protonet.ui.ContextMenu(
