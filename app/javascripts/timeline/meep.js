@@ -62,9 +62,9 @@ protonet.timeline.Meep.prototype = {
   _parseForm: function(form) {
     this.queryString = form.serialize();
     var data = protonet.utils.parseQueryString(this.queryString).tweet;
-    
     return $.extend(data, {
-      created_at: new Date().toString(),
+      user_id:        protonet.config.user_id,
+      created_at:     new Date().toString(),
       text_extension: data.text_extension && JSON.parse(data.text_extension)
     });
   },
