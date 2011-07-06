@@ -69,7 +69,7 @@ protonet.dispatcher.provider.FlashSocket = {
   },
   
   send: function(data) {
-    if (!this.socket && !this.socket.sendData) {
+    if (!this.socket || !this.socket.sendData) {
       return;
     }
     this.socket.sendData(JSON.stringify(data));
