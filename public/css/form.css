@@ -74,15 +74,15 @@
 }
 
 #textarea-wrapper menu [data-extension=smiley] {
-  background-position: 3px 3px;
+  background-position: 4px 3px;
 }
 
 #textarea-wrapper menu [data-extension=snapshot] {
-  background-position: 3px -38px;
+  background-position: 4px -38px;
 }
 
 #textarea-wrapper menu [data-extension=file] {
-  background-position: 3px -87px;
+  background-position: 4px -87px;
 }
 
 

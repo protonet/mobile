@@ -9,10 +9,10 @@
     <div id="textarea-wrapper">
       <div id="textarea-wrapper-inner">
         <menu>
-          <li data-extension="smiley">Insert emoticon</li>
-          <li data-extension="snapshot">Insert snapshot</li>
+          <li data-extension="smiley" title="Insert emoticon">Insert emoticon</li>
+          <li data-extension="snapshot" title="Attach snapshot">Attach snapshot</li>
           <%- if SystemPreferences.show_file_widget -%>
-            <li data-extension="file">Insert file</li>
+            <li data-extension="file" title="Attach file(s)">Attach file(s)</li>
           <%- end -%>
         </menu>
         <%= f.text_area(:message, :id => 'message', :placeholder => message_hint) %>
