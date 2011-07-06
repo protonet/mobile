@@ -11,7 +11,9 @@
         <menu>
           <li data-extension="smiley">Insert emoticon</li>
           <li data-extension="snapshot">Insert snapshot</li>
-          <li data-extension="file">Insert file</li>
+          <%- if SystemPreferences.show_file_widget -%>
+            <li data-extension="file">Insert file</li>
+          <%- end -%>
         </menu>
         <%= f.text_area(:message, :id => 'message', :placeholder => message_hint) %>
         <input type="submit" id="submit-message" value="" title="Send message [ENTER]">
