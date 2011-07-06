@@ -18,7 +18,7 @@ protonet.utils.emojify = (function() {
     if (!ignoreSetting && !protonet.user.Config.get("smilies")) {
       return str;
     }
-    // fix ::
+    
     str = str.replace(REG_EXP_TEMPLATE, function(original, $1) {
       $1 = $1.toLowerCase();
       if (DEFINED_EMOJIS.indexOf(" " + $1 + " ") !== -1) {
