@@ -7,10 +7,11 @@ protonet.text_extensions.render.flash = (function() {
       };
   
   return function(data) {
-    var anchor = protonet.text_extensions.render.image(data, true),
-        placeholderId = "swfobject-placeholder-" + index++;
+    var anchor        = protonet.text_extensions.render.image(data, true),
+        placeholderId = "swfobject-placeholder-" + index++,
+        placeholder   = $("<span>", { id: placeholderId });
     
-    anchor.attr("id", placeholderId).bind("click", function(event) {
+    anchor.bind("click", function(event) {
       if (!swfobject.hasFlashPlayerVersion("8")) {
         return;
       }
@@ -35,6 +36,8 @@ protonet.text_extensions.render.flash = (function() {
           }).insertBefore(flashElement);
         }
       };
+      
+      anchor.before(placeholder).detach();
       
       swfobject.embedSWF(
         data.flash,

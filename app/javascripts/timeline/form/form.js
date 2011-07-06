@@ -96,8 +96,11 @@ protonet.timeline.Form = {
        * Insert text at the caret/cursor position
        */
       .bind("form.insert", function(e, text) {
-        var value         = this.input.val(),
+
+        var value         = this.input.focus().val(),
             inputElement  = this.input[0],
+            // TODO: This doesn't work as expected in IE8 + 9!
+            // selectionEnd is always 0
             selectionEnd  = inputElement.selectionEnd,
             beforeCaret   = value.substr(0, selectionEnd),
             afterCaret    = value.substr(selectionEnd);
@@ -112,7 +115,6 @@ protonet.timeline.Form = {
         
         this.input.val(beforeCaret + text + afterCaret);
         inputElement.selectionStart = inputElement.selectionEnd = beforeCaret.length + text.length;
-        this.input.focus();
       }.bind(this))
       
       /**

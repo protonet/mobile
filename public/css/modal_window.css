@@ -268,7 +268,8 @@ input[type=search] {
   text-align: center;
 }
 
-.snapshot-page embed {
+.snapshot-page embed,
+.snapshot-page object {
   display: block;
   margin: 10px auto 0;
   border: 3px solid;

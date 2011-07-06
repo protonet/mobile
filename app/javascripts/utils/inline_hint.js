@@ -2,7 +2,7 @@ protonet.utils.InlineHint = (function() {
   var CLASS_NAME = "inline-hint";
   
   return function(input, hint) {
-    var form = this._input.parents("form");
+    var form = input.parents("form");
     
     var unset = function() {
       if (input.val() == hint) {
@@ -21,5 +21,7 @@ protonet.utils.InlineHint = (function() {
     }
     
     input.blur(set).focus(unset);
+    
+    set();
   };
 })();

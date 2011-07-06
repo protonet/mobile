@@ -11,6 +11,8 @@ protonet.dispatcher.provider.FlashSocket = {
         attributes  = { id: "flash-socket" },
         params      = { allowscriptaccess: "sameDomain", wmode: "opaque" };
     
+    this.retries = 0;
+    
     // Fires "socket.initialized" when ready
     swfobject.embedSWF(
       "/flash/socket.swf?" + new Date().getTime(),
@@ -35,7 +37,7 @@ protonet.dispatcher.provider.FlashSocket = {
     });
   },
   
-  connect: function(secondTry) {
+  connect: function() {
     this.socket = this.socket || swfobject.getObjectById("flash-socket");
     if (!this.socket) {
       // User is probably using a flash blocker
@@ -43,11 +45,11 @@ protonet.dispatcher.provider.FlashSocket = {
     }
     
     if (!this.socket.connectSocket) {
-      if (secondTry === true) {
+      // Retry a couple of times... IE needs this.
+      if (++this.retries > 15) {
         protonet.trigger("socket.connected", false);
       } else {
-        // Retry once... (needed for IE8)
-        setTimeout(this.connect.bind(this, true), 0);
+        setTimeout(this.connect.bind(this), 250);
       }
       return;
     }
@@ -66,6 +68,7 @@ protonet.dispatcher.provider.FlashSocket = {
       return;
     }
     this.socket.closeSocket();
+    this.retries = 0;
   },
   
   send: function(data) {

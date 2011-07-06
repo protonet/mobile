@@ -193,7 +193,11 @@ input[type=password] {
 }
 
 ::-webkit-input-placeholder,
-:-moz-placeholder,
+:-moz-placeholder {
+  color: #ccc;
+}
+
+/* this can't be combined with the class above since this will then be ignored in IE <= 9 */
 .inline-hint {
   color: #ccc;
 }
