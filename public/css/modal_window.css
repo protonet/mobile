@@ -261,7 +261,7 @@ input[type=search] {
 /* =MODAL WINDOW: SNAPSHOT
 =========================================================================== */
 .snapshot-page .modal-window-content button {
-  margin-top: 10px;
+  margin: 10px 0;
 }
 
 .snapshot-page .modal-window-content {
