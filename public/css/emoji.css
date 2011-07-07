@@ -1,11 +1,12 @@
 /**
  * Generated via https://github.com/protonet/emoji-css-builder
  * and the following shell command (executed in the emoji-css-builder dir)
- * mkdir dist; rake emoji DEST=dist SET=iphone ICONS=e00e,e00a,e00f,e00d,e421,e03c,e03e,e03f,e04a,e04c,e05a,e008,e009,e10a,e10b,e10c,e10d,e10e,e10f,e011,e11d,e012,e12a,e11b,e11a,e11c,e12f,e13c,e13d,e13e,e13f,e014,e14c,e14e,e015,e016,e017,e018,e020,e021,e023,e030,e30a,e30c,e30e,e30f,e31c,e31d,e31e,e032,e32f,e033,e33e,e33b,e034,e34b,e035,e037,e041,e41c,e42a,e42b,e42c,e045,e048,e049,e050,e051,e052,e52b,e52c,e52d,e52e,e52f,e053,e054,e101,e109,e111,e113,e120,e128,e136,e207,e208,e310,e311,e335,e426,e448,e057,e107,e405,e413,e105,e409,e056,e058,e417,e416,e404,e406
+ * mkdir dist; rake emoji DEST=dist SET=iphone ICONS=e00e,e00a,e00f,e00d,e421,e03c,e03e,e03f,e04a,e04c,e05a,e008,e009,e10a,e10b,e10c,e10d,e10e,e10f,e011,e11d,e012,e12a,e11b,e11a,e11c,e12f,e13c,e13d,e13e,e13f,e014,e14c,e14e,e015,e016,e017,e018,e020,e021,e023,e030,e30a,e30c,e30e,e30f,e31c,e31d,e31e,e032,e32f,e033,e33e,e33b,e034,e34b,e035,e037,e041,e41c,e42a,e42b,e42c,e045,e048,e049,e050,e051,e052,e52b,e52c,e52d,e52e,e52f,e053,e054,e101,e109,e111,e113,e120,e128,e136,e207,e208,e310,e311,e335,e426,e448,e057,e107,e405,e413,e105,e409,e056,e058,e417,e416,e404,e406,e022,e44c
+ * ... and don't forgt to crush the resulting png via tinypng!
  */
 .emoji {
   display: inline-block;
-  background: url(/img/spr_emoji_r1.png) top left no-repeat;
+  background: url(/img/spr_emoji_r2.png) top left no-repeat;
   display: inline-block;
   height: 20px;
   text-indent: -9999px;
@@ -115,3 +116,5 @@
 .emoji_e416, .emoji-angry        { background-position: 0 -1980px; }
 .emoji_e404, .emoji-rofl         { background-position: 0 -2000px; }
 .emoji_e406, .emoji-struggled    { background-position: 0 -2020px; }
+.emoji_e022, .emoji-heart        { background-position: 0 -2040px; }
+.emoji_e44c, .emoji-rainbow      { background-position: 0 -2060px; }

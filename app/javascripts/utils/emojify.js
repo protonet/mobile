@@ -1,4 +1,3 @@
-//= require "escape_for_reg_exp.js"
 //= require "template.js"
 
 /**
@@ -9,10 +8,12 @@
  *      => 'hey what's up, dudes! <img src="..." class="fire">'
  *    protonet.utils.emojify.shortcuts
  *      => list of all supported emojis
+ *
+ * See emoji.css for instructions on how to maintain the emojies
  */
 protonet.utils.emojify = (function() {
   var REG_EXP_TEMPLATE = /:(\w+):/gi;
-  var DEFINED_EMOJIS   = " laugh amazed wink cry cheek tongue grin sad kiss angry rofl struggled plus1 iphone wait fist minus1 microphone music key sun moon turd camera telephone squid pig alien rocket crone light victory fire stop tv ghost devil scull money zzz flash shoe bath golf muscle traffic tennis baseball surfing soccer question exclamation brokenheart flower ipod beers smoking pill lipstick fingernails massage rose star xmastree rice fries ring cake diamond church guitar mouth basketball football pool coffee snowman cloud tiger bear dog cow rabbit snake chicken boar mouse whale post monkey kissing pistol burger radio bike adultsonly nosmoking balloon bomb star bow santa ";
+  var DEFINED_EMOJIS   = " laugh amazed wink cry cheek tongue grin sad kiss angry rofl struggled heart brokenheart plus1 minus1 fist wait iphone microphone music key sun moon turd camera telephone squid pig alien rocket crone light victory fire stop tv ghost devil scull money zzz flash shoe bath golf muscle traffic tennis baseball surfing soccer question exclamation flower ipod beers smoking pill lipstick fingernails massage rose star xmastree rice fries ring cake diamond church guitar mouth basketball football pool coffee snowman cloud tiger bear dog cow rabbit snake chicken boar mouse whale post monkey kissing pistol burger radio bike adultsonly nosmoking balloon bomb star bow santa rainbow ";
     
   function emojify(str, ignoreSetting) {
     if (!ignoreSetting && !protonet.user.Config.get("smilies")) {
