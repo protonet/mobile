@@ -1,5 +1,5 @@
 protonet.data.Google = {
-  URL: "http://ajax.googleapis.com/ajax/services/search/web?v=1.0&callback=?",
+  URL: location.protocol + "//ajax.googleapis.com/ajax/services/search/web?v=1.0&callback=?",
   TIMEOUT: 4000,
   
   search: function(query, onSuccess, onFailure) {

@@ -107,7 +107,7 @@
   margin: 8px 0 6px;
 }
 
-/* =IFRAME (Doodle, Maps...)
+/* =IFRAME (Slideshare, Maps...)
 --------------------------------------------------------------------------- */
 .text-extension-results .media iframe {
   border: 1px solid #999;
@@ -115,11 +115,16 @@
   height: 200px;
 }
 
+.text-extension-results.YouTube .media iframe,
+.text-extension-results.Slideshare .media iframe {
+  height: 280px;
+}
+
 #text-extension-preview .text-extension-results .media iframe {
   width: 530px;
 }
 
-/* =VIDEO/FLASH TEXT EXTENSION (YouTube, Slideshare, ...)
+/* =VIDEO/FLASH TEXT EXTENSION (Vimeo, Grooveshark, ...)
 --------------------------------------------------------------------------- */
 .text-extension-results.flash object {
   height: 280px;
@@ -141,7 +146,8 @@
   width: 100px !important;
 }
 
-.text-extension-results.flash .media a:after {
+.text-extension-results.flash .media a:after,
+.text-extension-results.iframe .media a:after {
   content: "\25BA";
   cursor: pointer;
   font-family: Arial;
@@ -167,7 +173,7 @@
   -moz-box-shadow: 0 0 2px 1px #666;
 }
 
-.text-extension-results.flash .media .flash-close-link {
+.text-extension-results .media .media-close-link {
   position: absolute;
   top: -16px;
   right: -16px;
@@ -177,23 +183,26 @@
   -moz-transform: scale(0.75);
 }
 
-.text-extension-results.flash .media .flash-close-link:hover {
+.text-extension-results .media .media-close-link:hover {
   -webkit-transform: scale(1);
   -moz-transform: scale(1);
 }
 
-.text-extension-results.flash .media .flash-close-link:after {
+.text-extension-results .media .media-close-link:after {
   display: none;
 }
 
 .text-extension-results.flash .media a:active:after,
-.text-extension-results.flash .media a:hover:after {
+.text-extension-results.flash .media a:hover:after,
+.text-extension-results.iframe .media a:active:after,
+.text-extension-results.iframe .media a:hover:after {
   background: #487bff;
   -webkit-transform: scale(1.2);
   -moz-transform: scale(1.2);
 }
 
-.text-extension-results.flash .media a:active:after {
+.text-extension-results.flash .media a:active:after,
+.text-extension-results.iframe .media a:active:after {
   background: #000;
 }
 

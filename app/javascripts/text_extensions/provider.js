@@ -6,7 +6,6 @@ protonet.text_extensions.provider = {};
 //= require "provider/maps.js"
 //= require "provider/slideshare.js"
 //= require "provider/vimeo.js"
-//= require "provider/doodle.js"
 //= require "provider/flickr.js"
 //= require "provider/flickr_photo_set.js"
 //= require "provider/flickr_search.js"

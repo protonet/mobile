@@ -6,11 +6,11 @@ protonet.data.YQL.Query = function(query) {
 
 protonet.data.YQL.Query.prototype = {
   DEFAULT_TIMEOUT: 5000,
-  YQL_URL: "http://query.yahooapis.com/v1/public/yql?format=json&_maxage=3600&diagnostics=false&callback=?",
+  URL: location.protocol + "//query.yahooapis.com/v1/public/yql?format=json&_maxage=3600&diagnostics=false&callback=?",
   
   execute: function(onSuccess, onFailure, timeout) {
     $.ajax({
-      url: this.YQL_URL,
+      url: this.URL,
       data: {
         q: this._query
       },

@@ -1,6 +1,6 @@
 protonet.data.Facebook = (function() {
-  var URL = "http://graph.facebook.com/{id}?callback=?",
-      PICTURE_URL = "http://graph.facebook.com/{id}/picture?type=large",
+  var URL = location.protocol + "//graph.facebook.com/{id}?callback=?",
+      PICTURE_URL = location.protocol + "//graph.facebook.com/{id}/picture?type=large",
       TIMEOUT = 4000;
   
   function getOpenGraphData(id, onSuccess, onFailure) {

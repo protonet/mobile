@@ -11,8 +11,8 @@ protonet.text_extensions.provider.Vimeo = {
    */
   REG_EXP: /vimeo\.com\/(\d+)/i,
   
-  VIDEO_TEMPLATE: "http://vimeo.com/moogaloop.swf?clip_id={id}" +
-    "&server=vimeo.com&show_title=1&show_byline=1&show_portrait=0&color=&fullscreen=1",
+  VIDEO_TEMPLATE: location.protocol + "//vimeo.com/moogaloop.swf?clip_id={id}" +
+    "&server=vimeo.com&show_title=1&show_byline=1&show_portrait=0&color=&fullscreen=1&autoplay=1",
   
   loadData: function(url, onSuccess, onFailure) {
     var videoId = url.match(this.REG_EXP)[1];

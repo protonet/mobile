@@ -4,7 +4,9 @@ protonet.utils.Behaviors.add({
     if (!id) {
       return;
     }
-    protonet.Notifications.trigger("channel.change", id);
+    if (!element.is(".active")) {
+      protonet.trigger("channel.change", id);
+    }
     event.preventDefault();
   }
   

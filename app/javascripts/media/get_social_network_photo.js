@@ -1,4 +1,3 @@
-//= require "../lib/webtoolkit.md5.js"
 //= require "../data/yql.js"
 
 protonet.media.getSocialNetworkPhoto = (function() {

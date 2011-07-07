@@ -1,4 +1,3 @@
-//= require "../lib/webtoolkit.md5.js"
 protonet.media.ScreenShot = (function() {
   
   /**

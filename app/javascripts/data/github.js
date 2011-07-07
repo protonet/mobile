@@ -1,7 +1,7 @@
 protonet.data.GitHub = (function() {
-  var COMMIT_INFO = "http://github.com/api/v2/json/commits/show/{user}/{repo}/{id}?callback=?",
-      REPO_INFO = "http://github.com/api/v2/json/repos/show/{user}/{repo}?callback=?",
-      ISSUE_INFO = "http://github.com/api/v2/json/issues/show/{user}/{repo}/{id}?callback=?",
+  var COMMIT_INFO = "https://github.com/api/v2/json/commits/show/{user}/{repo}/{id}?callback=?",
+      REPO_INFO = "https://github.com/api/v2/json/repos/show/{user}/{repo}?callback=?",
+      ISSUE_INFO = "https://github.com/api/v2/json/issues/show/{user}/{repo}/{id}?callback=?",
       TIMEOUT = 4000;
   
   function getCommit(user, repo, id, onSuccess, onFailure) {

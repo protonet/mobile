@@ -1,6 +1,6 @@
 protonet.data.Vimeo = {
   TIMEOUT: 5000, // 5 seconds
-  URL: "http://vimeo.com/api/v2/video/{id}.json?callback=?",
+  URL: location.protocol + "//vimeo.com/api/v2/video/{id}.json?callback=?",
   
   getVideo: function(id, onSuccess, onFailure) {
     $.ajax({

@@ -16,10 +16,11 @@ protonet.text_extensions.provider.Slideshare = {
     var match = url.match(this.REG_EXP);
     protonet.data.SlideShare.getSlideShow(match[1], function(response) {
       onSuccess({
-        description:  response.Description,
-        image:        response.ThumbnailSmallURL,
-        title:        response.Title,
-        flash:        response.Embed && $(response.Embed).find("param[name=movie]").attr("value")
+        description:    "Uploaded by " + response.author_name,
+        image:          response.thumbnail,
+        title:          response.title,
+        titleAppendix:  response.total_slides + " slides",
+        iframe:         response.html && $(response.html).find("iframe").attr("src")
       });
     }, onFailure);
   }

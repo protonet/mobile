@@ -18,7 +18,7 @@ protonet.text_extensions.provider.YouTube = {
    */
   REG_EXP: /(youtube\.com\/watch(\?|#\!).*?v\=|youtu\.be\/)([\w_-]*)/i,
   
-  VIDEO_TEMPLATE: "http://www.youtube.com/v/{id}?playerapiid=ytplayer&egm=0&hd=1&showinfo=0&rel=0",
+  VIDEO_TEMPLATE: location.protocol + "//www.youtube.com/embed/{id}?playerapiid=ytplayer&egm=0&hd=1&showinfo=0&rel=0&autoplay=1",
   
   loadData: function(url, onSuccess, onFailure) {
     var videoId = url.match(this.REG_EXP)[3];
@@ -30,7 +30,7 @@ protonet.text_extensions.provider.YouTube = {
       onSuccess({
         videoId:        videoId,
         image:          mediaGroup["media$thumbnail"][0].url,
-        flash:          isEmbeddable && this.VIDEO_TEMPLATE.replace("{id}", videoId),
+        iframe:         isEmbeddable && this.VIDEO_TEMPLATE.replace("{id}", videoId),
         title:          mediaGroup["media$title"]["$t"],
         titleAppendix:  protonet.utils.formatSeconds(mediaGroup["yt$duration"].seconds),
         description:    mediaGroup["media$description"]["$t"],

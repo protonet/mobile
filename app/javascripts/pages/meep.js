@@ -122,7 +122,7 @@ protonet.pages.Meep = Class.create(protonet.Page, {
         event.stopPropagation();
       }.bind(this))
       
-      .delegate("li", "text_extension.show_flash", function(event) {
+      .delegate("li", "text_extension.show_media", function(event) {
         var $this = $(event.currentTarget);
         if ($this.is(".selected")) {
           this.adjust();
@@ -131,7 +131,7 @@ protonet.pages.Meep = Class.create(protonet.Page, {
         }
       }.bind(this))
       
-      .delegate("li", "text_extension.hide_flash", function() {
+      .delegate("li", "text_extension.hide_media", function() {
         this.adjust();
       }.bind(this))
       

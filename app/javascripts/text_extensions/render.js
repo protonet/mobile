@@ -23,7 +23,6 @@
  *   preventHoverEffect:     true,                       // whether the image should be resized on hover
  *   flash:                  "http://foo.de/bar.swf",    // url to the flash movie that should be rendered
  *   iframe:                 "http://foo.de/bar.html",   // url that should be rendered in an iframe
- *   iframeRefreshInterval:  60,                         // interval (seconds) how often iframe should be refreshed
  *   code:                   "var foo = 'bar';",         // plain code
  *   code:                   ["var foo = 'bar';"],       // array of plain codes
  *   codeTitle:              "awesome_script.js",        // file name or title
@@ -37,9 +36,9 @@
 protonet.text_extensions.render = (function() {
   var mediaTypeDetection = {
     flash:    function(data) { return data.flash && typeof(data.flash) == "string"; },
+    iframe:   function(data) { return data.iframe && typeof(data.iframe) == "string"; },
     image:    function(data) { return data.image && typeof(data.image) == "string"; },
     images:   function(data) { return $.isArray(data.image) && data.image; },
-    iframe:   function(data) { return data.iframe && typeof(data.iframe) == "string"; },
     code:     function(data) { return data.code && typeof(data.code) == "string"; },
     codes:    function(data) { return $.isArray(data.code) && data.code.length; }
   };
