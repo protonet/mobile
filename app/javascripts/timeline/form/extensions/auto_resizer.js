@@ -12,6 +12,8 @@ protonet.timeline.Form.extensions.AutoResizer = function(input, wrapper) {
       wrapperElement    = wrapper[0],
       originalHeight    = inputElement.offsetHeight,
       oldHeight         = originalHeight,
+      overflowY         = "hidden",
+      maxHeight         = 250,
       offset            = 10,
       scrollHeight,
       cloneElement      = (function() {
@@ -27,9 +29,10 @@ protonet.timeline.Form.extensions.AutoResizer = function(input, wrapper) {
         // Clone the actual textarea removing unique properties
         // and insert before original textarea:
         var clone = input.clone().removeAttr("id").removeAttr("name").css({
-            position: "absolute",
-            top:      0,
-            left:     "-9999px"
+            position:   "absolute",
+            top:        0,
+            left:       "-9999px",
+            overflowY:  overflowY
         }).css(propOb).attr("tabIndex", "-1").insertBefore(input);
         
         return clone[0];
@@ -45,6 +48,17 @@ protonet.timeline.Form.extensions.AutoResizer = function(input, wrapper) {
       newHeight = scrollHeight + offset;
     }
     
+    if (newHeight >= maxHeight) {
+      if (overflowY === "hidden") {
+        inputElement.style.overflowY = overflowY = "auto";
+      }
+      return;
+    } else {
+      if (overflowY !== "hidden") {
+        inputElement.style.overflowY = overflowY = "hidden";
+      }
+    }
+    
     if (newHeight !== oldHeight) {
       if (useEffect === true) {
         wrapper.animate({ height: newHeight.px() }, 250);
@@ -53,11 +67,11 @@ protonet.timeline.Form.extensions.AutoResizer = function(input, wrapper) {
       }
       oldHeight = newHeight;
     }
-  };
+  }
   
   input
     .bind("input", updateHeight)
-    .css("overflow-y", "hidden");
+    .css("overflow-y", overflowY);
   
   protonet.bind("form.submitted", function() {
     // delay for performance reasons

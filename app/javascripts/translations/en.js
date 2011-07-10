@@ -8,7 +8,7 @@ protonet.translations = {
   CHANNEL_SUBSCRIPTION_ERROR: "could not subscribe to channel with identifier '{identifier}'",
   SOCKET_DISCONNECTED: "There has been a connection problem. Please wait a few seconds while our hard working monsters fix the problem.",
   SOCKET_RECONNECTED: "Ok, you are online again!",
-  SOCKET_FAILURE: "Oh, f*ck. Something is wrong. We weren't able to establish a connection with the socket backend.",
+  SOCKET_FAILURE: "Oops. Something is wrong. We weren't able to establish a connection with the chat server.",
   FILE_DELETE_ERROR: "File couldn't be deleted",
   DIRECTORY_DELETE_ERROR: "Folder couldn't be deleted",
   DIRECTORY_DELETE_CONFIRM: "Are you sure? This will delete the folder including all contents. There's no undo.",
