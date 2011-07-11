@@ -14,12 +14,6 @@
   list-style: none;
 }
 
-.meep:hover {
-  -webkit-box-shadow: 0 0 2px #999;
-  -moz-box-shadow: 0 0 2px #999;
-  box-shadow: 0 0 2px #999;
-}
-
 .meep.focus {
   -webkit-box-shadow: 0 0 4px #666;
   -moz-box-shadow: 0 0 4px #666;
