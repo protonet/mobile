@@ -1,23 +1,15 @@
 /* =MEEPS
 =========================================================================== */
 .meep {
-  -moz-border-radius: 1em;
-  -webkit-border-radius: 1em;
-  background-color: #fff;
-  background-image: -moz-linear-gradient(100% 100% 90deg, rgba(0, 0, 0, 0.1), transparent);
-  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.1)));
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  background-color: #F2F2F2;
   border: 1px solid rgb(180, 180, 180);
-  border-radius: 1em;
-  margin: 0 20px 15px 45px;
+  border-radius: 8px;
+  margin: 0 20px 10px 45px;
   padding: 10px;
   position: relative;
   list-style: none;
-}
-
-.meep.focus {
-  -webkit-box-shadow: 0 0 4px #666;
-  -moz-box-shadow: 0 0 4px #666;
-  box-shadow: 0 0 4px #666;
 }
 
 .meep.focus:before {
@@ -32,9 +24,9 @@
   top: 0;
   bottom: 0;
   width: 20px;
-  -moz-border-radius: 0 0.95em 0.95em 0;
-  -webkit-border-radius: 0 0.95em 0.95em 0;
-  border-radius: 0 0.95em 0.95em 0;
+  -moz-border-radius: 0 8px 8px 0;
+  -webkit-border-radius: 0 8px 8px 0;
+  border-radius: 0 7px 7px 0;
 }
 
 [data-meep-action] {
@@ -96,6 +88,11 @@
 .meep article:first-child {
   padding-top: 0;
 }
+
+.meep article:last-of-type {
+  padding-bottom: 0;
+}
+
 
 .meep article {
   border-bottom: 1px solid rgb(220, 220, 220);
