@@ -81,10 +81,6 @@ class Channel < ActiveRecord::Base
     self.update_attribute(:uuid, UUID4R::uuid(1))
   end
   
-  def foo
-    
-  end
-  
   private
   def clean_diactritic_marks(string)
     ActiveSupport::Multibyte::Chars.new(string).mb_chars.normalize(:kd).gsub(/[^\x00-\x7F]/n,'').to_s

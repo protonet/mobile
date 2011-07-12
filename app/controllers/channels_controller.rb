@@ -75,7 +75,4 @@ class ChannelsController < ApplicationController
     end
   end
   
-  def guest_access
-    render :json => params
-  end
 end

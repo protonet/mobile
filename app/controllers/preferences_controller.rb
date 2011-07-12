@@ -1,5 +1,5 @@
 class PreferencesController < ApplicationController
-  # filter_resource_access
+
   before_filter :only_registered
   before_filter :set_available_preferences
   
