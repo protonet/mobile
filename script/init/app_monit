@@ -14,7 +14,13 @@ case $1 in
     stop)  
       /usr/sbin/monit -c $SHARED/config/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid quit
       ;;
+    restart)
+      /usr/sbin/monit -c $SHARED/config/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid restart all
+      ;;
+    reload)
+      /usr/sbin/monit -c $SHARED/config/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid reload
+      ;;
     *)  
-      echo "usage: app_monit rails-app-path {start|stop}" ;;
+      echo "usage: app_monit {start|stop|restart|reload}" ;;
 esac
 exit 0
