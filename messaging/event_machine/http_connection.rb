@@ -91,7 +91,7 @@ class HttpConnection < EM::Connection
   def close_after_timeout
     # this is to ensure that you don't end up with
     # stray request, so we reopen it from the frontend
-    EventMachine::add_timer( 120 ) { @response.close_connection }
+    EventMachine::add_timer( 120 ) { @response.close_connection rescue nil } # AJ: I added the rescue nil since I was seeing random errors in there
   end
 end 
 
