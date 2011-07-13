@@ -1,7 +1,6 @@
 var http      = require("http"),
     https     = require("https"),
-    parseUrl  = require("url").parse,
-    sys       = require("sys");
+    parseUrl  = require("url").parse;
 
 exports.get = function(url, callback) {
   var urlObj  = parseUrl(url),
@@ -12,8 +11,8 @@ exports.get = function(url, callback) {
         path: path
       };
       
-  sys.puts("http_proxy fetching: " + url);
-  sys.puts("http_proxy path: " + path);
+  console.log("http_proxy fetching: " + url);
+  console.log("http_proxy path: " + path);
 
   client.get(options, function(response) {
     var body = [];
@@ -24,10 +23,9 @@ exports.get = function(url, callback) {
     });
     response.addListener("end", function() {
       var responseText = body.join("");
-      console.log("http_proxy response end received - data:" + responseText);
       callback({ body: responseText, statusCode: response.statusCode }, "http_proxy");
     });
-  }).on('error', function(e) {
+  }).on("error", function(e) {
     console.log("Got error: " + e.message);
   });
 };
