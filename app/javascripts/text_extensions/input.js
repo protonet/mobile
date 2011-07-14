@@ -29,7 +29,7 @@ protonet.text_extensions.Input.prototype = {
       .bind("click",          this._cancel.bind(this));
     
     protonet
-      .bind("form.submitted", this._submitted.bind(this));
+      .bind("form.submitted", this._submitted.bind(this))
       .bind("text_extension_input.render", function(e, data) { this.render(data); }.bind(this));
   },
   
