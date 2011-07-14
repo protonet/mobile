@@ -142,6 +142,11 @@
   font-weight: bold;
 }
 
+#user-widget li a img {
+  float: right;
+  padding-right: 3px;
+  padding-top: 3px;
+}
 
 /*--------------------------------- FILE WIDGET ---------------------------------*/
 

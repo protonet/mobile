@@ -32,7 +32,11 @@ module ApplicationHelper
     opts[:height] ||= opts[:width]
     opts[:local]    = true
     opts[:escape] ||= true
-    image_tag(image_proxy(user.avatar.url, opts).html_safe, opts)
+    if opts[:delayed]
+      image_tag("data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=", opts.merge({"data-src" => image_proxy(user.avatar.url, opts).html_safe})).gsub("/images/", "")
+    else
+      image_tag(image_proxy(user.avatar.url, opts).html_safe, opts)
+    end
   end
   
   def image_proxy(url, opts)

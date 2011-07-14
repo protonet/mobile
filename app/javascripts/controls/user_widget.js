@@ -78,6 +78,13 @@ protonet.controls.UserWidget.prototype = {
         event.originalEvent.dataTransfer.setData("text/plain", "@" + $(this).text() + " ");
       }
     });
+    
+    this.container.find("img[data-src]").live("inview", function() {
+      var $this = $(this);
+      $this.attr("src", $this.attr("data-src"));
+      // Remove it from the set of matching elements in order to avoid that the handler gets re-executed
+      $this.removeAttr("data-src");
+    });
   },
   
   /**
