@@ -3,6 +3,7 @@
 export HOST=protonet-live
 export APP_ARCHIVE=dashboard.tar.gz
 export BABUSHKA_ARCHIVE=babushka.tar.gz
+export BABUSHKA_DEPS_ARCHIVE=babushka_deps.tar.gz
 export DEPLOYER_ARCHIVE=deployer.tar.gz
 export PROJECT_DIR=`pwd`
 
@@ -24,6 +25,7 @@ if [ "$release_type" != "OVERWRITE LAST" ]; then
    let "last_version += 1"
 fi
 
+############################################################
 #  get the dashboard
 cd /tmp
 rm -rf dashboard
@@ -47,6 +49,7 @@ echo $last_version > RELEASE
 cd /tmp
 tar -pczf $APP_ARCHIVE dashboard/
 
+############################################################
 # get babushka
 cd /tmp
 rm -rf babushka
@@ -57,6 +60,18 @@ rm -rf babushka/.git
 cd /tmp
 tar -pczf $BABUSHKA_ARCHIVE babushka/
 
+############################################################
+#  get the dudemeister@babushka-deps
+cd /tmp
+rm -rf babushka-deps
+git clone git@github.com:dudemeister/babushka-deps.git babushka-deps
+rm -rf babushka-deps/.git
+
+#  now create the dudemeister@babushka-deps archive
+cd /tmp
+tar -pczf $BABUSHKA_DEPS_ARCHIVE babushka-deps/
+
+############################################################
 #  get the deployer
 cd /tmp
 rm -rf deployer
@@ -68,9 +83,10 @@ rm -rf deployer/Gemfile.lock
 cd /tmp
 tar -pczf $DEPLOYER_ARCHIVE deployer/
 
+############################################################
 # create directory for the new release and upload it
 ssh protonet-live "mkdir -p ~/code-dispatcher/releases/$last_version"
-scp $APP_ARCHIVE $BABUSHKA_ARCHIVE $DEPLOYER_ARCHIVE protonet-live:~/code-dispatcher/releases/$last_version
+scp $APP_ARCHIVE $BABUSHKA_ARCHIVE $DEPLOYER_ARCHIVE $BABUSHKA_DEPS_ARCHIVE protonet-live:~/code-dispatcher/releases/$last_version
 if [ "$release_type" != "OVERWRITE LAST" ]; then
    scp /tmp/dashboard/TYPE protonet-live:~/code-dispatcher/releases/$last_version
 fi
@@ -85,3 +101,4 @@ fi
 rm /tmp/$APP_ARCHIVE
 rm /tmp/$BABUSHKA_ARCHIVE
 rm /tmp/$DEPLOYER_ARCHIVE
+rm /tmp/$BABUSHKA_DEPS_ARCHIVE

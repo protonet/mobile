@@ -163,7 +163,7 @@ Now install ruby:
     sudo apt-get install ruby-full build-essential
 or
     sudo apt-get install build-essential
-    sudo apt-get install ruby rdoc libopenssl-ruby
+    sudo apt-get install ruby ruby1.8-dev rdoc ri libopenssl-ruby
 
 then
     sudo su - protonet
