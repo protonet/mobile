@@ -1,0 +1,119 @@
+#!/bin/bash
+
+# the following is highly inspired and partly copied by what benhoskings is doing with his babushka bootstrapping script
+
+function welcome {
+  echo ""
+  echo "Good morning 'nam!"
+  echo ""
+  echo "This is your protonet bootstrapping script speaking, if all goes well today"
+  echo "we should have your node up and running in no time."
+  echo ""
+  echo "DISCLAIMER: this is intended to be run on Ubuntu 10.04LTS server releases "
+  echo "so don't blame us if it doesn't work on something else."
+  echo ""
+  echo "Let's have a short overview of what we're going to do:"
+  echo "- we start with creating the protonet user, the admin group which it will belong to"
+  echo "- next up we'll get ruby and our basic building stuff"
+  echo "- will then switch to the protonet user and install ourselves a babushka"
+  echo "- next up we'll be getting our babushka deps that will handle the rest of the installation"
+  echo ""
+  echo "If everything goes according to plan you'll end up with a perfectly setup protonet node."
+  echo ""
+  echo "So let's roll!"
+  echo ""
+  read -p "Ready? [y/N] " f
+  [[ "$f" == y* ]] || [[ "$f" == Y* ]]
+}
+
+function user_basics {
+  echo ""
+  echo "Setting up user..."
+  id -u protonet >/dev/null 2>&1
+
+  if [ $? != 0 ]; then 
+    #Make sure that we have a protonet user
+    sudo useradd protonet -m -s /bin/bash
+    #Make sure there is a protonet group
+    sudo groupadd -f admin
+    # add the current user to the admin group
+    sudo usermod -a -G admin `whoami`
+    # And add the protonet user to that group
+    sudo usermod -a -G admin protonet
+  fi
+  echo "Done setting up user."
+  echo ""
+}
+
+function update_apt {
+  echo ""
+  echo "Updating apt..."
+  sudo apt-get -qqy update
+  echo "Done updating apt."
+  echo ""
+}
+
+function install_ruby {
+  echo ""
+  echo "Installing ruby..."
+  sudo apt-get install -qqy build-essential
+  sudo apt-get install -qqy ruby-full
+  if [ $? != 0 ]; then
+    sudo apt-get install -qqy ruby ruby1.8-dev rdoc ri libopenssl-ruby
+    [[ $? == 0 ]]
+  else
+    true
+  fi
+  echo "Done installing ruby."
+  echo ""
+}
+
+
+function get_babushka {
+  bash -c "`wget -O - babushka.me/up`"
+}
+
+function continue_installation {
+  sudo su -l protonet $(cd `dirname $0` && pwd)/ptn_bootstrap_continue
+}
+
+function logo {
+  echo "    _   ,_    __ _|_  __   _  _    _ _|_ "
+  echo "  |/ \_/  |  /  \_|  /  \_/ |/ |  |/  |  "
+  echo "  |__/    |_/\__/ |_/\__/   |  |_/|__/|_/"
+  echo " /|                                      "
+  echo " \|                                      "
+  echo ""
+}
+
+function on_install_success {
+
+  echo ""
+  echo "Success!!"
+  echo ""
+  true
+}
+
+function on_install_failure {
+  echo ""
+  echo "Something went wrong during the install."
+  echo ""
+  false
+}
+
+
+if welcome; then
+  echo "Excellent."
+  echo ""
+  logo
+  user_basics && 
+  update_apt &&
+  install_ruby &&
+  get_babushka &&
+  continue_installation &&
+  on_install_success || on_install_failure
+  # do_bootstrap
+else
+  echo ""
+  echo "OK, maybe another time. :)"
+fi
