@@ -50,7 +50,6 @@ protonet.dispatcher = {
     if (this.connected) {
       return;
     }
-    
     this.currentProvider.connect();
   },
   

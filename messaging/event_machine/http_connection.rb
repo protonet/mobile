@@ -57,11 +57,11 @@ class HttpConnection < EM::Connection
 
       # generate http response object but don't close afterwards
       @response = EM::DelegatedHttpResponse.new(self)
-      if Rails.env != 'production'
-        # ensure that every host can acess this via cross domain ajax request in no-production mode
-        # https://developer.mozilla.org/en/http_access_control
-        @response.headers['Access-Control-Allow-Origin'] = '*';
-      end
+      
+      # Ensure that every host can acess this via cross domain ajax request in no-production mode
+      # We need this for bloody IE who isn't able to do XHR streaming with XMLHttpRequest
+      # Instead we abuse XDomainRequest which needs this header:
+      @response.headers['Access-Control-Allow-Origin'] = '*';
       @response.content_type 'text/plain'
       @response.xhr_streaming_enable true
       @response.send_response

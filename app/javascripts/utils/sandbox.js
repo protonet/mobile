@@ -24,7 +24,7 @@ protonet.utils.Sandbox = (function() {
     },
     
     load: function(callback) {
-      this.iframe.load(function() {
+      this.iframe.one("load", function() {
         callback(this.contentWindow);
       });
       return this;

@@ -1,4 +1,5 @@
 //= require "../../utils/sandbox.js"
+//= require "../../utils/is_same_origin.js"
 
 /**
  * Recommended to read
@@ -42,30 +43,48 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
       // Make sure that an already running request is aborted
       this.disconnect();
       
-      this.ajax = new win.XMLHttpRequest();
-      this.ajax.activeSince = new Date();
-      this.ajax.open("GET", url, true);
-      this.ajax.onreadystatechange = function() {
-        if (this.ajax.readyState >= 3 && connected === undefined) {
-          connected = (this.ajax.status == 200);
-          protonet.trigger("socket.connected", connected);
-        }
-        
-        if (!connected) {
-          return;
-        }
-        
-        if (this._hasReceivedData(this.ajax)) {
-          var responseText = this.ajax.responseText || "";
+      // Use IE-proprietary XDomainRequest for same-origin requests
+      // XMLHttpRequest doesn't work with http streaming since IE refuses to fill the responseText
+      // property unless readyState == 4
+      if (win.XDomainRequest) {
+        this.ajax = new win.XDomainRequest();
+        this.ajax.onprogress = function() {
+          if (this.ajax.responseText.length === byteOffset) {
+            return;
+          }
+          var responseText = this.ajax.responseText || "",
               rawData      = responseText.substring(byteOffset);
           byteOffset = responseText.length;
           protonet.trigger("socket.receive", rawData);
-        }
-        
-        if (this._shouldReconnect(this.ajax)) {
-          this._connect(win);
-        }
-      }.bind(this);
+        }.bind(this);
+        this.ajax.onload = this._connect.bind(this, win);
+      } else {
+        this.ajax = new win.XMLHttpRequest();
+        this.ajax.onreadystatechange = function() {
+          if (this.ajax.readyState >= 3 && connected === undefined) {
+            connected = (this.ajax.status == 200);
+            protonet.trigger("socket.connected", connected);
+          }
+
+          if (!connected) {
+            return;
+          }
+
+          if (this._hasReceivedData(this.ajax)) {
+            var responseText = this.ajax.responseText || "",
+                rawData      = responseText.substring(byteOffset);
+            byteOffset = responseText.length;
+            protonet.trigger("socket.receive", rawData);
+          }
+
+          if (this._shouldReconnect(this.ajax)) {
+            this._connect(win);
+          }
+        }.bind(this);
+      }
+      
+      this.ajax.activeSince = new Date();
+      this.ajax.open("GET", url, true);
       this.ajax.send(null);
     },
     
