@@ -91,6 +91,8 @@ class UsersController < ApplicationController
       new_password  = User.pronouncable_password
       user.password = new_password
       flash[:sticky] = "Generated new password for #{user.login}: \"#{new_password}\" please remind him to change it." if user.save
+    else
+      flash[:error]  = "You're not authorized to do this, please check your password and admin rights."
     end
     redirect_to :action => 'index', :anchor => params[:user_id]
   end
