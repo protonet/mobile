@@ -5,12 +5,13 @@
  *    text_extension_input.render - trigger this with text extension data in order to attach a text extension
  */
 protonet.text_extensions.Input = function(input) {
-  this.input = input;
+  this.input        = input;
   this.container    = $("#text-extension-preview");
   this.hiddenInput  = $("#text-extension-input");
   this.removeLink   = this.container.find("a.remove");
   this._ignoreUrls  = [];
   
+  // TODO: umlauts?
   this.regExp = /(\b(((https?|ftp):\/\/)|(www\.))[-A-Z0-9+&@#\/%?=~_|!:,.;\[\]]*[-A-Z0-9+&@#\/%=~_|])/gi;
   
   this._initEvents();
@@ -19,15 +20,16 @@ protonet.text_extensions.Input = function(input) {
 protonet.text_extensions.Input.prototype = {
   _initEvents: function() {
     this.input
-      .bind("paste", this._paste.bind(this))
-      .bind("keyup", this._keyUp.bind(this))
-      .bind("dragenter", this._dragEnter.bind(this))
-      .bind("drop", this._drop.bind(this));
+      .bind("paste",          this._paste.bind(this))
+      .bind("keyup",          this._keyUp.bind(this))
+      .bind("dragenter",      this._dragEnter.bind(this))
+      .bind("drop",           this._drop.bind(this));
     
-    this.removeLink.bind("click", this._cancel.bind(this));
+    this.removeLink
+      .bind("click",          this._cancel.bind(this));
     
     protonet
-      .bind("form.submitted", this._submitted.bind(this))
+      .bind("form.submitted", this._submitted.bind(this));
       .bind("text_extension_input.render", function(e, data) { this.render(data); }.bind(this));
   },
   
@@ -38,9 +40,9 @@ protonet.text_extensions.Input.prototype = {
   },
   
   _keyUp: function(event) {
-    var isSpaceBar = event.keyCode == 32,
-        isLineBreak = event.shiftKey && event.keyCode == 13,
-        isEscape = event.keyCode == 27;
+    var isSpaceBar  = event.keyCode == 32,
+        isLineBreak = event.keyCode == 13 && event.shiftKey,
+        isEscape    = event.keyCode == 27;
     
     if (isSpaceBar || isLineBreak) {
       return this._parse();
@@ -55,8 +57,8 @@ protonet.text_extensions.Input.prototype = {
     event.preventDefault();
     var valueLength = this.input.val().length;
     this.input.prop({
-      "selectionEnd":   valueLength,
-      "selectionStart": valueLength
+      selectionEnd:   valueLength,
+      selectionStart: valueLength
     }).focus();
   },
   
