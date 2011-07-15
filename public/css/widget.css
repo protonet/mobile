@@ -37,15 +37,12 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-.widget li {
-  overflow: hidden;
-}
-
 .widget li > * {
   display: block;
   color: #333;
+  overflow: hidden;
   padding-left: 26px;
-  line-height: 25px;
+  line-height: 26px;
   margin: 0 0 1px;
   white-space: nowrap;
   text-decoration: none;
@@ -142,11 +139,16 @@
   font-weight: bold;
 }
 
-#user-widget li a img {
+#user-widget li img {
+  display: none;
   position: absolute;
-  right: 0;
-  padding-right: 3px;
-  padding-top: 3px;
+  right: 3px;
+  margin-top: 3px;
+}
+
+#user-widget li a:hover img,
+#user-widget li a:focus img {
+  display: inline;
 }
 
 #user-widget li {

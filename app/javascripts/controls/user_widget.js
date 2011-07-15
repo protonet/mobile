@@ -17,6 +17,7 @@ protonet.controls.UserWidget = function() {
       name:                 $.trim(li.text()),
       isViewer:             li.hasClass("myself"),
       isStranger:           false,
+      avatar:               li.data("user-avatar"),
       channelSubscriptions: []
     };
   }.bind(this));
@@ -30,7 +31,7 @@ protonet.controls.UserWidget = function() {
 
 protonet.controls.UserWidget.prototype = {
   _observe: function() {
-    protonet.Notifications
+    protonet
       .bind("user.added", function(e, data) {
         /**
          * Creating a user will trigger the user.added event
@@ -73,18 +74,22 @@ protonet.controls.UserWidget.prototype = {
         this.filterChannelUsers(channelId);
       }.bind(this));
     
-    this.container.delegate("li[data-user-id] > a", "dragstart", function(event) {
-      if (event.originalEvent.dataTransfer)  {
-        event.originalEvent.dataTransfer.setData("text/plain", "@" + $(this).text() + " ");
-      }
-    });
-    
-    this.container.find("img[data-src]").live("inview", function() {
-      var $this = $(this);
-      $this.attr("src", $this.attr("data-src"));
-      // Remove it from the set of matching elements in order to avoid that the handler gets re-executed
-      $this.removeAttr("data-src");
-    });
+    this.container
+      .delegate("li[data-user-id] > a", "dragstart", function(event) {
+        var dataTransfer = event.originalEvent.dataTransfer;
+        if (dataTransfer)  {
+          dataTransfer.setData("text/plain", "@" + $(this).text() + " ");
+        }
+      })
+      .delegate("li[data-user-id] > a", "mouseover", function() {
+        var link  = $(event.target),
+            image = link.find("img");
+        if (!image.length) {
+          user = this.usersData[+link.parent().data("user-id")];
+          if (!user || !user.avatar) { return; }
+          $("<img>", { src: user.avatar, width: 20, height: 20 }).appendTo(link);
+        }
+      }.bind(this));
   },
   
   /**
@@ -167,6 +172,7 @@ protonet.controls.UserWidget.prototype = {
       name:                 user.name,
       isViewer:             isViewer,
       isStranger:           isStranger,
+      avatar:               user.avatar,
       channelSubscriptions: [],
       element:              element
     };
