@@ -6,6 +6,7 @@ module Devise
     class DatabaseAuthenticatable < Authenticatable
       def authenticate!
         if SystemPreferences.remote_ldap_sign_on
+          login = authentication_hash[:login]
           # try to authenticate against the LDAP server
           ldap = Net::LDAP.new
           ldap.host = SystemPreferences.remote_ldap_host
@@ -14,7 +15,7 @@ module Devise
           ldap.base = SystemPreferences.remote_ldap_base
           ldap.auth "#{login}@#{SystemPreferences.remote_ldap_domain}","#{password}"
           if ldap.bind # will return false if authentication is NOT successful
-            find_by_login(login.downcase) || begin
+            User.find_by_login(login.downcase) || begin
               generated_password = ActiveSupport::SecureRandom.base64(10)
               User.create({:login => login, :email => "#{login}@#{SystemPreferences.remote_ldap_domain}", :password => generated_password, :password_confirmation => generated_password})
             end
