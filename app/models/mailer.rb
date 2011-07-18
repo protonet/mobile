@@ -5,8 +5,8 @@ class Mailer < ActionMailer::Base
   
   def invitation(invitation)
     @invitation = invitation
-    
-    mail(:from => invitation.user.display_name, :to => invitation.email, :bcc => invitation.user.email, :subject => "#{invitation.user.display_name} wants you to join the Protonet")
+    from = "#{invitation.user.display_name}@#{SystemPreferences.public_host}"
+    mail(:from => from, :to => invitation.email, :bcc => invitation.user.email, :subject => "#{invitation.user.display_name} wants you to join the Protonet")
   end
 
 end
