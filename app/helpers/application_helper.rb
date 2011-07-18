@@ -41,7 +41,7 @@ module ApplicationHelper
   
   def image_proxy(url, opts)
     url = "#{(request.protocol + request.host_with_port) if opts[:local]}#{url}"
-    url = CGI::escape(url) if opts[:escape]
+    url = ERB::Util.u(url) if opts[:escape]
     "#{node_base_url}/image_proxy?url=#{url}&width=#{opts[:width]}&height=#{opts[:height]}"
   end
   

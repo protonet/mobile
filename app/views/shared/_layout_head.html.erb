@@ -10,15 +10,6 @@
   <title>
     <%= SystemPreferences.browser_title %>
   </title>
-  <%- if custom_stylesheet -%>
-    <%- if SystemPreferences.custom_css_type == "append" -%>
-      <%= stylesheet_link_tag(stylesheets, :cache => (configatron.avoid_caching != false)) %>
-    <%- end -%>
-    <%= raw custom_stylesheet %>
-  <%- else -%>
-    <%= stylesheet_link_tag(stylesheets, :cache => (configatron.avoid_caching != false)) %>
-  <%- end -%>
-  <%= csrf_meta_tag %>
   <script>
     var protonet = protonet || {};
     protonet.config = {
@@ -49,7 +40,15 @@
       debugMode:                <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>
     };
   </script>
-  
+  <%- if custom_stylesheet -%>
+    <%- if SystemPreferences.custom_css_type == "append" -%>
+      <%= stylesheet_link_tag(stylesheets, :cache => (configatron.avoid_caching != false)) %>
+    <%- end -%>
+    <%= raw custom_stylesheet %>
+  <%- else -%>
+    <%= stylesheet_link_tag(stylesheets, :cache => (configatron.avoid_caching != false)) %>
+  <%- end -%>
+  <%= csrf_meta_tag %>
   <%# Ensure HTML5 support in IE < 9 %>
   <!--[if lt IE 9]>
     <script>

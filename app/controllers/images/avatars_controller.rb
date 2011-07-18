@@ -1,7 +1,9 @@
 class Images::AvatarsController < ApplicationController
   
   def create
-    current_user.avatar = params[:avatar_file]
+    avatar = params[:avatar_file]
+    avatar.original_filename = Digest::MD5.hexdigest(avatar.original_filename)
+    current_user.avatar = avatar
     if current_user.save
       redirect_to preferences_path
     else

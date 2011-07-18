@@ -29,10 +29,16 @@ exports.proxy = function(params, headers, response) {
     child.exec("file --mime -b " + fileName, function(error, stdout, stderr) {
       var header = {};
       if(stdout && stdout.match(/(.*);/)) {
-        header = {'Content-Type': stdout.match(/(.*);/)[1], 'Content-Length': fs.lstatSync(fileName).size};
+        header = { "Content-Type": stdout.match(/(.*);/)[1], "Content-Length": fs.lstatSync(fileName).size };
       } else {
-        header = {'Content-Length': fs.lstatSync(fileName).size};
+        header = { "Content-Length": fs.lstatSync(fileName).size };
       }
+      
+      // Caching header
+      var ONE_YEAR = 365 * 24 * 60 * 60 * 1000;
+      header["Expires"] = new Date(new Date().getTime() + ONE_YEAR).toGMTString();
+      header["Cache-Control"] = "public, max-age=" + ONE_YEAR;
+      
       while (image_requests[fileName].length > 0) {
         var r = image_requests[fileName].pop();
         r.writeHead(200, header);
@@ -44,7 +50,7 @@ exports.proxy = function(params, headers, response) {
           .addListener('end', function(){
             r.end();
           });
-      };
+      }
     });
   }
   
@@ -123,8 +129,7 @@ exports.proxy = function(params, headers, response) {
           sys.puts("base file exists :) " + baseFileName);
           //only apply size manipulation and then send
           resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
-        }
-        else {
+        } else {
           sys.puts("NO base file exists :(");
           // get the port
           var secure = false;
@@ -139,7 +144,7 @@ exports.proxy = function(params, headers, response) {
           
           // request the image
           var fileStream = fs.createWriteStream(baseFileName);
-
+          
           request({ uri: url, headers: { "Cookie": cookie }, responseBodyStream: fileStream }, function (error, response, body) {
             if (!error && response.statusCode == 200) {
               fileStream.end();
