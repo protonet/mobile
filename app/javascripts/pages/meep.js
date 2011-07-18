@@ -48,7 +48,7 @@ protonet.pages.Meep = Class.create(protonet.Page, {
   },
   
   _initDependencies: function($super) {
-    this.behaviors.add("[data-meep-id]:click", function(element, event) {
+    $.behaviors("[data-meep-id]:click", function(element, event) {
       var action = element.data("meep-action");
       switch(action) {
         case "share":
