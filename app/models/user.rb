@@ -73,17 +73,6 @@ class User < ActiveRecord::Base
     end
   end
   
-  # created for an earlier version of devise
-  # TODO: check and remove if not used anymore
-  def self.authenticate(*args)
-    if configatron.ldap.single_authentication == true
-      return nil if args[0][:login].blank? || args[0][:password].blank?
-      return ldap_authenticate(args[0][:login], args[0][:password])
-    else
-      super
-    end
-  end
-
   def self.ldap_authenticate(login, password)
     # try to authenticate against the LDAP server
     ldap = Net::LDAP.new
