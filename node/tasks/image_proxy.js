@@ -89,16 +89,14 @@ exports.proxy = function(params, headers, response) {
   }
   
   // params = {"url": "http://www.google.com/images/logos/ps_logo2.png", "width": 100, "height": 100};
-  var url       = params.url,
-      parsedUrl = parseUrl(url, true),
-      urlPath   = (parsedUrl.pathname || "/") + (parsedUrl.search || ""),
-      cookie    = '';
-
-  var fileName      = resultingfileName(params);
-  var baseFileName  = resultingfileName(params, true);
+  var url           = params.url,
+      parsedUrl     = parseUrl(url, true),
+      cookie        = '',
+      fileName      = resultingfileName(params),
+      baseFileName  = resultingfileName(params, true);
   
   // handle concurrency
-  if(image_requests[fileName] && image_requests[fileName].length > 0){
+  if (image_requests[fileName] && image_requests[fileName].length > 0){
     console.log("concurrent")
     image_requests[fileName].push(response);
     return;
@@ -109,20 +107,19 @@ exports.proxy = function(params, headers, response) {
   
   // handle local requests
   if ((parsedUrl.host || "").replace(/:.*/, '') == headers.host.replace(/:.*/, '') || headers.host.replace(/:.*/, '') == "127.0.0.1") {
-    cookie             = headers.cookie; // only send cookie if its a local request
+    cookie = headers.cookie; // only send cookie if its a local request
   }
 
   // image exists with correct size
   path.exists(fileName, function(exists){
-    if(exists) {
+    if (exists) {
       sys.puts("file exists " + fileName);
       sendImage(fileName);
-    } 
-    else {
+    } else {
       sys.puts("file doesn't exists");
       path.exists(baseFileName, function(exists) {
         // if the base file exists
-        if(exists) {
+        if (exists) {
           sys.puts("base file exists :) " + baseFileName);
           //only apply size manipulation and then send
           resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
@@ -131,8 +128,8 @@ exports.proxy = function(params, headers, response) {
           sys.puts("NO base file exists :(");
           // get the port
           var secure = false;
-          if(!parsedUrl.port) {
-            if(parsedUrl.protocol == 'https:') {
+          if (!parsedUrl.port) {
+            if (parsedUrl.protocol == 'https:') {
               parsedUrl.port = 443;
               secure = true;
             } else {
@@ -143,10 +140,10 @@ exports.proxy = function(params, headers, response) {
           // request the image
           var fileStream = fs.createWriteStream(baseFileName);
 
-          request({"uri": encodeURI(url), "headers": {"Cookie": cookie}, "responseBodyStream": fileStream}, function (error, response, body) {
+          request({ uri: url, headers: { "Cookie": cookie }, responseBodyStream: fileStream }, function (error, response, body) {
             if (!error && response.statusCode == 200) {
               fileStream.end();
-              resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
+              resizeImage(baseFileName, fileName, { height: params.height, width: params.width }, sendImage, send404);
             } else {
               console.log(url + ' returned a ', response);
               send404(fileName);
