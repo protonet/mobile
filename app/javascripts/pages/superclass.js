@@ -29,7 +29,7 @@ protonet.Page = (function() {
       this.config       = $.extend({}, this._defaultConfig, config);
       this.state        = this.config.state;
       this.history      = protonet.utils.History;
-      this.behaviors    = protonet.utils.Behaviors;
+      this.behaviors    = $.behaviors;
       this.initialState = this.history.getCurrentPath();
     
       this._initDependencies();

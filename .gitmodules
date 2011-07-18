@@ -4,3 +4,6 @@
 [submodule "app/javascripts/lib/jquery-class-create"]
 	path = app/javascripts/lib/jquery-class-create
 	url = git@github.com:protonet/jquery-class-create.git
+[submodule "app/javascripts/lib/jquery-behaviors"]
+	path = app/javascripts/lib/jquery-behaviors
+	url = git://github.com/tiff/jquery-behaviors.git
