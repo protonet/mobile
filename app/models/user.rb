@@ -1,5 +1,4 @@
 require 'digest/sha1'
-require 'net/ldap' if SystemPreferences.remote_ldap_sign_on == true
 
 class User < ActiveRecord::Base
   include Rabbit
@@ -63,7 +62,7 @@ class User < ActiveRecord::Base
       find(-1)
     end
   end
-
+  
   # devise 1.2.1 calls this
   def valid_password?(password)
     if SystemPreferences.remote_ldap_sign_on == true
@@ -72,7 +71,7 @@ class User < ActiveRecord::Base
       super
     end
   end
-  
+
   def self.ldap_authenticate(login, password)
     # try to authenticate against the LDAP server
     ldap = Net::LDAP.new
@@ -297,3 +296,6 @@ class User < ActiveRecord::Base
   end
   
 end
+
+# devise ldap monkey patch
+require "#{Rails.root}/lib/devise_ext"
