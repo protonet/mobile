@@ -49,15 +49,16 @@ protonet.pages.Meep = Class.create(protonet.Page, {
   
   _initDependencies: function($super) {
     $.behaviors("[data-meep-id]:click", function(element, event) {
-      var action = element.data("meep-action");
+      var $element  = $(element),
+          action    = $element.data("meep-action");
       switch(action) {
         case "share":
-          var meep = element.parents("article").data("instance");
-          protonet.Notifications.trigger("form.fill", meep.getUrl());
+          var meep = $element.parents("article").data("instance");
+          protonet.trigger("form.fill", meep.getUrl());
           break;
         default:
-          var data = element.parents("article").data("meep");
-          this.show(element.data("meep-id"));
+          var data = $element.parents("article").data("meep");
+          this.show($element.data("meep-id"));
       }
       event.preventDefault();
     }.bind(this));

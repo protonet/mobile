@@ -146,7 +146,6 @@ protonet.Page = (function() {
       
       selector = typeof(this.config.selector) === "string" ? this.config.selector : "a[href]:click";
       $.behaviors(selector, function(element, event) {
-        element = element[0];
         if (element.host !== location.host) {
           return;
         }
