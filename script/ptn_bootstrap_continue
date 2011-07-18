@@ -62,8 +62,3 @@ check_licence_key &&
 get_babushka_deps &&
 get_babushka_protonet &&
 install
-
-# bash has default global variable
-# local variables are prefixed with local
-# curl -f http://localhost:3001/releases/licence/check/asdasd
-# wget http://33.33.33.1:3001/releases/licence/check/asdasd

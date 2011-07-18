@@ -106,7 +106,6 @@ if welcome; then
   install_ruby &&
   continue_installation &&
   on_install_success || on_install_failure
-  # do_bootstrap
 else
   echo ""
   echo "OK, maybe another time. :)"
