@@ -29,7 +29,6 @@ protonet.Page = (function() {
       this.config       = $.extend({}, this._defaultConfig, config);
       this.state        = this.config.state;
       this.history      = protonet.utils.History;
-      this.behaviors    = $.behaviors;
       this.initialState = this.history.getCurrentPath();
     
       this._initDependencies();
@@ -144,28 +143,26 @@ protonet.Page = (function() {
           }
         }.bind(this));
       }
-    
-      if (this.behaviors) {
-        selector = typeof(this.config.selector) === "string" ? this.config.selector : "a[href]:click";
-        this.behaviors.add(selector, function(element, event) {
-          element = element[0];
-          if (element.host !== location.host) {
-            return;
-          }
-        
-          var match = element.href.match(regExp);
-          if (!match) {
-            return;
-          }
-        
-          if (element.getAttribute("data-avoid-ajax")) {
-            return;
-          }
-        
-          this.show(decodeURIComponent(match[1]), element.href);
-          event.preventDefault();
-        }.bind(this));
-      }
+      
+      selector = typeof(this.config.selector) === "string" ? this.config.selector : "a[href]:click";
+      $.behaviors(selector, function(element, event) {
+        element = element[0];
+        if (element.host !== location.host) {
+          return;
+        }
+      
+        var match = element.href.match(regExp);
+        if (!match) {
+          return;
+        }
+      
+        if (element.getAttribute("data-avoid-ajax")) {
+          return;
+        }
+      
+        this.show(decodeURIComponent(match[1]), element.href);
+        event.preventDefault();
+      }.bind(this));
     },
   
     _interpolate: (function() {
