@@ -1,5 +1,5 @@
 require 'digest/sha1'
-require 'net/ldap' if configatron.ldap.single_authentication == true
+require 'net/ldap' if SystemPreferences.remote_ldap_sign_on == true
 
 class User < ActiveRecord::Base
   include Rabbit
@@ -66,7 +66,7 @@ class User < ActiveRecord::Base
 
   # devise 1.2.1 calls this
   def valid_password?(password)
-    if configatron.ldap.single_authentication == true
+    if SystemPreferences.remote_ldap_sign_on == true
       return !!self.class.ldap_authenticate(login, password)
     else
       super
@@ -76,15 +76,15 @@ class User < ActiveRecord::Base
   def self.ldap_authenticate(login, password)
     # try to authenticate against the LDAP server
     ldap = Net::LDAP.new
-    ldap.host = configatron.ldap.host
+    ldap.host = SystemPreferences.remote_ldap_host
     ldap.port = 636
     ldap.encryption :simple_tls # also required to tell Net:LDAP that we want SSL
-    ldap.base = configatron.ldap.base
-    ldap.auth "#{login}@#{configatron.ldap.domain}","#{password}"
+    ldap.base = SystemPreferences.remote_ldap_base
+    ldap.auth "#{login}@#{SystemPreferences.remote_ldap_domain}","#{password}"
     if ldap.bind # will return false if authentication is NOT successful
       find_by_login(login.downcase) || begin
         generated_password = ActiveSupport::SecureRandom.base64(10)
-        User.create({:login => login, :email => "#{login}@#{configatron.ldap.domain}", :password => generated_password, :password_confirmation => generated_password})
+        User.create({:login => login, :email => "#{login}@#{SystemPreferences.remote_ldap_domain}", :password => generated_password, :password_confirmation => generated_password})
       end
     end
   end

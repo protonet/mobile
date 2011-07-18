@@ -76,7 +76,7 @@ class ApplicationController < ActionController::Base
   end
   
   def allow_signup?
-    configatron.ldap.single_authentication != true && (
+    SystemPreferences.remote_ldap_sign_on != true && (
       node_privacy_settings["allow_registrations_for_strangers"] == true || 
       params[:invitation_token] && Invitation.unaccepted.find_by_token(params[:invitation_token]))
   end

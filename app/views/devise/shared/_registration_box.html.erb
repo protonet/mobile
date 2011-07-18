@@ -45,7 +45,7 @@
 
 <%= form_tag user_session_path, { :class => "login form #{'no-register' unless allow_signup?}" } do -%>
   <fieldset>
-    <%- if configatron.ldap.single_authentication == true %>
+    <%- if SystemPreferences.remote_ldap_sign_on == true %>
       <legend><strong>Log in</strong> with your ldap credentials</legend>
     <%- elsif node_privacy_settings["allow_registrations_for_strangers"] != true -%>
       <legend>Please <strong>log in!</strong></legend>

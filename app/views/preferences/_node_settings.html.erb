@@ -3,7 +3,7 @@
   <%= form_for @node, :url => {:controller => 'preferences', :action => 'node_settings'} do |f| -%>
     <fieldset>
       <legend>
-        <strong>Node Settings</strong>
+        <strong>Node Settings</strong><br />
         <span>are used by remote nodes, and allows users to tell which node is which.</span>
       </legend>
       <ul>
@@ -146,6 +146,33 @@
         <li>
           Default stranger group on visit
           <%= select_tag 'preferences[default_user_group]', options_from_collection_for_select(Role.where("title != 'admin'").all, 'title', 'title', SystemPreferences.default_stranger_user_group) %>
+        </li>
+      </ul>
+    </fieldset>
+    <button type="submit">Update</button>
+  <%- end -%>
+  
+  <%= form_tag system_preferences_update_path do -%>
+    <%= return_anchor_path %>
+    <fieldset>
+      <legend>
+        <strong>LDAP Settings</strong>
+      </legend>
+      <ul>
+        <li>
+          Remote LDAP sign on (remote):
+          <%= label_tag 'preferences[remote_ldap_sign_on]', 'OFF' %>
+          <%= radio_button_tag 'preferences[remote_ldap_sign_on]', false, !SystemPreferences.remote_ldap_sign_on %>
+          <%= label_tag 'preferences[remote_ldap_sign_on]', 'ON' %>
+          <%= radio_button_tag 'preferences[remote_ldap_sign_on]', true, SystemPreferences.remote_ldap_sign_on %>
+        </li>
+        <li>
+          <%= label_tag 'preferences[remote_ldap_host]', 'Remote LDAP Host' %>
+          <%= text_field_tag 'preferences[remote_ldap_host]', SystemPreferences.remote_ldap_host %><br>
+          <%= label_tag 'preferences[remote_ldap_host]', 'Remote LDAP Base' %>
+          <%= text_field_tag 'preferences[remote_ldap_base]', SystemPreferences.remote_ldap_base %><br>
+          <%= label_tag 'preferences[remote_ldap_domain]', 'Remote LDAP Domain' %>
+          <%= text_field_tag 'preferences[remote_ldap_domain]', SystemPreferences.remote_ldap_domain %><br>
         </li>
       </ul>
     </fieldset>
