@@ -68,13 +68,8 @@ function install_ruby {
   echo ""
 }
 
-
-function get_babushka {
-  bash -c "`wget -O - babushka.me/up`"
-}
-
 function continue_installation {
-  sudo su -l protonet $(cd `dirname $0` && pwd)/ptn_bootstrap_continue
+  sudo su -l protonet -c $(cd `dirname $0` && pwd)/ptn_bootstrap_continue
 }
 
 function logo {
@@ -109,7 +104,6 @@ if welcome; then
   user_basics && 
   update_apt &&
   install_ruby &&
-  get_babushka &&
   continue_installation &&
   on_install_success || on_install_failure
   # do_bootstrap

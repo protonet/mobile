@@ -1,3 +1,69 @@
 #!/bin/bash
 
+SERVER="33.33.33.1:3001"
+
 echo "BAM!!"
+
+function has {
+  type "$1" >/dev/null 2>&1
+}
+
+function get_babushka {
+  bash -c "`wget -O - babushka.me/up`"
+}
+
+function check_licence_key() {
+  echo ""
+  read -p "Please enter your protonet license key: " f
+  if has 'curl'; then
+    curl -f http://$SERVER/releases/licence/check/$f
+  elif has 'wget'; then
+    wget -q --server-response http://$SERVER/releases/licence/check/$f -o /dev/null -O /dev/null
+  fi
+}
+
+function get_babushka_deps() {
+  echo ""
+  local FILE=/tmp/babushka_deps.tar.gz
+  if has 'curl'; then
+    curl -f http://$SERVER/releases/release/babushka-deps/get/$f -o $FILE
+  elif has 'wget'; then
+    wget -q http://$SERVER/releases/release/babushka-deps/get/$f -O $FILE
+  fi
+  cd /tmp
+  tar -xzf $FILE
+  mkdir -p /home/protonet/.babushka/sources/dudemeister
+  mv /tmp/babushka-deps /home/protonet/.babushka/sources/dudemeister
+  rm -rf $FILE
+}
+
+function get_babushka_protonet() {
+  babushka "dudemeister:protonet babushka"
+}
+
+function install() {
+  echo ""
+  echo "If you are about to run protonet on your own hardware or virtual machine please select 1"
+  echo "If you want it to be installed on a real protonet provided node select 2"
+  echo "1. vm preps"
+  echo "2. full node preps"
+  read -p "Your selection: " t
+  if [ $t == 1 ]; then
+    babushka protonet:vm-preparations
+  elif [ $t == 2 ]; then
+    babushka protonet:node-preparations
+  else
+    exit 1
+  fi
+}
+
+get_babushka &&
+check_licence_key &&
+get_babushka_deps &&
+get_babushka_protonet &&
+install
+
+# bash has default global variable
+# local variables are prefixed with local
+# curl -f http://localhost:3001/releases/licence/check/asdasd
+# wget http://33.33.33.1:3001/releases/licence/check/asdasd
