@@ -63,35 +63,3 @@ if defined?(PhusionPassenger)
 end
 
 require 'net/ldap'
-
-# load this object for pre rails3 sessions
-# TODO remove after all nodes are on rails3
-module ActionController
-  module Flash
-    class FlashHash
-    end
-  end
-end
-
-ActiveSupport::MessageVerifier
-
-module ActiveSupport
-  class MessageVerifier
-      
-    def verify(signed_message)
-      raise InvalidSignature if signed_message.blank?
-
-      data, digest = signed_message.split("--")
-      if data.present? && digest.present? && secure_compare(digest, generate_digest(data))
-        begin
-          Marshal.load(ActiveSupport::Base64.decode64(data))
-        rescue ArgumentError
-          raise InvalidSignature
-        end
-      else
-        raise InvalidSignature
-      end
-    end
-      
-  end
-end
