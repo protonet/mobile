@@ -98,9 +98,9 @@
 }
 
 .text-extension-results .media a:hover img {
-  -webkit-box-shadow: 0 0 10px #666;
-  -moz-box-shadow: 0 0 10px #666;
-  box-shadow: 0 0 10px #666;
+  -webkit-box-shadow: 0 0 5px #666;
+  -moz-box-shadow: 0 0 5px #666;
+  box-shadow: 0 0 5px #666;
 }
 
 .meep .text-extension-results {
@@ -122,6 +122,13 @@
 
 #text-extension-preview .text-extension-results .media iframe {
   width: 530px;
+}
+
+.text-extension-results.Maps .media a:after {
+  content: "" !important;
+  background-image: url(/img/icn_magnifier.png);
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
 /* =VIDEO/FLASH TEXT EXTENSION (Vimeo, Grooveshark, ...)
@@ -153,7 +160,7 @@
   font-family: Arial;
   font-size: 20px;
   color: #fff;
-  background: #000;
+  background-color: #000;
   position: absolute;
   right: -2px;
   bottom: -2px;
@@ -196,14 +203,15 @@
 .text-extension-results.flash .media a:hover:after,
 .text-extension-results.iframe .media a:active:after,
 .text-extension-results.iframe .media a:hover:after {
-  background: #487bff;
+  background-color: #487bff;
   -webkit-transform: scale(1.2);
   -moz-transform: scale(1.2);
 }
 
 .text-extension-results.flash .media a:active:after,
 .text-extension-results.iframe .media a:active:after {
-  background: #000;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
 }
 
 /* =LINK TEXT EXTENSION
