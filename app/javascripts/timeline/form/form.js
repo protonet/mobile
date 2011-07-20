@@ -86,8 +86,10 @@ protonet.timeline.Form = {
         // add a white space before message if neccessary
         message = ((!value || value.slice(-1) == " ") ? "" : " ") + message;
         this.input.val(value + message);
-        this.input[0].selectionStart = value.length;
-        this.input[0].selectionEnd = value.length + message.length;
+        if (mark) {
+          this.input[0].selectionStart = value.length;
+          this.input[0].selectionEnd = value.length + message.length;
+        }
         // Invoke text extension checker
         this.input.trigger("paste");
       }.bind(this))

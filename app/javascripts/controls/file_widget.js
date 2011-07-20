@@ -502,15 +502,19 @@ protonet.controls.FileWidget.prototype = {
         imageNames.push(fileName);
       }
       
-      messageText.push("• file:" + downloadUrl);
+      messageText.push("\u25CF file:" + downloadUrl);
     }.bind(this)).join("\n");
     
-    protonet.Notifications.trigger("form.custom_submit", [messageText.join("\n"), images.length ? {
-      title:        "",
-      image:        images,
-      imageHref:    images,
-      imageTitle:   imageNames
-    } : ""]);
+    if (images.length) {
+      protonet.trigger("text_extension_input.render", {
+        title:        "",
+        image:        images,
+        imageHref:    images,
+        imageTitle:   imageNames
+      });
+    } else {
+      protonet.trigger("form.fill", messageText.join("\n"));
+    }
   },
   
   getDownloadPath: function(path) {
