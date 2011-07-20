@@ -53,8 +53,12 @@ exports.make_and_send = function(url, response) {
 
   function screenshotCommand(sanitizedUrl, fileName, baseName, directory) {
     if(systemType == 'linux') {
+      // This is using the following user agent
+      // Mozilla/5.0 (X11; U; Linux; C -) AppleWebKit/532.4 (KHTML, like Gecko) Qt/4.6.2 Safari/532.4
       command = "xvfb-run -a --server-args=\"-screen 0, 1024x768x24\" script/local_deps/webkit2png.py --aspect-ratio crop --scale 300 200 '" + sanitizedUrl + "' -o " + fileName;
     } else {
+      // This is using the following user agent
+      // Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_8; de-de) AppleWebKit/533.18.1 (KHTML, like Gecko)
       command = "script/local_deps/webkit2png-0.5.sh --clipwidth=300 --clipheight=200 -C -o " + baseName + " -D " + directory + ' "' + sanitizedUrl + '"';
     }
     return command;
