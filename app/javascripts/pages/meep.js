@@ -54,7 +54,7 @@ protonet.pages.Meep = Class.create(protonet.Page, {
       switch(action) {
         case "share":
           var meep = $element.parents("article").data("instance");
-          protonet.trigger("form.fill", meep.getUrl());
+          protonet.trigger("form.fill", [meep.getUrl(), true]);
           break;
         default:
           var data = $element.parents("article").data("meep");
@@ -113,7 +113,7 @@ protonet.pages.Meep = Class.create(protonet.Page, {
     
     this.shareButton.bind("click.meep_page", function() {
       this.hide();
-      protonet.trigger("form.fill", this.selectedMeep.getUrl());
+      protonet.trigger("form.fill", [this.selectedMeep.getUrl(), true]);
     }.bind(this));
     
     this.meepList
