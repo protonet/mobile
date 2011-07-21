@@ -6,6 +6,7 @@ export BABUSHKA_ARCHIVE=babushka.tar.gz
 export BABUSHKA_DEPS_ARCHIVE=babushka_deps.tar.gz
 export DEPLOYER_ARCHIVE=deployer.tar.gz
 export PROJECT_DIR=`pwd`
+export UPLOAD_PATH="~/code-dispatcher/code_dispatcher"
 
 # for os x tells tar not to include resource forks
 export COPYFILE_DISABLE=true
@@ -85,16 +86,16 @@ tar -pczf $DEPLOYER_ARCHIVE deployer/
 
 ############################################################
 # create directory for the new release and upload it
-ssh protonet-live "mkdir -p ~/code-dispatcher/releases/$last_version"
-scp $APP_ARCHIVE $BABUSHKA_ARCHIVE $DEPLOYER_ARCHIVE $BABUSHKA_DEPS_ARCHIVE protonet-live:~/code-dispatcher/releases/$last_version
-scp /tmp/dashboard/script/ptn_bootstrap* protonet-live:~/code-dispatcher/releases/$last_version
+ssh protonet-live "mkdir -p $UPLOAD_PATH/releases/$last_version"
+scp $APP_ARCHIVE $BABUSHKA_ARCHIVE $DEPLOYER_ARCHIVE $BABUSHKA_DEPS_ARCHIVE protonet-live:$UPLOAD_PATH/releases/$last_version
+scp /tmp/dashboard/script/ptn_bootstrap* protonet-live:$UPLOAD_PATH/releases/$last_version
 if [ "$release_type" != "OVERWRITE LAST" ]; then
-   scp /tmp/dashboard/TYPE protonet-live:~/code-dispatcher/releases/$last_version
+   scp /tmp/dashboard/TYPE protonet-live:$UPLOAD_PATH/releases/$last_version
 fi
 
 # if this is a stable release then link that thing to stable
 if [ "$release_type" = "STABLE" ]; then
-   ssh protonet-live "rm -f ~/code-dispatcher/code_dispatcher/stable; ln -s ~/code-dispatcher/code_dispatcher/releases/$last_version ~/code-dispatcher/code_dispatcher/stable"
+   ssh protonet-live "rm -f $UPLOAD_PATH/stable; ln -s $UPLOAD_PATH/releases/$last_version $UPLOAD_PATH/stable"
 fi
 
 # cleanup
