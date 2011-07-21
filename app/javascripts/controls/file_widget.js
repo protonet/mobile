@@ -28,10 +28,10 @@ protonet.controls.FileWidget = function() {
 
 protonet.controls.FileWidget.prototype = {
   _observe: function() {
-    protonet.Notifications
+    protonet
       .bind("channel.change", function(event, channelId) {
         this._resetHistory();
-        protonet.Notifications.trigger("files.load", channelId);
+        protonet.trigger("files.load", channelId);
       }.bind(this))
       
       .bind("files.load", function(event, channelId, path, fromHistory) {
@@ -79,16 +79,16 @@ protonet.controls.FileWidget.prototype = {
     this.container
       .delegate(".address-bar [data-directory-path]", "click", function(event) {
         var path = $(event.currentTarget).data("directory-path");
-        protonet.Notifications.trigger("files.load", [this.channelId, path]);
+        protonet.trigger("files.load", [this.channelId, path]);
         event.preventDefault();
       }.bind(this))
       
       .delegate(".enabled[rel=backward]", "click", function(event) {
-        protonet.Notifications.trigger("files.load", [this.channelId, this.history[--this.historyIndex], true]);
+        protonet.trigger("files.load", [this.channelId, this.history[--this.historyIndex], true]);
       }.bind(this))
       
       .delegate(".enabled[rel=forward]", "click", function(event) {
-        protonet.Notifications.trigger("files.load", [this.channelId, this.history[++this.historyIndex], true]);
+        protonet.trigger("files.load", [this.channelId, this.history[++this.historyIndex], true]);
       }.bind(this))
       
       .delegate("li.disabled", "click", function(event) {
@@ -138,7 +138,7 @@ protonet.controls.FileWidget.prototype = {
           },
           error: function() {
             li.removeClass("disabled");
-            protonet.Notifications.trigger("flash_message.error", protonet.t("FILE_DELETE_ERROR"));
+            protonet.trigger("flash_message.error", protonet.t("FILE_DELETE_ERROR"));
           }
         });
         
@@ -152,7 +152,7 @@ protonet.controls.FileWidget.prototype = {
     new protonet.ui.ContextMenu("#file-widget ul [data-directory-path]", {
       "<strong>open</strong>":   function(li, closeContextMenu) {
         var path = li.data("directory-path");
-        protonet.Notifications.trigger("files.load", [this.channelId, path]);
+        protonet.trigger("files.load", [this.channelId, path]);
         closeContextMenu();
       }.bind(this),
       "delete": function(li, closeContextMenu) {
@@ -175,7 +175,7 @@ protonet.controls.FileWidget.prototype = {
           },
           error: function() {
             li.removeClass("disabled");
-            protonet.Notifications.trigger("flash_message.error", protonet.t("DIRECTORY_DELETE_ERROR"));
+            protonet.trigger("flash_message.error", protonet.t("DIRECTORY_DELETE_ERROR"));
           }
         });
         
@@ -268,12 +268,16 @@ protonet.controls.FileWidget.prototype = {
     this.uploader.bind("FileUploaded", function(uploader, file) {
       window.onbeforeunload = null;
       if (uploader.total.percent >= 100 && uploader.total.queued <= 1) {
-        if (confirm(protonet.t("PUBLISH_FILES_CONFIRM"))) {
-          this.publish($.map(filesInQueue, function(file) {
-            return "/" + uploader._channelId + uploader._path + file.name;
-          }));
-        }
-        filesInQueue = [];
+        // Using a timeout here could fix a problem in some webkit based browsers
+        // where the UI partially freezes after executing the confirm()
+        setTimeout(function() {
+          if (confirm(protonet.t("PUBLISH_FILES_CONFIRM"))) {
+            this.publish($.map(filesInQueue, function(file) {
+              return "/" + uploader._channelId + uploader._path + file.name;
+            }));
+          }
+          filesInQueue = [];
+        }.bind(this), 0);
       }
     }.bind(this));
     
@@ -290,13 +294,13 @@ protonet.controls.FileWidget.prototype = {
       }
       
       if (error.code == plupload.FILE_SIZE_ERROR) {
-        protonet.Notifications.trigger(
+        protonet.trigger(
           "flash_message.error",
           "File '" + error.file.name + "' is too big (max size: " + maxFileSize + ")" + 
           ($.browser.mozilla ? " - Use Chrome/Safari to upload bigger files" : "")
         );
       } else {
-        protonet.Notifications.trigger(
+        protonet.trigger(
           "flash_message.error",
           "File Upload Error: " + error.message +
           "(Code: " + error.code + ") "
@@ -392,7 +396,7 @@ protonet.controls.FileWidget.prototype = {
             } else {
               message = "UNKNOWN_ERROR";
             }
-            protonet.Notifications.trigger("flash_message.error", protonet.t(message));
+            protonet.trigger("flash_message.error", protonet.t(message));
             deferredFocus();
           }
         });
@@ -512,7 +516,9 @@ protonet.controls.FileWidget.prototype = {
         imageHref:    images,
         imageTitle:   imageNames
       });
-    } else {
+    }
+    
+    if (images.length !== filePaths.length) {
       protonet.trigger("form.fill", messageText.join("\n"));
     }
   },
