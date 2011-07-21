@@ -18,7 +18,7 @@ class Tweet < ActiveRecord::Base
   has_one     :avatar,    :through => :user
 
   scope :recent, :order => "tweets.id DESC"
-  validates_presence_of :message
+  validates_presence_of :message, :unless => Proc.new { |meep| meep.text_extension? }
 
   attr_accessor :socket_id
   

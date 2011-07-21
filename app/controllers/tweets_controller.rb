@@ -58,7 +58,7 @@ class TweetsController < ApplicationController
     # TODO: Restrict user from posting to channels he has not subscribed or is not verified to post to
     
     # current user is nil when not logged in, that's ok
-    @tweet = Tweet.create(params[:tweet].merge({:author => author, :user => current_user, :channel_ids => [channel_id] }))
+    @tweet = Tweet.create!(params[:tweet].merge({:author => author, :user => current_user, :channel_ids => [channel_id] }))
     
     respond_to do |format|
       format.js  { render :text => @tweet.id }
