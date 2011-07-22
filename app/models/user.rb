@@ -137,15 +137,15 @@ class User < ActiveRecord::Base
   end
 
   def move_tweets_to_anonymous
-    tweets.each {|t| t.update_attribute(:user_id, 0)}
+    tweets.each {|t| t.update_attribute(:user_id, -1)}
   end
 
   def move_owned_channels_to_anonymous
-    owned_channels.each {|t| t.update_attribute(:owner_id, 0)}
+    owned_channels.each {|t| t.update_attribute(:owner_id, -1)}
   end
 
   def self.delete_strangers_older_than_two_days!
-    destroy_all(["temporary_identifier IS NOT NULL AND updated_at < ?", Time.now - 2.days]).each {|user| user.tweets.each {|t| t.update_attribute(:user_id, 0)}}
+    destroy_all(["temporary_identifier IS NOT NULL AND updated_at < ?", Time.now - 2.days]).each {|user| user.tweets.each {|t| t.update_attribute(:user_id, -1)}}
   end
   
   def anonymous?
