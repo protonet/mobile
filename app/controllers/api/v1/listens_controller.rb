@@ -1,4 +1,4 @@
-class ApiV1::ListensController < ApiV1::MasterController
+class Api::V1::ListensController < Api::V1::MasterController
   def create
     return head :unprocessable_entity unless @current_user.admin?
     return head :unprocessable_entity if params[:user_id].blank? || params[:channel_id].blank?

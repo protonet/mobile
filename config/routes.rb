@@ -91,22 +91,17 @@ Dashboard::Application.routes.draw do
   #   match 'meeps' => "api/meeps#index"
   # end
   
-  match "api/v1/meeps"            => "api_v1/meeps#index"
-  match "api/v1/meeps/create"     => "api_v1/meeps#create"
-  match "api/v1/meeps/show"       => "api_v1/meeps#show"
-
-  match "api/v1/channels"         => "api_v1/channels#index"
-  match "api/v1/channels/create"  => "api_v1/channels#create"
-  match "api/v1/channels/show"    => "api_v1/channels#show"
-
-  match "api/v1/users"            => "api_v1/users#index"
-  match "api/v1/users/create"     => "api_v1/users#create"
-  match "api/v1/users/show"       => "api_v1/users#show"
-  match "api/v1/users/auth_token" => "api_v1/users#auth_token"
-
-  match "api/v1/listens/create"   => "api_v1/listens#create"
-  match "api/v1/listens/destroy"  => "api_v1/listens#destroy"
-  
+  namespace "api" do
+    namespace "v1" do
+      resources :channels
+      resources :meeps
+      resources :users do
+        match "auth_token" => "users#auth_token"
+      end
+      resource  :listens
+    end
+  end
+    
   root :to => 'instruments#index'
   
   match "channel_data" => "instruments#channel_data"

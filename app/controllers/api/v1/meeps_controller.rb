@@ -1,4 +1,4 @@
-class ApiV1::MeepsController < ApiV1::MasterController
+class Api::V1::MeepsController < Api::V1::MasterController
   # EVERY CALL AUTHENTICATES A USER
   #
   # http://USERNAME:PASSOWRD@HOST.COM

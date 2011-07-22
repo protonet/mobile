@@ -1,4 +1,4 @@
-class ApiV1::UsersController < ApiV1::MasterController
+class Api::V1::UsersController < Api::V1::MasterController
   
   before_filter :set_defaults
 
@@ -19,10 +19,10 @@ class ApiV1::UsersController < ApiV1::MasterController
     
     user = User.new(
       :login => params[:login],
-      :name => (params[:name] || params[:login]),
+      :name => params[:name],
       :password => (params[:password] || ActiveSupport::SecureRandom.base64(10)),
-      :email => (params[:email] || "#{params[:login]}@user.local"),
-      :profile_url => nil,
+      :email => params[:email],
+      :profile_url => params[:profile_url],
       :avatar_url => params[:avatar_url],
       :channels_to_subscribe => (params[:no_channels] == "true" ? [] : nil )
     )
@@ -44,7 +44,21 @@ class ApiV1::UsersController < ApiV1::MasterController
   
   # GET A SPECIFIC USER
   def show
-    render :json => User.find(params[:id])
+    if params[:id]
+      render :json => User.find(params[:id])
+    elsif params[:login]
+      render :json => User.find_by_login(params[:login])
+    else
+      head :unprocessable_entity
+    end
+  end
+  
+  def destroy
+    return head :unprocessable_entity unless @current_user.admin?
+    return head :unprocessable_entity if params[:id].blank?
+    user = User.find(params[:id])
+    user.destroy
+    user.destroyed? ? head(:ok) : head(:unprocessable_entity)
   end
   
   private

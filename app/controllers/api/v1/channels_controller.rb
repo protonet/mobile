@@ -1,4 +1,4 @@
-class ApiV1::ChannelsController < ApiV1::MasterController
+class Api::V1::ChannelsController < Api::V1::MasterController
   
   before_filter :set_defaults
   
