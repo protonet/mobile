@@ -16,7 +16,10 @@ class Channel < ActiveRecord::Base
   before_validation :normalize_name, :on => :create
   after_create  :generate_uuid,   :if => lambda {|c| c.uuid.blank? }
   after_create  :create_folder,   :if => lambda {|c| !c.home?}
-  after_create  :subscribe_owner, :if => lambda {|c| !c.home?}
+  after_create  :subscribe_owner, :if => lambda {|c| !c.home? && !c.skip_autosubscribe}
+
+  attr_accessor   :skip_autosubscribe
+  attr_accessible :skip_autosubscribe, :name, :description, :owner
 
   scope :public,   :conditions => {:public => true}
 

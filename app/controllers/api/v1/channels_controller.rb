@@ -5,11 +5,7 @@ class Api::V1::ChannelsController < Api::V1::MasterController
   # GET A CHANNEL
   # OR ALL YOUR CHANNELS
   def index
-    if params[:channel_id]
-      channels = Channel.find(params[:channel_id].to_a)
-    else
-      channels = @current_user.channels.limit(@limit)
-    end
+    channels = @current_user.channels.limit(@limit)
     render :json => channels
   end
   
@@ -17,7 +13,7 @@ class Api::V1::ChannelsController < Api::V1::MasterController
   def create
     return head :unprocessable_entity unless @current_user.admin?
     return head :unprocessable_entity if params[:name].blank?
-    channel = Channel.new(:name => params[:name], :description => params[:description], :owner => @current_user)
+    channel = Channel.new(params.merge(:owner => @current_user))
     if channel.save
       render :json => {"channel_id" => channel.id}
     else
@@ -27,7 +23,20 @@ class Api::V1::ChannelsController < Api::V1::MasterController
   
   # GET A SPECIFIC CHANNEL
   def show
-    render :json => Channel.find(params[:id])
+    channel = Channel.find(params[:id]) rescue Channel.find_by_name(params[:id])
+    if channel
+      render :json => channel
+    else
+      head :unprocessable_entity
+    end
+  end
+  
+  def destroy
+    return head :unprocessable_entity unless @current_user.admin?
+    return head :unprocessable_entity if params[:id].blank?
+    channel = Channel.find(params[:id])
+    channel.destroy
+    channel.destroyed? ? head(:ok) : head(:unprocessable_entity)
   end
   
   # LIST CHANNELS FOR USER

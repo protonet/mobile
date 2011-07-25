@@ -4,10 +4,10 @@ class Api::V1::UsersController < Api::V1::MasterController
 
   # LIST USERS
   def index
-    if params[:user_id]
-      users = User.find(params[:user_id].to_a)
+    users = if params[:channel_id]
+      Channel.find(params[:channel_id]).users rescue []
     else
-      users = User.all
+      User.all
     end
     render :json => users
   end
@@ -15,14 +15,14 @@ class Api::V1::UsersController < Api::V1::MasterController
   # CREATE A USER
   def create
     return head :unprocessable_entity unless @current_user.admin?
-    return head :unprocessable_entity if params[:login].blank?
+    return head :unprocessable_entity if params[:login].blank? || params[:email].blank?
     
     user = User.new(
       :login => params[:login],
       :name => params[:name],
-      :password => (params[:password] || ActiveSupport::SecureRandom.base64(10)),
+      :password => (params[:password].blank? ? ActiveSupport::SecureRandom.base64(10) : params[:password]),
       :email => params[:email],
-      :profile_url => params[:profile_url],
+      :external_profile_url => params[:external_profile_url],
       :avatar_url => params[:avatar_url],
       :channels_to_subscribe => (params[:no_channels] == "true" ? [] : nil )
     )
@@ -44,10 +44,9 @@ class Api::V1::UsersController < Api::V1::MasterController
   
   # GET A SPECIFIC USER
   def show
-    if params[:id]
-      render :json => User.find(params[:id])
-    elsif params[:login]
-      render :json => User.find_by_login(params[:login])
+    user = User.find(params[:id]) rescue User.find_by_login(params[:id])
+    if user
+      render :json => user
     else
       head :unprocessable_entity
     end

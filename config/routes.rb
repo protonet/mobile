@@ -93,7 +93,9 @@ Dashboard::Application.routes.draw do
   
   namespace "api" do
     namespace "v1" do
-      resources :channels
+      resources :channels do
+        resources :users
+      end
       resources :meeps
       resources :users do
         match "auth_token" => "users#auth_token"

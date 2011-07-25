@@ -50,7 +50,7 @@ class ChannelsController < ApplicationController
   
   def destroy
     channel = Channel.find(params[:id])
-    if(channel && channel.owned_by(current_user)) 
+    if(channel && (channel.owned_by(current_user) || current_user.admin?)) 
       success = channel.destroy
       if success && channel.errors.empty?
         flash[:notice] = "Successfully deleted channel '#{channel.name}'"

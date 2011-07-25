@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   end
   
 
-  attr_accessible :login, :email, :name, :password, :password_confirmation, :avatar_url, :channels_to_subscribe
+  attr_accessible :login, :email, :name, :password, :password_confirmation, :avatar_url, :channels_to_subscribe, :external_profile_url
   attr_accessor :channels_to_subscribe, :invitation_token, :avatar_url
 
   has_many  :tweets
