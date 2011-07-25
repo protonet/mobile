@@ -56,12 +56,12 @@ protonet.timeline.Meep.prototype = {
    */
   config: {
     // Url to post the meep to
-    POST_URL: "/tweets"
+    POST_URL: "/meeps"
   },
   
   _parseForm: function(form) {
     this.queryString = form.serialize();
-    var data = protonet.utils.parseQueryString(this.queryString).tweet;
+    var data = protonet.utils.parseQueryString(this.queryString).meep;
     return $.extend(data, {
       user_id:        protonet.config.user_id,
       created_at:     new Date().toString(),
@@ -163,7 +163,7 @@ protonet.timeline.Meep.prototype = {
     this.setStatus(protonet.t("MEEP_SENDING"));
     
     this.queryString = this.queryString || $.param({
-      tweet: $.extend({}, this.data, {
+      meep: $.extend({}, this.data, {
         text_extension: JSON.stringify(this.data.text_extension)
       })
     });

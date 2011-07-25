@@ -16,7 +16,7 @@ class Api::V1::MeepsController < Api::V1::MasterController
     else
       channels = @current_user.channels
     end
-    meeps = channels.collect {|c| c.tweets.limit(@limit)}
+    meeps = channels.collect {|c| c.meeps.limit(@limit)}
     render :json => meeps
   end
   
@@ -24,17 +24,17 @@ class Api::V1::MeepsController < Api::V1::MasterController
   def create
     return if params[:message].blank? || params[:channel_id].blank?
     channel = Channel.find(params[:channel_id])
-    tweet = @current_user.tweets.build({:author => "api", :channels => [channel], :message => params[:message]})
-    if tweet.save
-      render :json => {"tweet_id" => tweet.id}
+    meep = @current_user.meeps.build({:author => "api", :channels => [channel], :message => params[:message]})
+    if meep.save
+      render :json => {"meep_id" => meep.id}
     else
-      render :json => tweet.errors, :status => :unprocessable_entity
+      render :json => meep.errors, :status => :unprocessable_entity
     end
   end
   
   # GET A SPECIFIC MEEP
   def show
-    render :json => Tweet.includes(:says).where("says.channel_id" => @current_user.channels.map(&:id)).find(params[:id])
+    render :json => Meep.includes(:says).where("says.channel_id" => @current_user.channels.map(&:id)).find(params[:id])
   end
   
   # LIST CHANNELS FOR USER

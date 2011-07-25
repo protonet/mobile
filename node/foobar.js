@@ -23,9 +23,9 @@ amqp.addListener("ready", function() {
       if(message.forwarded != 1 && message.channel_id) {
         sys.puts("received LOCAL message, forwarding to remote");
         var remoteNode = http.createClient(3001, 'localhost');
-        var request = remoteNode.request('POST', '/tweets',
+        var request = remoteNode.request('POST', '/meeps',
           {'host': 'localhost'});
-        request.write(querystring.stringify({"message_channel_id":message.channel_id, "tweet": {"text_extension":message.text_extension, "message": message.message}}));
+        request.write(querystring.stringify({"message_channel_id":message.channel_id, "meep": {"text_extension":message.text_extension, "message": message.message}}));
         request.end();
       }
     }

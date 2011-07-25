@@ -91,9 +91,9 @@ EM.run do
       if(!time && !msg.match(/\{p\}/)) && !msg.match(/\{x\}/)
         begin
           user = User.find_by_login(user_name)
-          tweet = Tweet.new({:author => "#{user_name}{x}", :user => user, :channels => Channel.find([16]), :message => msg.to_s})
-          tweet.socket_id = '0'
-          tweet.save
+          meep = Meep.new({:author => "#{user_name}{x}", :user => user, :channels => Channel.find([16]), :message => msg.to_s})
+          meep.socket_id = '0'
+          meep.save
         rescue Exception => e
           puts "BAM!"
           puts e.inspect
@@ -106,9 +106,9 @@ EM.run do
       if(!time && !msg.match(/\{p\}/)) && !msg.match(/\{x\}/)
         begin
           user = User.find_by_login(user_name)
-          tweet = Tweet.new({:author => "#{user_name}{x}", :user => user, :channels => Channel.find([4]), :message => msg.to_s})
-          tweet.socket_id = '0'
-          tweet.save
+          meep = Meep.new({:author => "#{user_name}{x}", :user => user, :channels => Channel.find([4]), :message => msg.to_s})
+          meep.socket_id = '0'
+          meep.save
         rescue Exception => e
           puts "BAM!"
           puts e.inspect
@@ -121,9 +121,9 @@ EM.run do
       if(!time && !msg.match(/\{p\}/)) && !msg.match(/\{x\}/)
         begin
           user = User.find_by_login(user_name)
-          tweet = Tweet.new({:author => "#{user_name}{x}", :user => user, :channels => Channel.find([21]), :message => msg.to_s})
-          tweet.socket_id = '0'
-          tweet.save
+          meep = Meep.new({:author => "#{user_name}{x}", :user => user, :channels => Channel.find([21]), :message => msg.to_s})
+          meep.socket_id = '0'
+          meep.save
         rescue Exception => e
           puts "BAM!"
           puts e.inspect
@@ -136,9 +136,9 @@ EM.run do
       if(!time && !msg.match(/\{p\}/)) && !msg.match(/\{x\}/)
         begin
           user = User.find_by_login(user_name)
-          tweet = Tweet.new({:author => "#{user_name}{x}", :user => user, :channels => Channel.find([22]), :message => msg.to_s})
-          tweet.socket_id = '0'
-          tweet.save
+          meep = Meep.new({:author => "#{user_name}{x}", :user => user, :channels => Channel.find([22]), :message => msg.to_s})
+          meep.socket_id = '0'
+          meep.save
         rescue Exception => e
           puts "BAM!"
           puts e.inspect
@@ -151,9 +151,9 @@ EM.run do
       if(!time && !msg.match(/\{p\}/)) && !msg.match(/\{x\}/)
         begin
           user = User.find_by_login(user_name)
-          tweet = Tweet.new({:author => "#{user_name}{x}", :user => user, :channels => Channel.find([20]), :message => msg.to_s})
-          tweet.socket_id = '0'
-          tweet.save
+          meep = Meep.new({:author => "#{user_name}{x}", :user => user, :channels => Channel.find([20]), :message => msg.to_s})
+          meep.socket_id = '0'
+          meep.save
         rescue Exception => e
           puts "BAM!"
           puts e.inspect

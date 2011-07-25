@@ -2,7 +2,7 @@ class Network < ActiveRecord::Base
   include Rabbit
   
   has_many :channels
-  has_many :tweets
+  has_many :meeps
   
   validates_uniqueness_of :uuid
   after_create :generate_uuid, :if => lambda {|c| c.uuid.blank? && c.local? }

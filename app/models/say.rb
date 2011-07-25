@@ -1,5 +1,5 @@
 class Say < ActiveRecord::Base
 
-  belongs_to  :tweet
+  belongs_to  :meep
   belongs_to  :channel
 end

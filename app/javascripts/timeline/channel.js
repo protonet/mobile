@@ -29,7 +29,7 @@ protonet.timeline.Channel = function(data) {
 protonet.timeline.Channel.prototype = {
   config: {
     MERGE_MEEPS_TIMEFRAME: 2 * 60 * 1000, // 2 minutes
-    FETCH_MEEPS_URL:       "/tweets"
+    FETCH_MEEPS_URL:       "/meeps"
   },
   
   _getLink: function() {

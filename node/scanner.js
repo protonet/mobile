@@ -18,8 +18,8 @@ fs.watchFile('/home/betahaus-scanner/scans', function (curr, prev) {
         exec('chown protonet:protonet -R /home/protonet/dashboard/shared/user-files/9');
         setTimeout(function(){
           var localNode = http.createClient(80, 'localhost');
-          var request = localNode.request('POST', '/tweets', {'host': 'localhost'});
-          request.write(querystring.stringify({"message_channel_id":9, "tweet": {"message": "your scan has arrived, please reload the file browser"}}));
+          var request = localNode.request('POST', '/meeps', {'host': 'localhost'});
+          request.write(querystring.stringify({"message_channel_id":9, "meep": {"message": "your scan has arrived, please reload the file browser"}}));
           request.end();
         }, 15000)
       }

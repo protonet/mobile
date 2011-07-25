@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
         #  move to {:controller => '', :action => ''} scheme
         return redirect_to("/") unless [
           ["instruments", "index"],
-          ["tweets", "create"],
+          ["meeps", "create"],
           ["system/files", "index"],
           ["system/files", "create"],
           ["system/files", "show"]

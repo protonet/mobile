@@ -205,7 +205,7 @@ protonet.pages.Meep = Class.create(protonet.Page, {
   
   _loadMeep: function(id, callback) {
     this.ajaxRequest = $.ajax({
-      url:      "/tweets/" + id,
+      url:      "/meeps/" + id,
       success:  callback,
       error:    function() {
         protonet.trigger("flash_message.error", protonet.t("DETAIL_VIEW_LOADING_ERROR"));
@@ -220,7 +220,7 @@ protonet.pages.Meep = Class.create(protonet.Page, {
     
     $.ajax({
       data:     { id: selectedMeep.data.id, count: this.config.meepsPerRequest },
-      url:      "/tweets/" + position,
+      url:      "/meeps/" + position,
       success:  function(data) {
         if (!data.length) {
           return;

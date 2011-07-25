@@ -3,8 +3,8 @@
  * @example
  *    protonet.utils.parseQueryString("&foo=1&bar=test");
  *      => { foo: 1, bar: "test" }
- *    protonet.utils.parseQueryString("&tweet[foo]=1&tweet[bar]=test");
- *      => { tweet: { foo: 1, bar: "test" } }
+ *    protonet.utils.parseQueryString("&meep[foo]=1&meep[bar]=test");
+ *      => { meep: { foo: 1, bar: "test" } }
  *
  * Please note:
  *    This method only supports one dimension of modelling within query strings. 

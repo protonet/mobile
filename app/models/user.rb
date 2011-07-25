@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
   attr_accessible :login, :email, :name, :password, :password_confirmation, :avatar_url, :channels_to_subscribe, :external_profile_url
   attr_accessor :channels_to_subscribe, :invitation_token, :avatar_url
 
-  has_many  :tweets
+  has_many  :meeps
   has_many  :listens,  :dependent => :destroy
   has_many  :channels,          :through => :listens, :order => :order_number
   has_many  :owned_channels,    :class_name => 'Channel', :foreign_key => :owner_id
@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
   after_create :listen_to_channels, :unless => :anonymous?
   after_create :mark_invitation_as_accepted, :if => :invitation_token
   
-  after_destroy :move_tweets_to_anonymous
+  after_destroy :move_meeps_to_anonymous
   after_destroy :move_owned_channels_to_anonymous
 
   def self.anonymous
@@ -136,8 +136,8 @@ class User < ActiveRecord::Base
     all(:conditions => "temporary_identifier IS NOT NULL")
   end
 
-  def move_tweets_to_anonymous
-    tweets.each {|t| t.update_attribute(:user_id, -1)}
+  def move_meeps_to_anonymous
+    meeps.each {|t| t.update_attribute(:user_id, -1)}
   end
 
   def move_owned_channels_to_anonymous
@@ -145,7 +145,7 @@ class User < ActiveRecord::Base
   end
 
   def self.delete_strangers_older_than_two_days!
-    destroy_all(["temporary_identifier IS NOT NULL AND updated_at < ?", Time.now - 2.days]).each {|user| user.tweets.each {|t| t.update_attribute(:user_id, -1)}}
+    destroy_all(["temporary_identifier IS NOT NULL AND updated_at < ?", Time.now - 2.days]).each {|user| user.meeps.each {|t| t.update_attribute(:user_id, -1)}}
   end
   
   def anonymous?

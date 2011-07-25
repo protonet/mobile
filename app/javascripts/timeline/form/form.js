@@ -9,8 +9,8 @@ protonet.timeline.Form = {
     this.form               = $("#message-form");
     this.wrapper            = this.form.find("#textarea-wrapper-inner");
     this.input              = this.form.find("#message");
-    this.channelIdInput     = this.form.find("#tweet_channel_id");
-    this.socketIdInput      = this.form.find("#tweet_socket_id");
+    this.channelIdInput     = this.form.find("#meep_channel_id");
+    this.socketIdInput      = this.form.find("#meep_socket_id");
     this.$window            = $(window);
     this.typing             = false;
     

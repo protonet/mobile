@@ -5,7 +5,7 @@ class Channel < ActiveRecord::Base
   belongs_to  :network
 
   has_many  :says
-  has_many  :tweets, :through => :says
+  has_many  :meeps, :through => :says
 
   has_many  :listens, :dependent => :destroy
   has_many  :users,   :through   => :listens
@@ -19,7 +19,7 @@ class Channel < ActiveRecord::Base
   after_create  :subscribe_owner, :if => lambda {|c| !c.home? && !c.skip_autosubscribe}
 
   attr_accessor   :skip_autosubscribe
-  attr_accessible :skip_autosubscribe, :name, :description, :owner
+  attr_accessible :skip_autosubscribe, :name, :description, :owner, :owner_id, :network, :network_id, :public, :global
 
   scope :public,   :conditions => {:public => true}
 

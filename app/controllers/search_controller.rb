@@ -6,7 +6,7 @@ class SearchController < ApplicationController
       format.json do
         perform_search
         
-        # TODO: Refactor Tweet.prepare_for_frontend and use it here
+        # TODO: Refactor Meep.prepare_for_frontend and use it here
         render :json => @search_results.hits.map {|hit|
           meep = hit.instance
           meep.text_extension = JSON.parse(meep.text_extension) rescue nil
@@ -18,23 +18,23 @@ class SearchController < ApplicationController
     end
   end
   
-  def more_tweets
+  def more_meeps
     respond_to do |format|
       format.json do
         perform_search
 
         channel = Channel.find(params[:channel_id])
         channel = nil if !@channels.map(&:id).include?(channel.id)
-        tweet = channel.tweets.find params[:tweet_id]
+        meep = channel.meeps.find params[:meep_id]
         later = params[:later].to_i
         earlier = params[:earlier].to_i
         channel_id = channel.id
-        tweets = tweet.from_minutes_after(later,channel_id) + [tweet] + tweet.from_minutes_before(earlier,channel_id)
+        meeps = meep.from_minutes_after(later,channel_id) + [meep] + meep.from_minutes_before(earlier,channel_id)
         
         render :partial => 'search/search_result',
           :locals => {
-            :tweet    => tweet,
-            :tweets    => tweets,
+            :meep    => meep,
+            :meeps    => meeps,
             :channel   => channel,
             :pos       => params[:pos],
             :more_time => later,
@@ -55,11 +55,11 @@ class SearchController < ApplicationController
           search_channel_ids = [channel_id.to_i]
         end
 
-        @search_results = Tweet.search do
+        @search_results = Meep.search do
           with(:channel_ids, search_channel_ids)
           keywords(search_term, :highlight => true)
           order_by(:created_at, :desc)
-          paginate(:page => (params[:page] || 1), :per_page => params[:results_count] || Tweet::SEARCH_RESULTS_PER_PAGE)
+          paginate(:page => (params[:page] || 1), :per_page => params[:results_count] || Meep::SEARCH_RESULTS_PER_PAGE)
         end
       end
     end

@@ -86,7 +86,7 @@ class NodeConnection < FlashConnection
       json['channel_id'] = channel.id
       json['network_uuid'] = @network.uuid
       
-      Tweet.create :user_id => 0,
+      Meep.create :user_id => 0,
         :author => json['author'],
         :message => json['message'],
         :text_extension => json['text_extension'],
@@ -107,7 +107,7 @@ class NodeConnection < FlashConnection
     bind('channels', channel.uuid) do |json|
       log json.inspect
       if json['network_uuid'] == Network.local.uuid
-        json['operation'] = 'tweet'
+        json['operation'] = 'meep'
         json.delete 'channel_id' # worthless to the remote
         send_json json
       end

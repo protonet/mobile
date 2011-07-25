@@ -52,7 +52,7 @@ Given /^I register as "([^\"]*)"$/ do |username|
 end
 
 Then /^the message field should contain "([^\"]*)"$/ do |value|
-  find("#message-form textarea[name='tweet[message]']").value.should match(/#{value}/)
+  find("#message-form textarea[name='meep[message]']").value.should match(/#{value}/)
 end
 
 Given /^"([^"]*)" is listening to "([^"]*)"$/ do |username, channelname|
@@ -178,12 +178,20 @@ Then /^(?:|I )should see an image with the url "([^\"]*)"(?: within "([^\"]*)")?
 end
 
 Then /^I should see the profile image "([^"]*)" in my profile details$/ do |image_name|
-  image_selector = "#preferences-details img[src*='#{image_name}']"
+  src = {
+    "user_picture.png" => "user_picture.png", #default
+    "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
+  }[image_name]
+  image_selector = "#preferences-details img[src*='#{src}']"
   find(:css, image_selector)
 end
 
 Then /^I should see the profile image "([^"]*)" in the top right navi$/ do |image_name|
-  image_selector = ".welcome img[src*='#{image_name}']"
+  src = {
+    "user_picture.png" => "user_picture.png", #default
+    "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
+  }[image_name]
+  image_selector = ".welcome img[src*='#{src}']"
   find(:css, image_selector)
 end
 

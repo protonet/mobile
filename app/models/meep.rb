@@ -1,4 +1,4 @@
-class Tweet < ActiveRecord::Base
+class Meep < ActiveRecord::Base
   include Rabbit
 
   SEARCH_RESULTS_PER_PAGE = 10
@@ -17,7 +17,7 @@ class Tweet < ActiveRecord::Base
   has_many    :channels,  :through => :says
   has_one     :avatar,    :through => :user
 
-  scope :recent, :order => "tweets.id DESC"
+  scope :recent, :order => "meeps.id DESC"
   validates_presence_of :message, :unless => Proc.new { |meep| meep.text_extension? }
 
   attr_accessor :socket_id
@@ -66,7 +66,7 @@ class Tweet < ActiveRecord::Base
     from_minutes({
       :from       => (created_at - (mins + 1).minutes),
       :to         => created_at,
-      :tweet_id   => id,
+      :meep_id   => id,
       :channel_id => channel_id
     })
   end
@@ -75,23 +75,23 @@ class Tweet < ActiveRecord::Base
     from_minutes({
       :from       => created_at,
       :to         => (created_at + (mins + 1).minutes),
-      :tweet_id   => id,
+      :meep_id   => id,
       :channel_id => channel_id
     })
   end
   
   def before(count)
-    Tweet.all(:include => [:says],
-      :conditions => ["tweets.id < ? AND says.channel_id = ?", id, channels.first.id],
-      :order => "tweets.created_at DESC",
+    Meep.all(:include => [:says],
+      :conditions => ["meeps.id < ? AND says.channel_id = ?", id, channels.first.id],
+      :order => "meeps.created_at DESC",
       :limit => count
     ).reverse
   end
   
   
   def after(count)
-    Tweet.all(:include => [:says],
-      :conditions => ["tweets.id > ? AND says.channel_id = ?", id, channels.first.id],
+    Meep.all(:include => [:says],
+      :conditions => ["meeps.id > ? AND says.channel_id = ?", id, channels.first.id],
       :limit => count
     )
   end
@@ -99,10 +99,10 @@ class Tweet < ActiveRecord::Base
   private
 
   def from_minutes(opts)
-    Tweet.all(:include => [:says],
-      :conditions => ["tweets.created_at >= ? AND tweets.created_at <= ? AND tweets.id <> ? AND says.channel_id = ?",
-      opts[:from],opts[:to], opts[:tweet_id], opts[:channel_id]],
-      :order => 'tweets.created_at DESC'
+    Meep.all(:include => [:says],
+      :conditions => ["meeps.created_at >= ? AND meeps.created_at <= ? AND meeps.id <> ? AND says.channel_id = ?",
+      opts[:from],opts[:to], opts[:meep_id], opts[:channel_id]],
+      :order => 'meeps.created_at DESC'
     )
   end
 end

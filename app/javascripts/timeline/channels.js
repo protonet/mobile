@@ -118,7 +118,7 @@ protonet.timeline.Channels = {
       });
       
       $.ajax({
-        url:      "/tweets/sync",
+        url:      "/meeps/sync",
         data:     { channel_states: channelStates },
         success: function(response) {
           $.each(response, function(channelId, meeps) {

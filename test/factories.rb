@@ -9,7 +9,7 @@ Factory.define :channel do |c|
   c.name { Random.city }
 end
 
-Factory.define :tweet do |t|
+Factory.define :meep do |t|
   t.message { Faker::Lorem.sentence }
   t.user {|u| u.association(:user) }
   t.channels {|c| [c.association(:channel)]}

@@ -12,18 +12,18 @@ Dashboard::Application.routes.draw do
   match 'users/sort_channels' => 'users#sort_channels', :via => [:post]
   
   resources :channels do
-    resources :tweets
+    resources :meeps
   end
   match 'channels/:id/destroy' => 'channels#destroy', :as => :destroy_channel
   
-  # Tweets
-  match 'tweets/sync' => 'tweets#sync', :as => :sync_tweets
-  match 'tweets/before' => 'tweets#before', :as => :tweets_before
-  match 'tweets/after' => 'tweets#after', :as => :tweets_after
+  # meeps
+  match 'meeps/sync' => 'meeps#sync', :as => :sync_meeps
+  match 'meeps/before' => 'meeps#before', :as => :meeps_before
+  match 'meeps/after' => 'meeps#after', :as => :meeps_after
   
-  resources :tweets
+  resources :meeps
   
-  match '/more_tweets/:tweet_id/:channel_id/:later/:earlier/:pos.:format' => 'search#more_tweets', :as => :more_tweets
+  match '/more_meeps/:meep_id/:channel_id/:later/:earlier/:pos.:format' => 'search#more_meeps', :as => :more_meeps
   match 'listens/create' => 'listens#create', :as => :listen_to_channel
   
   # Listens
@@ -96,7 +96,7 @@ Dashboard::Application.routes.draw do
       resources :channels do
         resources :users
       end
-      resources :tweets
+      resources :meeps
       resources :users do
         match "auth_token" => "users#auth_token"
       end

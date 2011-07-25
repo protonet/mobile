@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110606171225) do
+ActiveRecord::Schema.define(:version => 20110725125221) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -57,6 +57,17 @@ ActiveRecord::Schema.define(:version => 20110606171225) do
     t.integer  "order_number"
   end
 
+  create_table "meeps", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "author"
+    t.text     "message"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "text_extension"
+    t.integer  "network_id",     :default => 1
+    t.integer  "reply_from"
+  end
+
   create_table "networks", :force => true do |t|
     t.string   "name"
     t.string   "description"
@@ -95,7 +106,7 @@ ActiveRecord::Schema.define(:version => 20110606171225) do
 
   create_table "says", :force => true do |t|
     t.integer  "channel_id"
-    t.integer  "tweet_id"
+    t.integer  "meep_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -124,17 +135,6 @@ ActiveRecord::Schema.define(:version => 20110606171225) do
   end
 
   add_index "system_preferences", ["object_type", "object_id", "var"], :name => "index_system_preferences_on_object_type_and_object_id_and_var", :unique => true
-
-  create_table "tweets", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "author"
-    t.text     "message"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.text     "text_extension"
-    t.integer  "network_id",     :default => 1
-    t.integer  "reply_from"
-  end
 
   create_table "users", :force => true do |t|
     t.string   "login",                          :limit => 40

@@ -69,7 +69,7 @@ Background:
     And select an user
     And I have the rights
     Then I should be able to delete the user
-    And his tweets should still be visible
+    And his meeps should still be visible
     
   @javascript @wip
   Scenario: Admin: Managing stranger rights

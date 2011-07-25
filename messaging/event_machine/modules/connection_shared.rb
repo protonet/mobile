@@ -109,12 +109,12 @@ module ConnectionShared
                     :supernode   => data['supernode'],
                     :channels    => data['channels']
         
-        when 'tweet'
+        when 'meep'
           # TODO: Use a helper or *something*
           
           if node?
             channel = Channel.find_by_uuid data['channel_uuid']
-            tweet = Tweet.create :user_id => 0,
+            meep = Meep.create :user_id => 0,
               :author => data['author'],
               :message => data['message'],
               :text_extension => data['text_extension'],
@@ -127,7 +127,7 @@ module ConnectionShared
             else
               channel = Channel.find_by_id data['channel_id']
             end
-            tweet = Tweet.create :user_id => @user.id,
+            meep = Meep.create :user_id => @user.id,
               :author => @user.display_name,
               :message => data['message'],
               :text_extension => data['text_extension'],
