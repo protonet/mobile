@@ -4,6 +4,7 @@ class UserTest < Test::Unit::TestCase
   
   before do
     Role.find_or_create_by_title("user")
+    Role.find_or_create_by_title("guest")
   end
   
   context "Calling the class method anonymous" do

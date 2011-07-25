@@ -1,5 +1,5 @@
 Factory.define :user do |u|
-  u.login { Random.firstname }
+  u.login { Random.firstname + Random.alphanumeric(5) }
   u.email { Random.email     }
   u.password              123456
   u.password_confirmation 123456
