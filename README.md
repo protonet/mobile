@@ -141,7 +141,7 @@ or any of our other targets
     cap node deploy:migrations NODE=backup.protonet.info # -> deploys to backup.protonet.info
 
 DEPLOYING ON UBUNTU
-------------------
+-------------------
 Make sure that we have a protonet user
 
     sudo useradd protonet -m -s /bin/bash
