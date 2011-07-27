@@ -77,6 +77,9 @@ tar -pczf $BABUSHKA_DEPS_ARCHIVE babushka-deps/
 cd /tmp
 rm -rf deployer
 git clone git@github.com:protonet/deploy.git deployer
+cd deployer
+git reset --hard d0f693c602924ebff0ef2250e90aa36e4c2a54e2
+cd /tmp
 rm -rf deployer/.git
 rm -rf deployer/Gemfile.lock
 
