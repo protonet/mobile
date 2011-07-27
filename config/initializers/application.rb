@@ -16,7 +16,7 @@ require "#{Rails.root}/lib/linux/commands"
 require 'ifconfig'
 require 'ip'
 
-if Rails.env.development?
+if Rails.env.production?
   if File.exists?(File.join(Rails.root, 'tmp', 'debug.txt'))
     require 'ruby-debug'
     Debugger.wait_connection = true
