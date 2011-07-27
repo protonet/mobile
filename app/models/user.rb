@@ -192,7 +192,9 @@ class User < ActiveRecord::Base
     publish 'system', ['users', 'new'],
       :trigger   => 'user.added',
       :id        => id,
-      :name      => display_name
+      :name      => display_name,
+      :avatar    => avatar.url,
+      :external_profile_url => external_profile_url
   end
 
   def subscribe(channel)

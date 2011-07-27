@@ -17,9 +17,12 @@ class ClientTracker
   end
   
   def add_user user, conn
-    @online_users[user.id]['name'] ||= user.display_name
-    @online_users[user.id]['network_uuid'] ||= Network.local.uuid
-    @online_users[user.id]['connections'] ||= []
+    @online_users[user.id]['id']            ||= user.id
+    @online_users[user.id]['name']          ||= user.display_name
+    @online_users[user.id]['avatar']        ||= user.avatar.url
+    @online_users[user.id]['external_profile_url'] ||= user.external_profile_url
+    @online_users[user.id]['network_uuid']  ||= Network.local.uuid
+    @online_users[user.id]['connections']   ||= []
     @online_users[user.id]['connections'] << [conn.key, conn.type]
   end
   def remove_user user, conn
