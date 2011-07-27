@@ -54,7 +54,11 @@ protonet.user = {
       }.bind(this),
       "show profile": function(link, closeContextMenu) {
         try {
-          protonet.globals.pages.user.show(+link.data("user-id"));
+          if(link.data("user-external-profile-url")) {
+            window.open (link.data("user-external-profile-url"),"dbms-profile");
+          } else {
+            protonet.globals.pages.user.show(+link.data("user-id"));
+          }
         } catch(e) {} finally {
           closeContextMenu();
         }
