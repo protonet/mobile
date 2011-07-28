@@ -7,7 +7,7 @@ module ConnectionShared
     
     @queues = []
     
-    @key = ActiveSupport::SecureRandom.base64(10)
+    @key = rand(1000000)
     log "connected"
   end
 
@@ -276,23 +276,11 @@ module ConnectionShared
 
   def bind_channel(channel)
     bind 'channels', channel.uuid do |json|
-      # TODO: This should not be here see unbind_channel which should be implemented differently
-      unless unbound_channels.include?(json['channel_uuid'].to_s)
-        sender_socket_id = json['socket_id']
-        send_json json if !sender_socket_id || sender_socket_id != @key
-      end
+      sender_socket_id = json['socket_id']
+      send_json json if !sender_socket_id || sender_socket_id.to_i != @key
     end
   end
-  
-  # TODO: clean that up and make it work, check bind_channel for connected todo
-  def unbind_channel(channel)
-    unbound_channels.push(channel.uuid.to_s)
-  end
-  
-  def unbound_channels
-    @unbound_channels ||= []
-  end
-  
+
   def bind_files_for_channel(channel)
     bind 'files', 'channel', channel.uuid do |json|
       send_json json
