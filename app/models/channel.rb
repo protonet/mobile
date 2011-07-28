@@ -19,7 +19,7 @@ class Channel < ActiveRecord::Base
   after_create  :subscribe_owner, :if => lambda {|c| !c.home? && !c.skip_autosubscribe}
 
   attr_accessor   :skip_autosubscribe
-  attr_accessible :skip_autosubscribe, :name, :description, :owner, :owner_id, :network, :network_id, :public, :global
+  attr_accessible :skip_autosubscribe, :name, :description, :owner, :owner_id, :network, :network_id, :display_name, :public, :global
 
   scope :public,   :conditions => {:public => true}
 
