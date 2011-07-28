@@ -1,4 +1,5 @@
 class ClientTracker
+  include Rabbit
   attr_accessor :online_users, :remote_users, :channel_users, :open_sockets
   
   def initialize
@@ -7,6 +8,37 @@ class ClientTracker
     
     @channel_users = {}
     @open_sockets  = []
+    
+    track_new_subscriptions
+  end
+  
+  def track_new_subscriptions
+    bind 'channels', "#" do |json|
+      begin
+        user_id = json["user_id"]
+        channel_id = json["channel_id"]
+        case json["trigger"]
+        when "user.unsubscribed_channel"
+          puts("\n\n\n=======================>>>>>> #{json["user_id"]} #{json["channel_id"]} UNSUB\n\n\n")
+          @online_users[user_id.to_i]['connections'].each do |connection|
+            socket = @open_sockets.find {|socket| socket.key == connection[0]}
+            socket.unbind_channel(Channel.find(channel_id))
+            # socket.send_json({})
+            socket.send_json :x_target => 'document.location.reload'
+          end
+        when "user.subscribed_channel"
+          puts("\n\n\n=======================>>>>>> #{json["user_id"]} #{json["channel_id"]} SUB\n\n\n")
+          @online_users[user_id.to_i]['connections'].each do |connection|
+            socket = @open_sockets.find {|socket| socket.key == connection[0]}
+            socket.bind_channel(Channel.find(channel_id))
+            # socket.send_json({})
+            socket.send_json :x_target => 'document.location.reload'
+          end
+        end
+      rescue => ex
+        puts "ERROR!! on subscription tracking! #{ex.inspect}"
+      end
+    end
   end
   
   def add_conn conn
