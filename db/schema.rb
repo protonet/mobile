@@ -10,18 +10,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110728190055) do
+ActiveRecord::Schema.define(:version => 20110729094440) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
     t.text     "description"
     t.string   "uuid"
-    t.integer  "flags",        :default => 1
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "owner_id"
     t.integer  "network_id",   :default => 1
     t.string   "display_name"
+    t.boolean  "public"
+    t.boolean  "global"
   end
 
   create_table "images_avatars", :force => true do |t|
@@ -52,7 +53,7 @@ ActiveRecord::Schema.define(:version => 20110728190055) do
   create_table "listens", :force => true do |t|
     t.integer  "channel_id"
     t.integer  "user_id"
-    t.integer  "flags",        :default => 0
+    t.boolean  "verified",     :default => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "order_number"

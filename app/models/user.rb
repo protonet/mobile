@@ -169,10 +169,9 @@ class User < ActiveRecord::Base
   end
 
   def verified_channels
-    channels.all(:conditions => ['listens.flags = 1'])
+    channels.all(:conditions => ['listens.verified = ?', true])
   end
   
-
   def skip_password_validation?
     !new_record? || stranger?
   end

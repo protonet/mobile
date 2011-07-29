@@ -1,5 +1,4 @@
 class Channel < ActiveRecord::Base
-  include FlagShihTzu
 
   belongs_to  :owner, :class_name => "User"
   belongs_to  :network
@@ -22,15 +21,6 @@ class Channel < ActiveRecord::Base
   attr_accessible :skip_autosubscribe, :name, :description, :owner, :owner_id, :network, :network_id, :display_name, :public, :global
 
   scope :public,   :conditions => {:public => true}
-
-  # privacy
-  #   public  = everyone can subscribe and listen to channel immedietly
-  #   private = everyone can subscribe and listen to channel after owner's verification
-  # visibility
-  #   global = channel is listed in all clients connected to the node (also via other nodes!)
-  #   local  = channel is listed only in clients directly connected to the node
-  has_flags 1 => :public,
-            2 => :global
 
   def self.home
     begin
