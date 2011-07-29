@@ -28,6 +28,7 @@
   <%= error_messages_for @user %>
 
   <%= form_tag({:action => 'change_password', :controller => 'users'}, :id => 'change-password') do %>
+    <%= hidden_field_tag      :id, current_user.id %>
     <%= label_tag      :current_password,          'Current password:' %>&nbsp;
     <%= password_field_tag :current_password, nil %><br>
     <%= label_tag      :password,              'New password:' %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

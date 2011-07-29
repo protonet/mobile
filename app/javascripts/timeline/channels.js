@@ -107,6 +107,15 @@ protonet.timeline.Channels = {
       });
     }.bind(this));
     
+    protonet.bind("channel.subscribed", function(e, data) {
+      // debugger
+    }.bind(this));
+
+    protonet.bind("channel.unsubscribed", function(e, data) {
+      // debugger
+    }.bind(this));
+    
+    
     /**
      * Logic for loading meeps that were send when the user was disconnected
      */

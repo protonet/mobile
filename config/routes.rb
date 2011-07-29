@@ -53,6 +53,7 @@ Dashboard::Application.routes.draw do
   
   # Users
   devise_for :users, :controllers => { :registrations => "registrations" }
+  match 'users/update' => 'users#update', :as => :user_update
   match 'users/delete_stranger_older_than_two_days' => 'users#delete_stranger_older_than_two_days', :as => :delete_stranger_older_than_two_days
   
   resources :users

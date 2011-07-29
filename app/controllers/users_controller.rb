@@ -1,6 +1,6 @@
 class UsersController < ApplicationController 
-  
-  before_filter :only_registered, :except => [:new, :create]
+
+  filter_resource_access
   
   def index
     @users = User.registered
@@ -9,7 +9,7 @@ class UsersController < ApplicationController
 
   def show
     user = User.find(params[:id])
-    if user.external_profile_url
+    if false && user.external_profile_url
       return redirect_to(user.external_profile_url)
     else
       render :partial => "user_details", :locals => {:user => user}
@@ -116,5 +116,5 @@ class UsersController < ApplicationController
     end
     redirect_to :action => 'index'
   end
-  
+
 end

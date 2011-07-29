@@ -2,7 +2,6 @@ class ListensController < ApplicationController
   
   before_filter :set_listen_id
   filter_resource_access
-  before_filter :only_registered
   
   def index
     redirect_to listen_to_channel_path(:channel_name => params[:channel_name]) if params[:channel_name]
