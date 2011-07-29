@@ -1,11 +1,11 @@
 class MoveFlagShitzuToNormalFields < ActiveRecord::Migration
   def self.up
-    rename_column :listens, :flags, :verified
+    rename_column :listens, :flags, :verified, :default => false
     change_table :listens do |t|
       t.change :verified, :boolean
     end
-    add_column :channels, :public, :boolean
-    add_column :channels, :global, :boolean
+    add_column :channels, :public, :boolean, :default => true
+    add_column :channels, :global, :boolean, :default => false
     Channel.all.each do |c|
       c.update_attribute(:public, c.flags & 1 == 1)
       c.update_attribute(:global, c.flags & 2 == 1)
