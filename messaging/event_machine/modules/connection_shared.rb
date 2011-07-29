@@ -221,7 +221,7 @@ module ConnectionShared
   def fill_channel_users
     @tracker.channel_users = {}
     Channel.all.each do |channel|
-      @tracker.channel_users[channel.id] = channel.users(true).collect {|u| u.id}
+      @tracker.channel_users[channel.id] = channel.users.where(:listens => {:verified => true}).collect {|u| u.id}
     end
   end
   
