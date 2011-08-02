@@ -1,0 +1,186 @@
+#!/bin/bash
+
+from="https://github.com/protonet/babushka/tarball/master"
+to="$HOME/.babushka/bootstrap"
+
+function true_with { echo -e "\n$1"; true; }
+function false_with { echo -e "\n$1"; false; }
+
+function has {
+  type "$1" >/dev/null 2>&1
+}
+
+function pkg_manager {
+  managers=(aptitude apt-get brew pacman yum)
+  for manager in "${managers[@]}"; do
+    has "$manager" && echo "$manager" && exit
+  done
+}
+
+function update_manager {
+  case $(pkg_manager) in
+    apt-get) apt-get update -qqy ;;
+    aptitude) aptitude -y update ;;
+    brew) brew update ;;
+    yum) true ;;
+    *)
+  esac
+}
+
+function install_ruby {
+  case $(pkg_manager) in
+    apt-get) apt-get install -qqy ruby ;;
+    aptitude) aptitude -y install ruby ;;
+    brew) brew install ruby ;;
+    pacman) pacman -Syq --noconfirm --noprogressbar ruby ;;
+    yum) yum -y install ruby ;;
+    *)
+  esac
+}
+
+function logo {
+  echo ""
+  echo ".       .           .   .      "
+  echo "|-. ,-. |-. . . ,-. |-. | , ,-."
+  echo "| | ,-| | | | | \`-. | | |<  ,-|"
+  echo "^-' \`-^ ^-' \`-^ \`-' ' ' ' \` \`-^"
+}
+
+function check {
+  if ! has 'curl' && ! has 'wget'; then
+    false_with "Sorry, you need either curl or wget installed before I can download babushka."
+  elif ! has 'ruby'; then
+    if ! has $(pkg_manager); then
+      false_with "Sorry, you don't have ruby installed, and I couldn't find\na package manager I recognise."
+    elif [ $(whoami) != 'root' ] && [ $(pkg_manager) != 'brew' ]; then
+      false_with "You don't have ruby installed. I can install it via $(pkg_manager),\nbut only when running as root."
+    else
+      true
+    fi
+  else
+    true
+  fi
+}
+
+function welcome {
+  echo ""
+  echo "Hi there :)"
+  echo ""
+  echo "So, let's get down to business - first, pulling a tarball of babushka from"
+  echo "http://babushka.me. Then, using it to run \"babushka 'babushka'\", which"
+  echo "installs or updates babushka and its dependencies as required."
+  echo ""
+  if has 'ruby'; then
+    echo "You already have ruby $(ruby --version | awk '{print $2}'), so you're all set."
+  else
+    echo "You don't have ruby installed, so we'll take care of that first (using $(pkg_manager))."
+  fi
+  echo ""
+  read -p "Sound good? [y/N] " f
+  [[ "$f" == y* ]] || [[ "$f" == Y* ]]
+}
+
+function install_ruby_if_required {
+  if has 'ruby'; then
+    true # already installed
+  else
+    echo "First we need to install ruby (via $(pkg_manager))."
+    update_manager
+    install_ruby
+    if ! has 'ruby'; then
+      false_with "Argh, the ruby install failed."
+    else
+      true_with "Nice, ruby $(ruby --version | awk '{print $2}') was installed at $(which ruby)."
+    fi
+  fi
+}
+
+function clean_up_install_dir {
+  mkdir -p "$HOME/.babushka" &&
+  cd "$HOME/.babushka" &&
+  rm -rf "bootstrap"
+  cd
+}
+
+function create_install_dir {
+  clean_up_install_dir &&
+  mkdir -p "$to" &&
+  cd "$to"
+}
+
+function stream_tarball {
+  if has 'curl'; then
+    curl -L -\# "$from" | tar -zxf - --strip-components 1
+  elif has 'wget'; then
+    wget --progress=bar "$from" -O - | tar -zxf - --strip-components 1
+  fi
+}
+
+function handle_install {
+  echo ""
+  ruby "$to/bin/babushka.rb" meet 'babushka' 
+  [ $? -eq 0 ]
+}
+
+function on_install_success {
+  clean_up_install_dir
+
+  echo ""
+  echo "All installed! If you're new, the basic idea is 'babushka <dep name>'."
+  echo ""
+  echo "Some examples you might like to try:"
+  echo "  babushka babushka   # install/update babushka itself (i.e. what just happened)"
+  echo "  babushka homebrew   # set up homebrew on your Mac"
+  echo "  babushka rubygems   # up-to-date rubygems + latest sources"
+  echo ""
+  echo "You can instantly run others' public deps by adding a namespace. They're pulled"
+  echo "from http://github.com/<name>/babushka-deps. Some examples:"
+  echo "  babushka benhoskings:Sinatra.tmbundle   # also installs TextMate if required"
+  echo "  babushka dgoodlad:coffeescript.src      # pulls in node.js if required, etc."
+  echo ""
+  echo "When you run deps from public sources like those, babushka anonymously posts"
+  echo "success or failure to http://babushka.me, building a database anyone can search:"
+  echo "  babushka search mongo   # shows mongo-related deps others have run"
+  echo ""
+  echo "The database is public and anonymous, and deps in local or private sources are"
+  echo "never submitted. Info: http://benhoskin.gs/2010/09/24/babushka-community-stats/"
+  echo ""
+  echo "Resources:"
+  echo "  babushka --help"
+  echo "  @babushka_app"
+  echo "  http://babushka.me/docs"
+  echo "  http://babushka.me/mailing_list"
+  true
+}
+
+function on_install_failure {
+  echo ""
+  echo "Something went wrong during the install."
+  echo ""
+  echo "If you fix the problem, you can re-run the install with:"
+  echo "  ruby $to/bin/babushka.rb babushka"
+  echo ""
+  echo "There's a full log in ~/.babushka/logs/babushka. Would you mind"
+  echo "emailing it to ben@hoskings.net to help improve the installation"
+  echo "process? Thanks a lot."
+  false
+}
+
+function do_bootstrap {
+  install_ruby_if_required &&
+  create_install_dir &&
+  stream_tarball &&
+  handle_install && on_install_success || on_install_failure
+}
+
+logo
+if check; then
+  if welcome; then
+    echo "Excellent."
+    echo ""
+    do_bootstrap
+  else
+    echo ""
+    echo "OK, maybe another time. :)"
+  fi
+fi
