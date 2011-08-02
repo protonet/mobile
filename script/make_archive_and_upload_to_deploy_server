@@ -54,7 +54,7 @@ tar -pczf $APP_ARCHIVE dashboard/
 # get babushka
 cd /tmp
 rm -rf babushka
-git clone git@github.com:protonet/babushka.git
+git clone git@github.com:protonet/babushka-deps.git
 rm -rf babushka/.git
 
 #  now create another archive
