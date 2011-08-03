@@ -31,10 +31,16 @@ EventMachine::run do
   queue = Sunspot::IndexQueue.new
   EventMachine::PeriodicTimer.new(30) do
     begin
-      puts "==== solr index queue processing ===="
-      queue.process
+      if SystemPreferences.index_meeps
+        Timeout::timeout(5) do
+          puts "==== solr index queue processing ===="
+          queue.process
+        end
+      end
     rescue Exception => e
       puts "==== solr indexing exception ===="
+      puts "#{e}"
+      puts "================================="
       # If Solr isn't responding, wait a while to give it time to get back up
       if e.is_a?(Sunspot::IndexQueue::SolrNotResponding)
         # sleep(30)

@@ -127,6 +127,10 @@
           <%= hidden_field_tag 'preferences[allow_modal_views]', false, {:id => nil}  %>
           <%= label_tag 'preferences[allow_modal_views]', 'Allow modal views?' %> <%= check_box_tag 'preferences[allow_modal_views]', true, SystemPreferences.allow_modal_views %>
         </li>
+        <li>
+          <%= hidden_field_tag 'preferences[index_meeps]', false, {:id => nil}  %>
+          <%= label_tag 'preferences[index_meeps]', 'Index Meeps?' %> <%= check_box_tag 'preferences[index_meeps]', true, SystemPreferences.index_meeps %>
+        </li>
       </ul>
     </fieldset>
     <button type="submit">Update</button>

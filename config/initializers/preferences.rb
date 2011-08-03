@@ -53,4 +53,5 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:allow_modal_views] = true
   SystemPreferences.defaults[:custom_css_type] = "append"
   SystemPreferences.defaults[:publish_to_web_name] = "protonet-#{ActiveSupport::SecureRandom.base64(6)}"
+  SystemPreferences.defaults[:index_meeps] = true
 end
