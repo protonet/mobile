@@ -32,7 +32,7 @@ EventMachine::run do
   EventMachine::PeriodicTimer.new(30) do
     begin
       if SystemPreferences.index_meeps
-        Timeout::timeout(5) do
+        EM.defer do
           puts "==== solr index queue processing ===="
           queue.process
         end
