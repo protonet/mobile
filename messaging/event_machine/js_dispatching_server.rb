@@ -3,7 +3,6 @@
 require 'rubygems'
 require 'eventmachine'
 require 'evma_httpserver'
-require 'system_timer'
 
 # this is here to make sure environment.rb doens't recreate the EventMachine Loop
 RUN_FROM_DISPATCHER = true
@@ -33,7 +32,7 @@ EventMachine::run do
   EventMachine::PeriodicTimer.new(30) do
     begin
       if SystemPreferences.index_meeps
-        SystemTimer.timeout(5.seconds) do
+        Timeout::timeout(5) do
           puts "==== solr index queue processing ===="
           queue.process
         end
