@@ -218,6 +218,7 @@ GEM
     sprockets (1.0.2)
     sunspot_index_queue (1.1.0)
       sunspot (>= 1.1.0)
+    system_timer (1.2.4)
     term-ansicolor (1.0.5)
     thor (0.14.6)
     tmm1-amqp (0.6.4)
@@ -281,5 +282,6 @@ DEPENDENCIES
   sunspot!
   sunspot_index_queue
   sunspot_rails!
+  system_timer
   tmm1-amqp (= 0.6.4)
   will_paginate (= 3.0.pre2)
