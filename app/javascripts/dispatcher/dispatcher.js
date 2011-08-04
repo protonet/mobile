@@ -112,7 +112,7 @@ protonet.dispatcher = {
   /**
    * Send data to socket every 20 seconds
    * If no answer is received after 5 seconds the socket appears to be offline
-   * Try to reconnect after 5 seconds
+   * Try to reconnect after 5 seconds TODO AJ => changed to 10 seconds for dbms change back once the real problem is solved
    */
   startCheck: function() {
     this.stopCheck();
@@ -125,7 +125,7 @@ protonet.dispatcher = {
   
   ping: function() {
     clearTimeout(this.offlineTimeout);
-    this.offlineTimeout = setTimeout(this.disconnect.bind(this), 5000);
+    this.offlineTimeout = setTimeout(this.disconnect.bind(this), 10000);
     
     protonet.trigger("socket.send", { operation: "ping" });
   },
