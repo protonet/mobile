@@ -10,7 +10,7 @@ module ChannelsHelper
   
   def get_channel_mapping_as_json
     channel_mapping = {}
-    Channel.all.each do |channel|
+    Channel.real.all.each do |channel|
       channel_mapping[escape_javascript(channel.name)] = channel.id
     end
     channel_mapping.to_json

@@ -22,6 +22,9 @@ class Channel < ActiveRecord::Base
 
   scope :public,   :conditions => {:public => true}
 
+  # TODO handle 1on1's correctly
+  scope :real,  :conditions => {:display_name => nil}
+
   def self.home
     begin
       find(1)
