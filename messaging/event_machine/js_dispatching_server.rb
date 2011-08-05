@@ -27,27 +27,26 @@ EventMachine::run do
   EventMachine::start_server host, longpolling_port, HttpConnection, tracker
 
   # async solr indexing
-  # Use the default queue settings.
-  queue = Sunspot::IndexQueue.new
   EventMachine::PeriodicTimer.new(30) do
-    begin
-      if SystemPreferences.index_meeps
-        EM.defer do
+    solr_indexing = Proc.new {
+      begin
+        if SystemPreferences.index_meeps
           puts "==== solr index queue processing ===="
-          queue.process
+          Sunspot::IndexQueue.new.process
+        end
+      rescue Exception => e
+        puts "==== solr indexing exception ===="
+        puts "#{e}"
+        puts "================================="
+        # If Solr isn't responding, wait a while to give it time to get back up
+        if e.is_a?(Sunspot::IndexQueue::SolrNotResponding)
+          # sleep(30)
+        else
+          Rails.logger.error(e)
         end
       end
-    rescue Exception => e
-      puts "==== solr indexing exception ===="
-      puts "#{e}"
-      puts "================================="
-      # If Solr isn't responding, wait a while to give it time to get back up
-      if e.is_a?(Sunspot::IndexQueue::SolrNotResponding)
-        # sleep(30)
-      else
-        Rails.logger.error(e)
-      end
-    end
+    }
+    EM.defer(solr_indexing)
   end
 
   
