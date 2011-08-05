@@ -30,7 +30,7 @@ $(function() {
         userDetails.trigger('general');
       });
     } else {
-      userDetails.load("/users/" + userId, function(){
+      userDetails.load("/users/" + userId + "?no_redirect=true", function(){
         // now initiate controls
         userDetails.trigger('user')
       });

@@ -9,10 +9,10 @@ class UsersController < ApplicationController
 
   def show
     user = User.find(params[:id])
-    if false && user.external_profile_url
-      return redirect_to(user.external_profile_url)
-    else
+    if params[:no_redirect] || !user.external_profile_url
       render :partial => "user_details", :locals => {:user => user}
+    else
+      return redirect_to(user.external_profile_url)
     end
   end
   
