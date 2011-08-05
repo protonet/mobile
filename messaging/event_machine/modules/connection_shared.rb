@@ -213,9 +213,6 @@ module ConnectionShared
       :trigger => 'users.update_status'
     }
     send_and_publish 'system', 'users', data
-    # FIXME: Dunno why but we've to send the data to the current user again
-    # because it sometimes doesn't reach him (we've to investigate)
-    # send_json(data)
   end
   
   def fill_channel_users
