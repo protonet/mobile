@@ -46,7 +46,7 @@ EventMachine::run do
         end
       end
     }
-    EM.defer(solr_indexing)
+    # EM.defer(solr_indexing)
   end
 
   
