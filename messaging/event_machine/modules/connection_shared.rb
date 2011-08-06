@@ -7,7 +7,7 @@ module ConnectionShared
     
     @queues = []
     
-    @key = rand(1000000)
+    @key = rand(100000000)
     log "connected"
   end
 
@@ -21,7 +21,9 @@ module ConnectionShared
         if !node? # normal handling if you're not a node
           bind_socket_to_user_queues
           add_to_online_users
+          
           send_channel_subscriptions
+          refresh_users
           
         elsif data['channels'] # List of certain channels?
           data['channels'].each do |uuid|
@@ -199,12 +201,24 @@ module ConnectionShared
 
   def add_to_online_users
     @tracker.add_user @user, self
-    refresh_users
+    # send current user as online also send his channel subscriptions (cleaned of course)
+    data = {
+      :subscribed_channel_ids => @user.verified_channels.map {|c| c.id},
+      :trigger => 'user.came_online'
+    }.merge(@tracker.online_users[@user.id])
+    publish 'system', 'users', data
   end
 
   def remove_from_online_users
     @tracker.remove_user @user, self
-    refresh_users
+    # send current user as offline if this was his last connection
+    if @user && @tracker.online_users[@user.id].try(:empty?)
+      data = {
+        :id => @user.id,
+        :trigger => 'user.goes_offline'
+      }
+      publish 'system', 'users', data
+    end
   end
   
   def refresh_users
@@ -212,20 +226,22 @@ module ConnectionShared
       :online_users => @tracker.global_users,
       :trigger => 'users.update_status'
     }
-    send_and_publish 'system', 'users', data
-  end
-  
-  def fill_channel_users
-    @tracker.channel_users = {}
-    Channel.all.each do |channel|
-      @tracker.channel_users[channel.id] = channel.users.where(:listens => {:verified => true}).collect {|u| u.id}
-    end
+    send_json data
   end
   
   def send_channel_subscriptions
-    fill_channel_users
+    @tracker.channel_users ||= {}
     filtered_channel_users = {}
     @user.verified_channels.each do |channel|
+      @tracker.channel_users[channel.id] ||= []
+      if SystemPreferences.show_only_online_users
+        # only add user to current user list
+        @tracker.channel_users[channel.id] = @tracker.channel_users[channel.id] | [@user.id]
+      else
+        # store all users for each channel, if you have a lot of not online users don't do this! 
+        # Do switch the show_only_online_users setting to true!
+        @tracker.channel_users[channel.id] = channel.users.where(:listens => {:verified => true}).collect {|u| u.id}
+      end
       filtered_channel_users[channel.id] = @tracker.channel_users[channel.id]
     end
     

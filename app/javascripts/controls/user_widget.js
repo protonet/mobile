@@ -56,6 +56,16 @@ protonet.controls.UserWidget.prototype = {
       .bind("user.unsubscribed_channel", function(e, data) {
         this._userUnsubscribedChannel(+data.user_id, +data.channel_id);
       }.bind(this))
+
+      .bind("user.came_online", function(e, data) {
+        this.userCameOnline(data);
+        this.filterChannelUsers();
+      }.bind(this))
+
+      .bind("user.goes_offline", function(e, data) {
+        this.userWentOffline(data);
+        this.filterChannelUsers();
+      }.bind(this))
       
       .bind("users.update_status", function(e, data) {
         this.updateUsers(data.online_users);
@@ -115,29 +125,7 @@ protonet.controls.UserWidget.prototype = {
     this.createUsers(onlineUsers);
     
     for (var userId in this.usersData) {
-      var user = this.usersData[userId],
-          onlineUser = onlineUsers[userId];
-      
-      var hasBeenOnlineBefore = user.isOnline !== false;
-      user.isOnline = !!onlineUser;
-      
-      // Highlight effect for users that just came online
-      if (user.isOnline && !hasBeenOnlineBefore) {
-        user.element
-          .addClass("new-online")
-          .css("backgroundColor", "#ffff99")
-          .animate({ "backgroundColor": "#ffffff" }, { duration: 1000 });
-      }
-      
-      if (user.isOnline) {
-        user.element.addClass("online");
-      } else {
-        user.element.removeClass("online").removeClass("typing");
-        if (protonet.config.show_only_online_users) {
-          delete this.usersData[userId];
-          user.element.remove();
-        }
-      } 
+      this.updateUser(userId, onlineUsers);
     }
     
     this.sortEntries();
@@ -145,6 +133,32 @@ protonet.controls.UserWidget.prototype = {
     this.updateCount();
     
     protonet.Notifications.trigger("users.data_available", this.usersData);
+  },
+  
+  updateUser: function(userId, onlineUsers) {
+    var user = this.usersData[userId],
+        onlineUser = onlineUsers[userId];
+    
+    var hasBeenOnlineBefore = user.isOnline !== false;
+    user.isOnline = !!onlineUser;
+    
+    // Highlight effect for users that just came online
+    if (user.isOnline && !hasBeenOnlineBefore) {
+      user.element
+        .addClass("new-online")
+        .css("backgroundColor", "#ffff99")
+        .animate({ "backgroundColor": "#ffffff" }, { duration: 1000 });
+    }
+    
+    if (user.isOnline) {
+      user.element.addClass("online");
+    } else {
+      user.element.removeClass("online").removeClass("typing");
+      if (protonet.config.show_only_online_users) {
+        delete this.usersData[userId];
+        user.element.remove();
+      }
+    }
   },
   
   /**
@@ -159,7 +173,7 @@ protonet.controls.UserWidget.prototype = {
   },
   
   createUser: function(userId, user, hide) {
-    if (this.usersData[userId]) {
+    if (this.usersData[userId] || !user.id) {
       return;
     }
     
@@ -245,6 +259,39 @@ protonet.controls.UserWidget.prototype = {
     }
     
     this.onlineUsersCount.text("(" + online + "/" + total + ")");
+  },
+  
+  userCameOnline: function(userData) {
+    this.createUser(userData.id, userData);
+    var onlineUsers = {};
+    onlineUsers[userData.id] = true;
+    this.updateUser(userData.id, onlineUsers);
+    
+    // handle channel subscriptions
+    for (var i in userData.subscribed_channel_ids) {
+      var channelId = userData.subscribed_channel_ids[i];
+      if(this.channelSubscriptions[channelId])
+        this.channelSubscriptions[channelId].push(userData.id);
+    }
+    
+    // duplicated from updateUsers
+    this.sortEntries();
+    this.cleanupStrangers();
+    this.updateCount();
+    
+    protonet.Notifications.trigger("users.data_available", this.usersData);
+  },
+  
+  userWentOffline: function(userData) {
+    var onlineUsers = {};
+    this.updateUser(userData.id, onlineUsers);
+    
+    // duplicated from updateUsers
+    this.sortEntries();
+    this.cleanupStrangers();
+    this.updateCount();
+    
+    protonet.Notifications.trigger("users.data_available", this.usersData);
   },
   
   _userUnsubscribedChannel: function(userId, channelId) {
