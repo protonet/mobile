@@ -1,5 +1,7 @@
 log/*.log
 log/*.lck
+log/*.age
+log/*.db
 tmp/**/*
 .DS_Store
 .gitignore
