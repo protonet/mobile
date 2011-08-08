@@ -10,5 +10,5 @@ module Sunspot::IndexQueue::Entry
 end
 
 # Queue implementation backed by ActiveRecord
-Sunspot::IndexQueue::Entry.implementation = (SystemPreferences.index_meeps ? :nil : :active_record)
+Sunspot::IndexQueue::Entry.implementation = (SystemPreferences.index_meeps ? :active_record : :nil)
 
