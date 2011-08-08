@@ -38,7 +38,7 @@ protonet.timeline.Channels = {
         $.ajax({
           url:      "/users/sort_channels" ,
           type:     "POST",
-          data:     { "channel_order[]": channelArray },
+          data:     { "channel_order[]": channelArray, "id": protonet.config.user_id },
           traditional: true
         });
         protonet.trigger("channels.reordered");
