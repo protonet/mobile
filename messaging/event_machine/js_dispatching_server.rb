@@ -14,6 +14,31 @@ require File.dirname(__FILE__) + '/client_connection.rb'
 require File.dirname(__FILE__) + '/http_connection.rb'
 require File.dirname(__FILE__) + '/client_tracker.rb'
 
+def solr_index_processing
+  begin
+    if SystemPreferences.index_meeps
+      puts "==== solr index queue processing ========="
+      Sunspot::IndexQueue.new.process
+      puts "==== solr index queue processing done ===="
+      EventMachine::add_timer(30) {
+        solr_index_processing
+      }
+    end
+  rescue Exception => e
+    puts "==== solr indexing exception ===="
+    puts "#{e}"
+    puts "================================="
+    # If Solr isn't responding, wait a while to give it time to get back up
+    if e.is_a?(Sunspot::IndexQueue::SolrNotResponding)
+      EventMachine::add_timer(30) {
+        solr_index_processing
+      }
+    else
+      Rails.logger.error(e)
+    end
+  end
+end
+
 EventMachine::run do
   host = '0.0.0.0'
   port = configatron.socket.port rescue 5000
@@ -25,33 +50,15 @@ EventMachine::run do
   EventMachine.epoll if RUBY_PLATFORM =~ /linux/ #sky is the limit
   EventMachine::start_server host, port, ClientConnection, tracker
   EventMachine::start_server host, longpolling_port, HttpConnection, tracker
-
-  # async solr indexing
-  EventMachine::PeriodicTimer.new(30) do
-    solr_indexing = Proc.new {
-      begin
-        if SystemPreferences.index_meeps
-          puts "==== solr index queue processing ===="
-          Sunspot::IndexQueue.new.process
-        end
-      rescue Exception => e
-        puts "==== solr indexing exception ===="
-        puts "#{e}"
-        puts "================================="
-        # If Solr isn't responding, wait a while to give it time to get back up
-        if e.is_a?(Sunspot::IndexQueue::SolrNotResponding)
-          # sleep(30)
-        else
-          Rails.logger.error(e)
-        end
-      end
-    }
-    # EM.defer(solr_indexing)
-  end
-
   
   puts "Started socket server on #{host}:#{port}..."
   puts $$
+  
+  # async solr indexing
+  solr_indexing = Proc.new {
+    solr_index_processing
+  }
+  EM.defer(solr_indexing)
   
   Network.all(:conditions => {:coupled => true}).each do |network|
     NodeConnection.negotiate network, tracker

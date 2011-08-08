@@ -9,6 +9,8 @@ class SystemPreferencesObserver < ActiveRecord::Observer
       system_preference.destroy if system_preference.value.blank?
     when "public_host_https"
       ActionMailer::Base.default_url_options[:protocol] = (SystemPreferences.public_host_https ? 'https' : 'http')
+    when "index_meeps"
+      Sunspot::IndexQueue::Entry.implementation =  (system_preference.value ? :active_record : :nil)
     end
   end
   
