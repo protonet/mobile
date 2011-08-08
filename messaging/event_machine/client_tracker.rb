@@ -27,9 +27,8 @@ class ClientTracker
   end
   def remove_user user, conn
     return unless user
-    
-    @online_users[user.id]["connections"].reject! {|key, type| key == conn.key}
-    @online_users.delete(user.id) if @online_users[user.id]["connections"].empty?
+    @online_users[user.id]["connections"] && @online_users[user.id]["connections"].reject! {|key, type| key == conn.key}
+    @online_users.delete(user.id) if @online_users[user.id] && @online_users[user.id]["connections"].blank?
   end
   
   # TODO: STUPID! STUPID! STUPID!
