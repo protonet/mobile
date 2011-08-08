@@ -51,6 +51,7 @@
 <p>
   Enter admin key to become an admin, this can only be done once from the command-line (rake reset_admin_key):
   <%= form_tag({:action => 'request_admin_flag', :controller => 'users'}, :id => 'admin-request') do %>
+    <%= hidden_field_tag      :id, current_user.id %>
     <%= text_field_tag :key, nil, :size => 16, :maxlength => 16 %>
     <%= button "submit" %>
   <% end %>
