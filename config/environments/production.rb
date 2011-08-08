@@ -39,6 +39,6 @@ Dashboard::Application.configure do
   configatron.xhr_streaming.port = 8000
   configatron.nodejs.port = 8124
   # checks for stage specific config files
-  stage_config = "#{Rails.root}/config/environments/stage.rb"
+  stage_config = "#{configatron.shared_file_path}/config/stage.rb"
   eval(IO.read(stage_config), binding, stage_config) if test(?f, stage_config)
 end
