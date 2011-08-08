@@ -288,9 +288,13 @@ module ConnectionShared
   end
 
   def bind_channel(channel)
-    bind 'channels', channel.uuid do |json|
-      sender_socket_id = json['socket_id']
-      send_json json if !sender_socket_id || sender_socket_id.to_i != @key
+    begin
+      bind 'channels', channel.uuid do |json|
+        sender_socket_id = json['socket_id']
+        send_json json if !sender_socket_id || sender_socket_id.to_i != @key
+      end
+    rescue MQ::Error => e
+      log("bind error: " + e.inspect)
     end
   end
 
