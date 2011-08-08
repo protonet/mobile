@@ -21,9 +21,9 @@ module ConnectionShared
         if !node? # normal handling if you're not a node
           bind_socket_to_user_queues
           add_to_online_users
-          
           send_channel_subscriptions
           refresh_users
+          periodical_user_refresh
           
         elsif data['channels'] # List of certain channels?
           data['channels'].each do |uuid|
@@ -197,6 +197,7 @@ module ConnectionShared
     @tracker.remove_conn self
     remove_from_online_users # TODO: remove_conn should be do this
     unbind_queues
+    end_periodical_user_refresh
   end
 
   def add_to_online_users
@@ -227,6 +228,14 @@ module ConnectionShared
       :trigger => 'users.update_status'
     }
     send_json data
+  end
+  
+  def periodical_user_refresh
+    @periodic_user_refresh = EventMachine::add_periodic_timer( 300 ) { refresh_users }
+  end
+  
+  def end_periodical_user_refresh
+    @periodic_user_refresh.try(:cancel)
   end
   
   def send_channel_subscriptions
