@@ -1,5 +1,6 @@
 class KillSayModel < ActiveRecord::Migration
   def self.up
+    add_index  :says, :meep_id
     add_column :meeps, :channel_id, :integer
     ActiveRecord::Base.connection.execute("update meeps left join says on says.meep_id = meeps.id set meeps.channel_id = says.channel_id")
     drop_table :says
