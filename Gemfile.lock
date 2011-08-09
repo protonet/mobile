@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: https://github.com/dudemeister/sprockets-rails.git
-  revision: fad44692b2aa719cfb678e07a17c37fa93f4fc7d
+  revision: d9afb65998d61db628e9bac14554c4d71920879d
   specs:
     sprockets-rails (0.0.2)
 
