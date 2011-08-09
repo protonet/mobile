@@ -39,6 +39,7 @@
       server:                   "<%= request.server_software %>",
       debugMode:                <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>
     };
+    <%= raw SystemPreferences.custom_javascript %>
   </script>
   <%- if custom_stylesheet -%>
     <%- if SystemPreferences.custom_css_type == "append" -%>

@@ -87,6 +87,22 @@
     </fieldset>
     <button type="submit">Update</button>
   <%- end -%>
+
+  <%= form_tag system_preferences_update_path do -%>
+    <fieldset>
+      <legend>
+        <strong>Custom JavaScript</strong>
+      </legend>
+      <ul>
+        <li>
+          <%= hidden_field_tag 'anchor', 'node_settings'  %>
+          <%= label_tag 'preferences[custom_javascript]', 'Your JS' %>
+          <%= text_area_tag 'preferences[custom_javascript]', SystemPreferences.custom_javascript, {:rows => 7, :cols => 55} %>
+        </li>
+      </ul>
+    </fieldset>
+    <button type="submit">Update</button>
+  <%- end -%>
   
   <%= form_tag system_preferences_update_path do -%>
     <%= return_anchor_path %>
