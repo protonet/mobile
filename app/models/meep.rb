@@ -13,7 +13,7 @@ class Meep < ActiveRecord::Base
 
   belongs_to  :network
   belongs_to  :user
-  has_many    :channels
+  belongs_to  :channel
   has_one     :avatar,    :through => :user
 
   scope :recent, :order => "meeps.id DESC"
@@ -37,16 +37,14 @@ class Meep < ActiveRecord::Base
 
   def send_to_queue
     self.text_extension = JSON.parse(text_extension) rescue nil
-    channels.each do |channel|
-      publish 'channels', channel.uuid, self.attributes.merge({
-        :socket_id    => socket_id,
-        :channel_id   => channel.id,
-        :channel_uuid => channel.uuid,
-        :avatar       => user.avatar.url,
-        :network_uuid => network.uuid,
-        :trigger      => 'meep.receive'
-      })
-    end
+    publish 'channels', channel.uuid, self.attributes.merge({
+      :socket_id    => socket_id,
+      :channel_id   => channel.id,
+      :channel_uuid => channel.uuid,
+      :avatar       => user.avatar.url,
+      :network_uuid => network.uuid,
+      :trigger      => 'meep.receive'
+    })
   end
 
   def self.prepare_for_frontend(meeps, additional_attributes)

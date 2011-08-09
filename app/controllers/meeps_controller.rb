@@ -58,7 +58,7 @@ class MeepsController < ApplicationController
     # TODO: Restrict user from posting to channels he has not subscribed or is not verified to post to
     
     # current user is nil when not logged in, that's ok
-    @meep = Meep.create!(params[:meep].merge({:author => author, :user => current_user, :channel_ids => [channel_id] }))
+    @meep = Meep.create!(params[:meep].merge({:author => author, :user => current_user, :channel_id => channel_id }))
     
     respond_to do |format|
       format.js  { render :text => @meep.id }
