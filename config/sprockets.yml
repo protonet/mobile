@@ -14,6 +14,7 @@ instruments:
     - vendor/sprockets/*/src
     - vendor/plugins/*/javascripts
   source_files:
+    - app/javascripts/application.js
     - app/javascripts/instruments.js
 files:
   asset_root: public
@@ -22,6 +23,7 @@ files:
     - vendor/sprockets/*/src
     - vendor/plugins/*/javascripts
   source_files:
+    - app/javascripts/application.js
     - app/javascripts/files.js
 users:
   asset_root: public
@@ -30,6 +32,7 @@ users:
     - vendor/sprockets/*/src
     - vendor/plugins/*/javascripts
   source_files:
+    - app/javascripts/application.js
     - app/javascripts/users.js
 channels:
   asset_root: public
@@ -38,6 +41,7 @@ channels:
     - vendor/sprockets/*/src
     - vendor/plugins/*/javascripts
   source_files:
+    - app/javascripts/application.js
     - app/javascripts/channels.js
 preferences:
   asset_root: public
@@ -46,6 +50,7 @@ preferences:
     - vendor/sprockets/*/src
     - vendor/plugins/*/javascripts
   source_files:
+    - app/javascripts/application.js
     - app/javascripts/preferences.js
 networks:
   asset_root: public
@@ -54,4 +59,5 @@ networks:
     - vendor/sprockets/*/src
     - vendor/plugins/*/javascripts
   source_files:
+    - app/javascripts/application.js
     - app/javascripts/networks.js
