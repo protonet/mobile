@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110803094721) do
+ActiveRecord::Schema.define(:version => 20110809104622) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(:version => 20110803094721) do
     t.text     "text_extension"
     t.integer  "network_id",     :default => 1
     t.integer  "reply_from"
+    t.integer  "channel_id"
   end
 
   create_table "networks", :force => true do |t|
@@ -105,13 +106,6 @@ ActiveRecord::Schema.define(:version => 20110803094721) do
   end
 
   add_index "roles_users", ["role_id", "user_id"], :name => "index_roles_users_on_role_id_and_user_id", :unique => true
-
-  create_table "says", :force => true do |t|
-    t.integer  "channel_id"
-    t.integer  "meep_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "sunspot_index_queue_entries", :force => true do |t|
     t.string   "record_class_name",                                    :null => false

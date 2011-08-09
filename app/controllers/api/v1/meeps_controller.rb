@@ -34,7 +34,7 @@ class Api::V1::MeepsController < Api::V1::MasterController
   
   # GET A SPECIFIC MEEP
   def show
-    render :json => Meep.includes(:says).where("says.channel_id" => @current_user.channels.map(&:id)).find(params[:id])
+    render :json => Meep.where(:channel_id => @current_user.channels.map(&:id)).find(params[:id])
   end
   
   # LIST CHANNELS FOR USER

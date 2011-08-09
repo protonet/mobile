@@ -13,8 +13,7 @@ class Meep < ActiveRecord::Base
 
   belongs_to  :network
   belongs_to  :user
-  has_many    :says
-  has_many    :channels,  :through => :says
+  has_many    :channels
   has_one     :avatar,    :through => :user
 
   scope :recent, :order => "meeps.id DESC"
@@ -81,8 +80,8 @@ class Meep < ActiveRecord::Base
   end
   
   def before(count)
-    Meep.all(:include => [:says],
-      :conditions => ["meeps.id < ? AND says.channel_id = ?", id, channels.first.id],
+    Meep.all(
+      :conditions => ["meeps.id < ? AND meeps.channel_id = ?", id, channels.first.id],
       :order => "meeps.created_at DESC",
       :limit => count
     ).reverse
@@ -90,8 +89,8 @@ class Meep < ActiveRecord::Base
   
   
   def after(count)
-    Meep.all(:include => [:says],
-      :conditions => ["meeps.id > ? AND says.channel_id = ?", id, channels.first.id],
+    Meep.all(
+      :conditions => ["meeps.id > ? AND meeps.channel_id = ?", id, channels.first.id],
       :limit => count
     )
   end
@@ -99,8 +98,8 @@ class Meep < ActiveRecord::Base
   private
 
   def from_minutes(opts)
-    Meep.all(:include => [:says],
-      :conditions => ["meeps.created_at >= ? AND meeps.created_at <= ? AND meeps.id <> ? AND says.channel_id = ?",
+    Meep.all(
+      :conditions => ["meeps.created_at >= ? AND meeps.created_at <= ? AND meeps.id <> ? AND meeps.channel_id = ?",
       opts[:from],opts[:to], opts[:meep_id], opts[:channel_id]],
       :order => 'meeps.created_at DESC'
     )

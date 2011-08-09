@@ -3,8 +3,7 @@ class Channel < ActiveRecord::Base
   belongs_to  :owner, :class_name => "User"
   belongs_to  :network
 
-  has_many  :says
-  has_many  :meeps, :through => :says
+  has_many  :meeps
 
   has_many  :listens, :dependent => :destroy
   has_many  :users,   :through   => :listens
