@@ -175,7 +175,7 @@ protonet.timeline.Form = {
       this.typing = true;
       protonet.trigger("socket.send", {
         operation: "user.typing",
-        payload: { user_id: protonet.user.data.id }
+        payload: { user_id: protonet.user.data.id, channel_id: protonet.timeline.Channels.selected}
       });
     }
     

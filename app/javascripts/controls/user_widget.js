@@ -42,7 +42,7 @@ protonet.controls.UserWidget.prototype = {
       }.bind(this))
       
       .bind("user.typing", function(e, data) {
-        this._typingStart(data.user_id);
+        this._typingStart(data.user_id, data.channel_id);
       }.bind(this))
       
       .bind("user.typing_end", function(e, data) {
@@ -313,10 +313,12 @@ protonet.controls.UserWidget.prototype = {
     }
   },
   
-  _typingStart: function(userId) {
-    var userData = this.usersData[userId];
-    if (userData.element) {
-      userData.element.prependTo(this.list).addClass("typing");
+  _typingStart: function(userId, channelId) {
+    if(channelId == protonet.timeline.Channels.selected) {
+      var userData = this.usersData[userId];
+      if (userData.element) {
+        userData.element.prependTo(this.list).addClass("typing");
+      }
     }
   },
   

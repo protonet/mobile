@@ -51,7 +51,7 @@ module ConnectionShared
       case data["operation"]
         
         when /^user\.typing/
-          update_user_typing_status(data["operation"])
+          update_user_typing_status(data)
           
         when 'ping'
           send_ping_answer
@@ -259,10 +259,13 @@ module ConnectionShared
               :data => filtered_channel_users
   end
   
-  def update_user_typing_status(operation)
-    send_and_publish 'system', 'users',
-      :trigger => operation,
+  def update_user_typing_status(data)
+    response = {
+      :trigger => data["operation"],
       :user_id => @user.id
+    }
+    response.merge!(:channel_id => data["payload"] && data["payload"]["channel_id"]) if data["operation"] == "user.typing"
+    send_and_publish 'system', 'users', response
   end
 
   def send_ping_answer
