@@ -22,7 +22,10 @@ desc 'Reset admin getting key AND all admin users'
 task :reset_admin_key_and_users => :environment do
   SystemPreferences.admin_set = false
   SystemPreferences.admin_key = ActiveSupport::SecureRandom.base64(10)
-  User.update_all("admin = 0", "admin = 1")
+  role = Role.find_by_title('admin')
+  role.users.each do |u|
+    u.roles = u.roles - [role]
+  end
   puts "\n\nUse this key to become an admin, can only be used once:\n\n#{SystemPreferences.admin_key}\n\nbe careful!"
 end
 
