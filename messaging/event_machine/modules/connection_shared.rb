@@ -291,7 +291,7 @@ module ConnectionShared
       bind_files_for_channel(channel)
       log("subscribing to channel #{channel.id}")
     end
-    
+    bind_channel_subscriptions
     bind_user
     @subscribed = true
   end
@@ -301,6 +301,16 @@ module ConnectionShared
       bind 'channels', channel.uuid do |json|
         sender_socket_id = json['socket_id']
         send_json json if !sender_socket_id || sender_socket_id.to_i != @key
+      end
+    rescue MQ::Error => e
+      log("bind error: " + e.inspect)
+    end
+  end
+  
+  def bind_channel_subscriptions
+    begin
+      bind 'channels', "subscriptions" do |json|
+        send_json json
       end
     rescue MQ::Error => e
       log("bind error: " + e.inspect)

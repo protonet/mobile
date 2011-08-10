@@ -213,7 +213,7 @@ class User < ActiveRecord::Base
   end
 
   def send_channel_notification(channel, type)
-    publish 'channels', channel.uuid,
+    publish 'channels', "subscriptions",
       :trigger        => "user.#{type}",
       :channel_id     => channel.id,
       :user_id        => id
