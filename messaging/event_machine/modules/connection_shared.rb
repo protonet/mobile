@@ -6,6 +6,7 @@ module ConnectionShared
     @tracker.add_conn self
     
     @queues = []
+    @channel_queues = {}
     
     @key = rand(100000000)
     log "connected"
@@ -298,22 +299,37 @@ module ConnectionShared
 
   def bind_channel(channel)
     begin
-      bind 'channels', channel.uuid do |json|
+      uuid = channel.is_a?(Channel) ? channel.uuid : channel
+      @channel_queues[uuid] = bind 'channels', uuid do |json|
         sender_socket_id = json['socket_id']
         send_json json if !sender_socket_id || sender_socket_id.to_i != @key
       end
     rescue MQ::Error => e
-      log("bind error: " + e.inspect)
+      log("bind_channel error: #{e.inspect} for #{channel.inspect}")
     end
+  end
+  
+  def unbind_channel(channel_uuid)
+    queue = @channel_queues.delete(channel_uuid)
+    queue.delete if queue
   end
   
   def bind_channel_subscriptions
     begin
       bind 'channels', "subscriptions" do |json|
-        send_json json
+        if json['user_id'] == @user.id
+          case json['trigger']
+          when 'user.subscribed_channel'
+            bind_channel(json['channel_uuid'])
+          when 'user.unsubscribed_channel'
+            unbind_channel(json['channel_uuid'])
+          end
+        else
+          send_json json
+        end
       end
     rescue MQ::Error => e
-      log("bind error: " + e.inspect)
+      log("bind_channel_subscriptions error: " + e.inspect)
     end
   end
 

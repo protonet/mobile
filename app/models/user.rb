@@ -216,6 +216,7 @@ class User < ActiveRecord::Base
     publish 'channels', "subscriptions",
       :trigger        => "user.#{type}",
       :channel_id     => channel.id,
+      :channel_uuid   => channel.uuid,
       :user_id        => id
   end
 
