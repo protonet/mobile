@@ -23,8 +23,7 @@ class Api::V1::MeepsController < Api::V1::MasterController
   # CREATE A MEEP/TWEET
   def create
     return if params[:message].blank? || params[:channel_id].blank?
-    channel = Channel.find(params[:channel_id])
-    meep = @current_user.meeps.build({:author => "api", :channels => [channel], :message => params[:message]})
+    meep = @current_user.meeps.build({:author => "api", :channel_id => params[:channel_id], :message => params[:message]})
     if meep.save
       render :json => {"meep_id" => meep.id}
     else
