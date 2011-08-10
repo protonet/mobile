@@ -34,19 +34,19 @@ class MeepsController < ApplicationController
   def show
     meep = Meep.find(params[:id])
     return head(404) if meep.nil?
-    render :json => Meep.prepare_for_frontend([meep], { :channel_id => meep.channels.first.id }).first
+    render :json => Meep.prepare_for_frontend([meep], { :channel_id => meep.channel.id }).first
   end
   
   def before
     meep = Meep.find(params[:id]) rescue head(404)
     return head(404) if meep.nil?
-    render :json => Meep.prepare_for_frontend(meep.before(params[:count]), { :channel_id => meep.channels.first.id })
+    render :json => Meep.prepare_for_frontend(meep.before(params[:count]), { :channel_id => meep.channel.id })
   end
   
   def after
     meep = Meep.find(params[:id])
     return head(404) if meep.nil?
-    render :json => Meep.prepare_for_frontend(meep.after(params[:count]), { :channel_id => meep.channels.first.id })
+    render :json => Meep.prepare_for_frontend(meep.after(params[:count]), { :channel_id => meep.channel.id })
   end
   
   def create

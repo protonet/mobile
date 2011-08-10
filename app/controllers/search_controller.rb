@@ -11,7 +11,7 @@ class SearchController < ApplicationController
           meep = hit.instance
           meep.text_extension = JSON.parse(meep.text_extension) rescue nil
           avatar = meep.user.avatar.url if meep.user
-          meep.attributes.merge({ :avatar => avatar, :channel_id => nil, :posted_in => meep.channels.first.id })
+          meep.attributes.merge({ :avatar => avatar, :channel_id => nil, :posted_in => meep.channel.id })
         }.to_json
       end
       format.html {}

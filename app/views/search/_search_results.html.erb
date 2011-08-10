@@ -3,7 +3,7 @@
 <% search_results.hits.each do |hit| -%>
 <%
   meep = hit.instance
-  c = meep.channels.first
+  c = meep.channel
   meeps = meep.from_minutes_after(10,c.id) + [meep] + meep.from_minutes_before(10,c.id)
   highlights = hit.highlights(:message)
   if highlights && !highlights.empty?
