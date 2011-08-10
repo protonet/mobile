@@ -22,6 +22,9 @@ class HttpConnection < EM::Connection
       bind_socket_to_user_queues
       add_to_online_users
       send_channel_subscriptions
+      refresh_users
+      periodical_user_refresh
+      
       true
     else
       false
