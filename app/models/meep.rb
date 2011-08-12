@@ -79,7 +79,7 @@ class Meep < ActiveRecord::Base
   
   def before(count)
     Meep.all(
-      :conditions => ["meeps.id < ? AND meeps.channel_id = ?", id, channels.first.id],
+      :conditions => ["meeps.id < ? AND meeps.channel_id = ?", id, channel.id],
       :order => "meeps.created_at DESC",
       :limit => count
     ).reverse
@@ -88,7 +88,7 @@ class Meep < ActiveRecord::Base
   
   def after(count)
     Meep.all(
-      :conditions => ["meeps.id > ? AND meeps.channel_id = ?", id, channels.first.id],
+      :conditions => ["meeps.id > ? AND meeps.channel_id = ?", id, channel.id],
       :limit => count
     )
   end
