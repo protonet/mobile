@@ -125,7 +125,7 @@ protonet.dispatcher = {
   
   ping: function() {
     clearTimeout(this.offlineTimeout);
-    this.offlineTimeout = setTimeout(this.disconnect.bind(this), 10000);
+    this.offlineTimeout = setTimeout(this.disconnect.bind(this), 5000);
     
     protonet.trigger("socket.send", { operation: "ping" });
   },
