@@ -1,14 +1,14 @@
 GIT
+  remote: git://github.com/dudemeister/sprockets-rails.git
+  revision: d9afb65998d61db628e9bac14554c4d71920879d
+  specs:
+    sprockets-rails (0.0.2)
+
+GIT
   remote: https://github.com/dudemeister/ruby-ifconfig.git
   revision: b3eb63311ceb1172cf20904213717aa12cec57d4
   specs:
     ruby-ifconfig (1.2.3)
-
-GIT
-  remote: https://github.com/dudemeister/sprockets-rails.git
-  revision: d9afb65998d61db628e9bac14554c4d71920879d
-  specs:
-    sprockets-rails (0.0.2)
 
 GIT
   remote: https://github.com/isaac/sunspot.git
