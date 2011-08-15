@@ -112,7 +112,7 @@ protonet.dispatcher = {
   /**
    * Send data to socket every 20 seconds
    * If no answer is received after 5 seconds the socket appears to be offline
-   * Try to reconnect after 5 seconds TODO AJ => changed to 10 seconds for dbms change back once the real problem is solved
+   * Try to reconnect after 5 seconds
    */
   startCheck: function() {
     this.stopCheck();
