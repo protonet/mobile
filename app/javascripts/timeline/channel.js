@@ -29,7 +29,8 @@ protonet.timeline.Channel = function(data) {
 protonet.timeline.Channel.prototype = {
   config: {
     MERGE_MEEPS_TIMEFRAME: 2 * 60 * 1000, // 2 minutes
-    FETCH_MEEPS_URL:       "/meeps"
+    FETCH_MEEPS_URL:       "/meeps",
+    MAX_AMOUNT_MEEPS:      500 // How many meeps should be displayed per channel until the garbage collector takes action?
   },
   
   _getLink: function() {
@@ -56,13 +57,13 @@ protonet.timeline.Channel.prototype = {
         if (meepData.channel_id != this.data.id) {
           return;
         }
-      
+        
         var instance = this._renderMeep(meepData, this.channelList);
-      
+        
         this._notifications();
         this._replyNotifications(meepData, instance);
       }.bind(this))
-    
+      
       /**
        * Set fixed scroll position when user scrolled down in timeline
        * (eg. to watch a video) while new meep occurs
@@ -167,6 +168,18 @@ protonet.timeline.Channel.prototype = {
     }.bind(this));
   },
   
+  _initGarbageCollector: function() {
+    var MEEP_ELEMENTS = this.channelList[0].getElementsByTagName("article"); // Use a Live NodeList here
+    setInterval(function() {
+      if (this.data.meeps.length > this.config.MAX_AMOUNT_MEEPS) {
+        this.data.meeps.splice(this.config.MAX_AMOUNT_MEEPS);
+        while (MEEP_ELEMENTS.length > this.config.MAX_AMOUNT_MEEPS) {
+          $(MEEP_ELEMENTS[MEEP_ELEMENTS.length - 1]).data("instance").destroy();
+        }
+      }
+    }.bind(this), 60000);
+  },
+  
   /**
    * Decides whether or not a small badge
    * should be displayed, based on the number
@@ -255,6 +268,7 @@ protonet.timeline.Channel.prototype = {
     
     this._renderMeeps(this.data.meeps, this.channelList, function() {
       protonet.trigger("channel.rendered", [this.channelList, this.data, this]);
+      this._initGarbageCollector();
     }.bind(this));
     
     return this;

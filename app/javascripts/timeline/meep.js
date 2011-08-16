@@ -212,6 +212,15 @@ protonet.timeline.Meep.prototype = {
     return this;
   },
   
+  destroy: function() {
+    delete this.data;
+    if (this.merged) {
+      this.article.remove();
+    } else {
+      this.element.remove();
+    }
+  },
+  
   setStatus: function(html, fadeOutAfter) {
     if (!this.status) {
       var status = this.element.find(".status");
