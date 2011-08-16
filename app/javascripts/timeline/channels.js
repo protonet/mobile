@@ -86,12 +86,18 @@ protonet.timeline.Channels = {
        * Subscribe a new channel by id
        */
       .bind("channel.subscribe", function(e, id) {
+        var identifier = this.getChannelName(+id) || "#" + id;
+        
+        var success = function() {
+          var message = protonet.t("CHANNEL_SUBSCRIPTION_SUCCESS").replace("{identifier}", identifier);
+          protonet.trigger("flash_message.notice", message);
+        };
+        
         var error = function() {
-          var identifier = this.getChannelName(+id) || id,
-              message = protonet.t("CHANNEL_SUBSCRIPTION_ERROR").replace("{identifier}", identifier);
+          var message = protonet.t("CHANNEL_SUBSCRIPTION_ERROR").replace("{identifier}", identifier);
           protonet.trigger("flash_message.error", message);
-        }.bind(this);
-      
+        };
+        
         $.ajax({
           type:   "post",
           url:    "/listens",
@@ -101,7 +107,7 @@ protonet.timeline.Channels = {
           },
           success: function(data) {
             if (data.success) {
-              protonet.trigger("flash_message.notice", "You successfully started subscribing to channel #" + id);
+              success();
             } else {
               error();
             }
