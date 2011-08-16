@@ -21,7 +21,11 @@ class InstrumentsController < ApplicationController
       render :json => channels.map { |channel|
         meeps = channel.meeps.recent.all(:limit => 25)
         
-        { :id => channel.id, :name => channel.name, :meeps  => Meep.prepare_for_frontend(meeps, { :channel_id => channel.id }) }
+        {
+          :id => channel.id,
+          :name => channel.name.capitalize,
+          :meeps  => Meep.prepare_for_frontend(meeps, { :channel_id => channel.id })
+        }
       }.to_json
     end
 end

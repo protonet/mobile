@@ -30,15 +30,8 @@
 
   <nav id="channels">
     <ul>
-      <%- @channels.each_with_index do |c, index| -%>
-        <li>
-          <%= link_to c.name.capitalize, { :channel_id => c.id }, {
-            :title => c.description,
-            :class => c.locally_hosted? ? (c.global? ? 'global-hosted' : 'local') : 'global',
-            'data-channel-id' => c.id,
-            'data-channel-display-name' => c.display_name
-          } %>
-        </li>
+      <%- @channels.each_with_index do |channel, index| -%>
+        <%= render :partial => 'channels/tab', :locals => { :channel => channel } %>
       <%- end -%>
     </ul>
     <div id="manage-channels">

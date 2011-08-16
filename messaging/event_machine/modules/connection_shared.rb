@@ -327,9 +327,8 @@ module ConnectionShared
           when 'user.unsubscribed_channel'
             unbind_channel(json['channel_uuid'])
           end
-        else
-          send_json json
         end
+        send_json json
       end
     rescue MQ::Error => e
       log("bind_channel_subscriptions error: " + e.inspect)

@@ -15,6 +15,10 @@ if (typeof(localStorage) == "undefined") {
     
     getItem: function(key) {
       return this[key];
+    },
+    
+    removeItem: function(key) {
+      delete this[key];
     }
   };
 }

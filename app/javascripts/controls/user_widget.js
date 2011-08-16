@@ -92,7 +92,7 @@ protonet.controls.UserWidget.prototype = {
           dataTransfer.setData("text/plain", "@" + $(this).text() + " ");
         }
       })
-      .delegate("li[data-user-id] > a", "mouseover", function() {
+      .delegate("li[data-user-id] > a", "mouseover", function(event) {
         var link  = $(event.target),
             image = link.find("img");
         if (!image.length) {
@@ -270,8 +270,9 @@ protonet.controls.UserWidget.prototype = {
     // handle channel subscriptions
     for (var i in userData.subscribed_channel_ids) {
       var channelId = userData.subscribed_channel_ids[i];
-      if(this.channelSubscriptions[channelId])
+      if (this.channelSubscriptions[channelId]) {
         this.channelSubscriptions[channelId].push(userData.id);
+      }
     }
     
     // duplicated from updateUsers
@@ -305,6 +306,7 @@ protonet.controls.UserWidget.prototype = {
   },
   
   _userSubscribedChannel: function(userId, channelId) {
+    this.channelSubscriptions[channelId] = this.channelSubscriptions[channelId] || [];
     this.channelSubscriptions[channelId].push(userId);
     if (channelId == protonet.timeline.Channels.selected) {
       var user = this.usersData[userId];

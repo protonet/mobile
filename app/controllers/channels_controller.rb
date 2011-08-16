@@ -16,12 +16,20 @@ class ChannelsController < ApplicationController
   end
   
   def show
+    channel = Channel.find(params[:id])
+    
     respond_to do |format|
       format.json do
-        render :json => {}
+        meeps = channel.meeps.recent.all(:limit => 25)
+        render :json => {
+          :id => channel.id,
+          :name => channel.name.capitalize,
+          :display_name => channel.display_name,
+          :meeps  => Meep.prepare_for_frontend(meeps, { :channel_id => channel.id })
+        }
       end
       format.html do
-        render :partial => "channel_details", :locals => {:channel => Channel.find(params[:id])}
+        render :partial => "channel_details", :locals => { :channel => channel }
       end
     end
   end

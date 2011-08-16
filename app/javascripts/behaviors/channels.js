@@ -9,14 +9,6 @@ $.behaviors({
       protonet.trigger("channel.change", id);
     }
     event.preventDefault();
-  },
-  // this handles changing the name of a channel to it's display name
-  // TODO: tiff let's talk about this, I wanted to change the minimal amount of stuff so as to 
-  // not interfere with the rest of the code
-  "a[data-channel-display-name]": function(element, event) {
-    var $element      = $(element),
-        display_name  = $element.data("channel-display-name");
-   $element.html(display_name)
   }
   
   // This doesn't work anymore due to a conflict with the jquery.html5sortable plugin

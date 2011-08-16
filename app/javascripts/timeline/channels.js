@@ -15,8 +15,12 @@ protonet.timeline.Channels = {
   
   initialize: function(data) {
     this.container          = $("#timeline");
+    // All channel instances as key=>value
+    this.channels           = {};
+    // All channel data as array
     this.data               = data || [];
-    this.subscribedChannels = $.map(this.data, function(channel) { return channel.id; });
+    
+    this._updateSubscribedChannels();
     
     protonet.trigger("channels.data_available", [this.data, this.availableChannels, this.subscribedChannels]);
     
@@ -25,7 +29,10 @@ protonet.timeline.Channels = {
     this._renderChannelLists();
   },
   
-
+  _updateSubscribedChannels: function() {
+    this.subscribedChannels = $.map(this.data, function(channel) { return channel.id; });
+  },
+  
   _makeChannelsSortable: function() {
     $("#channels ul").Html5Sortable({
       drop: function() {
@@ -45,99 +52,137 @@ protonet.timeline.Channels = {
       }
     });
   },
-  	
+  
   _observe: function() {
-    /**
-     * Track selected channel
-     * Sometimes we have to prevent the hash from changing
-     * to avoid creating new browser history entries
-     *
-     * If the desired channel is not already subscribed this
-     * will fire the channel.subscribe event
-     */
-    protonet.bind("channel.change", function(e, id, avoidHistoryChange) {
-      id = +id; // + Makes sure that id is a Number
-      if ($.inArray(id, this.subscribedChannels) == -1) {
-        protonet.trigger("channel.subscribe", id);
-        return;
-      }
-      
-      this.selected = id;
-      
-      if (!avoidHistoryChange) {
-        protonet.utils.History.register("?channel_id=" + id);
-      }
-    }.bind(this));
-    
-    /**
-     * Select initial channel when channels are rendered/initialized
-     */
-    protonet.bind("channels.initialized", this._selectChannel.bind(this));
-    
-    /**
-     * Subscribe a new channel by id
-     */
-    protonet.bind("channel.subscribe", function(e, id) {
-      var error = function() {
-        var identifier = this.getChannelName(+id) || id,
-            message = protonet.t("CHANNEL_SUBSCRIPTION_ERROR").replace("{identifier}", identifier);
-        protonet.trigger("flash_message.error", message);
-      }.bind(this);
-      
-      $.ajax({
-        type:   "post",
-        url:    "/listens/",
-        data:   {
-          channel_id:         id,
-          authenticity_token: protonet.config.authenticity_token
-        },
-        success: function(data) {
-          if (data.success) {
-            if (data.public_channel) {
-              location.href = "?channel_id=" + id;
-            } else {
-              // Strip channel_id from URL
-              location.href = location.href.substring(0, location.href.indexOf('?'));
-            }
-          } else {
-            error();
-          }
-        },
-        error: error
-      });
-    }.bind(this));
-    
-    protonet.bind("channel.subscribed", function(e, data) {
-      // debugger
-    }.bind(this));
-
-    protonet.bind("channel.unsubscribed", function(e, data) {
-      // debugger
-    }.bind(this));
-    
-    
-    /**
-     * Logic for loading meeps that were send when the user was disconnected
-     */
-    protonet.bind("socket.reconnected", function(event) {
-      var channelStates = {};
-      $.each(this.data, function(i, channel) {
-        var latestMeepData = channel.meeps[channel.meeps.length - 1];
-        channelStates[channel.id] = latestMeepData ? latestMeepData.id : 0;
-      });
-      
-      $.ajax({
-        url:      "/meeps/sync",
-        data:     { channel_states: channelStates },
-        success: function(response) {
-          $.each(response, function(channelId, meeps) {
-            $.each(meeps, function(i, meepData) {
-              protonet.trigger("meep.receive", [meepData]);
-            });
-          });
+    protonet
+      /**
+       * Track selected channel
+       * Sometimes we have to prevent the hash from changing
+       * to avoid creating new browser history entries
+       *
+       * If the desired channel is not already subscribed this
+       * will fire the channel.subscribe event
+       */
+      .bind("channel.change", function(e, id, avoidHistoryChange) {
+        id = +id; // + Makes sure that id is a Number
+        if ($.inArray(id, this.subscribedChannels) == -1) {
+          protonet.trigger("channel.subscribe", id);
+          return;
         }
-      });
-    }.bind(this));
+      
+        this.selected = id;
+      
+        if (!avoidHistoryChange) {
+          protonet.utils.History.register("?channel_id=" + id);
+        }
+      }.bind(this))
+    
+      /**
+       * Select initial channel when channels are rendered/initialized
+       */
+     .bind("channels.initialized", this._selectChannel.bind(this))
+      
+      /**
+       * Subscribe a new channel by id
+       */
+      .bind("channel.subscribe", function(e, id) {
+        var error = function() {
+          var identifier = this.getChannelName(+id) || id,
+              message = protonet.t("CHANNEL_SUBSCRIPTION_ERROR").replace("{identifier}", identifier);
+          protonet.trigger("flash_message.error", message);
+        }.bind(this);
+      
+        $.ajax({
+          type:   "post",
+          url:    "/listens",
+          data:   {
+            channel_id:         id,
+            authenticity_token: protonet.config.authenticity_token
+          },
+          success: function(data) {
+            if (data.success) {
+              protonet.trigger("flash_message.notice", "You successfully started subscribing to channel #" + id);
+            } else {
+              error();
+            }
+          },
+          error: error
+        });
+      }.bind(this))
+      
+      /**
+       * Create a tab handle and render meeps for the newly subscribed channel
+       */
+      .bind("user.subscribed_channel", function(e, data) {
+        var channelId = data.channel_id;
+        if (protonet.config.user_id != data.user_id) {
+          return;
+        }
+        protonet
+          .trigger("channel.hide")
+          .trigger("timeline.loading_start");
+        $.ajax({
+          url: "/channels/" + channelId,
+          success: function(data) {
+            this.data.push(data);
+            this._updateSubscribedChannels();
+            
+            this.channels[channelId] = new protonet.timeline.Channel(data).renderTab("#channels ul").render(this.container);
+            
+            protonet
+              .trigger("timeline.loading_end")
+              .trigger("channel.change", channelId);
+          }.bind(this)
+        });
+      }.bind(this))
+      
+      /**
+       * Remove the tab handle, all meeps and all other dependencies of a channel
+       */
+      .bind("user.unsubscribed_channel", function(e, data) {
+        var channelId = data.channel_id;
+        
+        if (protonet.config.user_id != data.user_id) {
+          return;
+        }
+        
+        if (!this.channels[channelId]) {
+          return;
+        }
+        
+        this.channels[channelId].destroy();
+        delete this.channels[channelId];
+        
+        this.data = [];
+        $.each(this.channels, function(id, instance) {
+          this.data.push(instance.data);
+        }.bind(this));
+        
+        this._updateSubscribedChannels();
+      }.bind(this))
+      
+      /**
+       * Logic for loading meeps that were send when the user was disconnected
+       */
+      .bind("socket.reconnected", function(event) {
+        var channelStates = {};
+        $.each(this.data, function(i, channel) {
+          var latestMeepData = channel.meeps[channel.meeps.length - 1];
+          channelStates[channel.id] = latestMeepData ? latestMeepData.id : 0;
+        });
+      
+        $.ajax({
+          url:      "/meeps/sync",
+          data:     { channel_states: channelStates },
+          success: function(response) {
+            $.each(response, function(channelId, meeps) {
+              $.each(meeps, function(i, meepData) {
+                protonet.trigger("meep.receive", [meepData]);
+              });
+            });
+          }
+        });
+      }.bind(this));
     
     /**
      * Ajax history to enable forward and backward
@@ -148,7 +193,7 @@ protonet.timeline.Channels = {
   
   _renderChannelLists: function() {
     this.data.chunk(function(channelData) {
-      new protonet.timeline.Channel(channelData).render(this.container);
+      this.channels[channelData.id] = new protonet.timeline.Channel(channelData).render(this.container);
     }.bind(this), function() {
       protonet.trigger("channels.initialized", [this.data]);
     }.bind(this));

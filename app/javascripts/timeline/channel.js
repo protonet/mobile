@@ -20,8 +20,8 @@ protonet.timeline.Channel = function(data) {
   this.$window      = $(window);
   
   this._getLink();
-  this.unreadReplies = window.localStorage[this.data.id + ":unread_replies"]  || 0;
-  this.unreadMeeps   = window.localStorage[this.data.id + ":unread_meeps"]    || 0;
+  this.unreadReplies = localStorage[this.data.id + ":unread_replies"]  || 0;
+  this.unreadMeeps   = localStorage[this.data.id + ":unread_meeps"]    || 0;
   
   this._observe();
 };
@@ -73,7 +73,7 @@ protonet.timeline.Channel.prototype = {
         }
       
         var channelPositionTop = this.channelList.offset().top,
-            scrollPositionTop  = this.$window.scrollTop();
+            scrollPositionTop  = this.$window.scrollTop(),
             offset             = 40;
       
         if (scrollPositionTop > (channelPositionTop + offset)) {
@@ -134,7 +134,12 @@ protonet.timeline.Channel.prototype = {
         this.isSelected = channelId == this.data.id;
         this.toggle();
       }.bind(this))
-    
+      
+      .bind("channel.hide", function() {
+        this.isSelected = false;
+        this.toggle();
+      }.bind(this))
+      
       /**
        * Init endless scroller and no meeps hint after meeps are rendered
        */
@@ -157,8 +162,8 @@ protonet.timeline.Channel.prototype = {
      * Store number of unread meeps/replies in local storage
      */
     this.$window.bind("beforeunload", function() {
-      window.localStorage[this.data.id + ":unread_meeps"]   = this.unreadMeeps;
-      window.localStorage[this.data.id + ":unread_replies"] = this.unreadReplies;
+      localStorage[this.data.id + ":unread_meeps"]   = this.unreadMeeps;
+      localStorage[this.data.id + ":unread_replies"] = this.unreadReplies;
     }.bind(this));
   },
   
@@ -205,6 +210,20 @@ protonet.timeline.Channel.prototype = {
     }
   },
   
+  destroy: function() {
+    this.link.parent().remove();
+    
+    this.data = { id: null };
+    
+    this.channelList && this.channelList.remove();
+    this.noMeepsHint && this.noMeepsHint.remove();
+    
+    localStorage.removeItem(this.data.id + ":unread_replies");
+    localStorage.removeItem(this.data.id + ":unread_meeps");
+    
+    return this;
+  },
+  
   /**
    * Decide whether the channel should be shown or hidden
    */
@@ -220,6 +239,8 @@ protonet.timeline.Channel.prototype = {
     
     this._toggleReplyBadge();
     this._toggleBadge(true);
+    
+    return this;
   },
   
   /**
@@ -235,6 +256,20 @@ protonet.timeline.Channel.prototype = {
     this._renderMeeps(this.data.meeps, this.channelList, function() {
       protonet.trigger("channel.rendered", [this.channelList, this.data, this]);
     }.bind(this));
+    
+    return this;
+  },
+  
+  renderTab: function(tabContainer) {
+    var $li = $("<li>");
+    
+    this.link = $("<a>", {
+      href: "/?channel_id=" + this.data.id,
+      'data-channel-id': this.data.id,
+      text: this.data.display_name || this.data.name
+    }).appendTo($li);
+    
+    $li.appendTo(tabContainer);
     
     return this;
   },
@@ -360,15 +395,15 @@ protonet.timeline.Channel.prototype = {
       return;
     }
     
-    var noMeepsHint = $("<div>", {
+    this.noMeepsHint = $("<div>", {
       "class": "no-meeps-available"
     }).hide().html(protonet.t("NO_MEEPS_AVAILABLE")).appendTo(this.container);
     
     protonet.bind("channel.change", function(e, id) {
       if (this.data.id == id && !this.data.meeps.length) {
-        noMeepsHint.show();
+        this.noMeepsHint.show();
       } else {
-        noMeepsHint.hide();
+        this.noMeepsHint.hide();
       }
     }.bind(this));
     
@@ -377,7 +412,7 @@ protonet.timeline.Channel.prototype = {
         return;
       }
       
-      noMeepsHint.remove();
+      this.noMeepsHint.remove();
     }.bind(this));
   },
   
