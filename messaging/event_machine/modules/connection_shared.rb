@@ -239,10 +239,11 @@ module ConnectionShared
     @periodic_user_refresh.try(:cancel)
   end
   
-  def send_channel_subscriptions
+  def send_channel_subscriptions(channel_id=nil)
     @tracker.channel_users ||= {}
     filtered_channel_users = {}
     @user.verified_channels.each do |channel|
+      next if channel_id && channel_id != channel.id
       @tracker.channel_users[channel.id] ||= []
       if SystemPreferences.show_only_online_users
         # only add user to current user list
@@ -329,6 +330,7 @@ module ConnectionShared
           end
         end
         send_json json
+        send_channel_subscriptions(json['channel_id'])
       end
     rescue MQ::Error => e
       log("bind_channel_subscriptions error: " + e.inspect)

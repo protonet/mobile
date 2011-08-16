@@ -72,8 +72,11 @@ protonet.controls.UserWidget.prototype = {
         this.filterChannelUsers();
       }.bind(this))
       
+      /**
+       * Update subscriptions for all subscribed channels
+       */
       .bind("channels.update_subscriptions", function(e, channelSubscriptions) {
-        this.channelSubscriptions = channelSubscriptions.data;
+        $.extend(this.channelSubscriptions, channelSubscriptions.data);
         this.filterChannelUsers();
       }.bind(this))
       
@@ -94,7 +97,8 @@ protonet.controls.UserWidget.prototype = {
       })
       .delegate("li[data-user-id] > a", "mouseover", function(event) {
         var link  = $(event.target),
-            image = link.find("img");
+            image = link.find("img"),
+            user;
         if (!image.length) {
           user = this.usersData[+link.parent().data("user-id")];
           if (!user || !user.avatar) { return; }
