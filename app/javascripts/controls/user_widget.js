@@ -18,7 +18,7 @@ protonet.controls.UserWidget = function() {
       isViewer:             li.hasClass("myself"),
       isStranger:           false,
       avatar:               li.data("user-avatar"),
-      external_profile_url:   li.data("user-external-profile-url"),
+      externalProfileUrl: li.data("user-external-profile-url"),
       channelSubscriptions: []
     };
   }.bind(this));
@@ -193,7 +193,7 @@ protonet.controls.UserWidget.prototype = {
       isStranger:           isStranger,
       avatar:               user.avatar,
       channelSubscriptions: [],
-      external_profile_url:   user.external_profile_url,
+      externalProfileUrl:   user.external_profile_url,
       element:              element
     };
   },

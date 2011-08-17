@@ -54,15 +54,17 @@ protonet.user = {
       }.bind(this),
       "show profile": function(link, closeContextMenu) {
         try {
-          if(link.data("user-external-profile-url")) {
-            window.open (link.data("user-external-profile-url"),"dbms-profile");
+          var userId  = +link.data("user-id"),
+              user    = this.usersData[userId] || {};
+          if (user.externalProfileUrl) {
+            window.open(user.externalProfileUrl, "dbms-profile-" + user.externalProfileUrl);
           } else {
-            protonet.globals.pages.user.show(+link.data("user-id"));
+            protonet.globals.pages.user.show(userId);
           }
         } catch(e) {} finally {
           closeContextMenu();
         }
-      }
+      }.bind(this)
     };
     
     if (protonet.user.data.is_admin) {
