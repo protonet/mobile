@@ -116,9 +116,11 @@ exports.proxy = function(params, headers, response) {
   if ((parsedUrl.host || "").replace(/:.*/, '') == headers.host.replace(/:.*/, '') || headers.host.replace(/:.*/, '') == "127.0.0.1") {
     cookie = headers.cookie; // only send cookie if its a local request
   }
-
+  
+  console.log("check whether file exists: " + fileName);
   // image exists with correct size
   path.exists(fileName, function(exists){
+    console.log("exists? " + exists);
     if (exists) {
       sys.puts("file exists " + fileName);
       sendImage(fileName);
