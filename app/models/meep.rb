@@ -5,6 +5,7 @@ class Meep < ActiveRecord::Base
 
   searchable do
     integer :channel_id, :references => Channel, :multiple => true
+    text :author
     text :message, :stored => true
     text :text_extension
     time :created_at
