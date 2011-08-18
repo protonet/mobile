@@ -5,6 +5,18 @@ GIT
     sprockets-rails (0.0.2)
 
 GIT
+  remote: git://github.com/protonet/sunspot.git
+  revision: e4a1ef8d6bfe75b827f1c8a7898c8e0901469dca
+  specs:
+    sunspot (1.2.1)
+      escape (= 0.0.4)
+      pr_geohash (~> 1.0)
+      rsolr (= 0.12.1)
+    sunspot_rails (1.2.1)
+      nokogiri
+      sunspot (= 1.2.1)
+
+GIT
   remote: https://github.com/dudemeister/ruby-ifconfig.git
   revision: b3eb63311ceb1172cf20904213717aa12cec57d4
   specs:
@@ -205,15 +217,8 @@ GEM
       json_pure
       rubyzip
     sprockets (1.0.2)
-    sunspot (1.2.1)
-      escape (= 0.0.4)
-      pr_geohash (~> 1.0)
-      rsolr (= 0.12.1)
     sunspot_index_queue (1.1.0)
       sunspot (>= 1.1.0)
-    sunspot_rails (1.2.1)
-      nokogiri
-      sunspot (= 1.2.1)
     term-ansicolor (1.0.5)
     thor (0.14.6)
     tmm1-amqp (0.6.4)
@@ -274,7 +279,7 @@ DEPENDENCIES
   selenium-webdriver (= 0.2.2)
   sprockets
   sprockets-rails!
-  sunspot
+  sunspot!
   sunspot_index_queue
   sunspot_rails
   tmm1-amqp (= 0.6.4)
