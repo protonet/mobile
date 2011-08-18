@@ -56,7 +56,7 @@ class SearchController < ApplicationController
         end
 
         @search_results = Meep.search do
-          with(:channel_ids, search_channel_ids)
+          with(:channel_id, search_channel_ids)
           keywords(search_term, :highlight => true)
           order_by(:created_at, :desc)
           paginate(:page => (params[:page] || 1), :per_page => params[:results_count] || Meep::SEARCH_RESULTS_PER_PAGE)

@@ -4,7 +4,7 @@ class Meep < ActiveRecord::Base
   SEARCH_RESULTS_PER_PAGE = 10
 
   searchable do
-    integer :channel_ids, :references => Channel, :multiple => true
+    integer :channel_id, :references => Channel, :multiple => true
     text :message, :stored => true
     text :text_extension
     time :created_at

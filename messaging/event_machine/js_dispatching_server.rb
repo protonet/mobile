@@ -20,10 +20,10 @@ def solr_index_processing
       puts "==== solr index queue processing ========="
       Sunspot::IndexQueue.new.process
       puts "==== solr index queue processing done ===="
-      EventMachine::add_timer(30) {
-        solr_index_processing
-      }
     end
+    EventMachine::add_timer(30) {
+      solr_index_processing
+    }
   rescue Exception => e
     puts "==== solr indexing exception ===="
     puts "#{e}"
