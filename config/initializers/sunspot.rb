@@ -11,3 +11,5 @@ end
 
 # Queue implementation backed by ActiveRecord
 Sunspot::IndexQueue::Entry.implementation = (SystemPreferences.index_meeps ? :active_record : :nil) rescue :active_record
+
+require "sunspot/rails/solr_logging"
