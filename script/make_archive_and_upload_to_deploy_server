@@ -43,7 +43,9 @@ bundle package
 rm -rf .git
 
 #  write version information
-echo $release_type > TYPE
+if [ "$release_type" != "OVERWRITE LAST" ]; then
+   echo $release_type > TYPE
+fi
 echo $last_version > RELEASE
 
 #  now create an archive
