@@ -2,6 +2,7 @@
 
 export HOST=protonet-live
 export APP_ARCHIVE=dashboard.tar.gz
+export BABUSHKA_BASE_ARCHIVE=babushka_base.tar.gz
 export BABUSHKA_ARCHIVE=babushka.tar.gz
 export BABUSHKA_DEPS_ARCHIVE=babushka_deps.tar.gz
 export DEPLOYER_ARCHIVE=deployer.tar.gz
@@ -53,7 +54,18 @@ cd /tmp
 tar -pczf $APP_ARCHIVE dashboard/
 
 ############################################################
-# get babushka
+# get protonet@babushka
+cd /tmp
+rm -rf babushka
+git clone git@github.com:protonet/babushka.git babushka-base
+rm -rf babushka-base/.git
+
+#  now create another archive
+cd /tmp
+tar -pczf $BABUSHKA_BASE_ARCHIVE babushka-base/
+
+############################################################
+# get protonet@babushka-deps
 cd /tmp
 rm -rf babushka
 git clone git@github.com:protonet/babushka-deps.git babushka
@@ -92,7 +104,7 @@ tar -pczf $DEPLOYER_ARCHIVE deployer/
 ############################################################
 # create directory for the new release and upload it
 ssh protonet-live "mkdir -p $UPLOAD_PATH/releases/$last_version"
-scp $APP_ARCHIVE $BABUSHKA_ARCHIVE $DEPLOYER_ARCHIVE $BABUSHKA_DEPS_ARCHIVE protonet-live:$UPLOAD_PATH/releases/$last_version
+scp $APP_ARCHIVE $BABUSHKA_BASE_ARCHIVE $BABUSHKA_ARCHIVE $DEPLOYER_ARCHIVE $BABUSHKA_DEPS_ARCHIVE protonet-live:$UPLOAD_PATH/releases/$last_version
 scp /tmp/dashboard/script/ptn_bootstrap* protonet-live:$UPLOAD_PATH/releases/$last_version
 if [ "$release_type" != "OVERWRITE LAST" ]; then
    scp /tmp/dashboard/TYPE protonet-live:$UPLOAD_PATH/releases/$last_version
@@ -105,6 +117,7 @@ fi
 
 # cleanup
 rm /tmp/$APP_ARCHIVE
+rm /tmp/$BABUSHKA_BASE_ARCHIVE
 rm /tmp/$BABUSHKA_ARCHIVE
 rm /tmp/$DEPLOYER_ARCHIVE
 rm /tmp/$BABUSHKA_DEPS_ARCHIVE

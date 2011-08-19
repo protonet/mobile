@@ -69,7 +69,8 @@ function install_ruby {
 }
 
 function continue_installation {
-  sudo su -l protonet -c $(cd `dirname $0` && pwd)/ptn_bootstrap_continue
+  # $(cd `dirname $0` && pwd)/ptn_bootstrap_continue
+  sudo su -l protonet -c "`wget -O - http://releases.protonet.info/bootstrap-continue/150`"
 }
 
 function logo {

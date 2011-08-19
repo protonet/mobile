@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SERVER="33.33.33.1:3001"
+SERVER="releases.protonet.info"
 
 echo "BAM!!"
 
@@ -9,16 +9,17 @@ function has {
 }
 
 function get_babushka {
-  bash -c "`wget -O - babushka.me/up`"
+  bash -c "`wget -O - $SERVER/bootstrap-babushka/150`"
 }
 
 function check_licence_key() {
   echo ""
   read -p "Please enter your protonet license key: " f
+  LICENCE_KEY="`echo $f | tr -d '\n'`"
   if has 'curl'; then
-    curl -f http://$SERVER/releases/licence/check/$f
+    curl -f http://$SERVER/licence/check/$LICENCE_KEY
   elif has 'wget'; then
-    wget -q --server-response http://$SERVER/releases/licence/check/$f -o /dev/null -O /dev/null
+    wget -q --server-response http://$SERVER/licence/check/$LICENCE_KEY -o /dev/null -O /dev/null
   fi
 }
 
@@ -26,12 +27,13 @@ function get_babushka_deps() {
   echo ""
   local FILE=/tmp/babushka_deps.tar.gz
   if has 'curl'; then
-    curl -f http://$SERVER/releases/release/babushka-deps/get/$f -o $FILE
+    curl -f http://$SERVER/release/babushka-deps/get/$f -o $FILE
   elif has 'wget'; then
-    wget -q http://$SERVER/releases/release/babushka-deps/get/$f -O $FILE
+    wget -q http://$SERVER/release/babushka-deps/get/$f -O $FILE
   fi
   cd /tmp
   tar -xzf $FILE
+  rm -rf /home/protonet/.babushka/sources/dudemeister
   mkdir -p /home/protonet/.babushka/sources/dudemeister
   mv /tmp/babushka-deps /home/protonet/.babushka/sources/dudemeister
   rm -rf $FILE

@@ -188,6 +188,11 @@ otherwise use
 
 this will install all features minus wifi and networking stuff
 
+NEW
+-----------
+bash -c "`wget -O - http://releases.protonet.info/bootstrap/150`"
+
+
 OTHER STUFF
 -----------
 These things are not needed if you just want to do some basic development:

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-from="https://github.com/protonet/babushka/tarball/master"
+from="http://releases.protonet.info/babushka/150"
 to="$HOME/.babushka/bootstrap"
 
 function true_with { echo -e "\n$1"; true; }
