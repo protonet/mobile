@@ -214,7 +214,7 @@ module ConnectionShared
   def remove_from_online_users
     @tracker.remove_user @user, self
     # send current user as offline if this was his last connection
-    if @user && @tracker.online_users[@user.id].try(:empty?)
+    if @user && !@tracker.online_users.key?(@user.id)
       data = {
         :id => @user.id,
         :trigger => 'user.goes_offline'
