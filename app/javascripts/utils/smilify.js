@@ -26,7 +26,7 @@ protonet.utils.smilify = (function() {
     { shortcuts: [";-)", ";)"], className: "wink" },
     { shortcuts: [":-/", ":/"], className: "struggled" },
     { shortcuts: [":-*", ":*"], className: "kiss" },
-    { shortcuts: ["XD", "xD"], className: "lol" },
+    { shortcuts: ["XD", "xD"], className: "rofl" },
     { shortcuts: [";-P", ";P"], className: "cheek" }
   ];
   
