@@ -18,7 +18,7 @@ protonet.controls.UserWidget = function() {
       isViewer:             li.hasClass("myself"),
       isStranger:           false,
       avatar:               li.data("user-avatar"),
-      externalProfileUrl: li.data("user-external-profile-url"),
+      externalProfileUrl:   li.data("user-external-profile-url"),
       channelSubscriptions: []
     };
   }.bind(this));
@@ -83,7 +83,7 @@ protonet.controls.UserWidget.prototype = {
       }.bind(this))
       
       .bind("socket.disconnected", function() {
-        this.updateUsers({});
+        protonet.trigger("users.update_status", { online_users: {} });
       }.bind(this))
       
       .bind("channel.change", function(e, channelId) {

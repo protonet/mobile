@@ -1,5 +1,6 @@
 class Channel < ActiveRecord::Base
-
+  include Rabbit
+  
   belongs_to  :owner, :class_name => "User"
   belongs_to  :network
 
@@ -10,11 +11,13 @@ class Channel < ActiveRecord::Base
 
   validates_uniqueness_of   :name, :uuid
   validates_length_of       :name,     :maximum => 30
-
-  before_validation :normalize_name, :on => :create
-  after_create  :generate_uuid,   :if => lambda {|c| c.uuid.blank? }
-  after_create  :create_folder,   :if => lambda {|c| !c.home?}
-  after_create  :subscribe_owner, :if => lambda {|c| !c.home? && !c.skip_autosubscribe}
+  
+  before_validation :prepare_rendezvous,  :on => :create, :if => lambda {|c| !!c.rendezvous }
+  before_validation :normalize_name,      :on => :create
+  
+  after_create  :generate_uuid,     :if => lambda {|c| c.uuid.blank? }
+  after_create  :create_folder,     :if => lambda {|c| !c.home?}
+  after_create  :subscribe_owner,   :if => lambda {|c| !c.home? && !c.skip_autosubscribe}
 
   attr_accessor   :skip_autosubscribe
   attr_accessible :skip_autosubscribe, :name, :description, :owner, :owner_id, :network, :network_id, :display_name, :public, :global
@@ -22,7 +25,7 @@ class Channel < ActiveRecord::Base
   scope :public,   :conditions => {:public => true}
 
   # TODO handle 1on1's correctly
-  scope :real,  :conditions => {:display_name => nil}
+  scope :real,  :conditions => {:rendezvous => nil}
 
   def self.home
     begin
@@ -46,8 +49,22 @@ class Channel < ActiveRecord::Base
     self.name = name.gsub(/\W/, '-').downcase
   end
   
+  def prepare_rendezvous
+    self.name = "rendezvous-#{self.rendezvous}"
+    self.public = false
+    true
+  end
+  
   def home?
     id == 1
+  end
+  
+  def rendezvous?
+    !rendezvous.blank?
+  end
+  
+  def rendezvous_participant?(user)
+    rendezvous_participants.include?(user)
   end
   
   def locally_hosted?
@@ -55,7 +72,11 @@ class Channel < ActiveRecord::Base
   end
   
   def subscribe_owner
-    owner && owner.subscribe(self)
+    if rendezvous?
+      rendezvous_participants.each { |u| u.subscribe(self) }
+    else
+      owner && owner.subscribe(self)
+    end
   end
 
   def owned_by(user)
@@ -76,9 +97,45 @@ class Channel < ActiveRecord::Base
     self.update_attribute(:uuid, UUID4R::uuid(1))
   end
   
-  private
-  def clean_diactritic_marks(string)
-    ActiveSupport::Multibyte::Chars.new(string).mb_chars.normalize(:kd).gsub(/[^\x00-\x7F]/n,'').to_s
+  def self.prepare_for_frontend(channel)
+    meeps = channel.meeps.recent.all(:limit => 25)
+    {
+      :id           => channel.id,
+      :rendezvous   => channel.rendezvous,
+      :name         => channel.name,
+      :display_name => channel.display_name || channel.name.capitalize,
+      :meeps        => Meep.prepare_for_frontend(meeps, { :channel_id => channel.id })
+    }
   end
-
+  
+  # TODO:
+  #   Dearest dudemeister,
+  #   
+  #   I'm sure you can write this better.
+  #   Please do so and show me the right path.
+  #
+  #   Yours faithfully,
+  #   Young Padawan.
+  #
+  def self.setup_rendezvous_for(current_user_id, partner_id)
+    raise RuntimeError if current_user_id == partner_id
+    rendezvous_key = [current_user_id, partner_id].sort.join(':')
+    already_exists = find_by_rendezvous(rendezvous_key)
+    channel = find_or_create_by_rendezvous(rendezvous_key, :owner_id => current_user_id)
+    channel.listens.each {|l|
+      channel.publish 'users', l.user_id,
+        :trigger    => 'channel.load',
+        :channel_id => channel.id
+    } if already_exists
+    channel
+  end
+  
+  def rendezvous_participants
+    rendezvous.split(':').map { |id| User.find(id) }
+  end
+  
+  private
+    def clean_diactritic_marks(string)
+      ActiveSupport::Multibyte::Chars.new(string).mb_chars.normalize(:kd).gsub(/[^\x00-\x7F]/n,'').to_s
+    end
 end

@@ -172,6 +172,10 @@ class User < ActiveRecord::Base
     channels.all(:conditions => ['listens.verified = ?', true])
   end
   
+  def verified_real_channels
+    channels.real.all(:conditions => ['listens.verified = ?', true])
+  end
+  
   def skip_password_validation?
     !new_record? || stranger?
   end
@@ -199,25 +203,16 @@ class User < ActiveRecord::Base
   def subscribe(channel)
     return if channels.include?(channel)
     channels << channel
-    send_channel_notification(channel, :subscribed_channel) if save
   end
 
   def unsubscribe(channel)
     return unless channels.include?(channel)
     channels.delete(channel)
-    send_channel_notification(channel, :unsubscribed_channel) if save
+    save
   end
 
   def subscribed?(channel)
     channels.include?(channel)
-  end
-
-  def send_channel_notification(channel, type)
-    publish 'channels', "subscriptions",
-      :trigger        => "user.#{type}",
-      :channel_id     => channel.id,
-      :channel_uuid   => channel.uuid,
-      :user_id        => id
   end
 
   def password_required_with_logged_out_user?

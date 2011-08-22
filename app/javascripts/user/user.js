@@ -3,7 +3,7 @@
 protonet.user = {
   data: {
     name:                   protonet.config.user_name,
-    id:                     Number(protonet.config.user_id),
+    id:                     +protonet.config.user_id,
     is_admin:               protonet.config.user_is_admin,
     is_stranger:            protonet.config.user_is_stranger,
     subscribed_channel_ids: protonet.config.user_channel_ids,
@@ -45,45 +45,35 @@ protonet.user = {
     // U have to check it out http://grooveshark.com/#/s/The+Best+Day/2fZAWg
     // kkthxbai
     var contextOptions = {
+      "show profile": function(link, closeContextMenu) {
+        var userId  = +link.data("user-id"),
+            user    = this.usersData[userId] || {};
+        if (user.externalProfileUrl) {
+          window.open(user.externalProfileUrl, "dbms-profile-" + user.externalProfileUrl);
+        } else {
+          protonet.globals.pages.user.show(userId);
+        }
+        closeContextMenu();
+      }.bind(this),
       "send @reply": function(link, closeContextMenu) {
         var user = this.usersData[+link.data("user-id")];
         if (user) {
-          protonet.Notifications.trigger("form.create_reply", user.name);
-          closeContextMenu();
+          protonet.trigger("form.create_reply", user.name);
         }
+        closeContextMenu();
       }.bind(this),
-      "show profile": function(link, closeContextMenu) {
-        try {
-          var userId  = +link.data("user-id"),
-              user    = this.usersData[userId] || {};
-          if (user.externalProfileUrl) {
-            window.open(user.externalProfileUrl, "dbms-profile-" + user.externalProfileUrl);
-          } else {
-            protonet.globals.pages.user.show(userId);
-          }
-        } catch(e) {} finally {
-          closeContextMenu();
-        }
-      }.bind(this)
+      "start private chat": function(link, closeContextMenu) {
+        protonet.trigger("rendezvous.start", +link.data("user-id"));
+        closeContextMenu();
+      }
     };
-    
-    if (protonet.user.data.is_admin) {
-      contextOptions["give internet access"] = function(link, closeContextMenu) {
-        var user = this.usersData[+link.data("user-id")];
-        // todo add a && user.stranger()
-        if (user) {
-          protonet.Notifications.trigger("system.give_internet_access", user);
-          closeContextMenu();
-        }
-      }.bind(this);
-    }
     
     var contextMenu = new protonet.ui.ContextMenu("[data-user-id]", contextOptions);
   },
   
-  getUserName: function(userId) {
+  getUser: function(userId) {
     var user = this.usersData[+userId];
-    return user && user.name;
+    return user;
   }
 };
 

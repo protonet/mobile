@@ -1,6 +1,6 @@
-class UsersController < ApplicationController 
-
+class UsersController < ApplicationController
   filter_resource_access
+  verify :xhr => true, :only => [:start_rendezvous, :stop_rendezvous]
   
   def index
     @users = User.registered
@@ -39,22 +39,17 @@ class UsersController < ApplicationController
     end
     redirect_to :action => 'index'
   end
-
-  def list_channels
-    channels = current_user ? current_user.verified_channels : [Channel.home]
-    respond_to do |format|
-      format.json do
-        channels = channels.collect { |c| {:id => c.id, :name => c.name, :description => c.description, :uuid => c.uuid}}
-        render :json => {:channels => channels}
-      end
-    end
-  end
   
   def sort_channels
     params[:channel_order].each_with_index do |channel_id, index|
       @current_user.listens.where(:channel_id => channel_id.to_i).first.update_attribute(:order_number, index)
     end
     render :text => "ok"
+  end
+  
+  def start_rendezvous
+    Channel.setup_rendezvous_for(current_user.id, params[:id].to_i)
+    render :nothing => true
   end
   
   def request_admin_flag

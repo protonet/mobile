@@ -64,14 +64,6 @@ li.html5sortable-state-highlight + li {
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0.1)), to(transparent));
 }
 
-#channels .active {
-  background: rgb(255, 255, 255);
-  border-bottom: 1px solid rgb(255, 255, 255);
-  color: rgb(72, 123, 255);
-  line-height: 26px;
-  margin-top: -4px;
-}
-
 #manage-channels {
   font-size: 12px;
   position: absolute;
@@ -105,6 +97,78 @@ li.html5sortable-state-highlight + li {
 #channels .reply-badge {
   background: #ff7f31;
   right: 13px;
+}
+
+#channels .hide-link {
+  opacity: 0.5;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  margin-top: -8px;
+  height: 16px;
+  width: 16px;
+  right: 5px;
+  background: transparent url(/img/icn_close_grey.png) no-repeat center center;
+}
+
+#channels .hide-link:hover {
+  opacity: 1;
+}
+
+#channels .active + .hide-link {
+  margin-top: -10px;
+}
+
+#channels .rendezvous {
+  border-top-color: #ff7f31;
+  border-right-color: #ff7f31;
+  border-left-color: #ff7f31;
+  background: -moz-linear-gradient(100% 100% 90deg, rgba(255, 127, 49, 0.1), transparent);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(255, 127, 49, 0.1)));
+  padding-right: 23px;
+  padding-left: 23px;
+}
+
+#channels .rendezvous:focus,
+#channels .rendezvous:active {
+  background: -moz-linear-gradient(100% 100% 90deg, transparent, rgba(255, 127, 49, 0.1));
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 127, 49, 0.1)), to(transparent));
+}
+
+#channels .rendezvous:hover {
+  color: #ff7f31;
+}
+
+#channels .rendezvous.active {
+  color: #ff7f31;
+}
+
+#channels .active {
+  background: #fff;
+  border-bottom: 1px solid #fff;
+  color: rgb(72, 123, 255);
+  line-height: 26px;
+  margin-top: -4px;
+}
+
+/* online status */
+#channels .rendezvous:before {
+  background: url(../img/spr_user_status.png) no-repeat 0 -20px;
+  content: "";
+  position: absolute;
+  top: 50%;
+  margin-top: -8px;
+  left: 5px;
+  width: 16px;
+  height: 16px;
+}
+
+#channels .rendezvous.online:before {
+  background-position: 0 0;
+}
+
+#channels .rendezvous.typing:before {
+  background-position: 0 -45px;
 }
 
 /* ==============================================================CHANNELS = */

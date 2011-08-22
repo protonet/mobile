@@ -1,7 +1,7 @@
 //= require "../utils/parse_query_string.js"
 //= require "../behaviors/channels.js"
 //= require "channel.js"
-//= require "../lib/jquery.html5sortable.js"
+//= require "rendezvous.js"
 
 /**
  * @events
@@ -16,7 +16,9 @@ protonet.timeline.Channels = {
   initialize: function(data) {
     this.container          = $("#timeline");
     // All channel instances as key=>value
-    this.channels           = {};
+    this.channels             = {};
+    this.channelsBeingLoaded  = {};
+    this.rendezvous           = {};
     // All channel data as array
     this.data               = data || [];
     
@@ -24,33 +26,12 @@ protonet.timeline.Channels = {
     
     protonet.trigger("channels.data_available", [this.data, this.availableChannels, this.subscribedChannels]);
     
-    this._makeChannelsSortable();
     this._observe();
-    this._renderChannelLists();
+    this._renderChannels();
   },
   
   _updateSubscribedChannels: function() {
     this.subscribedChannels = $.map(this.data, function(channel) { return channel.id; });
-  },
-  
-  _makeChannelsSortable: function() {
-    $("#channels ul").Html5Sortable({
-      drop: function() {
-        return true;
-      },
-      dropend: function() {
-        var channelArray = $.map($("#channels ul a"), function(channel){
-          return $(channel).data("channel-id");
-        });
-        $.ajax({
-          url:      "/users/sort_channels" ,
-          type:     "POST",
-          data:     { "channel_order[]": channelArray, "id": protonet.config.user_id },
-          traditional: true
-        });
-        protonet.trigger("channels.reordered");
-      }
-    });
   },
   
   _observe: function() {
@@ -69,23 +50,40 @@ protonet.timeline.Channels = {
           protonet.trigger("channel.subscribe", id);
           return;
         }
-      
+        
         this.selected = id;
-      
+        
         if (!avoidHistoryChange) {
           protonet.utils.History.register("?channel_id=" + id);
         }
       }.bind(this))
-    
+      
       /**
        * Select initial channel when channels are rendered/initialized
        */
-     .bind("channels.initialized", this._selectChannel.bind(this))
+      .bind("channels.initialized", this._selectChannel.bind(this))
+      
+      .bind("channels.change_to_first", function() {
+        var firstChannel = this.data[0];
+        if (firstChannel) {
+          protonet.trigger("channel.change", this.data[0].id);
+        }
+      }.bind(this))
+      
+      .bind("channel.hide", function() {
+        this.selected = null;
+      }.bind(this))
+      
+      .bind("channel.load", function(e, data) {
+        this.loadChannel(data.channel_id);
+      }.bind(this))
       
       /**
        * Subscribe a new channel by id
        */
       .bind("channel.subscribe", function(e, id) {
+        protonet.trigger("channel.hide").trigger("timeline.loading_start");
+        
         var identifier = this.getChannelName(+id) || "#" + id;
         
         var success = function() {
@@ -107,13 +105,21 @@ protonet.timeline.Channels = {
           },
           success: function(data) {
             if (data.success) {
-              success();
+              data.already_subscribed ? protonet.trigger("channel.load", { channel_id: id }) : success();
             } else {
               error();
             }
           },
           error: error
         });
+      }.bind(this))
+      
+      .bind("meep.receive", function(e, meepData) {
+        if (!this.channels[meepData.channel_id]) {
+          return;
+        }
+        
+        this.loadChannel(meepData.channel_id);
       }.bind(this))
       
       /**
@@ -124,22 +130,8 @@ protonet.timeline.Channels = {
         if (protonet.config.user_id != data.user_id) {
           return;
         }
-        protonet
-          .trigger("channel.hide")
-          .trigger("timeline.loading_start");
-        $.ajax({
-          url: "/channels/" + channelId,
-          success: function(data) {
-            this.data.push(data);
-            this._updateSubscribedChannels();
-            
-            this.channels[channelId] = new protonet.timeline.Channel(data).renderTab("#channels ul").render(this.container);
-            
-            protonet
-              .trigger("timeline.loading_end")
-              .trigger("channel.change", channelId);
-          }.bind(this)
-        });
+        
+        this.loadChannel(channelId);
       }.bind(this))
       
       /**
@@ -147,24 +139,11 @@ protonet.timeline.Channels = {
        */
       .bind("user.unsubscribed_channel", function(e, data) {
         var channelId = data.channel_id;
-        
         if (protonet.config.user_id != data.user_id) {
           return;
         }
         
-        if (!this.channels[channelId]) {
-          return;
-        }
-        
-        this.channels[channelId].destroy();
-        delete this.channels[channelId];
-        
-        this.data = [];
-        $.each(this.channels, function(id, instance) {
-          this.data.push(instance.data);
-        }.bind(this));
-        
-        this._updateSubscribedChannels();
+        this.unloadChannel(channelId);
       }.bind(this))
       
       /**
@@ -191,18 +170,54 @@ protonet.timeline.Channels = {
       }.bind(this));
     
     /**
+     * Rendezvous
+     */
+    protonet
+      .bind("rendezvous.start", function(e, partner) {
+        if (!partner) {
+          return;
+        }
+        
+        if (protonet.config.user_id == partner) {
+          protonet.trigger("flash_message.error", protonet.t("RENDEZVOUS_WITH_YOURSELF_ERROR"));
+          return;
+        }
+        
+        if (this.rendezvous[partner]) {
+          protonet.trigger("channel.change", this.rendezvous[partner].data.id);
+        } else {
+          protonet.trigger("channel.hide").trigger("timeline.loading_start");
+          $.ajax("/users/" + partner + "/" + "start_rendezvous", {
+            type: "POST",
+            data: { authenticity_token: protonet.config.authenticity_token }
+          });
+        }
+      }.bind(this));
+    
+    /**
      * Ajax history to enable forward and backward
      * buttons in browser to switch between channels
      */
     protonet.utils.History.onChange(this._selectChannel.bind(this));
   },
   
-  _renderChannelLists: function() {
+  _renderChannels: function() {
     this.data.chunk(function(channelData) {
-      this.channels[channelData.id] = new protonet.timeline.Channel(channelData).render(this.container);
+      this._instantiateChannel(channelData).render(this.container);
     }.bind(this), function() {
       protonet.trigger("channels.initialized", [this.data]);
     }.bind(this));
+  },
+  
+  _instantiateChannel: function(channelData) {
+    var instance;
+    if (channelData.rendezvous) {
+      instance = new protonet.timeline.Rendezvous(channelData);
+      this.rendezvous[channelData.rendezvous] = instance;
+    } else {
+      instance = new protonet.timeline.Channel(channelData);
+    }
+    return this.channels[channelData.id] = instance;
   },
   
   /**
@@ -228,5 +243,68 @@ protonet.timeline.Channels = {
       }
     }
     return null;
+  },
+  
+  loadChannel: function(channelId) {
+    if (this.channels[channelId] || this.channelsBeingLoaded[channelId]) {
+      return;
+    }
+    
+    if (!this.selected) {
+      protonet.trigger("timeline.loading_start");
+    }
+    
+    var eventName                 = "meep.receive." + channelId,
+        meepsReceivedWhileLoading = this.channelsBeingLoaded[channelId] = {};
+    
+    protonet.bind(eventName, function(e, meepData) {
+      if (meepData.channel_id === channelId) {
+        // queue them while the channel is being loaded
+        meepsReceivedWhileLoading[meepData.id] = meepData;
+      }
+    });
+    
+    $.ajax({
+      url: "/channels/" + channelId,
+      success: function(data) {
+        // Strip all meeps that were receive while the channel was loaded
+        // Those meeps will later be rendered by firing the "meep.receive" event
+        data.meeps = $.map(data.meeps, function(meepData) {
+          return meepsReceivedWhileLoading[meepData.id] ? null : meepData; // returning null will remove it
+        });
+        
+        this._instantiateChannel(data).renderTab("#channels ul").render(this.container);
+        this.data.push(data);
+        this._updateSubscribedChannels();
+        
+        if (!this.selected) {
+          protonet.trigger("timeline.loading_end").trigger("channel.change", channelId);
+        }
+        
+        protonet.unbind(eventName);
+        $.each(meepsReceivedWhileLoading, function(id, meepData) {
+          protonet.trigger("meep.receive", meepData);
+        });
+        
+        delete this.channelsBeingLoaded[channelId];
+      }.bind(this)
+    });
+  },
+  
+  unloadChannel: function(channelId) {
+    if (!this.channels[channelId]) {
+      return;
+    }
+    
+    this.channels[channelId].destroy();
+    
+    delete this.rendezvous[this.channels[channelId].partner];
+    delete this.channels[channelId];
+    
+    this.data = $.map(this.channels, function(instance) {
+      return instance.data;
+    });
+    
+    this._updateSubscribedChannels();
   }
 };

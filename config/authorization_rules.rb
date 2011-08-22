@@ -28,7 +28,7 @@ authorization do
       if_attribute :owner => is {user}
     end
     # todo, this is too much
-    has_permission_on :users, :to => :show_only
+    has_permission_on :users, :to => [:show_only, :rendezvous]
     has_permission_on :users do 
       to [:manage, :change_password]
       if_attribute :id => is {user.id}
@@ -48,6 +48,7 @@ privileges do
   # default privilege hierarchies to facilitate RESTful Rails apps
   privilege :manage, :includes => [:create, :read, :update, :delete, :show, :request_admin_flag, :change_password, :update_user_admin_flag, :generate_new_password, :sort_channels]
   privilege :read, :includes => [:index, :show]
+  privilege :rendezvous, :includes => [:start_rendezvous]
   privilege :show_only, :includes => :show
   privilege :create, :includes => :new
   privilege :update, :includes => :edit

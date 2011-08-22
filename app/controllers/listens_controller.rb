@@ -9,17 +9,21 @@ class ListensController < ApplicationController
   
   def create
     channel = Channel.find(params[:channel_id]) if params[:channel_id]
-    
-    if channel
-      current_user.subscribe(channel)
-      flash[:notice] = "you started listening to #{channel.name}#{' (pending verification)' if !channel.public?}"
-    else
-      flash[:error] = "could not subscribe to channel with identifier #{params[:channel_id].to_s}"
-    end
+    already_subscribed = current_user.subscribed?(channel)
+    current_user.subscribe(channel) if channel && !already_subscribed
     
     respond_to do |format|
-      format.json { render :json => { :success => true, :public_channel => !!channel.try(:public?) }.to_json }
-      format.html { redirect_to :controller => 'channels', :action => 'index', :anchor => channel.try(:id) }
+      format.json {
+        render :json => { :success => !!channel, :already_subscribed => already_subscribed, :public_channel => !!channel.try(:public?) }.to_json
+      }
+      format.html {
+        if channel
+          flash[:notice] = "you started listening to #{channel.name}#{' (pending verification)' if !channel.public?}"
+        else
+          flash[:error] = already_subscribed ? "you already subscribed to #{channel.name}" : "could not subscribe to channel with identifier #{params[:channel_id]}"
+        end
+        redirect_to :controller => 'channels', :action => 'index', :anchor => channel.try(:id)
+      }
     end
   end
   

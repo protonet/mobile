@@ -20,13 +20,7 @@ class ChannelsController < ApplicationController
     
     respond_to do |format|
       format.json do
-        meeps = channel.meeps.recent.all(:limit => 25)
-        render :json => {
-          :id => channel.id,
-          :name => channel.name.capitalize,
-          :display_name => channel.display_name,
-          :meeps  => Meep.prepare_for_frontend(meeps, { :channel_id => channel.id })
-        }
+        render :json => Channel.prepare_for_frontend(channel)
       end
       format.html do
         render :partial => "channel_details", :locals => { :channel => channel }
@@ -68,7 +62,7 @@ class ChannelsController < ApplicationController
     end
     redirect_to :action => 'index'
   end
-
+  
   def search
     @channels = Channel.all(:conditions => ["description LIKE ?", "%#{params[:description]}%"])
     render :index
@@ -82,5 +76,4 @@ class ChannelsController < ApplicationController
       end
     end
   end
-  
 end

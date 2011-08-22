@@ -30,7 +30,7 @@
 
   <nav id="channels">
     <ul>
-      <%- @channels.each_with_index do |channel, index| -%>
+      <%- @channels.each do |channel| -%>
         <%= render :partial => 'channels/tab', :locals => { :channel => channel } %>
       <%- end -%>
     </ul>

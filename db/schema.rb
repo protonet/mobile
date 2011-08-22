@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110809104622) do
+ActiveRecord::Schema.define(:version => 20110817095530) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -22,7 +22,8 @@ ActiveRecord::Schema.define(:version => 20110809104622) do
     t.integer  "network_id",   :default => 1
     t.string   "display_name"
     t.boolean  "public",       :default => true
-    t.boolean  "global"
+    t.boolean  "global",       :default => false
+    t.string   "rendezvous"
   end
 
   create_table "images_avatars", :force => true do |t|
@@ -70,6 +71,8 @@ ActiveRecord::Schema.define(:version => 20110809104622) do
     t.integer  "reply_from"
     t.integer  "channel_id"
   end
+
+  add_index "meeps", ["channel_id"], :name => "index_meeps_on_channel_id"
 
   create_table "networks", :force => true do |t|
     t.string   "name"
