@@ -1,4 +1,5 @@
 //= require "../utils/unshort_url.js"
+//= require "utils/replace_base_url.js"
 
 /**
  * @events
@@ -185,8 +186,9 @@ protonet.text_extensions.Input.prototype = {
     this.reset();
   },
   
-  setInput: function(value) {
-    this.hiddenInput.val(value && JSON.stringify(value));
+  setInput: function(data) {
+    data = protonet.text_extensions.utils.replaceBaseUrl(data);
+    this.hiddenInput.val(data && JSON.stringify(data));
   },
   
   reset: function() {

@@ -2,6 +2,7 @@
 //= require "../utils/strip_tags.js"
 //= require "../utils/parse_url.js"
 //= require "../utils/template.js"
+//= require "utils/insert_base_url.js"
 
 /**
  * Supported fields:
@@ -58,6 +59,8 @@ protonet.text_extensions.render = (function() {
   }
   
   return function(container, data) {
+    data = protonet.text_extensions.utils.insertBaseUrl(data);
+    
     var results     = new protonet.utils.Template("text-extension-template").toElement(),
         description = protonet.utils.escapeHtml(protonet.utils.stripTags(data.description || "")),
         title       = protonet.utils.escapeHtml(protonet.utils.stripTags(data.title || "")),
