@@ -161,11 +161,11 @@
       <ul>
         <li>
           Default user group on sign-up
-          <%= select_tag 'preferences[default_user_group]', options_from_collection_for_select(Role.where("title != 'admin'").all, 'title', 'title', SystemPreferences.default_registered_user_group) %>
+          <%= select_tag 'preferences[default_registered_user_group]', options_from_collection_for_select(Role.where("title != 'admin'").all, 'title', 'title', SystemPreferences.default_registered_user_group) %>
         </li>
         <li>
           Default stranger group on visit
-          <%= select_tag 'preferences[default_user_group]', options_from_collection_for_select(Role.where("title != 'admin'").all, 'title', 'title', SystemPreferences.default_stranger_user_group) %>
+          <%= select_tag 'preferences[default_stranger_user_group]', options_from_collection_for_select(Role.where("title != 'admin'").all, 'title', 'title', SystemPreferences.default_stranger_user_group) %>
         </li>
       </ul>
     </fieldset>
