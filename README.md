@@ -142,56 +142,15 @@ or any of our other targets
 
 DEPLOYING ON UBUNTU
 -------------------
-Make sure that we have a protonet user
 
-    sudo useradd protonet -m -s /bin/bash
-    sudo passwd protonet
+It's super simple!
 
-Make sure there is a protonet group
+    bash -c "`wget -O - http://releases.protonet.info/bootstrap`"
 
-    sudo groupadd -f admin
+And you're done, use 83489kjdfj734732snfnfdsns98jsnld as your licence key.
 
-And add the protonet user to that group
-
-    sudo usermod -a -G admin protonet
-    
-And make the admin group sudoable (as root)
-    echo '%admin  ALL=(ALL) ALL' >> '/etc/sudoers'
-
-Now install ruby:
-    sudo apt-get update
-    sudo apt-get install ruby-full build-essential
-or
-    sudo apt-get install build-essential
-    sudo apt-get install ruby ruby1.8-dev rdoc ri libopenssl-ruby
-
-then
-    sudo su - protonet
-    bash -c "`wget -O - babushka.me/up`"
-    babushka sources -a dudemeister git://github.com/dudemeister/babushka-deps.git
-
-this is the license key: 83489kjdfj734732snfnfdsns98jsnld
-
-    babushka "dudemeister:protonet babushka"
-
-now do some sourcing (to add missing paths and all that)
-
-    . ~/.profile
-
-if you've got a full node with wifi capabilities you want to have taken over by protonet
-
-    babushka protonet:node-preparations
-
-otherwise use
-
-    babushka protonet:vm-preparations
-
-this will install all features minus wifi and networking stuff
-
-NEW
------------
-bash -c "`wget -O - http://releases.protonet.info/bootstrap/150`"
-
+(If you want to bootstrap to a specific release the url should look like:
+http://releases.protonet.info/bootstrap/RELEASE_NUMBER_HERE)
 
 OTHER STUFF
 -----------

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+RELEASE_VERSION=""
+
 # the following is highly inspired and partly copied by what benhoskings is doing with his babushka bootstrapping script
 
 function welcome {
@@ -70,7 +72,7 @@ function install_ruby {
 
 function continue_installation {
   # $(cd `dirname $0` && pwd)/ptn_bootstrap_continue
-  sudo su -l protonet -c "`wget -O - http://releases.protonet.info/bootstrap-continue/150`"
+  sudo su -l protonet -c "`wget -O - http://releases.protonet.info/bootstrap-continue$RELEASE_VERSION`"
 }
 
 function logo {

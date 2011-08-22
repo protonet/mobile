@@ -1,7 +1,9 @@
 #!/bin/bash
 
-from="http://releases.protonet.info/babushka/150"
+RELEASE_VERSION=""
+from="http://releases.protonet.info/babushka$RELEASE_VERSION"
 to="$HOME/.babushka/bootstrap"
+
 
 function true_with { echo -e "\n$1"; true; }
 function false_with { echo -e "\n$1"; false; }

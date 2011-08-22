@@ -49,14 +49,19 @@ if [ "$release_type" != "OVERWRITE LAST" ]; then
 fi
 echo $last_version > RELEASE
 
-#  now create an archive
+# set release_versions in bootstrap script
+cat script/ptn_bootstrap_start    | sed "s/RELEASE_VERSION=\"\"/RELEASE_VERSION=\"\/$last_version\"/g" > script/ptn_bootstrap_start
+cat script/ptn_bootstrap_continue | sed "s/RELEASE_VERSION=\"\"/RELEASE_VERSION=\"\/$last_version\"/g" > script/ptn_bootstrap_continue
+cat script/ptn_bootstrap_babushka | sed "s/RELEASE_VERSION=\"\"/RELEASE_VERSION=\"\/$last_version\"/g" > script/ptn_bootstrap_babushka
+
+# now create an archive
 cd /tmp
 tar -pczf $APP_ARCHIVE dashboard/
 
 ############################################################
 # get protonet@babushka
 cd /tmp
-rm -rf babushka
+rm -rf babushka-base
 git clone git@github.com:protonet/babushka.git babushka-base
 rm -rf babushka-base/.git
 
