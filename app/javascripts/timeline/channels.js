@@ -184,7 +184,7 @@ protonet.timeline.Channels = {
         }
         
         if (this.rendezvous[partner]) {
-          protonet.trigger("channel.change", this.rendezvous[partner].data.id);
+          protonet.trigger("timeline.loading_end").trigger("channel.change", this.rendezvous[partner].data.id);
         } else {
           protonet.trigger("channel.hide").trigger("timeline.loading_start");
           $.ajax("/users/" + partner + "/" + "start_rendezvous", {
