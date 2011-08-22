@@ -138,9 +138,19 @@ Number.prototype.px = function() {
 
 //---------------------------- AUDIO ------------------------------
 (function() {
+  /**
+   * Shim for HTML5 audio
+   */
   var userAgent    = navigator.userAgent.toLowerCase(),
       // Safari sometimes randomly crashes when playing sound
       audioIsBuggy = (userAgent.indexOf("safari") !== -1 && userAgent.indexOf("chrome") === -1);
+  
+  if (window.Audio) {
+    window.Audio.prototype.replay = function() {
+      this.currentTime = 0;
+    };
+  }
+  
   if (!window.Audio || audioIsBuggy) {
     window.Audio = function(src) {
       this.src = src;
@@ -158,6 +168,10 @@ Number.prototype.px = function() {
           document.body.appendChild(audioHost);
         };
       })(),
+      
+      replay: function() {
+        this.play();
+      },
       
       canPlayType: function(type) {
         switch(type) {

@@ -1,6 +1,7 @@
 //= require "meep.js"
 //= require "../utils/browser_title.js"
 //= require "../utils/is_window_focused.js"
+//= require "../utils/play_sound.js"
 //= require "../lib/jquery.inview/jquery.inview.js"
 
 /**
@@ -445,13 +446,7 @@ protonet.timeline.Channel.prototype = {
     }
     
     if (!isWindowFocused && this.isSelected && isAllowedToPlaySound) {
-      if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_OGG()) {
-        new Audio("/sounds/notification.ogg").play();
-      } else if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_MP3()) {
-        new Audio("/sounds/notification.mp3").play();
-      } else if (protonet.user.Browser.SUPPORTS_HTML5_AUDIO_WAV()) {
-        new Audio("/sounds/notification.wav").play();
-      }
+      protonet.utils.playSound("/sounds/notification.ogg", "/sounds/notification.mp3", "/sounds/notification.wav");
     }
     
     if (!this.isSelected) {

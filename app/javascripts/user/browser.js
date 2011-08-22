@@ -41,40 +41,26 @@ protonet.user.Browser = {
     return navigator.userAgent.indexOf("Linux") != -1;
   },
   
-  SUPPORTS_HTML5_AUDIO: function() {
-    return (/function|object/).test(typeof(window.Audio)) && "canPlayType" in new window.Audio();
-  },
-  
   SUPPORTS_HTML5_WEBSOCKET: function() {
     return !!window.WebSocket;
   },
   
-  SUPPORTS_HTML5_AUDIO_MP3: function() {
-    if (!this.SUPPORTS_HTML5_AUDIO()) {
-      return false;
-    }
-    
-    var canPlayMp3 = new window.Audio().canPlayType("audio/mpeg");
-    return canPlayMp3 != "no" && canPlayMp3 != "";
+  SUPPORTS_HTML5_AUDIO: function() {
+    return (/function|object/).test(typeof(window.Audio)) && "canPlayType" in new window.Audio();
   },
   
-  SUPPORTS_HTML5_AUDIO_OGG: function() {
-    if (!this.SUPPORTS_HTML5_AUDIO()) {
-      return false;
-    }
-    
-    var canPlayOgg = new window.Audio().canPlayType("audio/ogg");
-    return canPlayOgg != "no" && canPlayOgg != "";
-  },
-  
-  SUPPORTS_HTML5_AUDIO_WAV: function() {
-    if (!this.SUPPORTS_HTML5_AUDIO()) {
-      return false;
-    }
-    
-    var canPlayWav = new window.Audio().canPlayType("audio/wav");
-    return canPlayWav != "no" && canPlayWav != "";
-  },
+  SUPPORTS_AUDIO_TYPE: (function() {
+    var fileTypeMapping = { "mp3": "audio/mpeg" },
+        audio;
+    return function(fileType) {
+      if (!this.SUPPORTS_HTML5_AUDIO()) {
+        return false;
+      }
+      
+      audio = audio || new Audio();
+      return audio.canPlayType(fileTypeMapping[fileType] || "audio/" + fileType);
+    };
+  })(),
   
   HAS_FILE_UPLOAD_ENCODING_ISSUES: function() {
     return navigator.userAgent.indexOf("Safari") != -1 && navigator.userAgent.indexOf("Chrome") == -1;
