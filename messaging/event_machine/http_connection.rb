@@ -1,4 +1,3 @@
-require 'json'
 require File.dirname(__FILE__) + '/modules/connection_shared.rb'
 
 class HttpConnection < EM::Connection
@@ -6,13 +5,22 @@ class HttpConnection < EM::Connection
   include Rabbit
   include ConnectionShared
 
+  def post_init
+    super
+    custom_post_initialize # from ConnectionShared
+  end
+  
   @response_initialized = false
   def initialize tracker
-    super()
+    super
     
     @tracker = tracker
     
     close_after_timeout
+  end
+  
+  def unbind
+    custom_unbind # from ConnectionShared
   end
 
   def autosubscribe auth_data
@@ -31,10 +39,6 @@ class HttpConnection < EM::Connection
     end
   end
 
-  # def post_init
-  #   super
-  #   no_environment_strings
-  # end
 
   def send_json json
     json = json.to_json
@@ -43,18 +47,9 @@ class HttpConnection < EM::Connection
 
   def process_http_request
     # the http request details are available via the following instance variables:
-    #   @http_protocol
-    #   @http_request_method
-    #   @http_cookie
-    #   @http_if_none_match
-    #   @http_content_type
-    #   @http_path_info
-    #   @http_request_uri
-    #   @http_query_string
-    #   @http_post_content
-    #   @http_headers
+    #   @http_protocol, @http_request_method, @http_cookie, @http_if_none_match, @http_content_type, @http_path_info
+    #   @http_request_uri, @http_query_string, @http_post_content, @http_headers
 
-    # puts "test connection"
     unless @response_initialized
       @response_initialized = true
 

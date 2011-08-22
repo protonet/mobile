@@ -26,6 +26,7 @@ Dashboard::Application.configure do
   configatron.images.externals_path = "public/externals"
   configatron.socket.port = 5000
   configatron.xhr_streaming.port = 8000
+  configatron.websocket.port = 5001
   
   # Log all js event notifications
   configatron.log_event_notifications = true

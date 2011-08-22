@@ -170,3 +170,6 @@ Number.prototype.px = function() {
     };
   }
 })();
+
+//---------------------------- WEBSOCKET -------------------------
+window.WebSocket = window.MozWebSocket || window.WebSocket;

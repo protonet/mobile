@@ -12,6 +12,7 @@ require File.dirname(__FILE__) + '/../../config/environment'
 require File.dirname(__FILE__) + '/node_connection.rb'
 require File.dirname(__FILE__) + '/client_connection.rb'
 require File.dirname(__FILE__) + '/http_connection.rb'
+require File.dirname(__FILE__) + '/websocket_connection.rb'
 require File.dirname(__FILE__) + '/client_tracker.rb'
 
 def solr_index_processing
@@ -41,8 +42,9 @@ end
 
 EventMachine::run do
   host = '0.0.0.0'
-  port = configatron.socket.port rescue 5000
-  longpolling_port = configatron.xhr_streaming.port rescue 8000
+  port              = !configatron.socket.port.nil? && configatron.socket.port || 5000
+  longpolling_port  = !configatron.xhr_streaming.port.nil? && configatron.xhr_streaming.port || 8000
+  websocket_port    = !configatron.websocket.port.nil? && configatron.websocket.port || 5001
   
   tracker = ClientTracker.new
   NodeConnection.tracker = tracker
@@ -50,6 +52,7 @@ EventMachine::run do
   EventMachine.epoll if RUBY_PLATFORM =~ /linux/ #sky is the limit
   EventMachine::start_server host, port, ClientConnection, tracker
   EventMachine::start_server host, longpolling_port, HttpConnection, tracker
+  EventMachine::start_server host, websocket_port, WebsocketConnection, tracker
   
   puts "Started socket server on #{host}:#{port}..."
   puts $$

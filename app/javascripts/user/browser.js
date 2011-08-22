@@ -45,6 +45,10 @@ protonet.user.Browser = {
     return (/function|object/).test(typeof(window.Audio)) && "canPlayType" in new window.Audio();
   },
   
+  SUPPORTS_HTML5_WEBSOCKET: function() {
+    return !!window.WebSocket;
+  },
+  
   SUPPORTS_HTML5_AUDIO_MP3: function() {
     if (!this.SUPPORTS_HTML5_AUDIO()) {
       return false;

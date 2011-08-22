@@ -12,4 +12,13 @@ class ClientConnection < FlashServer
     @tracker = tracker
   end
   
+  def post_init
+    super
+    custom_post_initialize # from ConnectionShared
+  end
+  
+  def unbind
+    custom_unbind # from ConnectionShared
+  end
+  
 end

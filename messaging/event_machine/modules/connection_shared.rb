@@ -1,8 +1,8 @@
+require 'json'
 module ConnectionShared
   attr_accessor :key, :type, :tracker, :queues
   
-  def post_init
-    super
+  def custom_post_initialize
     @tracker.add_conn self
     
     @queues = []
@@ -193,7 +193,7 @@ module ConnectionShared
     send_json :trigger => 'socket.reconnect'
   end
   
-  def unbind
+  def custom_unbind
     log("connection closed")
     @tracker.remove_conn self
     remove_from_online_users # TODO: remove_conn should be do this

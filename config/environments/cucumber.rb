@@ -33,7 +33,8 @@ Dashboard::Application.configure do
   FileUtils.mkdir_p(configatron.images.externals_path + "/screenshots")
   FileUtils.mkdir_p(configatron.images.externals_path + "/snapshots")
   
-  configatron.socket.port = 5001
+  configatron.socket.port = 5005
+  configatron.websocket.port = 5006
   configatron.xhr_streaming.port = 8001
   configatron.nodejs.port = 8125
   configatron.js_dispatching_active = true
