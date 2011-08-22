@@ -38,7 +38,9 @@ protonet.controls.UserWidget.prototype = {
          * Creating a user will trigger the user.added event
          * and the user.subscribed_channel afterwards
          */
-        this.createUser(data.id, data, true);
+        if (!protonet.config.show_only_online_users) {
+          this.createUser(data.id, data, true);
+        }
       }.bind(this))
       
       .bind("user.typing", function(e, data) {
