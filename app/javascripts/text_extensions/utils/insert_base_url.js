@@ -1,6 +1,6 @@
 protonet.text_extensions.utils.insertBaseUrl = (function() {
-  var localUrlPlaceholder = "http://protonet",
-      currentBaseUrl      = protonet.config.base_url;
+  var localUrlPlaceholder = "http://protonet/",
+      currentBaseUrl      = protonet.config.base_url + "/";
   return function(data) {
     var i;
     for (i in data) {
