@@ -2,11 +2,6 @@
 //= require "preferences/users_specific"
 
 $(function() {
-  var input = $("a[rel]");
-  protonet.utils.toggleElement(input);
-});
-
-$(function() {
   
   $("#users-details").bind("general user", function(event){
     switch(event.type)

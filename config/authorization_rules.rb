@@ -40,7 +40,7 @@ authorization do
     has_permission_on :listens, :to => [:manage, :accept]
     has_permission_on :invitations, :to => :manage
     has_permission_on :authorization_rules, :to => :read
-    has_permission_on :users, :to => :manage
+    has_permission_on :users, :to => [:manage, :delete_stranger_older_than_two_days]
   end
 end
 
@@ -49,6 +49,7 @@ privileges do
   privilege :manage, :includes => [:create, :read, :update, :delete, :show, :request_admin_flag, :change_password, :update_user_admin_flag, :generate_new_password, :sort_channels]
   privilege :read, :includes => [:index, :show]
   privilege :rendezvous, :includes => [:start_rendezvous]
+  privilege :delete_stranger_older_than_two_days
   privilege :show_only, :includes => :show
   privilege :create, :includes => :new
   privilege :update, :includes => :edit

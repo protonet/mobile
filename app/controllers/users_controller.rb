@@ -37,7 +37,7 @@ class UsersController < ApplicationController
     else
       flash[:error]  = "Couldn't delete old strangers!"
     end
-    redirect_to :action => 'index'
+    render :json => User.strangers.count
   end
   
   def sort_channels

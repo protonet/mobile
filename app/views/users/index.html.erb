@@ -181,7 +181,7 @@
 <section class="sub main">
   <h2>Users</h2>  
   <div id="users-page" class="users options">
-    <%= link_to "delete strangers older than 2 days (#{@strangers_count} in DB)", { :action => "delete_stranger_older_than_two_days" }, :class => "cleanup" %>
+    <%= link_to("delete strangers older than 2 days (#{@strangers_count} in DB)", { :action => "delete_stranger_older_than_two_days", :id => current_user.id }, :class => "cleanup", :remote => true, :method => :post) if permitted_to? :delete_stranger_older_than_two_days %>
     <ul>
       <%- @users.each do |u| -%>
         <li id="user-<%= u.id %>">
