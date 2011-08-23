@@ -14,10 +14,6 @@ protonet.dispatcher.provider.WebSocket = {
       protonet.trigger("socket.receive", event.data);
     };
     
-    this.socket.onclose = function() { 
-      console.log("websocket closed");
-    };
-    
     this.socket.onopen = function() {
       this.send({
         operation: "authenticate",
@@ -29,6 +25,10 @@ protonet.dispatcher.provider.WebSocket = {
       });
       protonet.trigger("socket.connected", true);
     }.bind(this);
+    
+    this.socket.onclose = function() { 
+      protonet.trigger("socket.connected", false);
+    };
     
     this.socket.onerror = function() {
       protonet.trigger("socket.connected", false);
