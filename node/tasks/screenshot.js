@@ -16,7 +16,7 @@ try {
   systemType = "non-linux";
 }
 
-console.log("Screenshot subsystem determines a " + systemType + " system.")
+console.log("Screenshot subsystem determines a " + systemType + " system.");
 
 
 exports.make_and_publish = function(url, publish) {
@@ -87,15 +87,16 @@ exports.make_and_send = function(url, response) {
       if (fs.lstatSync(fileName).size > 0) {
         console.log('sending: ' + fileName);
         while (screenshotRequests[fileName].length > 0) {
-          var r = screenshotRequests[fileName].pop();
-          r.writeHead(200, { 'Content-Type': 'image/png'});
-          fs.createReadStream(fileName)
-            .addListener('data', function(data){
-              r.write(data, 'binary');
-            })
-            .addListener('end', function(){
-              r.end();
-            });
+          (function(r) {
+            r.writeHead(200, { 'Content-Type': 'image/png'});
+            fs.createReadStream(fileName)
+              .addListener('data', function(data) {
+                r.write(data, 'binary');
+              })
+              .addListener('end', function() {
+                r.end();
+              });
+          })(screenshotRequests[fileName].pop());
         }
       } else {
         send404();
@@ -117,7 +118,7 @@ exports.make_and_send = function(url, response) {
 
         if (stderr != "" || error !== null) {
           console.log('exec error: ' + error);
-          writeDefaultImage(sanitizedUrl, fileName, sendScreenshot)
+          writeDefaultImage(sanitizedUrl, fileName, sendScreenshot);
         } else {
           sendScreenshot(fileName);
         }
