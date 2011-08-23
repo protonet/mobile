@@ -125,8 +125,10 @@
           }
         }.bind(this))
 
-        .bind("channel.rendered_more", function(e, channelList, data) {
-          Array.prototype.unshift.apply(this.data.meeps, data.meeps || []);
+        .bind("channel.rendered_more", function(e, channelList, meepsData, instance) {
+          if (instance == this) {
+            Array.prototype.unshift.apply(this.data.meeps, meepsData);
+          }
         }.bind(this))
 
         /**
@@ -308,7 +310,7 @@
       var tempContainer = $("<ul>");
       this._renderMeeps(meepsData, tempContainer, function() {
         this.channelList.append(tempContainer.children());
-        protonet.trigger("channel.rendered_more", [this.channelList, this.data, this]);
+        protonet.trigger("channel.rendered_more", [this.channelList, meepsData, this]);
       }.bind(this));
     },
 
