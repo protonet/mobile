@@ -1,3 +1,5 @@
+//= require "../utils/is_window_focused.js"
+
 /**
  * A rendezvous is a chat between two people
  * Has the same characteristics as a channel just with a few adjustments
@@ -99,6 +101,23 @@
         }.bind(this));
       
       $super();
+    },
+    
+    _replyNotifications: function(meepData) {
+      if (meepData.user_id == viewer) {
+        return;
+      }
+      
+      var isWindowFocused             = protonet.utils.isWindowFocused(),
+          isAllowedToDoNotifications  = protonet.user.Config.get("reply_notification");
+      
+      if (!isWindowFocused && isAllowedToDoNotifications) {
+        new protonet.ui.Notification({
+          image:  meepData.avatar,
+          title:  protonet.t("RENDEZVOUS_NOTIFICATION_TITLE").replace("{author}", meepData.author),
+          text:   meepData.message.truncate(140)
+        });
+      }
     }
   });
 })(protonet);

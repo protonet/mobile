@@ -115,11 +115,10 @@ protonet.timeline.Channels = {
       }.bind(this))
       
       .bind("meep.receive", function(e, meepData) {
-        if (!this.channels[meepData.channel_id]) {
+        if (this.channels[meepData.channel_id]) {
           return;
         }
-        
-        this.loadChannel(meepData.channel_id);
+        this.loadChannel(meepData.channel_id, meepData);
       }.bind(this))
       
       /**
@@ -130,7 +129,6 @@ protonet.timeline.Channels = {
         if (protonet.config.user_id != data.user_id) {
           return;
         }
-        
         this.loadChannel(channelId);
       }.bind(this))
       
@@ -245,11 +243,14 @@ protonet.timeline.Channels = {
     return null;
   },
   
-  loadChannel: function(channelId) {
+  /**
+   * triggerMeepData is an optional parameter. it's a meep data object that triggered
+   * the channel to load
+   */
+  loadChannel: function(channelId, triggerMeepData) {
     if (this.channels[channelId] || this.channelsBeingLoaded[channelId]) {
       return;
     }
-    
     if (!this.selected) {
       protonet.trigger("timeline.loading_start");
     }
@@ -263,6 +264,11 @@ protonet.timeline.Channels = {
         meepsReceivedWhileLoading[meepData.id] = meepData;
       }
     });
+    
+    // queue the meep that triggered the channel to load
+    if (triggerMeepData) {
+      meepsReceivedWhileLoading[triggerMeepData.id] = triggerMeepData;
+    }
     
     $.ajax({
       url: "/channels/" + channelId,

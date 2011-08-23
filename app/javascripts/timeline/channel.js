@@ -465,7 +465,7 @@
       if (isReplyToViewer && isAllowedToDoNotifications && !isWindowFocused) {
         new protonet.ui.Notification({
           image:  meepData.avatar,
-          title:  protonet.t("REPLY_NOTIFICATION_TITLE"),
+          title:  protonet.t("REPLY_NOTIFICATION_TITLE").replace("{author}", meepData.author),
           text:   meepData.message.truncate(140)
         });
       }

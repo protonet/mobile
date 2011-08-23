@@ -27,17 +27,19 @@ if (typeof(localStorage) == "undefined") {
 
 
 //---------------------------- FUNCTION ----------------------------
-Function.prototype.bind = function() {
-  if (arguments.length < 2 && arguments[0] === undefined) {
-    return this;
-  }
-  var thisObj = this,
-      args = Array.prototype.slice.call(arguments),
-      obj = args.shift();
-  return function () {
-    return thisObj.apply(obj, args.concat(Array.prototype.slice.call(arguments)));
+if (!Function.prototype.bind) {
+  Function.prototype.bind = function() {
+    if (arguments.length < 2 && arguments[0] === undefined) {
+      return this;
+    }
+    var thisObj = this,
+        args = Array.prototype.slice.call(arguments),
+        obj = args.shift();
+    return function () {
+      return thisObj.apply(obj, args.concat(Array.prototype.slice.call(arguments)));
+    };
   };
-};
+}
 
 
 

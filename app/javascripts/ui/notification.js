@@ -17,6 +17,10 @@ protonet.ui.Notification = function(config) {
     notification.ondisplay = function() {
       setTimeout(function() { notification.cancel(); }, 6000);
     };
+    notification.onclick = function() {
+      window.focus();
+      this.cancel();
+    };
     notification.show();
   }
 };
