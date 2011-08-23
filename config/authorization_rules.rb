@@ -1,6 +1,6 @@
 authorization do
   role :guest do
-    has_permission_on :users, :to => :show_only
+    has_permission_on :users, :to => [:show_only, :rendezvous]
   end
   
   role :invitee do
