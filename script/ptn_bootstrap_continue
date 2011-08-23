@@ -28,9 +28,9 @@ function get_babushka_deps() {
   echo ""
   local FILE=/tmp/babushka_deps.tar.gz
   if has 'curl'; then
-    curl -f http://$SERVER/release/babushka-deps/get/$f -o $FILE
+    curl -f http://$SERVER/release/babushka-deps/get/$f$RELEASE_VERSION -o $FILE
   elif has 'wget'; then
-    wget -q http://$SERVER/release/babushka-deps/get/$f -O $FILE
+    wget -q http://$SERVER/release/babushka-deps/get/$f$RELEASE_VERSION -O $FILE
   fi
   cd /tmp
   tar -xzf $FILE
