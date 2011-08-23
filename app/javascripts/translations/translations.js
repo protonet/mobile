@@ -1,8 +1,12 @@
 //= require "en.js"
 
-/**
- * TODO: Support placeholders
- */
-protonet.t = function(key) {
-  return protonet.translations[key] || key;
+protonet.t = function(key, templateData) {
+  var str = protonet.translations[key] || key,
+      templateVariable;
+  if (templateData) {
+    for (templateVariable in templateData) {
+      str = str.split("#{" + templateVariable + "}").join(templateData[templateVariable]);
+    }
+  }
+  return str;
 };

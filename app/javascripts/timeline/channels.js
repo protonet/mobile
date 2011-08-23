@@ -87,12 +87,12 @@ protonet.timeline.Channels = {
         var identifier = this.getChannelName(+id) || "#" + id;
         
         var success = function() {
-          var message = protonet.t("CHANNEL_SUBSCRIPTION_SUCCESS").replace("{identifier}", identifier);
+          var message = protonet.t("CHANNEL_SUBSCRIPTION_SUCCESS", { identifier: identifier });
           protonet.trigger("flash_message.notice", message);
         };
         
         var error = function() {
-          var message = protonet.t("CHANNEL_SUBSCRIPTION_ERROR").replace("{identifier}", identifier);
+          var message = protonet.t("CHANNEL_SUBSCRIPTION_ERROR", { identifier: identifier });
           protonet.trigger("flash_message.error", message);
         };
         

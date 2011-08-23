@@ -114,7 +114,7 @@
       if (!isWindowFocused && isAllowedToDoNotifications) {
         new protonet.ui.Notification({
           image:  meepData.avatar,
-          title:  protonet.t("RENDEZVOUS_NOTIFICATION_TITLE").replace("{author}", meepData.author),
+          title:  protonet.t("RENDEZVOUS_NOTIFICATION_TITLE", { author: meepData.author }),
           text:   meepData.message.truncate(140)
         });
       }

@@ -185,10 +185,11 @@ protonet.pages.Meep = Class.create(protonet.Page, {
     this.selectedMeep = meep;
     
     // Change title text
-    var titleText = protonet.t("MEEP_WINDOW_HEADLINE")
-      .replace("{avatar}", '<img src="' + meep.data.avatar + '"  alt=\"\">')
-      .replace("{id}", "#" + meep.data.id)
-      .replace("{channel_name}", this.currentChannelName);
+    var titleText = protonet.t("MEEP_WINDOW_HEADLINE", {
+      avatar:       '<img src="' + meep.data.avatar + '"  alt=\"\">',
+      id:           "#" + meep.data.id,
+      channel_name: this.currentChannelName
+    });
       
     this.headline(titleText);
     this.adjust(borderAnimationDuration, meepListAnimationDuration);
