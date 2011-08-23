@@ -83,3 +83,7 @@
 .context-menu-smileys li:hover {
   background-color: #ccc;
 }
+
+.context-menu-users {
+  margin-right: -25px;
+}

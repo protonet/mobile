@@ -76,7 +76,7 @@ protonet.user = {
       }.bind(this)
     };
     
-    var contextMenu = new protonet.ui.ContextMenu("[data-user-id]", contextOptions);
+    var contextMenu = new protonet.ui.ContextMenu("[data-user-id]", contextOptions, "context-menu-users");
   },
   
   getUser: function(userId) {
