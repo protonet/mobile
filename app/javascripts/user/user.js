@@ -59,13 +59,21 @@ protonet.user = {
         var user = this.usersData[+link.data("user-id")];
         if (user) {
           protonet.trigger("form.create_reply", user.name);
+        } else {
+          protonet.trigger("flash_message.error", protonet.t("STRANGER_OFFLINE_ERROR"));
         }
         closeContextMenu();
       }.bind(this),
       "start private chat": function(link, closeContextMenu) {
-        protonet.trigger("rendezvous.start", +link.data("user-id"));
+        var userId  = +link.data("user-id"),
+            user    = this.usersData[userId];
+        if (user) {
+          protonet.trigger("rendezvous.start", userId);
+        } else {
+          protonet.trigger("flash_message.error", protonet.t("STRANGER_OFFLINE_ERROR"));
+        }
         closeContextMenu();
-      }
+      }.bind(this)
     };
     
     var contextMenu = new protonet.ui.ContextMenu("[data-user-id]", contextOptions);

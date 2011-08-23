@@ -106,9 +106,9 @@ li.html5sortable-state-highlight + li {
   top: 50%;
   margin-top: -8px;
   height: 16px;
-  width: 16px;
-  right: 5px;
-  background: transparent url(/img/icn_close_grey.png) no-repeat center center;
+  width: 21px;
+  right: 0;
+  background: transparent url(/img/icn_close_grey.png) no-repeat 5px center;
 }
 
 #channels .hide-link:hover {
@@ -120,13 +120,11 @@ li.html5sortable-state-highlight + li {
 }
 
 #channels .rendezvous {
-  border-top-color: #ff7f31;
-  border-right-color: #ff7f31;
-  border-left-color: #ff7f31;
+  background: #FFE0CC;
   background: -moz-linear-gradient(100% 100% 90deg, rgba(255, 127, 49, 0.1), transparent);
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(255, 127, 49, 0.1)));
   padding-right: 23px;
-  padding-left: 23px;
+  padding-left: 22px;
 }
 
 #channels .rendezvous:focus,
@@ -158,7 +156,7 @@ li.html5sortable-state-highlight + li {
   position: absolute;
   top: 50%;
   margin-top: -8px;
-  left: 5px;
+  left: 4px;
   width: 16px;
   height: 16px;
 }

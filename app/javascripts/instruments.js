@@ -21,7 +21,7 @@ $(function() {
     protonet.globals.pages = {
       search: new protonet.pages.Search(),
       meep:   new protonet.pages.Meep(),
-      user:   new protonet.Page("users") 
+      user:   new protonet.Page("users")
     };
   }
   

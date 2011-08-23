@@ -155,7 +155,7 @@ protonet.timeline.Channels = {
           var latestMeepData = channel.meeps[channel.meeps.length - 1];
           channelStates[channel.id] = latestMeepData ? latestMeepData.id : 0;
         });
-      
+        
         $.ajax({
           url:      "/meeps/sync",
           data:     { channel_states: channelStates },

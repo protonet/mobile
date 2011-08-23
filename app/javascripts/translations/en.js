@@ -27,5 +27,6 @@ protonet.translations = {
   DETAIL_VIEW_LOADING_ERROR: "Something went wrong while loading the context for the current message.",
   PAGE_LOADING_ERROR: "Page couldn't be loaded.",
   FLASH_DISABLED_MESSAGE: "Protonet requires the flash plugin. Please enable it by clicking below.",
-  RENDEZVOUS_WITH_YOURSELF_ERROR: "You can't start a private chat with yourself."
+  RENDEZVOUS_WITH_YOURSELF_ERROR: "You can't start a private chat with yourself.",
+  STRANGER_OFFLINE_ERROR: "You can't perform this action with a 'stranger' who's offline"
 };

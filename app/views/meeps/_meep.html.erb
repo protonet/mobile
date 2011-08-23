@@ -9,7 +9,7 @@
       #{posted_in}
     </div>
   </article>
-  <a class="avatar" href="/users/#{user_id}" target="_blank">
-    <img src="<%= image_proxy("#\{avatar\}", {:width => 36, :height => 36, :local => true, :escape => false}) %>" width="36" height="36" data-user-name="#{author}">
+  <a class="avatar" href="/users/#{user_id}" data-avoid-ajax="1" target="_blank">
+    <img src="<%= image_proxy("#\{avatar\}", {:width => 36, :height => 36, :local => true, :escape => false}) %>" width="36" height="36" data-user-id="#{user_id}">
   </a>
 </li>
