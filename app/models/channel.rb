@@ -131,7 +131,7 @@ class Channel < ActiveRecord::Base
   end
   
   def rendezvous_participants
-    rendezvous.split(':').map { |id| User.find(id) }
+    rendezvous ? rendezvous.split(':').map { |id| User.find(id) } : []
   end
   
   private
