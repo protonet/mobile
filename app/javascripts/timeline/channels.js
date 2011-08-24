@@ -215,6 +215,24 @@ protonet.timeline.Channels = {
         }
       }.bind(this));
     
+    $(window).bind("beforeunload", function() {
+      var mapping = {};
+      $.each(this.data, function(i, channelData) {
+        mapping[channelData.listen_id] = channelData.last_read_meep;
+      });
+      
+      $.ajax({
+        async:  false,
+        url:    "/users/update_last_read_meeps",
+        type:   "PUT",
+        data:   {
+          authenticity_token: protonet.config.authenticity_token,
+          id:                 protonet.config.user_id,
+          mapping:            mapping
+        }
+      });
+    }.bind(this));
+    
     /**
      * Ajax history to enable forward and backward
      * buttons in browser to switch between channels

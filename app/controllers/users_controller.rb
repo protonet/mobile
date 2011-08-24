@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
   filter_resource_access
-  verify :xhr => true, :only => [:start_rendezvous, :stop_rendezvous]
   
   def index
     @users = User.registered
@@ -49,6 +48,12 @@ class UsersController < ApplicationController
   
   def start_rendezvous
     Channel.setup_rendezvous_for(current_user.id, params[:id].to_i)
+    render :nothing => true
+  end
+  
+  def update_last_read_meeps
+    mapping = params[:mapping] || {}
+    Listen.update_last_read_meeps(current_user.id, mapping)
     render :nothing => true
   end
   

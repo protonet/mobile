@@ -169,11 +169,11 @@ class User < ActiveRecord::Base
   end
 
   def verified_channels
-    channels.all(:conditions => ['listens.verified = ?', true])
+    channels.select("listens.id AS listen_id, listens.last_read_meep as last_read_meep").all(:conditions => ['listens.verified = ?', true])
   end
   
   def verified_real_channels
-    channels.real.all(:conditions => ['listens.verified = ?', true])
+    channels.select("listens.id AS listen_id, listens.last_read_meep as last_read_meep").real.all(:conditions => ['listens.verified = ?', true])
   end
   
   def skip_password_validation?

@@ -7,7 +7,7 @@ class InstrumentsController < ApplicationController
       channels_to_load = params[:channels].split(',') rescue []
       channels = current_user.verified_channels
       render :json => channels.map { |channel|
-        channels_to_load.include?(channel.id.to_s) ? Channel.prepare_for_frontend(channel) : nil
+        Channel.prepare_for_frontend(channel) if channels_to_load.include?(channel.id.to_s) || channel.has_unread_meeps
       }.compact
     else
       @channels = current_user.verified_real_channels

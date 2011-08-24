@@ -82,7 +82,13 @@ class Channel < ActiveRecord::Base
   def owned_by(user)
     owner == user
   end
-
+  
+  def has_unread_meeps
+    last_posted_meep = meeps.last && meeps.last.id
+    
+    last_read_meep && last_posted_meep && last_posted_meep > last_read_meep.to_i
+  end
+  
   def create_folder
     begin
       path = SystemFileSystem.cleared_path("/#{id.to_s}")
@@ -100,11 +106,13 @@ class Channel < ActiveRecord::Base
   def self.prepare_for_frontend(channel)
     meeps = channel.meeps.recent.all(:limit => 25)
     {
-      :id           => channel.id,
-      :rendezvous   => channel.rendezvous,
-      :name         => channel.name,
-      :display_name => channel.display_name || channel.name.capitalize,
-      :meeps        => Meep.prepare_for_frontend(meeps, { :channel_id => channel.id })
+      :id               => channel.id,
+      :rendezvous       => channel.rendezvous,
+      :name             => channel.name,
+      :display_name     => channel.display_name || channel.name.capitalize,
+      :last_read_meep   => (channel.last_read_meep rescue nil),
+      :listen_id        => (channel.listen_id rescue nil),
+      :meeps            => Meep.prepare_for_frontend(meeps, { :channel_id => channel.id })
     }
   end
   

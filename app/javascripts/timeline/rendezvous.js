@@ -59,7 +59,9 @@
       if (this.tab.is(":visible")) {
         this.tab.hide();
         makeInactive(this.data.id);
-        protonet.trigger("channels.change_to_first");
+        if (this.isSelected) {
+          protonet.trigger("channels.change_to_first");
+        }
       }
     },
     
@@ -79,7 +81,7 @@
         click:    this.hide.bind(this)
       }).appendTo(this.tab);
       
-      if (!isActive(this.data.id)) {
+      if (!isActive(this.data.id) && !this.unreadMeeps) {
         this.tab.hide();
       }
       

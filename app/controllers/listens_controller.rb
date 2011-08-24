@@ -50,7 +50,7 @@ class ListensController < ApplicationController
     end
     redirect_to :controller => 'channels', :action => 'index', :anchor => channel.id
   end
-
+  
   private
   def set_listen_id
     params[:id] = params[:listen_id] if params[:listen_id]
