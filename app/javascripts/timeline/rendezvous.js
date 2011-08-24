@@ -17,10 +17,50 @@
     return +(rendezvousArr[0] == viewer ? rendezvousArr[1] : rendezvousArr[0]);
   }
   
+  function getActive() {
+    try { return JSON.parse(localStorage.active_rendezvous); } catch(e) { return {}; }
+  }
+  
+  function setActive(active) {
+    localStorage.active_rendezvous = JSON.stringify(active);
+  }
+  
+  function makeActive(channelId) {
+    var active = getActive();
+    active[channelId] = true;
+    setActive(active);
+  }
+  
+  function makeInactive(channelId) {
+    var active = getActive();
+    delete active[channelId];
+    setActive(active);
+  }
+  
+  function isActive(channelId) {
+    var active = getActive();
+    return active[channelId];
+  }
+  
   protonet.timeline.Rendezvous = Class.create(protonet.timeline.Channel, {
     initialize: function($super, data) {
       this.partner = getPartner(data.rendezvous);
       $super(data);
+    },
+    
+    show: function() {
+      if (this.tab.is(":hidden")) {
+        this.tab.show();
+        makeActive(this.data.id);
+      }
+    },
+    
+    hide: function() {
+      if (this.tab.is(":visible")) {
+        this.tab.hide();
+        makeInactive(this.data.id);
+        protonet.trigger("channels.change_to_first");
+      }
     },
     
     renderTab: function($super, container) {
@@ -34,15 +74,14 @@
       }
       
       this.hideLink = $("<span>", {
-        "class": "hide-link",
-        title: "close",
-        click: function() {
-          this.tab.hide();
-          protonet.trigger("channels.change_to_first");
-        }.bind(this)
+        "class":  "hide-link",
+        title:    "close",
+        click:    this.hide.bind(this)
       }).appendTo(this.tab);
       
-      this.tab.hide();
+      if (!isActive(this.data.id)) {
+        this.tab.hide();
+      }
       
       return this;
     },
@@ -57,13 +96,13 @@
         
         .bind("channel.change", function(e, channelId) {
           if (channelId === this.data.id) {
-            this.tab.show();
+            this.show();
           }
         }.bind(this))
         
         .bind("meep.receive", function(e, meepData) {
           if (meepData.channel_id === this.data.id) {
-            this.tab.show();
+            this.show();
           }
         }.bind(this))
         

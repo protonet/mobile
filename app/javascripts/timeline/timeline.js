@@ -2,6 +2,7 @@ protonet.timeline = {
   initialize: function() {
     this._observe();
     this._initForm();
+    this._initChannels();
     this.load();
   },
   
@@ -25,8 +26,14 @@ protonet.timeline = {
        /**
         * Dummy parameter needed to avoid weird caching/history issues in Firefox
         */
-      data: { ajax: 1 },
-      success: this._initChannels.bind(this),
+      data: {
+        // Dummy parameter to avoid weird caching/history issues in Firefox
+        ajax:     1,
+        channels: protonet.timeline.Channels.getActive().join(",")
+      },
+      success:  function(data) {
+        protonet.timeline.Channels.render(data);
+      },
       complete: function() {
         protonet.trigger("timeline.loading_end");
       },
@@ -37,9 +44,7 @@ protonet.timeline = {
   },
   
   _initChannels: function(channelData) {
-    this.data = channelData;
-    
-    protonet.timeline.Channels.initialize(channelData);
+    protonet.timeline.Channels.initialize();
   },
   
   _initForm: function() {

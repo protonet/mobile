@@ -13,21 +13,44 @@
 protonet.timeline.Channels = {
   availableChannels: protonet.config.availableChannels || {},
   
-  initialize: function(data) {
-    this.container          = $("#timeline");
+  initialize: function() {
+    this.container    = $("#timeline");
+    this.tabContainer = $("#channels ul");
+    this.tabs         = $("#channels [data-channel-id]");
+    
     // All channel instances as key=>value
     this.channels             = {};
     this.channelsBeingLoaded  = {};
     this.rendezvous           = {};
+    
+    this.queryParams = protonet.utils.parseQueryString(protonet.utils.History.getCurrentPath());
+  },
+  
+  render: function(data) {
     // All channel data as array
-    this.data               = data || [];
+    this.data = data || [];
     
     this._updateSubscribedChannels();
     
     protonet.trigger("channels.data_available", [this.data, this.availableChannels, this.subscribedChannels]);
     
     this._observe();
-    this._renderChannels();
+    this._render();
+  },
+  
+  getActive: function() {
+    var activeChannels = $.map(this.tabs, function(tab) {
+      return +$(tab).data("channel-id");
+    });
+    
+    var urlChannelId = +this.queryParams.channel_id;
+    if (urlChannelId) {
+      activeChannels.push(urlChannelId);
+    }
+    
+    var activeRendezvousChannels = Object.keys(localStorage.active_rendezvous ? JSON.parse(localStorage.active_rendezvous) : {});
+    
+    return activeChannels.concat(activeRendezvousChannels);
   },
   
   _updateSubscribedChannels: function() {
@@ -199,9 +222,13 @@ protonet.timeline.Channels = {
     protonet.utils.History.onChange(this._selectChannel.bind(this));
   },
   
-  _renderChannels: function() {
+  _render: function() {
     this.data.chunk(function(channelData) {
-      this._instantiateChannel(channelData).render(this.container);
+      var channel = this._instantiateChannel(channelData).render(this.container);
+      // Render tab if not existing
+      if (channel.tab.length === 0) {
+        channel.renderTab(this.tabContainer, true);
+      }
     }.bind(this), function() {
       protonet.trigger("channels.initialized", [this.data]);
     }.bind(this));
@@ -224,8 +251,7 @@ protonet.timeline.Channels = {
    * the first channel in the data array
    */
   _selectChannel: function() {
-    var queryParams       = protonet.utils.parseQueryString(protonet.utils.History.getCurrentPath()),
-        urlChannelId      = +queryParams.channel_id,
+    var urlChannelId      = +this.queryParams.channel_id,
         selectedChannelId = urlChannelId || (this.data[0] ? this.data[0].id : null),
         alreadySelected   = this.selected == selectedChannelId;
     if (selectedChannelId && !alreadySelected) {
@@ -279,7 +305,7 @@ protonet.timeline.Channels = {
           return meepsReceivedWhileLoading[meepData.id] ? null : meepData; // returning null will remove it
         });
         
-        this._instantiateChannel(data).renderTab("#channels ul").render(this.container);
+        this._instantiateChannel(data).renderTab(this.tabContainer).render(this.container);
         this.data.push(data);
         this._updateSubscribedChannels();
         

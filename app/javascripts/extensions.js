@@ -187,5 +187,24 @@ Number.prototype.px = function() {
   }
 })();
 
+
+//---------------------------- OBJECT ------------------------------
+if (!Object.keys) {
+  Object.keys = function(object) {
+    if (object.toString() !== "[object Object]") {
+      throw new TypeError();
+    }
+    var results = [];
+    for (var property in object) {
+      if (object.hasOwnProperty(property)) {
+        results.push(property);
+      }
+    }
+    return results;
+  };
+}
+
+
+
 //---------------------------- WEBSOCKET -------------------------
 window.WebSocket = window.MozWebSocket || window.WebSocket;

@@ -25,7 +25,7 @@
 protonet.ui.ContextMenu = function(selector, options, cssClass) {
   this.selector = selector;
   this.options  = options;
-  this.list     = $("<menu>", { "class": "context-menu " + cssClass || "" });
+  this.list     = $("<menu>", { "class": "context-menu " + (cssClass || "") });
   this.observe();
 };
 
