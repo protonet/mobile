@@ -59,19 +59,13 @@ function install_ruby {
   echo ""
   echo "Installing ruby..."
   sudo apt-get install -qqy build-essential
-  sudo apt-get install -qqy ruby-full
-  if [ $? != 0 ]; then
-    sudo apt-get install -qqy ruby ruby1.8-dev rdoc ri libopenssl-ruby
-    [[ $? == 0 ]]
-  else
-    true
-  fi
+  wget -O /tmp/ree.deb http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_amd64_ubuntu10.04.deb
+  sudo dpkg -i /tmp/ree.deb
   echo "Done installing ruby."
   echo ""
 }
 
 function continue_installation {
-  # $(cd `dirname $0` && pwd)/ptn_bootstrap_continue
   sudo su -l protonet -c "`wget -O - http://releases.protonet.info/bootstrap-continue$RELEASE_VERSION`"
 }
 
