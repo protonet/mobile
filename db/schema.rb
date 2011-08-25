@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110824123718) do
+ActiveRecord::Schema.define(:version => 20110825104243) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -60,6 +60,9 @@ ActiveRecord::Schema.define(:version => 20110824123718) do
     t.integer  "order_number"
     t.integer  "last_read_meep"
   end
+
+  add_index "listens", ["channel_id", "verified"], :name => "l_channel_id_verified"
+  add_index "listens", ["user_id", "verified"], :name => "l_user_id_verified"
 
   create_table "meeps", :force => true do |t|
     t.integer  "user_id"

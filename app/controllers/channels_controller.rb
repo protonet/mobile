@@ -16,8 +16,7 @@ class ChannelsController < ApplicationController
   end
   
   def show
-    channel = Channel.find(params[:id])
-    
+    channel = current_user.channels.find(params[:id])
     respond_to do |format|
       format.json do
         render :json => Channel.prepare_for_frontend(channel)

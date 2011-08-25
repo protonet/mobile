@@ -23,7 +23,19 @@ class Meep < ActiveRecord::Base
   attr_accessor :socket_id
   
   after_create :send_to_queue
-
+  
+  def self.prepare_for_frontend(meeps, additional_attributes)
+    meeps.map do |m|
+      m.text_extension = JSON.parse(m.text_extension) rescue nil
+      avatar = m.user.avatar.url if m.user
+      m.attributes.merge({ :avatar => avatar }).merge(additional_attributes || {})
+    end
+  end
+  
+  def self.valid_attributes
+    column_names + ['socket_id']
+  end
+  
   def local?
     network_id == 1
   end
@@ -46,18 +58,6 @@ class Meep < ActiveRecord::Base
       :network_uuid => network.uuid,
       :trigger      => 'meep.receive'
     })
-  end
-
-  def self.prepare_for_frontend(meeps, additional_attributes)
-    meeps.map do |m|
-      m.text_extension = JSON.parse(m.text_extension) rescue nil
-      avatar = m.user.avatar.url if m.user
-      m.attributes.merge({ :avatar => avatar }).merge(additional_attributes || {})
-    end
-  end
-  
-  def self.valid_attributes
-    column_names + ['socket_id']
   end
 
   def from_minutes_before(mins, channel_id)

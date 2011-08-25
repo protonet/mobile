@@ -48,7 +48,7 @@ class SearchController < ApplicationController
 
   def perform_search
     if search_term = params[:search_term]
-      search_channel_ids = current_user.verified_channels.map{|c| c.id}
+      search_channel_ids = current_user.channels.verified.map{|c| c.id}
 
       if search_term.present?
         if (channel_id = params[:channel_id]) && search_channel_ids.include?(channel_id.to_i)
@@ -66,7 +66,7 @@ class SearchController < ApplicationController
   end
 
   def load_channels
-    @channels = current_user.verified_channels
+    @channels = current_user.channels.verified
   end
 end
 

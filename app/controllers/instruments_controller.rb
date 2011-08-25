@@ -5,12 +5,12 @@ class InstrumentsController < ApplicationController
   def index
     if request.xhr?
       channels_to_load = params[:channels].split(',') rescue []
-      channels = current_user.verified_channels
+      channels = current_user.channels.verified
       render :json => channels.map { |channel|
         Channel.prepare_for_frontend(channel) if channels_to_load.include?(channel.id.to_s) || channel.has_unread_meeps
       }.compact
     else
-      @channels = current_user.verified_real_channels
+      @channels = current_user.channels.verified.real
     end
   end
   

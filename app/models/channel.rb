@@ -26,6 +26,7 @@ class Channel < ActiveRecord::Base
 
   # TODO handle 1on1's correctly
   scope :real,  :conditions => {:rendezvous => nil}
+  scope :verified, :conditions => {:listens => {:verified => true}}
 
   def self.home
     begin
@@ -44,6 +45,41 @@ class Channel < ActiveRecord::Base
     all(:select => :name).map {|c| c.name.downcase }
   end
   
+  def self.prepare_for_frontend(channel)
+    meeps = channel.meeps.includes(:user).recent.all(:limit => 25)
+    {
+      :id               => channel.id,
+      :rendezvous       => channel.rendezvous,
+      :name             => channel.name,
+      :display_name     => channel.display_name || channel.name.capitalize,
+      :last_read_meep   => (channel.last_read_meep rescue nil),
+      :listen_id        => (channel.listen_id rescue nil),
+      :meeps            => Meep.prepare_for_frontend(meeps, { :channel_id => channel.id })
+    }
+  end
+  
+  # TODO:
+  #   Dearest dudemeister,
+  #   
+  #   I'm sure you can write this better.
+  #   Please do so and show me the right path.
+  #
+  #   Yours faithfully,
+  #   Young Padawan.
+  #
+  def self.setup_rendezvous_for(current_user_id, partner_id)
+    raise RuntimeError if current_user_id == partner_id
+    rendezvous_key = [current_user_id, partner_id].sort.join(':')
+    already_exists = find_by_rendezvous(rendezvous_key)
+    channel = find_or_create_by_rendezvous(rendezvous_key, :owner_id => current_user_id)
+    channel.listens.each {|l|
+      channel.publish 'users', l.user_id,
+        :trigger    => 'channel.load',
+        :channel_id => channel.id
+    } if already_exists
+    channel
+  end
+  
   def normalize_name
     self.name = clean_diactritic_marks(name)
     self.name = name.gsub(/\W/, '-').downcase
@@ -53,6 +89,14 @@ class Channel < ActiveRecord::Base
     self.name = "rendezvous-#{self.rendezvous}"
     self.public = false
     true
+  end
+  
+  def listen_id
+    super.to_i
+  end
+
+  def last_read_meep
+    super.to_i
   end
   
   def home?
@@ -86,7 +130,7 @@ class Channel < ActiveRecord::Base
   def has_unread_meeps
     last_posted_meep = meeps.last && meeps.last.id
     
-    last_read_meep && last_posted_meep && last_posted_meep > last_read_meep.to_i
+    last_read_meep && last_posted_meep && last_posted_meep > last_read_meep
   end
   
   def create_folder
@@ -101,41 +145,6 @@ class Channel < ActiveRecord::Base
   def generate_uuid
     raise RuntimeError if uuid
     self.update_attribute(:uuid, UUID4R::uuid(1))
-  end
-  
-  def self.prepare_for_frontend(channel)
-    meeps = channel.meeps.recent.all(:limit => 25)
-    {
-      :id               => channel.id,
-      :rendezvous       => channel.rendezvous,
-      :name             => channel.name,
-      :display_name     => channel.display_name || channel.name.capitalize,
-      :last_read_meep   => (channel.last_read_meep rescue nil),
-      :listen_id        => (channel.listen_id rescue nil),
-      :meeps            => Meep.prepare_for_frontend(meeps, { :channel_id => channel.id })
-    }
-  end
-  
-  # TODO:
-  #   Dearest dudemeister,
-  #   
-  #   I'm sure you can write this better.
-  #   Please do so and show me the right path.
-  #
-  #   Yours faithfully,
-  #   Young Padawan.
-  #
-  def self.setup_rendezvous_for(current_user_id, partner_id)
-    raise RuntimeError if current_user_id == partner_id
-    rendezvous_key = [current_user_id, partner_id].sort.join(':')
-    already_exists = find_by_rendezvous(rendezvous_key)
-    channel = find_or_create_by_rendezvous(rendezvous_key, :owner_id => current_user_id)
-    channel.listens.each {|l|
-      channel.publish 'users', l.user_id,
-        :trigger    => 'channel.load',
-        :channel_id => channel.id
-    } if already_exists
-    channel
   end
   
   def rendezvous_participants

@@ -205,7 +205,7 @@ module ConnectionShared
     @tracker.add_user @user, self
     # send current user as online also send his channel subscriptions (cleaned of course)
     data = {
-      :subscribed_channel_ids => @user.verified_channels.map {|c| c.id},
+      :subscribed_channel_ids => @user.channels.verified.map {|c| c.id},
       :trigger => 'user.came_online'
     }.merge(@tracker.online_users[@user.id])
     publish 'system', 'users', data
@@ -242,7 +242,7 @@ module ConnectionShared
   def send_channel_subscriptions(channel_id=nil)
     @tracker.channel_users ||= {}
     filtered_channel_users = {}
-    @user.verified_channels.each do |channel|
+    @user.channels.verified.each do |channel|
       next if channel_id && channel_id != channel.id
       @tracker.channel_users[channel.id] ||= []
       if SystemPreferences.show_only_online_users
@@ -291,7 +291,7 @@ module ConnectionShared
   end
 
   def bind_socket_to_user_queues
-    @user.verified_channels.each do |channel|
+    @user.channels.verified.each do |channel|
       bind_channel(channel)
       bind_files_for_channel(channel)
       log("subscribing to channel #{channel.id}")

@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
 
   has_many  :meeps
   has_many  :listens,  :dependent => :destroy
-  has_many  :channels,          :through => :listens, :order => :order_number
+  has_many  :channels,          :through => :listens, :order => :order_number, :select => "channels.*, listens.id AS listen_id, listens.last_read_meep as last_read_meep"
   has_many  :owned_channels,    :class_name => 'Channel', :foreign_key => :owner_id
   has_many  :invitations
   has_and_belongs_to_many  :roles
@@ -168,14 +168,6 @@ class User < ActiveRecord::Base
     name.blank? ? login : name
   end
 
-  def verified_channels
-    channels.select("listens.id AS listen_id, listens.last_read_meep as last_read_meep").all(:conditions => ['listens.verified = ?', true])
-  end
-  
-  def verified_real_channels
-    channels.select("listens.id AS listen_id, listens.last_read_meep as last_read_meep").real.all(:conditions => ['listens.verified = ?', true])
-  end
-  
   def skip_password_validation?
     !new_record? || stranger?
   end
