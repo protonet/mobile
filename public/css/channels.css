@@ -103,7 +103,6 @@ li.html5sortable-state-highlight + li {
   border-bottom-left-radius
   border-top-left-radius: 6px;
   background: #ff7f31;
-  margin-right: 1px;
   padding-right: 3px;
   border-right: 1px solid #fff;
 }
