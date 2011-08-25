@@ -16,13 +16,12 @@ class ChannelsController < ApplicationController
   end
   
   def show
-    channel = current_user.channels.find(params[:id])
     respond_to do |format|
       format.json do
-        render :json => Channel.prepare_for_frontend(channel)
+        render :json => Channel.prepare_for_frontend(current_user.channels.find(params[:id]))
       end
       format.html do
-        render :partial => "channel_details", :locals => { :channel => channel }
+        render :partial => "channel_details", :locals => { :channel => Channel.find(params[:id]) }
       end
     end
   end
