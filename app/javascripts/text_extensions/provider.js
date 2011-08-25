@@ -3,6 +3,7 @@ protonet.text_extensions.provider = {};
 // ------ Ordered by priority ------ \\
 //= require "provider/local_image.js"
 //= require "provider/youtube.js"
+//= require "provider/facebook.js"
 //= require "provider/maps.js"
 //= require "provider/slideshare.js"
 //= require "provider/vimeo.js"

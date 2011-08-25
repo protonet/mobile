@@ -1,13 +1,17 @@
+/**
+ * Facebook Data Provider
+ *
+ * TODO: Facebook usually supports open graph meta tags.
+ * However we need to use embed.ly since YQL can't access facebook sites because it honors facebook's robots.txt
+ * This can be removed when facebook white-lists the YQL bot or we switch to a different data scraper provider
+ */
 protonet.data.Facebook = (function() {
-  var URL = location.protocol + "//graph.facebook.com/{id}?callback=?",
-      PICTURE_URL = location.protocol + "//graph.facebook.com/{id}/picture?type=large",
+  var URL = location.protocol + "//api.embed.ly/1/oembed?url={url}&key=ec48ad80cf2c11e0b7f44040d3dc5c07&callback=?",
       TIMEOUT = 4000;
   
-  function getOpenGraphData(id, onSuccess, onFailure) {
-    var apiUrl = URL.replace("{id}", id);
-    
+  function getData(url, onSuccess, onFailure) {
     $.ajax({
-      url: apiUrl,
+      url: URL.replace("{url}", encodeURIComponent(url)),
       cache: true,
       dataType: "jsonp",
       timeout: TIMEOUT,
@@ -15,15 +19,13 @@ protonet.data.Facebook = (function() {
         if (!data) {
           return onFailure();
         }
-        onSuccess($.extend(data, {
-          picture: PICTURE_URL.replace("{id}", id)
-        }));
+        onSuccess(data);
       },
       error: onFailure
     });
   }
   
   return {
-    getOpenGraphData: getOpenGraphData
+    getData: getData
   };
 })();
