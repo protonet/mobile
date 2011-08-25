@@ -130,7 +130,7 @@
             return;
           }
           
-          if (this.data.last_read_meep && this.data.last_read_meep < meepData.id) {
+          if (this.data.last_read_meep && this.data.last_read_meep < meepData.id && !this.isSelected) {
             this.unreadMeeps++;
             var isReplyToViewer = instance.userReplies.indexOf(protonet.user.data.id) !== -1;
             if (isReplyToViewer) {

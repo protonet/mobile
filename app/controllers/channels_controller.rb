@@ -1,7 +1,6 @@
 class ChannelsController < ApplicationController
   
   filter_resource_access
-  before_filter :only_registered
   
   def index
     respond_to do |format|

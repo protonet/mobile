@@ -18,7 +18,7 @@
   }
   
   function getActive() {
-    try { return JSON.parse(localStorage.active_rendezvous); } catch(e) { return {}; }
+    return JSON.parse(localStorage.active_rendezvous || "{}");
   }
   
   function setActive(active) {

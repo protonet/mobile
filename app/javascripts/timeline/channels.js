@@ -48,7 +48,7 @@ protonet.timeline.Channels = {
       activeChannels.push(urlChannelId);
     }
     
-    var activeRendezvousChannels = Object.keys(localStorage.active_rendezvous ? JSON.parse(localStorage.active_rendezvous) : {});
+    var activeRendezvousChannels = Object.keys(JSON.parse(localStorage.active_rendezvous || "{}"));
     
     return activeChannels.concat(activeRendezvousChannels);
   },
