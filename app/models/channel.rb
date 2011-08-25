@@ -96,7 +96,7 @@ class Channel < ActiveRecord::Base
   end
 
   def last_read_meep
-    super.to_i unless super.nil? || super == 0
+    super.to_i unless super.nil? || super.to_i == 0
   end
   
   def home?
