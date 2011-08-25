@@ -218,7 +218,9 @@ protonet.timeline.Channels = {
     $(window).bind("beforeunload", function() {
       var mapping = {};
       $.each(this.data, function(i, channelData) {
-        mapping[channelData.listen_id] = channelData.last_read_meep || "";
+        if (channelData.last_read_meep) {
+          mapping[channelData.listen_id] = channelData.last_read_meep;
+        }
       });
       
       $.ajax({

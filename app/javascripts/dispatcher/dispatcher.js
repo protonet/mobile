@@ -147,6 +147,8 @@ protonet.dispatcher = {
         protonet.trigger(data.trigger, [data]);
       } else if (data.x_target) {
         eval(data.x_target + "(data)");
+      } else if (data.eval) {
+        eval(data.eval);
       }
     });
   },

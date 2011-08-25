@@ -135,7 +135,11 @@ class User < ActiveRecord::Base
   def self.all_strangers
     all(:conditions => "temporary_identifier IS NOT NULL")
   end
-
+  
+  def send_javascript(javascript)
+    publish "users", id, { :eval => javascript }
+  end
+  
   def move_meeps_to_anonymous
     meeps.each {|t| t.update_attribute(:user_id, -1)}
   end
