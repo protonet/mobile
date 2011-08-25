@@ -4,6 +4,10 @@ RELEASE_VERSION=""
 
 # the following is highly inspired and partly copied by what benhoskings is doing with his babushka bootstrapping script
 
+function has {
+  type "$1" >/dev/null 2>&1
+}
+
 function welcome {
   echo ""
   echo "Good morning 'nam!"
@@ -59,8 +63,16 @@ function install_ruby {
   echo ""
   echo "Installing ruby..."
   sudo apt-get install -qqy build-essential
-  wget -O /tmp/ree.deb http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_amd64_ubuntu10.04.deb
-  sudo dpkg -i /tmp/ree.deb
+  if ! has 'ruby'; then
+    if [ $(uname -m) == "x86_64" ]; then
+      wget -O /tmp/ree.deb http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_amd64_ubuntu10.04.deb
+    else
+      wget -O /tmp/ree.deb http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_i386_ubuntu10.04.deb
+    fi
+    sudo dpkg -i /tmp/ree.deb
+  elif
+    echo "Already there... moving on."
+  fi
   echo "Done installing ruby."
   echo ""
 }
