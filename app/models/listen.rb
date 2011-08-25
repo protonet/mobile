@@ -4,7 +4,6 @@ class Listen < ActiveRecord::Base
   belongs_to :user
   belongs_to :channel
   
-  default_scope :order => :order_number
   scope :verified, :conditions => {:verified => true}
   
   # if a channel is public we set the verified status to public

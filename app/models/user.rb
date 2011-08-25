@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
 
   has_many  :meeps
   has_many  :listens,  :dependent => :destroy
-  has_many  :channels,          :through => :listens, :order => :order_number, :select => "channels.*, listens.id AS listen_id, listens.last_read_meep as last_read_meep"
+  has_many  :channels,          :through => :listens, :select => "channels.*, listens.id AS listen_id, listens.last_read_meep as last_read_meep"
   has_many  :owned_channels,    :class_name => 'Channel', :foreign_key => :owner_id
   has_many  :invitations
   has_and_belongs_to_many  :roles
