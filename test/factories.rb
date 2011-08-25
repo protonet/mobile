@@ -12,5 +12,5 @@ end
 Factory.define :meep do |t|
   t.message { Faker::Lorem.sentence }
   t.user {|u| u.association(:user) }
-  t.channels {|c| [c.association(:channel)]}
+  t.channel {|c| c.association(:channel)}
 end
