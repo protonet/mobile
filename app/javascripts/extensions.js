@@ -143,9 +143,11 @@ Number.prototype.px = function() {
   /**
    * Shim for HTML5 audio
    */
-  var userAgent    = navigator.userAgent.toLowerCase(),
+  var userAgent                 = navigator.userAgent.toLowerCase(),
       // Safari sometimes randomly crashes when playing sound
-      audioIsBuggy = (userAgent.indexOf("safari") !== -1 && userAgent.indexOf("chrome") === -1);
+      audioIsBuggy              = (userAgent.indexOf("safari") !== -1 && userAgent.indexOf("chrome") === -1),
+      // IE < 9 requires the confirmation of the user to use the plugin "Windows Media Player Core"
+      requiresUserConfirmation  = userAgent.match(/msie/);
   
   if (window.Audio) {
     window.Audio.prototype.replay = function() {
@@ -154,7 +156,7 @@ Number.prototype.px = function() {
     };
   }
   
-  if (!window.Audio || audioIsBuggy) {
+  if ((!window.Audio || audioIsBuggy) && !requiresUserConfirmation) {
     window.Audio = function(src) {
       this.src = src;
     };
