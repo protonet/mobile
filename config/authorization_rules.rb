@@ -6,6 +6,7 @@ authorization do
   
   role :invitee do
     has_permission_on :users, :to => [:show_only, :rendezvous, :update_last_read_meeps]
+    has_permission_on :channels, :to => [:show_only]
     has_permission_on :users do 
       to [:manage, :change_password]
       if_attribute :id => is {user.id}
