@@ -52,7 +52,7 @@ Given /^I register as "([^\"]*)"$/ do |username|
 end
 
 Then /^the message field should contain "([^\"]*)"$/ do |value|
-  find("#message-form textarea[name='meep[message]']").value.should match(/#{value}/)
+  find("#message-form textarea[name='meep[message]']").native.attribute(:value).should match(/#{value}/)
 end
 
 Given /^"([^"]*)" is listening to "([^"]*)"$/ do |username, channelname|
@@ -60,8 +60,6 @@ Given /^"([^"]*)" is listening to "([^"]*)"$/ do |username, channelname|
 end
 
 Given /^I click on "([^"]*)" within "([^"]*)"$/ do |linktext, selector|
-  puts 'foo'
-  debugger
   find(:css, "#{selector} a", :text => linktext, :visible => true)
 end
 
