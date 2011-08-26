@@ -190,7 +190,7 @@ protonet.timeline.Meep.prototype = {
         this.data.id = +response;
         
         (onSuccess || $.noop)();
-        protonet.trigger("meep.sent", [this.element, this.data, this]);
+        protonet.trigger("meep.sent", [this.data, this.element, this]);
       }.bind(this),
       error:      function() {
         protonet.trigger("flash_message.error", protonet.t("MEEP_ERROR_LONG"));

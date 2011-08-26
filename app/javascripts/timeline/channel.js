@@ -84,7 +84,7 @@
         /**
          * Render meep in this channel if it contains a channel reply
          */
-        .bind("meep.sent", function(e, meepElement, meepData, instance) {
+        .bind("meep.sent", function(e, meepData, meepElement, instance) {
           if (meepData.channel_id == this.data.id) {
             return;
           }
@@ -106,17 +106,7 @@
           this._renderMeep(newMeepData, this.channelList, true);
         }.bind(this))
 
-        /**
-         * Make sure that the data object is up to date
-         * by tracking incoming and outgoing meeps
-         */
-        .bind("meep.sent", function(e, meepElement, meepData, instance) {
-          if (meepData.channel_id == this.data.id) {
-            this.data.meeps.push(meepData);
-          }
-        }.bind(this))
-
-        .bind("meep.receive", function(e, meepData) {
+        .bind("meep.receive meep.sent", function(e, meepData) {
           if (meepData.channel_id == this.data.id) {
             this.data.meeps.push(meepData);
             if (this.isSelected) {
