@@ -199,7 +199,7 @@
       if (this.unreadReplies > 0) {
         this.replyBadge = this.replyBadge || $("<span>", {
           "class": "reply-badge"
-        }).appendTo(this.badgeContainer);
+        }).prependTo(this.badgeContainer);
         this.replyBadge.text(this.unreadReplies > 20 ? "20+" : this.unreadReplies).show();
       } else {
         this.replyBadge && this.replyBadge.hide();

@@ -149,7 +149,8 @@ Number.prototype.px = function() {
   
   if (window.Audio) {
     window.Audio.prototype.replay = function() {
-      this.currentTime = 0;
+      // this can cause js errors in chrome under certain circumstances...
+      try { this.currentTime = 0; } catch(e) {}
     };
   }
   
