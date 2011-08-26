@@ -49,6 +49,7 @@ Feature: Managing your profile
     Given administrator rights have not been claimed
     And administrator claiming key is "secret"
     And I follow "your profile" within "#preferences-page"
+    Then I should see "Enter admin key to become an admin" within "#preferences-details"
     And I fill in "key" with "secret" within "#admin-request"
     And I press "submit" within "#admin-request"
     Then I should see "you're an ADMIN" within "#preferences-details"
