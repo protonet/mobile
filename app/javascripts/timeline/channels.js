@@ -329,8 +329,9 @@ protonet.timeline.Channels = {
         this.data.push(data);
         this._updateSubscribedChannels();
         
+        protonet.trigger("timeline.loading_end");
         if (!this.selected) {
-          protonet.trigger("timeline.loading_end").trigger("channel.change", channelId);
+          protonet.trigger("channel.change", channelId);
         }
         
         protonet.unbind(eventName);
