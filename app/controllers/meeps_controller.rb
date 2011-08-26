@@ -1,4 +1,5 @@
 class MeepsController < ApplicationController
+  include Rabbit
   
   def index
     channel = Channel.where(:id => params[:channel_id]).first
@@ -18,13 +19,20 @@ class MeepsController < ApplicationController
   # response: { 1 => [{ :message => 'foo bar' }, { :message => 'foo bar' }], 2 => [{ :message => 'foo bar' }] }
   def sync
     result = {}
-    params[:channel_states].each do |channel_id, first_meep_id|
-      channel = Channel.find(channel_id)
-      result[channel_id] = Meep.prepare_for_frontend(
-        channel.meeps.all(:conditions => ["meeps.id > ?", first_meep_id], :order => "meeps.id ASC", :limit => 100),
-        { :channel_id => channel_id }
-      )
+    channel_states = params[:channel_states] || {}
+    current_user.channels.each do |channel|
+      channel_state = channel_states[channel.id.to_s]
+      if channel_state
+        meeps = channel.meeps.includes(:user).all(:conditions => ["meeps.id > ?", channel_state], :order => "meeps.id ASC", :limit => 100)
+        result[channel.id] = Meep.prepare_for_frontend(meeps, { :channel_id => channel.id })
+      elsif channel.has_unread_meeps
+        publish "users", current_user.id, {
+          :trigger    => "channel.load",
+          :channel_id => channel.id
+        }
+      end
     end
+    
     render :json => result
   end
 

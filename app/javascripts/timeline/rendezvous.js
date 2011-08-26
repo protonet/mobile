@@ -81,7 +81,11 @@
         click:    this.hide.bind(this)
       }).appendTo(this.tab);
       
-      if (!isActive(this.data.id) && !this.unreadMeeps) {
+      try {
+        var hasUnreadMeeps = this.data.meeps[0].id > this.data.last_read_meep;
+      } catch(e) {}
+      
+      if (!isActive(this.data.id) && !hasUnreadMeeps) {
         this.tab.hide();
       }
       
