@@ -110,11 +110,7 @@ protonet.Page = (function() {
     getState: function() {
       return this.state;
     },
-  
-    toString: function() {
-      return this.name;
-    },
-  
+    
     _trigger: function(eventName) {
       protonet.trigger("page." + eventName, this.name);
       this.config["on" + eventName.capitalize()](this, this.name);
