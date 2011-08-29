@@ -27,6 +27,8 @@ Dashboard::Application.configure do
   # Enable threaded mode
   # config.threadsafe!
   
+  config.action_dispatch.x_sendfile_header = "X-Sendfile"
+  
   configatron.current_file_path = "/home/protonet/dashboard/current"
   configatron.shared_file_path  = "/home/protonet/dashboard/shared"
   configatron.deploy_config_file_path = "#{configatron.shared_file_path}/config/protonet.d/deploy_config"
