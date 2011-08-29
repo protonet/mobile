@@ -2,8 +2,7 @@ class Api::V1::ChannelsController < Api::V1::MasterController
   
   before_filter :set_defaults
   
-  # GET A CHANNEL
-  # OR ALL YOUR CHANNELS
+  # GET ALL YOUR CHANNELS
   def index
     channels = @current_user.channels.limit(@limit)
     render :json => channels
