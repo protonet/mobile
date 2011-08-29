@@ -45,13 +45,13 @@ class Channel < ActiveRecord::Base
     all(:select => :name).map {|c| c.name.downcase }
   end
   
-  def self.prepare_for_frontend(channel)
+  def self.prepare_for_frontend(channel, current_user)
     meeps = channel.meeps.includes(:user).recent.all(:limit => 25)
     {
       :id               => channel.id,
       :rendezvous       => channel.rendezvous,
       :name             => channel.name,
-      :display_name     => channel.display_name || channel.name.capitalize,
+      :display_name     => channel.rendezvous_name(current_user) || channel.display_name || channel.name.capitalize,
       :last_read_meep   => (channel.last_read_meep rescue nil),
       :listen_id        => (channel.listen_id rescue nil),
       :meeps            => Meep.prepare_for_frontend(meeps, { :channel_id => channel.id })
@@ -149,6 +149,12 @@ class Channel < ActiveRecord::Base
   
   def rendezvous_participants
     rendezvous ? rendezvous.split(':').map { |id| User.find(id) } : []
+  end
+  
+  def rendezvous_name(current_user)
+    return nil unless rendezvous?
+    user_id = rendezvous.split(':').find { |id| id.to_i != current_user.id }
+    User.find(user_id).display_name rescue 'stranger'
   end
   
   private
