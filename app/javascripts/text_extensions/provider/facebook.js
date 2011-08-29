@@ -3,7 +3,7 @@
 /**
  * Facebook Provider
  */
-protonet.text_extensions.provider.YouTube = {
+protonet.text_extensions.provider.Facebook = {
   /**
    * Matches:
    * http://www.facebook.com/christopher.blum
