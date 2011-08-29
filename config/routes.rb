@@ -98,6 +98,7 @@ Dashboard::Application.routes.draw do
       resources :channels do
         resources :users
       end
+      resources :rendezvous
       resources :meeps
       resources :users do
         match "auth_token" => "users#auth_token"

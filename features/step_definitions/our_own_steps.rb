@@ -234,3 +234,30 @@ Then /^I should see all settings$/ do
   all(:css, "#preferences-page li").size.should == 10
 end
 
+Given /^I start a rendezvous chat with "([^"]*)"$/ do |username|
+  within('#user-widget') do
+    find(:xpath, "//a[contains(.,'#{username}')]").click
+  end
+  find(:css, ".context-menu-users li", :text => 'start private chat').click
+end
+
+Then /^I should see a channel for "([^"]*)"$/ do |channelname|
+  find(:css, '#channels li', :text => channelname)
+end
+
+Then /^I should not see a channel for "([^"]*)"$/ do |channelname|
+  all(:css, "#channel li", :text => channelname).empty?.should == true
+end
+
+Then /^I close the rendezvous channel for "([^"]*)"$/ do |username|
+  find(:css, '#channels li', :text => username).find(:css, 'span.hide-link').click
+end
+
+Then /^the protonet channel "([^"]*)" should be active$/ do |channelname|
+  find(:css, '#channels li a.active', :text => channelname)
+end
+
+Then /^I switch to the channel "([^"]*)"$/ do |channelname|
+  find(:css, '#channels li a', :text => channelname).click
+end
+

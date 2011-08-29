@@ -18,6 +18,7 @@ class Channel < ActiveRecord::Base
   after_create  :generate_uuid,     :if => lambda {|c| c.uuid.blank? }
   after_create  :create_folder,     :if => lambda {|c| !c.home?}
   after_create  :subscribe_owner,   :if => lambda {|c| !c.home? && !c.skip_autosubscribe}
+  after_create  :subscribe_rendezvous_participant, :if => lambda {|c| c.rendezvous?}
 
   attr_accessor   :skip_autosubscribe
   attr_accessible :skip_autosubscribe, :name, :description, :owner, :owner_id, :network, :network_id, :display_name, :public, :global
@@ -67,17 +68,21 @@ class Channel < ActiveRecord::Base
   #   Yours faithfully,
   #   Young Padawan.
   #
-  def self.setup_rendezvous_for(current_user_id, partner_id)
-    raise RuntimeError if current_user_id == partner_id
-    rendezvous_key = [current_user_id, partner_id].sort.join(':')
-    already_exists = find_by_rendezvous(rendezvous_key)
-    channel = find_or_create_by_rendezvous(rendezvous_key, :owner_id => current_user_id)
+  def self.setup_rendezvous_for(first_user_id, second_user_id)
+    raise RuntimeError if first_user_id == second_user_id
+    key = rendezvous_key(first_user_id, second_user_id)
+    already_exists = find_by_rendezvous(key)
+    channel = find_or_create_by_rendezvous(key, :owner_id => first_user_id)
     channel.listens.each {|l|
       channel.publish 'users', l.user_id,
         :trigger    => 'channel.load',
         :channel_id => channel.id
     } if already_exists
     channel
+  end
+  
+  def self.rendezvous_key(first_user_id, second_user_id)
+    [first_user_id.to_i, second_user_id.to_i].sort.join(':')
   end
   
   def normalize_name
@@ -116,11 +121,11 @@ class Channel < ActiveRecord::Base
   end
   
   def subscribe_owner
-    if rendezvous?
-      rendezvous_participants.each { |u| u.subscribe(self) }
-    else
-      owner && owner.subscribe(self)
-    end
+    owner && owner.subscribe(self)
+  end
+  
+  def subscribe_rendezvous_participant
+    rendezvous_participants.each { |u| u.subscribe(self) }
   end
 
   def owned_by(user)
