@@ -66,6 +66,7 @@ module System
         cleared_file_path = SystemFileSystem.cleared_path(full_file_path)
         target_file       = cleared_file_path
         FileUtils.mv(params[:file].path, target_file)
+        FileUtils.chmod("0640", target_file)
         
         channel = Channel.find(params[:channel_id])
         publish 'files', ['channel', channel.uuid],
