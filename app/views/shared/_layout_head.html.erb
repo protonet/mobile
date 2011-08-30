@@ -40,6 +40,8 @@
       server:                     "<%= request.server_software %>",
       debugMode:                  <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>
     };
+    
+    <%= "var AIRBRAKE_API_KEY = '#{HoptoadNotifier.configuration.api_key}';" if Rails.env.production? %>
   </script>
   <%- if custom_stylesheet -%>
     <%- if SystemPreferences.custom_css_type == "append" -%>

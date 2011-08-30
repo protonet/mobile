@@ -7,3 +7,6 @@
 [submodule "app/javascripts/lib/jquery-behaviors"]
 	path = app/javascripts/lib/jquery-behaviors
 	url = git://github.com/tiff/jquery-behaviors.git
+[submodule "app/javascripts/lib/simple-javascript-airbrake-notifier"]
+	path = app/javascripts/lib/simple-javascript-airbrake-notifier
+	url = git@github.com:protonet/simple-javascript-airbrake-notifier.git

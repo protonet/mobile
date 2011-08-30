@@ -1,3 +1,4 @@
+//= require "lib/simple-javascript-airbrake-notifier/notifier.js"
 //= require "lib/shimprove.1-0-1.min.js"
 //= require "lib/jquery-1.6.2.min.js"
 //= require "lib/jquery-ui-1.8.11.custom.min.js"
