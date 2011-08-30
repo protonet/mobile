@@ -38,6 +38,8 @@
     <%= hidden_field_tag      :user_id, user.id %>
     <%= label_tag             :admin_password, 'Administrator - please enter your password for changes:' %>
     <%= password_field_tag    :admin_password %>
+    <%= label_tag             :send_email, 'Send by email?' %>
+    <%= check_box_tag  :send_email, true %>
     <%= button "Generate New Password " %>
   <% end %>
 <%- end -%>
