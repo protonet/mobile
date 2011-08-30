@@ -32,8 +32,8 @@ Dashboard::Application.configure do
   configatron.user_file_path = Rails.root.to_s + "/tmp/test/shared/user-files"
   FileUtils.mkdir_p(configatron.user_file_path)
   
-  configatron.images.avatars_path   = Rails.root.to_s + "public/avatars"
-  configatron.images.externals_path = Rails.root.to_s + "public/externals"
+  configatron.images.avatars_path   = Rails.root.to_s + "/public/avatars"
+  configatron.images.externals_path = Rails.root.to_s + "/public/externals"
   FileUtils.mkdir_p(configatron.images.externals_path + "/image_proxy")
   FileUtils.mkdir_p(configatron.images.externals_path + "/screenshots")
   FileUtils.mkdir_p(configatron.images.externals_path + "/snapshots")
