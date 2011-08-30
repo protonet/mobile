@@ -21,7 +21,7 @@ class Api::V1::RendezvousController < Api::V1::MasterController
     if channel = Channel.setup_rendezvous_for(params[:first_user_id], params[:second_user_id])
       render :json => channel
     else
-      render :json => channel.errors, :status => :unprocessable_entity
+      render :json => {:errors => channel.errors}, :status => :unprocessable_entity
     end
   end
   

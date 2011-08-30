@@ -16,7 +16,7 @@ class Api::V1::ChannelsController < Api::V1::MasterController
     if channel.save
       render :json => {"channel_id" => channel.id}
     else
-      render :json => channel.errors, :status => :unprocessable_entity
+      render :json => {:errors => channel.errors}, :status => :unprocessable_entity
     end
   end
   

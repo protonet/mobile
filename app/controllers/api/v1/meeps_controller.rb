@@ -27,7 +27,7 @@ class Api::V1::MeepsController < Api::V1::MasterController
     if meep.save
       render :json => {"meep_id" => meep.id}
     else
-      render :json => meep.errors, :status => :unprocessable_entity
+      render :json => {:errors => meep.errors}, :status => :unprocessable_entity
     end
   end
   

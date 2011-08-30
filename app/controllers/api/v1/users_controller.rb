@@ -29,7 +29,7 @@ class Api::V1::UsersController < Api::V1::MasterController
     if user.save
       render :json => {"user_id" => user.id}
     else
-      render :json => user.errors, :status => :unprocessable_entity
+      render :json => {:errors => user.errors}, :status => :unprocessable_entity
     end
   end
   
