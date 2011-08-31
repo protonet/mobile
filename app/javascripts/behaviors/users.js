@@ -3,7 +3,7 @@ $.behaviors({
     if (event.originalEvent.dataTransfer)  {
       var $element  = $(element),
           userName  = $element.data("user-name") || protonet.user.getUser($element.data("user-id")).name;
-      event.originalEvent.dataTransfer.setData("text/plain", "@" + userName + " ");
+      event.originalEvent.dataTransfer.setData("Text", "@" + userName + " ");
     }
   }
 });

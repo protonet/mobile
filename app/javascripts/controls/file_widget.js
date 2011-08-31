@@ -103,7 +103,7 @@ protonet.controls.FileWidget.prototype = {
               fileUrl   = this.href;
           // Enable dragging of files to desktop
           dataTransfer.setData("DownloadURL", "application/octet-stream:" + fileName + ":" + fileUrl);
-          dataTransfer.setData("text/plain", fileUrl + " ");
+          dataTransfer.setData("Text", fileUrl + " ");
         }
       });
       

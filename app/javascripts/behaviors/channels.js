@@ -14,7 +14,7 @@ $.behaviors({
     var $element = $(element);
     if (event.originalEvent.dataTransfer) {
       var channelId = $element.data("channel-id");
-      event.originalEvent.dataTransfer.setData("text/plain", "@" + protonet.timeline.Channels.getChannelName(channelId) + " ");
+      event.originalEvent.dataTransfer.setData("Text", "@" + protonet.timeline.Channels.getChannelName(channelId) + " ");
     }
   }
 });

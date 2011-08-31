@@ -94,7 +94,7 @@ protonet.controls.UserWidget.prototype = {
       .delegate("li[data-user-id] > a", "dragstart", function(event) {
         var dataTransfer = event.originalEvent.dataTransfer;
         if (dataTransfer)  {
-          dataTransfer.setData("text/plain", "@" + $(this).text() + " ");
+          dataTransfer.setData("Text", "@" + $(this).text() + " ");
         }
       })
       .delegate("li[data-user-id] > a", "mouseover", function(event) {
