@@ -93,7 +93,12 @@
           if (meepData.reply_from) {
             return;
           }
-
+          
+          // Prevent creating a channel reply when the channel is not a "real" channel
+          if (!protonet.timeline.Channels.getChannelName(+meepData.channel_id)) {
+            return;
+          }
+          
           if ($.inArray(this.data.id, instance.channelReplies) == -1) {
             return;
           }
