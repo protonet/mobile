@@ -303,7 +303,9 @@ protonet.controls.UserWidget.prototype = {
   
   _userUnsubscribedChannel: function(userId, channelId) {
     var channelUsers = this.channelSubscriptions[channelId];
-    channelUsers.splice(channelUsers.indexOf(userId), 1);
+    if (channelUsers) {
+      channelUsers.splice(channelUsers.indexOf(userId), 1);
+    }
     if (channelId == protonet.timeline.Channels.selected) {
       var user = this.usersData[userId];
       user && user.element.hide();
