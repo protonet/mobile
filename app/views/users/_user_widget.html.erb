@@ -11,7 +11,7 @@
   <ul>
     <!-- tabindex="-1" ensures that the element is focusable via css -->
     <% users.each do |user| -%>
-      <li data-user-external-profile-url="<%= user.external_profile_url %>" data-user-id="<%= user.id %>" data-user-avatar="<%= image_proxy(user.avatar.url, { :height => 20, :width => 20, :local => true }) %>" title="<%=h user.display_name %>" <%= raw 'class="myself"' if user.id == current_user.id %>>
+      <li data-user-id="<%= user.id %>" data-user-avatar="<%= image_proxy(user.avatar.url, { :height => 20, :width => 20, :local => true }) %>" title="<%=h user.display_name %>" <%= raw 'class="myself"' if user.id == current_user.id %>>
         <a href="#" tabindex="-1"><%=h user.display_name %></a>
       </li>
     <% end -%>

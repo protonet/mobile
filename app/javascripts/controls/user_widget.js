@@ -18,7 +18,6 @@ protonet.controls.UserWidget = function() {
       isViewer:             li.hasClass("myself"),
       isStranger:           false,
       avatar:               li.data("user-avatar"),
-      externalProfileUrl:   li.data("user-external-profile-url"),
       channelSubscriptions: []
     };
   }.bind(this));
@@ -195,7 +194,6 @@ protonet.controls.UserWidget.prototype = {
       isStranger:           isStranger,
       avatar:               user.avatar,
       channelSubscriptions: [],
-      externalProfileUrl:   user.external_profile_url,
       element:              element
     };
   },
@@ -203,7 +201,6 @@ protonet.controls.UserWidget.prototype = {
   createElement: function(user, isViewer, isStranger) {
     return $("<li>", {
       "data-user-id": user.id,
-      "data-user-external-profile-url": user.external_profile_url,
       title:          user.name,
       "class":        [isViewer ? "myself" : "", isStranger ? "stranger" : ""].join(" ")
     }).append(
