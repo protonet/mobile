@@ -10,14 +10,15 @@ protonet.controls.UserWidget = function() {
   this.usersData = {};
   this.channelSubscriptions = {};
   
-  this.list.children().each(function(i, li) {
-    li = $(li);
-    this.usersData[+li.data("user-id")] = {
-      element:              li,
-      name:                 $.trim(li.text()),
-      isViewer:             li.hasClass("myself"),
+  this.list.find("a").each(function(i, link) {
+    var $link     = $(link),
+        $listItem = $link.parent();
+    this.usersData[+$link.data("user-id")] = {
+      element:              $listItem,
+      name:                 $.trim($link.text()),
+      isViewer:             $listItem.hasClass("myself"),
       isStranger:           false,
-      avatar:               li.data("user-avatar"),
+      avatar:               $link.data("user-avatar"),
       channelSubscriptions: []
     };
   }.bind(this));
@@ -141,7 +142,7 @@ protonet.controls.UserWidget.prototype = {
   },
   
   updateUser: function(userId, onlineUsers) {
-    var user = this.usersData[userId],
+    var user = this.usersData[userId] || {},
         onlineUser = onlineUsers[userId];
     
     var hasBeenOnlineBefore = user.isOnline !== false;
@@ -199,15 +200,15 @@ protonet.controls.UserWidget.prototype = {
   },
   
   createElement: function(user, isViewer, isStranger) {
-    return $("<li>", {
-      "data-user-id": user.id,
-      title:          user.name,
-      "class":        [isViewer ? "myself" : "", isStranger ? "stranger" : ""].join(" ")
+    return $("<li>",{
+      "class": [isViewer ? "myself" : "", isStranger ? "stranger" : ""].join(" ")
     }).append(
       $("<a>", {
-        tabindex: -1,
-        href:     "#",
-        text:     user.name
+        href:               "/users/" + user.id,
+        "data-user-id":     user.id,
+        "data-avoid-ajax":  1,
+        tabindex:           -1,
+        text:               user.name
       })
     ).appendTo(this.list);
   },
@@ -322,7 +323,7 @@ protonet.controls.UserWidget.prototype = {
   
   _typingStart: function(userId, channelId) {
     if(channelId == protonet.timeline.Channels.selected) {
-      var userData = this.usersData[userId];
+      var userData = this.usersData[userId] || {};
       if (userData.element) {
         userData.element.prependTo(this.list).addClass("typing");
       }
@@ -330,7 +331,7 @@ protonet.controls.UserWidget.prototype = {
   },
   
   _typingEnd: function(userId) {
-    var userData = this.usersData[userId];
+    var userData = this.usersData[userId] || {};
     if (userData.element) {
       userData.element.removeClass("typing");
     }

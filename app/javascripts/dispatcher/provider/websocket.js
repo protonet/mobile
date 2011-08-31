@@ -46,7 +46,7 @@ protonet.dispatcher.provider.WebSocket = {
     if (!this.socket || !this.socket.send) {
       return;
     }
-    this.socket.send(JSON.stringify(data));
+    try { this.socket.send(JSON.stringify(data)); } catch(e) {}
   },
   
   receive: function(rawData) {
