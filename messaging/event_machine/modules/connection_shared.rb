@@ -288,6 +288,8 @@ module ConnectionShared
       
       send_json json
     end
+  rescue MQ::Error => e
+    log("bind_socket_to_system_queue error: #{e.inspect} for #{channel.inspect}")
   end
 
   def bind_socket_to_user_queues
@@ -302,15 +304,13 @@ module ConnectionShared
   end
 
   def bind_channel(channel)
-    begin
-      uuid = channel.is_a?(Channel) ? channel.uuid : channel
-      @channel_queues[uuid] = bind 'channels', uuid do |json|
-        sender_socket_id = json['socket_id']
-        send_json json if !sender_socket_id || sender_socket_id.to_i != @key
-      end
-    rescue MQ::Error => e
-      log("bind_channel error: #{e.inspect} for #{channel.inspect}")
+    uuid = channel.is_a?(Channel) ? channel.uuid : channel
+    @channel_queues[uuid] = bind 'channels', uuid do |json|
+      sender_socket_id = json['socket_id']
+      send_json json if !sender_socket_id || sender_socket_id.to_i != @key
     end
+  rescue MQ::Error => e
+    log("bind_channel error: #{e.inspect} for #{channel.inspect}")
   end
   
   def unbind_channel(channel_uuid)
@@ -319,34 +319,36 @@ module ConnectionShared
   end
   
   def bind_channel_subscriptions
-    begin
-      bind 'channels', "subscriptions" do |json|
-        if json['user_id'] == @user.id
-          case json['trigger']
-          when 'user.subscribed_channel'
-            bind_channel(json['channel_uuid'])
-          when 'user.unsubscribed_channel'
-            unbind_channel(json['channel_uuid'])
-          end
+    bind 'channels', "subscriptions" do |json|
+      if json['user_id'] == @user.id
+        case json['trigger']
+        when 'user.subscribed_channel'
+          bind_channel(json['channel_uuid'])
+        when 'user.unsubscribed_channel'
+          unbind_channel(json['channel_uuid'])
         end
-        send_json json
-        send_channel_subscriptions(json['channel_id'])
       end
-    rescue MQ::Error => e
-      log("bind_channel_subscriptions error: " + e.inspect)
+      send_json json
+      send_channel_subscriptions(json['channel_id'])
     end
+  rescue MQ::Error => e
+    log("bind_channel_subscriptions error: " + e.inspect)
   end
 
   def bind_files_for_channel(channel)
     bind 'files', 'channel', channel.uuid do |json|
-      send_json json
+        send_json json
     end
+  rescue MQ::Error => e
+    log("bind_files_for_channel error: " + e.inspect)
   end
 
   def bind_user
     bind 'users', @user.id do |json|
       send_json json
     end
+  rescue MQ::Error => e
+    log("bind_user error: " + e.inspect)
   end
   
   def web?;  @type == 'web';  end
