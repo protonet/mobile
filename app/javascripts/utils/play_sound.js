@@ -16,7 +16,7 @@ protonet.utils.playSound = (function() {
         path;
     for (; i<length; i++) {
       path = arguments[i];
-      if (cache[path]) {
+      if (cache[path] && cache[path].replay) {
         cache[path].replay();
         return;
       }

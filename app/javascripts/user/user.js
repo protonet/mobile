@@ -50,7 +50,7 @@ protonet.user = {
             user    = this.usersData[userId] || {};
         if (user.externalProfileUrl) {
           window.open(user.externalProfileUrl, "dbms-profile-" + user.externalProfileUrl);
-        } else {
+        } else if (protonet.config.allow_modal_views && userId) {
           protonet.globals.pages.user.show(userId);
         }
         closeContextMenu();
