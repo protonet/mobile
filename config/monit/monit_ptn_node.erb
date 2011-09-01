@@ -24,7 +24,7 @@ check process rabbitmq with pidfile /var/run/rabbitmq.pid
   group base
   start program = "/usr/bin/sudo /etc/init.d/rabbitmq-server start"
   stop program = "/usr/bin/sudo /etc/init.d/rabbitmq-server stop"
-  if totalmem > 80.0 MB for 5 cycles then restart
+  if totalmem > 120.0 MB for 5 cycles then restart
 
 check process apache2 with pidfile /var/run/apache2.pid
   group base
