@@ -39,13 +39,13 @@ class SystemRelease
       babushka_update     = system(
         "#{release_version_var} export HISTIGNORE=\"*ptn_babushka_update*\"; #{configatron.current_file_path}/script/ptn_babushka_update #{license_key}"
       )
-      babushka_migrations = system(
+      babushka_migrations = babushka_update && system(
         "export HISTIGNORE=\"*ptn_babushka_migrations*\"; #{configatron.current_file_path}/script/ptn_babushka_migrations '#{password}'"
       )
-      deployer_update     = system(
+      deployer_update     = babushka_migrations && system(
         "#{release_version_var} export HISTIGNORE=\"*ptn_deployer_update*\"; #{configatron.current_file_path}/script/ptn_deployer_update '#{license_key}'"
       )
-      release_update      = system(
+      release_update      = deployer_update && system(
         "#{release_version_var} #{configatron.current_file_path}/script/ptn_release_update #{configatron.shared_file_path}"
       )
       {:babushka_update => babushka_update, :babushka_migrations => babushka_migrations, :release_update => release_update, :deployer_update => deployer_update}
