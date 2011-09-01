@@ -4,9 +4,9 @@
  * This method will find the one that's compatible and play it
  *
  * @example
- *    protonet.utils.playSound("sounds/notification.mp3", "sounds/notification.ogg", "sounds/notification.wav")
+ *    protonet.media.playSound("sounds/notification.mp3", "sounds/notification.ogg", "sounds/notification.wav")
  */
-protonet.utils.playSound = (function() {
+protonet.media.playSound = (function() {
   var fileTypeRegExp = /.+\.(\w+)/,
       cache          = {};
   return function() {
@@ -16,7 +16,7 @@ protonet.utils.playSound = (function() {
         path;
     for (; i<length; i++) {
       path = arguments[i];
-      if (cache[path] && cache[path].replay) {
+      if (cache[path] && typeof(cache[path].replay) === "function") {
         cache[path].replay();
         return;
       }

@@ -1,7 +1,7 @@
 //= require "meep.js"
 //= require "../utils/browser_title.js"
 //= require "../utils/is_window_focused.js"
-//= require "../utils/play_sound.js"
+//= require "../media/play_sound.js"
 //= require "../lib/jquery.inview/jquery.inview.js"
 
 /**
@@ -440,7 +440,7 @@
       }
 
       if (!isWindowFocused && this.isSelected && isAllowedToPlaySound) {
-        protonet.utils.playSound("/sounds/notification.ogg", "/sounds/notification.mp3", "/sounds/notification.wav");
+        protonet.media.playSound("/sounds/notification.ogg", "/sounds/notification.mp3", "/sounds/notification.wav");
       }
 
       if (!this.isSelected) {
