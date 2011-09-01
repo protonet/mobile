@@ -6,26 +6,6 @@ if (typeof(console) == "undefined" || !console.log) {
 
 
 
-//---------------------------- LOCAL STORAGE ----------------------------
-if (typeof(localStorage) == "undefined") {
-  window.localStorage = window.sessionStorage || {
-    setItem: function(key, value) {
-      this[key] = value;
-    },
-    
-    getItem: function(key) {
-      return this[key];
-    },
-    
-    removeItem: function(key) {
-      delete this[key];
-    }
-  };
-}
-
-
-
-
 //---------------------------- FUNCTION ----------------------------
 if (!Function.prototype.bind) {
   Function.prototype.bind = function() {

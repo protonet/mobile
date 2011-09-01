@@ -28,19 +28,17 @@ protonet.user.Config = {
   },
   
   initialize: function() {
-    this._storage = window.localStorage;
-    
     if (protonet.config.show_user_navigation) {
       this._renderConfigs();
     }
   },
   
   set: function(key, value) {
-    this._storage.setItem(key, JSON.stringify(value));
+    protonet.storage.set(key, JSON.stringify(value));
   },
   
   get: function(key) {
-    var value  = this._storage.getItem(key),
+    var value  = protonet.storage.get(key),
         config = this.configs[key];
     
     if (config && config.type == "notification") {

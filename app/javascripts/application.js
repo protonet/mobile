@@ -8,6 +8,7 @@
 //= require "extensions.js"
 //= require "protonet.js"
 //= require "notifications/notifications.js"
+//= require "storage/storage.js"
 //= require "user/user.js"
 //= require "translations/translations.js"
 //= require "behaviors/users.js"

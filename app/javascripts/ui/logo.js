@@ -5,7 +5,7 @@
  */
 protonet.ui.Logo = {
   monsters:       ["default", "business", "female", "surfer", "nerd"],
-  monstersIndex:  (window.localStorage && window.localStorage.getItem("monster")) || 0,
+  monstersIndex:  protonet.storage.get("monster") || 0,
   
   initialize: function() {
     this.monster = $("header > .monster");
@@ -33,9 +33,7 @@ protonet.ui.Logo = {
       this.monstersIndex = 0;
     }
     
-    if (window.localStorage) {
-      window.localStorage.setItem("monster", this.monstersIndex);
-    }
+    protonet.storage.set("monster", this.monstersIndex);
     
     this.setMonster(this.monsters[this.monstersIndex]);
   },

@@ -18,11 +18,11 @@
   }
   
   function getActive() {
-    return JSON.parse(localStorage.active_rendezvous || "{}");
+    return JSON.parse(protonet.storage.get("active_rendezvous") || "{}");
   }
   
   function setActive(active) {
-    localStorage.active_rendezvous = JSON.stringify(active);
+    protonet.storage.set("active_rendezvous", JSON.stringify(active));
   }
   
   function makeActive(channelId) {
