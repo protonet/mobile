@@ -374,7 +374,7 @@
       return !newMeepData.reply_from &&
         !previousMeep.error &&
         !newMeepData.text_extension &&
-        newMeepData.author == previousMeepData.author &&
+        newMeepData.user_id === previousMeepData.user_id &&
         new Date(newMeepData.created_at) - new Date(previousMeepData.created_at) < MERGE_MEEPS_TIMEFRAME;
     },
 
