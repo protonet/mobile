@@ -34,7 +34,7 @@ protonet.user.Config = {
   },
   
   set: function(key, value) {
-    protonet.storage.set(key, JSON.stringify(value));
+    protonet.storage.set(key, value);
   },
   
   get: function(key) {

@@ -511,6 +511,7 @@ protonet.controls.FileWidget.prototype = {
     
     if (images.length) {
       protonet.trigger("text_extension_input.render", {
+        type:         "LocalFiles",
         title:        "",
         image:        images,
         imageHref:    images,

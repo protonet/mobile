@@ -28,7 +28,7 @@ protonet.timeline.Channels = {
   
   render: function(data) {
     // All channel data as array
-    this.data = data || [];
+    this._prepareData(data);
     
     this._updateSubscribedChannels();
     
@@ -48,7 +48,7 @@ protonet.timeline.Channels = {
       activeChannels.push(urlChannelId);
     }
     
-    var activeRendezvousChannels = Object.keys(JSON.parse(protonet.storage.get("active_rendezvous") || "{}"));
+    var activeRendezvousChannels = Object.keys(protonet.storage.get("active_rendezvous") || {});
     
     return activeChannels.concat(activeRendezvousChannels);
   },
@@ -216,12 +216,8 @@ protonet.timeline.Channels = {
       }.bind(this));
     
     $(window).bind("beforeunload", function() {
-      var mapping = {};
-      $.each(this.data, function(i, channelData) {
-        if (channelData.last_read_meep) {
-          mapping[channelData.listen_id] = channelData.last_read_meep;
-        }
-      });
+      var lastReadMeeps = this._collectLastReadMeeps();
+      protonet.storage.set("last_read_meeps", lastReadMeeps);
       
       $.ajax({
         async:  false,
@@ -230,10 +226,14 @@ protonet.timeline.Channels = {
         data:   {
           authenticity_token: protonet.config.authenticity_token,
           id:                 protonet.config.user_id,
-          mapping:            mapping
+          mapping:            lastReadMeeps
         }
       });
     }.bind(this));
+    
+    setInterval(function() {
+      protonet.storage.set("last_read_meeps", this._collectLastReadMeeps());
+    }.bind(this), 10000);
     
     /**
      * Ajax history to enable forward and backward
@@ -359,5 +359,26 @@ protonet.timeline.Channels = {
     });
     
     this._updateSubscribedChannels();
+  },
+  
+  _collectLastReadMeeps: function() {
+    var mapping = {};
+    $.each(this.data, function(i, channelData) {
+      if (channelData.last_read_meep) {
+        mapping[channelData.listen_id] = channelData.last_read_meep;
+      }
+    });
+    return mapping;
+  },
+  
+  /**
+   * Sync last read meeps from local storage into data object
+   */
+  _prepareData: function(data) {
+    this.data = data || [];
+    var lastReadMeeps = protonet.storage.get("last_read_meeps") || {};
+    $.each(this.data, function(i, channelData) {
+      channelData.last_read_meep = Math.max(+lastReadMeeps[channelData.listen_id] || 0, channelData.last_read_meep);
+    });
   }
 };

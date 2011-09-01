@@ -10,16 +10,17 @@ protonet.storage = (function() {
       tempStorage[key] = value;
       try {
         // try/catch for silent fail when localStorage isn't available or full
-        localStorage.setItem(key, value);
+        localStorage.setItem(key, JSON.stringify(value));
       } catch(e) {}
     },
     
     get: function(key) {
       if (typeof(tempStorage[key]) === "undefined") {
-        return localStorage.getItem(key);
-      } else {
-        return tempStorage[key];
+        try {
+          tempStorage[key] = JSON.parse(localStorage.getItem(key));
+        } catch(e) {}
       }
+      return tempStorage[key];
     },
     
     remove: function(key) {
