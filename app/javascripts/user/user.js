@@ -49,7 +49,7 @@ protonet.user = {
         if (protonet.config.allow_modal_views) {
           protonet.globals.pages.user.show(+link.data("user-id"));
         } else {
-          window.open(link.attr("href"), "dbms-profile-" + new Date().getTime());
+          window.open(link.attr("href"), "profile" + new Date().getTime());
         }
         closeContextMenu();
       }.bind(this),
