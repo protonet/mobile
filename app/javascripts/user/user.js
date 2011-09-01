@@ -54,22 +54,17 @@ protonet.user = {
         closeContextMenu();
       }.bind(this),
       "send @reply": function(link, closeContextMenu) {
-        var user = this.usersData[+link.data("user-id")];
+        var user = this.usersData[+link.data("user-id")] || (function() {
+          var meep = link.parents("article").data("meep");
+          return meep && { name: meep.author };
+        })();
         if (user) {
           protonet.trigger("form.create_reply", user.name);
-        } else {
-          protonet.trigger("flash_message.error", protonet.t("STRANGER_OFFLINE_ERROR"));
         }
         closeContextMenu();
       }.bind(this),
       "start private chat": function(link, closeContextMenu) {
-        var userId  = +link.data("user-id"),
-            user    = this.usersData[userId];
-        if (user) {
-          protonet.trigger("rendezvous.start", userId);
-        } else {
-          protonet.trigger("flash_message.error", protonet.t("STRANGER_OFFLINE_ERROR"));
-        }
+        protonet.trigger("rendezvous.start", +link.data("user-id"));
         closeContextMenu();
       }.bind(this)
     };
