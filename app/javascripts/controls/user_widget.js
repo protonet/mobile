@@ -142,8 +142,12 @@ protonet.controls.UserWidget.prototype = {
   },
   
   updateUser: function(userId, onlineUsers) {
-    var user = this.usersData[userId] || {},
+    var user = this.usersData[userId],
         onlineUser = onlineUsers[userId];
+    
+    if (!user) {
+      return;
+    }
     
     var hasBeenOnlineBefore = user.isOnline !== false;
     user.isOnline = !!onlineUser;
