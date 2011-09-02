@@ -5,6 +5,7 @@ class SystemBackend
   # this basically defines the backend api interface (of course without signatures...)
   @@backend_api_methods = [
     :info,
+    :license_key,
     :get_ips_of_currently_connected_clients,
     :grant_internet_access,
     :revoke_internet_access,

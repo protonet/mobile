@@ -130,6 +130,10 @@ module BackendAdapters
       `/sbin/route`.match(/.*UG.*/).to_s.split(" ").last rescue nil
     end
     
+    def license_key
+      File.read("#{configatron.deploy_config_file_path}").match(":key,.*\"(.*)\"")[1] rescue nil
+    end
+    
    # private
       def get_connected_macs_to_wlan(iface)
         raise ArgumentError, iface unless DEFAULT_WLAN_INTERFACES.include?(iface)

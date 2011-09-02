@@ -31,7 +31,7 @@ class SystemPublishToWeb
     end
     
     def port
-      license_key = File.read(configatron.deploy_config_file_path).match(/:key, \"(.*)\"/)[1]
+      license_key = SystemBackend.license_key
       url = "http://directory.protonet.info/show?node_name=#{SystemPreferences.publish_to_web_name}&license_key=#{license_key}"
       response = HTTParty.get(url, :timeout => 10).body
       if response.match(/error/)

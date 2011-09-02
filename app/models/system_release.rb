@@ -33,9 +33,9 @@ class SystemRelease
     
     def update!(password=nil, release_version=nil)
       return false if Rails.env != 'production'
-      return false unless File.exist?("/home/protonet/deployer") && File.exist?(configatron.deploy_config_file_path)
+      return false unless File.exist?("/home/protonet/deployer") && SystemBackend.license_key
       release_version_var = "export RELEASE_VERSION=#{release_version};" unless release_version.blank?
-      license_key = File.read(configatron.deploy_config_file_path).match(/:key, \"(.*)\"/)[1]
+      license_key = SystemBackend.license_key
       babushka_update     = system(
         "#{release_version_var} export HISTIGNORE=\"*ptn_babushka_update*\"; #{configatron.current_file_path}/script/ptn_babushka_update #{license_key}"
       )

@@ -1,4 +1,5 @@
 <div id="system-settings">
+  <span id="license-key">Licence-Key: <%= SystemBackend.license_key %></span>
 
   <%= form_for @node, :url => {:controller => 'preferences', :action => 'node_settings'} do |f| -%>
     <fieldset>

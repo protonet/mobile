@@ -13,14 +13,14 @@ function get_babushka {
   bash -c "`wget -O - $SERVER/bootstrap-babushka$RELEASE_VERSION`"
 }
 
-function check_licence_key() {
+function check_license_key() {
   echo ""
   read -p "Please enter your protonet license key: " f
   LICENCE_KEY="`echo $f | tr -d '\n'`"
   if has 'curl'; then
-    curl -f http://$SERVER/licence/check/$LICENCE_KEY
+    curl -f http://$SERVER/license/check/$LICENCE_KEY
   elif has 'wget'; then
-    wget -q --server-response http://$SERVER/licence/check/$LICENCE_KEY -o /dev/null -O /dev/null
+    wget -q --server-response http://$SERVER/license/check/$LICENCE_KEY -o /dev/null -O /dev/null
   fi
 }
 
@@ -62,7 +62,7 @@ function install() {
 }
 
 get_babushka &&
-check_licence_key &&
+check_license_key &&
 get_babushka_deps &&
 get_babushka_protonet &&
 install

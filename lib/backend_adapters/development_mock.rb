@@ -56,5 +56,9 @@ module BackendAdapters
       'dev0'
     end
     
+    def license_key
+      "development"
+    end
+    
   end
 end
