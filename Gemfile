@@ -46,8 +46,8 @@ group :test, :cucumber do
   gem "random_data", "1.5.1"
   gem "mocha", "0.9.8"
   gem "factory_girl_rails"
-  gem 'cucumber-rails', '~> 0.4.0'
-  gem 'capybara', '~> 0.4.1.2'
+  gem 'cucumber-rails', '1.0.2'
+  gem 'capybara', '1.1.0.rc1'
   gem "database_cleaner"
   gem "pickle"
   gem "launchy"
