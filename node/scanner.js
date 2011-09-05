@@ -23,8 +23,8 @@ fs.watchFile('/home/betahaus-scanner/scans', function (curr, prev) {
           var password = 'scanner$01';
           var auth = 'Basic ' + new Buffer(username + ':' + password).toString('base64');
           var header = {'Host': 'localhost', 'Authorization': auth};
-          var request = localNode.request('POST', '/meeps', header);
-          request.write(querystring.stringify({"channel_id":9, "meep": {"message": "your scan has arrived, please reload the file browser"}}));
+          var request = localNode.request('POST', '/api/v1/meeps', header);
+          request.write(querystring.stringify({"channel_id":9, "message": "your scan has arrived, please reload the file browser"}));
           request.end();
         }, 15000)
       }
