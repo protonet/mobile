@@ -26,6 +26,6 @@ After do
   end
 
   # reset connection tracker
-  # `kill -2 #{SystemServices.services["js_dispatching_server"][2].pid}`
+  # `kill -1 #{SystemServices.services["js_dispatching_server"][2].pid}`
 
 end

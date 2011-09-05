@@ -67,7 +67,7 @@ EventMachine::run do
     NodeConnection.negotiate network, tracker
   end
   
-  trap("INT") do
+  trap("HUP") do
     # reset connection tracker, needed for tests
     puts "resetting connection tracker"
     connections = tracker.open_sockets.each {|s| s.send_reconnect_request}
