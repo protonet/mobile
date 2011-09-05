@@ -106,7 +106,7 @@ protonet.dispatcher = {
   
   reconnect: function() {
     this.disconnect();
-    setTimeout(this.connect(), 1000);
+    setTimeout(this.connect.bind(this), 1000);
   },
   
   /**

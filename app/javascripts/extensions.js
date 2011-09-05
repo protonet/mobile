@@ -129,7 +129,7 @@ Number.prototype.px = function() {
       // IE < 9 requires the confirmation of the user to use the plugin "Windows Media Player Core"
       requiresUserConfirmation  = userAgent.match(/msie/);
   
-  if (window.Audio) {
+  if (window.Audio && window.Audio.prototype) {
     window.Audio.prototype.replay = function() {
       // this can cause js errors in chrome under certain circumstances...
       try { this.currentTime = 0; } catch(e) {}
