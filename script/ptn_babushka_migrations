@@ -1,6 +1,10 @@
 #!/usr/bin/expect
 
 log_file -noappend /tmp/ptn_update_migrations.log
+proc do_exit {msg} {
+    puts stderr $msg
+    exit 1
+}
 
 # never time out
 set timeout -1
@@ -32,7 +36,7 @@ expect {
   }
   -re ".*file a bug report for that now*\? " {
     send "n\r"
-    exp_continue
+    do_exit "babushka migration failed"
   }
 }
 
