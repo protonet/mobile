@@ -16,10 +16,15 @@ fs.watchFile('/home/betahaus-scanner/scans', function (curr, prev) {
         console.log('exec error: ' + error);
       } else {
         exec('chown protonet:protonet -R /home/protonet/dashboard/shared/user-files/9');
+        exec('chmod g+r -R /home/protonet/dashboard/shared/user-files/9');
         setTimeout(function(){
           var localNode = http.createClient(80, 'localhost');
-          var request = localNode.request('POST', '/meeps', {'host': 'localhost'});
-          request.write(querystring.stringify({"message_channel_id":9, "meep": {"message": "your scan has arrived, please reload the file browser"}}));
+          var username = 'scanner';
+          var password = 'scanner$01';
+          var auth = 'Basic ' + new Buffer(username + ':' + password).toString('base64');
+          var header = {'Host': 'localhost', 'Authorization': auth};
+          var request = localNode.request('POST', '/meeps', header);
+          request.write(querystring.stringify({"channel_id":9, "meep": {"message": "your scan has arrived, please reload the file browser"}}));
           request.end();
         }, 15000)
       }
