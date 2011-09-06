@@ -19,7 +19,8 @@ After do
     old_driver  = Capybara.current_driver
     Capybara.session_name = "second"
     Capybara.current_driver = :selenium
-    Capybara.current_session.driver.visit("http://blanksite.com/")
+    # Capybara.current_session.driver.visit("http://blanksite.com/")
+    Capybara.current_session.driver.quit
     Capybara.session_name = old_session
     Capybara.current_driver = old_driver
   end
@@ -28,14 +29,14 @@ After do
   # `kill -1 #{SystemServices.services["js_dispatching_server"][2].pid}`
 end
 
-AfterStep do
-  if Capybara.send(:session_pool).size > 1
-    old_session = Capybara.session_name
-    old_driver  = Capybara.current_driver
-    Capybara.session_name = "second"
-    Capybara.current_driver = :selenium
-    Capybara.current_session.driver.execute_script("console.log('ping')")
-    Capybara.session_name = old_session
-    Capybara.current_driver = old_driver
-  end
-end
+# AfterStep do
+#   if Capybara.send(:session_pool).size > 1
+#     old_session = Capybara.session_name
+#     old_driver  = Capybara.current_driver
+#     Capybara.session_name = "second"
+#     Capybara.current_driver = :selenium
+#     Capybara.current_session.driver.execute_script("console.log('ping')")
+#     Capybara.session_name = old_session
+#     Capybara.current_driver = old_driver
+#   end
+# end
