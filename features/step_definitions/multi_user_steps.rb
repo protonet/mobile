@@ -20,3 +20,9 @@ Given /^I am using the second browser$/ do
   Capybara.session_name = "second"
   sleep 0.5
 end
+
+Then /^I close the second browser$/ do
+  Capybara.session_name = "second"
+  Capybara.current_session.driver.quit
+  Capybara.session_name = "first"
+end
