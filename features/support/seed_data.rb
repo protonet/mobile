@@ -21,7 +21,8 @@ After do
     Capybara.current_driver = :selenium
     # Capybara.current_session.driver.visit("http://blanksite.com/")
     Capybara.current_session.driver.quit
-    Capybara.session_name = old_session
+    Capybara.instance_variable_set(:@session_pool, Capybara.send(:session_pool).reject {|k,v| k.match("selenium:second")})
+    Capybara.session_name = "first"
     Capybara.current_driver = old_driver
   end
   

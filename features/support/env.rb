@@ -65,6 +65,34 @@ FileUtils.rm_rf(Rails.root + "/public/sprockets/*")
 
 SystemServices.start_all
 
+Capybara::Selenium::Driver
+class Capybara::Selenium::Driver
+  def browser
+    unless @browser
+      @browser = Selenium::WebDriver.for(options[:browser], options.reject { |key,val| SPECIAL_OPTIONS.include?(key) })
+
+      main = Process.pid
+      at_exit do
+        begin
+          # Store the exit status of the test run since it goes away after calling the at_exit proc...
+          @exit_status = $!.status if $!.is_a?(SystemExit)
+          quit if Process.pid == main
+        ensure
+          exit @exit_status if @exit_status # Force exit with stored status
+        end
+      end
+    end
+    @browser
+  end
+  
+  def quit
+    @browser.quit
+  rescue
+    # Browser must have already gone
+  end
+end
+
+
 at_exit do
   # stop services
   SystemServices.stop_all unless ENV["NOSTOP"].to_i == 1
