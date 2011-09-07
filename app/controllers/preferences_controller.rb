@@ -35,6 +35,7 @@ class PreferencesController < ApplicationController
   def set_available_preferences
     @preferences = current_user.roles.include?(Role.find_by_title!('admin')) ? [
       {:url => 'profile', :name => 'your profile'},
+      {:url => 'publish_to_web', :name => 'publish to web'},
       {:url => 'node_settings', :name => 'node settings'},
       {:url => 'network_settings', :name => 'network settings'},
       {:url => 'pppoe_settings', :name => 'pppoe settings'},

@@ -1,0 +1,21 @@
+<%= form_tag system_preferences_update_path do -%>
+  <%= hidden_field_tag(:anchor, 'publish_to_web') %>
+  <h3 style="margin-bottom: 10px">Publish to WEB!</h3>
+  <p style="margin-bottom: 10px">Make your node available to the outside world with just one click.</p>
+  <ul>
+    <li style="margin-bottom: 10px">
+      <%= label_tag 'preferences[publish_to_web_name]', 'URL:' %>
+      http:// <%= text_field_tag 'preferences[publish_to_web_name]', SystemPreferences.publish_to_web_name, :disabled => SystemPublishToWeb.status, :style => "width: 140px" %>.protonet.info
+    </li>
+    <li style="margin-bottom: 10px">
+      Publish to web:
+      <strong>
+      <%= label_tag 'preferences[publish_to_web]', 'OFF' %>
+      <%= radio_button_tag 'preferences[publish_to_web]', false, !SystemPublishToWeb.status %>
+      <%= label_tag 'preferences[publish_to_web]', 'ON' %>
+      <%= radio_button_tag 'preferences[publish_to_web]', true, SystemPublishToWeb.status %>
+      </strong>
+    </li>
+  </ul>
+  <button type="submit">Update</button>
+<%- end -%>

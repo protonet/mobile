@@ -48,29 +48,6 @@
     </fieldset>
     <button type="submit">Update</button>
   <%- end -%>
-
-  <%= form_tag system_preferences_update_path do -%>
-    <%= hidden_field_tag(:anchor, 'node_settings') %>
-    <fieldset>
-      <legend>
-        <strong>Publish to WEB! BAHAMMMM!</strong>
-      </legend>
-      <ul>
-        <li>
-          <%= label_tag 'preferences[publish_to_web_name]', 'public name (under what address can your node be reached for the outside)' %>
-          <%= text_field_tag 'preferences[publish_to_web_name]', SystemPreferences.publish_to_web_name, :disabled => SystemPublishToWeb.status %>.protonet.info
-        </li>
-        <li>
-          Publish to web
-          <%= label_tag 'preferences[publish_to_web]', 'OFF' %>
-          <%= radio_button_tag 'preferences[publish_to_web]', false, !SystemPublishToWeb.status %>
-          <%= label_tag 'preferences[publish_to_web]', 'ON' %>
-          <%= radio_button_tag 'preferences[publish_to_web]', true, SystemPublishToWeb.status %>
-        </li>
-      </ul>
-    </fieldset>
-    <button type="submit">Update</button>
-  <%- end -%>
   
   <%= form_tag system_preferences_update_path do -%>
     <fieldset>

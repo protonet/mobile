@@ -3,8 +3,8 @@
 
 protonet.data.Flickr = {};
 protonet.data.Flickr.getPhoto = (function() {
-  var YQL_GET_PHOTO_INFO = "SELECT title, description FROM flickr.photos.info WHERE photo_id = '{id}'",
-      YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE photo_id = '{id}' and label IN ('Thumbnail', 'Small')",
+  var YQL_GET_PHOTO_INFO = "SELECT title, description FROM flickr.photos.info WHERE photo_id = '{id}' AND api_key = '456b1b6c99204e79a34b5333e074d7f2'",
+      YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE photo_id = '{id}' and label IN ('Thumbnail', 'Small')  AND api_key = '456b1b6c99204e79a34b5333e074d7f2'",
       callbacks,
       photoId,
       data;
@@ -58,9 +58,9 @@ protonet.data.Flickr.getPhoto = (function() {
 protonet.data.Flickr.getPhotoSet = (function() {
   var MULTI_QUERY = "USE \"http://www.datatables.org/data/query.multi.xml\" AS multiquery;" +
                     "SELECT * FROM multiquery WHERE queries=\"{queries}\"",
-      YQL_GET_PHOTOSET_INFO = "SELECT id FROM flickr.photosets.photos WHERE photoset_id = '{id}' LIMIT 10",
-      YQL_GET_PHOTO_INFO = "SELECT urls, title, description, url FROM flickr.photos.info WHERE photo_id IN ({sub_select})",
-      YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE photo_id IN ({sub_select}) AND label IN ('Square', 'Small')",
+      YQL_GET_PHOTOSET_INFO = "SELECT id FROM flickr.photosets.photos WHERE photoset_id = '{id}' AND api_key = '456b1b6c99204e79a34b5333e074d7f2' LIMIT 10",
+      YQL_GET_PHOTO_INFO = "SELECT urls, title, description, url FROM flickr.photos.info WHERE photo_id IN ({sub_select}) AND api_key = '456b1b6c99204e79a34b5333e074d7f2'",
+      YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE photo_id IN ({sub_select}) AND label IN ('Square', 'Small') AND api_key = '456b1b6c99204e79a34b5333e074d7f2'",
       callbacks,
       data = [];
   
@@ -121,9 +121,9 @@ protonet.data.Flickr.getPhotoSet = (function() {
 protonet.data.Flickr.getPhotoSearch = (function() {
   var MULTI_QUERY = "USE \"http://www.datatables.org/data/query.multi.xml\" AS multiquery;" +
                     "SELECT * FROM multiquery WHERE queries=\"{queries}\"",
-      YQL_GET_PHOTOS_INFO = "SELECT id FROM flickr.photos.search WHERE text = '{query}' AND sort = '{sort}' LIMIT 10",
-      YQL_GET_PHOTO_INFO = "SELECT urls, title, description, url FROM flickr.photos.info WHERE photo_id IN ({sub_select})",
-      YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE photo_id IN ({sub_select}) AND label IN ('Square', 'Small')",
+      YQL_GET_PHOTOS_INFO = "SELECT id FROM flickr.photos.search WHERE text = '{query}' AND sort = '{sort}' AND api_key = '456b1b6c99204e79a34b5333e074d7f2' LIMIT 10",
+      YQL_GET_PHOTO_INFO = "SELECT urls, title, description, url FROM flickr.photos.info WHERE photo_id IN ({sub_select}) AND api_key = '456b1b6c99204e79a34b5333e074d7f2'",
+      YQL_GET_PHOTO_SIZES = "SELECT source, height, width FROM flickr.photos.sizes WHERE photo_id IN ({sub_select}) AND label IN ('Square', 'Small') AND api_key = '456b1b6c99204e79a34b5333e074d7f2'",
       callbacks,
       data = [];
   
