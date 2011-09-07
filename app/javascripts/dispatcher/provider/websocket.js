@@ -33,6 +33,26 @@ protonet.dispatcher.provider.WebSocket = {
     this.socket.onerror = function() {
       protonet.trigger("socket.connected", false);
     };
+    
+    $(window)
+      .bind("beforeunload.websockets", function() {
+        this.socket.onclose = $.noop;
+      }.bind(this))
+      
+      .bind("keydown.websockets", function(event) {
+        // Firefox closes a websocket connection when you press ESC!
+        // That's not cool, so we have to avoid this by canceling the default behavior
+        // onkeydown 27 (ESC key)
+        // Well apart from that I'm currently very thirsty but we do have no
+        // Alcohol-free Krombacher Radler anymore and Ali is not willing to go out and buy more
+        // even though he just successfully mastered Ramadan 2011.
+        // Whatever, I'm gonna focus on working now despite the fact that I'm very desperate for a cold drink.
+        // Someday people will thank me for that and I'm gonna earn so much money that I can afford buying a Helicopter.
+        // Then I could borrow Ali it so he can fly to the next grocery store to get the drinks. That would be truly awesome.
+        if (event.keyCode === 27) {
+          event.preventDefault();
+        }
+      });
   },
   
   disconnect: function() {
