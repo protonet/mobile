@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RELEASE_VERSION=""
+export RELEASE_VERSION=""
 
 # the following is highly inspired and partly copied by what benhoskings is doing with his babushka bootstrapping script
 
@@ -46,6 +46,10 @@ function user_basics {
     sudo usermod -a -G admin `whoami`
     # And add the protonet user to that group
     sudo usermod -a -G admin protonet
+    sudo usermod -a -G sudo protonet
+    echo "Setup password for protonet user:"
+    sudo passwd protonet
+    # setup password for protonet
   fi
   echo "Done setting up user."
   echo ""

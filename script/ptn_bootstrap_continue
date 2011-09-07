@@ -1,7 +1,7 @@
 #!/bin/bash
 
-SERVER="releases.protonet.info"
-RELEASE_VERSION=""
+export SERVER="releases.protonet.info"
+export RELEASE_VERSION=""
 
 echo "Continuing bootstrapping..."
 
@@ -16,7 +16,7 @@ function get_babushka {
 function check_license_key() {
   echo ""
   read -p "Please enter your protonet license key: " f
-  LICENCE_KEY="`echo $f | tr -d '\n'`"
+  export LICENCE_KEY="`echo $f | tr -d '\n'`"
   if has 'curl'; then
     curl -f http://$SERVER/license/check/$LICENCE_KEY
   elif has 'wget'; then
