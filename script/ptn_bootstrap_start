@@ -67,7 +67,7 @@ function update_apt {
 function install_ruby {
   echo ""
   echo "Installing ruby..."
-  sudo apt-get install -qqy build-essential
+  sudo apt-get install -qqy build-essential libreadline5 libreadline5-dev
   if ! has 'ruby'; then
     if [ $(uname -m) == "x86_64" ]; then
       wget -O /tmp/ree.deb http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_amd64_ubuntu10.04.deb
