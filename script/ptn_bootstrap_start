@@ -70,7 +70,7 @@ function install_ruby {
       wget -O /tmp/ree.deb http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_i386_ubuntu10.04.deb
     fi
     sudo dpkg -i /tmp/ree.deb
-  elif; then
+  else
     echo "Already there... moving on."
   fi
   echo "Done installing ruby."
