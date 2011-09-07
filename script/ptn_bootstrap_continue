@@ -2,6 +2,7 @@
 
 export SERVER="releases.protonet.info"
 export RELEASE_VERSION=""
+export RELEASE_VERSION_PATH="/$RELEASE_VERSION"
 
 echo "Continuing bootstrapping..."
 
@@ -10,7 +11,7 @@ function has {
 }
 
 function get_babushka {
-  bash -c "`wget -O - $SERVER/bootstrap-babushka$RELEASE_VERSION`"
+  bash -c "`wget -O - $SERVER/bootstrap-babushka$RELEASE_VERSION_PATH`"
 }
 
 function check_license_key() {
@@ -28,9 +29,9 @@ function get_babushka_deps() {
   echo ""
   local FILE=/tmp/babushka_deps.tar.gz
   if has 'curl'; then
-    curl -f http://$SERVER/release/babushka-deps/get/$f$RELEASE_VERSION -o $FILE
+    curl -f http://$SERVER/release/babushka-deps/get/$f$RELEASE_VERSION_PATH -o $FILE
   elif has 'wget'; then
-    wget -q http://$SERVER/release/babushka-deps/get/$f$RELEASE_VERSION -O $FILE
+    wget -q http://$SERVER/release/babushka-deps/get/$f$RELEASE_VERSION_PATH -O $FILE
   fi
   cd /tmp
   tar -xzf $FILE
