@@ -242,7 +242,8 @@ module ConnectionShared
   def send_channel_subscriptions(channel_id=nil)
     @tracker.channel_users ||= {}
     filtered_channel_users = {}
-    @user.channels.verified.each do |channel|
+
+    @user.channels.verified.reload.each do |channel|
       next if channel_id && channel_id != channel.id
       @tracker.channel_users[channel.id] ||= []
       if SystemPreferences.show_only_online_users
