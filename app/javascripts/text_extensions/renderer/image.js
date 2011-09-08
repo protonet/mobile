@@ -15,7 +15,9 @@ protonet.text_extensions.render.image = function(data, preventResizing) {
   var image = $("<img>", $.extend({
     src:    protonet.media.Proxy.getImageUrl(data.image, imageSize),
     alt:    data.imageTitle,
-    title:  data.imageTitle
+    title:  data.imageTitle,
+    load:   function() { $(this).addClass("loaded"); },
+    error:  function() { $(this).hide(); }
   }, imageSize));
   
   if (!preventResizing && !data.preventHoverEffect) {

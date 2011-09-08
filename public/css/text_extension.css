@@ -94,7 +94,11 @@
 }
 
 .text-extension-results .media img {
-  background: #999;
+  background: #fff url(/img/screenshot_fetching.gif) center center no-repeat;
+}
+
+.text-extension-results .media img.loaded {
+  background: #fff;
 }
 
 .text-extension-results .media a:hover img {
@@ -212,12 +216,6 @@
 .text-extension-results.iframe .media a:active:after {
   -webkit-transform: scale(1);
   -moz-transform: scale(1);
-}
-
-/* =LINK TEXT EXTENSION
---------------------------------------------------------------------------- */
-.text-extension-results.Link .media img {
-  background: #fff url(/img/screenshot_fetching.gif) center center no-repeat;
 }
 
 /* =IMAGES TEXT EXTENSIONS
