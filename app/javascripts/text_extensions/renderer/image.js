@@ -16,8 +16,14 @@ protonet.text_extensions.render.image = function(data, preventResizing) {
     src:    protonet.media.Proxy.getImageUrl(data.image, imageSize),
     alt:    data.imageTitle,
     title:  data.imageTitle,
-    load:   function() { $(this).addClass("loaded"); },
-    error:  function() { $(this).hide(); }
+    load:   function() {
+      $(this).addClass("loaded");
+    },
+    error:  function() {
+      if (anchor.siblings().length === 0) {
+        anchor.parent().remove();
+      }
+    }
   }, imageSize));
   
   if (!preventResizing && !data.preventHoverEffect) {
