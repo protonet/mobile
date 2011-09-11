@@ -204,7 +204,8 @@ protonet.timeline.Channels = {
           return;
         }
         
-        if (this.rendezvous[partner]) {
+        var rendezvousKey = [partner, +protonet.config.user_id].sort(function(a, b) { return a>b; }).join(":");
+        if (this.rendezvous[rendezvousKey]) {
           protonet.trigger("timeline.loading_end").trigger("channel.change", this.rendezvous[partner].data.id);
         } else {
           protonet.trigger("channel.hide").trigger("timeline.loading_start");
