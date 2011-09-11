@@ -40,7 +40,8 @@ protonet.timeline.Form.extensions.AutoResizer = function(input, wrapper) {
   
   function updateHeight(useEffect) {
     cloneElement.value = inputElement.value;
-    var scrollHeight = cloneElement.scrollHeight;
+    var scrollHeight = cloneElement.scrollHeight,
+        newHeight;
     
     if (scrollHeight <= originalHeight) {
       newHeight = originalHeight;
@@ -70,7 +71,9 @@ protonet.timeline.Form.extensions.AutoResizer = function(input, wrapper) {
   }
   
   input
-    .bind("input", updateHeight)
+    .bind("input", function() {
+      setTimeout(updateHeight, 0);
+    })
     .css("overflow-y", overflowY);
   
   protonet.bind("form.submitted", function() {
