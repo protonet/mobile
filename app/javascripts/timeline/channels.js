@@ -352,7 +352,7 @@ protonet.timeline.Channels = {
     
     this.channels[channelId].destroy();
     
-    delete this.rendezvous[this.channels[channelId].partner];
+    delete this.rendezvous[this.channels[channelId].data.rendezvous];
     delete this.channels[channelId];
     
     this.data = $.map(this.channels, function(instance) {
