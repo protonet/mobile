@@ -28,6 +28,7 @@ class Listen < ActiveRecord::Base
   end
   
   def self.update_last_read_meeps(user_id, mapping)
+    return if mapping.empty?
     sql_query = "UPDATE `#{Listen.table_name}` SET last_read_meep = (CASE id\n"
     mapping.each { |listen_id, meep_id|
       sql_query += self.sanitize_sql_for_conditions(["WHEN ? THEN ?\n", listen_id, meep_id])
