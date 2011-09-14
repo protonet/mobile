@@ -204,9 +204,10 @@ protonet.timeline.Channels = {
           return;
         }
         
-        var rendezvousKey = [partner, +protonet.config.user_id].sort(function(a, b) { return a>b; }).join(":");
-        if (this.rendezvous[rendezvousKey]) {
-          protonet.trigger("timeline.loading_end").trigger("channel.change", this.rendezvous[partner].data.id);
+        var rendezvousKey = [partner, +protonet.config.user_id].sort(function(a, b) { return a>b; }).join(":"),
+            rendezvous    = this.rendezvous[rendezvousKey];
+        if (rendezvous) {
+          protonet.trigger("timeline.loading_end").trigger("channel.change", rendezvous.data.id);
         } else {
           protonet.trigger("channel.hide").trigger("timeline.loading_start");
           $.ajax("/users/" + partner + "/" + "start_rendezvous", {
