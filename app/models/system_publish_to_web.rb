@@ -15,7 +15,6 @@ class SystemPublishToWeb
       system(service_command(0, 'status'))
     end
     
-    private
     def ssh_keys
       SystemPreferences.proxy_ssh_keys ||= create_keys
     end
