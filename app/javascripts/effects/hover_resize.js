@@ -4,6 +4,8 @@
 /**
  * Resizes an image when hovering
  *
+ * TODO: this needs heavy refactoring since the code is outdated and buggy
+ *
  * @constructor
  *
  * @param {Element} element jQuery reference to the image element that should be resized

@@ -76,6 +76,7 @@ Dashboard::Application.routes.draw do
   # System
   namespace :system do
     match 'files/create_directory' => 'files#create_directory', :as => :files_create_directory
+    match 'files/delete_directory' => 'files#delete_directory', :as => :files_delete_directory
     match 'files/delete' => 'files#delete', :as => :files_delete
     resources :files
     match 'preferences/update' => 'preferences#update', :as => :preferences_update

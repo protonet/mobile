@@ -204,8 +204,10 @@ protonet.timeline.Channels = {
           return;
         }
         
-        if (this.rendezvous[partner]) {
-          protonet.trigger("timeline.loading_end").trigger("channel.change", this.rendezvous[partner].data.id);
+        var rendezvousKey = [partner, +protonet.config.user_id].sort(function(a, b) { return a>b; }).join(":"),
+            rendezvous    = this.rendezvous[rendezvousKey];
+        if (rendezvous) {
+          protonet.trigger("timeline.loading_end").trigger("channel.change", rendezvous.data.id);
         } else {
           protonet.trigger("channel.hide").trigger("timeline.loading_start");
           $.ajax("/users/" + partner + "/" + "start_rendezvous", {
@@ -215,7 +217,7 @@ protonet.timeline.Channels = {
         }
       }.bind(this));
     
-    $(window).bind("beforeunload", function() {
+    $(window).bind("unload", function() {
       var lastReadMeeps = this._collectLastReadMeeps();
       protonet.storage.set("last_read_meeps", lastReadMeeps);
       
@@ -351,7 +353,7 @@ protonet.timeline.Channels = {
     
     this.channels[channelId].destroy();
     
-    delete this.rendezvous[this.channels[channelId].partner];
+    delete this.rendezvous[this.channels[channelId].data.rendezvous];
     delete this.channels[channelId];
     
     this.data = $.map(this.channels, function(instance) {

@@ -207,8 +207,8 @@
         
         this.badgeContainer.show();
         this.meepBadge.text(this.unreadMeeps > 20 ? "20+" : this.unreadMeeps).show();
-        if (!this.meepBadge.is(":animated") && !preventEffect) {
-          this.meepBadge.effect("bounce", { times: 3, distance: 12 }, 125);
+        if (!this.badgeContainer.is(":animated") && !preventEffect) {
+          this.badgeContainer.effect("bounce", { times: 3, distance: 12 }, 125);
         }
       } else {
         this.meepBadge && this.meepBadge.hide();
