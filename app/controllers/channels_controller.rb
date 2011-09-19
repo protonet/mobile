@@ -1,6 +1,6 @@
 class ChannelsController < ApplicationController
   
-  filter_resource_access :collection => [:global]
+  filter_resource_access :collection => [:index, :global]
   
   def index
     respond_to do |format|
