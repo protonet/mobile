@@ -6,6 +6,7 @@ class WebsocketConnection < EventMachine::WebSocket::Connection
   include ConnectionShared
   
   def initialize(tracker, *args)
+    set_comm_inactivity_timeout(60)
     @tracker = tracker
     super({})
   end
