@@ -17,10 +17,18 @@ GIT
       sunspot (= 1.2.1)
 
 GIT
-  remote: https://github.com/dudemeister/ruby-ifconfig.git
-  revision: b3eb63311ceb1172cf20904213717aa12cec57d4
+  remote: git@github.com:protonet/protolink.git
+  revision: 9516c033d8a231868a1faf2ad3c704f0041fbf81
   specs:
-    ruby-ifconfig (1.2.3)
+    protolink (0.2.6)
+      crack
+      httparty (~> 0.7.4)
+
+GIT
+  remote: https://github.com/dudemeister/ruby-ifconfig.git
+  revision: 2ce2fd78bfea76c1cf8469884b1f0d2c4bc452e4
+  specs:
+    ruby-ifconfig (1.2.4)
 
 GEM
   remote: http://rubygems.org/
@@ -270,6 +278,7 @@ DEPENDENCIES
   newrelic_rpm
   paperclip (~> 2.3.8)
   pickle
+  protolink!
   rails (= 3.0.5)
   random_data (= 1.5.1)
   redcarpet

@@ -1,6 +1,6 @@
 class ChannelsController < ApplicationController
   
-  filter_resource_access
+  filter_resource_access :collection => [:global]
   
   def index
     respond_to do |format|
@@ -63,6 +63,11 @@ class ChannelsController < ApplicationController
   def search
     @channels = Channel.all(:conditions => ["description LIKE ?", "%#{params[:description]}%"])
     render :index
+  end
+  
+  def global
+    protonet = Protolink::Protonet.open("https://team.protonet.info", "nod2node", "5fdr42Ng2")
+    @channels = protonet.global_channels || []
   end
 
   def list
