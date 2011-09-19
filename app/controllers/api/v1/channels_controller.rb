@@ -4,7 +4,11 @@ class Api::V1::ChannelsController < Api::V1::MasterController
   
   # GET ALL YOUR CHANNELS
   def index
-    channels = @current_user.channels.limit(@limit)
+    channels = if params[:global]
+      Channel.where(:global => true).all
+    else
+      @current_user.channels.limit(@limit)
+    end
     render :json => channels
   end
   

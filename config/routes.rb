@@ -12,6 +12,13 @@ Dashboard::Application.routes.draw do
   
   resources :channels do
     resources :meeps
+    collection do
+      get 'global'
+    end
+    
+    member do
+      get 'details'
+    end
   end
   match 'channels/:id/destroy' => 'channels#destroy', :as => :destroy_channel
   
@@ -89,10 +96,6 @@ Dashboard::Application.routes.draw do
   
   # js
   resources :sprockets, :only => :show
-  
-  # namespace "api/v1" do
-  #   match 'meeps' => "api/meeps#index"
-  # end
   
   namespace "api" do
     namespace "v1" do
