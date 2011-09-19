@@ -68,6 +68,8 @@ class ChannelsController < ApplicationController
   def global
     protonet = Protolink::Protonet.open("https://team.protonet.info", "node2node", "5fdr42Ng2")
     @channels = protonet.global_channels || []
+    
+    render :global, :layout => false
   end
 
   def list

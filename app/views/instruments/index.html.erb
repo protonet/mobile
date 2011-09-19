@@ -35,7 +35,7 @@
       <%- end -%>
     </ul>
     <div id="manage-channels">
-      <%= link_to "Discover global channels", global_channels_path %>
+      <%= link_to "Discover global channels", global_channels_path, "data-lightbox" => "true", "data-lightbox-title" => "Discover public channels!" %>
       <%= link_to "invite", new_invitation_path, "data-lightbox" => "true", "data-lightbox-title" => "Invite your awesome buddy!" if permitted_to?(:create, :invitations) %>
       <%= link_to "add/manage channels", "/channels" if permitted_to?(:create, :listens) or permitted_to?(:create, :channels) %>
     </div>
