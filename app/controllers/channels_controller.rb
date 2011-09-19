@@ -66,7 +66,7 @@ class ChannelsController < ApplicationController
   end
   
   def global
-    protonet = Protolink::Protonet.open("https://team.protonet.info", "nod2node", "5fdr42Ng2")
+    protonet = Protolink::Protonet.open("https://team.protonet.info", "node2node", "5fdr42Ng2")
     @channels = protonet.global_channels || []
   end
 
