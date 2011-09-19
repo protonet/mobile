@@ -7,6 +7,7 @@ tmp/**/*
 .gitignore
 .bundle
 .bundle/*
+.redcar/
 doc/api
 doc/app
 *.pid
