@@ -1,5 +1,5 @@
 <ul>
 <% @channels.each do |channel| %>
-  <li><%= channel.name %></li>
+  <li><%= channel.name %> <%= link_to "Listen", listen_to_global_channel_path("1234", "333") %></li>
 <% end %>
 </ul>

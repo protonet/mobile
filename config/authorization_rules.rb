@@ -38,7 +38,7 @@ authorization do
   end
   
   role :admin do
-    has_permission_on :channels, :to => :manage
+    has_permission_on :channels, :to => [:manage, :manage_globals]
     has_permission_on :listens, :to => [:manage, :accept]
     has_permission_on :invitations, :to => :manage
     has_permission_on :authorization_rules, :to => :read
@@ -49,8 +49,8 @@ end
 privileges do
   # default privilege hierarchies to facilitate RESTful Rails apps
   privilege :manage, :includes => [:create, :read, :update, :delete, :show,
-    :request_admin_flag, :change_password, :update_user_admin_flag, :generate_new_password, :sort_channels,
-    :global]
+    :request_admin_flag, :change_password, :update_user_admin_flag, :generate_new_password, :sort_channels]
+  privilege :manage_globals, :includes => [:global]
   privilege :read, :includes => [:index, :show]
   privilege :rendezvous, :includes => [:start_rendezvous]
   privilege :update_last_read_meeps

@@ -31,6 +31,7 @@ Dashboard::Application.routes.draw do
   
   match '/more_meeps/:meep_id/:channel_id/:later/:earlier/:pos.:format' => 'search#more_meeps', :as => :more_meeps
   match 'listens/create' => 'listens#create', :as => :listen_to_channel
+  get 'listens/node/:node_id/channel/:channel_id' => 'listens#global', :as => :listen_to_global_channel
   
   # Listens
   resources :listens do

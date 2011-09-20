@@ -51,11 +51,15 @@ class ListensController < ApplicationController
     redirect_to :controller => 'channels', :action => 'index', :anchor => channel.id
   end
   
+  def global
+
+  end
+
+  
   private
   def set_listen_id
     params[:id] = params[:listen_id] if params[:listen_id]
     true
   end
-
 
 end
