@@ -2,30 +2,8 @@ require 'digest/sha1'
 
 class User < ActiveRecord::Base
   include Rabbit
-
-  NAME_REGEX    = /\A[\w\.\-\_]*\z/
-  EMAIL_REGEX   = /\A([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})\z/i
-  BAD_NAME_MSG  = "use only letters, numbers, and .-_ please."
-  BAD_EMAIL_MSG = "should look like an email address."
-
+  
   devise :database_authenticatable, :registerable, :encryptable, :rememberable, :token_authenticatable, :encryptor => :restful_authentication_sha1
-
-  with_options :unless => :skip_credentials_validation? do |v|
-    v.validates_presence_of       :login, :email
-    v.validates_uniqueness_of     :login, :email
-    v.validates_length_of         :login,    :within => 3..40
-    v.validates_format_of         :login,    :with => NAME_REGEX, :message => BAD_NAME_MSG
-    v.validates_format_of         :email,    :with => EMAIL_REGEX, :message => BAD_NAME_MSG, :allow_nil => false
-    v.validates_format_of         :name,     :with => NAME_REGEX,  :message => BAD_NAME_MSG, :allow_nil => true
-    v.validates_length_of         :name,     :maximum => 100
-  end
-  
-  with_options :unless => :skip_password_validation? do |v|
-    v.validates_presence_of     :password
-    v.validates_confirmation_of :password
-    v.validates_length_of       :password, :within => 6..20, :allow_blank => true
-  end
-  
 
   attr_accessible :login, :email, :name, :password, :password_confirmation, :avatar_url, :channels_to_subscribe, :external_profile_url
   attr_accessor :channels_to_subscribe, :invitation_token, :avatar_url
@@ -38,13 +16,12 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many  :roles
   has_attached_file :avatar, :default_url => '/img/user_picture.png'
   
-  scope :registered, :conditions => {:temporary_identifier => nil}
-  scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"
   
+  scope :registered, :conditions => {:temporary_identifier => nil}
+ 
   before_validation :download_remote_avatar, :if => :avatar_url_provided?
   after_validation :assign_roles_and_channels, :on => :create
   
-  after_create :create_ldap_user if configatron.ldap.active == true
   after_create :send_create_notification, :unless => :anonymous?
   after_create :listen_to_channels, :unless => :anonymous?
   after_create :mark_invitation_as_accepted, :if => :invitation_token
@@ -69,22 +46,6 @@ class User < ActiveRecord::Base
       return !!self.class.ldap_authenticate(login, password)
     else
       super
-    end
-  end
-
-  def self.ldap_authenticate(login, password)
-    # try to authenticate against the LDAP server
-    ldap = Net::LDAP.new
-    ldap.host = SystemPreferences.remote_ldap_host
-    ldap.port = 636
-    ldap.encryption :simple_tls # also required to tell Net:LDAP that we want SSL
-    ldap.base = SystemPreferences.remote_ldap_base
-    ldap.auth "#{login}@#{SystemPreferences.remote_ldap_domain}","#{password}"
-    if ldap.bind # will return false if authentication is NOT successful
-      find_by_login(login.downcase) || begin
-        generated_password = ActiveSupport::SecureRandom.base64(10)
-        User.create({:login => login, :email => "#{login}@#{SystemPreferences.remote_ldap_domain}", :password => generated_password, :password_confirmation => generated_password})
-      end
     end
   end
   
@@ -124,18 +85,6 @@ class User < ActiveRecord::Base
     token && token == read_attribute(:communication_token) && communication_token_expires_at > DateTime.now
   end
 
-  # create a user with a session id
-  def self.stranger(identifier)
-    u = find_or_create_by_temporary_identifier(identifier)  do |u|
-      u.name = "stranger_#{identifier[0,10]}"
-    end
-    u
-  end
-
-  def self.all_strangers
-    all(:conditions => "temporary_identifier IS NOT NULL")
-  end
-  
   def send_javascript(javascript)
     publish "users", id, { :eval => javascript }
   end
@@ -148,16 +97,8 @@ class User < ActiveRecord::Base
     owned_channels.each {|t| t.update_attribute(:owner_id, -1)}
   end
 
-  def self.delete_strangers_older_than_two_days!
-    destroy_all(["temporary_identifier IS NOT NULL AND updated_at < ?", Time.now - 2.days])
-  end
-  
   def anonymous?
     id == -1
-  end
-  
-  def stranger?
-    !temporary_identifier.blank?
   end
 
   def login=(value)
@@ -179,12 +120,20 @@ class User < ActiveRecord::Base
   # skip validation if the user is a logged out (stranger) user
   def skip_credentials_validation?
     stranger?
+  end  
+  
+  def avatar_url_provided?
+    !avatar_url.blank?
   end
+  
+  def download_remote_avatar   
+    t = Tempfile.new(ActiveSupport::SecureRandom.hex(4))
+    t.write(open(avatar_url).read)
+    t.flush      
 
-  def create_ldap_user
-    LdapUser.create_for_user(self) unless stranger?
+    self.avatar = t
   end
-
+  
   def send_create_notification
     return if stranger?
     
@@ -242,23 +191,9 @@ class User < ActiveRecord::Base
   end
   
   def can_be_edited_by?(user)
-    self.id != 0 && !user.stranger? && (user.admin? || user.id == self.id)
+    self.id != 0 && self.type != "FacebookUser" &&!user.stranger? && (user.admin? || user.id == self.id)
   end
   
-  def assign_roles_and_channels
-    if invitation_token
-      if invitation = Invitation.unaccepted.find_by_token(invitation_token)
-        self.channels_to_subscribe = Channel.find(invitation.channel_ids).to_a
-        self.roles = [Role.find_by_title('invitee')]
-      else
-        errors.add_to_base("The invitation token is invalid.")
-        return false
-      end
-    else
-      self.channels_to_subscribe ||= [Channel.home]
-      self.roles = [Role.find_by_title(stranger? ? SystemPreferences.default_stranger_user_group : SystemPreferences.default_registered_user_group)]
-    end
-  end
 
   def mark_invitation_as_accepted
     invitation = Invitation.unaccepted.find_by_token(invitation_token)
@@ -275,19 +210,40 @@ class User < ActiveRecord::Base
     update_attribute(:authentication_token, nil)
   end
   
-  def avatar_url_provided?
-    !avatar_url.blank?
+  # create a user with a session id
+  def self.stranger(identifier)
+    u = find_or_create_by_temporary_identifier(identifier)  do |u|
+      u.name = "stranger_#{identifier[0,10]}"
+    end
+    u
   end
   
-  def download_remote_avatar
-    # open a tempfile using the last 14 chars of the filename
-    t = Tempfile.new(avatar_url.parameterize.slice(-14, 14))
-    t.write(open(avatar_url).read)
-    t.flush
-    self.avatar = t
+  def self.all_strangers
+    all(:conditions => "temporary_identifier IS NOT NULL")
+  end
+  
+  def self.delete_strangers_older_than_two_days!
+    destroy_all(["temporary_identifier IS NOT NULL AND updated_at < ?", Time.now - 2.days])
+  end
+  
+  def stranger?
+    !temporary_identifier.blank?
+  end
+  
+  def assign_roles_and_channels
+    if invitation_token
+      if invitation = Invitation.unaccepted.find_by_token(invitation_token)
+        self.channels_to_subscribe = Channel.find(invitation.channel_ids).to_a
+        self.roles = [Role.find_by_title('invitee')]
+      else
+        errors.add_to_base("The invitation token is invalid.")
+        return false
+      end
+    else
+      self.channels_to_subscribe ||= [Channel.home]
+      self.roles = [Role.find_by_title(stranger? ? SystemPreferences.default_stranger_user_group : SystemPreferences.default_registered_user_group)]
+    end
   end
   
 end
 
-# devise ldap monkey patch
-require "#{Rails.root}/lib/devise_ext"

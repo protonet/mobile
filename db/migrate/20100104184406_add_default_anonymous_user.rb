@@ -1,6 +1,6 @@
 class AddDefaultAnonymousUser < ActiveRecord::Migration
   def self.up
-    u = User.new(:id => 0, :name => 'Anonymous', :login => 'Anonymous')
+    u = LocalUser.new(:id => 0, :name => 'Anonymous', :login => 'Anonymous')
     u.id = 0 
     u.save_with_validation(false)
   end

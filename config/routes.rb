@@ -60,6 +60,7 @@ Dashboard::Application.routes.draw do
   
   # Users
   devise_for :users, :controllers => { :registrations => "registrations" }
+  devise_for :facebook_user, :controllers => { :omniauth_callbacks => "omniauth_callbacks" }
   match 'users/update' => 'users#update', :as => :user_update
   match 'users/:id/start_rendezvous' => 'users#start_rendezvous', :as => :start_rendezvous, :via => [:post]
   match 'users/update_last_read_meeps' => 'users#update_last_read_meeps', :as => :update_last_read_meeps, :via => [:put]

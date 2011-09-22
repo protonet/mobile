@@ -10,7 +10,6 @@ class RegistrationsController < Devise::RegistrationsController
   # POST /resource
   def create
     build_resource
-    
     # handle invitations
     resource.invitation_token = params[:invitation_token]
 
@@ -36,6 +35,12 @@ class RegistrationsController < Devise::RegistrationsController
       flash[:error] = "The invitation token is invalid." if params[:invitation_token]
       redirect_to new_user_session_path and return 
     end
+  end
+  
+  def build_resource(hash=nil)
+    hash ||= params[resource_name] || {}
+    custom_user_class = LocalUser
+    self.resource = custom_user_class.new_with_session(hash, session)
   end
   
   def is_devise_resource?

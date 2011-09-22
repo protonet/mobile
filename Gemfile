@@ -5,6 +5,7 @@ gem "rails", "3.0.5"
 gem "bundler", "1.0.11"
 gem "mysql"
 gem "devise", "1.2.1" # if you update this please check the monkeypatches in user.rb (methods and lines after declaration), lib/devise_ext.rb
+gem 'omniauth', :git => 'git://github.com/intridea/omniauth.git' , :tag => 'v0.3.0.rc3'
 gem "memcache-client"
 gem "httparty", "0.7.4"
 gem "configatron", "2.6.3"

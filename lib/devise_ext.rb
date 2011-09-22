@@ -17,7 +17,7 @@ module Devise
           if ldap.bind # will return false if authentication is NOT successful
             User.find_by_login(login.downcase) || begin
               generated_password = ActiveSupport::SecureRandom.base64(10)
-              User.create({:login => login, :email => "#{login}@#{SystemPreferences.remote_ldap_domain}", :password => generated_password, :password_confirmation => generated_password})
+              LocalUser.create({:login => login, :email => "#{login}@#{SystemPreferences.remote_ldap_domain}", :password => generated_password, :password_confirmation => generated_password})
             end
           end
         end

@@ -17,7 +17,7 @@ class Api::V1::UsersController < Api::V1::MasterController
     return head :unprocessable_entity unless @current_user.admin?
     return head :unprocessable_entity if params[:login].blank? || params[:email].blank?
     
-    user = User.new(
+    user = LocalUser.new(
       :login => params[:login],
       :name => params[:name],
       :password => (params[:password].blank? ? ActiveSupport::SecureRandom.base64(10) : params[:password]),
