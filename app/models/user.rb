@@ -29,7 +29,7 @@ class User < ActiveRecord::Base
   after_destroy :move_meeps_to_anonymous
   after_destroy :move_owned_channels_to_anonymous
   
-  validates_uniqueness_of :email
+  validates_uniqueness_of :email, :if => lambda {|u| !u.stranger?}
 
   def self.anonymous
     begin
@@ -220,6 +220,7 @@ class User < ActiveRecord::Base
   def self.stranger(identifier)
     u = find_or_create_by_temporary_identifier(identifier)  do |u|
       u.name = "stranger_#{identifier[0,10]}"
+      u.email = "#{u.name}@local.stranger"
     end
     u
   end
