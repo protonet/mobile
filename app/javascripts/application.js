@@ -26,4 +26,19 @@ $(function() {
   protonet.user.initialize();
   protonet.ui.FlashMessage.initialize();
   protonet.ui.Logo.initialize();
+  
+  var oauthMapping = {
+    facebook: "/auth/facebook/callback",
+    twitter:  "/auth/twitter/callback"
+  };
+  $(window).bind("message", function(event) {
+    event = event.originalEvent;
+    var payload = JSON.parse(event.data);
+    if (event.origin === "http://localhost:3001" && oauthMapping[payload.provider]) {
+     var $form = $("<form>", { method: "post", action: oauthMapping[payload.provider] }).hide().appendTo("body");
+      $("<input>", { name: "json", val: event.data }).appendTo($form);
+      $("<input>", { name: "authenticity_token", val: protonet.config.authenticity_token }).appendTo($form);
+      $form.submit();
+    }
+  });
 });

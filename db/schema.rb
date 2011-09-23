@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110921120151) do
+ActiveRecord::Schema.define(:version => 20110923125852) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -161,6 +161,7 @@ ActiveRecord::Schema.define(:version => 20110921120151) do
     t.string   "external_profile_url"
     t.string   "facebook_id"
     t.string   "type"
+    t.string   "twitter_id"
   end
 
   add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true

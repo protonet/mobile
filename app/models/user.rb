@@ -28,6 +28,8 @@ class User < ActiveRecord::Base
   
   after_destroy :move_meeps_to_anonymous
   after_destroy :move_owned_channels_to_anonymous
+  
+  validates_uniqueness_of :email
 
   def self.anonymous
     begin
@@ -208,6 +210,10 @@ class User < ActiveRecord::Base
   
   def after_token_authentication
     update_attribute(:authentication_token, nil)
+  end
+  
+  def self.generate_valid_name(name)
+    name.gsub(/[^0-9A-Za-z]/, '.')
   end
   
   # create a user with a session id

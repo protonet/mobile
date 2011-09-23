@@ -38,8 +38,9 @@
       </div>
       <div>
         <button type="submit" name="join">sign up</button>
+        <%= render :partial => 'instruments/facebook_login' %>
+        <%= render :partial => 'instruments/twitter_login' %>         
       </div>
-      <%= link_to "Facebook", facebook_user_omniauth_authorize_path(:facebook) %>
     </fieldset>
   <%- end %>
 <%- end %>

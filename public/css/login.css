@@ -85,4 +85,10 @@ header.login {
   width: 280px;
 }
 
+.external-login {
+  display: inline-block;
+  vertical-align: middle;
+  margin-bottom: -3px;
+}
+
 /* ================================================================ LOGIN = */

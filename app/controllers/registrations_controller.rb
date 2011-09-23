@@ -13,7 +13,6 @@ class RegistrationsController < Devise::RegistrationsController
     # handle invitations
     resource.invitation_token = params[:invitation_token]
 
-
     if resource.save
       if resource.active_for_authentication?
         set_flash_message :notice, :signed_up
