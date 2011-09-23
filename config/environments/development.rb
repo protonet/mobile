@@ -33,5 +33,5 @@ Dashboard::Application.configure do
   configatron.avoid_caching = true
   configatron.nodejs.port = 8124
   
-  configatron.oauth_host = "http://localhost:3001/oauth"
+  configatron.oauth_host = "http://oauth.protonet.info"
 end
