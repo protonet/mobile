@@ -42,5 +42,8 @@ Dashboard::Application.configure do
   configatron.websocket.port = 5006
   configatron.xhr_streaming.port = 8001
   configatron.nodejs.port = 8125
+  
+  configatron.oauth_host = "http://oauth.protonet.info"
+  
   configatron.amqp.vhost  = "/test"
 end

@@ -40,5 +40,7 @@ Dashboard::Application.configure do
   configatron.js_dispatching_active = true
   configatron.messaging_bus_active  = true
   
+  configatron.oauth_host = "http://oauth.protonet.info"
+  
   configatron.amqp.vhost  = "/test"
 end
