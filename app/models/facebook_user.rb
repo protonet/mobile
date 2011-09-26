@@ -16,9 +16,8 @@ class FacebookUser < User
         user
       else # Create a user with a stub password.
         login = generate_valid_name(data["name"])
-        avatar_url = HTTParty.get("https://graph.facebook.com/#{data["id"]}/picture")
 
-        FacebookUser.create(:email => data["email"], :password => Devise.friendly_token[0,20], 
+        FacebookUser.create(:email => data["email"], :password => Devise.friendly_token[0,20],
           :login => login, :name => data["name"], :facebook_id => data["id"], 
           :avatar_url => "https://graph.facebook.com/#{data['id']}/picture" )
       end
