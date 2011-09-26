@@ -217,7 +217,7 @@ protonet.timeline.Channels = {
         }
       }.bind(this));
     
-    $(window).bind("unload", function() {
+    $(window).bind("beforeunload", function() {
       var lastReadMeeps = this._collectLastReadMeeps();
       protonet.storage.set("last_read_meeps", lastReadMeeps);
       
