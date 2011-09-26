@@ -14,7 +14,7 @@ protonet.text_extensions.provider.YouTube = {
    */
   REG_EXP: /(youtube\.com\/watch(\?|#\!).*?v\=|youtu\.be\/)([\w_-]*)/i,
   
-  VIDEO_TEMPLATE: location.protocol + "//www.youtube.com/embed/{id}?playerapiid=ytplayer&egm=0&hd=1&showinfo=0&rel=0&autoplay=1",
+  VIDEO_TEMPLATE: location.protocol + "//www.youtube.com/embed/{id}?playerapiid=ytplayer&egm=0&hd=1&showinfo=0&rel=0&autoplay=1&wmode=opaque",
   
   loadData: function(url, onSuccess, onFailure) {
     var videoId = url.match(this.REG_EXP)[3];
