@@ -24,9 +24,7 @@ class LocalUser < User
     v.validates_length_of       :password, :within => 6..20, :allow_blank => true
   end
   
-  scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"
-  
-   after_create :create_ldap_user if configatron.ldap.active == true
+  after_create :create_ldap_user if configatron.ldap.active == true
   
   def create_ldap_user
     LdapUser.create_for_user(self) unless stranger?

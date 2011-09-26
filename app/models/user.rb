@@ -18,7 +18,8 @@ class User < ActiveRecord::Base
   
   
   scope :registered, :conditions => {:temporary_identifier => nil}
- 
+  scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"
+  
   before_validation :download_remote_avatar, :if => :avatar_url_provided?
   after_validation :assign_roles_and_channels, :on => :create
   
