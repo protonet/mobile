@@ -57,6 +57,10 @@ module ApplicationHelper
   def xhr_streaming_url
     request.server_software != 'apache' ? "#{request.protocol}#{server_name}:#{configatron.xhr_streaming.port}" : "#{request.protocol}#{server_name}/xhr"
   end
+  
+  def include_stylesheet_if_exists(stylesheet)
+    stylesheet_tag(stylesheet, :cache => (configatron.avoid_caching != false)) if File.exists?(File.join(Rails.root, 'public', stylesheet))
+  end
 end
 
 

@@ -193,7 +193,6 @@ $.behaviors({
       },
       success: function(html) {
         $tabContainer.html(html).hide().fadeIn("fast");
-        $(".modal-window-scroll-content").scrollTop(0);
       }
     });
     event.preventDefault();

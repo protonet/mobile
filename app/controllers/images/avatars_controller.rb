@@ -7,7 +7,7 @@ class Images::AvatarsController < ApplicationController
     user = User.find(params[:user_id])
     
     if current_user.can_edit?(user) && (user.avatar = avatar) && user.save
-      render :text => { :success => true }.to_json
+      render :text => { :success => true, :avatar => user.avatar.url }.to_json
       publish "system", "users", {
         :trigger    => "user.changed_avatar",
         :user_id    => user.id,

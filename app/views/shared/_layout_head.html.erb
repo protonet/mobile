@@ -45,12 +45,12 @@
   <%- if custom_stylesheet -%>
     <%- if SystemPreferences.custom_css_type == "append" -%>
       <%= stylesheet_link_tag(stylesheets, :cache => (configatron.avoid_caching != false), :concat => true) %>
-      <%= stylesheet_tag("/css/pages/#{controller_name}", :cache => (configatron.avoid_caching != false)) if File.exists?(File.join(Rails.root, 'public/css/pages', "#{controller_name}.css")) %>
+      <%= include_stylesheet_if_exists("/css/pages/#{controller_name}.css") %>
     <%- end -%>
     <%= raw custom_stylesheet %>
   <%- else -%>
     <%= stylesheet_link_tag(stylesheets, :cache => (configatron.avoid_caching != false)) %>
-    <%= stylesheet_tag("/css/pages/#{controller_name}", :cache => (configatron.avoid_caching != false)) if File.exists?(File.join(Rails.root, 'public/css/pages', "#{controller_name}.css")) %>
+    <%= include_stylesheet_if_exists("/css/pages/#{controller_name}.css") %>
   <%- end -%>
   <%= csrf_meta_tag %>
   <%# Ensure HTML5 support in IE < 9 %>

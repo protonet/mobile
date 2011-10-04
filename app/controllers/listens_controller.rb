@@ -30,7 +30,7 @@ class ListensController < ApplicationController
   def destroy
     listen = Listen.find(params[:id])
     channel = listen.channel
-    if listen.user == current_user || channel.owner == current_user
+    if listen.user == current_user || channel.owner == current_user || current_user.admin?
       listen.user.unsubscribe(channel)
       if listen.user == current_user
         flash[:notice] = "You stopped listening to @#{channel.name}"
@@ -38,7 +38,7 @@ class ListensController < ApplicationController
         flash[:notice] = "@#{listen.user.display_name} stopped listening to @#{channel.name}"
       end
     else
-      flash[:notice] = "You have no rights to this operation"
+      flash[:error] = "You have no rights to this operation"
     end
     redirect_to :controller => 'channels', :action => 'show', :id => channel.id
   end

@@ -22,6 +22,10 @@ class Network < ActiveRecord::Base
     local.update_attributes({:name => SystemPreferences.node_name, :description => SystemPreferences.node_description, :key => SystemPreferences.node_key, :supernode => SystemPreferences.node_supernode, :uuid => SystemPreferences.node_uuid})
   end
   
+  def self.with_channels
+    all.select {|n| n.channels.real.size > 0 }
+  end
+  
   def local?
     id == 1
   end

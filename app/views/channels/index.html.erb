@@ -3,8 +3,8 @@
   <div class="modal-window-scroll-content">
     <aside>
       <ul>
-        <%- Network.all.each do |n| %>
-          <%- if Network.all.size > 1%>
+        <%- Network.with_channels.each do |n| %>
+          <%- if Network.with_channels.size > 1 %>
             <li class="network-separator">
               Network: <strong><%= n.name %></strong>
               <p><%= n.channels.real.size %> channels</p>
@@ -13,11 +13,7 @@
           <%- n.channels.real.each do |c| -%>
             <li class="<%= 'selected' if @selected_channel && c.id == @selected_channel.id %>">
               <a href="/channels/<%= c.id %>" data-tab="channels">
-                <strong>@<%= c.name %></strong> <%= channel_icons(c) %>
-                <%- c.random_users(5).each do |u| %>
-                  <%= avatar(u, :width => 20, :height => 20, 'data-hover-hint' => 'top', :title => u.display_name) %>
-                <%- end %>
-                <%= raw("<i>+ #{c.users.registered.size - 5} more</i>") if c.users.registered.size > 5 %>
+                <strong>@<%= c.name %></strong> (<%= pluralize(c.users.registered.size, "user") %>)
               </a>
             </li>
           <%- end -%>

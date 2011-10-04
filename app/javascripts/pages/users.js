@@ -2,6 +2,8 @@ $(function() {
   var $subpage          = $(".users-page"),
       $meepContainer    = $subpage.find("output[data-user-id]"),
       $loadingIndicator = $meepContainer.next(".progress"),
+      $fileInput        = $subpage.find("[type=file]"),
+      $avatarForm       = $fileInput.parents("form"),
       $meepList         = $("<ul>", { "class": "meeps" });
   
   $meepContainer.bind("inview", function() {
@@ -34,40 +36,51 @@ $(function() {
     });
   });
   
-  $subpage.find("[type=file]").bind({
-    change: function() {
-      var $form           = $(this.form),
-          $iframe         = $("<iframe>", { width: 1, height: 1, name: "upload_iframe" }).hide().insertAfter($form),
-          $avatarElement  = $subpage.find(".user-avatar");
-        
-      function reset() {
-        setTimeout(function() { $iframe.remove(); }, 0);
-        setTimeout(function() { $avatarElement.removeClass("loading"); }, 1000);
-        $form.trigger("reset").find("button").removeAttr("disabled").removeClass("loading");
-      }
-      
-      $iframe.load(function() {
-        try {
-          var body = $iframe[0].contentWindow.document.documentElement,
-              response = JSON.parse($.trim(body.innerText || body.textContent));
-        } catch(e) {}
-        
-        if (!response || !response.success) {
-          protonet.trigger("flash_message.error", (response && response.error) || protonet.t("AVATAR_UPLOAD_ERROR"));
+  $avatarForm.bind("submit", function() {
+    var $iframe = $("<iframe>", { width: 1, height: 1, name: "upload_iframe" }).hide().insertAfter($avatarForm),
+        $avatar = $subpage.find(".user-avatar");
+    
+    function reset() {
+      setTimeout(function() { $iframe.remove(); }, 0);
+      setTimeout(function() { $avatar.removeClass("loading"); }, 1000);
+      $avatarForm.trigger("reset").find("button").removeAttr("disabled").removeClass("loading");
+    }
+    
+    $iframe.load(function() {
+      try {
+        var body     = $iframe[0].contentWindow.document.documentElement,
+            response = JSON.parse($.trim(body.innerText || body.textContent));
+      } catch(e) {}
+
+      if (!response || !response.success) {
+        protonet.trigger("flash_message.error", (response && response.error) || protonet.t("AVATAR_UPLOAD_ERROR"));
+      } else {
+        // success
+        if (!protonet.dispatcher.connected) {
+          protonet.trigger("user.changed_avatar", {
+            user_id: protonet.config.user_id,
+            avatar:  response.avatar
+          });
         }
-        reset();
-      });
-      
-      $avatarElement.addClass("loading");
-      $form.attr("target", "upload_iframe").submit().find("button").addClass("loading").attr("disabled", "disabled");
+      }
+      reset();
+    });
+    
+    $avatar.addClass("loading");
+    $avatarForm.attr("target", "upload_iframe").find("button").addClass("loading").attr("disabled", "disabled");
+  });
+  
+  $fileInput.bind({
+    change: function() {
+      $avatarForm.submit();
     },
     
     mousedown: function() {
-      $(this.form).find("button").addClass("active");
+      $avatarForm.find("button").addClass("active");
     },
     
     mouseup: function() {
-      $(this.form).find("button").removeClass("active");
+      $avatarForm.find("button").removeClass("active");
     }
   });
 });

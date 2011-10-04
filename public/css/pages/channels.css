@@ -15,12 +15,6 @@
   background: transparent url(/img/spr_channel_icons.png) no-repeat 0 0;
 }
 
-aside .channel-icon-list {
-  position: absolute;
-  right: 7px;
-  top: 9px;
-}
-
 aside .channel-icon-list li {
   border-bottom: 0;
   position: static;

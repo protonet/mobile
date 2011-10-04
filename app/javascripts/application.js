@@ -14,6 +14,7 @@
 //= require "events/emitter.js"
 //= require "storage/storage.js"
 //= require "user/user.js"
+//= require "dispatcher/dispatcher.js"
 //= require "i18n/i18n.js"
 //= require "utils/history.js"
 //= require "behaviors/main.js"

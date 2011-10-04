@@ -112,6 +112,7 @@
 }
 
 .subpage aside li {
+  word-wrap: break-word;
   position: relative;
   border-bottom: 1px solid #999;
 }
@@ -168,7 +169,6 @@
 }
 
 .subpage aside strong {
-  display: block;
   font-size: 14px;
 }
 
@@ -321,10 +321,6 @@ a.loading {
 
 
 
-
-.icon-list {
-  display: inline-block;
-}
 
 .icon-list li {
   width: 14px;
