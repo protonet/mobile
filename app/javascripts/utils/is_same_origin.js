@@ -4,7 +4,6 @@ protonet.utils.isSameOrigin = (function() {
   return function(url) {
     anchor.href = url;
     return  anchor.protocol === location.protocol &&
-            anchor.hostname === location.hostname &&
-            anchor.port     === location.port;
+            anchor.host     === location.host;
   };
 })();
