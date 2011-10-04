@@ -59,7 +59,7 @@ module ApplicationHelper
   end
   
   def include_stylesheet_if_exists(stylesheet)
-    stylesheet_tag(stylesheet, :cache => (configatron.avoid_caching != false)) if File.exists?(File.join(Rails.root, 'public', stylesheet))
+    stylesheet_tag(stylesheet, {}) if File.exists?(File.join(Rails.root, 'public', stylesheet))
   end
 end
 

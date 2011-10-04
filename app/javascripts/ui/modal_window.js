@@ -24,7 +24,7 @@ protonet.ui.ModalWindow = (function() {
         "unknown":  "xhr"
       },
       // Needed to preload stylesheets before rendering the corresponding HTML
-      regExpStylesheets             = /<link[^>]?\s+href=(?:\"|')([^>"]+?\.css(?:\?.+?)?)(?:\"|')[^>]+>/gi,
+      regExpStylesheets             = /<link.*\shref=(?:\"|')([^>"]+?\.css(?:\?.+?)?)(?:\"|')[^>]+>/gi,
       // Cached references
       $body                         = $(document.body),
       $document                     = $(document),
