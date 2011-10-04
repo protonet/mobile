@@ -31,7 +31,6 @@
 //---------------------------- INITIALIZE APPLICATION ----------------------------
 
 $(function() {
-  protonet.dispatcher.initialize();
   protonet.user.initialize();
   protonet.ui.FlashMessage.initialize();
   protonet.ui.Logo.initialize();

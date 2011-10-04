@@ -9,6 +9,7 @@
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
 $(function() {
+  protonet.dispatcher.initialize();
   protonet.timeline.initialize();
   
   // Init widgets
