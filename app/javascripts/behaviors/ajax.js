@@ -132,7 +132,8 @@ $.behaviors({
   
   ".subpage:ajax:complete": function(element, event, xhr) {
     $(event.target).removeClass("loading").find("input, textarea, select, button").prop("disabled", false);
-    
+    console.log(xhr);
+    console.log(arguments);
     $.each({
       "X-Error-Message":  "flash_message.error",
       "X-Notice-Message": "flash_message.notice",

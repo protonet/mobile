@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
   
   # needed because js can't figure out at which url an ajax request ended (redirects, ...) 
   def set_request_url_to_header
-    response.headers['X-URL'] = request.url
+    response.headers['X-URL'] = request.url.sub(/_xhr_redirect=1&?/, '')
   end
   
   def guest_login

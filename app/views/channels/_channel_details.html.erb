@@ -9,7 +9,7 @@
   <ul class="list">
     <%- channel.listens.all(:include => :user, :order => 'verified ASC', :limit => configatron.max_list_size).each do |listen| %>
       <%- if !listen.user.stranger? && user = listen.user %>
-        <li data-cucumber-user-id="<%= listen.user.id %>" tabindex="-1">
+        <li data-cucumber="<%= listen.user.id %>" tabindex="-1">
           <%= avatar(user, :width => 20, :height => 20, :lazy_load => true) %>
           <%= user.display_name %>
           <%= raw("<strong>(owner)</strong>") if channel.owned_by?(listen.user) %>
@@ -18,7 +18,7 @@
           <%- if channel.owned_by?(current_user) || current_user.admin? %>
             <%= link_to('remove', listen_path(listen), :method => :delete, :remote => true, :class => "action") %>
             <%- unless listen.verified? %>
-              <%= link_to('verify', listen_accept_path(listen), :method => :post, :remote => true, :class => "action") %>
+              <%= link_to('verify', listen_accept_path(listen), :method => :post, :remote => true, :class => "action", 'data-cucumber' => 'verify') %>
             <%- end %>
           <%- end %>
         </li>
@@ -55,7 +55,7 @@
   
   <h3>Channel settings <a data-hover-hint="top" title="Only visible to admins and the channel owner" class="hint">(?)</a></h3>
 
-  <%= form_for channel, :url => { :action => 'update' }, :html => { 'data-ajax-auto-submit' => '1' } do |f| -%>
+  <%= form_for channel, :html => { 'data-ajax-auto-submit' => '1' } do |f| -%>
     <%= f.hidden_field :id, { :value => channel.id } %>
     <label class="checkbox-row" for="channel_public">
       <%= f.check_box :public %>

@@ -75,22 +75,22 @@ Given /^I log out$/ do
   visit "/users/sign_out"
 end
 
-Given /^I select the channel "([^"]*)" in the channel list$/ do |linktext|
-  find(:css, "#channels-page a", :text => linktext, :visible => true).click
+Given /^I select the channel "([^\"]*)" in the channel list$/ do |linktext|
+  find(:css, "a[data-tab='channels'] strong", :text => "@#{linktext}", :visible => true).click
 end
 
 Then /^I should see "([^\"]*)" in the channel list$/ do |channel_name|
-  find(:css, '.channel-list li', :text => channel_name, :visible => true)
+  find(:css, 'a[data-tab="channels"] strong', :text => "@#{channel_name}", :visible => true)
 end
 
 Then /^I should see "([^\"]*)" in the channel details pane$/ do |channel_name|
-  find(:css, '#channels-details h3', :text => channel_name, :visible => true)
+  find(:css, 'output[data-tab="channels"] h2', :text => "@#{channel_name}", :visible => true)
 end
 
 Then /^I verify the user "([^"]*)" for the channel "([^"]*)"$/ do |user_name, channel|
   Given "I select the channel \"#{channel}\" in the channel list"
   user = User.find_by_login(user_name)
-  find(:css, "#channel-subscribers li[data-cucumber-user-id='#{user.id}'] a.channel-verify-listener").click
+  find(:css, "li[data-cucumber='#{user.id}'] a[data-cucumber='verify']").click
 end
 
 Then /^I click verify the user "([^\"]*)" in users list$/ do |user|

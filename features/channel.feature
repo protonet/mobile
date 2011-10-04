@@ -7,6 +7,7 @@ Feature: Using the protonet channel management
     And I am logged in as "dudemeister"
     And I go to the channels page
       Then I should see "home" in the channel list
+      And I select the channel "home" in the channel list
       And I should see "home" in the channel details pane
 
   @wip
@@ -29,12 +30,10 @@ Feature: Using the protonet channel management
       And go unauthenticated to the start page
       And I am logged in as "dudemeister"
       And I go to the channels page
-      And follow "create a channel"
+      And follow "Create new"
       And I fill in "channel_name" with "privatechannel"
       And press "Create"
-      # within "#channels-page"
       And I uncheck "channel_public"
-      And press "Save"
     #batman starts listening private channel
         And I am using the second browser
         And go unauthenticated to the start page
@@ -43,7 +42,7 @@ Feature: Using the protonet channel management
         And I select the channel "privatechannel" in the channel list
         # need to wait for appearance of listen in chanels-details
         And wait 1 seconds 
-        Then I click on the element "#channels-details .listen p"
+        Then I press "Listen"
         Then I go to the start page
         Then I should not see "Privatechannel" in the channel selector
     #dudemeister verifies batman
