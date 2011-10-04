@@ -6,7 +6,7 @@ Background:
   
   Scenario: Only profile settings if you're no admin
     And I go to the preferences page
-    Then I should only see my profile settings
+    Then I should see "No preferences available. Maybe you don't have admin rights?"
   
   Scenario: all settings if you're an admin
     Given "dudemeister" is an admin

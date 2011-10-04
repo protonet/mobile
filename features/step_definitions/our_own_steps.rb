@@ -226,12 +226,8 @@ When /^I accept the invitation with the token "([^\"]*)"$/ do |token|
   visit accept_invitation_path(:invitation_token => token)
 end
 
-Then /^I should only see my profile settings$/ do
-  all(:css, "#preferences-page li").size.should == 1
-end
-
 Then /^I should see all settings$/ do
-  all(:css, "#preferences-page li").size.should == 11
+  all(:css, "a[data-tab='preferences']").size.should == 8
 end
 
 Given /^I start a rendezvous chat with "([^"]*)"$/ do |username|
