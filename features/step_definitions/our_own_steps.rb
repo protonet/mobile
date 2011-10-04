@@ -104,7 +104,7 @@ Then /^I should not see "([^\"]*)" in the channel selector$/ do |channel_name|
   all(:css, '#channels li', :text => channel_name, :visible => true).empty?.should == true
 end
 
-Then /^I should see "([^"]*)" in the channel selector$/ do |channel_name|
+Then /^I should see "([^\"]*)" in the channel selector$/ do |channel_name|
   find(:css, '#channels li', :text => channel_name, :visible => true)
 end
 
@@ -175,7 +175,7 @@ Then /^(?:|I )should see an image with the url "([^\"]*)"(?: within "([^\"]*)")?
   end
 end
 
-Then /^I should see the profile image "([^"]*)" in my profile details$/ do |image_name|
+Then /^I should see the profile image "([^\"]*)" in my profile details$/ do |image_name|
   src = {
     "user_picture_r2.png" => "user_picture_r2.png", #default
     "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
@@ -184,7 +184,7 @@ Then /^I should see the profile image "([^"]*)" in my profile details$/ do |imag
   find(:css, image_selector)
 end
 
-Then /^I should see the profile image "([^"]*)" in the top right navi$/ do |image_name|
+Then /^I should see the profile image "([^\"]*)" in the top right navi$/ do |image_name|
   src = {
     "user_picture_r2.png" => "user_picture_r2.png", #default
     "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
@@ -217,30 +217,33 @@ Then /^I should see all settings$/ do
   all(:css, "a[data-tab='preferences']").size.should == 8
 end
 
-Given /^I start a rendezvous chat with "([^"]*)"$/ do |username|
+Given /^I start a rendezvous chat with "([^\"]*)"$/ do |username|
   within('#user-widget') do
     find(:xpath, "//a[contains(.,'#{username}')]").click
   end
   find(:css, ".context-menu-users li", :text => 'start private chat').click
 end
 
-Then /^I should see a channel for "([^"]*)"$/ do |channelname|
+Then /^I should see a channel for "([^\"]*)"$/ do |channelname|
   find(:css, '#channels li', :text => channelname)
 end
 
-Then /^I should not see a channel for "([^"]*)"$/ do |channelname|
+Then /^I should not see a channel for "([^\"]*)"$/ do |channelname|
   all(:css, "#channel li", :text => channelname).empty?.should == true
 end
 
-Then /^I close the rendezvous channel for "([^"]*)"$/ do |username|
+Then /^I close the rendezvous channel for "([^\"]*)"$/ do |username|
   find(:css, '#channels li', :text => username).find(:css, 'span.hide-link').click
 end
 
-Then /^the protonet channel "([^"]*)" should be active$/ do |channelname|
+Then /^the protonet channel "([^\"]*)" should be active$/ do |channelname|
   find(:css, '#channels li a.active', :text => channelname)
 end
 
-Then /^I switch to the channel "([^"]*)"$/ do |channelname|
+Then /^I switch to the channel "([^\"]*)"$/ do |channelname|
   find(:css, '#channels li a', :text => channelname).click
 end
 
+Then /^I visit the profile of "([^\"]*)"$/ do |username|
+   visit "/users/search?search_term=#{username}&id=1"
+end

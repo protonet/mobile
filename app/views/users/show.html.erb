@@ -36,7 +36,7 @@
       </p>
       
       <h3>Info <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
-      <dl>
+      <dl data-cucumber="roles">
         <dt>Roles: </dt><dd><%= @user.roles.map(&:title).join(", ") %></dd>
         <dt>E-Mail: </dt><dd><%= @user.email %></dd>
       </dl>

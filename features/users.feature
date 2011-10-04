@@ -8,60 +8,64 @@ Background:
 
   @javascript
   Scenario: Seeing the anonymous users profile
-    And I follow "Anonymous" within "#users-page"
-    Then I should see "Anonymous" within "#users-details"
-    And I should not see "Edit" within "#users-details"
-    And I should not see "Admin settings" within "#users-details"
-    And I should not see "Password reset" within "#users-details"
-    And I should not see "Delete User" within "#users-details"
+    Then I fill in "users_search_term" with "anonymous" within ".users-page"
+    Then I press "Go" within ".users-page"
+    Then I should see "@Anonymous" within ".users-page h2"
+    Then I should not see "edit" within ".users-page"
 
   @javascript
   Scenario: Seeing some other users profile
-    And I follow "someotherdude" within "#users-page"
-    Then I should see "someotherdude" within "#users-details"
-    And I should not see "Edit" within "#users-details"
-    And I should not see "Admin settings" within "#users-details"
-    And I should not see "Password reset" within "#users-details"
-    And I should not see "Delete User" within "#users-details"
+    Then I fill in "users_search_term" with "someotherdude" within ".users-page"
+    Then I press "Go" within ".users-page"
+    Then I should see "@someotherdude" within ".users-page h2"
+    Then I should not see "edit" within ".users-page"
 
   @javascript
   Scenario: Admin: Managing some other users profile
     And "dudemeister" is an admin
-    And I go to the users page
-    And I follow "someotherdude" within "#users-page"
-    Then I should see "someotherdude" within "#users-details"
-    And I should see "Edit" within "#users-details"
-    And I should see "Should this user become an Admin" within "#users-details"
-    And I should see "Password reset" within "#users-details"
-    And I should see "Delete User" within "#users-details"
+    Then I visit the profile of "someotherdude"
+    Then I should see "@someotherdude" within ".users-page h2"
+    And I should not see "admin" within "dl[data-cucumber='roles']"
+    And I should see "edit" within ".users-page"
+    And I follow "edit"
+    Then I should see "Should this user become an admin?" within ".users-page"
+    And I should see "Change password" within ".users-page"
+    And I should see "Generate new password" within ".users-page"
+    And I should see "Delete user" within ".users-page"
     # allright now that the basics are done
     # test making an user admin
-    And check "admin" within "#admin-setting"
-    And I fill in "admin_password" with "123456" within "#admin-setting"
-    And press "Update" within "#admin-setting"
-    Then I should see "admin" within "#roles"
-    And uncheck "admin" within "#admin-setting"
-    And I fill in "admin_password" with "123456" within "#admin-setting"
-    And press "Update" within "#admin-setting"
-    Then I should not see "admin" within "#roles"
-    And I fill in "admin_password" with "123456" within "#password-reset"
-    And press "Generate New Password" within "#password-reset"
+    And check "admin" within "form[data-cucumber='admin-settings']"
+    And I fill in "admin_password" with "123456" within "form[data-cucumber='admin-settings']"
+    And press "Save" within "form[data-cucumber='admin-settings']"
+    Then I should see "Successfully made" within ".flash-message"
+    Then I visit the profile of "someotherdude"
+    Then I should see "admin" within "dl[data-cucumber='roles']"
+    And I follow "edit"
+    And uncheck "admin" within "form[data-cucumber='admin-settings']"
+    And I fill in "admin_password" with "123456" within "form[data-cucumber='admin-settings']"
+    And press "Save" within "form[data-cucumber='admin-settings']"
+    Then I visit the profile of "someotherdude"
+    Then I should not see "admin" within "dl[data-cucumber='roles']"
+    And I follow "edit"
+    And I fill in "admin_password" with "123456" within "form[data-cucumber='change-password']"
+    And press "Generate new password" within "form[data-cucumber='change-password']"
     And I store /"(.*)"/ from ".flash-message p" into "password"
     And I go unauthenticated to the start page
     And I am logged in as "someotherdude"
 
   @javascript
   Scenario: Seeing my own profile and doing changes
-    And I follow "dudemeister" within "#users-page"
-    Then I should see "that's you!" within "#users-page li.clicked"
-    And I should see "dudemeister" within "#users-details"
-    And I should see "Edit" within "#users-details"
-    And I should not see "Password reset" within "#users-details"
-    Then I fill in "user[login]" with "newname"
-    And  I fill in "user[email]" with "some@email.com"
-    And  I press "Update" within "#users-details .edit"
+    And I follow "My profile" within ".users-page"
+    Then I should see "@dudemeister" within ".users-page h2"
+    And I should see "edit" within ".users-page"
+    And I follow "edit" within ".users-page"
+    And I should not see "Generate new password" within ".users-page"
+    Then I fill in "user[login]" with "newname" within "form[data-cucumber='user-details']"
+    And  I fill in "user[email]" with "some@email.com" within "form[data-cucumber='user-details']"
+    And  I press "Save" within "form[data-cucumber='user-details']"
     Then I should see "Successfully updated" within ".flash-message"
-    And I should see "newname" within "#users-details"
+    Then I visit the profile of "newname"
+    And I should see "@newname" within ".users-page h2"
     
   @javascript @wip
   Scenario: Admin: Deleting an user
