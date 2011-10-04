@@ -1,4 +1,4 @@
-<%= stylesheet_link_tag("/css/pages/#{controller_name}", :cache => (configatron.avoid_caching != false), :concat => false) rescue nil %>
+<%= stylesheet_tag("/css/pages/#{controller_name}", :cache => (configatron.avoid_caching != false)) if File.exists?(File.join(Rails.root, 'public/css/pages', "#{controller_name}.css")) %>
 
 <%= yield %>
 
