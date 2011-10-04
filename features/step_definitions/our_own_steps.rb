@@ -180,7 +180,7 @@ Then /^I should see the profile image "([^"]*)" in my profile details$/ do |imag
     "user_picture_r2.png" => "user_picture_r2.png", #default
     "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
   }[image_name]
-  image_selector = "#preferences-details img[src*='#{src}']"
+  image_selector = ".users-page .user-avatar[src*='#{src}']"
   find(:css, image_selector)
 end
 
@@ -191,19 +191,6 @@ Then /^I should see the profile image "([^"]*)" in the top right navi$/ do |imag
   }[image_name]
   image_selector = ".welcome img[src*='#{src}']"
   find(:css, image_selector)
-end
-
-
-Given /^administrator rights have not been claimed$/ do
-  SystemPreferences.admin_set = false
-end
-
-Given /^administrator rights have been claimed$/ do
-  SystemPreferences.admin_set = true
-end
-
-Given /^administrator claiming key is "([^\"]*)"$/ do |key|
-  SystemPreferences.admin_key = key
 end
 
 Given /^strangers are not allowed to register$/ do

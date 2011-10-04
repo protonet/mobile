@@ -65,7 +65,7 @@
               <%= button "Generate New Password" %>
             <% end %>
           <%- else %>
-            <%= form_tag({ :action => 'change_password' }, { :remote => true, 'data-type' => 'html' }) do %>
+            <%= form_tag({ :action => 'change_password' }, { :remote => true, 'data-type' => 'html', 'data-cucumber' => 'change-password' }) do %>
               <%= hidden_field_tag :id, @user.id %>
               <div class="form-field">
                 <%= label_tag :current_password, 'Current password:' %>
