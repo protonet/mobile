@@ -1,6 +1,6 @@
 protonet.utils.stripTags = (function() {
-  var DUMMY = $("<span>");
+  var regExp = /<\w+(\s+("[^"]*"|'[^']*'|[^>])+)?>|<\/\w+>/gi;
   return function(str) {
-    return DUMMY.html(str).text();
+    return str.replace(regExp, "");
   };
 })();
