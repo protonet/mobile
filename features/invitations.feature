@@ -12,17 +12,18 @@ Feature: Invitations
   Scenario: Admin invites someone to a channel
     Given I go unauthenticated to the start page
     And I am logged in as "dudemeister"
-    And I follow "invite"
-    Then I should see "Invite your awesome buddy!"
-    When I fill in "Email" with "friend@protonet.com"
-    And I fill in "Message" with "Come join us"
+    And I go to the new invitation page
+    Then I should see "Grow your network!"
+    When I fill in "invitation_email" with "friend@protonet.com"
+    And I click on the element ".invitation-message-link"
+    And I fill in "invitation_message" with "Come join us"
     And I check "home"
-    And I press "Send invitation"
-    Then I should see "Invitation was successfully created"
+    And I press "Invite"
+    Then I should see "Your invitation has been successfully sent!"
     # Invitation mail
-    And "friend@protonet.com" should receive an email with subject "dudemeister wants you to join the Protonet"
-    When "friend@protonet.com" opens the email with subject "dudemeister wants you to join the Protonet"
-    Then they should see "dudemeister invited you to the Protonet" in the email body
+    And "friend@protonet.com" should receive an email with subject "dudemeister wants you to join his protonet"
+    When "friend@protonet.com" opens the email with subject "dudemeister wants you to join his protonet"
+    Then they should see "<strong>dudemeister</strong> invited you to his protonet network." in the email body
     And they should see "Come join us" in the email body
     And they should see /\/join\/(.*){10}/ in the email body
 
