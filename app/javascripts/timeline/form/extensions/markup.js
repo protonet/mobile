@@ -1,4 +1,4 @@
-//= require "../../../controls/inline_autocompleter.js"
+//= require "../../../ui/inline_autocompleter.js"
 
 /**
  * Auto completion for markup tags
@@ -22,7 +22,7 @@ protonet.timeline.Form.extensions.Markup = function(input) {
     }
   }
   
-  new protonet.controls.InlineAutocompleter(input, [
+  new protonet.ui.InlineAutocompleter(input, [
     "quote}", "/quote}", "code}", "/code}"
   ], {
     fromBeginning:  false,
@@ -31,7 +31,7 @@ protonet.timeline.Form.extensions.Markup = function(input) {
     onAutocomplete: onAutocomplete
   });
   
-  new protonet.controls.InlineAutocompleter(input, [
+  new protonet.ui.InlineAutocompleter(input, [
     "code]", "/code]", "quote]", "/quote]"
   ], {
     fromBeginning: false,

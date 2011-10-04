@@ -14,10 +14,10 @@ class User < ActiveRecord::Base
   has_many  :owned_channels,    :class_name => 'Channel', :foreign_key => :owner_id
   has_many  :invitations
   has_and_belongs_to_many  :roles
-  has_attached_file :avatar, :default_url => '/img/user_picture.png'
+  has_attached_file :avatar, :default_url => configatron.default_avatar
   
   
-  scope :registered, :conditions => {:temporary_identifier => nil}
+  scope :registered, :conditions => "temporary_identifier IS NULL AND users.id != -1"
   scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"
   
   before_validation :download_remote_avatar, :if => :avatar_url_provided?
@@ -78,7 +78,7 @@ class User < ActiveRecord::Base
     save(:validate => false)
     # todo: propagate
   end
-
+  
   def communication_token
     generate_new_communication_token unless communication_token_expires_at && communication_token_expires_at > Time.now
     read_attribute(:communication_token)
@@ -123,10 +123,18 @@ class User < ActiveRecord::Base
   # skip validation if the user is a logged out (stranger) user
   def skip_credentials_validation?
     stranger?
-  end  
+  end
   
   def avatar_url_provided?
     !avatar_url.blank?
+  end
+  
+  def first_admin?
+    admin? && id == 1
+  end
+  
+  def newbie?
+    super && !stranger?
   end
   
   def download_remote_avatar   
@@ -154,8 +162,7 @@ class User < ActiveRecord::Base
 
   def unsubscribe(channel)
     return unless channels.include?(channel)
-    channels.delete(channel)
-    save
+    listens.where(:channel_id => channel.id).first.destroy
   end
 
   def subscribed?(channel)
@@ -197,6 +204,9 @@ class User < ActiveRecord::Base
     self.id != 0 && self.type != "FacebookUser" && self.type != "TwitterUser" &&!user.stranger? && (user.admin? || user.id == self.id)
   end
   
+  def invitee?
+    roles.size == 1 && roles.first.title == "invitee"
+  end
 
   def mark_invitation_as_accepted
     invitation = Invitation.unaccepted.find_by_token(invitation_token)

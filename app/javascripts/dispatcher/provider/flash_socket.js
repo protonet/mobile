@@ -1,6 +1,8 @@
 protonet.dispatcher.provider.FlashSocket = {
   isSupported: function() {
-    return !protonet.config.force_xhr_streaming && location.search.indexOf("noflash=1") == -1 && protonet.user.Browser.HAS_FLASH(8);
+    return !protonet.config.force_xhr_streaming
+        && !(location.href + document.referrer).match(/(\?|&)noflash\=1/)
+        && protonet.user.Browser.HAS_FLASH(8);
   },
   
   initialize: function() {

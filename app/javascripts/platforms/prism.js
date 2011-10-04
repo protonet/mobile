@@ -18,7 +18,7 @@
   var icon            = prism.icon(),
       unreadMessages  = 0;
   
-  protonet.Notifications.bind("meep.receive", function(e, meepData) {
+  protonet.bind("meep.receive", function(e, meepData) {
     if (protonet.utils.isWindowFocused()) {
       return;
     }

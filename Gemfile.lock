@@ -1,4 +1,10 @@
 GIT
+  remote: git://github.com/dudemeister/ruby-ifconfig.git
+  revision: 2ce2fd78bfea76c1cf8469884b1f0d2c4bc452e4
+  specs:
+    ruby-ifconfig (1.2.4)
+
+GIT
   remote: git://github.com/dudemeister/sprockets-rails.git
   revision: d9afb65998d61db628e9bac14554c4d71920879d
   specs:
@@ -23,12 +29,6 @@ GIT
     protolink (0.2.6)
       crack
       httparty (~> 0.7.4)
-
-GIT
-  remote: https://github.com/dudemeister/ruby-ifconfig.git
-  revision: 2ce2fd78bfea76c1cf8469884b1f0d2c4bc452e4
-  specs:
-    ruby-ifconfig (1.2.4)
 
 GEM
   remote: http://rubygems.org/

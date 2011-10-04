@@ -1,5 +1,5 @@
 <li>
-  <%= link_to channel.display_name || channel.name.capitalize, { :channel_id => channel.id }, {
+  <%= link_to channel.display_name, { :channel_id => channel.id }, {
     :title => channel.description,
     :class => channel.locally_hosted? ? (channel.global? ? 'global-hosted' : 'local') : 'global',
     'data-channel-id' => channel.id

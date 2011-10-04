@@ -5,21 +5,22 @@
   protonet
     .bind("channel.change", function(e, channelId) {
       currentChannelId = channelId;
-      _renderQueue(channelId);
+      setTimeout(function() {
+        _renderQueue(channelId);
+      }, 0);
     })
-    .bind("meep.rendered", function(e, meepElement, meepData) {
+    .bind("meep.rendered", function(e, $meepElement, meepData) {
       if (!meepData.text_extension) {
         return;
       }
       
       // Put text extension rendering into a queue when channel isn't selected
-      if ($.type(meepData.channel_id) == "number" && meepData.channel_id != currentChannelId) {
-        queue.push({ data: meepData, element: meepElement });
+      if (typeof(meepData.channel_id) == "number" && meepData.channel_id != currentChannelId) {
+        queue.push({ data: meepData, $element: $meepElement });
         return;
       }
       
-      var output = _getOutputElement(meepElement);
-      protonet.text_extensions.render(output, meepData.text_extension);
+      protonet.text_extensions.render(meepData.text_extension).insertBefore($meepElement.find(".author"));
     });
   
   function _renderQueue(channelId) {
@@ -27,15 +28,10 @@
       if (meep.data.channel_id != currentChannelId) {
         return meep;
       }
-
-      var output = _getOutputElement(meep.element);
-      protonet.text_extensions.render(output, meep.data.text_extension);
-      return null;
+      
+      protonet.text_extensions.render(meep.data.text_extension).insertBefore(meep.$element.find(".author"));
+      return null; // null tells $.map to remove it from the newly created array
     });
-  }
-  
-  function _getOutputElement(element) {
-    return element.find(".text-extension-container");
   }
 })();
 

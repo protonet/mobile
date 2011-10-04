@@ -1,79 +1,27 @@
-<style>
-#preferences-page h3 {
-  font-size: 1.4em;
-  font-weight: bold;
-  margin: 0 0 0.5em;
-}
-#preferences-page {
-  background: rgb(247, 247, 247);
-  border: 1px solid rgb(212, 212, 212);
-  padding: 10px;
-  width:  350px;
-  float: left;
-}
-#preferences-page li {
-  -moz-border-radius: 0.5em;
-  -webkit-border-radius: 0.5em;
-  background: rgb(255, 255, 255) url(/images/bkg_message.png) repeat-x scroll left bottom;
-  border-radius: 0.5em;
-  border: 1px solid rgba(0, 0, 0, 0.5);
-  color: rgb(0, 0, 0);
-  font-size: 1.4em;
-  font-weight: bold;
-  margin: 0 0 0.5em;
-  padding: 1em 0.6em;
-  text-decoration: none;
-  cursor: pointer;
-}
-#preferences-page li.clicked {
-  background: none;
-  border: 1px solid #FF7F31
-}
-#preferences-page li span {
-  color: rgba(0, 0, 0, 0.5);
-  font-weight: normal;
-}
-#preferences-page .control {
-  float: right;
-}
-
-#preferences-page a {
-  text-decoration: none;
-}
-#preferences-search {
-  margin-bottom: 1em;
-}
-#preferences-search input {
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  float: left;
-  width: 341px;
-}
-#preferences-details {
-  background: rgb(247, 247, 247);
-  border: 1px solid rgb(212, 212, 212);
-  padding: 10px;
-  margin-left: 20px;
-  width: 480px;
-  float:left;
-}
-</style>
-
-<section class="main sub">
-  <h2>Preferences</h2>
-  <div id="preferences-page">
-    <!-- <form id="preferences-search" action="/preferences/search">
-      <fieldset>
-        <input type="text" value="<%= params[:description] %>" name="description" placeholder="search for preferences ..."/>
-      </fieldset>
-    </form> -->
-  
-    <ul>
-      <%- @preferences.each do |p| -%>
-        <li id="<%= p[:url] %>">
-          <a href="#"><%= p[:name] %></a>
-        </li>
-      <%- end -%>
-    </ul>
+<section class="preferences-page subpage">
+  <%= render :partial => "header" %>
+  <div class="modal-window-scroll-content">
+    <%- if @preferences.empty? %>
+      <p class="hint">No preferences available. Maybe you don't have admin rights?</p>
+    <%- else -%>
+      <aside>
+        <ul>
+          <%- @preferences.each do |preference| %>
+            <li class="<%= 'selected' if preference[:section] == @selected_section %>">
+              <a href="/preferences/show?section=<%= preference[:section] %>" data-tab="preferences">
+                <strong><%= preference[:name] %></strong>
+              </a>
+            </li>
+          <%- end %>
+        </ul>
+      </aside>
+      <output data-tab="preferences" class="content">
+        <%- if @selected_section %>
+          <%= render :partial => @selected_section %>
+        <%- else %>
+          <p class="hint">Here you can administrate your node. Only admins can see this.<br>Please note that you can administrate <%= link_to 'users', users_path, { :class => 'promotion-link' } %> and <%= link_to 'channels', channels_path, { :class => 'promotion-link' } %> on their corresponding page.</p>
+        <%- end %>
+      </output>
+    <%- end %>
   </div>
-  <output id="preferences-details"></output>
 </section>

@@ -1,190 +1,35 @@
-<style>
-/* =CHANNELS
---------------------------------------------------------------------------- */
-#channels-page h3 {
-  font-size: 1.4em;
-  font-weight: bold;
-  margin: 0 0 0.5em;
-}
-#channels-page {
-  background: rgb(247, 247, 247);
-  border: 1px solid rgb(212, 212, 212);
-  padding: 10px;
-  float: left;
-  margin: 0;
-  width:  350px;
-}
-#channels-page ul.channel-list {
-  max-height: 540px;
-  overflow: auto;
-}
-#channels-page li.network p {
-  border-bottom: 1px solid #D4D4D4;
-  margin-bottom: 6px;
-  margin-right: 8px;
-  padding: 2px;
-  text-align: right;
-}
-#channels-page li.channel {
-  -moz-border-radius: 0.5em;
-  -webkit-border-radius: 0.5em;
-  background: rgb(255, 255, 255) url(/images/bkg_message.png) repeat-x scroll left bottom;
-  border-radius: 0.5em;
-  border: 1px solid rgba(0, 0, 0, 0.5);
-  color: rgb(0, 0, 0);
-  font-size: 1.4em;
-  font-weight: bold;
-  margin: 0 0 0.5em;
-  padding: 1em 0.6em;
-  text-decoration: none;
-  cursor: pointer;
-}
-#channels-page li.channel.clicked,
-#users li.clicked div {
-  background: none;
-  border: 1px solid #FF7F31
-}
-#channels-page li.channel span {
-  color: rgba(0, 0, 0, 0.5);
-  font-weight: normal;
-}
-
-#channels-page .channel-indicator {
-  margin: 0.2em 0.5em 0 0;
-  float: right;
-}
-
-#channels-page a {
-  text-decoration: none;
-}
-
-#channels-page a.create {
-  display: block;
-  font-size: 1.2em;
-  margin: 0 0 0.3em;
-  text-align: right;
-}
-#channels-page div.create {
-  margin: 0 0 1em;
-}
-
-#channels-page .search {
-  margin: 0 0 1em;
-  width: 340px;
-}
-#channels-page .search input {
-  width: 100%;
-}
-#channels-details {
-  background: rgb(247, 247, 247);
-  border: 1px solid rgb(212, 212, 212);
-  padding: 10px;
-  margin-left: 20px;
-  width: 480px;
-  float:left;
-}
-
-/* = Channels-details
---------------------------------------------------------------------------- */
-
-#channels-details h3 {
-  font-size: 1.4em;
-  font-weight: bold;
-  margin: 0 0 0.1em;
-  display: inline;
-}
-#channels-details h4 {
-  font-size: 1.2em;
-  font-weight: bold;
-  margin: 0.1em 0 0.3em;
-}
-#channels-details #channel-owner {
-  color: rgb(107, 107, 107);
-  font-style: italic;
-  padding: 0 0 0.2em;
-}
-#channel-description {
- display: inline;
-}
-#channel-listener {
-  -moz-border-radius: 0.5em;
-  -webkit-border-radius: 0.5em;
-  background: rgb(255, 255, 255) url(/images/bkg_message.png) repeat-x scroll left bottom;
-  border-radius: 0.5em;
-  border: 1px solid rgba(0, 0, 0, 0.5);
-  color: rgb(0, 0, 0);
-  font-size: 1.2em;
-  float: right;
-  margin: 0 0 0.5em;
-  padding: 1em 0.6em;
-  text-decoration: none;
-  cursor: pointer;
-}
-#channel-subscribers {
-  background: rgb(255, 255, 255);
-  border: 0.1em solid rgb(212, 212, 212);
-  height: 200px;
-  width: 400px;
-  overflow: auto;
-  padding: 0.3em;
-}
-#channel-subscribers li{
-  margin: 0.2em 0;
-}
-#channel-subscribers img{
-  vertical-align: middle;
-}
-.channel-remove-listener {
-  float: right;
-}
-.hidden {
-  display: none;
-}
-</style>
-
-<section class="sub main">
-  <h2>Channels</h2>
-  
-  <div id="channels-page">
-
-    <!-- <form action="/channels/search" class="search">
-      <fieldset>
-        <input type="text" value="<%= params[:description] %>" name="description" placeholder="search for interesting channels…"/>
-      </fieldset>
-    </form> -->
-
-    <ul class="channel-list">
-      <% @networks.each do |n| %>
-      <li class="network" id="network-<%= n.id %>">
-        <p><strong>Network:</strong> <%= n.name %></p>
-        <ul>
+<section class="channels-page subpage">
+  <%= render :partial => "header" %>
+  <div class="modal-window-scroll-content">
+    <aside>
+      <ul>
+        <%- Network.all.each do |n| %>
+          <%- if Network.all.size > 1%>
+            <li class="network-separator">
+              Network: <strong><%= n.name %></strong>
+              <p><%= n.channels.real.size %> channels</p>
+            </li>
+          <%- end %>
           <%- n.channels.real.each do |c| -%>
-            <li id="channel-<%= c.id %>" class="channel">
-              <a href="#">
-              <% if current_user.subscribed?(c) %>
-                <img src="/images/bullet_green.png" width="16" height="16" alt="" class="channel-indicator" />
-              <% end %>
-              <%= raw "#{h c.name} <span>(#{h c.description})</span>" %>
+            <li class="<%= 'selected' if @selected_channel && c.id == @selected_channel.id %>">
+              <a href="/channels/<%= c.id %>" data-tab="channels">
+                <strong>@<%= c.name %></strong> <%= channel_icons(c) %>
+                <%- c.random_users(5).each do |u| %>
+                  <%= avatar(u, :width => 20, :height => 20, 'data-hover-hint' => 'top', :title => u.display_name) %>
+                <%- end %>
+                <%= raw("<i>+ #{c.users.registered.size - 5} more</i>") if c.users.registered.size > 5 %>
               </a>
-           </li>
-         <%- end -%>
-        </ul>
-      </li>
-      <% end %>
-    </ul>
-
-    <%= link_to 'create a channel', "#", :class => "create", :rel => "create" %>
-
-    <div id="create" class="create section hidden">
-      <%= form_for :channel, :url => channels_path, :action => 'post' do |f| -%>
-        <fieldset>
-          <%= f.text_field :name, { :placeholder => 'Name of the channel…' } %>
-          <%= f.text_field :description, { :placeholder => 'Description of the channel…' } %>
-          <%= button 'Create' %>
-        </fieldset>
-      <%- end -%>
-    </div>
-
+            </li>
+          <%- end -%>
+        <%- end %>
+      </ul>
+    </aside>
+    <output data-tab="channels" class="content">
+      <%- if @selected_channel %>
+        <%= render :partial => 'channel_details', :locals => { :channel => @selected_channel } %>
+      <%- else %>
+        <p class="hint">Please choose a channel from the left or <%= link_to "click here", new_channel_path, :class => 'promotion-link' %> to create a new one.</p>
+      <%- end %>
+    </output>
   </div>
-  <output id="channels-details">Please choose a channel from the left</output>
 </section>

@@ -4,10 +4,15 @@ protonet.dispatcher = {
     this.create();
   },
   
+  initializeCallback: function() {
+    this.initialized = true;
+    this.connect();
+  },
+  
   _observe: function() {
     protonet
       .bind("socket.initialized", function() {
-        this.connect();
+        this.initializeCallback();
       }.bind(this))
       
       .bind("socket.connected", function(e, status) {
@@ -47,13 +52,17 @@ protonet.dispatcher = {
   },
   
   connect: function() {
-    if (this.connected) {
+    if (this.connected || this.connecting || !this.initialized) {
       return;
     }
+    
+    this.connecting = true;
     this.currentProvider.connect();
   },
   
   connectCallback: function(status) {
+    this.connecting = false;
+    
     if (status) {
       this.connected = true;
       this.startCheck();

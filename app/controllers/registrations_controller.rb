@@ -4,7 +4,7 @@ class RegistrationsController < Devise::RegistrationsController
   # GET /resource/sign_up
   def new
     build_resource({})
-    render_with_scope :new
+    render 'devise/registrations/new'
   end
   
   # POST /resource
@@ -24,7 +24,7 @@ class RegistrationsController < Devise::RegistrationsController
       end
     else
       clean_up_passwords(resource)
-      render_with_scope :new
+      render 'devise/registrations/new'
     end
   end
   

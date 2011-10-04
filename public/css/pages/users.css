@@ -1,0 +1,71 @@
+.users-page.edit .content,
+.users-page.show .content {
+  margin-left: 260px;
+  position: relative;
+  min-height: 300px;
+}
+
+.users-page .content > img {
+  position: absolute;
+  top: 20px;
+  left: -230px
+}
+
+.users-page .content > img.loading {
+  opacity: 0.5;
+}
+
+.users-page h2 i {
+  font-style: normal;
+  font-weight: normal;
+  color: #999;
+}
+
+.users-page p .button {
+  margin-top: 0;
+}
+
+.users-page .meep {
+  background: #F2F2F2;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.users-page .meep .avatar {
+  display: none;
+}
+
+.users-page .meep .author {
+  background-image: none;
+}
+
+.users-page [type=search] {
+  border-width: 2px;
+  padding-top: 3px;
+  padding-left: 3px;
+  padding-bottom: 3px;
+}
+
+.users-page .user-avatar.loading {
+  opacity: 0.5;
+}
+
+.upload-button-container {
+  display: inline-block;
+  overflow: hidden;
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.upload-button-container [type=file] {
+  opacity: 0;
+  filter: Alpha(Opacity=0);
+  font-size: 25px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  z-index: 1;
+}

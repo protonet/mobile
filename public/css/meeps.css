@@ -3,20 +3,19 @@
 .meep {
   -moz-border-radius: 8px;
   -webkit-border-radius: 8px;
+  border-radius: 8px;
   background-color: #F2F2F2;
   border: 1px solid rgb(180, 180, 180);
-  border-radius: 8px;
   margin: 0 20px 10px 45px;
-  padding: 10px;
+  padding: 1px 10px 3px;
   position: relative;
-  list-style: none;
 }
 
 .meep.focus:before {
-  content: " ";
+  content: "";
   background: rgb(72, 123, 255);
   background: rgba(72, 123, 255, 0.5);
-  background: -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 0.7), rgba(72, 123, 255, 0.3));
+  background: -moz-linear-gradient(top, rgba(72, 123, 255, 0.3), rgba(72, 123, 255, 0.7));
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.3)), to(rgba(72, 123, 255, 0.7)));
   position: absolute;
   z-index: 2;
@@ -29,91 +28,38 @@
   border-radius: 0 7px 7px 0;
 }
 
-[data-meep-action] {
-  background-image: url(/img/spr_meep_options.png);
-  background-repeat: no-repeat;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-  cursor: pointer;
-  width: 20px;
-  height: 15px;
-  position: absolute;
-  right: 0;
-  z-index: 3;
-}
-
-[data-meep-action='detail-view'] {
-  background-position: 1px 1px;
-  margin-top: -23px;
-}
-
-[data-meep-action='detail-view']:active {
-  background-position: 1px -39px;
-}
-
-.meep article:last-of-type [data-meep-action='detail-view'] {
-  margin-top: -40px;
-}
-
-[data-meep-action='share'] {
-  background-position: 1px -24px;
-  margin-top: -8px;
-}
-
-[data-meep-action='share']:active {
-  background-position: 1px -64px;
-}
-
-.meep article:last-of-type [data-meep-action='share'] {
-  margin-top: -24px;
-}
-
-[data-meep-action]:active {
-  color: black;
-}
-
 .own.meep {
   background: #fef6f3;
-  background: -moz-linear-gradient(100% 100% 90deg, rgba(234, 100, 47, 0.1), transparent);
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(234, 100, 47, 0.1)));
 }
 
 .meep .author {
   font-size: 10px;
-  margin-top: 5px;
+  padding: 2px 12px 2px 1px;
   color: #666;
 }
 
-.meep article:first-child {
-  padding-top: 0;
+.meep article {
+  position: relative;
+  border-bottom: 1px solid rgb(220, 220, 220);
+  display: block;
+  padding: 5px 12px 5px 0;
+  word-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 .meep article:last-of-type {
   padding-bottom: 0;
-}
-
-
-.meep article {
-  border-bottom: 1px solid rgb(220, 220, 220);
-  display: block;
-  padding: 5px 12px 5px 0;
-}
-
-.meep article:nth-last-child(2) {
   border-bottom: 0;
-  background: url("/img/icn_message_arrow.png") no-repeat left bottom;
+}
+
+.meep .author {
+  background: url(/img/icn_message_arrow.png) no-repeat left bottom;
   margin-left: -25px;
   padding-left: 25px;
 }
 
-.own.meep article:nth-last-child(2) {
-  background-image: url("/img/icn_own_message_arrow.png");
-}
-
-.meep article > .text {
-  white-space: pre-wrap;
-  overflow: hidden;
+.own.meep .author {
+  background-image: url(/img/icn_own_message_arrow.png);
 }
 
 .meep article q:before,
@@ -150,16 +96,16 @@
   -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  bottom: 0;
-  height: 46px;
-  left: -70px;
+  bottom: -2px;
+  height: 48px;
+  left: -71px;
   position: absolute;
-  width: 21px;
+  width: 22px;
 }
 
 .meep .avatar img {
   background: rgb(255, 255, 255);
-  padding: 5px;
+  padding: 6px;
 }
 
 .meep time {
@@ -178,9 +124,9 @@
 .meep.separator:after {
   right: 0;
   left: 0;
-  content: " ";
-  bottom: -9px;
-  border-bottom: 1px dotted rgb(180, 180, 180);
+  content: "";
+  bottom: -7px;
+  border-bottom: 1px dotted #ccc;
   position: absolute;
 }
 
@@ -188,11 +134,42 @@
   color: red;
 }
 
-.meep-loading-indicator {
-  display: none;
+div.progress {
   height: 48px;
-  background: url(/img/icn_loading_big.gif) center center no-repeat;
+  background: transparent url(/img/icn_loading_big.gif) center center no-repeat;
   margin-bottom: 6px;
+}
+
+.detail-view-link,
+.share-link {
+  background: url(/img/spr_meep_options.png) no-repeat;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  width: 20px;
+  height: 15px;
+  position: absolute;
+  right: -10px;
+  z-index: 3;
+}
+
+.detail-view-link {
+  background-position: 1px 1px;
+  top: -2px;
+}
+
+.detail-view-link:active {
+  background-position: 1px -39px;
+}
+
+.share-link {
+  background-position: 1px -24px;
+  top: 13px;
+}
+
+.share-link:active {
+  background-position: 1px -64px;
 }
 
 .no-meeps-available {
@@ -254,6 +231,11 @@
   background: rgb(255, 127, 49);
 }
 
+.reply-from-channel {
+  float: right;
+  margin-left: 5px;
+}
+
 .reply-from-channel a {
   color: rgb(72, 123, 255);
   color: rgba(72, 123, 255, 0.8);
@@ -263,4 +245,11 @@
   color: rgb(72, 123, 255);
 }
 
+
+/* Meeps in modal windows: */
+.modal-window .meep .avatar {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
 /* ================================================================ MEEPS = */

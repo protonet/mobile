@@ -1,14 +1,23 @@
 /* =LOGIN
 =========================================================================== */
-header.login {
-  background: url(/img/icn_login_arrow_r2.png) no-repeat 220px 0;
-  position: relative;
-}
-
 #login {
+  position: relative;
+  background: #fff;
+  border: 1px solid #bbb;
+  margin-top: -1px;
   min-height: 100px;
   padding: 15px 30px 20px 30px;
   width: 890px;
+}
+
+#login:after {
+  background: url(/img/icn_login_arrow_r2.png) no-repeat 0 0;
+  content: "";
+  position: absolute;
+  width: 77px;
+  height: 41px;
+  bottom: -41px;
+  left: 210px;
 }
 
 #login h1 {
@@ -17,7 +26,7 @@ header.login {
   text-transform: lowercase;
 }
 
-#login .form {
+#login form {
   border-right: 1px solid #999;
   display: inline-block;
   padding: 2px 0;
@@ -25,34 +34,52 @@ header.login {
   width: 432px;
 }
 
-#single-login #login, #single-login #login .form {
+#single-login #login,
+#single-login #login form {
   width: auto;
 }
 
-#single-login .form .field_with_errors {
+#single-login .field_with_errors {
   display: inline;
 }
 
-#single-login .sign-up .field_with_errors input {
+#single-login .field_with_errors input {
   border: 1px solid red;
 }
 
-#login .form legend {
+#single-login {
+  width: 890px;
+  margin: 0 auto;
+  position: relative;
+  top: 100px;
+}
+
+#single-login .errorExplanation {
+  background:       none repeat scroll 0 0 white;
+  margin-bottom:    10px;
+  margin-left:      auto;
+  margin-right:     auto;
+  padding:          10px;
+  width:            500px;
+}
+
+#single-login .errorExplanation h2 {
+  color:            red;
+}
+
+#login legend {
   color: #666;
-  font-size: 17px;
+  font-size: 16px;
   padding-bottom: 10px;
 }
 
-#login .form label {
-  display: none;
-}
-
-#login .form div {
+#login label {
+  display: block;
   margin-bottom: 10px;
 }
 
-#login .form div:last-child {
-  margin-bottom: 0;
+#login button {
+  margin-top: 0;
 }
 
 #login .hint {
@@ -61,10 +88,6 @@ header.login {
 
 #login .forgot-password {
   line-height: 24px;
-}
-
-#login form {
-  padding-left: 10px;
 }
 
 #login .sign-up {
@@ -80,15 +103,25 @@ header.login {
   padding-left: 0;
 }
 
-#login .login.no-register input[type=text],
-#login .login.no-register input[type=password] {
+#login .login.no-register [type=text],
+#login .login.no-register [type=password] {
   width: 280px;
 }
 
 .external-login {
-  display: inline-block;
+  background: url(/img/spr_icn_connect.png) no-repeat 0 0;
+  width: 32px;
+  height: 32px;
+  display: none;
   vertical-align: middle;
+  overflow: hidden;
+  text-indent: -9999px;
+  margin-top: -6px;
   margin-bottom: -3px;
+}
+
+.external-login.facebook {
+  background-position: -32px 0;
 }
 
 /* ================================================================ LOGIN = */

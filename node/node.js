@@ -106,7 +106,7 @@ process.addListener('SIGKILL', shutdownTasks);
 process.addListener('SIGTERM', shutdownTasks);
 
 // how to use node background workers:
-// protonet.Notifications.bind('workdone', function(e, msg){ console.log(e, msg) })
+// protonet.bind('workdone', function(e, msg){ console.log(e, msg) })
 // protonet.globals.dispatcher.sendMessage(JSON.stringify({'operation':'work', 'task':'screenshot', 'url':'http://www.google.de'}))
 // or 
 // protonet.globals.dispatcher.sendMessage(JSON.stringify({'operation':'work', 'task':'eval', 'javascript':'2*2'}))

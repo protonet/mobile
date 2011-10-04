@@ -59,6 +59,7 @@ protonet.dispatcher.provider.WebSocket = {
     if (!this.socket) {
       return;
     }
+    $(window).unbind(".websockets");
     this.socket.close();
   },
   

@@ -24,6 +24,7 @@ class Listen < ActiveRecord::Base
       :trigger        => "user.#{type}",
       :channel_id     => channel.id,
       :channel_uuid   => channel.uuid,
+      :rendezvous     => channel.rendezvous?,
       :user_id        => user.id
   end
   
@@ -45,7 +46,7 @@ class Listen < ActiveRecord::Base
   end
   
   def auto_set_verification
-    self.verified = true if channel.public? || channel.owned_by(user) || channel.rendezvous_participant?(user)
+    self.verified = true if channel.public? || channel.owned_by?(user) || channel.rendezvous_participant?(user)
     save
   end
   

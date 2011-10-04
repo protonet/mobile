@@ -1,0 +1,14 @@
+.invitations-page .channel-checkboxes {
+  padding-left: 220px;
+  margin-bottom: 4px;
+}
+
+.invitations-page .invitation-message {
+  display: none;
+}
+
+.invitations-page .invitation-message-link {
+  display: block;
+  margin-left: 220px;
+  margin-top: 10px;
+}

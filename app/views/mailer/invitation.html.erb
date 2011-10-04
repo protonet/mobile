@@ -1,0 +1,13 @@
+<h2 style="color: #487bff;">Hey there!</h2>
+
+<p><strong><%= @invitation.user.display_name %></strong> invited you to his protonet network.</p>
+
+<%- unless @invitation.message.blank? %>
+<p style="margin: 20px; color: #666; border-left: 4px solid #666; padding-left: 5px;"><%= @invitation.message %></p>
+<%- end %>
+
+<p>Please follow this link to sign up:<br>
+<%= accept_invitation_url(:invitation_token => @invitation.token) %></p>
+
+<p>Have fun using the protonet.</p>
+

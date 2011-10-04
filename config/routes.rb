@@ -23,13 +23,13 @@ Dashboard::Application.routes.draw do
   match 'channels/:id/destroy' => 'channels#destroy', :as => :destroy_channel
   
   # meeps
+  match 'meep/:id' => 'meeps#show' # Needed for backwards compatibility
   match 'meeps/sync' => 'meeps#sync', :as => :sync_meeps
   match 'meeps/before' => 'meeps#before', :as => :meeps_before
   match 'meeps/after' => 'meeps#after', :as => :meeps_after
   
   resources :meeps
   
-  match '/more_meeps/:meep_id/:channel_id/:later/:earlier/:pos.:format' => 'search#more_meeps', :as => :more_meeps
   match 'listens/create' => 'listens#create', :as => :listen_to_channel
   get 'listens/node/:node_id/channel/:channel_id' => 'listens#global', :as => :listen_to_global_channel
   
@@ -66,8 +66,12 @@ Dashboard::Application.routes.draw do
   
   match 'users/update' => 'users#update', :as => :user_update
   match 'users/:id/start_rendezvous' => 'users#start_rendezvous', :as => :start_rendezvous, :via => [:post]
+  match 'users/:id/meeps_with_text_extension' => 'users#meeps_with_text_extension', :as => :meeps_with_text_extension, :via => [:get]
   match 'users/update_last_read_meeps' => 'users#update_last_read_meeps', :as => :update_last_read_meeps, :via => [:put]
+  match 'users/search' => 'users#search', :as => :search, :via => [:get]
   match 'users/delete_stranger_older_than_two_days' => 'users#delete_stranger_older_than_two_days', :as => :delete_stranger_older_than_two_days, :via => [:post]
+  match 'users/remove_newbie_flag' => 'users#remove_newbie_flag', :as => :remove_newbie_flag, :via => [:post]
+  match 'users/newbie_todo_list' => 'users#newbie_todo_list', :as => :newbie_todo_list, :via => [:get]
   
   resources :users
   
@@ -78,6 +82,8 @@ Dashboard::Application.routes.draw do
   namespace :preferences do
     match 'privacy/update'  => 'privacy#update', :as => :privacy_update
     match 'wifi/update'     => 'wifi#update', :as => :wifi_update
+    match 'vpn/update'      => 'vpn#update', :as => :vpn_update
+    match 'wifi/interface_status'     => 'wifi#interface_status', :as => :interface_status
     match 'vpn/on'    => 'vpn#on', :as => :vpn_on
     match 'vpn/off'   => 'vpn#off', :as => :vpn_off
     match 'wifi/on'   => 'wifi#on', :as => :wifi_on

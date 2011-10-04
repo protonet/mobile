@@ -1,2 +1,38 @@
-<%= sprockets_include_tag(controller_name.to_sym) %>
+<!-- TODO: this needs to be done smarter" -->
+<script type="protonet/template" id="meep-template">
+  <%= render :partial => 'meeps/meep' %>
+</script>
+<script type="protonet/template" id="meep-to-merge-template">
+  <%= render :partial => 'meeps/meep_to_merge' %>
+</script>
+<script type="protonet/template" id="text-extension-template">
+  <%= render :partial => 'meeps/text_extension' %>
+</script>
+<script type="protonet/template" id="channel-reply-template">
+  <%= render :partial => 'meeps/channel_reply' %>
+</script>
+<script type="protonet/template" id="user-reply-template">
+  <%= render :partial => 'meeps/user_reply' %>
+</script>
+<script type="protonet/template" id="emoji-template">
+  <%= render :partial => 'meeps/emoji' %>
+</script>
+<script type="protonet/template" id="reply-from-channel-template">
+  <%= render :partial => 'meeps/reply_from_channel' %>
+</script>
+<script type="protonet/template" id="posted-in-channel-template">
+  <%= render :partial => 'meeps/posted_in_channel' %>
+</script>
+<script type="protonet/template" id="meep-status-template">
+  <%= render :partial => 'meeps/meep_status' %>
+</script>
+<script type="protonet/template" id="meep-actions-template">
+  <%= render :partial => 'meeps/meep_actions' %>
+</script>
+<script type="protonet/template" id="search-page-template">
+  <%= render :template => 'search/index' %>
+</script>
+
+<%= sprockets_include_tag(:default) %>
+<%= sprockets_include_tag(controller_name.to_sym) rescue nil %>
 <%= raw("<script>#{SystemPreferences.custom_javascript}</script>") if SystemPreferences.custom_javascript %>

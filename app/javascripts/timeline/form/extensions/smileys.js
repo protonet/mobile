@@ -1,4 +1,4 @@
-//= require "../../../controls/inline_autocompleter.js"
+//= require "../../../ui/inline_autocompleter.js"
 //= require "../../../utils/emojify.js"
 //= require "../../../ui/context_menu.js"
 
@@ -18,7 +18,7 @@ protonet.timeline.Form.extensions.Smileys = function(input) {
     };
   });
   
-  new protonet.controls.InlineAutocompleter(
+  new protonet.ui.InlineAutocompleter(
     input, emojis, {
       lowerCase: false
     }

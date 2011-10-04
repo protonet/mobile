@@ -2,7 +2,13 @@ class SystemPreferencesObserver < ActiveRecord::Observer
   def after_save(system_preference)
     case system_preference.var
     when "publish_to_web"
-      system_preference.value ? turn_on_publishing : turn_off_publishing
+      if system_preference.value
+        turn_on_publishing
+        SystemPreferences.public_host = "#{SystemPreferences.publish_to_web_name}.protonet.info"
+        SystemPreferences.public_host_https = true
+      else
+        turn_off_publishing
+      end
     when "node_name", "node_description", "node_supernode", "node_key", "node_uuid"
       Network.update_local_from_preferences
     when "custom_css", "custom_javascript", "browser_title"

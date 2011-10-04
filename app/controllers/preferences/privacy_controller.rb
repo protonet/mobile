@@ -1,24 +1,30 @@
 module Preferences
   class PrivacyController < ApplicationController
     def update
-      success = nil
-      if(params[:preferences])
-        key   = params[:preferences].keys.first
-        value = params[:preferences][key] == "true"
+      success = false
+      if params[:preferences]
+        params[:preferences].each do |key, value|
+          params[:preferences][key] = value == "true"
+        end
+        
         interface = params[:interface]
         current_settings = SystemPreferences.privacy
         current_settings[interface] ||= {}
-        current_settings[interface].merge!({key => value})
+        current_settings[interface].merge!(params[:preferences])
         SystemPreferences.privacy = current_settings
-        success = "#{interface} #{key} #{value}" if SystemPreferences.privacy == current_settings
+        success = SystemPreferences.privacy == current_settings
       end
-      response = if success
-        {:type => :notice, :message => "Setting #{success} was saved."}
+      
+      if success
+        flash[:notice] = "Successfully saved."
       else
-        {:type => :error, :message => "Setting #{success} was NOT saved."}
+        flash[:error] = "There has been an error saving your preferences."
       end
-      respond_to do |format|
-        format.js { render :json => response, :status => (success ? :ok : :error), :content_type => "application/json" }
+      
+      if request.xhr?
+        head(204)
+      else
+        redirect_to :controller => '/preferences', :action => :show, :section => params[:section]
       end
     end
   end

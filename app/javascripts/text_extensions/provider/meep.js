@@ -5,6 +5,7 @@
  */
 protonet.text_extensions.provider.Meep = {
   URL:     "/meeps/{id}",
+  
   REG_EXP: (function() {
     var escapedBaseUrl = protonet.utils.escapeForRegExp(protonet.config.base_url);
     return new RegExp(escapedBaseUrl + "(\\/#\\!)?\\/meep/(\\d+)", "i");
@@ -15,6 +16,7 @@ protonet.text_extensions.provider.Meep = {
         meepId = match && +match[2];
     
     $.ajax({
+      dataType: "json",
       url: this.URL.replace("{id}", meepId),
       success: function(data) {
         onSuccess({
@@ -22,8 +24,8 @@ protonet.text_extensions.provider.Meep = {
           imageWidth:         24,
           imageHeight:        24,
           preventHoverEffect: true,
-          title:              "Message from '" + data.author + "'",
-          titleAppendix:      data.text_extension && "incl. '" + data.text_extension.type + "' attachment",
+          title:              "Message from @" + data.author,
+          titleAppendix:      data.text_extension && "incl. " + data.text_extension.type + " attachment",
           description:        data.message
         });
       },

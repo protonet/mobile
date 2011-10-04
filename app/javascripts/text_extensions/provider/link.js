@@ -1,5 +1,5 @@
 //= require "../../data/meta_data.js"
-//= require "../../media/screenshot.js"
+//= require "../../media/get_screenshot.js"
 //= require "../../utils/parse_url.js"
 //= require "../../utils/strip_tracking_params.js"
 
@@ -21,11 +21,11 @@ protonet.text_extensions.provider.Link = {
     var metaDataCallback = function(response) {
       response = response || {};
       onSuccess({
-        image: response.image_src || protonet.media.ScreenShot.get(queryUrl),
-        flash: response.video_src,
-        title: response.title || shortUrl,
-        description: response.description || response.keywords,
-        keywords: response.keywords
+        image:        response.image_src || protonet.media.getScreenShot(queryUrl),
+        flash:        response.video_src,
+        title:        response.title || shortUrl,
+        description:  response.description || response.keywords,
+        keywords:     response.keywords
       });
     };
     

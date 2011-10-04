@@ -24,11 +24,11 @@ class Meep < ActiveRecord::Base
   
   after_create :send_to_queue
   
-  def self.prepare_for_frontend(meeps, additional_attributes)
+  def self.prepare_for_frontend(meeps, additional_attributes = {})
     meeps.map do |m|
       m.text_extension = JSON.parse(m.text_extension) rescue nil
       avatar = m.user.avatar.url if m.user
-      m.attributes.merge({ :avatar => avatar }).merge(additional_attributes || {})
+      m.attributes.merge({ :avatar => avatar }).merge(additional_attributes)
     end
   end
   
@@ -80,6 +80,7 @@ class Meep < ActiveRecord::Base
   
   def before(count)
     Meep.all(
+      :include => :user,
       :conditions => ["meeps.id < ? AND meeps.channel_id = ?", id, channel.id],
       :order => "meeps.created_at DESC",
       :limit => count
@@ -89,6 +90,7 @@ class Meep < ActiveRecord::Base
   
   def after(count)
     Meep.all(
+      :include => :user,
       :conditions => ["meeps.id > ? AND meeps.channel_id = ?", id, channel.id],
       :limit => count
     )

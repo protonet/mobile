@@ -1,33 +1,40 @@
 class UsersController < ApplicationController
   filter_resource_access
+  include Rabbit
   
   def index
-    @users = User.registered
-    @strangers_count = User.strangers.count
+    @active_users = Meep.select('distinct user_id').
+                         order(:id => "DESC").
+                         group(:user_id).
+                         limit(20).
+                         includes('user').
+                         where(:users => { :temporary_identifier => nil }).
+                         map(&:user)
   end
-
+  
   def show
-    user = User.find(params[:id])
-    if params[:no_redirect] || !user.external_profile_url
-      render :partial => "user_details", :locals => {:user => user}
+    @user = User.find(params[:id])
+    if params[:no_redirect] || !@user.external_profile_url
+      render
     else
-      return redirect_to(user.external_profile_url)
+      return redirect_to(@user.external_profile_url)
     end
   end
   
   def new
-    redirect_to :controller => "registrations", :action => :new
+    redirect_to_and_preserve_xhr :controller => "registrations", :action => :new
   end
   
   def update
-    user = User.find(params[:user][:id])
-    success = user && (user.update_attributes(params[:user]) if user.can_edit?(user))
+    user_type = params[:user_type]
+    user = User.find(params[user_type][:id])
+    success = user && (user.update_attributes(params[user_type]) if user.can_edit?(user))
     if success && user.errors.empty?
       flash[:notice] = "Successfully updated user '#{user.login}'"
     else
       flash[:error] = "Could not update user '#{user.login}'"
     end
-    redirect_to request.referer + "##{params[:anchor]}"
+    redirect_to_and_preserve_xhr :action => 'edit', :id => user.id
   end
 
   def delete_stranger_older_than_two_days
@@ -36,39 +43,24 @@ class UsersController < ApplicationController
     else
       flash[:error]  = "Couldn't delete old strangers!"
     end
-    render :json => User.strangers.count
-  end
-  
-  def sort_channels
-    params[:channel_order].each_with_index do |channel_id, index|
-      @current_user.listens.where(:channel_id => channel_id.to_i).first.update_attribute(:order_number, index)
+    if request.xhr?
+      head(204)
+    else
+      redirect_to :back
     end
-    render :text => "ok"
   end
   
   def start_rendezvous
     Channel.setup_rendezvous_for(current_user.id, params[:id].to_i)
-    render :nothing => true
+    head(204)
   end
   
   def update_last_read_meeps
-    mapping = params[:mapping] || {}
-    Listen.update_last_read_meeps(current_user.id, mapping)
-    render :nothing => true
-  end
-  
-  def request_admin_flag
-    case current_user.make_admin(params[:key])
-    when :ok
-      flash[:notice] = "woot! you're an admin now!"
-    when :admin_already_set
-      flash[:error] = 'already done you need to reset with rake'
-    when :key_error
-      flash[:error] = 'you entered an invalid key'
-    else
-      flash[:error] = 'error! BAM!'
+    unless current_user.stranger?
+      mapping = params[:mapping] || {}
+      Listen.update_last_read_meeps(current_user.id, mapping)
     end
-    redirect_to :back
+    head(204)
   end
   
   def update_user_admin_flag
@@ -76,13 +68,17 @@ class UsersController < ApplicationController
       user = User.find(params[:user_id])
       if params[:admin] == 'true'
         user.add_to_role(:admin)
-        flash[:notice] = "Successfully made #{user.login} an admin!"
+        flash[:notice] = "Successfully made '#{user.login}' an admin!"
       else
         user.remove_from_role(:admin)
-        flash[:notice] = "Successfully removed #{user.login} from the list of admins!"
+        flash[:notice] = "Successfully removed '#{user.login}' from the list of admins!"
       end
+      
+      redirect_to_edit_after_update(user)
+    else
+      flash[:error] = "The admin password is wrong"
+      head(403)
     end
-    redirect_to :action => 'index', :anchor => params[:user_id]
   end
   
   def generate_new_password
@@ -98,19 +94,21 @@ class UsersController < ApplicationController
     else
       flash[:error]  = "You're not authorized to do this, please check your password and admin rights."
     end
-    redirect_to :action => 'index', :anchor => params[:user_id]
+    
+    redirect_to_edit_after_update(user)
   end
   
   def change_password
-    @user = current_user
+    @user = User.find(params[:id])
     @user.errors.add(:password_confirmation, 'does not match your new password') if params[:password] != params[:password_confirmation]
-    if @user.errors.empty? && @user.update_with_password(params)
+    if current_user.can_edit?(@user) && @user.errors.empty? && @user.update_with_password(params)
       sign_in(@user, :bypass => true)
       flash[:notice] = "You've successfully changed your password!"
+      publish "users", @user.id, { :trigger => 'user.changed_password' }
     else
       flash[:error]  = "There was an error changing you password: #{@user.errors.full_messages.to_sentence}."
     end
-    redirect_to :back
+    redirect_to_edit_after_update(@user)
   end
   
   def delete
@@ -120,5 +118,48 @@ class UsersController < ApplicationController
     end
     redirect_to :action => 'index'
   end
-
+  
+  def meeps_with_text_extension
+    @meeps = Meep.where(:channel_id => current_user.channels.verified.map(&:id)).
+                  where(:user_id => params[:id]).
+                  where("text_extension != ''").
+                  includes(:user).
+                  order(:id => "DESC").
+                  all(:limit => 25)
+    render :json => Meep.prepare_for_frontend(@meeps)
+  end
+  
+  def search
+    @user = User.find(params[:search_term]) rescue User.find_by_login(params[:search_term]) rescue nil
+    if @user
+      redirect_to user_path(@user)
+    else
+      flash[:error] = "Couldn't find user with identifier '#{params[:search_term]}'"
+      redirect_to_and_preserve_xhr :index
+    end
+  end
+  
+  def remove_newbie_flag
+    current_user.update_attribute(:newbie, false)
+    head(204)
+  end
+  
+  def newbie_todo_list
+    render :json => {
+      'change-password' => !current_user.valid_password?('admin'),
+      'upload-avatar'   => current_user.avatar.file?,
+      'create-channel'  => current_user.channels.real.size > 1,
+      'invite-user'     => User.registered.size > 1,
+      'write-meep'      => Meep.find_all_by_user_id(current_user.id).size > 0
+    }
+  end
+  
+  private
+    def redirect_to_edit_after_update(user)
+      if request.xhr?
+        head(204)
+      else
+        redirect_to_and_preserve_xhr :action => 'edit', :id => user.id
+      end
+    end
 end

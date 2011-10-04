@@ -1,3 +1,5 @@
+//= require "../../utils/url_behaviors.js"
+
 /**
  * @events
  *    form.submitted          - Indicates that the input has been submitted
@@ -18,6 +20,7 @@ protonet.timeline.Form = {
     this._initTextExtension();
     
     this._observe();
+    this._prefill();
   },
   
   _initExtensions: function() {
@@ -33,9 +36,15 @@ protonet.timeline.Form = {
   },
   
   _observe: function() {
-    var preventFocus = protonet.user.data.is_stranger;
+    var preventFocus = protonet.config.user_is_stranger || protonet.user.Browser.IS_TOUCH_DEVICE();
     
     protonet
+      .bind("user.changed_avatar", function(e, data) {
+        if (data.user_id == protonet.config.user_id) {
+          this.form.find("[name='meep[avatar]']").val(data.avatar);
+        }
+      }.bind(this))
+      
       .bind("channel.hide", function() {
         this.input.prop("disabled", true);
       }.bind(this))
@@ -71,7 +80,9 @@ protonet.timeline.Form = {
       .bind("form.create_reply", function(e, userName) {
         var value = this.input.focus().val(),
             reply = "@" + userName + " ";
-        this.input.val(value + ((value.slice(-1) == " " || !value.length) ? "" : " ") + reply);
+        if (value.indexOf(reply) === -1) { // Only insert "@username" when not already in input
+          this.input.val(value + ((value.slice(-1) == " " || !value.length) ? "" : " ") + reply);
+        }
       }.bind(this))
       
       /**
@@ -98,6 +109,13 @@ protonet.timeline.Form = {
         }
         // Invoke text extension checker
         this.input.trigger("paste");
+      }.bind(this))
+      
+      /**
+       * Focus the input
+       */
+      .bind("form.focus", function(e, message, mark) {
+        this.input.focus();
       }.bind(this))
       
       /**
@@ -133,7 +151,18 @@ protonet.timeline.Form = {
         if (!$.trim(value)) {
           this.input.val(data.message);
         }
-      }.bind(this));
+      }.bind(this))
+      
+      .bind("form.share_meep", function(e, id) {
+        protonet.timeline.Meep.get(id, function(data) {
+          if (data.author !== protonet.config.user_name) {
+            protonet.trigger("form.create_reply", data.author);
+          } else {
+            protonet.trigger("form.focus");
+          }
+          protonet.trigger("text_extension_input.select", protonet.timeline.Meep.getUrl(id));
+        });
+      });
     
     
     /**
@@ -154,6 +183,15 @@ protonet.timeline.Form = {
       
       this.submit(event);
     }.bind(this));
+    
+    $.behaviors({
+      "[data-reply-to]:click": function(element, event) {
+        protonet
+          .trigger("form.create_reply", $(element).data("reply-to"))
+          .trigger("modal_window.hide");
+        event.preventDefault();
+      }
+    });
   },
   
   /**
@@ -181,7 +219,7 @@ protonet.timeline.Form = {
       this.typing = true;
       protonet.trigger("socket.send", {
         operation: "user.typing",
-        payload: { user_id: protonet.user.data.id, channel_id: protonet.timeline.Channels.selected}
+        payload: { user_id: protonet.config.user_id, channel_id: protonet.timeline.Channels.selected}
       });
     }
     
@@ -195,9 +233,18 @@ protonet.timeline.Form = {
       clearTimeout(this._typingTimeout);
       protonet.trigger("socket.send", {
         operation: "user.typing_end",
-        payload: { user_id: protonet.user.data.id }
+        payload: { user_id: protonet.config.user_id }
       });
     }
+  },
+  
+  _prefill: function() {
+    protonet.utils.urlBehaviors({
+      "form.fill":                    /(?:\?|&)message=([^&#$]+)(.*)/,
+      "text_extension_input.select":  /(?:\?|&)url=([^&#$]+)(.*)/,
+      "form.share_meep":              /(?:\?|&)share=([^&#$]+)(.*)/,
+      "form.create_reply":            /(?:\?|&)reply_to=([^&#$]+)(.*)/
+    });
   }
 };
 

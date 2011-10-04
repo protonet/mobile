@@ -1,18 +1,17 @@
 module ChannelsHelper
-
-  def channel_listen_control(channel)
-    if current_user.channels.include?(channel)
-      link_to(raw('<p id="channel-listener"> stop listening </p>'), current_user.listens.find_by_channel_id(channel.id), :class => 'listen off', :method => :delete)
-    else
-      link_to(raw('<p id="channel-listener"> start listening </p>'), listens_path(:channel_id => channel.id), :class => 'listen on', :method => :post)
-    end
-  end
-  
   def get_channel_mapping_as_json
     channel_mapping = {}
     Channel.real.all.each do |channel|
       channel_mapping[escape_javascript(channel.name)] = channel.id
     end
     channel_mapping.to_json
+  end
+  
+  def channel_description(channel)
+    channel.description.blank? ? raw('<i class="hint">no description available</i>') : channel.description
+  end
+  
+  def channel_icons(channel)
+    render :partial => 'channel_icons', :locals => { :channel => channel }
   end
 end

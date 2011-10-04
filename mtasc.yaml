@@ -11,7 +11,7 @@ preview:    textmate
 player:     8
 width:      1
 height:     1
-fps:        15
+fps:        10
 bgcolor:    FFFFFF
 
 # Optional, use it if you have a custom version of MTASC (i.e: HAMTASC):

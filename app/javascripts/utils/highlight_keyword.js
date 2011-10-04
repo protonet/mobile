@@ -15,11 +15,14 @@
  *    </script>
  */
 protonet.utils.highlightKeyword = (function() {
-  var EXCLUDES         = ["html", "head", "style", "title", "link", "meta", "script", "object", "iframe"],
+  var EXCLUDES         = ["html", "head", "style", "title", "link", "meta", "script", "object", "iframe", "mark"],
       HTML_REPLACEMENT = "<mark>$&</mark>";
   
   return function(keyword, element) {
-    var regExp = $.type(keyword) == "regexp" ? keyword : new RegExp(protonet.utils.escapeForRegExp(keyword), "gi"),
+    if (!$.trim(keyword)) {
+      return;
+    }
+    var regExp = $.type(keyword) === "regexp" ? keyword : new RegExp(protonet.utils.escapeForRegExp(keyword), "gi"),
         childNodes = element.childNodes,
         childNodesLength = childNodes.length;
     

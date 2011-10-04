@@ -12,9 +12,8 @@
       greyer_light  #f2f2f2   rgb(242, 242, 242)
       white         #fff      rgb(255, 255, 255)
 =========================================================================== */
-html,
-body {
-  min-height: 100%;
+html {
+  height: 100%;
 }
 
 body {
@@ -22,6 +21,7 @@ body {
   overflow-y: scroll;
   background: #dae4ff; /* Same as rgba(72, 123, 255, 0.2); which creates a very buggy background effect in opera 10.64 */
   color: #000;
+  min-height: 100%;
 }
 
 .inner-body {
@@ -30,10 +30,15 @@ body {
 }
 
 body,
+button,
 select,
 textarea,
 input {
   font: 12px/1.4em Verdana, sans-serif;
+}
+
+output {
+  display: block;
 }
 
 a {
@@ -50,6 +55,7 @@ a:hover {
   outline: 0;
 }
 
+button:focus,
 a:focus {
   outline: 1px dotted #666;
 }
@@ -58,28 +64,26 @@ img:-moz-broken{
   -moz-force-broken-image-icon: 1;
 }
 
-h5 {
-  font-size: 12px;
-}
-
 mark {
   display: inline;
   background: rgb(0, 204, 0);
   background: rgba(0, 204, 0, 0.25);
 }
 
-
+.button,
 button {
   position: relative;
   border: 1px solid #ccc;
+  display: inline-block;
   padding: 4px 20px;
+  margin: 10px 10px 0 0;
   color: #333;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13px;
   background: #ddd;
-  -webkit-border-radius: 12px;
-  -moz-border-radius: 12px;
-  border-radius: 12px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;
   -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, .5);
   -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, .5);
   box-shadow: 1px 1px 2px rgba(0, 0, 0, .5);
@@ -88,11 +92,18 @@ button {
   background: -moz-linear-gradient(top,  #eee,  #ccc);
 }
 
-button:hover {
-  color: #000;
+.button:focus,
+button:focus {
+  color: #487bff;
 }
 
-button:active {
+.button:hover {
+  color: #333;
+}
+
+.button:active,
+button:active,
+button.active {
   background: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#eee));
   background: -moz-linear-gradient(top,  #ccc,  #eee);
   -webkit-box-shadow: none;
@@ -102,48 +113,55 @@ button:active {
   left: 1px;
 }
 
+form.loading button,
+.button.loading,
 button.loading {
+  background: #fff url(/img/icn_loading.gif) 12px center no-repeat;
   padding-left: 40px;
 }
 
-button.loading:before {
-  content: "";
-  width: 16px;
-  height: 16px;
-  top: 7px;
-  position: absolute;
-  left: 17px;
-  background: transparent url(/img/icn_loading.gif) no-repeat;
-}
-
+form.loading button,
+.button.loading,
+.button:disabled,
 button.loading,
 button:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-output {
-  display: block;
+input[type=search],
+.inset-border {
+  padding: 5px;
+  font-size: 14px;
+  border: 3px solid;
+  border-color: #777 #ccc #ccc #777;
 }
 
-section,
-aside {
+input[type=search] {
+  padding-right: 27px;
+  width: 182px;
+  background: #fff url(../img/icn_search.png) 190px center no-repeat;
+}
+
+.subpage,
+.main-content,
+.side-content {
   -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  background: rgb(255, 255, 255);
+  background: #fff;
   display: inline-block;
   vertical-align: top;
 }
 
-section.main {
+.main-content {
   width: 650px;
-  min-height: 500px;
+  min-height: 700px;
   margin: 0 20px 0 0;
   position: relative;
 }
 
-#side {
+.side-content {
   width: 220px;
   padding: 20px;
 }
@@ -159,12 +177,18 @@ section.main {
 }
 
 input[type=text],
-input[type=password] {
+input[type=email],
+input[type=password],
+textarea {
   border: 1px solid;
   border-color: #666 #ccc #ccc #666;
   padding: 2px 4px;
   width: 200px;
   height: 18px;
+}
+
+textarea {
+  height: 150px;
 }
 
 .upgrade-browser {
@@ -209,9 +233,9 @@ a.close-link {
   font-size: 16px;
   color: #fff;
   text-align: center;
-  padding: 5px;
-  width: 19px;
-  line-height: 19px;
+  width: 30px;
+  height: 30px;
+  line-height: 29px; /* 29px for firefox */
   background: #000;
   border: 3px solid #fff;
   border-radius: 30px;
@@ -228,17 +252,14 @@ a.close-link:hover {
   background: #487bff;
 }
 
-a.close-link:active {
-  -webkit-transform: scale(1);
-  -moz-transform: scale(1);
-}
-
 pre {
   margin: 5px 0;
   max-height: 200px;
-  overflow: auto;
+  overflow-y: scroll;
+  overflow-x: auto;
   display: block;
   font-size: 12px;
+  word-wrap: normal;
   background-color: #fff;
   padding: 5px;
   border: 1px solid #ccc;
@@ -306,7 +327,7 @@ pre {
 header {
   position: relative;
   display: block;
-  height: 90px;
+  height: 88px;
 }
 
 header .logo {
@@ -369,35 +390,13 @@ header .hearts {
   text-align: center;
 }
 
-/* =SINGLE LOGIN
-=========================================================================== */
-#single-login {
-  width: 890px;
-  margin: 0 auto;
-  position: relative;
-  top: 100px;
-}
-
-#single-login .errorExplanation {
-  background:       none repeat scroll 0 0 white;
-  margin-bottom:    10px;
-  margin-left:      auto;
-  margin-right:     auto;
-  padding:          10px;
-  width:            500px;
-}
-
-#single-login .errorExplanation h2 {
-  color:            red;
-}
-
 /* =USER NAVIGATION
 =========================================================================== */
 #user-navigation  {
   position: absolute;
   right: 0;
   top: 6px;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 #user-navigation > li {
@@ -420,10 +419,6 @@ header .hearts {
 #user-navigation .welcome {
   padding-right: 0;
   color: #666;
-}
-
-#user-navigation .change-avatar {
-  font-weight: bold;
 }
 
 #user-navigation .welcome a {
@@ -482,32 +477,53 @@ header .hearts {
   color: #e75c79;
 }
 
-/* =SUB PAGES
-=========================================================================== */
-section.sub {
-  width: 895px;
-  padding: 20px;
+
+/** Hover Hint */
+.hover-hint {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  position: absolute;
+  background: #333;
+  padding: 3px 8px;
+  color: #fff;
+  font-size: 10px;
+  z-index: 20;
+  font-style: normal;
 }
 
-.sub h2 {
-  margin-bottom: 20px;
+.hover-hint:after {
+  border: 5px solid transparent;
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
 }
 
-.sub form {
-  margin-bottom: 20px;
+.hover-hint-top {
+  margin-top: -9px;
 }
 
-/* =BOX
-=========================================================================== */
-section.box {
-  margin: 30px auto;
-  padding: 10px;
-  position: relative;
-  top: 100px;
-  width: 608px; /* sizes are adapted to be as big as the auto width login box below - sorry */
+.hover-hint-right {
+  margin-left: 7px;
 }
-div.box-wrapper {
-  margin: 0 auto;
-  width: 890px;
+
+.hover-hint-top:after {
+  border-top: 5px solid #333;
+  margin-left: -5px;
+  left: 50%;
+  bottom: -10px;
 }
-/* ================================================================ BOX = */
+
+.hover-hint-right:after {
+  border-right: 5px solid #333;
+  margin-top: -5px;
+  top: 50%;
+  left: -10px;
+}
+
+.hint[data-hover-hint] {
+  color: #999 !important;
+  text-decoration: none;
+  font-weight: normal;
+}

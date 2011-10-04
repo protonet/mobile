@@ -1,0 +1,380 @@
+.subpage {
+  display: block;
+  position: relative;
+  min-height: 300px;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.subpage:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+.modal-window .subpage {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background: transparent;
+  height: 100%;
+}
+
+.modal-window .modal-window-scroll-content {
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+  overflow-y: scroll;
+}
+
+
+
+
+
+.subpage h1 {
+  background: rgb(72, 123, 255);
+  background: -webkit-gradient(linear, left top, left bottom, from(#a4bdff), to(#487bff));
+  background: -moz-linear-gradient(top, #a4bdff, #487bff);
+  font-size: 18px;
+  line-height: 56px;
+  padding: 0 0 0 30px;
+  color: #fff;
+}
+
+.subpage h2 {
+  font-size: 18px;
+}
+
+.subpage h3 {
+  margin-top: 50px;
+  font-size: 14px;
+  padding: 0 0 5px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.subpage h2,
+.subpage h3,
+.subpage p {
+  margin-bottom: 10px;
+}
+
+.subpage > nav {
+  float: right;
+  margin-right: 30px;
+  font-size: 0;
+}
+
+.subpage > nav > a {
+  color: #eee;
+  font-size: 12px;
+  padding: 0 10px;
+  line-height: 56px;
+  display: inline-block;
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.subpage > nav > a:first-child {
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.subpage > nav > a:hover,
+.subpage > nav > a:focus {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.subpage > nav > a:active {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.subpage aside {
+  margin-top: 1px;
+  float: left;
+  width: 250px;
+  border-right: 1px solid #999;
+}
+
+.subpage aside:after {
+  content: "";
+  top: 57px;
+  position: absolute;
+  bottom: 0;
+  border-right: 1px solid #999;
+  left: 250px;
+}
+
+.subpage aside li {
+  position: relative;
+  border-bottom: 1px solid #999;
+}
+
+.subpage aside .selected {
+  z-index: 1;
+}
+
+.subpage aside .selected a {
+  background: #487bff !important;
+  color: #fff !important;
+  border-bottom: 1px solid transparent !important;
+}
+
+.subpage aside .selected i {
+  color: #ccc !important;
+}
+
+.subpage aside .selected:after {
+  content: "";
+  position: absolute;
+  right: 0;
+  width: 0;
+  height: 0;
+  right: -28px;
+  top: 5px;
+  border-left: 28px solid #487bff;
+  border-top: 28px solid transparent;
+  border-bottom: 28px solid transparent;
+}
+
+.subpage aside a {
+  display: block;
+  padding: 10px 10px 10px 30px;
+  height: 45px;
+  text-decoration: none;
+  border-bottom: 1px solid #fff;
+  background: #eee;
+  background: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.08));
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.08)));
+  outline: 0;
+}
+
+.subpage aside a:hover,
+.subpage aside a:focus {
+  color: #000;
+  background: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.15));
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.15)));
+}
+
+.subpage aside a:active {
+  background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.1), transparent);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0.1)), to(transparent));
+}
+
+.subpage aside strong {
+  display: block;
+  font-size: 14px;
+}
+
+.subpage aside p {
+  font-size: 9px;
+  margin-bottom: 0;
+}
+
+.subpage aside img {
+  margin-top: 7px;
+  outline: 1px solid #fff
+}
+
+.subpage aside img + i {
+  font-style: normal;
+}
+
+.subpage aside i {
+  font-size: 9px;
+}
+
+.subpage .content {
+  padding: 20px 30px 20px 30px;
+}
+
+.subpage .content[data-tab] {
+  padding: 20px 20px 15px 40px;
+  margin: 0 0 0 250px;
+  border-left: 1px solid #999;
+}
+
+.subpage dt {
+  width: 30%;
+}
+
+.subpage dd {
+  width: 70%;
+}
+
+.subpage dt,
+.subpage dd {
+  display: inline-block;
+  vertical-align: top;
+  margin-bottom: 5px;
+}
+
+.subpage .single-button-form,
+.single-button-form button {
+  margin-top: 0;
+}
+
+.subpage textarea,
+.subpage select,
+.subpage input[type=text],
+.subpage input[type=password],
+.subpage input[type=email] {
+  width: 300px;
+}
+
+
+
+
+
+.checkbox-row {
+  background-color: #f3f3f3;
+  cursor: pointer;
+  display: block;
+  margin-bottom: 1px;
+  padding: 5px;
+}
+
+.checkbox-row:hover {
+  background-color: rgba(72, 123, 255, 0.15);
+}
+
+.checkbox-row input {
+  vertical-align: middle;
+}
+
+.checkbox-row.loading {
+  background-image: url(/img/icn_loading.gif);
+  background-repeat: no-repeat;
+  background-position: 96% center;
+}
+
+
+
+
+
+h3.belongs-to-list {
+  padding: 5px;
+  background: #999;
+  color: #fff;
+  margin-bottom: 0;
+  border: 1px solid #999;
+  position: relative;
+}
+
+.list {
+  overflow-y: scroll;
+  border: 1px solid #999;
+  background: #fff;
+  padding: 5px 0;
+  min-height: 150px;
+  max-height: 150px;
+  margin-bottom: 15px;
+}
+
+.list li {
+  margin-bottom: 1px;
+  line-height: 24px;
+  padding-left: 30px;
+  padding-right: 5px;
+  position: relative;
+}
+
+.list li:hover,
+.list li:focus {
+  background: #eee;
+}
+
+.list img {
+  top: 2px;
+  left: 5px;
+  position: absolute;
+}
+
+.list .action {
+  float: right;
+  padding-left: 5px;
+  margin: 2px 0 0 5px;
+  color: #487bff;
+  line-height: 20px;
+  border-left: 1px solid #ccc;
+}
+
+.list .action:last-of-type {
+  border-left: 0;
+}
+
+a.loading {
+  padding-right: 20px;
+  background-image: url(/img/icn_loading.gif);
+  background-repeat: no-repeat;
+  background-position: right center;
+  color: #999 !important;
+  text-decoration: none;
+}
+
+
+
+
+
+.icon-list {
+  display: inline-block;
+}
+
+.icon-list li {
+  width: 14px;
+  height: 14px;
+  float: left;
+  margin-right: 4px;
+}
+
+.icon-list li:last-child {
+  margin-right: 0;
+}
+
+
+
+
+
+.subpage .form-field {
+  display: block;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.subpage .form-field > label {
+  font-weight: bold;
+  float: left;
+  width: 220px;
+}
+
+.subpage .form-field + button {
+  margin-top: 0;
+}
+
+
+
+
+
+
+h2 .action-link {
+  float: right;
+}
+
+.action-link {
+  text-decoration : none;
+  padding-left: 20px;
+}
+
+.action-link.edit {
+  background: transparent url(/img/icn_edit.png) left center no-repeat;
+}
+
+.promotion-link {
+  color: #487bff;
+}

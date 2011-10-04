@@ -28,7 +28,7 @@ protonet.ui.Resizer.prototype = {
         
         var newPos = event.pageY,
             heightDiff = (newPos - currentPos),
-            newHeight = parseInt(this.element.css("height"), 10) + heightDiff;
+            newHeight = this.element.cssUnit("height")[0] + heightDiff;
         
         this.element.css("height", newHeight.px());
         currentPos = newPos;

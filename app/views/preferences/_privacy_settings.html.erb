@@ -1,22 +1,27 @@
-<h2>Please select the privacy settings for your interfaces:</h2>
-<% (SystemBackend.get_interfaces.collect(&:name) | ["published_to_web", "fallback"]).each do |interface| %>
-  <h3><%= interface %></h3>
-  <div>
-    <%= form_tag(preferences_privacy_update_path, {:id => 'allow-dashboard', :style => 'margin-bottom:0px;'}) do %>
-      <%= hidden_field_tag 'anchor', 'privacy'  %>
-      <%= hidden_field_tag 'interface', interface  %>
-      <%= hidden_field_tag 'preferences[allow_dashboard_for_strangers]', false  %>
-      Logged out users get to see dashboard? <%= check_box_tag 'preferences[allow_dashboard_for_strangers]', true, (SystemPreferences.privacy[interface]["allow_dashboard_for_strangers"] rescue false) %>
-    <% end %>
-  </div>
-  <div>
-    <%= form_tag(preferences_privacy_update_path, {:id => 'allow-registrations', :style => 'margin-bottom:0px;'}) do %>
-      <%= hidden_field_tag 'anchor', 'privacy'  %>
-      <%= hidden_field_tag 'interface', interface  %>
-      <%= hidden_field_tag 'preferences[allow_registrations_for_strangers]', false  %>
-      Strangers are allowed to register (without invitation)? <%= check_box_tag 'preferences[allow_registrations_for_strangers]', true, (SystemPreferences.privacy[interface]["allow_registrations_for_strangers"] rescue false) %>
-    <% end %>
-  </div>
-  <br>
-<% end %>
-You're currently using: <%= incoming_interface %>
+<h2>Privacy settings</h2>
+
+<p>
+  Here you can configure what your users are allowed to do depending on which network interface they are coming from.<br>
+  You are currently accessing protonet via network interface "<strong><%= incoming_interface %></strong>".
+</p>
+
+<%- network_interfaces.each do |interface| %>
+  <h3><%= raw(network_interface_description(interface)) %></h3>
+  <%= form_tag(preferences_privacy_update_path, { 'data-ajax-auto-submit' => '1' }) do %>
+    <%= hidden_field_tag 'section', 'publish_to_web' %>
+    <%= hidden_field_tag 'interface', interface  %>
+    <%= hidden_field_tag 'preferences[allow_dashboard_for_strangers]', false  %>
+    <label class="checkbox-row">
+      <%= check_box_tag 'preferences[allow_dashboard_for_strangers]', true, (SystemPreferences.privacy[interface]["allow_dashboard_for_strangers"] rescue false) %> Non-members can chat
+    </label>
+  <%- end %>
+  <%= form_tag(preferences_privacy_update_path, { 'data-ajax-auto-submit' => '1' }) do %>
+    <%= hidden_field_tag 'section', 'publish_to_web' %>
+    <%= hidden_field_tag 'interface', interface  %>
+    <%= hidden_field_tag 'preferences[allow_registrations_for_strangers]', false  %>
+    <label class="checkbox-row">
+      <%= check_box_tag 'preferences[allow_registrations_for_strangers]', true, (SystemPreferences.privacy[interface]["allow_registrations_for_strangers"] rescue false) %>
+      Non-members can register (without invitation) 
+    </label>
+  <%- end %>
+<%- end %>

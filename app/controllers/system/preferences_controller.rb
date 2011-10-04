@@ -6,9 +6,12 @@ module System
         v = eval(v) if ['false', 'true'].include?(v)
         SystemPreferences[k] = v
       end
-      respond_to do |format|
-        format.html { redirect_to preferences_path(:anchor => params[:anchor]) }
-        format.js { head :ok }
+      
+      flash[:notice] = "Your preferences have been successfully saved"
+      if request.xhr?
+        head(204)
+      else
+        redirect_to :controller => '/preferences', :action => :show, :section => params[:section]
       end
     end
     

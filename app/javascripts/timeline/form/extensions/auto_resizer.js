@@ -33,12 +33,12 @@ protonet.timeline.Form.extensions.AutoResizer = function(input, wrapper) {
             top:        0,
             left:       "-9999px",
             overflowY:  overflowY
-        }).css(propOb).attr("tabIndex", "-1").insertBefore(input);
+        }).css(propOb).attr("tabindex", "-1").insertBefore(input);
         
         return clone[0];
       })();
   
-  function updateHeight(useEffect) {
+  function updateHeight() {
     cloneElement.value = inputElement.value;
     var scrollHeight = cloneElement.scrollHeight,
         newHeight;
@@ -61,11 +61,7 @@ protonet.timeline.Form.extensions.AutoResizer = function(input, wrapper) {
     }
     
     if (newHeight !== oldHeight) {
-      if (useEffect === true) {
-        wrapper.animate({ height: newHeight.px() }, 250);
-      } else {
-        wrapperElement.style.height = newHeight.px();
-      }
+      wrapperElement.style.height = newHeight.px();
       oldHeight = newHeight;
     }
   }
@@ -78,6 +74,6 @@ protonet.timeline.Form.extensions.AutoResizer = function(input, wrapper) {
   
   protonet.bind("form.submitted", function() {
     // delay for performance reasons
-    setTimeout(function() { updateHeight(true); }, 100);
+    setTimeout(updateHeight, 0);
   });
 };

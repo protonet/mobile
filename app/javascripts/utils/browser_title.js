@@ -1,41 +1,39 @@
-//= require "is_window_focused.js"
-
 protonet.utils.BrowserTitle = (function() {
   var restoredTitle,
       animation,
       autoRestore,
       isAnimating,
+      doc                         = document,
+      originalTitle               = doc.title,
+      prefix                      = "",
       VISIBLE_CHARACTERS_IN_TITLE = 200;
       
   $(window).focus(_focus);
   
-  function set(message, onlyWhenPageIsBlurred, shouldBeAnimated) {
-    if (onlyWhenPageIsBlurred && protonet.utils.isWindowFocused()) {
+  function animate(message) {
+    if (isAnimating) {
       return;
     }
-    
-    if (shouldBeAnimated && isAnimating) {
-      return;
-    }
-    
-    restoredTitle = restoredTitle || document.title;
     
     // Auto restore title when page is focused
-    autoRestore = onlyWhenPageIsBlurred;
-    
-    // Only set title and return if no animation wished
-    if (!shouldBeAnimated) {
-      document.title = message;
-      return;
-    }
+    autoRestore = true;
     
     _animate(message);
   }
   
+  function setPrefix(str) {
+    prefix = str;
+    autoRestore = true;
+    if (!isAnimating) {
+      doc.title = "(" + prefix + ") " + originalTitle;
+    }
+  }
+  
   function restore() {
     _stopAnimation();
+    prefix = "";
     autoRestore = false;
-    document.title = restoredTitle;
+    doc.title = originalTitle;
   }
   
   function _focus() {
@@ -47,12 +45,12 @@ protonet.utils.BrowserTitle = (function() {
   
   function _animate(message) {
     var documentTitle = _extendTitle(message, message);
-    document.title = documentTitle;
+    doc.title = documentTitle;
     
     animation = setInterval(function() {
       documentTitle = documentTitle.substr(1);
       documentTitle = _extendTitle(documentTitle, message);
-      document.title = documentTitle;
+      doc.title = prefix ?  ("(" + prefix + ") " + documentTitle) : documentTitle;
     }, 400);
     
     isAnimating = true;
@@ -70,10 +68,9 @@ protonet.utils.BrowserTitle = (function() {
     return title;
   }
   
-  
-  
   return {
-    set: set,
+    animate: animate,
+    setPrefix: setPrefix,
     restore: restore
   };
 })();

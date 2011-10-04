@@ -14,10 +14,12 @@ protonet.utils.highlightChannelReplies = (function() {
       TRAILING_CHARS  = /[\.\-_]+$/,
       channelMapping  = {};
   
-  protonet.Notifications.bind("channels.data_available", function(e, channelData, availableChannels) {
-    $.each(availableChannels, function(channelName, channelId) {
-      channelMapping[channelName.toLowerCase()] = channelId;
-    });
+  $.each(protonet.config.available_channels, function(channelName, channelId) {
+    channelMapping[channelName.toLowerCase()] = channelId;
+  });
+  
+  protonet.bind("channel.added", function(e, channel) {
+    channelMapping[channel.name.toLowerCase()] = channel.id;
   });
   
   return function(str) {

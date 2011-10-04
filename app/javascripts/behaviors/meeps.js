@@ -1,11 +1,11 @@
-//= require "../utils/parse_query_string.js"
 //= require "../utils/template.js"
 
 $.behaviors({
   "li.meep:focus": function(element, event) {
-    var $target    = $(event.target),
-        $element  = $(element);
-    if (!$target.is("li.meep") && !$target.is("[data-meep-action]")) {
+    var $target     = $(event.target),
+        $element    = $(element),
+        actionLink  = ".detail-view-link, .share-link";
+    if (!$target.is("li.meep") && !$target.is(actionLink)) {
       $element.trigger("blur");
       return;
     }
@@ -18,7 +18,7 @@ $.behaviors({
     
     var blur = function() {
       $body.add($target).unbind(".meep_focus");
-      $element.removeClass("focus").find("[data-meep-action]").remove();
+      $element.removeClass("focus").find(actionLink).remove();
     };
     
     $body
@@ -56,7 +56,7 @@ $.behaviors({
     } else if (event.keyCode === 40 || (event.keyCode === 9 && !event.shiftKey)) {
       $nextElement = $element.next();
     } else if (event.keyCode === 13) {
-      $element.find("[data-meep-action='detail-view']:last").trigger("click").end().trigger("blur");
+      $element.find(".detail-view-link:last").trigger("click").end().trigger("blur");
       return;
     } else {
       return;

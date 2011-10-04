@@ -1,4 +1,8 @@
 protonet.text_extensions.render.iframe = function(data) {
+  if (!data.image) {
+    return;
+  }
+  
   var anchor = protonet.text_extensions.render.image(data, true),
       iframe,
       visible,
@@ -9,7 +13,7 @@ protonet.text_extensions.render.iframe = function(data) {
     iframe    = iframe    || $("<iframe>", { src: data.iframe, frameborder: 0 });
     closeLink = closeLink || $("<a>", {
       "class":    "media-close-link close-link",
-      html:       "X",
+      html:       "&times;",
       mousedown:  false, // ensure that meep isn't accidentally focused
       click:      function() {
         closeLink.detach();
@@ -22,6 +26,8 @@ protonet.text_extensions.render.iframe = function(data) {
     iframe.insertBefore(anchor);
     closeLink.insertBefore(anchor);
     anchor.detach();
+    
+    iframe.trigger("text_extension.show_media");
     
     protonet.one("channel.change", function() {
       if (visible) {

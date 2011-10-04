@@ -14,8 +14,15 @@ instruments:
     - vendor/sprockets/*/src
     - vendor/plugins/*/javascripts
   source_files:
-    - app/javascripts/application.js
-    - app/javascripts/instruments.js
+    - app/javascripts/pages/instruments.js
+snapshots:
+  asset_root: public
+  load_path:
+    - app/javascripts
+    - vendor/sprockets/*/src
+    - vendor/plugins/*/javascripts
+  source_files:
+    - app/javascripts/pages/snapshots.js
 files:
   asset_root: public
   load_path:
@@ -23,8 +30,7 @@ files:
     - vendor/sprockets/*/src
     - vendor/plugins/*/javascripts
   source_files:
-    - app/javascripts/application.js
-    - app/javascripts/files.js
+    - app/javascripts/pages/files.js
 users:
   asset_root: public
   load_path:
@@ -32,17 +38,7 @@ users:
     - vendor/sprockets/*/src
     - vendor/plugins/*/javascripts
   source_files:
-    - app/javascripts/application.js
-    - app/javascripts/users.js
-channels:
-  asset_root: public
-  load_path:
-    - app/javascripts
-    - vendor/sprockets/*/src
-    - vendor/plugins/*/javascripts
-  source_files:
-    - app/javascripts/application.js
-    - app/javascripts/channels.js
+    - app/javascripts/pages/users.js
 preferences:
   asset_root: public
   load_path:
@@ -50,30 +46,28 @@ preferences:
     - vendor/sprockets/*/src
     - vendor/plugins/*/javascripts
   source_files:
-    - app/javascripts/application.js
-    - app/javascripts/preferences.js
-networks:
+    - app/javascripts/pages/preferences.js
+meeps:
   asset_root: public
   load_path:
     - app/javascripts
     - vendor/sprockets/*/src
     - vendor/plugins/*/javascripts
   source_files:
-    - app/javascripts/application.js
-    - app/javascripts/networks.js
-sessions:
+    - app/javascripts/pages/meeps.js
+invitations:
   asset_root: public
   load_path:
     - app/javascripts
     - vendor/sprockets/*/src
     - vendor/plugins/*/javascripts
   source_files:
-    - app/javascripts/application.js
-registrations:
+    - app/javascripts/pages/invitations.js
+search:
   asset_root: public
   load_path:
     - app/javascripts
     - vendor/sprockets/*/src
     - vendor/plugins/*/javascripts
   source_files:
-    - app/javascripts/application.js
+    - app/javascripts/pages/search.js

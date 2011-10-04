@@ -35,7 +35,7 @@ Feature: Managing your profile
     Given I follow "your profile" within "#preferences-page"
     Then I should see "Name: dudemeister" within "#preferences-details"
     # standard image
-    Then I should see the profile image "user_picture.png" in my profile details
+    Then I should see the profile image "user_picture_r2.png" in my profile details
     And I should see "change user image" within "#preferences-details"
     And I press "change user image" within "#preferences-details"
     Then I should see "Upload" within "#avatar-upload"

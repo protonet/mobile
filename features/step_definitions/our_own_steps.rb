@@ -177,7 +177,7 @@ end
 
 Then /^I should see the profile image "([^"]*)" in my profile details$/ do |image_name|
   src = {
-    "user_picture.png" => "user_picture.png", #default
+    "user_picture_r2.png" => "user_picture_r2.png", #default
     "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
   }[image_name]
   image_selector = "#preferences-details img[src*='#{src}']"
@@ -186,7 +186,7 @@ end
 
 Then /^I should see the profile image "([^"]*)" in the top right navi$/ do |image_name|
   src = {
-    "user_picture.png" => "user_picture.png", #default
+    "user_picture_r2.png" => "user_picture_r2.png", #default
     "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
   }[image_name]
   image_selector = ".welcome img[src*='#{src}']"

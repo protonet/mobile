@@ -15,17 +15,13 @@ protonet.utils.highlightUserReplies = (function() {
   var REG_EXP         = /(\s|^|\()@([\w\.\-_@]+)/g,
       TRAILING_CHARS  = /[\.\-_]+$/,
       userMapping     = {},
-      viewer          = {};
+      viewerId        = protonet.config.user_id;
   
-  protonet.Notifications.bind("user.added", function(e, data) {
+  protonet.bind("user.added", function(e, data) {
     userMapping[data.name.toLowerCase()] = Number(data.id);
   });
   
-  protonet.Notifications.bind("user.data_available", function(e, userData) {
-    viewer = userData;
-  });
-  
-  protonet.Notifications.bind("users.data_available", function(e, userData) {
+  protonet.bind("users.data_available", function(e, userData) {
     $.each(userData, function(userId, data) {
       userMapping[data.name.toLowerCase()] = Number(userId);
     });
@@ -37,7 +33,7 @@ protonet.utils.highlightUserReplies = (function() {
       var trailingChars = ($2.match(TRAILING_CHARS) || [""])[0],
           userName      = trailingChars ? $2.replace(TRAILING_CHARS, "") : $2,
           userId        = userMapping[userName.toLowerCase()],
-          isViewer      = viewer.id == userId;
+          isViewer      = viewerId == userId;
       if (!userId) {
         return original;
       }

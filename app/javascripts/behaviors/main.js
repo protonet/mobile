@@ -1,36 +1,86 @@
+//= require "../utils/get_channel_name.js"
+
 $.behaviors({
-  "a[data-lightbox]:click": function(link, event) {
-    var $link    = $(link),
-        headline = $link.data("lightbox-title");
-    $.get($link.attr("href"), function(response) {
-      new protonet.ui.ModalWindow("my-modal-window").content(response).headline(headline).show();
-    });
-    event.preventDefault();
+  "a[data-channel-id]:dragstart": function(element, event) {
+    if (event.originalEvent.dataTransfer) {
+      var $element  = $(element),
+          channelId = $element.data("channel-id");
+      event.originalEvent.dataTransfer.setData("Text", "@" + protonet.utils.getChannelName(channelId) + " ");
+    }
   },
   
-  // this behaviour is the first ajax form behaviour we're using
-  // we've bound it's implementation to the invitation form usage
-  "form[data-protonet-remote]:submit": function(form, event) {
-    var $form = $(form);
-    $.ajax({
-      type: $form.attr("method"),
-      url:  $form.attr("action"),
-      data: $form.serialize(),
-      beforeSend: function(){
-        $form.find("input,textarea,select").attr("disabled", "disabled");
-      },
-      success:function(response) {
-        if (protonet.ui.currentModalWindow) {
-          protonet.ui.currentModalWindow.hide();
-        }
-        protonet.Notifications.trigger("flash_message.notice", response.flash);
-      },
-      error: function(response) {
-        protonet.ui.currentModalWindow.update({ content: response.responseText });
+  "a[data-user-id]:dragstart": function(element, event) {
+    if (event.originalEvent.dataTransfer)  {
+      var $element  = $(element),
+          user      = protonet.user.getUser(+$element.data("user-id"));
+      if (user) {
+        event.originalEvent.dataTransfer.setData("Text", "@" + user.name + " ");
       }
-    });
-    event.preventDefault();
-  }
+    }
+  },
+  
+  "img[data-src]:inview": function(element) {
+    $element = $(element);
+    $element.attr("src", $element.attr("data-src")).removeAttr("data-src");
+  },
+  
+  "[data-hover-hint]:mouseover": (function() {
+    var $bubble;
+    return function(element, event) {
+      event.preventDefault();
+      var $element = $(element);
+      if ($element.data("original_title")) {
+        return;
+      }
+      
+      var direction = $element.data("hover-hint"),
+          title     = $element.attr("title");
+      
+      $bubble = $bubble || $("<i>");
+      $bubble[0].style.cssText = "";
+      
+      $bubble
+        .attr("class", "hover-hint hover-hint-" + direction)
+        .text(title)
+        .appendTo("body");
+      
+      $element
+        .data("original_title", title)
+        .removeAttr("title")
+        .bind("mouseleave click", function() {
+          $bubble.detach();
+          $element
+            .attr("title", $element.data("original_title"))
+            .data("original_title", null)
+            .unbind("mouseleave click", arguments.callee);
+        });
+      
+      var elementDimenisons = {
+        width:  $element.outerWidth(),
+        height: $element.outerHeight()
+      };
+      
+      var bubbleDimensions = {
+        width:  $bubble.outerWidth(),
+        height: $bubble.outerHeight()
+      };
+      
+      var elementPosition = $element.offset();
+      
+      if (direction === "right") {
+        $bubble.css({
+          left: (elementPosition.left + elementDimenisons.width).px(),
+          top:  (elementPosition.top + (elementDimenisons.height / 2 - bubbleDimensions.height / 2)).px()
+        });
+      } else if (direction === "top") {
+        $bubble.css({
+          left: (elementPosition.left + (elementDimenisons.width / 2 - bubbleDimensions.width / 2)).px(),
+          top:  (elementPosition.top - bubbleDimensions.height).px()
+        });
+      }
+      $bubble.hide().fadeIn("fast");
+    };
+  })()
 });
 
 if (protonet.user.Browser.IS_TOUCH_DEVICE()) {

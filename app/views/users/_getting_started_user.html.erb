@@ -1,0 +1,30 @@
+<div class="getting-started">
+  <h4>Welcome. Get started!</h4>
+  <a class="getting-started-close-link" title="Don't show this again">&times;</a>
+  <ol>
+    <li class="upload-avatar">
+      <%= link_to edit_user_path(:id => current_user.id) do %>
+        <strong>Upload a profile picture</strong>
+        <p>Let others know who you are.</p>
+      <%- end %>
+    </li>
+    <%- unless current_user.invitee? %>
+      <li class="create-channel">
+        <%= link_to new_channel_path do %>
+          <%- if Channel.real.size > 1 %>
+            <strong>Listen to channels</strong>
+          <%- else %>
+            <strong>Create a channel</strong>
+          <%- end %>
+          <p>Channels are like groups/topics. You can create new ones or subscribe to existing ones.</p>
+        <%- end %>
+      </li>
+    <%- end %>
+    <li class="write-meep">
+      <a>
+        <strong>Write something</strong>
+        <p>Start a conversation.</p>
+      </a>
+    </li>
+  </ol>
+</div>

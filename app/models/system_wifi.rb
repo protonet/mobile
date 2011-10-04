@@ -25,7 +25,7 @@ class SystemWifi
     end
   
     def status(interface)
-      return 'off' unless Rails.env == 'production'
+      return false unless Rails.env == 'production'
       system(service_command("status"))
     end
       

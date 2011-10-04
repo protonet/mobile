@@ -6,7 +6,7 @@
 protonet.text_extensions.provider.LocalImage = {
   REG_EXP: (function() {
     var escapedBaseUrl = protonet.utils.escapeForRegExp(protonet.config.base_url);
-    return new RegExp(escapedBaseUrl + ".+\.(jpe?g|gif|png)", "i");
+    return new RegExp(escapedBaseUrl + ".+\\.(jpe?g|gif|png)", "i");
   })(),
   
   FILENAME_REG_EXP: /(file_path\=.*%2F|.+\/)(.+\.(jpe?g|gif|png|tiff))/i,

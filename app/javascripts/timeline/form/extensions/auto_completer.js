@@ -1,4 +1,4 @@
-//= require "../../../controls/inline_autocompleter.js"
+//= require "../../../ui/inline_autocompleter.js"
 
 /**
  * Auto completion for users and channels
@@ -6,7 +6,7 @@
 protonet.timeline.Form.extensions.AutoCompleter = function(input) {
   var userNames = [], channelNames = [];
   
-  var autoCompleter = new protonet.controls.InlineAutocompleter(input, [], {
+  var autoCompleter = new protonet.ui.InlineAutocompleter(input, [], {
     maxChars: 2,
     prefix:   "@"
   });
@@ -47,5 +47,9 @@ protonet.timeline.Form.extensions.AutoCompleter = function(input) {
      */
     .bind("user.added", function(e, user) {
       autoCompleter.addData(user.name, true);
+    })
+    
+    .bind("channel.added", function(e, channel) {
+      autoCompleter.addData(channel.name, true);
     });
 };

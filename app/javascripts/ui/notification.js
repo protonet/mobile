@@ -3,7 +3,7 @@
  *
  * @example
  *    new protonet.ui.Notification({
- *      image: "/images/user_picture.png",
+ *      image: "/img/foo.png",
  *      title: "Attention!",
  *      text:  "Hello this is the body of the notification"
  *    });
@@ -20,6 +20,7 @@ protonet.ui.Notification = function(config) {
     notification.onclick = function() {
       window.focus();
       this.cancel();
+      (config.onclick || $.noop)();
     };
     notification.show();
   }

@@ -1,0 +1,72 @@
+<h2>Customize the interface</h2>
+
+<p>Here you can change colors, build in custom functionality and adjust things. Free your mind.</p>
+
+<h3>General</h3>
+<%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
+  <%= hidden_field_tag 'section', 'customize' %>
+  <div class="form-field">
+    <%= label_tag 'preferences[browser_title]', 'Title' %>
+    <%= text_field_tag 'preferences[browser_title]', SystemPreferences.browser_title %>
+  </div>
+  <div class="form-field">
+    <%= hidden_field_tag 'preferences[show_user_navigation]', false, {:id => nil} %>
+    <%= label_tag 'preferences[show_user_navigation]', 'Show navigation' %> <%= check_box_tag 'preferences[show_user_navigation]', true, SystemPreferences.show_user_navigation %>
+    <a class="hint" data-hover-hint="top" title="Whether the navigation on the upper right should be shown">(?)</a>
+  </div>
+  <div class="form-field">
+    <%= hidden_field_tag 'preferences[show_clouds]', false, {:id => nil}  %>
+    <%= label_tag 'preferences[show_clouds]', 'Show clouds in background' %> <%= check_box_tag 'preferences[show_clouds]', true, SystemPreferences.show_clouds %>
+    <a class="hint" data-hover-hint="top" title="Turning this off will make the interface a bit more performant">(?)</a>
+  </div>
+  <div class="form-field">
+    <%= hidden_field_tag 'preferences[show_search_widget]', false, {:id => nil}  %>
+    <%= label_tag 'preferences[show_search_widget]', 'Enable search' %> <%= check_box_tag 'preferences[show_search_widget]', true, SystemPreferences.show_search_widget %>
+    <a class="hint" data-hover-hint="top" title="Whether users can search for messages">(?)</a>
+  </div>
+  <div class="form-field">
+    <%= hidden_field_tag 'preferences[show_user_widget]', false, {:id => nil}  %>
+    <%= label_tag 'preferences[show_user_widget]', 'Show user widget?' %> <%= check_box_tag 'preferences[show_user_widget]', true, SystemPreferences.show_user_widget %>
+    <a class="hint" data-hover-hint="top" title="Whether users should see who is currently online">(?)</a>
+  </div>
+  <div class="form-field">
+    <%= hidden_field_tag 'preferences[show_file_widget]', false, {:id => nil}  %>
+    <%= label_tag 'preferences[show_file_widget]', 'Enable file management' %> <%= check_box_tag 'preferences[show_file_widget]', true, SystemPreferences.show_file_widget %>
+    <a class="hint" data-hover-hint="top" title="Whether users should be able to upload and share files">(?)</a>
+  </div>
+  <div class="form-field">
+    <%= hidden_field_tag 'preferences[show_only_online_users]', false, {:id => nil}  %>
+    <%= label_tag 'preferences[show_only_online_users]', 'Show only online users' %> <%= check_box_tag 'preferences[show_only_online_users]', true, SystemPreferences.show_only_online_users %>
+    <a class="hint" data-hover-hint="top" title="Whether offline users should be hidden in the user widget. Recommended if your node has a lot of users (> 1000)">(?)</a>
+  </div>
+  <div class="form-field">
+    <%= hidden_field_tag 'preferences[allow_modal_views]', false, {:id => nil}  %>
+    <%= label_tag 'preferences[allow_modal_views]', 'Allow modal views?' %> <%= check_box_tag 'preferences[allow_modal_views]', true, SystemPreferences.allow_modal_views %>
+    <a class="hint" data-hover-hint="top" title="Whether sub pages should be displayed in a modal dialog">(?)</a>
+  </div>
+  <%= button "Save" %>
+<%- end %>
+
+<h3>Custom CSS</h3>
+<%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
+  <%= hidden_field_tag 'section', 'customize' %>
+  <div class="form-field">
+    <%= label_tag 'preferences[custom_css]', 'Your CSS:' %>
+    <%= text_area_tag 'preferences[custom_css]', SystemPreferences.custom_css %>
+  </div>
+  <div class="form-field">
+    <%= label_tag 'preferences[custom_css_type]', 'Type:' %>
+    <%= select_tag 'preferences[custom_css_type]', options_for_select([["append", "append"], ["overwrite", "overwrite"]], SystemPreferences.custom_css_type) %>
+  </div>
+  <%= button "Save" %>
+<%- end %>
+
+<h3>Custom JavaScript</h3>
+<%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
+  <%= hidden_field_tag 'section', 'customize' %>
+  <div class="form-field">
+    <%= label_tag 'preferences[custom_javascript]', 'Your JS:' %>
+    <%= text_area_tag 'preferences[custom_javascript]', SystemPreferences.custom_javascript %>
+  </div>
+  <%= button "Save" %>
+<%- end %>

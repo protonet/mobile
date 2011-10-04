@@ -21,10 +21,9 @@
       dispatching_websocket_port: "<%= configatron.websocket.port %>",
       force_xhr_streaming:        <%= raw(incoming_interface == "published_to_web" ? "true" : "false") %>,
       token:                      "<%= current_user.communication_token %>",
+      default_avatar:             "<%= configatron.default_avatar %>",
       user_name:                  "<%= current_user.display_name %>",
-      user_id:                    "<%= current_user.id %>",
-      user_channel_ids:           "<%= current_user.channels && current_user.channels.map {|c| c.id}.to_json %>",
-      user_icon_url:              "<%= current_user.avatar.url %>",
+      user_id:                    <%= current_user.id %>,
       user_is_admin:              <%= current_user.admin?.to_json %>,
       user_is_stranger:           <%= current_user.stranger?.to_json %>,
       show_file_widget:           <%= SystemPreferences.show_file_widget.to_json %>,
@@ -36,9 +35,9 @@
       allow_modal_views:          <%= SystemPreferences.allow_modal_views.to_json %>,
       session_id:                 "<%= cookies['_rails_dashboard_session'] %>",
       authenticity_token:         "<%= form_authenticity_token %>",
-      availableChannels:          <%= raw(get_channel_mapping_as_json) %>,
+      available_channels:         <%= raw(get_channel_mapping_as_json) %>,
       server:                     "<%= request.server_software %>",
-      debugMode:                  <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>
+      debug_mode:                 <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>
     };
     
     <%= "var AIRBRAKE_API_KEY = '#{HoptoadNotifier.configuration.api_key}';" if Rails.env.production? %>
@@ -46,10 +45,12 @@
   <%- if custom_stylesheet -%>
     <%- if SystemPreferences.custom_css_type == "append" -%>
       <%= stylesheet_link_tag(stylesheets, :cache => (configatron.avoid_caching != false)) %>
+      <%= stylesheet_link_tag("/css/pages/#{controller_name}", :cache => (configatron.avoid_caching != false)) rescue nil %>
     <%- end -%>
     <%= raw custom_stylesheet %>
   <%- else -%>
     <%= stylesheet_link_tag(stylesheets, :cache => (configatron.avoid_caching != false)) %>
+    <%= stylesheet_link_tag("/css/pages/#{controller_name}", :cache => (configatron.avoid_caching != false)) rescue nil %>
   <%- end -%>
   <%= csrf_meta_tag %>
   <%# Ensure HTML5 support in IE < 9 %>

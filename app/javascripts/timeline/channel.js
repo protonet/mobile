@@ -1,8 +1,8 @@
-//= require "meep.js"
 //= require "../utils/browser_title.js"
+//= require "../utils/ensure_scroll_position.js"
 //= require "../utils/is_window_focused.js"
 //= require "../media/play_sound.js"
-//= require "../lib/jquery.inview/jquery.inview.js"
+//= require "../utils/get_channel_name.js"
 
 /**
  * @example
@@ -13,11 +13,12 @@
  *  @events
  *    channel.change        - Call this with the channel id if you want to switch the channel
  *    channel.rendered      - Triggered when channel, including meeps, is completely rendered
+ *    channel.meep_receive  - Triggered after a meep has been received and rendered
  *    channel.rendered_more - Triggered when a bunch of new meeps are rendered into the channel (due to endless scrolling, etc.)
  *
  */
 (function(protonet) {
-  var MERGE_MEEPS_TIMEFRAME = 2 * 60 * 1000,  // 2 minutes
+  var MERGE_MEEPS_TIMEFRAME = 4 * 60 * 1000,  // 4 minutes
       FETCH_MEEPS_URL       = "/meeps",
       MAX_AMOUNT_MEEPS      = 500,            // Max amount of meeps to render per channel until the garbage collector takes action
       $window               = $(window);
@@ -27,6 +28,7 @@
       this.data = data;
       this.unreadMeeps = this.unreadReplies = 0;
       this._getTab();
+      
       this._observe();
     },
     
@@ -47,7 +49,7 @@
           }
           this._renderMeep(dataOrForm, this.channelList, post);
         }.bind(this))
-
+        
         /**
          * Render meep when received
          */
@@ -55,32 +57,20 @@
           if (meepData.channel_id != this.data.id) {
             return;
           }
-
-          var instance = this._renderMeep(meepData, this.channelList);
-
-          this._notifications();
-          this._replyNotifications(meepData, instance);
+          
+          // Set fixed scroll position when user scrolled down in timeline
+          // (eg. to watch a video) while new meep occurs
+          protonet.utils.ensureScrollPosition(function() {
+            var instance = this._renderMeep(meepData, this.channelList);
+            this._notifications();
+            this._replyNotifications(meepData, instance);
+            protonet.trigger("channel.meep_receive", [meepData, instance, this]);
+          }.bind(this)).when({
+            scrollTopGreaterThan: this.channelList.offset().top + 50,
+            and:                  this.isSelected
+          });
         }.bind(this))
-
-        /**
-         * Set fixed scroll position when user scrolled down in timeline
-         * (eg. to watch a video) while new meep occurs
-         */
-        .bind("meep.rendered", function(e, meepElement, meepData, instance) {
-          if (meepData.channel_id != this.data.id) {
-            return;
-          }
-
-          var channelPositionTop = this.channelList.offset().top,
-              scrollPositionTop  = $window.scrollTop(),
-              offset             = 40;
-
-          if (scrollPositionTop > (channelPositionTop + offset)) {
-            var meepHeight = meepElement.outerHeight(true);
-            $window.scrollTop(scrollPositionTop + meepHeight);
-          }
-        }.bind(this))
-
+        
         /**
          * Render meep in this channel if it contains a channel reply
          */
@@ -95,7 +85,7 @@
           }
           
           // Prevent creating a channel reply when the channel is not a "real" channel
-          if (!protonet.timeline.Channels.getChannelName(+meepData.channel_id)) {
+          if (!protonet.utils.getChannelName(+meepData.channel_id)) {
             return;
           }
           
@@ -120,17 +110,36 @@
           }
         }.bind(this))
         
+        /**
+         * Count unread meeps
+         */
         .bind("meep.rendered", function(e, meepElement, meepData, instance) {
-          if (meepData.channel_id != this.data.id) {
+          // Meep counts as unread ...
+          
+          // ... when meep is posted in this channel
+          if (meepData.channel_id !== this.data.id) {
             return;
           }
           
-          if (this.data.last_read_meep < meepData.id && !this.isSelected) {
-            this.unreadMeeps++;
-            var isReplyToViewer = instance.userReplies.indexOf(protonet.user.data.id) !== -1;
-            if (isReplyToViewer) {
-              this.unreadReplies++;
-            }
+          // ... and when meep was written by someone else than me
+          if (meepData.user_id == protonet.config.user_id) {
+            return;
+          }
+          
+          // ... and when meep was after the last_read_meep
+          if (meepData.id <= this.data.last_read_meep) {
+            return;
+          }
+          
+          // .. and when channel is neither selected nor focused
+          if (this.isSelected && protonet.utils.isWindowFocused()) {
+            return;
+          }
+          
+          this.unreadMeeps++;
+          var isReplyToViewer = instance.userReplies.indexOf(protonet.config.user_id) !== -1;
+          if (isReplyToViewer) {
+            this.unreadReplies++;
           }
         }.bind(this))
         
@@ -147,7 +156,7 @@
           this.isSelected = channelId == this.data.id;
           this.toggle();
         }.bind(this))
-
+        
         .bind("channel.hide", function() {
           this.isSelected = false;
           this.toggle();
@@ -163,8 +172,14 @@
           
           this._initEndlessScroller();
         }.bind(this));
+      
+      $window.bind("focus", function() {
+        if (this.isSelected) {
+          this.unreadMeeps = 0;
+        }
+      }.bind(this));
     },
-
+    
     _initGarbageCollector: function() {
       var MEEP_ELEMENTS = this.channelList[0].getElementsByTagName("article"); // Use a Live NodeList here
       setInterval(function() {
@@ -286,16 +301,24 @@
     /**
      * Render meeps non-blocking into the given dom element
      */
-    _renderMeeps: function(meepsData, channelList, callback) {
+    _renderMeeps: function(meepsData, channelList, callback, sync) {
       /**
        * Reverse meeps since we have to render them from top to bottom
        * in order to ensure that meep-merging works
        *
        * Chunking needed to avoid ui blocking while rendering
        */
-      meepsData.reverse().chunk(function(meepData) {
-        this._renderMeep(meepData, channelList);
-      }.bind(this), callback);
+       meepsData = meepsData.reverse();
+       if (sync) {
+         for (var i=0, length=meepsData.length; i<length; i++) {
+           this._renderMeep(meepsData[i], channelList);
+         }
+         callback();
+       } else {
+         meepsData.chunk(function(meepData) {
+           this._renderMeep(meepData, channelList);
+         }.bind(this), callback);
+       }
     },
 
     /**
@@ -307,7 +330,7 @@
       this._renderMeeps(meepsData, tempContainer, function() {
         this.channelList.append(tempContainer.children());
         protonet.trigger("channel.rendered_more", [this.channelList, meepsData, this]);
-      }.bind(this));
+      }.bind(this), true);
     },
 
     /**
@@ -316,8 +339,8 @@
      * pass post = true
      */
     _renderMeep: function(meepDataOrForm, channelList, post) {
-      var meep              = new protonet.timeline.Meep(meepDataOrForm),
-          previousMeep      = channelList.find(":first").data("instance");
+      var meep         = new protonet.timeline.Meep(meepDataOrForm),
+          previousMeep = channelList.find(":first").data("instance");
 
       if (previousMeep && this._shouldBeMerged(previousMeep, meep)) {
         meep.mergeWith(previousMeep.element);
@@ -336,13 +359,13 @@
      * Load meeps for channel
      */
     _loadMeeps: function(parameters, callback) {
-      protonet.trigger("timeline.loading_start");
-
-      $.extend(parameters, { channel_id: this.data.id });
       $.ajax({
         url:  FETCH_MEEPS_URL,
         type: "get",
-        data: parameters,
+        data: $.extend(parameters, { channel_id: this.data.id }),
+        beforeSend: function() {
+          protonet.trigger("timeline.loading_start");
+        },
         success: function(response) {
           if (!response || !response.length) {
             return;
@@ -393,7 +416,7 @@
         this._loadMeeps({ last_id: lastMeepId }, this._renderMoreMeeps.bind(this));
       }.bind(this));
     },
-
+    
     /**
      * Show small text hint when
      * channel has no meeps yet
@@ -407,7 +430,7 @@
       this.noMeepsHint = $("<div>", {
         "class": "no-meeps-available"
       }).hide().html(protonet.t("NO_MEEPS_AVAILABLE")).appendTo(this.container);
-
+      
       protonet.bind("channel.change", function(e, id) {
         if (this.data.id == id && !this.data.meeps.length) {
           this.noMeepsHint.show();
@@ -415,16 +438,17 @@
           this.noMeepsHint.hide();
         }
       }.bind(this));
-
+      
+      // TODO: meep.rendered should be unbinded when the noMeepsHint has been removed
       protonet.bind("meep.rendered", function(e, meepElement, meepData) {
         if (meepData.channel_id != this.data.id) {
           return;
         }
-
+        
         this.noMeepsHint.remove();
       }.bind(this));
     },
-
+    
     /**
      * Do all kind of notifications when a new meep is received
      *    - Animate browser title when page is not focused
@@ -436,13 +460,13 @@
           isAllowedToPlaySound  = protonet.user.Config.get("sound");
 
       if (!isWindowFocused && this.isSelected) {
-        protonet.utils.BrowserTitle.set("+++ New messages", true, true);
+        protonet.utils.BrowserTitle.animate("+++ New messages");
       }
 
       if (!isWindowFocused && this.isSelected && isAllowedToPlaySound) {
         protonet.media.playSound("/sounds/notification.ogg", "/sounds/notification.mp3", "/sounds/notification.wav");
       }
-
+      
       if (!this.isSelected) {
         this._toggleBadge();
       }
@@ -454,13 +478,16 @@
     _replyNotifications: function(meepData, instance) {
       var isWindowFocused             = protonet.utils.isWindowFocused(),
           isAllowedToDoNotifications  = protonet.user.Config.get("reply_notification"),
-          isReplyToViewer             = instance.userReplies.indexOf(protonet.user.data.id) !== -1;
+          isReplyToViewer             = instance.userReplies.indexOf(protonet.config.user_id) !== -1;
 
       if (isReplyToViewer && isAllowedToDoNotifications && !isWindowFocused) {
         new protonet.ui.Notification({
-          image:  meepData.avatar,
-          title:  protonet.t("REPLY_NOTIFICATION_TITLE", { author: meepData.author }),
-          text:   meepData.message.truncate(140)
+          image:    instance.getAvatar({ width: 48, height: 48 }),
+          title:    protonet.t("REPLY_NOTIFICATION_TITLE", { author: meepData.author }),
+          text:     meepData.message.truncate(140),
+          onclick:  function() {
+            protonet.trigger("channel.change", this.data.id);
+          }.bind(this)
         });
       }
     }

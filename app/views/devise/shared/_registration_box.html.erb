@@ -6,38 +6,28 @@
 <h1>Welcome guest</h1>
 
 <%- if allow_signup? %>
-  <%= form_for :user, :url => user_registration_path, :html => { :class => "sign-up form" } do |f| %>
+  <%= form_for :user, :url => user_registration_path, :html => { :class => "sign-up" } do |f| %>
     <%= hidden_field_tag :invitation_token, params[:invitation_token] if params[:invitation_token] %>
     <fieldset>
       <legend>Get started by <strong>signing up</strong> (it's free)</legend>
-      <div>
-        <%= f.label :login, "username" %>
+      <label>
         <%= f.text_field :login, :placeholder => "user name" %>
         <span class="hint">min. 3 characters</span>
-      </div>
-      <div>
-        <%= f.label :email, "email" %>
+      </label>
+      <label>
         <%= f.text_field :email, :placeholder => "email" %>
         <span class="hint">a valid email address</span>
-      </div>
-      <div>
-        <%= f.label :password, "password" %>
+      </label>
+      <label>
         <%= f.password_field :password, :placeholder => "password" %>
         <span class="hint">min. 6 characters</span>
-      </div>
-      <div>
-        <%= f.label :password_confirmation, "password confirmation" %>
+      </label>
+      <label>
         <%= f.password_field :password_confirmation, :placeholder => "password" %>
         <span class="hint">repeat for confirmation</span>
-      </div>
+      </label>
       <div>
-        <!-- TODO: Enable this -->
-        <%#= f.label :signup_contact, "social media profile or email" %>
-        <%#= f.text_field :signup_contact, :placeholder => "social media profile or email" %>
-        <!-- <span class="hint">(eg. http://www.facebook.com/john.doe)</span> -->
-      </div>
-      <div>
-        <button type="submit" name="join">sign up</button>
+        <%= button "sign up" %>
         <%= render :partial => 'instruments/facebook_login' %>
         <%= render :partial => 'instruments/twitter_login' %>         
       </div>
@@ -45,7 +35,7 @@
   <%- end %>
 <%- end %>
 
-<%= form_tag user_session_path, { :class => "login form #{'no-register' unless allow_signup?}" } do -%>
+<%= form_tag user_session_path, { :class => "login #{'no-register' unless allow_signup?}" } do -%>
   <fieldset>
     <%- if SystemPreferences.remote_ldap_sign_on == true %>
       <legend><strong>Log in</strong> with your ldap credentials</legend>
@@ -54,24 +44,16 @@
     <%- else %>
       <legend>or <strong>logging in</strong></legend>
     <%- end %>
-    <div>
-      <%= label :login, :login, "login" %>
+    <label>
       <%= text_field :user, :login, :value => @login, :placeholder => "user name", :id => "login_login" %>
-    </div>
-    <div>
-      <%= label :login, :password, "password" %>
+    </label>
+    <label>
       <%= password_field :user, :password, :value => nil, :placeholder => "password", :id => "login_password" %>
-    </div>
-    <div>
-      <%= check_box :user, :remember_me %>
-      <%= label :user, :remember_me, "Keep logged in?", :class => "hint", :style => "display:inline;" %>
-    </div>
-    <!-- TODO:<div class="forgot-password">
-        <a href="" class="hint" title="shit happens!">forgot password?</a>
-    </div>-->
-    <div>
-      <button type="submit" name="commit">login</button>
-    </div>
+    </label>
+    <label>
+      <%= check_box :user, :remember_me %> <span class="hint">Keep logged in?</span>
+    </label>
+    <button type="submit" name="commit">login</button>
   </fieldset>
 <%- end -%>
 </section>

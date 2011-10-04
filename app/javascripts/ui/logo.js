@@ -6,6 +6,7 @@
 protonet.ui.Logo = {
   monsters:       ["default", "business", "female", "surfer", "nerd"],
   monstersIndex:  protonet.storage.get("monster") || 0,
+  heartTrigger:   ".heart, .emoji-heart",
   
   initialize: function() {
     this.monster = $("header > .monster");
@@ -17,8 +18,20 @@ protonet.ui.Logo = {
   },
   
   _observe: function() {
-    protonet.Notifications.bind("monster.jump", this.jumpMonster.bind(this));
-    $(".heart").live("click", this.hearts.bind(this));
+    protonet
+      .bind("monster.jump", this.jumpMonster.bind(this))
+      .bind("monster.in_love", this.hearts.bind(this))
+      .bind("channel.meep_receive", function(e, meepData, instance, channel) {
+        if (!channel.isSelected) {
+          return;
+        }
+        
+        if (instance.article.find(this.heartTrigger).length) {
+          setTimeout(this.hearts.bind(this), 200);
+        }
+      }.bind(this));
+    
+    $(document).delegate(this.heartTrigger, "click", this.hearts.bind(this));
   },
   
   nextMonster: function(event) {
@@ -39,7 +52,7 @@ protonet.ui.Logo = {
   },
   
   setMonster: function(type) {
-    var oldMarginBottom = parseInt(this.monster.css("marginBottom"), 10);
+    var oldMarginBottom = this.monster.cssUnit("margin-bottom")[0];
     
     this.monster.animate({
       marginBottom: (oldMarginBottom + 50).px()
@@ -51,7 +64,7 @@ protonet.ui.Logo = {
     }.bind(this)).animate({
       marginBottom: oldMarginBottom.px()
     }, 250, function() {
-      if (type == "female") {
+      if (type === "female") {
         this.hearts();
       }
     }.bind(this));
@@ -61,17 +74,17 @@ protonet.ui.Logo = {
     this.setMonster(this.monsters[this.monstersIndex]);
   },
   
-  hearts: function(event) {
-    var hearts = $("<span>", {
+  hearts: function() {
+    var $hearts = $("<span>", {
       "class": "hearts",
-      html: "&hearts; &hearts; &hearts;<br>&hearts; &hearts;"
+      html:    "&hearts; &hearts; &hearts;<br>&hearts; &hearts;"
     }).insertBefore(this.monster);
     
-    hearts.animate({
-      opacity: 0,
-      top: "-50px"
+    $hearts.animate({
+      opacity:  0,
+      top:      "-50px"
     }, 2000, function() {
-      hearts.remove();
+      $hearts.remove();
     });
   }
 };

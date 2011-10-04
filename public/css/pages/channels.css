@@ -1,0 +1,46 @@
+.subpage aside .network-separator {
+  padding: 20px 10px 5px 30px;
+  text-align: left;
+  background: #999;
+  color: #fff;
+  margin-top: 30px;
+  border-bottom: 1px solid #fff;
+}
+
+.channel-icon-list {
+  padding: 2px 4px 3px;
+}
+
+.channel-icon-list li {
+  background: transparent url(/img/spr_channel_icons.png) no-repeat 0 0;
+}
+
+aside .channel-icon-list {
+  position: absolute;
+  right: 7px;
+  top: 9px;
+}
+
+aside .channel-icon-list li {
+  border-bottom: 0;
+  position: static;
+}
+
+.channel-icon-list .private {
+  background-position: -43px 0;
+  width: 10px;
+}
+
+.channel-icon-list .global {
+  background-position: -29px 0;
+}
+
+.channel-icon-list .admin {
+  background-position: -15px 0;
+}
+
+.channel-icon-list .subscribed {
+  background-position: -1px 0;
+  width: 14px;
+}
+

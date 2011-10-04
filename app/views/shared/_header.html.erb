@@ -1,0 +1,7 @@
+<header>
+  <a href="<%= root_path %>" class="logo"><%= SystemPreferences.browser_title %></a>
+  <a href="<%= root_path %>" class="monster default">change character</a>
+  <%- if SystemPreferences.show_user_navigation && !current_user.stranger? -%>
+    <%= render :partial => 'shared/user_navigation' %>
+  <%- end -%>
+</header>

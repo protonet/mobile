@@ -1,0 +1,50 @@
+<h2>WiFi configuration</h2>
+
+<p>You can have one private and one public WiFi network. Here you can configure them.<br>
+<strong>Please make sure that you don't turn off both networks accidentally.</strong></p>
+
+<% {"private" => "wlan0", "public" => "wlan1"}.each do |type, interface| %>
+  <%= form_tag preferences_wifi_update_path, { :remote => true, 'data-type' => 'html' }  do %>
+    <%= hidden_field_tag 'section', 'wifi_config' %>
+    <div class="status-box" data-interface="<%= interface %>">
+      <%= render :partial => 'preferences/wifi/interface_status', :locals => { :interface => interface } %>
+    </div>
+    <h3><%= type.capitalize %> <i class="hint">(Network interface: <%= interface %>)</i></h3>
+    <div class="form-field">
+      <label>Status</label>
+      <span>
+        <label>
+          <input type="radio" name="preferences[wifi][<%= interface %>]" value="true" <%= 'checked'  if SystemWifi.status(interface) %>>
+          On
+        </label>
+        <label>
+          <input type="radio" name="preferences[wifi][<%= interface %>]" value="false" <%= 'checked' unless SystemWifi.status(interface) %>>
+          Off
+        </label>
+      </span>
+    </div>
+    
+    <div class="form-field">
+      <label>Share internet connection:</label>
+      <span>
+        <label>
+          <input type="radio" name="preferences[sharing][<%= interface %>]" value="true" <%= "checked" if SystemConnectionSharing.status(interface) %>>
+          On
+        </label>
+        <label>
+          <input type="radio" name="preferences[sharing][<%= interface %>]" value="false" <%= "checked" unless SystemConnectionSharing.status(interface) %>>
+          Off
+        </label>
+        <a class="hint" data-hover-hint="top" title="Allow others to use your internet connection. When turned 'off' users will only be able to reach the protonet chat. No other website.">(?)</a>
+      </span>
+    </div>
+  
+    <div class="form-field">
+      <%= label_tag "preferences[password][#{interface}]", "Password:" %>
+      <%= text_field_tag "preferences[password][#{interface}]", SystemPreferences.wifi[interface]["password"], {:size => 12, :placeholder => "password (empty for unsecured)"} %>
+    </div>
+    <div>
+      <%= button "Save" %>
+    </div>
+  <%- end %>
+<%- end %>

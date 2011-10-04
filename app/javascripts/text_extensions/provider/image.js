@@ -1,4 +1,6 @@
 //= require "../../utils/parse_url.js"
+//= require "../../utils/escape_for_reg_exp.js"
+//= require "../../media/proxy.js"
 
 /**
  * Image Provider
@@ -10,13 +12,18 @@ protonet.text_extensions.provider.Image = {
   REG_EXP: /.{13,}\.(jpe?g|gif|png)(\?.*)*/i,
   
   loadData: function(url, onSuccess, onFailure) {
-    var testImg = new Image(),
+    // Handle already proxied images
+    url = protonet.media.Proxy.extractOriginalImageUrl(url);
+    
+    var testImg  = new Image(),
         urlParts = protonet.utils.parseUrl(url);
+        
     testImg.onerror = onFailure;
     testImg.onload = function() {
       onSuccess({
-        title:        urlParts.filename,
-        image:        url
+        url:   url,
+        title: urlParts.filename,
+        image: url
       });
     };
     testImg.src = url;

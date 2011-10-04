@@ -1,277 +1,46 @@
-/* =GENERAL
-=========================================================================== */
 .modal-window-shadow {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(255, 255, 255, 0.7);
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
+  z-index: 20;
 }
 
-.modal-window-dialog {
+.modal-window {
   -moz-box-shadow: 0 0 15px #000;
   -webkit-box-shadow: 0 0 15px #000;
   box-shadow: 0 0 15px #000;
-  background: #fff url(/img/modal_window_monster.png) 103% 104% no-repeat;
+  background: #fff;
   position: relative;
   width: 90%;
   margin: 0 auto;
   border-bottom: 5px solid #999;
-  border-top: 5px solid #999;
 }
 
-.modal-window-content {
+.modal-window > output {
   overflow: auto;
-  margin: 0 auto;
-  max-width: 650px;
   height: 40px;
+  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-.modal-window-dialog > h2 {
-  background-color: rgb(72, 123, 255);
-  background: -moz-linear-gradient(100% 100% 90deg, rgba(72, 123, 255, 0.8), rgba(72, 123, 255, 0.5));
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.5)), to(rgba(72, 123, 255, 0.8)));
-  -webkit-box-shadow: 0 0 10px #999;
-  -moz-box-shadow: 0 0 10px #999;
-  box-shadow: 0 0 10px #999;
-  padding: 20px;
-  color: white;
-  position: relative;
-  z-index: 1;
-}
-
-.modal-window-shadow {
-  z-index: 5;
-  display: none;
-}
-
-.modal-window-close-link {
+.modal-window .close-link {
   position: absolute;
-  z-index: 5;
+  z-index: 2;
   top: -16px;
   right: -16px;
 }
 
-.modal-window-dialog .loading-indicator {
-  text-align: center;
-  color: rgb(180, 180, 180);
+.modal-window.loading {
+  background: #fff url(/img/icn_loading_big.gif) center center no-repeat;
 }
 
-
-/* =MODAL WINDOWS CONTAINING MEEPS
-=========================================================================== */
-.modal-window-content li.meep {
-  margin-right: 0;
-}
-
-.modal-window-content .meeps {
-  width: 630px;
-}
-
-.modal-window-content .meep .avatar {
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-
-
-
-/* =MODAL WINDOW: SEARCH
-=========================================================================== */
-#search-form {
-  margin-bottom: 20px;
-}
-
-.search-page li.meep:last-child {
-  margin-bottom: 0;
-}
-
-.search-page .modal-window-content {
-  background: rgb(255, 255, 255);
-  background: rgba(255, 255, 255, 0.8);
-  padding-left: 45px;
-  overflow: hidden;
-  overflow-y: auto;
-}
-
-input[type=search] {
-  border: 3px solid;
-  border-color: #777 #ccc #ccc #777;
-  padding: 5px 27px 5px 5px;
-  font-size: 14px;
-  width: 182px;
-  background: #fff url(../img/icn_search.png) 190px center no-repeat;
-}
-
-.search-page h2 {
-  text-align: center;
-}
-
-.search-page input[type=search] {
-  width: 616px;
-  background-position: 624px;
-}
-
-.search-page .no-meeps-available {
+.modal-window > output > img:first-child,
+.modal-window > output > iframe:first-child {
   display: block;
-}
-
-.search-page .meeps,
-.search-page .no-meeps-available,
-.search-page .meep-loading-indicator {
-  margin-top: 15px;
-}
-
-.search-page .meeps {
-  margin-bottom: 15px;
-}
-
-.modal-window-dialog.loading input[type=search] {
-  background-image: url(../img/icn_loading.gif);
-}
-
-
-/* =MODAL WINDOW: MEEP DETAILS
-=========================================================================== */
-.meep-page .modal-window-content {
-  overflow: hidden;
-  padding-left: 40px;
-  padding-right: 40px;
-  position: relative;
-}
-
-.meep-page .meeps {
-  position: absolute;
-  top: 50%;
-}
-
-.meep-page .border {
-  height: 90px;
-  border: 7px solid rgb(72, 123, 255);
-  -webkit-box-shadow: 0 0 4px #000;
-  -moz-box-shadow: 0 0 4px #000;
-  box-shadow: 0 0 4px #000;
-  -webkit-border-radius: 1.2em;
-  -moz-border-radius: 1.2em;
-  border-radius: 1.2em;
-  overflow: visible !important; /* jquery will set this to hidden while animating, we don't want this */
-  position: absolute;
-  margin-left: -37px;
-  top: 50%;
-  padding: 7px;
-  margin-top: -70px;
-  width: 654px;
-  background: #fff;
-}
-
-.meep-page .border.loading {
-  background: transparent url(/img/icn_loading_big.gif) center center no-repeat;
-}
-
-.meep-page h2 img {
-  display: inline-block;
-  height: 16px;
-  width: 16px;
-  border: 2px solid #fff;
-  margin-top: -2px;
-  vertical-align: middle;
-}
-
-.meep-page .share {
-  background: transparent url(/img/share_arrow.png) 0 0 no-repeat;
-  right: -8px;
-  bottom: -13px;
-  z-index: 10;
-  position: absolute;
-  width: 100px;
-  height: 40px;
-}
-
-.meep-page .next,
-.meep-page .previous {
-  position: absolute;
-  width: 0;
-  height: 0;
-  right: -50px;
-  top: 50%;
-  border-style: solid;
-  border-width: 20px;
-}
-
-.meep-page .next {
-  border-color: transparent transparent #999 transparent;
-  margin-top: -40px;
-}
-
-.meep-page .next:hover {
-  border-color: transparent transparent #000 transparent;
-}
-
-.meep-page .previous {
-  border-color: #999 transparent transparent transparent;
-  margin-top: 5px;
-}
-
-.meep-page .previous:hover {
-  border-color: #000 transparent transparent transparent;
-}
-
-.meep-page .meep {
-  opacity: 0.5;
-}
-
-.meep-page .meep:not(.selected) {
-  background-color: #ededed;
-  background-image: none; /* removes gradient, for a faster scrolling performance */
-}
-
-.meep-page .own.meep:not(.selected) {
-  background-color: #f9f3f0;
-  background-image: none;
-}
-
-.meep-page .meep:not(.selected) a {
-  cursor: default !important;
-}
-
-.meep-page .meep [data-meep-action],
-.meep-page .meep:before {
-  display: none !important;
-}
-
-.meep-page .selected.meep {
-  z-index: 5;
-  opacity: 1;
-}
-
-.meep-page input {
-  border: 1px inset #999;
-  color: #333;
-  font-size: 10px;
-  width: 190px;
-  background: #ddd;
-  height: 18px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  right: 0;
-}
-
-/* =MODAL WINDOW: SNAPSHOT
-=========================================================================== */
-.snapshot-page .modal-window-content button {
-  margin: 10px 0;
-}
-
-.snapshot-page .modal-window-content {
-  text-align: center;
-}
-
-.snapshot-page embed,
-.snapshot-page object {
-  display: block;
-  margin: 10px auto 0;
-  border: 3px solid;
-  border-color: #666 #ccc #ccc #666;
+  margin: 10px auto;
 }

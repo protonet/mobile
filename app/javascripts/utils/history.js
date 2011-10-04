@@ -1,118 +1,77 @@
 protonet.utils.History = (function() {
-  var HASH_PREFIX   = "#!", // HASHBANG-IN-YO-FACE!
-      $window       = $(window),
-      observers     = [],
-      current       = null,
-      history       = window.history,
-      location      = window.location,
-      usePushState  = history.pushState && false; // Set this to true, to use buggy HTML5 history.pushState
+  var $window       = $(window),
+      hooks         = [],
+      fallbacks     = [],
+      frozen        = false,
+      tempLink      = document.createElement("a"),
+      history       = window.history;
   
-  function register(path) {
-    if (path.startsWith("?")) {
-      path = location.pathname + path;
+  function normalize(url) {
+    tempLink.setAttribute("href", url);
+    return tempLink.href;
+  }
+  
+  function replace(url, additionalParams) {
+    url = normalize(url);
+    if (history.replaceState) {
+      history.replaceState($.extend({ url: url }, additionalParams), "", url);
     }
-    
-    if (path == current) {
-      return;
-    }
-    
-    if (usePushState) {
-      history.pushState({ path: path }, "", path);
-    } else {
-      // Following line is needed for Firefox to avoid onhashchange fuckup
-      current = path;
-      location.hash = HASH_PREFIX + path;
-      if (!path || path === location.pathname) {
-        try { history.replaceState({}, "", location.pathname); } catch(e) {}
-      }
-    }
-    current = getCurrentPath();
     return this;
   }
   
-  function getHash() {
-    var hash = location.hash;
-    if (hash.startsWith(HASH_PREFIX)) {
-      return hash.substr(HASH_PREFIX.length);
+  function push(url, additionalParams) {
+    url = normalize(url);
+    if (url !== location.href && history.pushState && !frozen) {
+      history.pushState($.extend({ url: url }, additionalParams), "", url);
+      freeze(0);
     }
-    return "";
+    return this;
   }
   
-  function getCurrentPath() {
-    var hash = getHash();
-    if (hash) {
-      return hash;
+  function freeze(duration) {
+    frozen = true;
+    setTimeout(function() {
+      frozen = false;
+    }, duration);
+  }
+  
+  function addHook(method) {
+    hooks.push(method);
+    return this;
+  }
+  
+  function addFallback(method) {
+    fallbacks.push(method);
+    return this;
+  }
+  
+  protonet.bind("history.change", function(e, path, additionalParams) {
+    var i = 0, j = 0, hooksLength = hooks.length, fallbacksLength = fallbacks.length, returnValue;
+    for (; i<hooksLength; i++) {
+      returnValue = returnValue || hooks[i](path, additionalParams);
     }
     
-    return location.pathname  + location.search;
-  }
-  
-  function onChange(callback) {
-    protonet.bind("history.change", function(e, path) {
-      callback(path);
-    });
-    return this;
-  }
-  
-  function observe(regExp, method) {
-    observers.push([regExp, method]);
-    return this;
-  }
-  
-  function _triggerObservers(path) {
-    path = path || getCurrentPath();
-    $.each(observers, function(i, value) {
-      var match = path.match(value[0]);
-      if (match) {
-        match.shift();
-        match = $.map(match, function(str) { return decodeURIComponent(str); })
-        value[1].apply(window, match);
+    if (!returnValue) {
+      for (; j<fallbacksLength; j++) {
+        fallbacks[j](path, additionalParams);
       }
-    });
-  }
-  
-  function _triggerChange(path) {
-    if (path == current) {
-      return;
-    }
-    current = path;
-    protonet.trigger("history.change", path);
-    _triggerObservers(path);
-  }
-  
-  // Observe
-  if (usePushState) {
-    $window.bind("popstate", function(event) {
-      var path = location.pathname + location.search;
-      if ($.type(path) == "string") {
-        _triggerChange(path);
-      }
-    });
-  }
-  
-  $window.bind("hashchange", function() {
-    var hash = getHash();
-    if ($.type(hash) == "string") {
-      _triggerChange(hash);
     }
   });
   
-  // Check for history entries initially
-  $(function() {
-    // Timeout in order to let everything which is done ondomready initialize
-    setTimeout(function() {
-      var historyEntry = getCurrentPath();
-      if (historyEntry) {
-        _triggerChange(historyEntry);
-      }
-    }, 10);
+  // Omit first popstate when history.state doesn't exist
+  $window.bind("popstate", function(event) {
+    if (!("state" in history)) {
+      history.state = event.originalEvent.state;
+      return;
+    }
+    var state = event.originalEvent.state || { url: location.href };
+    protonet.trigger("history.change", [state.url, state]);
   });
   
   return {
-    register:       register,
-    onChange:       onChange,
-    getHash:        getHash,
-    getCurrentPath: getCurrentPath,
-    observe:        observe
+    push:           push,
+    replace:        replace,
+    addFallback:    addFallback,
+    addHook:        addHook
   };
 })();

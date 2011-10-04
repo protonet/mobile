@@ -1,0 +1,3 @@
+Live status: <%= raw(SystemWifi.status(interface) ? '<span class="on">on</span>' : '<span class="off">off</span>') %>,
+DHCP/DNS: <%= raw(SystemDnsmasq.status(interface) ? '<span class="on">on</span>' : '<span class="off">off</span>') %>
+<%= link_to "reload", preferences_path(:section => 'wifi_config'), :class => 'reload-link', :title => 'reload' %>

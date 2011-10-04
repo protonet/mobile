@@ -1,26 +1,14 @@
 //= require "../ui/context_menu.js"
 
 protonet.user = {
-  data: {
-    name:                   protonet.config.user_name,
-    id:                     +protonet.config.user_id,
-    is_admin:               protonet.config.user_is_admin,
-    is_stranger:            protonet.config.user_is_stranger,
-    subscribed_channel_ids: protonet.config.user_channel_ids,
-    avatar:                 protonet.config.user_icon_url,
-    session_id:             protonet.config.session_id,
-    authenticity_token:     protonet.config.authenticity_token
-  },
-  
   initialize: function() {
     this.usersData = {};
     
     protonet.user.Config.initialize();
+    protonet.user.initGettingStarted();
     
     this._observe();
     this._createContextMenu();
-    
-    protonet.trigger("user.data_available", this.data);
   },
   
   _observe: function() {
@@ -29,14 +17,36 @@ protonet.user = {
      */
     protonet
       .bind("meep.rendered", function(e, element, data, instance) {
-        if (data.author == this.data.name && !instance.merged) {
+        if (data.author == protonet.config.user_name && data.user_id == protonet.config.user_id && !instance.merged) {
           element.addClass("own");
         }
       }.bind(this))
-    
+      
       .bind("users.data_available", function(event, usersData) {
         this.usersData = usersData;
-      }.bind(this));
+      }.bind(this))
+      
+      .bind("user.changed_avatar", function(e, data) {
+        // timeout needed since the server needs to first move the avatar to the correct location
+        setTimeout(function() {
+          var selector = [];
+          selector.push("a[data-user-id='" + data.user_id + "'] img");
+          if (data.user_id == protonet.config.user_id) {
+            selector.push("img[data-my-avatar]")
+          }
+          selector = selector.join(",");
+          $(selector).toArray().chunk(function(img) {
+            var $img       = $(img),
+                dimensions = { width:  $img.width(), height: $img.height() },
+                avatar = protonet.media.Proxy.getImageUrl(data.avatar, dimensions);
+            if ($img.attr("data-src")) {
+              $img.attr("data-src", avatar);
+            } else {
+              $img.attr("src", avatar);
+            }
+          });
+        }, 1000);
+      });
   },
   
   _createContextMenu: function() {
@@ -45,11 +55,12 @@ protonet.user = {
     // U have to check it out http://grooveshark.com/#/s/The+Best+Day/2fZAWg
     // kkthxbai
     var contextOptions = {
-      "show profile": function(link, closeContextMenu) {
+      "show profile": function($link, closeContextMenu) {
+        var url = $link.prop("href");
         if (protonet.config.allow_modal_views) {
-          protonet.globals.pages.user.show(+link.data("user-id"));
+          protonet.open(url);
         } else {
-          window.open(link.attr("href"), "profile" + new Date().getTime());
+          window.open(url, "profile" + new Date().getTime());
         }
         closeContextMenu();
       }.bind(this),
@@ -69,7 +80,7 @@ protonet.user = {
       }.bind(this)
     };
     
-    var contextMenu = new protonet.ui.ContextMenu("[data-user-id]", contextOptions, "context-menu-users");
+    var contextMenu = new protonet.ui.ContextMenu("a[data-user-id]", contextOptions, "context-menu-users");
   },
   
   getUser: function(userId) {
@@ -80,3 +91,4 @@ protonet.user = {
 
 //= require "browser.js"
 //= require "config.js"
+//= require "getting_started.js"

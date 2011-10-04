@@ -31,7 +31,8 @@ protonet.text_extensions.Input.prototype = {
     
     protonet
       .bind("form.submitted", this._submitted.bind(this))
-      .bind("text_extension_input.render", function(e, data) { this.render(data); }.bind(this));
+      .bind("text_extension_input.render", function(e, data)  { this.render(data);  }.bind(this))
+      .bind("text_extension_input.select", function(e, url)   { this.select(url);   }.bind(this));
   },
   
   _paste: function() {
@@ -99,7 +100,7 @@ protonet.text_extensions.Input.prototype = {
     this._show();
     
     protonet.utils.unshortUrl(url, function(originalUrl) {
-      this.originalUrl = originalUrl;
+      this.originalUrl = originalUrl.replace(/\/#!?\//, "/");
       this._getDataProvider(originalUrl);
       this.provider ? this._request() : this._hide();
     }.bind(this));
@@ -119,7 +120,7 @@ protonet.text_extensions.Input.prototype = {
     this._cancelRequest = false;
     this.provider.loadData(this.originalUrl, function(data) {
       if (!this._cancelRequest) {
-        data = $.extend({}, data, { type: this.providerName, url: this.originalUrl });
+        data = $.extend({}, data, { type: this.providerName, url: data.url || this.originalUrl });
         this.render(data);
       }
     }.bind(this), this._ignoreUrlAndReset.bind(this));
@@ -128,29 +129,32 @@ protonet.text_extensions.Input.prototype = {
   render: function(data) {
     this._removeRenderer();
     this.data = data;
-    this.renderer = new protonet.text_extensions.render(this.container, data);
+    this.element = protonet.text_extensions.render(data);
+    this.container.append(this.element);
     this.setInput(data);
     this.container.removeClass("loading-bar").show();
     this.expand();
   },
   
   _removeRenderer: function() {
-    if (this.renderer && this.renderer.resultsElement) {
-      this.renderer.resultsElement.remove();
+    if (this.element) {
+      this.element.remove();
     }
   },
   
   _show: function() {
-    this.container.addClass("loading-bar");
-    this.container.animate({
-      height: "30px",
-      opacity: 100
-    }, 200).show();
+    this.container
+      .addClass("loading-bar")
+      .animate({
+        height: "30px",
+        opacity: 100
+      }, 200)
+      .show();
   },
   
   expand: function() {
     this.container.stop().animate({
-      height: this.renderer.resultsElement.outerHeight(true).px(),
+      height: this.element.outerHeight(true).px(),
       opacity: 100
     }, 200, function() {
       this.container.css({ height: "auto", overflow: "visible" });

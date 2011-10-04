@@ -1,5 +1,5 @@
 #message-form {
-  margin: 20px 20px 20px 30px;
+  margin: 20px 20px 4px 30px;
   position: relative;
 }
 
@@ -45,9 +45,9 @@
   width: 50px;
   background: rgb(170, 170,170) url(/img/return.png) center center no-repeat;
   background: url(/img/return.png) center center no-repeat,
-              -moz-linear-gradient(100% 100% 90deg, rgba(153, 153, 153, 1), rgba(153, 153, 153, 0.7));
+              -moz-linear-gradient(top, rgba(134, 134, 134, 0.7), rgba(134, 134, 134, 1));
   background: url(/img/return.png) center center no-repeat,
-              -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(153, 153, 153, 0.7)), to(rgba(153, 153, 153, 1)));
+              -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(134, 134, 134, 0.7)), to(rgba(134, 134, 134, 1)));
   cursor: pointer;
   text-align: center;
   color: #fff;
@@ -88,7 +88,7 @@
 
 #textarea-wrapper [type=submit]:active {
   background: url(/img/return.png) center center no-repeat,
-              -moz-linear-gradient(100% 100% 90deg, rgba(153, 153, 153, 0.7), rgba(153, 153, 153, 1));
+              -moz-linear-gradient(top, rgba(153, 153, 153, 1), rgba(153, 153, 153, 0.7));
   background: url(/img/return.png) center center no-repeat,
               -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(153, 153, 153, 1)), to(rgba(153, 153, 153, 0.7)));
 }
@@ -98,13 +98,13 @@
   -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   position: absolute;
-  left: -54px;
-  top: 5px;
-  height: 46px;
-  width: 21px;
+  left: -55px;
+  top: 0;
+  height: 48px;
+  width: 22px;
 }
 
 #message-form .avatar img {
   background: #fff;
-  padding: 5px;
+  padding: 6px;
 }

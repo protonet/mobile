@@ -1,0 +1,89 @@
+<h2>@<%= channel.name %></h2>
+<p><%= channel_description(channel) %></p>
+
+<h3 class="belongs-to-list">Listeners (<%= channel.users.registered.size %>)</h3>
+
+<%- if channel.users.registered.size == 0 %>
+  <p class="hint">There are currently no users that listen to this channel. Be the first!</p>
+<%- else %>
+  <ul class="list">
+    <%- channel.listens.all(:include => :user, :order => 'verified ASC', :limit => configatron.max_list_size).each do |listen| %>
+      <%- if !listen.user.stranger? && user = listen.user %>
+        <li data-cucumber-user-id="<%= listen.user.id %>" tabindex="-1">
+          <%= avatar(user, :width => 20, :height => 20, :lazy_load => true) %>
+          <%= user.display_name %>
+          <%= raw("<strong>(owner)</strong>") if channel.owned_by?(listen.user) %>
+          <%= raw("<strong>(awaiting verification)</strong>") unless listen.verified? %>
+          <a href="/users/<%= user.id %>" class="action">show profile</a>
+          <%- if channel.owned_by?(current_user) || current_user.admin? %>
+            <%= link_to('remove', listen_path(listen), :method => :delete, :remote => true, :class => "action") %>
+            <%- unless listen.verified? %>
+              <%= link_to('verify', listen_accept_path(listen), :method => :post, :remote => true, :class => "action") %>
+            <%- end %>
+          <%- end %>
+        </li>
+      <%- end %>
+    <%- end %>
+  </ul>
+<%- end %>
+
+<%- if current_user.channels.include?(channel) %>
+  <%= form_tag(current_user.listens.find_by_channel_id(channel.id), {
+    :remote => true,
+    :method => :delete,
+    'data-type' => 'html',
+    :class => "single-button-form"
+  }) do -%>
+    <%= button "Stop listening" %>
+  <%- end %>
+<%- else %>
+  <%= form_tag(listens_path(:channel_id => channel.id), {
+    :remote => true,
+    :method => :post,
+    'data-type' => 'html',
+    :class => "single-button-form"
+  }) do -%>
+    <%= button "Listen" %>
+  <%- end %>
+<%- end %>
+
+<%- if permitted_to?(:update, channel) %>
+  <%- if current_user.admin? %>
+    <h3>Invite people <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
+    <p>Grow your network by <%= link_to("inviting people", new_invitation_path(:channel_id => channel.id), :class => 'promotion-link') %> to this and other channels.</p>
+  <%- end %>
+  
+  <h3>Channel settings <a data-hover-hint="top" title="Only visible to admins and the channel owner" class="hint">(?)</a></h3>
+
+  <%= form_for channel, :url => { :action => 'update' }, :html => { 'data-ajax-auto-submit' => '1' } do |f| -%>
+    <%= f.hidden_field :id, { :value => channel.id } %>
+    <label class="checkbox-row" for="channel_public">
+      <%= f.check_box :public %>
+      public (users can listen without verification)
+    </label>
+    <label class="checkbox-row" for="channel_global">
+      <%= f.check_box :global %>
+      global (channel is visible from external nodes and clients)
+    </label>
+  <%- end %>
+  
+  <h3>Details <a data-hover-hint="top" title="Only visible to admins and the channel owner" class="hint">(?)</a></h3>
+  <dl>
+    <dt>Network: </dt><dd><%= link_to(channel.network.name, networks_path) %></dd>
+    <dt>Channel UUID: </dt><dd><%= channel.uuid %></dd>
+    <dt>Created: </dt><dd title="<%= channel.created_at %>"><%= time_ago_in_words(channel.created_at) %> ago</dd>
+    <dt>Messages: </dt><dd><%= channel.meeps.size %></dd>
+    <dt>Messages + attachment: </dt><dd><%= channel.meeps.where('text_extension != ""').size %></dd>
+  </dl>
+  
+  <h3>Delete channel <a data-hover-hint="top" title="Only visible to admins and the channel owner" class="hint">(?)</a></h3>
+  <p>Delete this channel and all messages posted in it.</p>
+  <%= form_tag("/channels/#{channel.id}", {
+    :remote     => true,
+    :method     => :delete,
+    'data-type' => 'html',
+    'class'     => 'single-button-form'
+  }) do -%>
+    <%= button "Delete", 'data-confirm' => 'Do you really want to delete this channel? There\'s no undo.' %>
+  <%- end %>
+<%- end %>

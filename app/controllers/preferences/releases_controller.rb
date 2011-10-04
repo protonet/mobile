@@ -3,24 +3,37 @@ module Preferences
     
     def update
       if current_user.admin?
-        (flash[:error] = "Wrong *NODE* password (remember, this is your ssh password for the protonet user)!" and return redirect_to :back) unless SystemRelease.password_correct?(params["password"])
-        if(results = SystemRelease.update!(params["password"], params["release"]))
-          response  = []
-          success   = true
-          results.each do |k,v|
-            response.push("#{k} success: #{v}")
-            success = false unless v
+        unless SystemRelease.password_correct?(params["password"])
+          flash[:error] = "Wrong password (remember, this is your ssh node password for the protonet user)!"
+          if request.xhr?
+            head(204)
+          else
+            redirect_to :back
           end
-          success ? flash[:notice] = "Software update was a SUCCESS! #{response.join(",")}" :
-                    flash[:error] = "Software update was a FAIL! #{response.join(",")}"
+          return
         else
-          flash[:error] = "Couldn't start software update... please check with protonet support!"
+          if (results = SystemRelease.update!(params["password"], params["release"]))
+            response  = []
+            success   = true
+            results.each do |k,v|
+              response.push("#{k} success: #{v}")
+              success = false unless v
+            end
+            success ? flash[:notice]  = "Software update succeeded. Technical details: #{response.join(", ")}" :
+                      flash[:error]   = "Software update failed. Please contact the protonet support. Technical details: #{response.join(", ")}"
+          else
+            flash[:error] = "Couldn't start software update... please check with protonet support!"
+          end
         end
       else
         flash[:error] = "You're no admin, man, what are you doing here?"
       end
-      redirect_to :back
+      
+      if request.xhr?
+        head(204)
+      else
+        redirect_to :back
+      end
     end
-    
   end
 end

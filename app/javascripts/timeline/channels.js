@@ -1,5 +1,7 @@
 //= require "../utils/parse_query_string.js"
-//= require "../behaviors/channels.js"
+//= require "../utils/browser_title.js"
+//= require "../utils/is_window_focused.js"
+//= require "../utils/url_behaviors.js"
 //= require "channel.js"
 //= require "rendezvous.js"
 
@@ -11,7 +13,7 @@
  *    channel.subscribe       - Call this when you want to subscribe a new channel by id
  */
 protonet.timeline.Channels = {
-  availableChannels: protonet.config.availableChannels || {},
+  availableChannels: protonet.config.available_channels || {},
   
   initialize: function() {
     this.container    = $("#timeline");
@@ -19,11 +21,21 @@ protonet.timeline.Channels = {
     this.tabs         = $("#channels [data-channel-id]");
     
     // All channel instances as key=>value
+    this.data                 = [];
     this.channels             = {};
     this.channelsBeingLoaded  = {};
     this.rendezvous           = {};
     
-    this.queryParams = protonet.utils.parseQueryString(protonet.utils.History.getCurrentPath());
+    /**
+     * Ajax history to enable forward and backward
+     * buttons in browser to switch between channels
+     */
+    protonet.utils.History.addHook(function() {
+      if (location.pathname === "/") {
+        this._selectChannel();
+        return true;
+      }
+    }.bind(this));
   },
   
   render: function(data) {
@@ -43,7 +55,7 @@ protonet.timeline.Channels = {
       return +$(tab).data("channel-id");
     });
     
-    var urlChannelId = +this.queryParams.channel_id;
+    var urlChannelId = +protonet.utils.parseQueryString(location.search).channel_id;
     if (urlChannelId) {
       activeChannels.push(urlChannelId);
     }
@@ -58,6 +70,35 @@ protonet.timeline.Channels = {
   },
   
   _observe: function() {
+    $.behaviors({
+      "a[data-channel-id]:click": function(element, event) {
+        var $element  = $(element),
+            id        = +$element.data("channel-id");
+            
+        if (!$element.is(".active")) {
+          protonet.trigger("channel.change", id);
+        }
+        
+        protonet.trigger("modal_window.hide");
+        
+        event.preventDefault();
+      },
+      
+      "a[data-meep-share]:click": function(element, event) {
+        protonet
+          .trigger("form.share_meep", +$(element).data("meep-share"))
+          .trigger("modal_window.hide");
+        event.preventDefault();
+      },
+      
+      "a[data-rendezvous-with]:click": function(element, event) {
+        protonet
+          .trigger("rendezvous.start", +$(element).data("rendezvous-with"))
+          .trigger("modal_window.hide");
+        event.preventDefault();
+      }
+    });
+    
     protonet
       /**
        * Track selected channel
@@ -69,6 +110,10 @@ protonet.timeline.Channels = {
        */
       .bind("channel.change", function(e, id, avoidHistoryChange) {
         id = +id; // + Makes sure that id is a Number
+        if (this.selected === id) {
+          return;
+        }
+        
         if ($.inArray(id, this.subscribedChannels) == -1) {
           protonet.trigger("channel.subscribe", id);
           return;
@@ -77,7 +122,7 @@ protonet.timeline.Channels = {
         this.selected = id;
         
         if (!avoidHistoryChange) {
-          protonet.utils.History.register("?channel_id=" + id);
+          protonet.utils.History.push("/?channel_id=" + id);
         }
       }.bind(this))
       
@@ -85,6 +130,15 @@ protonet.timeline.Channels = {
        * Select initial channel when channels are rendered/initialized
        */
       .bind("channels.initialized", this._selectChannel.bind(this))
+      
+      /**
+       * Start rendezvous if param in url is given
+       */
+      .bind("channels.initialized", function() {
+        protonet.utils.urlBehaviors({
+          "rendezvous.start": /(?:\?|&)rendezvous_with=([^&#$]+)(.*)/
+        });
+      })
       
       .bind("channels.change_to_first", function() {
         var firstChannel = this.data[0];
@@ -107,7 +161,7 @@ protonet.timeline.Channels = {
       .bind("channel.subscribe", function(e, id) {
         protonet.trigger("channel.hide").trigger("timeline.loading_start");
         
-        var identifier = this.getChannelName(+id) || "#" + id;
+        var identifier = protonet.utils.getChannelName(id) || "#" + id;
         
         var success = function() {
           var message = protonet.t("CHANNEL_SUBSCRIPTION_SUCCESS", { identifier: identifier });
@@ -116,15 +170,15 @@ protonet.timeline.Channels = {
         
         var error = function() {
           var message = protonet.t("CHANNEL_SUBSCRIPTION_ERROR", { identifier: identifier });
-          protonet.trigger("flash_message.error", message);
+          protonet.trigger("flash_message.error", message).trigger("timeline.loading_end");
         };
         
         $.ajax({
-          type:   "post",
-          url:    "/listens",
-          data:   {
-            channel_id:         id,
-            authenticity_token: protonet.config.authenticity_token
+          type:     "post",
+          dataType: "json",
+          url:      "/listens",
+          data:     {
+            channel_id: id,
           },
           success: function(data) {
             if (data.success) {
@@ -204,15 +258,14 @@ protonet.timeline.Channels = {
           return;
         }
         
-        var rendezvousKey = [partner, +protonet.config.user_id].sort(function(a, b) { return a>b; }).join(":"),
+        var rendezvousKey = [partner, protonet.config.user_id].sort(function(a, b) { return a>b; }).join(":"),
             rendezvous    = this.rendezvous[rendezvousKey];
         if (rendezvous) {
           protonet.trigger("timeline.loading_end").trigger("channel.change", rendezvous.data.id);
         } else {
           protonet.trigger("channel.hide").trigger("timeline.loading_start");
           $.ajax("/users/" + partner + "/" + "start_rendezvous", {
-            type: "POST",
-            data: { authenticity_token: protonet.config.authenticity_token }
+            type: "post"
           });
         }
       }.bind(this));
@@ -226,22 +279,26 @@ protonet.timeline.Channels = {
         url:    "/users/update_last_read_meeps",
         type:   "PUT",
         data:   {
-          authenticity_token: protonet.config.authenticity_token,
           id:                 protonet.config.user_id,
           mapping:            lastReadMeeps
         }
       });
     }.bind(this));
+      
+    setInterval(function() {
+      var totalUnreadMeeps = 0;
+      $.each(this.channels, function(id, channel) {
+        totalUnreadMeeps += channel.unreadMeeps || 0;
+      });
+
+      if (totalUnreadMeeps) {
+        protonet.utils.BrowserTitle.setPrefix(totalUnreadMeeps);
+      }
+    }.bind(this), 1000);
     
     setInterval(function() {
       protonet.storage.set("last_read_meeps", this._collectLastReadMeeps());
     }.bind(this), 10000);
-    
-    /**
-     * Ajax history to enable forward and backward
-     * buttons in browser to switch between channels
-     */
-    protonet.utils.History.onChange(this._selectChannel.bind(this));
   },
   
   _render: function() {
@@ -252,7 +309,7 @@ protonet.timeline.Channels = {
         channel.renderTab(this.tabContainer, true);
       }
     }.bind(this), function() {
-      protonet.trigger("channels.initialized", [this.data]);
+      protonet.trigger("channels.initialized", [this.data, this.channels]);
     }.bind(this));
   },
   
@@ -273,22 +330,11 @@ protonet.timeline.Channels = {
    * the first channel in the data array
    */
   _selectChannel: function() {
-    var urlChannelId      = +this.queryParams.channel_id,
-        selectedChannelId = urlChannelId || (this.data[0] ? this.data[0].id : null),
-        alreadySelected   = this.selected == selectedChannelId;
-    if (selectedChannelId && !alreadySelected) {
+    var urlChannelId      = +protonet.utils.parseQueryString(location.search).channel_id,
+        selectedChannelId = urlChannelId || (this.data[0] ? this.data[0].id : null);
+    if (selectedChannelId) {
       protonet.trigger("channel.change", [selectedChannelId, true]);
     }
-  },
-  
-  getChannelName: function(channelId) {
-    var channelName;
-    for (channelName in this.availableChannels) {
-      if (this.availableChannels[channelName] == channelId) {
-        return channelName;
-      }
-    }
-    return null;
   },
   
   /**
@@ -319,6 +365,7 @@ protonet.timeline.Channels = {
     }
     
     $.ajax({
+      dataType: "json",
       url: "/channels/" + channelId,
       success: function(data) {
         // Strip all meeps that were receive while the channel was loaded

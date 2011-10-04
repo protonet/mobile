@@ -1,0 +1,5 @@
+<%= stylesheet_link_tag("/css/pages/#{controller_name}", :cache => (configatron.avoid_caching != false)) rescue nil %>
+
+<%= yield %>
+
+<%= sprockets_include_tag(controller_name.to_sym) rescue nil %>

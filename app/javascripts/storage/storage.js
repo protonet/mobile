@@ -25,7 +25,7 @@ protonet.storage = (function() {
     
     remove: function(key) {
       delete tempStorage[key];
-      localStorage.removeItem(key);
+      window.localStorage && localStorage.removeItem(key);
     }
   };
 })();

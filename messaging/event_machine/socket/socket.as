@@ -14,11 +14,11 @@ class Socket {
      * http://www.digitalmachina.com/archives/2009/03/11/externalinterface-error-when-parameters-contain-special-characters/
      */
     data = data.split("\\").join("\\\\");
-    ExternalInterface.call("protonet.Notifications.trigger", "socket.receive", data);
+    ExternalInterface.call("protonet.trigger", "socket.receive", data);
   }
   
   static function onConnect(status:Boolean) {
-    ExternalInterface.call("protonet.Notifications.trigger", "socket.connected", status);
+    ExternalInterface.call("protonet.trigger", "socket.connected", status);
   }
   
   static function connectSocket(ip:String, port:Number) {
@@ -38,6 +38,6 @@ class Socket {
     ExternalInterface.addCallback("connectSocket", null, connectSocket);
     ExternalInterface.addCallback("closeSocket", null, closeSocket);
     
-    ExternalInterface.call("protonet.Notifications.trigger", "socket.initialized");
+    ExternalInterface.call("protonet.trigger", "socket.initialized");
   }
 }

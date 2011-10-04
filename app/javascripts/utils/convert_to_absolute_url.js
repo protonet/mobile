@@ -11,20 +11,20 @@ protonet.utils.convertToAbsoluteUrl = (function() {
       return relativeUrl;
     }
     
-    var parentUrlParts = protonet.utils.parseUrl(parentUrl);
+    var parentUrlParts = parentUrl ? protonet.utils.parseUrl(parentUrl) : location;
     
     // Protocol-relative (eg. "//google.com/img/foo.jpg")
     if (PROTOCOL_RELATIVE_REG_EXP.test(relativeUrl)) {
-      return parentUrlParts.protocol + ":" + relativeUrl;
+      return parentUrlParts.protocol + relativeUrl;
     }
     
     // Domain-relative (eg. "/img/foo.jpg")
     if (DOMAIN_RELATIVE_REG_EXP.test(relativeUrl)) {
-      return parentUrlParts.protocol + "://" + parentUrlParts.host + relativeUrl;
+      return parentUrlParts.protocol + "//" + parentUrlParts.host + relativeUrl;
     }
     
     // Folder-relative (eg. "foo.jpg" or "../foo.jpg")
-    return parentUrlParts.protocol + "://" +
+    return parentUrlParts.protocol + "//" +
            parentUrlParts.host +
            parentUrlParts.path.substring(0, parentUrlParts.path.lastIndexOf("/")) + "/" +
            relativeUrl;

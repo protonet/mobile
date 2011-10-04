@@ -40,9 +40,17 @@ class MeepsController < ApplicationController
   end
 
   def show
-    meep = Meep.find(params[:id])
-    return head(404) if meep.nil?
-    render :json => Meep.prepare_for_frontend([meep], { :channel_id => meep.channel.id }).first
+    respond_to do |format|
+      format.html {
+        render
+      }
+      format.json {
+        @meep = Meep.find(params[:id])
+        return head(404) if @meep.nil?
+        @meep = Meep.prepare_for_frontend([@meep], { :channel_id => @meep.channel.id }).first
+        render :json => @meep.to_json
+      }
+    end
   end
   
   def before

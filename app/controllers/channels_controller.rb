@@ -3,26 +3,26 @@ class ChannelsController < ApplicationController
   filter_resource_access :collection => [:index, :global]
   
   def index
-    respond_to do |format|
-      format.json do
-        network_id  = params[:network_id].to_i
-        render :json => network_id == 0 ? {} : Network.find(network_id).channels
-      end
-      format.html do
-        @networks = Network.all
-      end
-    end
+    @selected_channel = Channel.find(params[:id]) rescue nil
   end
   
   def show
     respond_to do |format|
+      format.html do
+        if request.headers['X-Request-Type'] == 'tab'
+          render :partial => "channel_details", :locals => { :channel => Channel.find(params[:id]) }
+        else
+          @selected_channel = Channel.find(params[:id])
+          render :index
+        end
+      end
       format.json do
         render :json => Channel.prepare_for_frontend(current_user.channels.find(params[:id]), current_user)
       end
-      format.html do
-        render :partial => "channel_details", :locals => { :channel => Channel.find(params[:id]) }
-      end
     end
+  end
+  
+  def new
   end
   
   def create
@@ -30,10 +30,11 @@ class ChannelsController < ApplicationController
     success = channel && channel.save
     if success && channel.errors.empty?
       flash[:notice] = "Successfully created channel '#{params[:channel][:name]}'"
+      redirect_to_and_preserve_xhr :action => 'index', :id => channel.id
     else
-      flash[:error] = "Could not create channel '#{params[:channel][:name]}', the reason is: #{channel.errors.map(&:inspect).join(' ')}"
+      flash[:error] = "Could not create channel, #{channel.errors.map().join(' ')}"
+      head(:status => :expectation_failed)
     end
-    redirect_to :action => 'index', :anchor => channel.id
   end
   
   def update
@@ -44,32 +45,28 @@ class ChannelsController < ApplicationController
     else
       flash[:error] = "Could not update channel '#{channel.name}'"
     end
-    redirect_to :action => 'index', :anchor => channel.id
+    redirect_to_and_preserve_xhr :action => 'index', :id => channel.id
   end
   
   def destroy
     channel = Channel.find(params[:id])
-    if(channel && (channel.owned_by(current_user) || current_user.admin?)) 
+    if channel && (channel.owned_by?(current_user) || current_user.admin?)
+      channel_name = channel.name
       success = channel.destroy
       if success && channel.errors.empty?
-        flash[:notice] = "Successfully deleted channel '#{channel.name}'"
+        flash[:notice] = "Successfully deleted channel '#{channel_name}'"
+        redirect_to_and_preserve_xhr :action => 'index'
       else
-        flash[:error] = "Could not delete channel '#{channel.name}'"
+        flash[:error] = "Could not delete channel '#{channel_name}'"
       end
     end
-    redirect_to :action => 'index'
-  end
-  
-  def search
-    @channels = Channel.all(:conditions => ["description LIKE ?", "%#{params[:description]}%"])
-    render :index
   end
   
   def global
     protonet = Protolink::Protonet.open("https://team.protonet.info", "node2node", "5fdr42Ng2")
     @channels = protonet.global_channels || []
     
-    render :global, :layout => false
+    render :global
   end
 
   def list

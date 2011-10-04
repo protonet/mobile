@@ -6,8 +6,8 @@ protonet.utils.parseUrl = (function() {
   return function(url) {
     anchor.href = url;
     return {
-      protocol:   anchor.protocol.replace(":", ""),
-      host:       anchor.hostname,
+      protocol:   anchor.protocol,
+      host:       anchor.host,
       port:       anchor.port,
       query:      anchor.search,
       path:       anchor.pathname.replace(PATH_REGEXP, "/$1"),

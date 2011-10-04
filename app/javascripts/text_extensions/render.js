@@ -58,7 +58,7 @@ protonet.text_extensions.render = (function() {
     return null;
   }
   
-  return function(container, data) {
+  return function(data) {
     data = protonet.text_extensions.utils.insertBaseUrl(data);
     
     var results     = new protonet.utils.Template("text-extension-template").toElement(),
@@ -85,9 +85,8 @@ protonet.text_extensions.render = (function() {
     if (renderMedia) {
       results.find(".media").html(renderMedia(data));
     }
-    results.appendTo(container);
     
-    this.resultsElement = results;
+    return results;
   };
 })();
 

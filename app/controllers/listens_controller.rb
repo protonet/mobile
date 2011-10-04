@@ -13,16 +13,16 @@ class ListensController < ApplicationController
     current_user.subscribe(channel) if channel && !already_subscribed
     
     respond_to do |format|
-      format.json {
-        render :json => { :success => !!channel, :already_subscribed => already_subscribed, :public_channel => !!channel.try(:public?) }.to_json
-      }
       format.html {
         if channel
-          flash[:notice] = "you started listening to #{channel.name}#{' (pending verification)' if !channel.public?}"
+          flash[:notice] = "You started listening to @#{channel.name}#{' (pending verification)' if !channel.public?}"
         else
-          flash[:error] = already_subscribed ? "you already subscribed to #{channel.name}" : "could not subscribe to channel with identifier #{params[:channel_id]}"
+          flash[:error] = already_subscribed ? "You are already listening to @#{channel.name}" : "Could not listen to channel with identifier '#{params[:channel_id]}'"
         end
-        redirect_to :controller => 'channels', :action => 'index', :anchor => channel.try(:id)
+        redirect_to :controller => 'channels', :action => 'show', :id => channel.try(:id)
+      }
+      format.json {
+        render :json => { :success => !!channel, :already_subscribed => already_subscribed, :public_channel => !!channel.try(:public?) }.to_json
       }
     end
   end
@@ -32,11 +32,15 @@ class ListensController < ApplicationController
     channel = listen.channel
     if listen.user == current_user || channel.owner == current_user
       listen.user.unsubscribe(channel)
-      flash[:notice] = "you stopped listening to '#{channel.name}'"
+      if listen.user == current_user
+        flash[:notice] = "You stopped listening to @#{channel.name}"
+      else
+        flash[:notice] = "@#{listen.user.display_name} stopped listening to @#{channel.name}"
+      end
     else
-      flash[:notice] = "you have no right to this operation"
+      flash[:notice] = "You have no rights to this operation"
     end
-    redirect_to :controller => 'channels', :action => 'index', :anchor => channel.id
+    redirect_to :controller => 'channels', :action => 'show', :id => channel.id
   end
 
   def accept
@@ -44,11 +48,11 @@ class ListensController < ApplicationController
     channel = listen.channel
     if current_user == channel.owner
       listen.verified = true
-      flash[:notice] = "you allowed user #{listen.user.name} to listen to channel #{channel.name}" if listen.save
+      flash[:notice] = "You allowed user @#{listen.user.display_name} to listen to channel @#{channel.name}" if listen.save
     else
-      flash[:notice] = "only the channel owner can accept subscription request!"
+      flash[:notice] = "Only the channel owner can verify a listen request!"
     end
-    redirect_to :controller => 'channels', :action => 'index', :anchor => channel.id
+    redirect_to :controller => 'channels', :action => 'show', :id => channel.id
   end
   
   def global

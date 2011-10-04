@@ -1,18 +1,15 @@
-/* =CHANNELS
-=========================================================================== */
-
 #channels {
   border-bottom: 1px solid rgb(140, 140, 140);
   display: block;
   margin: 0 20px 10px 30px;
-  padding: 0 0 0 15px;
+  padding: 10px 0 0 15px;
   position: relative;
   z-index: 5;
 }
 
 #channels ul {
   margin: 0 0 -1px;
-  overflow:hidden;
+  overflow: hidden;
 }
 
 #channels li {
@@ -22,10 +19,6 @@
   vertical-align: bottom;
   position: relative;
   margin: 6px 3px 0 0;
-}
-
-li.html5sortable-state-highlight + li {
-  padding-left: 51px;
 }
 
 #channels li:last-child {
@@ -39,7 +32,7 @@ li.html5sortable-state-highlight + li {
   -webkit-border-top-right-radius: 8px;
   background: #eee;
   background: rgba(0, 0, 0, 0.1);
-  background: -moz-linear-gradient(100% 100% 90deg, rgba(0, 0, 0, 0.1), transparent);
+  background: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.1));
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.1)));
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -60,7 +53,7 @@ li.html5sortable-state-highlight + li {
 
 #channels li a:focus,
 #channels li a:active {
-  background: -moz-linear-gradient(100% 100% 90deg, transparent, rgba(0, 0, 0, 0.1));
+  background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.1), transparent);
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0.1)), to(transparent));
 }
 
@@ -176,5 +169,3 @@ li.html5sortable-state-highlight + li {
 #channels .rendezvous.typing:before {
   background-position: 0 -45px;
 }
-
-/* ==============================================================CHANNELS = */

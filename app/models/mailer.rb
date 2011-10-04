@@ -5,8 +5,8 @@ class Mailer < ActionMailer::Base
   
   def invitation(invitation)
     @invitation = invitation
-    from = "#{invitation.user.display_name}@#{SystemPreferences.public_host}"
-    mail(:from => from, :to => invitation.email, :bcc => invitation.user.email, :subject => "#{invitation.user.display_name} wants you to join the Protonet")
+    from = invitation.user.email
+    mail(:from => from, :to => invitation.email, :bcc => invitation.user.email, :subject => "#{invitation.user.display_name} (#{invitation.user.email}) wants you to join his protonet")
   end
   
   def password_reset(password, receiver)

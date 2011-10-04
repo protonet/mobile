@@ -62,4 +62,7 @@ if defined?(PhusionPassenger)
   end
 end
 
+configatron.max_list_size = 1500
+configatron.default_avatar = '/img/user_picture_r2.png'
+
 require 'net/ldap'

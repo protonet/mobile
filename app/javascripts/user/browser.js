@@ -1,46 +1,4 @@
 protonet.user.Browser = {
-  SUPPORTS_HTML5_MULTIPLE_FILE_UPLOAD: function() {
-    var supportsMultipleAttribute = "multiple" in $('<input type="file">')[0],
-        supportsXhrUpload = "upload" in new XMLHttpRequest();
-    
-    return supportsXhrUpload && supportsMultipleAttribute;
-  },
-  
-  SUPPORTS_FILE_READER: function() {
-    return (/function|object/).test(typeof(window.FileReader)) && "readAsBinaryString" in new window.FileReader();
-  },
-  
-  SUPPORTS_FLASH_UPLOAD: function() {
-    var flash;
-    
-    if (window.ActiveXObject) {
-      for (var i=8, flashVersions=20; i<flashVersions; i++) {
-        try {
-          flash = new ActiveXObject("ShockwaveFlash.ShockwaveFlash." + i);
-          if (flash) { return true; }
-        } catch(e) {}
-      }
-    }
-    
-    if (navigator.plugins) {
-      flash = navigator.plugins["Shockwave Flash"];
-      if (flash) {
-        var flashVersion = parseInt(flash.description.split("Shockwave Flash ")[1], 10);
-        if (flashVersion >= 10) { return true; }
-      }
-    }
-    
-    return false;
-  },
-  
-  IS_ON_WINDOWS: function() {
-    return navigator.userAgent.indexOf("Windows") != -1;
-  },
-  
-  IS_ON_LINUX: function() {
-    return navigator.userAgent.indexOf("Linux") != -1;
-  },
-  
   SUPPORTS_HTML5_WEBSOCKET: function() {
     return !!window.WebSocket;
   },
@@ -62,8 +20,10 @@ protonet.user.Browser = {
     };
   })(),
   
-  HAS_FILE_UPLOAD_ENCODING_ISSUES: function() {
-    return navigator.userAgent.indexOf("Safari") != -1 && navigator.userAgent.indexOf("Chrome") == -1;
+  SUPPORTS_POST_MESSAGE_BETWEEN_POPUPS: function() {
+    // window.DOMParser is only supported in IE versions 9+
+    // IE 8 supports postMessage but not between popups
+    return "postMessage" in window && "DOMParser" in window;
   },
   
   SUPPORTS_NOTIFICATIONS: function() {
@@ -121,5 +81,10 @@ protonet.user.Browser = {
       }
       return cache[version];
     };
-  })()
+  })(),
+  
+  IS_ANDROID_WEBKIT: function() {
+    var userAgent = navigator.userAgent.toLowerCase();
+    return userAgent.indexOf("android") !== -1 && userAgent.indexOf("webkit") !== -1;
+  }
 };

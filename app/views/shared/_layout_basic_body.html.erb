@@ -12,7 +12,7 @@
 %>
 <div class="flash-message <%= flash_message_class_name %>">
   <p><%= h(flash_message) %></p>
-  <a href="" class="flash-message-close-link">X</a>
+  <a href="" class="flash-message-close-link">&times;</a>
 </div>
 
 <!--[if lt IE 8]>
@@ -31,3 +31,7 @@
     </p>
   </div>
 <![endif]-->
+
+<%- if SystemPreferences.show_clouds -%>
+  <div id="cloud-container"><!-- container for fluffy clouds (call it "the sky") --></div>
+<%- end -%>

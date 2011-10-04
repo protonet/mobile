@@ -1,0 +1,42 @@
+.preferences-page input[name='preferences[publish_to_web_name]'] {
+  width: 140px;
+  padding: 0;
+}
+
+.preferences-page h3 i {
+  font-weight: normal;
+  font-style: normal;
+  font-size: 12px;
+}
+
+.preferences-page .status-box {
+  background: #eee;
+  display: inline-block;
+  padding: 4px;
+  float: right;
+  margin-top: -1px;
+}
+
+.preferences-page .on {
+  color: green;
+}
+
+.preferences-page .off {
+  color: red;
+}
+
+.preferences-page .reload-link {
+  overflow: hidden;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  text-indent: -9999px;
+  background: url(/img/icn_reload.png) no-repeat 0 0;
+  margin: 0 5px;
+}
+
+.preferences-page .reload-link.reloading {
+  cursor: default;
+  background: url(/img/icn_loading.gif) no-repeat 0 0;
+}
+

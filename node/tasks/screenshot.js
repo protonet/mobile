@@ -67,7 +67,7 @@ exports.make_and_send = function(url, response) {
   function writeDefaultImage(sanitizedUrl, fileName, callback) {
     console.log('writing default image for ' + sanitizedUrl + ' fileName: ' + fileName);
     // write default image!
-    exec("cp " + process.cwd() + "/public/images/world-globe-small.jpg " + fileName, function(error, stdout, stderr) {
+    exec("cp " + process.cwd() + "/public/img/world-globe-small.jpg " + fileName, function(error, stdout, stderr) {
       if (error == null) {
         callback(fileName);
       }

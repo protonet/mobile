@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110923125852) do
+ActiveRecord::Schema.define(:version => 20110930095703) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -151,7 +151,6 @@ ActiveRecord::Schema.define(:version => 20110923125852) do
     t.string   "communication_token"
     t.datetime "communication_token_expires_at"
     t.string   "temporary_identifier"
-    t.boolean  "guest",                                         :default => true
     t.datetime "remember_created_at"
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
@@ -162,6 +161,7 @@ ActiveRecord::Schema.define(:version => 20110923125852) do
     t.string   "facebook_id"
     t.string   "type"
     t.string   "twitter_id"
+    t.boolean  "newbie",                                        :default => true
   end
 
   add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true

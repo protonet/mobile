@@ -6,18 +6,49 @@ class ApplicationController < ActionController::Base
   
   # hack for reload problem in development
   before_filter :set_backend_for_development, :captive_check, :current_user, :set_current_user_for_authorization, :guest_login
-
+  before_filter :detect_xhr_redirect
+  
+  after_filter :set_flash_message_to_header, :if => Proc.new { |a| a.request.xhr? }
+  after_filter :set_request_url_to_header, :if => Proc.new { |a| a.request.xhr? }
+  
+  # TODO check with @dudemeister
+  layout Proc.new { |a| return a.request.xhr? ? 'ajax' : 'application' }
+  
   # devise migration
   def logged_in?
     user_signed_in?
   end
- 
+  
   private
+  
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=553888
+  def redirect_to_and_preserve_xhr(options)
+    redirect_to options.merge('_xhr_redirect' => 1)
+  end
+  
+  def detect_xhr_redirect
+    request.env['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest' if request.url.include?('_xhr_redirect=1')
+  end
+  
+  # needed for ajax requests
+  def set_flash_message_to_header
+    response.headers['X-Error-Message']   = flash[:error]   unless flash[:error].blank?
+    response.headers['X-Notice-Message']  = flash[:notice]  unless flash[:notice].blank?
+    response.headers['X-Sticky-Message']  = flash[:sticky]  unless flash[:sticky].blank?
+    is_redirect = self.status == 302
+    flash.discard unless is_redirect
+    true
+  end
+  
+  # needed because js can't figure out at which url an ajax request ended (redirects, ...) 
+  def set_request_url_to_header
+    response.headers['X-URL'] = request.url
+  end
   
   def guest_login
     @current_user = login_as_guest if current_user.nil?
   end
-
+  
   def login_as_guest
     session[:stranger_id] ||= ActiveSupport::SecureRandom.base64(20)
     User.stranger(session[:stranger_id])
@@ -99,5 +130,4 @@ class ApplicationController < ActionController::Base
   def node_privacy_settings
     @privacy_settings ||= Hash.new(false).merge(SystemPreferences.privacy[incoming_interface] || SystemPreferences.privacy["fallback"] || {})
   end
-  
 end

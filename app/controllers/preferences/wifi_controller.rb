@@ -25,14 +25,19 @@ module Preferences
       SystemPreferences.wifi = wifi_preferences # if check is ok
       Rails.logger.info(SystemPreferences.wifi.inspect)
       SystemWifi.reconfigure!
-
-      redirect_to :controller => '/preferences', :action => 'index', :anchor => 'wifi_settings'
+      
+      flash[:notice] = "Your WiFi configuration has been successfully saved"
+      if request.xhr?
+        head(204)
+      else
+        redirect_to :controller => '/preferences', :action => 'show', :section => 'wifi_config'
+      end
     end
     
     def on
       SystemWifi.start
       respond_to do |format|
-        format.html {redirect_to :controller => '/preferences', :action => 'index', :anchor => 'wifi_settings'}
+        format.html {redirect_to :controller => '/preferences', :action => 'show', :section => 'wifi_config'}
         format.js  { render :json => {:status => 'on'} }
       end
     end
@@ -40,9 +45,13 @@ module Preferences
     def off
       SystemWifi.stop
       respond_to do |format|
-        format.html {redirect_to :controller => '/preferences', :action => 'index', :anchor => 'wifi_settings'}
+        format.html { redirect_to :controller => '/preferences', :action => 'index', :section => 'wifi_config' }
         format.js  { render :json => {:status => 'off'} }
       end
+    end
+    
+    def interface_status
+      render :partial => 'interface_status', :locals => { :interface => params[:interface] }
     end
     
   end

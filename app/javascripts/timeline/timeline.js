@@ -1,4 +1,7 @@
-protonet.timeline = {
+//= require "form/form.js"
+//= require "channels.js"
+
+$.extend(protonet.timeline, {
   initialize: function() {
     this._observe();
     this._initForm();
@@ -7,15 +10,15 @@ protonet.timeline = {
   },
   
   _observe: function() {
-    var loadingIndicator = $("#timeline-loading-indicator");
+    var $loadingIndicator = $("#timeline-loading");
     
-    protonet.bind("timeline.loading_start", function() {
-      loadingIndicator.show();
-    });
-    
-    protonet.bind("timeline.loading_end", function() {
-      loadingIndicator.hide();
-    });
+    protonet
+      .bind("timeline.loading_start", function() {
+        $loadingIndicator.show();
+      })
+      .bind("timeline.loading_end", function() {
+        $loadingIndicator.hide();
+      });
   },
   
   load: function() {
@@ -23,9 +26,6 @@ protonet.timeline = {
     
     $.ajax({
       url: "/",
-       /**
-        * Dummy parameter needed to avoid weird caching/history issues in Firefox
-        */
       data: {
         // Dummy parameter to avoid weird caching/history issues in Firefox
         ajax:     1,
@@ -50,7 +50,4 @@ protonet.timeline = {
   _initForm: function() {
     protonet.timeline.Form.initialize();
   }
-};
-
-//= require "form/form.js"
-//= require "channels.js"
+});

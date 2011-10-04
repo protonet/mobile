@@ -10,15 +10,16 @@ class Channel < ActiveRecord::Base
   has_many  :users,   :through   => :listens
 
   validates_uniqueness_of   :name, :uuid
-  validates_length_of       :name,     :maximum => 30
+  validates_length_of       :name, :maximum => 30, :minimum => 1
   
   before_validation :prepare_rendezvous,  :on => :create, :if => lambda {|c| !!c.rendezvous }
   before_validation :normalize_name,      :on => :create
   
-  after_create  :generate_uuid,     :if => lambda {|c| c.uuid.blank? }
-  after_create  :create_folder,     :if => lambda {|c| !c.home?}
-  after_create  :subscribe_owner,   :if => lambda {|c| !c.home? && !c.skip_autosubscribe}
-  after_create  :subscribe_rendezvous_participant, :if => lambda {|c| c.rendezvous?}
+  after_create  :generate_uuid,                     :if => lambda {|c| c.uuid.blank? }
+  after_create  :create_folder,                     :if => lambda {|c| !c.home? }
+  after_create  :subscribe_owner,                   :if => lambda {|c| !c.home? && !c.skip_autosubscribe }
+  after_create  :subscribe_rendezvous_participant,  :if => lambda {|c| c.rendezvous? }
+  after_create  :send_channel_notification,         :if => lambda {|c| !c.rendezvous? }
 
   attr_accessor   :skip_autosubscribe
   attr_accessible :skip_autosubscribe, :name, :description, :owner, :owner_id, :network, :network_id, :display_name, :public, :global
@@ -52,7 +53,7 @@ class Channel < ActiveRecord::Base
       :id               => channel.id,
       :rendezvous       => channel.rendezvous,
       :name             => channel.name,
-      :display_name     => channel.rendezvous_name(current_user) || channel.display_name || channel.name.capitalize,
+      :display_name     => channel.rendezvous_name(current_user) || channel.display_name,
       :last_read_meep   => (channel.last_read_meep rescue nil),
       :listen_id        => (channel.listen_id rescue nil),
       :meeps            => Meep.prepare_for_frontend(meeps, { :channel_id => channel.id })
@@ -108,6 +109,10 @@ class Channel < ActiveRecord::Base
     id == 1
   end
   
+  def display_name
+    super || name.capitalize
+  end
+  
   def rendezvous?
     !rendezvous.blank?
   end
@@ -128,7 +133,7 @@ class Channel < ActiveRecord::Base
     rendezvous_participants.each { |u| u.subscribe(self) }
   end
 
-  def owned_by(user)
+  def owned_by?(user)
     owner == user
   end
   
@@ -162,8 +167,20 @@ class Channel < ActiveRecord::Base
     User.find(user_id).display_name rescue 'stranger'
   end
   
+  def random_users(amount=5)
+    users.registered.all(:order => 'rand()', :limit => amount)
+  end
+  
   private
     def clean_diactritic_marks(string)
       ActiveSupport::Multibyte::Chars.new(string).mb_chars.normalize(:kd).gsub(/[^\x00-\x7F]/n,'').to_s
+    end
+    
+    def send_channel_notification
+      publish "system", "channels", {
+        :trigger      => 'channel.added',
+        :name         => self.name,
+        :id           => self.id
+      }
     end
 end

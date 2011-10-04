@@ -21,8 +21,8 @@ class SystemVpn
     end
   
     def status
-      return 'off' unless Rails.env == 'production'
-      system("/usr/bin/sudo /home/protonet/dashboard/current/script/init/vpn status") ? 'on' : 'off'
+      return false unless Rails.env == 'production'
+      system("/usr/bin/sudo /home/protonet/dashboard/current/script/init/vpn status")
     end
   end
 

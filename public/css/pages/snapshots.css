@@ -1,0 +1,42 @@
+.snapshots-page {
+  text-align: center;
+}
+
+.snapshots-page h1 {
+  text-align: left;
+}
+
+.snapshots-page output {
+  background: #eee;
+  border: 3px solid;
+  border-color: #666 #ccc #ccc #666;
+  height: 380px;
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+.snapshots-page .modal-window-scroll-content {
+  padding: 10px;
+}
+
+.snapshots-page label,
+.snapshots-page input {
+  font-size: 14px;
+}
+
+.snapshots-page label {
+  display: none;
+  margin-top: 10px;
+  line-height: 32px;
+}
+
+.snapshots-page input {
+  padding: 4px;
+  width: 400px;
+  font-size: 14px;
+}
+
+.snapshots-page .retry,
+.snapshots-page .share {
+  display: none;
+}

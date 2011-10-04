@@ -1,21 +1,45 @@
+<h2>Publish to web</h2>
+<p>Make your node available to the entire world not just your local network.</p>
 <%= form_tag system_preferences_update_path do -%>
-  <%= hidden_field_tag(:anchor, 'publish_to_web') %>
-  <h3 style="margin-bottom: 10px">Publish to WEB!</h3>
-  <p style="margin-bottom: 10px">Make your node available to the outside world with just one click.</p>
-  <ul>
-    <li style="margin-bottom: 10px">
-      <%= label_tag 'preferences[publish_to_web_name]', 'URL:' %>
-      http:// <%= text_field_tag 'preferences[publish_to_web_name]', SystemPreferences.publish_to_web_name, :disabled => SystemPublishToWeb.status, :style => "width: 140px" %>.protonet.info
-    </li>
-    <li style="margin-bottom: 10px">
-      Publish to web:
-      <strong>
-      <%= label_tag 'preferences[publish_to_web]', 'OFF' %>
-      <%= radio_button_tag 'preferences[publish_to_web]', false, !SystemPublishToWeb.status %>
-      <%= label_tag 'preferences[publish_to_web]', 'ON' %>
-      <%= radio_button_tag 'preferences[publish_to_web]', true, SystemPublishToWeb.status %>
-      </strong>
-    </li>
-  </ul>
-  <button type="submit">Update</button>
+  <%= hidden_field_tag(:section, 'publish_to_web') %>
+  <div class="form-field">
+    <%= label_tag 'preferences[publish_to_web_name]', 'URL:' %>
+    https:// <%= text_field_tag 'preferences[publish_to_web_name]', SystemPreferences.publish_to_web_name, :disabled => SystemPublishToWeb.status %>.protonet.info <a title="This is your node's external web address" data-hover-hint="top" class="hint">(?)</a>
+  </div>
+  <div class="form-field">
+    <%= label_tag 'preferences[publish_to_web]', 'Status:' %>
+    <span>
+      <label>
+        <input type="radio" name="preferences[publish_to_web]" value="true" <%= "checked" if SystemPublishToWeb.status %>>
+        On
+      </label>
+      <label>
+        <input type="radio" name="preferences[publish_to_web]" value="false" <%= "checked" unless SystemPublishToWeb.status %>>
+        Off
+      </label>
+    </span>
+  </div>
+  <%= button "Save" %>
 <%- end -%>
+
+<h3>Privacy settings</h3>
+<p>Non-members coming via <i><%= SystemPreferences.publish_to_web_name %>.protonet.info</i> ...</p>
+<%= form_tag(preferences_privacy_update_path, { 'data-ajax-auto-submit' => '1' }) do %>
+  <%= hidden_field_tag 'section', 'publish_to_web' %>
+  <%= hidden_field_tag 'interface', 'publish_to_web'  %>
+  <%= hidden_field_tag 'preferences[allow_dashboard_for_strangers]', false  %>
+  <label class="checkbox-row">
+    <%= check_box_tag 'preferences[allow_dashboard_for_strangers]', true, (SystemPreferences.privacy['publish_to_web']["allow_dashboard_for_strangers"] rescue false) %> can chat without registering
+  </label>
+<%- end %>
+<%= form_tag(preferences_privacy_update_path, { 'data-ajax-auto-submit' => '1' }) do %>
+  <%= hidden_field_tag 'section', 'publish_to_web' %>
+  <%= hidden_field_tag 'interface', 'publish_to_web'  %>
+  <%= hidden_field_tag 'preferences[allow_registrations_for_strangers]', false  %>
+  <label class="checkbox-row">
+    <%= check_box_tag 'preferences[allow_registrations_for_strangers]', true, (SystemPreferences.privacy['publish_to_web']["allow_registrations_for_strangers"] rescue false) %> can register
+  </label>
+<%- end %>
+
+<h3>Promote your published node</h3>
+<p>You can easily <%= link_to "invite people", new_invitation_path, :class => 'promotion-link' %> from the outside to collaborate with you.</p>

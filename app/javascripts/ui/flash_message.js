@@ -6,7 +6,7 @@
  *
  * @example
  *    // either
- *    protonet.Notifications.trigger("flash_message.error", "Ouch something bad happened!");
+ *    protonet.trigger("flash_message.error", "Ouch something bad happened!");
  *    
  *    // or
  *    protonet.ui.FlashMessage.show("error", "Ouch something bad happened!");

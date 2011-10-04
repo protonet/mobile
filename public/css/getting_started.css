@@ -1,0 +1,121 @@
+.getting-started {
+  background: #487bff;
+  background-image: -webkit-gradient(linear, left top, right bottom, from(rgba(255, 255, 255, 0.4)), to(rgba(255, 255, 255, 0)));
+  background-image: -moz-linear-gradient(left top, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+  margin: -60px -34px 20px -34px;
+  padding: 20px 10px 22px;
+  position: relative;
+}
+
+.getting-started:after,
+.getting-started:before {
+  position: absolute;
+  bottom: -22px;
+  content: "";
+  width: 50px;
+  height: 50px;
+  z-index: -1;
+  background: #062984;
+  display: none\9; /* IE 8 and below */
+}
+
+.getting-started:after {
+  left: 11px;
+  -webkit-transform: rotate(40deg);
+  -moz-transform: rotate(40deg);
+  -ms-transform: rotate(40deg);
+  transform: rotate(40deg);
+}
+
+.getting-started:before {
+  right: 10px;
+  -webkit-transform: rotate(-40deg);
+  -moz-transform: rotate(-40deg);
+  -ms-transform: rotate(-40deg);
+  transform: rotate(-40deg);
+}
+
+.getting-started h4 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 20px;
+  text-shadow: -1px 1px 1px rgba(255, 255, 255, 0.6);
+}
+
+.getting-started-close-link {
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  text-align: center;
+  line-height: 18px;
+  -moz-border-radius: 40px;
+  -webkit-border-radius: 40px;
+  border-radius: 40px;
+  text-decoration: none;
+  right: 6px;
+  top: 6px;
+}
+
+.getting-started-close-link:hover {
+  color: #000;
+}
+
+.getting-started ol {
+  counter-reset: li;
+}
+
+.getting-started li {
+  margin-top: 14px;
+  position: relative;
+  padding-left: 30px;
+  color: #fff;
+}
+
+.getting-started li a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.getting-started li:before {
+  font-family: Arial, sans-serif;
+  position: absolute;
+  left: 0;
+  top: -2px;
+  content: counter(li);
+  counter-increment: li;
+  font-size: 16px;
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font-weight: bold;
+  line-height: 21px;
+  width: 21px;
+  height: 21px;
+  text-align: center;
+  -moz-border-radius: 40px;
+  -webkit-border-radius: 40px;
+  border-radius: 40px;
+}
+
+.getting-started li.done:before {
+  content: "\2713";
+  color: #00cc00;
+  background: #fff !important;
+}
+
+.getting-started li:hover:before {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.getting-started strong {
+  display: block;
+  font-size: 13px;
+}
+
+.getting-started p {
+  font-size: 11px;
+  line-height: 1.5;
+  color: #eee;
+}

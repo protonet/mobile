@@ -17,7 +17,7 @@ require File.dirname(__FILE__) + '/client_tracker.rb'
 
 def solr_index_processing
   begin
-    if SystemPreferences.index_meeps
+    if SystemPreferences.show_search_widget
       puts "==== solr index queue processing ========="
       Sunspot::IndexQueue.new.process
       puts "==== solr index queue processing done ===="

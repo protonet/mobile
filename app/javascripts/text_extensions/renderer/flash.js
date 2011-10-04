@@ -7,6 +7,10 @@ protonet.text_extensions.render.flash = (function() {
       };
   
   return function(data) {
+    if (!data.image) {
+      return;
+    }
+    
     var anchor        = protonet.text_extensions.render.image(data, true),
         placeholderId = "swfobject-placeholder-" + index++,
         placeholder,
@@ -22,10 +26,10 @@ protonet.text_extensions.render.flash = (function() {
       var callback = function(event) {
         flashElement = event.ref;
         if (flashElement) {
-          flashElement  = $(flashElement).trigger("text_extension.show_flash");
+          flashElement  = $(flashElement).trigger("text_extension.show_media");
           closeLink     = closeLink || $("<a>", {
             "class":    "media-close-link close-link",
-            html:       "X",
+            html:       "&times;",
             mousedown:  false, // ensure that meep isn't accidentally focused
             click:      function() {
               closeLink.detach();
