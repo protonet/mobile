@@ -117,9 +117,9 @@ class UsersController < ApplicationController
     @meeps = Meep.where(:channel_id => current_user.channels.verified.map(&:id)).
                   where(:user_id => params[:id]).
                   where("text_extension != ''").
+                  order("meeps.id DESC").
                   includes(:user).
-                  order(:id => "DESC").
-                  all(:limit => 25)
+                  all(:limit => 20)
     render :json => Meep.prepare_for_frontend(@meeps)
   end
   
