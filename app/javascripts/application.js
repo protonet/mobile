@@ -24,7 +24,6 @@
 //= require "ui/modal_window.js"
 //= require "utils/toggle_element.js"
 //= require "utils/rails.js"
-//= require "dispatcher/dispatcher.js"
 //= require "text_extensions/text_extensions.js"
 //= require "timeline/meep.js"
 //= require "effects/clouds.js"

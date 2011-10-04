@@ -1,3 +1,4 @@
+//= require "dispatcher/dispatcher.js"
 //= require "../timeline/timeline.js"
 //= require "../widgets/file.js"
 //= require "../widgets/user.js"
