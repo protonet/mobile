@@ -18,9 +18,10 @@ protonet.ui.FlashMessage = {
   initialize: function() {
     this.element = $("div.flash-message");
     this.element.click(this.hide.bind(this));
+    this.messageContainer = this.element.find("p");
     this.element.find(".flash-message-close-link").click(this.hide.bind(this));
     
-    if ($.trim(this.element.text())) {
+    if ($.trim(this.messageContainer.text())) {
       this.show();
     }
     
@@ -37,7 +38,7 @@ protonet.ui.FlashMessage = {
   show: function(type, message) {
     if (message) {
       // Using html() instead of text() here would open security holes
-      this.element.find("p").text(message);
+      this.messageContainer.text(message);
     }
     
     if (type) {
