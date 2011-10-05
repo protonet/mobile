@@ -322,20 +322,6 @@ a.loading {
 
 
 
-.icon-list li {
-  width: 14px;
-  height: 14px;
-  float: left;
-  margin-right: 4px;
-}
-
-.icon-list li:last-child {
-  margin-right: 0;
-}
-
-
-
-
 
 .subpage .form-field {
   display: block;

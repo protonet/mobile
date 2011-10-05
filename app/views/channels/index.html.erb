@@ -14,6 +14,9 @@
             <li class="<%= 'selected' if @selected_channel && c.id == @selected_channel.id %>">
               <a href="/channels/<%= c.id %>" data-tab="channels">
                 <strong>@<%= c.name %></strong> (<%= pluralize(c.users.registered.size, "user") %>)
+                <%- if current_user.subscribed?(c) %>
+                  <p>&#10003; listening</p>
+                <%- end %>
               </a>
             </li>
           <%- end -%>
