@@ -344,19 +344,6 @@ a.loading {
 
 
 
-h2 .action-link {
-  float: right;
-}
-
-.action-link {
-  text-decoration : none;
-  padding-left: 20px;
-}
-
-.action-link.edit {
-  background: transparent url(/img/icn_edit.png) left center no-repeat;
-}
-
 .promotion-link {
   color: #487bff;
 }

@@ -34,9 +34,7 @@
         <%= render :partial => 'channels/tab', :locals => { :channel => channel } %>
       <%- end -%>
     </ul>
-    <div id="manage-channels">
-      <%= link_to "add/manage channels", "/channels" if permitted_to?(:create, :listens) or permitted_to?(:create, :channels) %>
-    </div>
+    <%= link_to("+", channels_path, :class => 'manage-channels', :title => 'Add/manage channels', 'data-hover-hint' => 'top') if permitted_to?(:create, :listens) or permitted_to?(:create, :channels) %>
   </nav>
   <output id="timeline"></output>
   <div class="progress" id="timeline-loading"></div>

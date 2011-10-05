@@ -8,7 +8,7 @@
 }
 
 #channels ul {
-  margin: 0 0 -1px;
+  margin: 0 22px -1px 0;
   overflow: hidden;
 }
 
@@ -22,7 +22,20 @@
 }
 
 #channels li:last-child {
-  margin-right: 140px;
+  margin-right: 20px;
+}
+
+.manage-channels {
+  color: #999;
+  font-weight: bold;
+  font-size: 18px;
+  width: 20px;
+  height: 20px;
+  padding-bottom: 2px;
+  text-decoration: none;
+  position: absolute;
+  right: 0;
+  bottom: 0;
 }
 
 #channels li a {
@@ -55,18 +68,6 @@
 #channels li a:active {
   background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.1), transparent);
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0.1)), to(transparent));
-}
-
-#manage-channels {
-  font-size: 12px;
-  position: absolute;
-  right: 5px;
-  bottom: 2px;
-}
-
-#manage-channels a {
-  color: rgb(170, 170, 170);
-  text-decoration: none;
 }
 
 #channels .badge-container {
