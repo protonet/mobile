@@ -144,7 +144,7 @@ $.behaviors({
   },
   
   ".subpage:ajax:success": (function() {
-    var $tempElement, $window;
+    var $tempElement;
     return function(element, event, html, statusText, xhr) {
       if (!html) { return; }
       $tempElement = $tempElement || $("<div>");
@@ -175,18 +175,30 @@ $.behaviors({
    *    <output data-tab="channel-container"></output>
    */
   "a[data-tab]:click": function(tabLink, event) {
-    var $tabLink      = $(tabLink),
-        tabName       = $tabLink.data("tab"),
-        url           = $tabLink.prop("href"),
-        $tabContainer = $("output[data-tab='" + tabName + "']"),
-        $tabLinks     = $("a[data-tab='" + tabName + "']");
+    var $tabLink            = $(tabLink),
+        tabName             = $tabLink.data("tab"),
+        url                 = $tabLink.prop("href"),
+        $tabContainer       = $("output[data-tab='" + tabName + "']"),
+        $tabLinks           = $("a[data-tab='" + tabName + "']"),
+        originalPaddingTop  = (function() {
+          var paddingTop = $tabContainer.data("original-padding-top");
+          if (typeof(paddingTop) === "undefined") {
+            paddingTop = $tabContainer.cssUnit("padding-top")[0];
+            $tabContainer.data("original-padding-top", paddingTop);
+          }
+          return paddingTop;
+        })();
     
     $.ajax({
       url:      $tabLink.prop("href"),
       data:     { ajax: 1 },
       headers:  { "X-Request-Type": "tab" },
       beforeSend: function() {
-        $tabContainer.html($("<p>", { "class": "hint", text: protonet.t("LOADING") }));
+        var $scrollContainer  = $tabContainer.parents(".modal-window-scroll-content"),
+            scrollTop         = $scrollContainer.scrollTop();
+        $tabContainer
+          .css("padding-top", (originalPaddingTop + scrollTop).px())
+          .html($("<p>", { "class": "hint", text: protonet.t("LOADING") }));
         $tabLinks.parent().removeClass("selected");
         $tabLink.parent().addClass("selected");
         protonet.utils.History.push(url);

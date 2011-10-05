@@ -110,7 +110,7 @@
 /*--------------------------------- USER WIDGET ---------------------------------*/
 #user-widget li a {
   color: #999;
-  background-image: url(../img/spr_user_status.png);
+  background-image: url(/img/spr_user_status.png);
   background-repeat: no-repeat;
   background-position: 4px -16px;
 }
@@ -156,7 +156,9 @@
   color: #999;
   font-size: 10px;
   position: relative;
+  border: 1px #6D95FF solid;
   border-bottom: 1px solid #ccc;
+  margin-bottom: -1px;
   padding: 0 17px;
 }
 
