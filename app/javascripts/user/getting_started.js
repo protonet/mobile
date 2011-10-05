@@ -43,8 +43,8 @@ protonet.user.initGettingStarted = (function() {
       });
     
     protonet
-      .bind("user.changed_avatar", function(e, data) {
-        if (data.user_id == viewer) {
+      .bind("user.changed_avatar", function(e, user) {
+        if (user.id == viewer) {
           _done("upload-avatar");
         }
       })

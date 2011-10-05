@@ -39,9 +39,9 @@ protonet.timeline.Form = {
     var preventFocus = protonet.config.user_is_stranger || protonet.user.Browser.IS_TOUCH_DEVICE();
     
     protonet
-      .bind("user.changed_avatar", function(e, data) {
-        if (data.user_id == protonet.config.user_id) {
-          this.form.find("[name='meep[avatar]']").val(data.avatar);
+      .bind("user.changed_avatar", function(e, user) {
+        if (user.id == protonet.config.user_id) {
+          this.form.find("[name='meep[avatar]']").val(user.avatar);
         }
       }.bind(this))
       

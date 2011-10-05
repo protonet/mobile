@@ -2,7 +2,7 @@
   <%= render :partial => 'header' %>
   <div class="modal-window-scroll-content">
     <output class="content">
-      <%= avatar(@user, :width => 240, :height => 240, :class => 'user-avatar') %>
+      <%= avatar(@user, :width => 240, :height => 240, :class => 'user-avatar', 'data-user-avatar' => @user.id) %>
       <h2>Edit @<%= @user.display_name %> <a data-hover-hint="top" title="This page can only be seen by admins and the user himself" class="hint">(?)</a></h2>
       <h3>Change avatar</h3>
       <%= form_tag images_avatars_path, :multipart => true, :class => 'single-button-form' do %>

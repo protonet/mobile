@@ -1,4 +1,5 @@
 //= require "../ui/context_menu.js"
+//= require "../media/try_to_load_image.js"
 
 protonet.user = {
   initialize: function() {
@@ -26,26 +27,25 @@ protonet.user = {
         this.usersData = usersData;
       }.bind(this))
       
-      .bind("user.changed_avatar", function(e, data) {
-        // timeout needed since the server needs to first move the avatar to the correct location
-        setTimeout(function() {
-          var selector = [];
-          selector.push("a[data-user-id='" + data.user_id + "'] img");
-          if (data.user_id == protonet.config.user_id) {
-            selector.push("img[data-my-avatar]")
+      .bind("user.changed_avatar", function(e, user) {
+        protonet.media.tryToLoadImage(user.avatar, function() {
+          var selector = [
+            "a[data-user-id='" + user.id + "'] > img",
+            "img[data-user-avatar='" + user.id + "']"
+          ];
+          
+          if (user.id == protonet.config.user_id) {
+            selector.push("img[data-my-avatar]");
           }
+          
           selector = selector.join(",");
           $(selector).toArray().chunk(function(img) {
             var $img       = $(img),
                 dimensions = { width:  $img.width(), height: $img.height() },
-                avatar = protonet.media.Proxy.getImageUrl(data.avatar, dimensions);
-            if ($img.attr("data-src")) {
-              $img.attr("data-src", avatar);
-            } else {
-              $img.attr("src", avatar);
-            }
+                avatar     = protonet.media.Proxy.getImageUrl(user.avatar, dimensions);
+            $img.attr("data-src") ? $img.attr("data-src", avatar) : $img.attr("src", avatar);
           });
-        }, 1000);
+        });
       });
   },
   
@@ -80,7 +80,7 @@ protonet.user = {
       }.bind(this)
     };
     
-    var contextMenu = new protonet.ui.ContextMenu("a[data-user-id]", contextOptions, "context-menu-users");
+    new protonet.ui.ContextMenu("a[data-user-id]", contextOptions, "context-menu-users");
   },
   
   getUser: function(userId) {

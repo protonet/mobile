@@ -21,11 +21,11 @@ module ApplicationHelper
   end
   
   def avatar(user, opts = {})
-    opts[:alt]            ||= ""
-    opts[:width]          ||= 36
-    opts[:height]         ||= opts[:width]
-    opts[:title]          ||= user.display_name
-    opts['data-my-avatar']  = 1 if user == current_user
+    opts[:alt]              ||= ""
+    opts[:width]            ||= 36
+    opts[:height]           ||= opts[:width]
+    opts[:title]            ||= user.display_name
+    opts['data-user-avatar']  = user.id
     
     if opts.delete(:lazy_load)
       opts['data-src'] = image_proxy(user.avatar.url, opts).html_safe

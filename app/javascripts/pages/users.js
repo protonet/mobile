@@ -42,7 +42,7 @@ $(function() {
     
     function reset() {
       setTimeout(function() { $iframe.remove(); }, 0);
-      setTimeout(function() { $avatar.removeClass("loading"); }, 1000);
+      setTimeout(function() { $avatar.removeClass("loading"); }, 2000);
       $avatarForm.trigger("reset").find("button").removeAttr("disabled").removeClass("loading");
     }
     
@@ -52,15 +52,12 @@ $(function() {
             response = JSON.parse($.trim(body.innerText || body.textContent));
       } catch(e) {}
 
-      if (!response || !response.success) {
+      if (!response || !response.avatar) {
         protonet.trigger("flash_message.error", (response && response.error) || protonet.t("AVATAR_UPLOAD_ERROR"));
       } else {
         // success
         if (!protonet.dispatcher.connected) {
-          protonet.trigger("user.changed_avatar", {
-            user_id: protonet.config.user_id,
-            avatar:  response.avatar
-          });
+          protonet.trigger("user.changed_avatar", response);
         }
       }
       reset();

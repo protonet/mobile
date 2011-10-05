@@ -76,7 +76,7 @@ protonet.widgets.User = Class.create({
       }.bind(this))
       
       .bind("user.changed_avatar", function(e, data) {
-        var user = this.usersData[data.user_id];
+        var user = this.usersData[data.id];
         if (user) {
           user.avatar = data.avatar;
         }
