@@ -20,7 +20,7 @@ allow protonet:admin
 ##########################################################################
 
 # app  settings
-check process rabbitmq with pidfile /var/run/rabbitmq.pid
+check process rabbitmq with pidfile /var/run/rabbitmq/pid
   group base
   start program = "/usr/bin/sudo /etc/init.d/rabbitmq-server start"
   stop program  = "/usr/bin/sudo /etc/init.d/rabbitmq-server stop"
