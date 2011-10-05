@@ -5,6 +5,7 @@ $.behaviors({
     var $target     = $(event.target),
         $element    = $(element),
         actionLink  = ".detail-view-link, .share-link";
+    
     if (!$target.is("li.meep") && !$target.is(actionLink)) {
       $element.trigger("blur");
       return;
@@ -28,7 +29,7 @@ $.behaviors({
           blur();
         }
       })
-      .bind("focusout.meep_focus", function() {
+      .bind("focusout.meep_focus", function(event) {
         blur();
       });
     
@@ -41,8 +42,8 @@ $.behaviors({
     $subMeepParagaphs.each(function(i, subMeepParagaph) {
       var $subMeepParagaph  = $(subMeepParagaph),
           meepId            = $subMeepParagaph.parent().data("meep").id,
-          $detailViewLink    = new protonet.utils.Template("meep-actions-template", { id: meepId }).toElement();
-      $detailViewLink.appendTo($subMeepParagaph);
+          $actionLinks      = new protonet.utils.Template("meep-actions-template", { id: meepId }).toElement();
+      $actionLinks.mousedown(false).appendTo($subMeepParagaph);
     });
     
     $element.addClass("focus");
