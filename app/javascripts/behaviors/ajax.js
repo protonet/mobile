@@ -179,6 +179,7 @@ $.behaviors({
         tabName             = $tabLink.data("tab"),
         url                 = $tabLink.prop("href"),
         $tabContainer       = $("output[data-tab='" + tabName + "']"),
+        $scrollContainer    = $tabContainer.parents(".modal-window-scroll-content"),
         $tabLinks           = $("a[data-tab='" + tabName + "']"),
         originalPaddingTop  = (function() {
           var paddingTop = $tabContainer.data("original-padding-top");
@@ -194,17 +195,16 @@ $.behaviors({
       data:     { ajax: 1 },
       headers:  { "X-Request-Type": "tab" },
       beforeSend: function() {
-        var $scrollContainer  = $tabContainer.parents(".modal-window-scroll-content"),
-            scrollTop         = $scrollContainer.scrollTop();
-        $tabContainer
-          .css("padding-top", (originalPaddingTop + scrollTop).px())
-          .html($("<p>", { "class": "hint", text: protonet.t("LOADING") }));
+        var hint = $("<p>", { "class": "hint", text: protonet.t("LOADING") });
+        $tabContainer.html(hint);
+        
         $tabLinks.parent().removeClass("selected");
         $tabLink.parent().addClass("selected");
         protonet.utils.History.push(url);
       },
       success: function(html) {
         $tabContainer.html(html).hide().fadeIn("fast");
+        $tabContainer.css("padding-top", (originalPaddingTop + $scrollContainer.scrollTop()).px());
       }
     });
     event.preventDefault();
