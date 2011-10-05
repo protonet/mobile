@@ -21,10 +21,6 @@
   margin: 6px 3px 0 0;
 }
 
-#channels li:last-child {
-  margin-right: 20px;
-}
-
 .manage-channels {
   color: #999;
   font-weight: bold;
