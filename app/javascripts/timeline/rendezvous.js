@@ -82,7 +82,7 @@
       }).appendTo(this.tab);
       
       try {
-        var hasUnreadMeeps = this.data.meeps[0].id > this.data.last_read_meep;
+        var hasUnreadMeeps = this.data.meeps[this.data.meeps.length - 1].id > this.data.last_read_meep;
       } catch(e) {}
       
       if (!isActive(this.data.id) && !hasUnreadMeeps) {
