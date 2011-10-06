@@ -40,3 +40,6 @@
   background: url(/img/icn_loading.gif) no-repeat 0 0;
 }
 
+.preferences-page input[name="target"] {
+  width: 82px;
+}

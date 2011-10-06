@@ -21,7 +21,7 @@ class PreferencesController < ApplicationController
   def set_available_preferences
     @preferences = current_user.roles.include?(Role.find_by_title!('admin')) ? [
       {:section => 'publish_to_web',    :name => 'Publish to web'},
-      {:section => 'user_settings',     :name => 'User settings'},
+      {:section => 'user_settings',     :name => 'User management'},
       {:section => 'customize',         :name => 'Customize the interface'},
       # TODO: Merge this into miscellaneous
       #{:section => 'network_settings',  :name => 'Network settings'},

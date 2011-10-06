@@ -31,7 +31,11 @@ class User < ActiveRecord::Base
   after_destroy :move_owned_channels_to_anonymous
   
   validates_uniqueness_of :email, :if => lambda {|u| !u.stranger?}
-
+  
+  def self.find_by_id_or_login(id_or_login)
+    find_by_id(id_or_login) || find_by_login(id_or_login)
+  end
+  
   def self.anonymous
     begin
       find(-1)
@@ -137,7 +141,7 @@ class User < ActiveRecord::Base
     super && !stranger?
   end
   
-  def download_remote_avatar   
+  def download_remote_avatar
     t = Tempfile.new(ActiveSupport::SecureRandom.hex(4))
     t.write(open(avatar_url).read)
     t.flush      

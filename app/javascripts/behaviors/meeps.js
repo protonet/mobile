@@ -41,7 +41,7 @@ $.behaviors({
     var $subMeepParagaphs = $element.find("article");
     $subMeepParagaphs.each(function(i, subMeepParagaph) {
       var $subMeepParagaph  = $(subMeepParagaph),
-          meepId            = $subMeepParagaph.parent().data("meep").id,
+          meepId            = $subMeepParagaph.data("meep").id,
           $actionLinks      = new protonet.utils.Template("meep-actions-template", { id: meepId }).toElement();
       $actionLinks.mousedown(false).appendTo($subMeepParagaph);
     });

@@ -1,9 +1,18 @@
 class UsersController < ApplicationController
-  filter_resource_access
   include Rabbit
   
+  filter_resource_access
+  
+  before_filter :prepare_target_users, :only => [:send_system_message, :send_javascript]
+  
   def index
-    @active_users = User.find(Meep.connection.select_values("SELECT user_id, count(meeps.id) as counter FROM meeps left outer join users on users.id = meeps.user_id WHERE users.temporary_identifier IS NULL AND (users.id != -1) AND meeps.created_at > '#{(Time.now - 2.weeks).to_s(:db)}' GROUP BY user_id ORDER BY counter DESC, meeps.id DESC LIMIT 20"))
+    @active_users = User.find(
+      Meep.connection.select_values("
+        SELECT user_id, count(meeps.id) as counter FROM meeps left outer join users on users.id = meeps.user_id
+        WHERE users.temporary_identifier IS NULL AND (users.id != -1) AND meeps.created_at > '#{(Time.now - 2.weeks).to_s(:db)}'
+        GROUP BY user_id ORDER BY counter DESC, meeps.id DESC LIMIT 20
+      ")
+    )
   end
   
   def show
@@ -11,7 +20,7 @@ class UsersController < ApplicationController
     if params[:no_redirect] || !@user.external_profile_url
       render
     else
-      return redirect_to(@user.external_profile_url)
+      redirect_to(@user.external_profile_url)
     end
   end
   
@@ -37,16 +46,12 @@ class UsersController < ApplicationController
     else
       flash[:error]  = "Couldn't delete old strangers!"
     end
-    if request.xhr?
-      head(204)
-    else
-      redirect_to :back
-    end
+    redirect_to_preferences
   end
   
   def start_rendezvous
     Channel.setup_rendezvous_for(current_user.id, params[:id].to_i)
-    head(204)
+    render_nothing
   end
   
   def update_last_read_meeps
@@ -54,7 +59,7 @@ class UsersController < ApplicationController
       mapping = params[:mapping] || {}
       Listen.update_last_read_meeps(current_user.id, mapping)
     end
-    head(204)
+    render_nothing
   end
   
   def update_user_admin_flag
@@ -86,7 +91,7 @@ class UsersController < ApplicationController
         flash[:sticky] = "Generated new password for #{user.login}: \"#{new_password}\" please remind him to change it." if user.save
       end
     else
-      flash[:error]  = "You're not authorized to do this, please check your password and admin rights."
+      flash[:error]  = "You are not authorized to do this, please check your password and admin rights."
     end
     
     redirect_to_edit_after_update(user)
@@ -124,7 +129,7 @@ class UsersController < ApplicationController
   end
   
   def search
-    @user = User.find(params[:search_term]) rescue User.find_by_login(params[:search_term]) rescue nil
+    @user = User.find_by_id_or_login(params[:search_term])
     if @user
       redirect_to user_path(@user)
     else
@@ -135,7 +140,7 @@ class UsersController < ApplicationController
   
   def remove_newbie_flag
     current_user.update_attribute(:newbie, false)
-    head(204)
+    render_nothing
   end
   
   def newbie_todo_list
@@ -148,10 +153,39 @@ class UsersController < ApplicationController
     }
   end
   
+  def send_javascript
+    @target_users.each {|u| publish("users", u.id, { :eval => params[:javascript] }) }
+    flash[:notice] = 'The javascript has been executed'
+    redirect_to_preferences
+  end
+  
+  def send_system_message
+    @target_users.each {|u| publish("users", u.id, { :eval => "protonet.trigger('flash_message.sticky', '#{params[:message]}')" }) }
+    flash[:notice] = 'The system message has been sent'
+    redirect_to_preferences
+  end
+  
   private
+    
+    def prepare_target_users
+      @target_users = params[:target_all] ? User.registered : User.find_by_id_or_login(params[:target]).to_a
+    end
+    
+    def render_nothing
+      head(204)
+    end
+    
+    def redirect_to_preferences
+      if request.xhr?
+        render_nothing
+      else
+        redirect_to :controller => '/preferences', :action => :show, :section => params[:section]
+      end
+    end
+    
     def redirect_to_edit_after_update(user)
       if request.xhr?
-        head(204)
+        render_nothing
       else
         redirect_to_and_preserve_xhr :action => 'edit', :id => user.id
       end

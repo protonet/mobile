@@ -49,7 +49,7 @@ end
 privileges do
   # default privilege hierarchies to facilitate RESTful Rails apps
   privilege :manage, :includes => [:create, :read, :update, :delete, :show,
-    :change_password, :update_user_admin_flag, :generate_new_password, :search, :meeps_with_text_extension]
+    :change_password, :update_user_admin_flag, :generate_new_password, :search, :meeps_with_text_extension, :send_javascript, :send_system_message]
   privilege :manage_globals, :includes => [:global]
   privilege :read, :includes => [:index, :show]
   privilege :newbie, :includes => [:remove_newbie_flag, :newbie_todo_list]
