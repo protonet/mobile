@@ -10,13 +10,16 @@
     </li>
     <%- unless current_user.invitee? %>
       <li class="create-channel">
-        <%= link_to new_channel_path do %>
-          <%- if Channel.real.size > 1 %>
+        <%- if Channel.real.size > 1 %>
+          <%= link_to channels_path do %>
             <strong>Listen to channels</strong>
-          <%- else %>
-            <strong>Create a channel</strong>
+            <p>Channels are like groups/topics. You can create new ones or subscribe to existing ones.</p>
           <%- end %>
-          <p>Channels are like groups/topics. You can create new ones or subscribe to existing ones.</p>
+        <%- else %>
+          <%= link_to new_channel_path do %>
+            <strong>Create a channel</strong>
+            <p>Channels are like groups/topics. You can create new ones or subscribe to existing ones.</p>
+          <%- end %>
         <%- end %>
       </li>
     <%- end %>

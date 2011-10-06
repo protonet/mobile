@@ -1,9 +1,14 @@
-Given /^an? ([^"]*) with the login "([^"]*)"$/ do |role_name, login|
+Given /^an? ([^"]*) with the login "([^\"]*)"$/ do |role_name, login|
   user = Factory(:user, :login => login, :email => "#{login}@protonet.com")
   user.add_to_role(role_name)
 end
 
-Then /^wait (\d+) seconds?$/ do |seconds|
+Given /^a channel named "([^\"]*)"$/ do |channel_name|
+  #Channel.create(:owner => User.find(1), :name => channel_n)
+  channel = Factory(:channel, :name => channel_name)
+end
+
+Then /^I wait (\d+) seconds?$/ do |seconds|
   sleep seconds.to_i
   true
 end
@@ -26,7 +31,7 @@ Then /^I wait for the autocompletion$/ do
   sleep 0.5
 end
 
-Given /^I am logged in as "([^\"]*)"(?: with "([^\"]*)")?$/ do|username, password|
+Given /^I am logged in as "([^\"]*)"(?: with password "([^\"]*)")?$/ do|username, password|
   password ||= (@password || '123456')
   within("form.login") do
     fill_in 'login_login', :with => username
@@ -117,7 +122,11 @@ Then /^I click on "([^\"]*)" in the timeline$/ do |text|
 end
 
 Then /^I should see the login form$/ do
-  page.has_xpath?('//form[@action="/users/sign_in"]', :visible => true).should == true
+  find(:css, 'form.login', :visible => true)
+end
+
+Then /^I should see the registration form$/ do
+  find(:css, 'form.sign-up', :visible => true)
 end
 
 Given /^I send the message "([^\"]*)"$/ do |text|
@@ -245,5 +254,41 @@ Then /^I switch to the channel "([^\"]*)"$/ do |channelname|
 end
 
 Then /^I visit the profile of "([^\"]*)"$/ do |username|
-   visit "/users/search?search_term=#{username}&id=1"
+  visit "/users/search?search_term=#{username}&id=1"
+end
+
+Then /^"([^\"]*)" should be an admin$/ do |username|
+  User.find_by_login(username).admin?
+end
+
+Then /^I should see the getting started box containing (\d+) steps$/ do |step_size|
+  all(:css, '.getting-started li', :visible => true).size.should == step_size.to_i
+end
+
+Then /^I should not see the getting started box$/ do
+  all(:css, '.getting-started', :visible => true).empty?.should == true
+end
+
+Then /^I follow the getting started "([^\"]*)" link$/ do |link_name|
+  find(:css, ".#{link_name.gsub(/\s/, '-')} a", :visible => true).click
+end
+
+Then /^I should see the modal window$/ do
+  find(:css, ".modal-window", :visible => true)
+end
+
+Then /^I close the modal window$/ do
+  find(:css, ".modal-window .close-link", :visible => true).click
+end
+
+Then /^I should not see the modal window$/ do
+  all(:css, '.modal-window', :visible => true).empty?.should == true
+end
+
+Then /^I should see "([^\"]*)" marked as done in the getting started box$/ do |link_name|
+  find(:css, ".getting-started .#{link_name.gsub(/\s/, '-')}.done", :visible => true)
+end
+
+Then /^I close the getting started box$/ do
+  find(:css, ".getting-started-close-link", :visible => true).click
 end

@@ -41,7 +41,7 @@ Feature: Using the protonet channel management
         And I go to the channels page
         And I select the channel "privatechannel" in the channel list
         # need to wait for appearance of listen in chanels-details
-        And wait 1 seconds 
+        And I wait 1 seconds 
         Then I press "Listen"
         Then I go to the start page
         Then I should not see "Privatechannel" in the channel selector

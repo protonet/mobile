@@ -70,7 +70,7 @@ Feature: Using the protonet dashboard
     And I am logged in as "dudemeister"
     Given I send the message "@cool-channel"
     And I click on "cool-channel" in the timeline
-    And wait 3 seconds
+    Given I wait 3 seconds
     Then I should not see "Cool-channel" in the channel selector
 
   @wip
