@@ -2,14 +2,15 @@ class Channel < ActiveRecord::Base
   include Rabbit
   
   belongs_to  :owner, :class_name => "User"
-  belongs_to  :network
+  belongs_to  :node
 
   has_many  :meeps
 
   has_many  :listens, :dependent => :destroy
   has_many  :users,   :through   => :listens
 
-  validates_uniqueness_of   :name, :uuid
+  validates_uniqueness_of   :name, :scope => :node_id
+  validates_uniqueness_of   :uuid
   validates_length_of       :name, :maximum => 30, :minimum => 1
   
   before_validation :prepare_rendezvous,  :on => :create, :if => lambda {|c| !!c.rendezvous }
@@ -22,7 +23,7 @@ class Channel < ActiveRecord::Base
   after_create  :send_channel_notification,         :if => lambda {|c| !c.rendezvous? }
 
   attr_accessor   :skip_autosubscribe
-  attr_accessible :skip_autosubscribe, :name, :description, :owner, :owner_id, :network, :network_id, :display_name, :public, :global
+  attr_accessible :skip_autosubscribe, :name, :description, :owner, :owner_id, :node, :node_id, :display_name, :public, :global
 
   scope :public,   :conditions => {:public => true}
 
@@ -51,6 +52,7 @@ class Channel < ActiveRecord::Base
     meeps = channel.meeps.includes(:user).recent.all(:limit => 25)
     {
       :id               => channel.id,
+      :uuid             => channel.uuid,
       :rendezvous       => channel.rendezvous,
       :name             => channel.name,
       :display_name     => channel.rendezvous_name(current_user) || channel.display_name,
@@ -122,7 +124,7 @@ class Channel < ActiveRecord::Base
   end
   
   def locally_hosted?
-    network_id == 1
+    node_id == 1
   end
   
   def subscribe_owner

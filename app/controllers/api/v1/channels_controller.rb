@@ -1,5 +1,6 @@
 class Api::V1::ChannelsController < Api::V1::MasterController
   
+  skip_before_filter :authenticate, :only => [:index]
   before_filter :set_defaults
   
   # GET ALL YOUR CHANNELS
@@ -26,7 +27,25 @@ class Api::V1::ChannelsController < Api::V1::MasterController
   
   # GET A SPECIFIC CHANNEL
   def show
-    channel = Channel.find(params[:id]) rescue Channel.find_by_name(params[:id])
+    channel = Channel.find(params[:id])
+    if channel
+      render :json => channel
+    else
+      head :unprocessable_entity
+    end
+  end
+  
+  def find_by_name
+    channel = Channel.find_by_name(params[:name])
+    if channel
+      render :json => channel
+    else
+      head :unprocessable_entity
+    end
+  end
+  
+  def find_by_uuid
+    channel = Channel.find_by_uuid(params[:uuid])
     if channel
       render :json => channel
     else

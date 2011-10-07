@@ -11,8 +11,8 @@ class ChannelTest < ActiveSupport::TestCase
   end
   
   test "the locally_hosted? method should return true on local channels" do
-    assert Channel.new(:network_id => 1).locally_hosted?
-    assert !Channel.new(:network_id => 2).locally_hosted?
+    assert Channel.new(:node_id => 1).locally_hosted?
+    assert !Channel.new(:node_id => 2).locally_hosted?
   end
 
 end

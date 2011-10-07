@@ -79,3 +79,6 @@ Background:
   Scenario: Admin: Managing stranger rights
     # allowing them to see the dashboard or not
     # allowing strangers to register or not
+    
+  @javascript @wip
+  Scenario: Sending out a new password for a user

@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(:version => 20110930095703) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "owner_id"
-    t.integer  "network_id",   :default => 1
+    t.integer  "node_id",      :default => 1
     t.string   "display_name"
     t.boolean  "public",       :default => true
     t.boolean  "global",       :default => false
@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(:version => 20110930095703) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "text_extension"
-    t.integer  "network_id",     :default => 1
+    t.integer  "node_id",        :default => 1
     t.integer  "reply_from"
     t.integer  "channel_id"
   end
@@ -92,10 +92,15 @@ ActiveRecord::Schema.define(:version => 20110930095703) do
 
   create_table "nodes", :force => true do |t|
     t.string   "name"
-    t.string   "type"
     t.integer  "network_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "description"
+    t.string   "uuid"
+    t.string   "url"
+    t.string   "api_user"
+    t.string   "api_password"
+    t.integer  "api_user_id"
   end
 
   add_index "nodes", ["name"], :name => "index_nodes_on_name"
@@ -158,6 +163,7 @@ ActiveRecord::Schema.define(:version => 20110930095703) do
     t.datetime "avatar_updated_at"
     t.string   "authentication_token"
     t.string   "external_profile_url"
+    t.integer  "node_id",                                       :default => 1
     t.string   "facebook_id"
     t.string   "type"
     t.string   "twitter_id"

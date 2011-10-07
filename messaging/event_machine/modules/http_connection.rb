@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/modules/connection_shared.rb'
+require File.join(File.dirname(__FILE__), 'connection_shared.rb')
 
 class HttpConnection < EM::Connection
   include EM::HttpServer

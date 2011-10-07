@@ -1,7 +1,7 @@
 class ListensController < ApplicationController
   
   before_filter :set_listen_id
-  filter_resource_access
+  filter_resource_access :collection => [:index, :global]
   
   def index
     redirect_to listen_to_channel_path(:channel_name => params[:channel_name]) if params[:channel_name]
@@ -56,7 +56,13 @@ class ListensController < ApplicationController
   end
   
   def global
-
+    node = Node.couple(params[:node_data])
+    if node && channel = node.attach_global_channel(params[:channel_uuid])
+      current_user.subscribe(channel)
+      redirect_to :root
+    else
+      render :text => "error"
+    end
   end
 
   

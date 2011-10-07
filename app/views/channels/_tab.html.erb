@@ -1,7 +1,9 @@
 <li>
   <%= link_to channel.display_name, { :channel_id => channel.id }, {
     :title => channel.description,
-    :class => channel.locally_hosted? ? (channel.global? ? 'global-hosted' : 'local') : 'global',
-    'data-channel-id' => channel.id
+    :class => channel.locally_hosted? ? 'local' : 'global',
+    'data-channel-id'   => channel.id,
+    'data-channel-uuid' => channel.uuid,
+    'data-node-id'      => channel.node_id
   } %>
 </li>

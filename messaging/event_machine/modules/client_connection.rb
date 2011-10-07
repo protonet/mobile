@@ -1,5 +1,5 @@
-require File.dirname(__FILE__) + '/modules/flash_server.rb'
-require File.dirname(__FILE__) + '/modules/connection_shared.rb'
+require File.join(File.dirname(__FILE__), 'flash_server')
+require File.join(File.dirname(__FILE__), 'connection_shared')
 
 # awesome stuff happening here
 class ClientConnection < FlashServer

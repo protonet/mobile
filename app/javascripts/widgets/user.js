@@ -40,24 +40,24 @@ protonet.widgets.User = Class.create({
          * and the user.subscribed_channel afterwards
          */
         if (!protonet.config.show_only_online_users) {
-          this.createUser(+data.id, data, true);
+          this.createUser(data.id, data, true);
         }
       }.bind(this))
       
       .bind("user.typing", function(e, data) {
-        this._typingStart(+data.user_id, +data.channel_id);
+        this._typingStart(data.user_id, data.channel_uuid);
       }.bind(this))
       
       .bind("user.typing_end", function(e, data) {
-        this._typingEnd(+data.user_id);
+        this._typingEnd(data.user_id);
       }.bind(this))
       
       .bind("user.subscribed_channel", function(e, data) {
-        this._userSubscribedChannel(+data.user_id, +data.channel_id);
+        this._userSubscribedChannel(data.user_id, data.channel_uuid);
       }.bind(this))
       
       .bind("user.unsubscribed_channel", function(e, data) {
-        this._userUnsubscribedChannel(+data.user_id, +data.channel_id);
+        this._userUnsubscribedChannel(data.user_id, data.channel_uuid);
       }.bind(this))
 
       .bind("user.came_online", function(e, data) {
@@ -245,8 +245,18 @@ protonet.widgets.User = Class.create({
   
   filterChannelUsers: function(channelId) {
     channelId = channelId || protonet.timeline.Channels.selected;
-    var channelSubscriptions = this.channelSubscriptions[channelId];
-    if (!this.channelSubscriptions[channelId]) {
+    if(!channelId || !protonet.timeline.Channels.channelIdToUuid) {
+      return;
+    }
+    // transform input (id or uuid) to uuid
+    if(channelId && channelId.toString().match("-")) {
+      channelUuid = channelId;
+    } else {
+      channelUuid = protonet.timeline.Channels.channelIdToUuid[channelId];
+    }
+    
+    var channelSubscriptions = this.channelSubscriptions[channelUuid];
+    if (!this.channelSubscriptions[channelUuid]) {
       return;
     }
     
@@ -334,8 +344,8 @@ protonet.widgets.User = Class.create({
     }
   },
   
-  _typingStart: function(userId, channelId) {
-    if (channelId == protonet.timeline.Channels.selected) {
+  _typingStart: function(userId, channelUuid) {
+    if (channelUuid == protonet.timeline.Channels.selectedUuid) {
       var user = this.usersData[userId] || {};
       if (user.element) {
         user.element.prependTo(this.list).addClass("typing");

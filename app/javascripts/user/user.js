@@ -84,7 +84,7 @@ protonet.user = {
   },
   
   getUser: function(userId) {
-    var user = this.usersData[+userId];
+    var user = this.usersData[userId];
     return user;
   }
 };

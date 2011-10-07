@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '..', 'flash_connection')
+require File.join(File.dirname(__FILE__), 'flash_connection')
 
 # this is the class to handle policy talk with flash sockets
 class FlashServer < FlashConnection

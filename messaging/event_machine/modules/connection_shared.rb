@@ -18,132 +18,69 @@ module ConnectionShared
       if json_authenticate(data["payload"]) && !@subscribed
         @subscribed = true # don't resubscribe
         bind_socket_to_system_queue
-        
-        if !node? # normal handling if you're not a node
-          bind_socket_to_user_queues
-          add_to_online_users
-          send_channel_subscriptions
-          refresh_users
-          periodical_user_refresh
-          
-        elsif data['channels'] # List of certain channels?
-          data['channels'].each do |uuid|
-            channel = Channel.find_by_uuid uuid
-            
-            bind_channel(channel)
-            bind_files_for_channel(channel)
-            log("subscribing to channel #{channel.uuid}")
-          end
-          
-        else # No list. Auto-subscribe to all global channels
-          log 'subscribing to all global channels'
-          Channel.global.each do |channel|
-            bind_channel(channel)
-            bind_files_for_channel(channel)
-            log("subscribing to channel #{channel.uuid}")
-          end
-        end
+        bind_socket_to_user_queues
+        add_to_online_users
+        send_channel_subscriptions
+        refresh_users
+        periodical_user_refresh
       else
         send_reload_request # invalid auth
       end
-      
-    elsif (@user || node?) && data.is_a?(Hash)
+    elsif (@user) && data.is_a?(Hash)
       case data["operation"]
-        
         when /^user\.typing/
           update_user_typing_status(data)
-          
         when 'ping'
           send_ping_answer
-          
         when 'work'
           send_work_request(data)
-        
-        when 'network.probe'
-          log "Pulling channel list off #{data['supernode']}"
-          network = Network.new :supernode => data['supernode']
-          
-          send_json :trigger   => 'network.probe',
-                    :supernode => data['supernode'],
-                    :channels  => network.get_channels
-        
-        when 'network.create'
-          log "Coupling with #{data['supernode']}"
-          
-          network = Network.new :name => data['name'],
-                                :description => data['description'],
-                                :supernode => data['supernode']
-          
-          send_json :trigger     => 'network.creating',
-                    :message     => 'Probing remote node...'
-          
-          info = network.negotiate
-          
-          send_json :trigger     => 'network.creating',
-                    :message     => 'Creating local entry for remote node...'
-          
-          network.save
-          
-          send_json :trigger     => 'network.creating',
-                    :message     => 'Importing channels...'
-          
-          data['channels'].each do |uuid|
-            chan = info['channels'][uuid]
-            
-            send_json :trigger     => 'network.creating',
-                      :message     => 'Importing channel: ' + chan['name']
-            
-            Channel.create :name => chan['name'],
-              :description => chan['description'],
-              :uuid => uuid,
-              :owner_id => 0,
-              :network_id => network.id
-          end
-          
-          send_json :trigger     => 'network.creating',
-                    :message     => 'Initiating persistant connection...'
-
-          NodeConnection.connect network, @tracker, info['config']['socket_server_host'], info['config']['socket_server_port']
-          
-          send_json :trigger     => 'network.create',
-                    :id          => network.id,
-                    :name        => data['name'],
-                    :description => data['description'],
-                    :supernode   => data['supernode'],
-                    :channels    => data['channels']
-        
-        when 'meep'
-          # TODO: Use a helper or *something*
-          
-          if node?
-            channel = Channel.find_by_uuid data['channel_uuid']
-            meep = Meep.create :user_id => 0,
-              :author => data['author'],
-              :message => data['message'],
-              :text_extension => data['text_extension'],
-              :network_id => @node.id, # TODO: un-hardcode
-              :channels => [channel]
-              
-          else
-            if data['channel_uuid']
-              channel = Channel.find_by_uuid data['channel_uuid']
+        when 'remote.meep'
+          channel_id = @tracker.channel_id_for(data['channel_uuid'])
+          channel_id && Meep.create(:user_id => @user.id,
+                  :author => data['author'],
+                  :message => data['message'],
+                  :text_extension => data['text_extension'],
+                  :node_id => @user.node.id,
+                  :channel_id => channel_id,
+                  :socket_id  => @key)
+        when 'remote_users.update'
+          if node_connection? # remote node
+            case data['trigger']
+            when 'users.update_status'
+              users_to_remove, users_to_add = @tracker.update_remote_users(@user.node_id, data['online_users'], data['channel_users'])
+              users_to_remove.each do |user_id|
+                data = {
+                  :id => user_id,
+                  :trigger    => 'user.goes_offline',
+                  :socket_id  => @key
+                }
+                publish 'system', 'users', data
+              end
+              users_to_add.each do |user_id|
+                data = {
+                  :subscribed_channel_ids => @tracker.global_channel_users.map {|channel_uuid, users| channel_uuid if users.include?(user_id)}.compact,
+                  :trigger    => 'user.came_online',
+                  :socket_id  => @key
+                }.merge(@tracker.global_online_users[user_id])
+                publish 'system', 'users', data
+              end
+            when 'user.came_online', 'user.goes_offline'
+              data["id"] = "#{@user.node_id}_#{data["id"]}"
+              data["socket_id"] = @key
+              publish 'system', 'users', data
             else
-              channel = Channel.find_by_id data['channel_id']
+              log "==========>>>>>>>>  #{data.inspect} \n\n\n"
             end
-            meep = Meep.create :user_id => @user.id,
-              :author => @user.display_name,
-              :message => data['message'],
-              :text_extension => data['text_extension'],
-              :network_id => 1,
-              :channels => [channel]
           end
-          
       end
-      
     else
       # play echoserver if request could not be understood
       send_json(data)
     end
+  end
+  
+  def node_connection?
+    @user && (@user.node_id != 1)
   end
 
   def json_authenticate(auth_data)
@@ -168,19 +105,6 @@ module ConnectionShared
           log("could not authenticate user #{auth_data.inspect}")
           return false
         end
-      
-      when 'node'
-        potential_node = Network.find_by_uuid(auth_data['uuid']) rescue nil
-        @node = potential_node if potential_node && potential_node.key == auth_data['key']
-        
-        if @node
-          log("authenticated node #{@node.name}")
-          send_json :x_target => 'authenticate', :key => @key
-        else
-          log("could not authenticate node #{auth_data.inspect}")
-          return false
-        end
-    
     end # case
     @type = type
   end
@@ -196,16 +120,22 @@ module ConnectionShared
   def custom_unbind
     log("connection closed")
     @tracker.remove_conn self
-    remove_from_online_users # TODO: remove_conn should be do this
+    remove_from_online_users
+    remove_remote_users
     unbind_queues
     end_periodical_user_refresh
+  end
+  
+  def remove_remote_users
+    if node_connection?
+      @tracker.remove_remote_users(@user.node_id)
+    end
   end
 
   def add_to_online_users
     @tracker.add_user @user, self
-    # send current user as online also send his channel subscriptions (cleaned of course)
     data = {
-      :subscribed_channel_ids => @user.channels.verified.map {|c| c.id},
+      :subscribed_channel_ids => @user.channels.verified.map {|c| c.uuid},
       :trigger => 'user.came_online'
     }.merge(@tracker.online_users[@user.id])
     publish 'system', 'users', data
@@ -225,8 +155,9 @@ module ConnectionShared
   
   def refresh_users
     data = {
-      :online_users => @tracker.global_users,
-      :trigger => 'users.update_status'
+      :trigger => 'users.update_status',
+      :online_users => @tracker.global_online_users,
+      :channel_users => @tracker.channel_subscriptions_for(@channel_queues.keys)
     }
     send_json data
   end
@@ -239,26 +170,10 @@ module ConnectionShared
     @periodic_user_refresh.try(:cancel)
   end
   
-  def send_channel_subscriptions(channel_id=nil)
-    @tracker.channel_users ||= {}
-    filtered_channel_users = {}
-
-    @user.channels.verified.reload.each do |channel|
-      next if channel_id && channel_id != channel.id
-      @tracker.channel_users[channel.id] ||= []
-      if SystemPreferences.show_only_online_users
-        # only add user to current user list
-        @tracker.channel_users[channel.id] = @tracker.channel_users[channel.id] | [@user.id]
-      else
-        # store all users for each channel, if you have a lot of not online users don't do this! 
-        # Do switch the show_only_online_users setting to true!
-        @tracker.channel_users[channel.id] = channel.users.where(:listens => {:verified => true}).collect {|u| u.id}
-      end
-      filtered_channel_users[channel.id] = @tracker.channel_users[channel.id]
-    end
-    
+  def send_channel_subscriptions(channel_uuid=nil)
+    channel_uuids = (channel_uuid ? [channel_uuid] : @channel_queues.keys)
     send_json :trigger => 'channels.update_subscriptions',
-              :data => filtered_channel_users
+              :data => @tracker.channel_subscriptions_for(channel_uuids)
   end
   
   def update_user_typing_status(data)
@@ -266,7 +181,9 @@ module ConnectionShared
       :trigger => data["operation"],
       :user_id => @user.id
     }
-    response.merge!(:channel_id => data["payload"] && data["payload"]["channel_id"]) if data["operation"] == "user.typing"
+    response.merge!(
+      :channel_id   => data["payload"] && data["payload"]["channel_id"],
+      :channel_uuid => data["payload"] && data["payload"]["channel_uuid"]) if data["operation"] == "user.typing"
     send_and_publish 'system', 'users', response
   end
 
@@ -287,10 +204,10 @@ module ConnectionShared
     bind 'system', '#' do |json|
       log("got system message: #{json.inspect}")
       
-      send_json json
+      send_json json unless json["socket_id"] == @key
     end
   rescue MQ::Error => e
-    log("bind_socket_to_system_queue error: #{e.inspect} for #{channel.inspect}")
+    log("bind_socket_to_system_queue error: #{e.inspect}")
   end
 
   def bind_socket_to_user_queues
@@ -308,13 +225,15 @@ module ConnectionShared
     uuid = channel.is_a?(Channel) ? channel.uuid : channel
     @channel_queues[uuid] = bind 'channels', uuid do |json|
       sender_socket_id = json['socket_id']
-      send_json json if !sender_socket_id || sender_socket_id.to_i != @key
+      send_json json if (!sender_socket_id || sender_socket_id.to_i != @key)
     end
+    @tracker.add_channel_subscription(@user.id, uuid)
   rescue MQ::Error => e
     log("bind_channel error: #{e.inspect} for #{channel.inspect}")
   end
   
   def unbind_channel(channel_uuid)
+    @tracker.remove_channel_subscription(@user.id, channel_uuid)
     queue = @channel_queues.delete(channel_uuid)
     queue.delete if queue
   end
@@ -330,7 +249,7 @@ module ConnectionShared
         end
       end
       send_json json
-      send_channel_subscriptions(json['channel_id'])
+      send_channel_subscriptions(json['channel_uuid'])
     end
   rescue MQ::Error => e
     log("bind_channel_subscriptions error: " + e.inspect)
@@ -354,7 +273,6 @@ module ConnectionShared
   
   def web?;  @type == 'web';  end
   def api?;  @type == 'api';  end
-  def node?; @type == 'node'; end
   
   def queue_id; "consumer-#{@key}"; end
   def to_s; @key; end

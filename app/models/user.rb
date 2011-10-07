@@ -5,9 +5,12 @@ class User < ActiveRecord::Base
   
   devise :database_authenticatable, :registerable, :encryptable, :rememberable, :token_authenticatable, :encryptor => :restful_authentication_sha1
 
-  attr_accessible :login, :email, :name, :password, :password_confirmation, :avatar_url, :channels_to_subscribe, :external_profile_url
+  attr_accessible :login, :email, :name, :password, :password_confirmation, :avatar_url,
+    :channels_to_subscribe, :external_profile_url, :node, :node_id
+
   attr_accessor :channels_to_subscribe, :invitation_token, :avatar_url
 
+  belongs_to :node
   has_many  :meeps
   has_many  :listens,  :dependent => :destroy
   has_many  :channels,          :through => :listens, :select => "channels.*, listens.id AS listen_id, listens.last_read_meep as last_read_meep"

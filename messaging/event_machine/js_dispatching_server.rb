@@ -9,11 +9,12 @@ RUN_FROM_DISPATCHER = true
 
 require File.dirname(__FILE__) + '/../../config/environment'
 
-require File.dirname(__FILE__) + '/node_connection.rb'
-require File.dirname(__FILE__) + '/client_connection.rb'
-require File.dirname(__FILE__) + '/http_connection.rb'
-require File.dirname(__FILE__) + '/websocket_connection.rb'
+require File.dirname(__FILE__) + '/modules/node_connection.rb'
+require File.dirname(__FILE__) + '/modules/client_connection.rb'
+require File.dirname(__FILE__) + '/modules/http_connection.rb'
+require File.dirname(__FILE__) + '/modules/websocket_connection.rb'
 require File.dirname(__FILE__) + '/client_tracker.rb'
+require File.dirname(__FILE__) + '/node_tracker.rb'
 
 def solr_index_processing
   begin
@@ -45,14 +46,14 @@ EventMachine::run do
   port              = !configatron.socket.port.nil? && configatron.socket.port || 5000
   longpolling_port  = !configatron.xhr_streaming.port.nil? && configatron.xhr_streaming.port || 8000
   websocket_port    = !configatron.websocket.port.nil? && configatron.websocket.port || 5001
+  nodesocket_port   = !configatron.nodesocket.port.nil? && configatron.nodesocket.port || 5002
   
-  tracker = ClientTracker.new
-  NodeConnection.tracker = tracker
-  
+  client_tracker = ClientTracker.new
+    
   EventMachine.epoll if RUBY_PLATFORM =~ /linux/ #sky is the limit
-  EventMachine::start_server host, port, ClientConnection, tracker
-  EventMachine::start_server host, longpolling_port, HttpConnection, tracker
-  EventMachine::start_server host, websocket_port, WebsocketConnection, tracker
+  EventMachine::start_server host, port, ClientConnection, client_tracker
+  EventMachine::start_server host, longpolling_port, HttpConnection, client_tracker
+  EventMachine::start_server host, websocket_port, WebsocketConnection, client_tracker
   
   puts "Started socket server on #{host}:#{port}..."
   puts $$
@@ -62,15 +63,23 @@ EventMachine::run do
     solr_index_processing
   }
   EM.defer(solr_indexing)
+  puts "\nStarted background SOLR indexing...\n"
   
-  Network.all(:conditions => {:coupled => true}).each do |network|
-    NodeConnection.negotiate network, tracker
+  node_tracker = NodeTracker.new(client_tracker)
+  node_tracker.bind_nodes_queue
+  Node.all.each do |node|
+    NodeConnection.connect node, node_tracker if node.api_user_id
   end
+  
+  EventMachine::add_periodic_timer(10) {
+    p "="*50 + " nodes connected:" + node_tracker.online_nodes.keys.inspect
+  }
   
   trap("HUP") do
     # reset connection tracker, needed for tests
     puts "resetting connection tracker"
-    connections = tracker.open_sockets.each {|s| s.send_reconnect_request}
+    connections = client_tracker.open_sockets.each {|s| s.send_reconnect_request}
   end
   
 end
+

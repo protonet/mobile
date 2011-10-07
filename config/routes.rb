@@ -31,7 +31,7 @@ Dashboard::Application.routes.draw do
   resources :meeps
   
   match 'listens/create' => 'listens#create', :as => :listen_to_channel
-  get 'listens/node/:node_id/channel/:channel_id' => 'listens#global', :as => :listen_to_global_channel
+  match 'listens/node/:node_uuid/channel/:channel_uuid' => 'listens#global', :as => :listen_to_global_channel
   
   # Listens
   resources :listens do
@@ -110,6 +110,8 @@ Dashboard::Application.routes.draw do
   
   namespace "api" do
     namespace "v1" do
+      match 'channels/find_by_name/:name' => 'channels#find_by_name'
+      match 'channels/find_by_uuid/:uuid' => 'channels#find_by_uuid'
       resources :channels do
         resources :users
       end
@@ -118,6 +120,8 @@ Dashboard::Application.routes.draw do
       resources :users do
         match "auth_token" => "users#auth_token"
       end
+      resources  :nodes
+      resources  :couplings
       resource  :listens
     end
   end

@@ -21,6 +21,7 @@
       dispatching_websocket_port: "<%= configatron.websocket.port %>",
       force_xhr_streaming:        <%= raw(incoming_interface == "published_to_web" ? "true" : "false") %>,
       token:                      "<%= current_user.communication_token %>",
+      node_uuid:                  "<%= Node.local.uuid %>",
       default_avatar:             "<%= configatron.default_avatar %>",
       user_name:                  "<%= current_user.display_name %>",
       user_id:                    <%= current_user.id %>,

@@ -5,10 +5,10 @@ SystemPreferences.node_key  = "encryptme"
 SystemPreferences.node_uuid = UUID4R::uuid(1)
 #  this code is duplicated in the rake task -> dashboard.rake -> reset_admin_key
 Network.local
-Role.find_or_create_by_title('admin')
-Role.find_or_create_by_title('user')
-Role.find_or_create_by_title('guest')
-Role.find_or_create_by_title('invitee')
+Node.local
+['admin', 'user', 'guest', 'invitee', 'api', 'api-node'].each do |title|
+  Role.find_or_create_by_title(title)
+end
 User.anonymous
 Channel.home
 admin = User.create(:login => 'admin', :email => 'admin@protonet.local', :password => 'admin')

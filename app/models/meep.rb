@@ -12,7 +12,7 @@ class Meep < ActiveRecord::Base
     time :updated_at
   end
 
-  belongs_to  :network
+  belongs_to  :node
   belongs_to  :user
   belongs_to  :channel
   has_one     :avatar,    :through => :user
@@ -37,11 +37,11 @@ class Meep < ActiveRecord::Base
   end
   
   def local?
-    network_id == 1
+    node_id == 1
   end
 
   def remote?
-    network_id != 1
+    node_id != 1
   end
 
   def text_extension?
@@ -55,7 +55,7 @@ class Meep < ActiveRecord::Base
       :channel_id   => channel.id,
       :channel_uuid => channel.uuid,
       :avatar       => user.avatar.url,
-      :network_uuid => network.uuid,
+      :node_uuid    => node.uuid,
       :trigger      => 'meep.receive'
     })
   end

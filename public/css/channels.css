@@ -66,6 +66,36 @@
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0.1)), to(transparent));
 }
 
+#channels .global.offline {
+  background: url(../img/mesh_global_offline.png) no-repeat 4px 3px, 
+    -moz-linear-gradient(100% 100% 90deg, rgba(0, 0, 0, 0.1), transparent);
+  background: url(../img/mesh_global_offline.png) no-repeat 4px 3px,
+    -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.1)));
+  padding-left: 23px;
+}
+
+#channels .global {
+  background: url(../img/mesh_global.png) no-repeat 4px 3px,
+    -moz-linear-gradient(100% 100% 90deg, rgba(0, 0, 0, 0.1), transparent);
+  background: url(../img/mesh_global.png) no-repeat 4px 3px,
+    -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.1)));
+  padding-left: 23px;
+}
+
+#channels .global.offline:focus,
+#channels .global.offline:active,
+#channels .global.offline.active {
+  background: white url(../img/mesh_global_offline.png) no-repeat 4px 4px;
+  padding-left: 23px;
+}
+
+#channels .global:focus,
+#channels .global:active,
+#channels .global.active {
+  background: white url(../img/mesh_global.png) no-repeat 4px 4px;
+  padding-left: 23px;
+}
+
 #channels .badge-container {
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;

@@ -24,7 +24,7 @@ GIT
 
 GIT
   remote: git@github.com:protonet/protolink.git
-  revision: 9516c033d8a231868a1faf2ad3c704f0041fbf81
+  revision: ca89f34dfb4568e451a80c671a00c2669a15f092
   specs:
     protolink (0.2.6)
       crack

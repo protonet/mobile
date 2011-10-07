@@ -26,6 +26,9 @@ protonet.timeline.Channels = {
     this.channelsBeingLoaded  = {};
     this.rendezvous           = {};
     
+    this.channelUuidToId      = {};
+    this.channelIdToUuid      = {};
+    
     /**
      * Ajax history to enable forward and backward
      * buttons in browser to switch between channels
@@ -120,6 +123,7 @@ protonet.timeline.Channels = {
         }
         
         this.selected = id;
+        this.selectedUuid = protonet.timeline.Channels.channelIdToUuid[id];
         
         if (!avoidHistoryChange) {
           protonet.utils.History.push("/?channel_id=" + id);
@@ -149,6 +153,7 @@ protonet.timeline.Channels = {
       
       .bind("channel.hide", function() {
         this.selected = null;
+        this.selectedUuid = null;
       }.bind(this))
       
       .bind("channel.load", function(e, data) {
@@ -244,6 +249,15 @@ protonet.timeline.Channels = {
         });
       }.bind(this));
     
+      protonet
+        .bind("node.connected", function(e, data) {
+          this.tabs.filter("[data-node-id=" + data["node_id"] + "]").removeClass("offline");
+        }.bind(this))
+        
+        .bind("node.disconnected", function(e, data) {
+          this.tabs.filter("[data-node-id=" + data["node_id"] + "]").addClass("offline");
+        }.bind(this));
+    
     /**
      * Rendezvous
      */
@@ -321,7 +335,9 @@ protonet.timeline.Channels = {
     } else {
       instance = new protonet.timeline.Channel(channelData);
     }
-    return this.channels[channelData.id] = instance;
+    this.channelUuidToId[channelData.uuid]  = channelData.id;
+    this.channelIdToUuid[channelData.id]    = channelData.uuid;
+    return this.channels[channelData.id]    = instance;
   },
   
   /**

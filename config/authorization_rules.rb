@@ -39,7 +39,7 @@ authorization do
   
   role :admin do
     has_permission_on :channels, :to => [:manage, :manage_globals]
-    has_permission_on :listens, :to => [:manage, :accept]
+    has_permission_on :listens, :to => [:manage, :accept, :manage_globals]
     has_permission_on :invitations, :to => :manage
     has_permission_on :authorization_rules, :to => :read
     has_permission_on :users, :to => [:manage, :delete_stranger_older_than_two_days, :rendezvous, :update_last_read_meeps, :newbie]
