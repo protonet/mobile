@@ -28,21 +28,21 @@ protonet.user = {
       }.bind(this))
       
       .bind("user.changed_avatar", function(e, user) {
-        protonet.media.tryToLoadImage(user.avatar, function() {
-          var selector = [
-            "a[data-user-id='" + user.id + "'] > img",
-            "img[data-user-avatar='" + user.id + "']"
-          ];
-          
-          if (user.id == protonet.config.user_id) {
-            selector.push("img[data-my-avatar]");
-          }
-          
-          selector = selector.join(",");
-          $(selector).toArray().chunk(function(img) {
-            var $img       = $(img),
-                dimensions = { width:  $img.width(), height: $img.height() },
-                avatar     = protonet.media.Proxy.getImageUrl(user.avatar, dimensions);
+        var selector = [
+          "a[data-user-id='" + user.id + "'] > img",
+          "img[data-user-avatar='" + user.id + "']"
+        ];
+        
+        if (user.id == protonet.config.user_id) {
+          selector.push("img[data-my-avatar]");
+        }
+        
+        selector = selector.join(",");
+        $(selector).toArray().chunk(function(img) {
+          var $img       = $(img),
+              dimensions = { width:  $img.width(), height: $img.height() },
+              avatar     = protonet.media.Proxy.getImageUrl(user.avatar, dimensions);
+          protonet.media.tryToLoadImage(avatar, function() {
             $img.attr("data-src") ? $img.attr("data-src", avatar) : $img.attr("src", avatar);
           });
         });

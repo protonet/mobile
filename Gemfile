@@ -35,7 +35,7 @@ gem "activeldap3", :require => "active_ldap" #, :git => "git://github.com/asynch
 gem "ruby-ifconfig", :git => 'git://github.com/dudemeister/ruby-ifconfig.git'
 gem 'jquery-rails'
 gem 'redcarpet'
-gem 'protolink', :git => "git@github.com:protonet/protolink.git"
+gem 'protolink', :git => "git://github.com/protonet/protolink.git"
 
 group :development do
   gem 'foreman'

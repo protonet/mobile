@@ -2,7 +2,7 @@ protonet.media.tryToLoadImage = (function() {
   var MAX_TRIES = 10;
   
   return function(url, callback) {
-    var tries = 10;
+    var tries = 0;
     
     function loadRecursive() {
       var img = new Image();

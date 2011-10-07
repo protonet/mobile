@@ -11,6 +11,14 @@ GIT
     sprockets-rails (0.0.2)
 
 GIT
+  remote: git://github.com/protonet/protolink.git
+  revision: ca89f34dfb4568e451a80c671a00c2669a15f092
+  specs:
+    protolink (0.2.6)
+      crack
+      httparty (~> 0.7.4)
+
+GIT
   remote: git://github.com/protonet/sunspot.git
   revision: e4a1ef8d6bfe75b827f1c8a7898c8e0901469dca
   specs:
@@ -21,14 +29,6 @@ GIT
     sunspot_rails (1.2.1)
       nokogiri
       sunspot (= 1.2.1)
-
-GIT
-  remote: git@github.com:protonet/protolink.git
-  revision: ca89f34dfb4568e451a80c671a00c2669a15f092
-  specs:
-    protolink (0.2.6)
-      crack
-      httparty (~> 0.7.4)
 
 GEM
   remote: http://rubygems.org/

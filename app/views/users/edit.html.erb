@@ -12,7 +12,7 @@
           <%= button "Take a photo" %>
         -->
         <span class="upload-button-container">
-          <%= file_field_tag :avatar_file %>
+          <%= file_field_tag :avatar_file, :accept => 'image/jpeg, image/gif, image/png, image/bmp' %>
           <%= button "Upload photo" %>
         </span>
       <% end %>
