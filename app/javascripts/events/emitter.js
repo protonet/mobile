@@ -30,7 +30,7 @@ $.extend(protonet, (function() {
     return this;
   }
   
-  return {
+  return protonet.Emitter = {
     bind:    bind,
     unbind:  unbind,
     trigger: trigger,
