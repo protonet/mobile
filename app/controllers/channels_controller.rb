@@ -63,7 +63,7 @@ class ChannelsController < ApplicationController
   end
   
   def global
-    @node = Node.from_url("http://127.0.0.1:3001")
+    @node = Node.from_url("https://team.protonet.info")
     @channels = @node.global_channels
     
     render :global

@@ -15,7 +15,7 @@ class NodeConnection < FlashConnection
     def connect(node, tracker)
       uri = URI.parse node.url
       host = uri.host
-      port = 5010
+      port = uri.port
       EventMachine.next_tick do
         conn = EventMachine.connect host, port, NodeConnection, node, tracker
       end
