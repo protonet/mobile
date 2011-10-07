@@ -147,7 +147,7 @@ It's super simple!
 
     bash -c "`wget -O - http://releases.protonet.info/bootstrap`"
 
-And you're done, use 83489kjdfj734732snfnfdsns98jsnld as your licence key.
+And you're done. Go to http://admin.protonet.info and create a license key.
 
 (If you want to bootstrap to a specific release the url should look like:
 http://releases.protonet.info/bootstrap/RELEASE_NUMBER_HERE)
