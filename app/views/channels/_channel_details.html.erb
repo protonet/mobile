@@ -69,7 +69,7 @@
   
   <h3>Details <a data-hover-hint="top" title="Only visible to admins and the channel owner" class="hint">(?)</a></h3>
   <dl>
-    <dt>Network: </dt><dd><%= link_to(channel.network.name, networks_path) %></dd>
+    <dt>Network: </dt><dd><%= link_to(channel.node.name, nodes_path) %></dd>
     <dt>Channel UUID: </dt><dd><%= channel.uuid %></dd>
     <dt>Created: </dt><dd title="<%= channel.created_at %>"><%= time_ago_in_words(channel.created_at) %> ago</dd>
     <dt>Messages: </dt><dd><%= channel.meeps.size %></dd>

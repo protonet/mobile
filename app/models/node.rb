@@ -41,6 +41,10 @@ class Node < ActiveRecord::Base
       end
     end
     
+    def with_channels
+      all.select {|n| n.channels.real.size > 0 }
+    end
+    
   end
   
   def local?

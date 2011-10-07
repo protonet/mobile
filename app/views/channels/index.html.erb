@@ -3,10 +3,10 @@
   <div class="modal-window-scroll-content">
     <aside>
       <ul>
-        <%- Network.with_channels.each do |n| %>
-          <%- if Network.with_channels.size > 1 %>
+        <%- Node.with_channels.each do |n| %>
+          <%- if Node.with_channels.size > 1 %>
             <li class="network-separator">
-              Network: <strong><%= n.name %></strong>
+              Node: <strong><%= n.name %></strong>
               <p><%= n.channels.real.size %> channels</p>
             </li>
           <%- end %>

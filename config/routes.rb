@@ -42,14 +42,8 @@ Dashboard::Application.routes.draw do
   resources :invitations
   match '/join/:invitation_token' => 'registrations#new', :as => :accept_invitation
   
-  # Networks
-  match 'networks/negotiate.:format' => 'networks#negotiate', :as => :negotiate_network
-  resources :networks do
-    match 'map' => 'networks#map', :as => :map
-    match 'couple' => 'networks#couple', :as => :couple
-    match 'decouple' => 'networks#decouple', :as => :decouple
-    match 'join' => 'networks#join', :as => :join
-    match 'leave' => 'networks#leave', :as => :leave
+  # Node
+  resources :nodes do
     resources :channels
   end
   
