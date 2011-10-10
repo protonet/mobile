@@ -201,7 +201,7 @@ protonet.widgets.User = Class.create({
         isStranger = user.name.startsWith("stranger_"),
         $element = this.createElement(user, isViewer, isStranger);
     
-    hide && element.hide();
+    hide && $element.hide();
     
     this.usersData[userId] = {
       name:                   user.name,
