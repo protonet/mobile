@@ -29,6 +29,9 @@ class NodeConnection < FlashConnection
     @node = node
     @tracker = tracker
     
+    @channel_uuids = []
+    @channel_id    = []
+    
     @tracker.add_node(@node, self)
   end
   
@@ -176,7 +179,7 @@ class NodeConnection < FlashConnection
         data = {
             :trigger    => json['trigger'],
             :operation  => 'remote_users.update',
-            :subscribed_channel_ids => (json['subscribed_channel_ids'] & @channel_uuids)
+            :subscribed_channel_ids => (json['subscribed_channel_ids'] & (@channel_uuids || []))
         }.merge(@tracker.client_tracker.online_users[json['id']] || {})
         send_json(data) if json['remote'] != @node.id
       when 'user.goes_offline'

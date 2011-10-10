@@ -59,9 +59,9 @@ class ListensController < ApplicationController
     node = Node.couple(params[:node_data])
     if node && channel = node.attach_global_channel(params[:channel_uuid])
       current_user.subscribe(channel)
-      redirect_to :root
+      head :ok
     else
-      render :text => "error"
+      head :error
     end
   end
 
