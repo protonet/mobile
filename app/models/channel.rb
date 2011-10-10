@@ -53,6 +53,7 @@ class Channel < ActiveRecord::Base
     {
       :id               => channel.id,
       :uuid             => channel.uuid,
+      :remote           => channel.node_id != 1,
       :rendezvous       => channel.rendezvous,
       :name             => channel.name,
       :display_name     => channel.rendezvous_name(current_user) || channel.display_name,
