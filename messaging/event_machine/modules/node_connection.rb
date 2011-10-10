@@ -127,9 +127,14 @@ class NodeConnection < FlashConnection
           :node_id => @node.id,
           :channel_id => channel.id
       when 'channels.update_subscriptions'
-        puts 'foo'
-        # debugger
-        puts 'bar'
+        json["data"].each do |channel_uuid, user_ids|
+          user_ids = user_ids.map {|user_id| "#{@node.id}_#{user_id}"}
+          if remote_channel_users = @tracker.client_tracker.remote_channel_users[channel_uuid]
+            @tracker.client_tracker.remote_channel_users[channel_uuid] = (remote_channel_users | user_ids)
+          else
+          @tracker.client_tracker.remote_channel_users[channel_uuid] = user_ids
+          end
+        end
       when 'users.update_status'
         users_to_remove, users_to_add = @tracker.client_tracker.update_remote_users(@node.id, json['online_users'], json['channel_users'])
         users_to_remove.each do |user_id|
