@@ -51,7 +51,7 @@ class UsersController < ApplicationController
   
   def start_rendezvous
     Channel.setup_rendezvous_for(current_user.id, params[:id].to_i)
-    render :nothing
+    render :nothing => true
   end
   
   def update_last_read_meeps
@@ -59,7 +59,7 @@ class UsersController < ApplicationController
       mapping = params[:mapping] || {}
       Listen.update_last_read_meeps(current_user.id, mapping)
     end
-    render :nothing
+    render :nothing => true
   end
   
   def update_user_admin_flag
@@ -140,7 +140,7 @@ class UsersController < ApplicationController
   
   def remove_newbie_flag
     current_user.update_attribute(:newbie, false)
-    render :nothing
+    render :nothing => true
   end
   
   def newbie_todo_list
