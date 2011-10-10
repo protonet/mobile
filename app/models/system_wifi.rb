@@ -23,7 +23,7 @@ class SystemWifi
         monitor_service
       end
     end
-  
+    
     def status(interface)
       return false unless Rails.env == 'production'
       system(service_command("status"))
@@ -49,6 +49,7 @@ class SystemWifi
     end
     
     def reconfigure!
+      return unless Rails.env == 'production'
       ["wlan0", "wlan1"].each do |interface|
         SystemDnsmasq.stop(interface, false) # reload set to false
         SystemConnectionSharing.stop(interface)
@@ -61,6 +62,7 @@ class SystemWifi
       case SystemPreferences.wifi["mode"]
       when :dual
         settings += default_settings
+        settings += "\nchannel=#{SystemPreferences.wifi["channel"]}"
         settings += "\nssid=#{SystemPreferences.wifi["wlan0"]["name"]}\ninterface=wlan0\n"
         settings += wpa_settings(SystemPreferences.wifi["wlan0"]["name"], SystemPreferences.wifi["wlan0"]["password"])
         settings += "\nbss=wlan1\nssid=#{SystemPreferences.wifi["wlan1"]["name"]}\nbssid=00:13:10:95:fe:0b"
@@ -74,6 +76,7 @@ class SystemWifi
         end
       when "wlan0"
         settings += default_settings
+        settings += "\nchannel=#{SystemPreferences.wifi["channel"]}"
         settings += "\nssid=#{SystemPreferences.wifi["wlan0"]["name"]}\ninterface=wlan0\n"
         settings += wpa_settings(SystemPreferences.wifi["wlan0"]["name"], SystemPreferences.wifi["wlan0"]["password"])
         generate_config(settings)
@@ -84,6 +87,7 @@ class SystemWifi
       when "wlan1"
         # we're still using the same interface only the settings change
         settings += default_settings
+        settings += "\nchannel=#{SystemPreferences.wifi["channel"]}"
         settings += "\nssid=#{SystemPreferences.wifi["wlan1"]["name"]}\ninterface=wlan0\n"
         settings += wpa_settings(SystemPreferences.wifi["wlan1"]["name"], SystemPreferences.wifi["wlan1"]["password"])
         generate_config(settings)
@@ -103,7 +107,6 @@ class SystemWifi
       "ctrl_interface=/var/run/hostapd
 driver=nl80211
 hw_mode=g
-channel=3
 wme_enabled=1
 ieee80211n=1
 ht_capab=[HT40-][SHORT-GI-40][DSSS_CCK-40]"
@@ -123,6 +126,7 @@ rsn_pairwise=CCMP\n"
     end
     
     def generate_config(config)
+      return unless Rails.env == 'production'
       config_file = "#{configatron.shared_file_path}/config/hostapd.d/config"
       File.open(config_file, 'w') {|f| f.write(config) }
     end

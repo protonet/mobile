@@ -23,6 +23,7 @@ Dashboard::Application.config.to_prepare do
   }
   SystemPreferences.defaults[:wifi] = {
     "mode" => :dual,
+    "channel" => 3,
     "wlan0" => {
       "name" => "protonet-private",
       "password" => ActiveSupport::SecureRandom.base64(10),

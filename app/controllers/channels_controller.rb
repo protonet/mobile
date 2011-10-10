@@ -30,10 +30,10 @@ class ChannelsController < ApplicationController
     success = channel && channel.save
     if success && channel.errors.empty?
       flash[:notice] = "Successfully created channel '#{params[:channel][:name]}'"
-      redirect_to_and_preserve_xhr :action => 'index', :id => channel.id
+      xhr_redirect_to :action => 'index', :id => channel.id
     else
       flash[:error] = "Could not create channel, #{channel.errors.map().join(' ')}"
-      head(:status => :expectation_failed)
+      head(417)
     end
   end
   
@@ -45,7 +45,7 @@ class ChannelsController < ApplicationController
     else
       flash[:error] = "Could not update channel '#{channel.name}'"
     end
-    redirect_to_and_preserve_xhr :action => 'index', :id => channel.id
+    xhr_redirect_to :action => 'index', :id => channel.id
   end
   
   def destroy
@@ -55,7 +55,7 @@ class ChannelsController < ApplicationController
       success = channel.destroy
       if success && channel.errors.empty?
         flash[:notice] = "Successfully deleted channel '#{channel_name}'"
-        redirect_to_and_preserve_xhr :action => 'index'
+        xhr_redirect_to :action => 'index'
       else
         flash[:error] = "Could not delete channel '#{channel_name}'"
       end

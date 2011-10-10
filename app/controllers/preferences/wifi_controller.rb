@@ -3,51 +3,38 @@ module Preferences
     
     def update
       # handle wlan0, wlan1, dual stuff
-      wifi_params     = params["preferences"]["wifi"]
-      sharing_params  = params["preferences"]["sharing"]
-      password_params = params["preferences"]["password"]
+      current_interface = params['interface']
+      other_interface   = current_interface == "wlan0" ? "wlan1" : "wlan0"
+      wifi              = params["preferences"]["wifi"]    == "true"
+      sharing           = params["preferences"]["sharing"] == "true"
+      password          = params["preferences"]["password"]
+      
+      if !password.blank? && password.size < 8
+        flash[:error] = 'The password must be at least 8 characters long'
+        return respond_to_preference_update(417)
+      end
       
       wifi_preferences = SystemPreferences.wifi
+      wifi_preferences[current_interface].merge!({ "password" => password, "sharing" => sharing })
       
-      wifi_preferences["mode"] = if (wifi_params["wlan0"] == "true" && wifi_params["wlan1"] == "true")
+      other_interface_active    = wifi_preferences["mode"] == :dual || wifi_preferences["mode"] == other_interface
+      current_interface_active  = wifi
+      
+      wifi_preferences["mode"] = if other_interface_active && current_interface_active
         :dual
-      elsif wifi_params["wlan0"] == "true"
-        "wlan0"
-      elsif wifi_params["wlan1"] == "true"
-        "wlan1"
+      elsif other_interface_active
+        other_interface
+      elsif current_interface
+        current_interface
       else
         nil
       end
-      ["wlan0", "wlan1"].each do |iface|
-        wifi_preferences[iface] = wifi_preferences[iface].merge({"password" => password_params[iface], "sharing" => sharing_params[iface]})
-      end
-      
       SystemPreferences.wifi = wifi_preferences # if check is ok
       Rails.logger.info(SystemPreferences.wifi.inspect)
       SystemWifi.reconfigure!
       
       flash[:notice] = "Your WiFi configuration has been successfully saved"
-      if request.xhr?
-        head(204)
-      else
-        redirect_to :controller => '/preferences', :action => 'show', :section => 'wifi_config'
-      end
-    end
-    
-    def on
-      SystemWifi.start
-      respond_to do |format|
-        format.html {redirect_to :controller => '/preferences', :action => 'show', :section => 'wifi_config'}
-        format.js  { render :json => {:status => 'on'} }
-      end
-    end
-    
-    def off
-      SystemWifi.stop
-      respond_to do |format|
-        format.html { redirect_to :controller => '/preferences', :action => 'index', :section => 'wifi_config' }
-        format.js  { render :json => {:status => 'off'} }
-      end
+      respond_to_preference_update
     end
     
     def interface_status

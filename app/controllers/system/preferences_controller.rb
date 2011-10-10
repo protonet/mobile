@@ -8,12 +8,7 @@ module System
       end
       
       flash[:notice] = "Your preferences have been successfully saved"
-      if request.xhr?
-        head(204)
-      else
-        redirect_to :controller => '/preferences', :action => :show, :section => params[:section]
-      end
+      respond_to_request
     end
-    
   end
 end

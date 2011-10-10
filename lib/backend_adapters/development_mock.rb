@@ -60,5 +60,8 @@ module BackendAdapters
       "development"
     end
     
+    def wpa_passphrase(ssid_name, password)
+      "foobarius"
+    end
   end
 end

@@ -25,7 +25,7 @@ class UsersController < ApplicationController
   end
   
   def new
-    redirect_to_and_preserve_xhr :controller => "registrations", :action => :new
+    xhr_redirect_to :controller => "registrations", :action => :new
   end
   
   def update
@@ -37,7 +37,7 @@ class UsersController < ApplicationController
     else
       flash[:error] = "Could not update user '#{user.login}'"
     end
-    redirect_to_and_preserve_xhr :action => 'edit', :id => user.id
+    xhr_redirect_to :action => 'edit', :id => user.id
   end
 
   def delete_stranger_older_than_two_days
@@ -51,7 +51,7 @@ class UsersController < ApplicationController
   
   def start_rendezvous
     Channel.setup_rendezvous_for(current_user.id, params[:id].to_i)
-    render_nothing
+    render :nothing
   end
   
   def update_last_read_meeps
@@ -59,7 +59,7 @@ class UsersController < ApplicationController
       mapping = params[:mapping] || {}
       Listen.update_last_read_meeps(current_user.id, mapping)
     end
-    render_nothing
+    render :nothing
   end
   
   def update_user_admin_flag
@@ -73,7 +73,7 @@ class UsersController < ApplicationController
         flash[:notice] = "Successfully removed '#{user.login}' from the list of admins!"
       end
       
-      redirect_to_edit_after_update(user)
+      respond_to_user_update(user)
     else
       flash[:error] = "The admin password is wrong"
       head(403)
@@ -94,7 +94,7 @@ class UsersController < ApplicationController
       flash[:error]  = "You are not authorized to do this, please check your password and admin rights."
     end
     
-    redirect_to_edit_after_update(user)
+    respond_to_user_update(user)
   end
   
   def change_password
@@ -107,7 +107,7 @@ class UsersController < ApplicationController
     else
       flash[:error]  = "There was an error changing you password: #{@user.errors.full_messages.to_sentence}."
     end
-    redirect_to_edit_after_update(@user)
+    respond_to_user_update(@user)
   end
   
   def delete
@@ -131,16 +131,16 @@ class UsersController < ApplicationController
   def search
     @user = User.find_by_id_or_login(params[:search_term])
     if @user
-      redirect_to user_path(@user)
+      xhr_redirect_to :controller => :users, :action => :show, :id => @user.id
     else
       flash[:error] = "Couldn't find user with identifier '#{params[:search_term]}'"
-      redirect_to_and_preserve_xhr :index
+      xhr_redirect_to :index
     end
   end
   
   def remove_newbie_flag
     current_user.update_attribute(:newbie, false)
-    render_nothing
+    render :nothing
   end
   
   def newbie_todo_list
@@ -171,23 +171,11 @@ class UsersController < ApplicationController
       @target_users = params[:target_all] ? User.registered : User.find_by_id_or_login(params[:target]).to_a
     end
     
-    def render_nothing
-      head(204)
-    end
-    
-    def redirect_to_preferences
+    def respond_to_user_update(user)
       if request.xhr?
-        render_nothing
+        head(204)
       else
-        redirect_to :controller => '/preferences', :action => :show, :section => params[:section]
-      end
-    end
-    
-    def redirect_to_edit_after_update(user)
-      if request.xhr?
-        render_nothing
-      else
-        redirect_to_and_preserve_xhr :action => 'edit', :id => user.id
+        xhr_redirect_to :action => 'edit', :id => user.id
       end
     end
 end

@@ -5,12 +5,7 @@ module Preferences
       if current_user.admin?
         unless SystemRelease.password_correct?(params["password"])
           flash[:error] = "Wrong password (remember, this is your ssh node password for the protonet user)!"
-          if request.xhr?
-            head(204)
-          else
-            redirect_to :back
-          end
-          return
+          return respond_to_preference_update(417)
         else
           if (results = SystemRelease.update!(params["password"], params["release"]))
             response  = []
@@ -29,11 +24,7 @@ module Preferences
         flash[:error] = "You're no admin, man, what are you doing here?"
       end
       
-      if request.xhr?
-        head(204)
-      else
-        redirect_to :back
-      end
+      respond_to_preference_update
     end
   end
 end

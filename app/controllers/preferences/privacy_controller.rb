@@ -21,11 +21,7 @@ module Preferences
         flash[:error] = "There has been an error saving your preferences."
       end
       
-      if request.xhr?
-        head(204)
-      else
-        redirect_to :controller => '/preferences', :action => :show, :section => params[:section]
-      end
+      respond_to_preference_update
     end
   end
 end

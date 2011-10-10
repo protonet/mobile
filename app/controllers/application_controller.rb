@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   private
   
   # https://bugzilla.mozilla.org/show_bug.cgi?id=553888
-  def redirect_to_and_preserve_xhr(options)
+  def xhr_redirect_to(options)
     redirect_to options.merge('_xhr_redirect' => 1)
   end
   
@@ -130,4 +130,13 @@ class ApplicationController < ActionController::Base
   def node_privacy_settings
     @privacy_settings ||= Hash.new(false).merge(SystemPreferences.privacy[incoming_interface] || SystemPreferences.privacy["fallback"] || {})
   end
+  
+  private
+    def respond_to_preference_update(status=204)
+      if request.xhr?
+        head(status)
+      else
+        redirect_to :controller => '/preferences', :action => :show, :section => params[:section]
+      end
+    end
 end

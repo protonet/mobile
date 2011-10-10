@@ -3,6 +3,7 @@
 <p>You can access your protonet network via VPN. Here you can start/stop the VPN service.</p>
 
 <%= form_tag preferences_vpn_update_path, { :remote => true, 'data-type' => 'html' }  do %>
+  <%= hidden_field_tag 'section', 'vpn_settings' %>
   <div class="form-field">
     <label>Status:</label>
     <span>
