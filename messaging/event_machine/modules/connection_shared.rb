@@ -154,9 +154,11 @@ module ConnectionShared
   end
   
   def refresh_users
+    online_users = @tracker.global_online_users
+    online_users = online_users.reject {|k,v| k.to_s.match(/^#{@user.node_id}_/)} if node_connection?
     data = {
       :trigger => 'users.update_status',
-      :online_users => @tracker.global_online_users,
+      :online_users => online_users,
       :channel_users => @tracker.channel_subscriptions_for(@channel_queues.keys)
     }
     send_json data
