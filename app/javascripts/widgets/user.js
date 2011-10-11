@@ -197,7 +197,7 @@ protonet.widgets.User = Class.create({
       return;
     }
     
-    var isViewer = protonet.config.user_name === user.name,
+    var isViewer = protonet.config.user_id == user.id,
         isStranger = user.name.startsWith("stranger_"),
         $element = this.createElement(user, isViewer, isStranger);
     
