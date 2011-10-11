@@ -95,7 +95,7 @@
     _observe: function($super) {
       protonet
         .bind("rendezvous.start", function(e, partner) {
-          if (partner === this.partner) {
+          if (partner == this.partner) {
             protonet.trigger("channel.change", this.data.id);
           }
         }.bind(this))

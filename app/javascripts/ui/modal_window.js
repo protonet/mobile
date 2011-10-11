@@ -165,8 +165,9 @@ protonet.ui.ModalWindow = (function() {
           elements.dialog.removeClass("loading");
         }
       },
-      failure: function() {
+      error: function() {
         protonet.trigger("flash_message.error", protonet.t("PAGE_LOADING_ERROR"));
+        elements.dialog.removeClass("loading");
       },
       timeout: 15000
     });

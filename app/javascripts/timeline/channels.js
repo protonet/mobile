@@ -279,7 +279,10 @@ protonet.timeline.Channels = {
         } else {
           protonet.trigger("channel.hide").trigger("timeline.loading_start");
           $.ajax("/users/" + partner + "/" + "start_rendezvous", {
-            type: "post"
+            type: "post",
+            error: function() {
+              protonet.trigger("flash_message.error", protonet.t("RENDEZVOUS_ERROR")).trigger("timeline.loading_end");
+            }
           });
         }
       }.bind(this));

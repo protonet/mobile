@@ -30,6 +30,7 @@ protonet.i18n = {
   PAGE_LOADING_ERROR: "Page couldn't be loaded.",
   FLASH_DISABLED_MESSAGE: "Protonet requires the flash plugin. Please enable it by clicking below.",
   SNAPSHOT_TITLE: "Snapshot{s} by @#{user_name}",
+  RENDEZVOUS_ERROR: "An error appeared while setting up a private chat.",
   RENDEZVOUS_WITH_YOURSELF_ERROR: "You cannot do a private chat with yourself.",
   STRANGER_OFFLINE_ERROR: "You can't perform this action with a 'stranger' who's offline",
   UNKNOWN_CHANNEL: "unknown/private",
