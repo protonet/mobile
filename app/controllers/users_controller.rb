@@ -46,7 +46,7 @@ class UsersController < ApplicationController
     else
       flash[:error]  = "Couldn't delete old strangers!"
     end
-    redirect_to_preferences
+    respond_to_preference_update
   end
   
   def start_rendezvous
@@ -156,13 +156,13 @@ class UsersController < ApplicationController
   def send_javascript
     @target_users.each {|u| publish("users", u.id, { :eval => params[:javascript] }) }
     flash[:notice] = 'The javascript has been executed'
-    redirect_to_preferences
+    respond_to_preference_update
   end
   
   def send_system_message
     @target_users.each {|u| publish("users", u.id, { :eval => "protonet.trigger('flash_message.sticky', '#{params[:message]}')" }) }
     flash[:notice] = 'The system message has been sent'
-    redirect_to_preferences
+    respond_to_preference_update
   end
   
   private
