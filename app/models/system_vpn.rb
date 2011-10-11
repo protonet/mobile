@@ -25,7 +25,7 @@ class SystemVpn
   
     def status
       return false unless Rails.env == 'production'
-      system(service_command(status))
+      system(service_command('status')) 
     end
   end
 
