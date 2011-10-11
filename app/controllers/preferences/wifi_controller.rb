@@ -29,6 +29,7 @@ module Preferences
       else
         nil
       end
+      
       SystemPreferences.wifi = wifi_preferences # if check is ok
       Rails.logger.info(SystemPreferences.wifi.inspect)
       SystemWifi.reconfigure!
