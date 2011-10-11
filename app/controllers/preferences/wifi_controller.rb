@@ -24,7 +24,7 @@ module Preferences
         :dual
       elsif other_interface_active
         other_interface
-      elsif current_interface
+      elsif current_interface_active
         current_interface
       else
         nil
