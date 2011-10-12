@@ -31,7 +31,6 @@ module Preferences
       end
       
       SystemPreferences.wifi = wifi_preferences # if check is ok
-      Rails.logger.info(SystemPreferences.wifi.inspect)
       SystemWifi.reconfigure!
       
       flash[:notice] = "Your WiFi configuration has been successfully saved"

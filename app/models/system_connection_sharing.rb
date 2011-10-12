@@ -14,7 +14,7 @@ class SystemConnectionSharing
     
     def status(intif)
       extif = SystemBackend.current_internet_interface
-      service_command("status", extif, intif)
+      service_command("status", extif, intif).gsub(/\W/, "") == "Active"
     end
     
     private
