@@ -22,7 +22,7 @@ Feature: Getting Started
     # step 2: upload avatar
     Then I attach "profile_pic.png" to "avatar_file"
     And I press "Upload photo"
-    Then I wait 1 second
+    Then I wait 2 seconds
     Then I should see the profile image "profile_pic.png" in my profile details
     Then I close the modal window
     And I should not see the modal window
@@ -76,7 +76,7 @@ Feature: Getting Started
     Then I should see "@hornyboy52" within ".users-page h2"
     Then I attach "profile_pic.png" to "avatar_file"
     And I press "Upload photo"
-    Then I wait 1 second
+    Then I wait 2 seconds
     Then I should see the profile image "profile_pic.png" in my profile details
     Then I close the modal window
     And I should not see the modal window
