@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111011085954) do
+ActiveRecord::Schema.define(:version => 20111012080240) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -24,19 +24,6 @@ ActiveRecord::Schema.define(:version => 20111011085954) do
     t.boolean  "public",       :default => true
     t.boolean  "global",       :default => false
     t.string   "rendezvous"
-  end
-
-  create_table "images_avatars", :force => true do |t|
-    t.string   "name"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "images_externals", :force => true do |t|
-    t.text     "image_url"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "invitations", :force => true do |t|
@@ -163,11 +150,11 @@ ActiveRecord::Schema.define(:version => 20111011085954) do
     t.datetime "avatar_updated_at"
     t.string   "authentication_token"
     t.string   "external_profile_url"
+    t.integer  "node_id",                                       :default => 1
     t.string   "facebook_id"
     t.string   "type"
     t.string   "twitter_id"
     t.boolean  "newbie",                                        :default => true
-    t.integer  "node_id",                                       :default => 1
   end
 
   add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true
