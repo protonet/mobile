@@ -30,6 +30,7 @@ class Channel < ActiveRecord::Base
   # TODO handle 1on1's correctly
   scope :real,  :conditions => {:rendezvous => nil}
   scope :verified, :conditions => {:listens => {:verified => true}}
+  scope :local, :conditions => {:node_id => 1}
 
   def self.home
     begin

@@ -4,7 +4,7 @@ class InvitationsController < ApplicationController
   
   def new
     @invitation = current_user.invitations.new
-    @channels = current_user.owned_channels | Channel.public
+    @channels = current_user.owned_channels.real | Channel.public
   end
   
   def create

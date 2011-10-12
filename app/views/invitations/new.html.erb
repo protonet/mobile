@@ -14,7 +14,7 @@
           <%- @channels.each do |channel| %>
             <div class="channel-checkboxes">
             <%= check_box_tag "invitation[channel_ids][]", channel.id, @channels.size == 1 || params[:channel_id].to_i == channel.id, :id => dom_id(channel, "invitation") %>
-            <%= label_tag dom_id(channel, "invitation"), channel.name, { :class => 'reply channel' } %>
+            <%= label_tag dom_id(channel, "invitation"), channel.name, { :class => 'reply channel' } %> <%= " from remote node " + channel.node.uuid if !channel.locally_hosted? %>
             </div>
           <%- end %>
         </div>
