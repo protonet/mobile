@@ -75,12 +75,24 @@ protonet.user = {
         closeContextMenu();
       }.bind(this),
       "start private chat": function(link, closeContextMenu) {
-        protonet.trigger("rendezvous.start", link.data("user-id"));
+        protonet.trigger("rendezvous.start", +link.data("user-id"));
         closeContextMenu();
       }.bind(this)
     };
     
-    new protonet.ui.ContextMenu("a[data-user-id]", contextOptions, "context-menu-users");
+    var contextMenu = new protonet.ui.ContextMenu("a[data-user-id]", contextOptions, "context-menu-users");
+    contextMenu.bind("opening", function(e, menu, target) {
+      var userId = target.data("user-id");
+      if(userId.toString().match(/_/)) {
+        $.each(["show profile", "start private chat"], function(i, element){
+          menu.list.children("li:contains('" + element + "')").hide();
+        }.bind(this));
+      } else {
+        $.each(["show profile", "start private chat"], function(i, element){
+          menu.list.children("li:contains('" + element + "')").show();
+        }.bind(this));
+      }
+    });
   },
   
   getUser: function(userId) {
