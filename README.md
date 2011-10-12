@@ -191,3 +191,29 @@ Make sure that /private/var/db/openldap/openldap-data/ exists, creating it if it
 Run slapd:
 
     sudo /usr/libexec/slapd
+
+HowTo mount your local code to a protonet node (OSX)
+==================================
+
+1. In OSX go to "System Preferences" -> "Accounts" and create a new user with user name "protonet-node" and enter a password
+
+2. Go to "System Preferences" -> "Sharing" -> "File Sharing"
+   and share the folder that contains the code you'd like to synchronize with your node.
+   In this case we wanna share the folder "app/".
+   Click "Options" and make sure that "Share files and folders using SMB" is enabled.
+   Choose the user "protonet-node" from the list below and enter his password.
+
+3. At your protonet node install the Samba Filesystem Support:
+
+        sudo apt-get install smbfs
+
+4. Finally, use the mount command to mount the OSX folder to an existing directory on your node
+   (change the IP address, paths and password in the example below as needed):
+
+        sudo mount -t smbfs //192.168.2.1/app ~/dashboard/current/app -o username=protonet-node,password=secret
+
+5. In order to make sure that your changes in the rails code are immediately visible set config.cache_classes to false in your *production.rb*
+
+6. Now you just need to restart your rails app
+
+        touch ~/dashboard/current/tmp/restart.txt
