@@ -119,16 +119,17 @@ class NodeConnection < FlashConnection
         channel = Channel.find_by_uuid(json['channel_uuid'])
         json['channel_id'] = channel.id
         json['node_uuid'] = @node.uuid
-      
+        
         Meep.create :user_id => -1,
           :author => json['author'],
           :message => json['message'],
-          :text_extension => json['text_extension'],
+          :text_extension => json['text_extension'].to_json,
           :node_id => @node.id,
-          :channel_id => channel.id
+          :channel_id => channel.id,
+          :remote_user_id => remote_user_id(json["user_id"])
       when 'channels.update_subscriptions'
         json["data"].each do |channel_uuid, user_ids|
-          user_ids = user_ids.map {|user_id| "#{@node.id}_#{user_id}"}
+          user_ids = user_ids.map {|user_id| remote_user_id(user_id)}
           if remote_channel_users = @tracker.client_tracker.remote_channel_users[channel_uuid]
             @tracker.client_tracker.remote_channel_users[channel_uuid] = (remote_channel_users | user_ids)
           else
@@ -155,7 +156,7 @@ class NodeConnection < FlashConnection
         end
       when 'user.came_online', 'user.goes_offline'
         unless json["id"].to_s.match(/#{@remote_node_id}_/)
-          json["id"]      = "#{@node.id}_#{json["id"]}"
+          json["id"]      = remote_user_id(json["id"])
           json["remote"]  = @node.id
           publish 'system', 'users', json
         end
@@ -216,6 +217,10 @@ class NodeConnection < FlashConnection
 
   def queue_id
     "node-#{@node.id}"
+  end
+  
+  def remote_user_id(user_id)
+    "#{@node.id}_#{user_id}"
   end
 
   # TODO: redundant code

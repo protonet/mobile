@@ -20,7 +20,7 @@ class Meep < ActiveRecord::Base
   scope :recent, :order => "meeps.id DESC"
   validates_presence_of :message, :unless => Proc.new { |meep| meep.text_extension? }
 
-  attr_accessor :socket_id
+  attr_accessor :socket_id, :remote_user_id
   
   after_create :send_to_queue
   
@@ -50,7 +50,7 @@ class Meep < ActiveRecord::Base
 
   def send_to_queue
     self.text_extension = JSON.parse(text_extension) rescue nil
-    publish 'channels', channel.uuid, self.attributes.merge({
+    data = self.attributes.merge({
       :socket_id    => socket_id,
       :channel_id   => channel.id,
       :channel_uuid => channel.uuid,
@@ -58,6 +58,8 @@ class Meep < ActiveRecord::Base
       :node_uuid    => node.uuid,
       :trigger      => 'meep.receive'
     })
+    data[:user_id] = remote_user_id if remote_user_id
+    publish 'channels', channel.uuid, data
   end
 
   def from_minutes_before(mins, channel_id)
