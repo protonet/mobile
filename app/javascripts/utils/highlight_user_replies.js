@@ -18,12 +18,12 @@ protonet.utils.highlightUserReplies = (function() {
       viewerId        = protonet.config.user_id;
   
   protonet.bind("user.added", function(e, data) {
-    userMapping[data.name.toLowerCase()] = Number(data.id);
+    userMapping[data.name.toLowerCase()] = data.id;
   });
   
   protonet.bind("users.data_available", function(e, userData) {
     $.each(userData, function(userId, data) {
-      userMapping[data.name.toLowerCase()] = Number(userId);
+      userMapping[data.name.toLowerCase()] = userId;
     });
   });
   
