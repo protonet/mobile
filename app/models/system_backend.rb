@@ -12,6 +12,7 @@ class SystemBackend
     :ssid_of_base_station,
     :server_ips,
     :get_interfaces,
+    :get_active_interfaces,
     :get_interface_information,
     :get_hostname_for_ip,
     :get_mac_for_ip,
