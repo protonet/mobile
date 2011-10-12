@@ -25,8 +25,7 @@ class SystemWifi
     end
     
     def status(interface)
-      return false unless Rails.env == 'production'
-      system(service_command("status"))
+      !!SystemBackend.get_interfaces[interface]
     end
       
     def monitor_service
