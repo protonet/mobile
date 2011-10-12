@@ -3,6 +3,7 @@
 //= require "../utils/is_window_focused.js"
 //= require "../media/play_sound.js"
 //= require "../utils/get_channel_name.js"
+//= require "../ui/notification.js"
 
 /**
  * @example

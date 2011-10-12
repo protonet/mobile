@@ -8,7 +8,7 @@ module System
       end
       
       flash[:notice] = "Your preferences have been successfully saved"
-      respond_to_request
+      respond_to_preference_update
     end
   end
 end

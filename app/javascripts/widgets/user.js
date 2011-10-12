@@ -1,5 +1,4 @@
 //= require "../ui/resizer.js"
-//= require "../ui/notification.js"
 //= require "../media/proxy.js"
 
 protonet.widgets.User = Class.create({

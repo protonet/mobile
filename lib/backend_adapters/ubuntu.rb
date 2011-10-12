@@ -35,7 +35,11 @@ module BackendAdapters
     def get_interfaces
       ::IfconfigWrapper.new(nil, IO.popen("/sbin/ifconfig -a"){ |f| f.readlines.join }).parse
     end
-
+    
+    def get_active_interfaces
+      ::IfconfigWrapper.new(nil, IO.popen("/sbin/ifconfig"){ |f| f.readlines.join }).parse
+    end
+    
     def get_interface_information(iface)
       get_interfaces[iface]
     end

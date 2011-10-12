@@ -34,6 +34,10 @@ module BackendAdapters
     def get_interfaces
       ::IfconfigWrapper.new.parse
     end
+    
+    def get_active_interfaces
+      ::IfconfigWrapper.new.parse
+    end
 
     def get_interface_information(iface) # TODO: take 'information' off the name
       get_interfaces[iface]

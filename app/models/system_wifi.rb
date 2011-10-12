@@ -25,7 +25,7 @@ class SystemWifi
     end
     
     def status(interface)
-      !!SystemBackend.get_interfaces[interface]
+      !!SystemBackend.get_active_interfaces[interface]
     end
       
     def monitor_service
