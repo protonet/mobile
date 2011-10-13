@@ -43,6 +43,15 @@ module ConnectionShared
                   :node_id => @user.node.id,
                   :channel_id => channel_id,
                   :socket_id  => @key)
+        when 'rpc.get_avatar'
+          if node_connection?
+            # image = ActiveSupport::Base64.encode64(open("http://image.com/img.jpg") { |io| io.read })
+            local_user_id = data["user_id"].match(/.*_([0-9]*)/).try(:[], 1)
+            avatar_filename = data["avatar_filename"].match(/[\w]*\./).try(:[], 0) #security cleanup
+            file_path = "#{Rails.root}/public/system/avatars/#{local_user_id}/original/" + avatar_filename
+            image = ActiveSupport::Base64.encode64(File.read(file_path)) rescue nil
+            send_json(:trigger => 'rpc.get_avatar_answer', :user_id => local_user_id, :avatar_filename => avatar_filename, :image => image) if image
+          end
         when 'remote_users.update'
           if node_connection? # remote node
             case data['trigger']
