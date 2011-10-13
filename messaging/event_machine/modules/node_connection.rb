@@ -31,6 +31,7 @@ class NodeConnection < FlashConnection
     
     @channel_uuids = []
     @channel_id    = []
+    @remote_avatar_mapping = {}
     
     @tracker.add_node(@node, self)
   end
@@ -119,6 +120,7 @@ class NodeConnection < FlashConnection
         channel = Channel.find_by_uuid(json['channel_uuid'])
         json['channel_id'] = channel.id
         json['node_uuid'] = @node.uuid
+        user_id = remote_user_id(json["user_id"])
         
         Meep.create :user_id => -1,
           :author => json['author'],
@@ -126,7 +128,8 @@ class NodeConnection < FlashConnection
           :text_extension => json['text_extension'].to_json,
           :node_id => @node.id,
           :channel_id => channel.id,
-          :remote_user_id => remote_user_id(json["user_id"])
+          :remote_user_id => user_id,
+          :avatar => @remote_avatar_mapping[user_id] || configatron.default_avatar
       when 'channels.update_subscriptions'
         json["data"].each do |channel_uuid, user_ids|
           user_ids = user_ids.map {|user_id| remote_user_id(user_id)}
@@ -154,12 +157,34 @@ class NodeConnection < FlashConnection
           }.merge(@tracker.client_tracker.remote_users[user_id])
           publish 'system', 'users', data
         end
+        users_to_add.each do |user_id|
+          request_user_avatar(user_id, @tracker.client_tracker.remote_users[user_id]["avatar"])
+        end
       when 'user.came_online', 'user.goes_offline'
         unless json["id"].to_s.match(/#{@remote_node_id}_/)
           json["id"]      = remote_user_id(json["id"])
           json["remote"]  = @node.id
           publish 'system', 'users', json
         end
+      when 'rpc.get_avatar_answer'
+        user_id = remote_user_id(json["user_id"])
+        filename  = json["avatar_filename"].match(/[\w]*\./).try(:[], 0) #security cleanup
+        directory = "#{Rails.root}/public/system/avatars/#{user_id}/original"
+        full_path = "#{directory}/#{filename}"
+        url       = "/system/avatars/#{user_id}/original/#{filename}"
+        FileUtils.mkdir_p(directory)
+        open(full_path, 'w') do |f| 
+           f << ActiveSupport::Base64.decode64( json["image"] )
+        end
+        @remote_avatar_mapping[user_id] = url
+    end
+  end
+  
+  def request_user_avatar(user_id, remote_avatar_url)
+    if (url = remote_avatar_url.match(/^(\/system.*)\?.*/).try(:[], 1)) && !File.exists?("#{Rails.root}/public#{url}")
+      avatar_filename = remote_avatar_url.match(/original\/(.*)\?/).try(:[], 1)
+      return unless avatar_filename
+      send_json :operation => "rpc.get_avatar", :avatar_filename => avatar_filename, :user_id => user_id
     end
   end
   
