@@ -15,20 +15,18 @@ class Meep < ActiveRecord::Base
   belongs_to  :node
   belongs_to  :user
   belongs_to  :channel
-  has_one     :avatar,    :through => :user
 
   scope :recent, :order => "meeps.id DESC"
   validates_presence_of :message, :unless => Proc.new { |meep| meep.text_extension? }
 
   attr_accessor :socket_id, :remote_user_id
   
-  after_create :send_to_queue
+  after_create :set_avatar, :send_to_queue
   
   def self.prepare_for_frontend(meeps, additional_attributes = {})
     meeps.map do |m|
       m.text_extension = JSON.parse(m.text_extension) rescue nil
-      avatar = m.user.avatar.url if m.user
-      m.attributes.merge({ :avatar => avatar }).merge(additional_attributes)
+      m.attributes.merge(additional_attributes)
     end
   end
   
@@ -54,7 +52,6 @@ class Meep < ActiveRecord::Base
       :socket_id    => socket_id,
       :channel_id   => channel.id,
       :channel_uuid => channel.uuid,
-      :avatar       => user.avatar.url,
       :node_uuid    => node.uuid,
       :trigger      => 'meep.receive'
     })
@@ -106,6 +103,10 @@ class Meep < ActiveRecord::Base
       opts[:from],opts[:to], opts[:meep_id], opts[:channel_id]],
       :order => 'meeps.created_at DESC'
     )
+  end
+  
+  def set_avatar
+    self.avatar ||= configatron.default_avatar
   end
 end
 

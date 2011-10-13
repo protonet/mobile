@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111012080240) do
+ActiveRecord::Schema.define(:version => 20111013083431) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -61,6 +61,7 @@ ActiveRecord::Schema.define(:version => 20111012080240) do
     t.integer  "node_id",        :default => 1
     t.integer  "reply_from"
     t.integer  "channel_id"
+    t.string   "avatar"
   end
 
   add_index "meeps", ["channel_id"], :name => "index_meeps_on_channel_id"
