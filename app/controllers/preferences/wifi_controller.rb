@@ -2,38 +2,39 @@ module Preferences
   class WifiController < ApplicationController
     
     def update
-      # handle wlan0, wlan1, dual stuff
-      current_interface = params['interface']
-      other_interface   = current_interface == "wlan0" ? "wlan1" : "wlan0"
-      wifi              = params["preferences"]["wifi"]    == "true"
-      sharing           = params["preferences"]["sharing"] == "true"
-      password          = params["preferences"]["password"]
+      wifi_preferences = SystemPreferences.wifi
+      wlan0_active = params["preferences"]["wlan0"]["wifi"] == "true"
+      wlan1_active = params["preferences"]["wlan1"]["wifi"] == "true"
       
-      if !password.blank? && password.size < 8
-        flash[:error] = 'The password must be at least 8 characters long'
-        return respond_to_preference_update(417)
+      ["wlan0", "wlan1"].each do |interface|
+        wifi      = params["preferences"][interface]["wifi"]    == "true"
+        sharing   = params["preferences"][interface]["sharing"] == "true"
+        password  = params["preferences"][interface]["password"]
+        
+        if !password.blank? && password.size < 8
+          flash[:error] = "The password for #{interface} must be at least 8 characters long"
+          return respond_to_preference_update(417)
+        end
+        
+        wifi_preferences[interface].merge!({ "password" => password, "sharing" => sharing })
       end
       
-      wifi_preferences = SystemPreferences.wifi
-      wifi_preferences[current_interface].merge!({ "password" => password, "sharing" => sharing })
-      
-      other_interface_active    = wifi_preferences["mode"] == :dual || wifi_preferences["mode"] == other_interface
-      current_interface_active  = wifi
-      
-      wifi_preferences["mode"] = if other_interface_active && current_interface_active
+      wifi_preferences["mode"] = if wlan0_active && wlan1_active
         :dual
-      elsif other_interface_active
-        other_interface
-      elsif current_interface_active
-        current_interface
+      elsif wlan0_active
+        "wlan0"
+      elsif wlan1_active
+        "wlan1"
       else
         nil
       end
       
-      SystemPreferences.wifi = wifi_preferences # if check is ok
+      wifi_preferences["channel"] = params["preferences"]["channel"].to_i
+      
+      SystemPreferences.wifi = wifi_preferences
       SystemWifi.reconfigure!
       
-      flash[:notice] = "Your WiFi configuration has been successfully saved"
+      flash[:notice] = "Your WLAN configuration has been successfully saved"
       respond_to_preference_update
     end
     

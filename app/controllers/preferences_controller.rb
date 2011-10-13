@@ -25,7 +25,7 @@ class PreferencesController < ApplicationController
       {:section => 'customize',         :name => 'Customize the interface'},
       # TODO: Merge this into miscellaneous
       #{:section => 'network_settings',  :name => 'Network settings'},
-      {:section => 'wifi_config',       :name => 'Wi-Fi settings'},
+      {:section => 'wifi_config',       :name => 'WLAN settings'},
       # Captive stuff. This is not finished yet
       #{:url => 'captive_settings', :name => 'Captive settings'},
       #{:url => 'webhook_settings', :name => 'Webhook settings'},

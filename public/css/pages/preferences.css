@@ -10,11 +10,11 @@
 }
 
 .preferences-page .status-box {
+  margin-top: -35px;
   background: #eee;
   display: inline-block;
   padding: 4px;
   float: right;
-  margin-top: -1px;
 }
 
 .preferences-page .on {

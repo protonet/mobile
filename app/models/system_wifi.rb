@@ -1,6 +1,12 @@
 class SystemWifi
 
   class << self
+    
+    def supported?
+      # TODO: use iwconfig here (didn't work out for me)
+      `lspci`.include?("Wireless Network")
+    end
+    
     def start
       return unless Rails.env == 'production'
       if SystemMonit.exists?(:wifi)

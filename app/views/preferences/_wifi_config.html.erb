@@ -1,51 +1,63 @@
-<h2>WiFi configuration</h2>
+<h2>WLAN settings</h2>
 
-<p>You can have one private and one public WiFi (WPA 2) network. Here you can configure them.<br>
-<strong>Please note:</strong> If you turn off both WiFi networks you lock yourself out.</strong></p>
+<%- if SystemWifi.supported? %>
+  <p>You can have one private and one public wireless access point (WPA 2). Here you can configure them.<br>
+  <%- if incoming_interface.starts_with? "wlan" %>
+    <strong>Please note:</strong> Turning off both wireless networks will lock yourself out.</strong></p>
+  <%- end %>
 
-<% {"private" => "wlan0", "public" => "wlan1"}.each do |type, interface| %>
   <%= form_tag preferences_wifi_update_path, { :remote => true, 'data-type' => 'html', :class => 'wifi' }  do %>
-    <%= hidden_field_tag 'section', 'wifi_config' %>
-    <%= hidden_field_tag 'interface', interface %>
-    <div class="status-box" data-interface="<%= interface %>">
-      <%= render :partial => 'preferences/wifi/interface_status', :locals => { :interface => interface } %>
-    </div>
-    <h3><%= type.capitalize %> <i class="hint">(Network interface: <%= interface %>)</i></h3>
-    <div class="form-field">
-      <label>Status</label>
-      <span>
-        <label>
-          <input type="radio" name="preferences[wifi]" value="true" <%= 'checked'  if SystemWifi.status(interface) %>>
-          On
-        </label>
-        <label>
-          <input type="radio" name="preferences[wifi]" value="false" <%= 'checked' unless SystemWifi.status(interface) %>>
-          Off
-        </label>
-      </span>
-    </div>
+    <% {"private" => "wlan0", "public" => "wlan1"}.each do |type, interface| %>
+      <%= hidden_field_tag 'section', 'wifi_config' %>
+      <h3><%= type.capitalize %> <i class="hint">(Network interface: <%= interface %>)</i></h3>
+      <div class="status-box" data-interface="<%= interface %>">
+        <%= render :partial => 'preferences/wifi/interface_status', :locals => { :interface => interface } %>
+      </div>
+      <div class="form-field">
+        <label>Status:</label>
+        <span>
+          <label>
+            <input type="radio" name="preferences[<%= interface %>][wifi]" value="true" <%= 'checked'  if SystemWifi.status(interface) %>>
+            On
+          </label>
+          <label>
+            <input type="radio" name="preferences[<%= interface %>][wifi]" value="false" <%= 'checked' unless SystemWifi.status(interface) %>>
+            Off
+          </label>
+        </span>
+      </div>
     
+      <div class="form-field">
+        <label>Share internet connection:</label>
+        <span>
+          <label>
+            <input type="radio" name="preferences[<%= interface %>][sharing]" value="true" <%= "checked" if SystemConnectionSharing.status(interface) %>>
+            On
+          </label>
+          <label>
+            <input type="radio" name="preferences[<%= interface %>][sharing]" value="false" <%= "checked" unless SystemConnectionSharing.status(interface) %>>
+            Off
+          </label>
+          <a class="hint" data-hover-hint="top" title="Allow others to use your internet connection. When turned 'off' users will only be able to reach the protonet chat. No other website.">(?)</a>
+        </span>
+      </div>
+  
+      <div class="form-field">
+        <%= label_tag "preferences[#{interface}][password]", "Password:" %>
+        <%= text_field_tag "preferences[#{interface}][password]", SystemPreferences.wifi[interface]["password"], {:size => 12, :placeholder => "password (empty for unsecured)"} %> <a class="hint" data-hover-hint="top" title="The password must be at least 8 characters long">(?)</a>
+      </div>
+    <%- end %>
+  
+    <h3>WLAN Channel</h3>
     <div class="form-field">
-      <label>Share internet connection:</label>
-      <span>
-        <label>
-          <input type="radio" name="preferences[sharing]" value="true" <%= "checked" if SystemConnectionSharing.status(interface) %>>
-          On
-        </label>
-        <label>
-          <input type="radio" name="preferences[sharing]" value="false" <%= "checked" unless SystemConnectionSharing.status(interface) %>>
-          Off
-        </label>
-        <a class="hint" data-hover-hint="top" title="Allow others to use your internet connection. When turned 'off' users will only be able to reach the protonet chat. No other website.">(?)</a>
-      </span>
+      <%= label_tag "preferences[channel]", "Channel:" %>
+      <%= select_tag "preferences[channel]", options_for_select(5..11, SystemPreferences.wifi['channel']) %> <a class="hint" data-hover-hint="top" title="Change this if you are experiencing connection problems">(?)</a>
     </div>
   
-    <div class="form-field">
-      <%= label_tag "preferences[password]", "Password:" %>
-      <%= text_field_tag "preferences[password]", SystemPreferences.wifi[interface]["password"], {:size => 12, :placeholder => "password (empty for unsecured)"} %> <a class="hint" data-hover-hint="top" title="The password must be at least 8 characters long">(?)</a>
-    </div>
     <div>
       <%= button "Save" %>
     </div>
   <%- end %>
+<%- else %>
+  <p>Sorry. This node doesn't support WLAN.</p>
 <%- end %>
