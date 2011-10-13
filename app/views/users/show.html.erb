@@ -35,11 +35,13 @@
         <%- end %>
       </p>
       
-      <h3>Info <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
-      <dl data-cucumber="roles">
-        <dt>Roles: </dt><dd><%= @user.roles.map(&:title).join(", ") %></dd>
-        <dt>E-Mail: </dt><dd><%= @user.email %></dd>
-      </dl>
+      <%- if current_user.admin? %>
+        <h3>Info <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
+        <dl data-cucumber="roles">
+          <dt>Roles: </dt><dd><%= @user.roles.map(&:title).join(", ") %></dd>
+          <dt>E-Mail: </dt><dd><%= @user.email %></dd>
+        </dl>
+      <%- end %>
       
       <h3>
         Recent messages including an attachment

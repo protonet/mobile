@@ -18,11 +18,12 @@ Background:
     Then I fill in "users_search_term" with "someotherdude" within ".users-page"
     Then I press "Go" within ".users-page"
     Then I should see "@someotherdude" within ".users-page h2"
+    Then I should not see "someotherdude@protonet.com"
     Then I should not see "edit" within ".users-page"
 
   @javascript
   Scenario: Admin: Managing some other users profile
-    And "dudemeister" is an admin
+    Given "dudemeister" is an admin
     Then I visit the profile of "someotherdude"
     Then I should see "@someotherdude" within ".users-page h2"
     And I should not see "admin" within "dl[data-cucumber='roles']"
