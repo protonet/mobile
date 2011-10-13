@@ -65,7 +65,7 @@ class SystemWifi
         settings += "\nssid=#{SystemPreferences.wifi["wlan0"]["name"]}\ninterface=wlan0\n"
         settings += wpa_settings(SystemPreferences.wifi["wlan0"]["name"], SystemPreferences.wifi["wlan0"]["password"])
         settings += "\nbss=wlan1\nssid=#{SystemPreferences.wifi["wlan1"]["name"]}\nbssid=00:13:10:95:fe:0b\n"
-        settings += wpa_settings(SystemPreferences.wifi["wlan0"]["name"], SystemPreferences.wifi["wlan1"]["password"])
+        settings += wpa_settings(SystemPreferences.wifi["wlan1"]["name"], SystemPreferences.wifi["wlan1"]["password"])
         generate_config(settings)
         restart
         sleep 15
