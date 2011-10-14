@@ -14,7 +14,7 @@
             <a href="/channels/<%= c.id %>" data-tab="channels">
               <strong>@<%= c.name %></strong> (<%= pluralize(c.users.registered.size, "user") %>)
               <%- if current_user.subscribed?(c) %>
-                <p>&#10003; listening</p>
+                <p>&#10003; susbcribed</p>
               <%- end %>
             </a>
           </li>

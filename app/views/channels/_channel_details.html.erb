@@ -6,10 +6,10 @@
 </h2>
 <p><%= channel_description(channel) %></p>
 
-<h3 class="belongs-to-list">Listeners (<%= channel.users.registered.size %>)</h3>
+<h3 class="belongs-to-list">Subscribers (<%= channel.users.registered.size %>)</h3>
 
 <%- if channel.users.registered.size == 0 %>
-  <p class="hint">There are currently no users that listen to this channel. Be the first!</p>
+  <p class="hint">There are currently no users that subscribed to this channel. Be the first!</p>
 <%- else %>
   <ul class="list">
     <%- channel.listens.all(:include => :user, :order => 'verified ASC', :limit => configatron.max_list_size).each do |listen| %>
@@ -39,7 +39,7 @@
     'data-type' => 'html',
     :class => "single-button-form"
   }) do -%>
-    <%= button "Stop listening" %>
+    <%= button "Unsubscribe" %>
   <%- end %>
 <%- else %>
   <%= form_tag(listens_path(:channel_id => channel.id), {
@@ -48,7 +48,7 @@
     'data-type' => 'html',
     :class => "single-button-form"
   }) do -%>
-    <%= button "Listen" %>
+    <%= button "Subscribe" %>
     <%- unless channel.public? %>
       <span class="hint">This channel is private: The owner needs to verify your subscription.</span>
     <%- end %>
@@ -67,7 +67,7 @@
     <%= f.hidden_field :id, { :value => channel.id } %>
     <label class="checkbox-row" for="channel_public">
       <%= f.check_box :public %>
-      public (users can listen without verification)
+      public (users can subscribe without verification)
     </label>
     <label class="checkbox-row" for="channel_global">
       <%= f.check_box :global %>

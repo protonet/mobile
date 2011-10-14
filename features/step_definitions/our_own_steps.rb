@@ -98,13 +98,6 @@ Then /^I verify the user "([^"]*)" for the channel "([^"]*)"$/ do |user_name, ch
   find(:css, "li[data-cucumber='#{user.id}'] a[data-cucumber='verify']").click
 end
 
-Then /^I click verify the user "([^\"]*)" in users list$/ do |user|
-  
-  with_scope("#channel-subscribers") do
-    find(:xpath, "//a[contains(.,'verify listener')]").click
-  end
-end
-
 Then /^I should not see "([^\"]*)" in the channel selector$/ do |channel_name|
   all(:css, '#channels li', :text => channel_name, :visible => true).empty?.should == true
 end

@@ -12,7 +12,7 @@
       <%- end %>
       <%= link_to("edit", edit_user_path(@user), :class => 'action-link edit') if current_user.can_edit?(@user) %>
     </h2>
-    <p><strong><%= @user.display_name %></strong> is a member here for <strong title="<%= @user.created_at %>"><%= time_ago_in_words(@user.created_at) %></strong>. He's listening to <strong><%= @user.channels.real.verified.size %></strong> channels and posted <strong><%= Meep.find_all_by_user_id(@user.id).size %></strong> messages so far.</p>
+    <p><strong><%= @user.display_name %></strong> is a member here for <strong title="<%= @user.created_at %>"><%= time_ago_in_words(@user.created_at) %></strong>, subscribed to <strong><%= @user.channels.real.verified.size %></strong> channels and posted <strong><%= Meep.find_all_by_user_id(@user.id).size %></strong> messages so far.</p>
     
     <h3>Actions</h3>
     <p>
@@ -45,9 +45,9 @@
     <h3>
       Recent messages including an attachment
       <%- if @user == current_user %>
-        <a data-hover-hint="top" title="Other users will only see messages posted by you in channels they are also listening to" class="hint">(?)</a>
+        <a data-hover-hint="top" title="Other users will only see messages posted by you in channels that they have also subscribed" class="hint">(?)</a>
       <%- else %>
-        <a data-hover-hint="top" title="You only see messages that where posted by @<%= @user.display_name %> in channels that you are also listening to" class="hint">(?)</a>
+        <a data-hover-hint="top" title="You only see messages that where posted by @<%= @user.display_name %> in channels that you have also subscribed" class="hint">(?)</a>
       <%- end %>
     </h3>
     <output class="user-meeps" data-user-id="<%= @user.id %>"></output>

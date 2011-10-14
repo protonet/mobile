@@ -15,9 +15,9 @@ class ListensController < ApplicationController
     respond_to do |format|
       format.html {
         if channel
-          flash[:notice] = "You started listening to @#{channel.name}#{' (pending verification)' if !channel.public?}"
+          flash[:notice] = "You subscribed to @#{channel.name}#{' (pending verification)' if !channel.public?}"
         else
-          flash[:error] = already_subscribed ? "You are already listening to @#{channel.name}" : "Could not listen to channel with identifier '#{params[:channel_id]}'"
+          flash[:error] = already_subscribed ? "You have already subscribed to @#{channel.name}" : "Could not subscribe to channel with identifier '#{params[:channel_id]}'"
         end
         redirect_to :controller => 'channels', :action => 'show', :id => channel.try(:id)
       }
@@ -33,9 +33,9 @@ class ListensController < ApplicationController
     if listen.user == current_user || channel.owner == current_user || current_user.admin?
       listen.user.unsubscribe(channel)
       if listen.user == current_user
-        flash[:notice] = "You stopped listening to @#{channel.name}"
+        flash[:notice] = "You successfully unsubscribed from @#{channel.name}"
       else
-        flash[:notice] = "@#{listen.user.display_name} stopped listening to @#{channel.name}"
+        flash[:notice] = "@#{listen.user.display_name} has been unsubscribed from @#{channel.name}"
       end
     else
       flash[:error] = "You have no rights to this operation"
@@ -48,7 +48,7 @@ class ListensController < ApplicationController
     channel = listen.channel
     listen.verified = true
     if listen.save
-      flash[:notice] = "You allowed user @#{listen.user.display_name} to listen to channel @#{channel.name}" if listen.save
+      flash[:notice] = "You allowed user @#{listen.user.display_name} to subscribe to channel @#{channel.name}" if listen.save
       redirect_to :controller => 'channels', :action => 'show', :id => channel.id
     else
       head(500)

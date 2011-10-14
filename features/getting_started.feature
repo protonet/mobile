@@ -87,7 +87,7 @@ Feature: Getting Started
     Then I should see the modal window
     Then I wait 10 seconds
     Then I select the channel "movies" in the channel list
-    And press "Listen" within ".channels-page"
+    And press "Subscribe" within ".channels-page"
     
     # step 3: write meep
     Then I send the message "Hallo!"
