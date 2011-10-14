@@ -4,9 +4,7 @@
   <body>
     <%= render :partial => 'shared/layout_basic_body' %>
     
-    <section class="<%= page_class_names %>">
-      <%= yield %>
-    </section>
+    <%= yield %>
     
     <%= render :partial => 'shared/layout_footer' %>
   </body>

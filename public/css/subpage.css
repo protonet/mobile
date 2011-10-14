@@ -51,6 +51,12 @@
   font-size: 18px;
 }
 
+.subpage h2 i {
+  font-style: normal;
+  font-weight: normal;
+  color: #999;
+}
+
 .subpage h3 {
   margin-top: 50px;
   font-size: 14px;
@@ -259,17 +265,22 @@
 
 
 h3.belongs-to-list {
-  padding: 5px;
-  background: #999;
   color: #fff;
-  margin-bottom: 0;
-  border: 1px solid #999;
+  font-weight: normal;
+  padding: 0 7px;
+  font-size: 13px;
+  line-height: 30px;
+  background: rgb(72, 123, 255);
+  background: -moz-linear-gradient(top, rgba(72, 123, 255, 0.6), rgba(72, 123, 255, 1));
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.6)), to(rgba(72, 123, 255, 1)));
+  margin-bottom: -1px;
+  border: 0;
   position: relative;
 }
 
 .list {
   overflow-y: scroll;
-  border: 1px solid #999;
+  border: 1px #6D95FF solid;
   background: #fff;
   padding: 5px 0;
   min-height: 150px;

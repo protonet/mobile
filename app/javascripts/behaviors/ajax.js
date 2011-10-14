@@ -168,8 +168,12 @@ $.behaviors({
     };
   })(),
   
-  ".subpage:ajax:error": function() {
-    protonet.trigger("flash_message.error", protonet.t("FORM_SUBMIT_ERROR"));
+  ".subpage:ajax:error": function(xhr) {
+    if (xhr.status === 403) {
+      
+    } else {
+      protonet.trigger("flash_message.error", protonet.t("FORM_SUBMIT_ERROR"));
+    }
   },
   
   /**

@@ -26,7 +26,7 @@ authorization do
     
     has_permission_on :channels, :to => [:read, :create]
     has_permission_on :channels do
-      to :manage
+      to [:manage]
       if_attribute :owner => is {user}
     end
     # todo, this is too much
@@ -48,7 +48,7 @@ end
 
 privileges do
   # default privilege hierarchies to facilitate RESTful Rails apps
-  privilege :manage, :includes => [:create, :read, :update, :delete, :show,
+  privilege :manage, :includes => [:create, :read, :update, :delete, :destroy, :show,
     :change_password, :update_user_admin_flag, :generate_new_password, :search, :meeps_with_text_extension, :send_javascript, :send_system_message]
   privilege :manage_globals, :includes => [:global]
   privilege :read, :includes => [:index, :show]

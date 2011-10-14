@@ -46,13 +46,13 @@ class ListensController < ApplicationController
   def accept
     listen = Listen.find(params[:id])
     channel = listen.channel
-    if current_user == channel.owner
-      listen.verified = true
+    listen.verified = true
+    if listen.save
       flash[:notice] = "You allowed user @#{listen.user.display_name} to listen to channel @#{channel.name}" if listen.save
+      redirect_to :controller => 'channels', :action => 'show', :id => channel.id
     else
-      flash[:notice] = "Only the channel owner can verify a listen request!"
+      head(500)
     end
-    redirect_to :controller => 'channels', :action => 'show', :id => channel.id
   end
   
   def global

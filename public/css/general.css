@@ -458,7 +458,7 @@ header .hearts {
   z-index: 1;
   background: #fff;
   margin: 1px 0 0 -7px;
-  min-width: 120px;
+  min-width: 140px;
   border: 1px solid #999;
   border-top: 0;
 }

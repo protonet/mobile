@@ -36,6 +36,7 @@ protonet.i18n = {
   UNKNOWN_CHANNEL: "unknown/private",
   FORM_SUBMIT_SUCCESS: "Your changes have been successfully saved.",
   FORM_SUBMIT_ERROR: "There was an error. Your changes have not been saved.",
+  NO_RIGHTS_ERROR: "You don't have rights to perform this action",
   LOADING: "loading ...",
   PLEASE_ENTER_KEYWORD: "Please enter a keyword to search",
   NO_RESULTS_FOUND: "No results found",
