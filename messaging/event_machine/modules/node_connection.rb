@@ -1,9 +1,10 @@
 require 'uri'
-
+require File.join(File.dirname(__FILE__), 'node2node')
 require File.join(File.dirname(__FILE__), 'flash_connection')
 
 class NodeConnection < FlashConnection
   include Rabbit
+  include Node2Node
   
   attr_accessor :node, :tracker
 
@@ -122,14 +123,14 @@ class NodeConnection < FlashConnection
         json['node_uuid'] = @node.uuid
         user_id = remote_user_id(json["user_id"])
         
-        Meep.create :user_id => -1,
+        Meep.create(:user_id => -1,
           :author => json['author'],
           :message => json['message'],
           :text_extension => json['text_extension'].to_json,
           :node_id => @node.id,
           :channel_id => channel.id,
           :remote_user_id => user_id,
-          :avatar => @remote_avatar_mapping[user_id] || configatron.default_avatar
+          :avatar => @remote_avatar_mapping[user_id] || configatron.default_avatar)
       when 'channels.update_subscriptions'
         json["data"].each do |channel_uuid, user_ids|
           user_ids = user_ids.map {|user_id| remote_user_id(user_id)}
@@ -140,52 +141,23 @@ class NodeConnection < FlashConnection
           end
         end
       when 'users.update_status'
-        users_to_remove, users_to_add = @tracker.client_tracker.update_remote_users(@node.id, json['online_users'], json['channel_users'])
-        users_to_remove.each do |user_id|
-          data = {
-            :id => user_id,
-            :trigger => 'user.goes_offline',
-            :remote  => @node.id
-          }
-          publish 'system', 'users', data
-        end
+        users_to_remove, users_to_add = update_remote_users(@tracker.client_tracker, @node.id, node_socket_id)
         users_to_add.each do |user_id|
-          data = {
-            :subscribed_channel_ids => @tracker.client_tracker.channel_users.map {|channel_uuid, users| channel_uuid if users.include?(user_id)}.compact,
-            :trigger => 'user.came_online',
-            :remote  => @node.id
-          }.merge(@tracker.client_tracker.remote_users[user_id])
-          publish 'system', 'users', data
-        end
-        users_to_add.each do |user_id|
-          request_user_avatar(user_id, @tracker.client_tracker.remote_users[user_id]["avatar"])
+          request_remote_avatar(user_id, @tracker.client_tracker.remote_users[user_id]["avatar"])
         end
       when 'user.came_online', 'user.goes_offline'
         unless json["id"].to_s.match(/#{@remote_node_id}_/)
-          json["id"]      = remote_user_id(json["id"])
-          json["remote"]  = @node.id
-          publish 'system', 'users', json
+          update_online_state(remote_user_id(json["id"]), node_socket_id, json)
         end
+      when 'rpc.get_avatar'
+        send_avatar(json)
       when 'rpc.get_avatar_answer'
-        user_id = remote_user_id(json["user_id"])
-        filename  = json["avatar_filename"].match(/[\w]*\./).try(:[], 0) #security cleanup
-        directory = "#{Rails.root}/public/system/avatars/#{user_id}/original"
-        full_path = "#{directory}/#{filename}"
-        url       = "/system/avatars/#{user_id}/original/#{filename}"
-        FileUtils.mkdir_p(directory)
-        open(full_path, 'w') do |f| 
-           f << ActiveSupport::Base64.decode64( json["image"] )
-        end
-        @remote_avatar_mapping[user_id] = url
+        @remote_avatar_mapping[user_id] = store_remote_avatar(json)
     end
   end
   
-  def request_user_avatar(user_id, remote_avatar_url)
-    if (url = remote_avatar_url.match(/^(\/system.*)\?.*/).try(:[], 1)) && !File.exists?("#{Rails.root}/public#{url}")
-      avatar_filename = remote_avatar_url.match(/original\/(.*)\?/).try(:[], 1)
-      return unless avatar_filename
-      send_json :operation => "rpc.get_avatar", :avatar_filename => avatar_filename, :user_id => user_id
-    end
+  def node_socket_id
+    "node_#{@node.id}"
   end
   
   def bind_channel(channel)
@@ -212,14 +184,14 @@ class NodeConnection < FlashConnection
             :operation  => 'remote_users.update',
             :subscribed_channel_ids => (json['subscribed_channel_ids'] & (@channel_uuids || []))
         }.merge(@tracker.client_tracker.online_users[json['id']] || {})
-        send_json(data) if json['remote'] != @node.id
+        send_json(data) if json['socket_id'] != node_socket_id
       when 'user.goes_offline'
         data = {
             :trigger    => json['trigger'],
             :operation  => 'remote_users.update',
             :id         => json['id']
         }
-        send_json(data) if json['remote'] != @node.id
+        send_json(data) if json['socket_id'] != node_socket_id
       end
     end
   end
@@ -242,10 +214,6 @@ class NodeConnection < FlashConnection
 
   def queue_id
     "node-#{@node.id}"
-  end
-  
-  def remote_user_id(user_id)
-    "#{@node.id}_#{user_id}"
   end
 
   # TODO: redundant code

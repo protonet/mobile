@@ -1,21 +1,26 @@
 require 'json'
+require File.join(File.dirname(__FILE__), 'node2node')
+
 module ConnectionShared
-  attr_accessor :key, :type, :tracker, :queues
+  include Node2Node
+
+  attr_accessor :socket_id, :type, :tracker, :queues
   
   def custom_post_initialize
     @tracker.add_conn self
     
     @queues = []
     @channel_queues = {}
+    @remote_avatar_mapping = {}
     
-    @key = rand(100000000)
+    @socket_id = rand(100000000)
     log "connected"
   end
 
-  def receive_json(data)
-    if data.is_a?(Hash) && data["operation"] == "authenticate"
-      log("auth json: #{data["payload"].inspect}")
-      if json_authenticate(data["payload"]) && !@subscribed
+  def receive_json(json)
+    if json.is_a?(Hash) && json["operation"] == "authenticate"
+      log("auth json: #{json["payload"].inspect}")
+      if json_authenticate(json["payload"]) && !@subscribed
         @subscribed = true # don't resubscribe
         bind_socket_to_system_queue
         bind_socket_to_user_queues
@@ -26,65 +31,47 @@ module ConnectionShared
       else
         send_reload_request # invalid auth
       end
-    elsif (@user) && data.is_a?(Hash)
-      case data["operation"]
+    elsif (@user) && json.is_a?(Hash)
+      case json["operation"]
         when /^user\.typing/
-          update_user_typing_status(data)
+          update_user_typing_status(json)
         when 'ping'
           send_ping_answer
         when 'work'
-          send_work_request(data)
+          send_work_request(json)
         when 'remote.meep'
-          channel_id = @tracker.channel_id_for(data['channel_uuid'])
+          channel_id = @tracker.channel_id_for(json['channel_uuid'])
           channel_id && Meep.create(:user_id => @user.id,
-                  :author => data['author'],
-                  :message => data['message'],
-                  :text_extension => data['text_extension'],
+                  :author => json['author'],
+                  :message => json['message'],
+                  :text_extension => json['text_extension'],
                   :node_id => @user.node.id,
                   :channel_id => channel_id,
-                  :socket_id  => @key)
+                  :socket_id  => @socket_id,
+                  :remote_user_id => user_id,
+                  :avatar => @remote_avatar_mapping[user_id] || configatron.default_avatar)
         when 'rpc.get_avatar'
-          if node_connection?
-            # image = ActiveSupport::Base64.encode64(open("http://image.com/img.jpg") { |io| io.read })
-            local_user_id = data["user_id"].match(/.*_([0-9]*)/).try(:[], 1)
-            avatar_filename = data["avatar_filename"].match(/[\w]*\./).try(:[], 0) #security cleanup
-            file_path = "#{Rails.root}/public/system/avatars/#{local_user_id}/original/" + avatar_filename
-            image = ActiveSupport::Base64.encode64(File.read(file_path)) rescue nil
-            send_json(:trigger => 'rpc.get_avatar_answer', :user_id => local_user_id, :avatar_filename => avatar_filename, :image => image) if image
-          end
+          send_avatar(json) if node_connection?
+        when 'rpc.get_avatar_answer'
+          @remote_avatar_mapping[user_id] = store_remote_avatar(json)
         when 'remote_users.update'
           if node_connection? # remote node
-            case data['trigger']
+            case json['trigger']
             when 'users.update_status'
-              users_to_remove, users_to_add = @tracker.update_remote_users(@user.node_id, data['online_users'], data['channel_users'])
-              users_to_remove.each do |user_id|
-                data = {
-                  :id => user_id,
-                  :trigger    => 'user.goes_offline',
-                  :socket_id  => @key
-                }
-                publish 'system', 'users', data
-              end
+              users_to_remove, users_to_add = update_remote_users(@tracker, @user.node_id, @socket_id, json)
               users_to_add.each do |user_id|
-                data = {
-                  :subscribed_channel_ids => @tracker.global_channel_users.map {|channel_uuid, users| channel_uuid if users.include?(user_id)}.compact,
-                  :trigger    => 'user.came_online',
-                  :socket_id  => @key
-                }.merge(@tracker.global_online_users[user_id])
-                publish 'system', 'users', data
+                request_remote_avatar(user_id, @tracker.client_tracker.remote_users[user_id]["avatar"])
               end
             when 'user.came_online', 'user.goes_offline'
-              data["id"] = "#{@user.node_id}_#{data["id"]}"
-              data["socket_id"] = @key
-              publish 'system', 'users', data
+              update_online_state("#{@user.node_id}_#{json["id"]}", @socket_id, json)
             else
-              log "==========>>>>>>>>  #{data.inspect} \n\n\n"
+              log "==========>>>>>>>>  #{json.inspect} \n\n\n"
             end
           end
       end
     else
       # play echoserver if request could not be understood
-      send_json(data)
+      send_json(json)
     end
   end
   
@@ -109,7 +96,7 @@ module ConnectionShared
         
         if @user
           log("authenticated #{@user.display_name}")
-          send_json :trigger => 'socket.update_id', :socket_id => @key
+          send_json :trigger => 'socket.update_id', :socket_id => @socket_id
         else
           log("could not authenticate user #{auth_data.inspect}")
           return false
@@ -163,12 +150,14 @@ module ConnectionShared
   end
   
   def refresh_users
-    online_users = @tracker.global_online_users
-    online_users = online_users.reject {|k,v| k.to_s.match(/^#{@user.node_id}_/)} if node_connection?
+    channel_users = @tracker.channel_subscriptions_for(@channel_queues.keys)
+    online_users  = @tracker.global_online_users
+    # online_users  = online_users.reject {|k,v| } possibly remove users not in your channels
+    online_users  = online_users.reject {|k,v| k.to_s.match(/^#{@user.node_id}_/)} if node_connection?
     data = {
       :trigger => 'users.update_status',
       :online_users => online_users,
-      :channel_users => @tracker.channel_subscriptions_for(@channel_queues.keys)
+      :channel_users => channel_users
     }
     send_json data
   end
@@ -215,7 +204,7 @@ module ConnectionShared
     bind 'system', '#' do |json|
       log("got system message: #{json.inspect}")
       
-      send_json json unless json["socket_id"] == @key
+      send_json json unless json["socket_id"] == @socket_id
     end
   rescue MQ::Error => e
     log("bind_socket_to_system_queue error: #{e.inspect}")
@@ -236,7 +225,7 @@ module ConnectionShared
     uuid = channel.is_a?(Channel) ? channel.uuid : channel
     @channel_queues[uuid] = bind 'channels', uuid do |json|
       sender_socket_id = json['socket_id']
-      send_json json if (!sender_socket_id || sender_socket_id.to_i != @key)
+      send_json json if (!sender_socket_id || sender_socket_id.to_i != @socket_id)
     end
     @tracker.add_channel_subscription(@user.id, uuid)
   rescue MQ::Error => e
@@ -285,6 +274,6 @@ module ConnectionShared
   def web?;  @type == 'web';  end
   def api?;  @type == 'api';  end
   
-  def queue_id; "consumer-#{@key}"; end
-  def to_s; @key; end
+  def queue_id; "consumer-#{@socket_id}"; end
+  def to_s; @socket_id; end
 end

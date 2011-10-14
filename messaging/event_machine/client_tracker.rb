@@ -28,12 +28,12 @@ class ClientTracker
     @online_users[user.id]['avatar']        ||= user.avatar.url
     @online_users[user.id]['node_uuid']     ||= Node.local.uuid
     @online_users[user.id]['connections']   ||= []
-    @online_users[user.id]['connections'] << [conn.key, conn.type]
+    @online_users[user.id]['connections'] << [conn.socket_id, conn.type]
   end
   
   def remove_user user, conn
     return unless user
-    @online_users[user.id]["connections"] && @online_users[user.id]["connections"].reject! {|key, type| key == conn.key}
+    @online_users[user.id]["connections"] && @online_users[user.id]["connections"].reject! {|socket_id, type| socket_id == conn.socket_id}
     if @online_users[user.id] && @online_users[user.id]["connections"].blank?
       @online_users.delete(user.id) 
       remove_all_channel_subscriptions_for(user.id)
