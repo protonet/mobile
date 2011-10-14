@@ -151,11 +151,11 @@ ActiveRecord::Schema.define(:version => 20111013083431) do
     t.datetime "avatar_updated_at"
     t.string   "authentication_token"
     t.string   "external_profile_url"
-    t.integer  "node_id",                                       :default => 1
     t.string   "facebook_id"
     t.string   "type"
     t.string   "twitter_id"
     t.boolean  "newbie",                                        :default => true
+    t.integer  "node_id",                                       :default => 1
   end
 
   add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true

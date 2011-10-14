@@ -182,10 +182,9 @@ Then /^I should see the profile image "([^\"]*)" in my profile details$/ do |ima
     "user_picture_r2.png" => "user_picture_r2.png", #default
     "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
   }[image_name]
-  image_selector = ".users-page .user-avatar[src*='#{src}']"
   
   wait_until(10) do
-    find(:css, image_selector)
+    page.has_css?(".users-page .user-avatar[src*='#{src}']")
   end
 end
 
@@ -194,9 +193,9 @@ Then /^I should see the profile image "([^\"]*)" in the top right navi$/ do |ima
     "user_picture_r2.png" => "user_picture_r2.png", #default
     "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
   }[image_name]
-  image_selector = ".welcome img[src*='#{src}']"
+  
   wait_until(10) do
-    find(:css, image_selector)
+    find(:css, ".welcome img[src*='#{src}']")
   end
 end
 
@@ -265,7 +264,7 @@ end
 
 Then /^I should not see the getting started box$/ do
   wait_until(10) do
-    all(:css, '.getting-started', :visible => true).empty?.should == true
+    !page.has_css?('.getting-started')
   end
 end
 
