@@ -170,7 +170,7 @@ $.behaviors({
   
   ".subpage:ajax:error": function(xhr) {
     if (xhr.status === 403) {
-      
+      protonet.trigger("flash_message.error", protonet.t("NO_RIGHTS_ERROR"));
     } else {
       protonet.trigger("flash_message.error", protonet.t("FORM_SUBMIT_ERROR"));
     }

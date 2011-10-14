@@ -1,7 +1,7 @@
 Feature: Getting Started
   
   @javascript
-  Scenario: Admin user exists with 'admin' password
+  Scenario: Going through the getting started process with an admin user
     Given I go to the start page
     Then I should see the login form
     And I should see the registration form
@@ -63,7 +63,7 @@ Feature: Getting Started
     Then I should not see the getting started box
     
   @javascript
-  Scenario: Ordinary user
+  Scenario: Going through the getting started process with a normal user
     Given a user with the login "hornyboy52"
     Given a channel named "movies"
     And I go to the start page

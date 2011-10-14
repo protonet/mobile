@@ -49,7 +49,6 @@ class ChannelsController < ApplicationController
   end
   
   def destroy
-    return head(403)
     channel = Channel.find(params[:id])
     channel_name = channel.name
     success = channel.destroy
