@@ -52,7 +52,7 @@ module ConnectionShared
         when 'rpc.get_avatar'
           send_avatar(json) if node_connection?
         when 'rpc.get_avatar_answer'
-          @remote_avatar_mapping[user_id] = store_remote_avatar(json)
+          @remote_avatar_mapping[json['user_id']] = store_remote_avatar(json)
         when 'remote_users.update'
           if node_connection? # remote node
             case json['trigger']
