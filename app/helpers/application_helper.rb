@@ -63,7 +63,7 @@ module ApplicationHelper
   end
   
   def page_class_names
-    "subpage #{controller_name}-page #{controller_name}-#{action_name}-page" unless controller_name == "instruments"
+    "subpage #{controller_name}-page #{controller_name}-#{action_name}-page"
   end
 end
 

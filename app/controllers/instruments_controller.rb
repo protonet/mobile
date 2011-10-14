@@ -11,6 +11,7 @@ class InstrumentsController < ApplicationController
       }.compact
     else
       @channels = current_user.channels.verified.real
+      render :layout => "instruments"
     end
   end
   
