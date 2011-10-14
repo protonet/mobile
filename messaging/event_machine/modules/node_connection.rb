@@ -147,7 +147,7 @@ class NodeConnection < FlashConnection
         end
       when 'user.came_online', 'user.goes_offline'
         unless json["id"].to_s.match(/#{@remote_node_id}_/)
-          update_online_state(remote_user_id(json["id"]), node_socket_id, json)
+          update_remote_online_state(remote_user_id(json["id"]), node_socket_id, json)
         end
       when 'rpc.get_avatar'
         send_avatar(json)

@@ -62,7 +62,7 @@ module ConnectionShared
                 request_remote_avatar(user_id, @tracker.remote_users[user_id]["avatar"])
               end
             when 'user.came_online', 'user.goes_offline'
-              update_online_state("#{@user.node_id}_#{json["id"]}", @socket_id, json)
+              update_remote_online_state("#{@user.node_id}_#{json["id"]}", @socket_id, json)
             else
               log "==========>>>>>>>>  #{json.inspect} \n\n\n"
             end
