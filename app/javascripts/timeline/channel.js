@@ -288,10 +288,11 @@
       this.tab = $("<li>");
       
       this.link = $("<a>", {
-        href:               "/?channel_id=" + this.data.id,
-        'data-channel-id':  this.data.id,
-        text:               this.data.display_name,
-        'class':            (this.data.remote ? 'global' : null)
+        href:                 "/?channel_id=" + this.data.id,
+        'data-channel-id':    this.data.id,
+        'data-channel-uuid':  this.data.uuid,
+        text:                 this.data.display_name,
+        'class':              (this.data.remote ? 'global' : null)
       });
       
       this.link .appendTo(this.tab);

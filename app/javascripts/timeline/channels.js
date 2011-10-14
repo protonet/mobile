@@ -27,7 +27,7 @@ protonet.timeline.Channels = {
     this.rendezvous           = {};
     
     this.channelUuidToId      = {};
-    this.channelIdToUuid      = {};
+    this.channelIdToUuid      = protonet.config.channel_id_to_uuid_mapping;
     
     /**
      * Ajax history to enable forward and backward

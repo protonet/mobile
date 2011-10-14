@@ -14,13 +14,21 @@ protonet.widgets.User = Class.create({
     this.list.find("a").each(function(i, link) {
       var $link     = $(link),
           $listItem = $link.parent();
-      this.usersData[+$link.data("user-id")] = {
+          userId    = $link.data("user-id");
+      this.usersData[userId] = {
         element:              $listItem,
         name:                 $.trim($link.text()),
         isViewer:             $listItem.hasClass("myself"),
         isStranger:           false,
         avatar:               $link.data("user-avatar"),
-        channelSubscriptions: []
+        channelSubscriptions: $.map($link.data("user-channel-subscriptions"), function(channelId) {
+          var channelUuid = protonet.timeline.Channels.channelIdToUuid[channelId];
+          if(!this.channelSubscriptions[channelUuid]) {
+            this.channelSubscriptions[channelUuid] = [];
+          }
+          this.channelSubscriptions[channelUuid].push(userId);
+          return channelUuid;
+        }.bind(this))
       };
     }.bind(this));
 
@@ -53,10 +61,12 @@ protonet.widgets.User = Class.create({
       
       .bind("user.subscribed_channel", function(e, data) {
         this._userSubscribedChannel(data.user_id, data.channel_uuid);
+        this.filterChannelUsers();
       }.bind(this))
       
       .bind("user.unsubscribed_channel", function(e, data) {
         this._userUnsubscribedChannel(data.user_id, data.channel_uuid);
+        this.filterChannelUsers();
       }.bind(this))
 
       .bind("user.came_online", function(e, data) {
@@ -71,6 +81,7 @@ protonet.widgets.User = Class.create({
       
       .bind("users.update_status", function(e, data) {
         this.updateUsers(data.online_users);
+        this.updateSubscriptions(data.channel_users);
         this.filterChannelUsers();
       }.bind(this))
       
@@ -85,7 +96,7 @@ protonet.widgets.User = Class.create({
        * Update subscriptions for all subscribed channels
        */
       .bind("channels.update_subscriptions", function(e, channelSubscriptions) {
-        $.extend(this.channelSubscriptions, channelSubscriptions.data);
+        this.updateSubscriptions(channelSubscriptions.data);
         this.filterChannelUsers();
       }.bind(this))
       
@@ -242,6 +253,19 @@ protonet.widgets.User = Class.create({
     }
   },
   
+  updateSubscriptions: function(channelSubscriptions) {
+    if(!channelSubscriptions) {
+      return;
+    }
+    $.each(channelSubscriptions, function(channelUuid, subscriptions){
+      if(protonet.config.show_only_online_users) {
+        this.channelSubscriptions[channelUuid] = subscriptions;
+      } else {
+        this.channelSubscriptions[channelUuid] = $.merge(this.channelSubscriptions[channelUuid] || [], subscriptions).unique();
+      }
+    }.bind(this));
+  },
+  
   filterChannelUsers: function(channelId) {
     channelId = channelId || protonet.timeline.Channels.selected;
     if(!channelId || !protonet.timeline.Channels.channelIdToUuid) {
@@ -294,12 +318,11 @@ protonet.widgets.User = Class.create({
     this.updateUser(userData.id, onlineUsers);
     
     // handle channel subscriptions
-    for (var i in userData.subscribed_channel_ids) {
-      var channelId = userData.subscribed_channel_ids[i];
+    $.each(userData.subscribed_channel_ids, function(i, channelId) {
       if (this.channelSubscriptions[channelId]) {
         this.channelSubscriptions[channelId].push(userData.id);
       }
-    }
+    }.bind(this));
     
     // duplicated from updateUsers
     this.sortEntries();
@@ -336,6 +359,7 @@ protonet.widgets.User = Class.create({
   _userSubscribedChannel: function(userId, channelId) {
     this.channelSubscriptions[channelId] = this.channelSubscriptions[channelId] || [];
     this.channelSubscriptions[channelId].push(userId);
+    this.channelSubscriptions[channelId] = this.channelSubscriptions[channelId].unique();
     if (channelId == protonet.timeline.Channels.selected) {
       var user = this.usersData[userId];
       user && user.element.show();

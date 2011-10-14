@@ -25,7 +25,6 @@ module ConnectionShared
         bind_socket_to_system_queue
         bind_socket_to_user_queues
         add_to_online_users
-        send_channel_subscriptions
         refresh_users
         periodical_user_refresh
       else
@@ -152,7 +151,6 @@ module ConnectionShared
   def refresh_users
     channel_users = @tracker.channel_subscriptions_for(@channel_queues.keys)
     online_users  = @tracker.global_online_users
-    # online_users  = online_users.reject {|k,v| } possibly remove users not in your channels
     online_users  = online_users.reject {|k,v| k.to_s.match(/^#{@user.node_id}_/)} if node_connection?
     data = {
       :trigger => 'users.update_status',
@@ -170,10 +168,9 @@ module ConnectionShared
     @periodic_user_refresh.try(:cancel)
   end
   
-  def send_channel_subscriptions(channel_uuid=nil)
-    channel_uuids = (channel_uuid ? [channel_uuid] : @channel_queues.keys)
-    send_json :trigger => 'channels.update_subscriptions',
-              :data => @tracker.channel_subscriptions_for(channel_uuids)
+  def publish_channel_subscriptions(channel_uuid)
+    publish 'channels', channel_uuid, :trigger => 'channels.update_subscriptions',
+              :data => @tracker.channel_subscriptions_for([channel_uuid])
   end
   
   def update_user_typing_status(data)
@@ -247,9 +244,9 @@ module ConnectionShared
         when 'user.unsubscribed_channel'
           unbind_channel(json['channel_uuid'])
         end
+        publish_channel_subscriptions(json['channel_uuid'])
       end
       send_json json
-      send_channel_subscriptions(json['channel_uuid'])
     end
   rescue MQ::Error => e
     log("bind_channel_subscriptions error: " + e.inspect)

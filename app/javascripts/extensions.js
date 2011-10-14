@@ -63,8 +63,17 @@ if (!Array.prototype.indexOf) {
   };
 }
 
-
-
+Array.prototype.unique = function () {
+  var array = this;
+  var result = [];
+  for (var i = array.length; i--; ) {
+    var val = array[i];
+    if ($.inArray(val, result) === -1) {
+      result.unshift(val);
+    }
+  }
+  return result;
+}
 
 //---------------------------- STRING ----------------------------
 String.prototype.startsWith = function(str) {
