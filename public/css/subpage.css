@@ -318,6 +318,12 @@ a.loading {
   text-decoration: none;
 }
 
+.loading-hint {
+  color: #999;
+  display: none;
+  margin: 0;
+}
+
 
 
 

@@ -1,5 +1,5 @@
-<%= include_stylesheet_if_exists("/css/pages/#{controller_name}.css") %>
-
-<%= yield %>
-
-<%= sprockets_include_tag(controller_name.to_sym) rescue nil %>
+<section class="<%= page_class_names %>">
+  <%= include_stylesheet_if_exists("/css/pages/#{controller_name}.css") %>
+  <%= yield %>
+  <%= sprockets_include_tag(controller_name.to_sym) rescue nil %>
+</section>

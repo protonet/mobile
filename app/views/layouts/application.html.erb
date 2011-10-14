@@ -11,7 +11,9 @@
       
       <%= render :partial => 'shared/header' %>
       
-      <%= yield %>
+      <section class="<%= page_class_names %>">
+        <%= yield %>
+      </section>
       
       <%= render :partial => 'shared/layout_footer' %>
     </div>

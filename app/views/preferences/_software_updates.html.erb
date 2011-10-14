@@ -19,5 +19,5 @@
     <%= label_tag   :release, 'Select version' %>
     <%= select_tag  :release, options_for_select(SystemRelease.last_releases.reverse.map{|c| ["#{c[0]} / #{c[1]}", c[0]] if c[0].to_i >= SystemRelease.current_version}.compact, SystemRelease.last_releases.reverse.find {|release| release[1].strip! == "STABLE"}[0]) %>
   </div>
-  <%= button "Update" %>
+  <%= button "Update" %> <span class="loading-hint">Please wait. This will take a few minutes.</span>
 <%- end %> 

@@ -61,6 +61,10 @@ module ApplicationHelper
   def include_stylesheet_if_exists(stylesheet)
     stylesheet_tag(stylesheet, {}) if File.exists?(File.join(Rails.root, 'public', stylesheet))
   end
+  
+  def page_class_names
+    "subpage #{controller_name}-page #{controller_name}-#{action_name}-page" unless controller_name == "instruments"
+  end
 end
 
 

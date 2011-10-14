@@ -1,5 +1,5 @@
-.users-page.edit .content,
-.users-page.show .content {
+.users-edit-page .content,
+.users-show-page .content {
   margin-left: 260px;
   position: relative;
   min-height: 300px;

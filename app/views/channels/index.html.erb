@@ -1,34 +1,32 @@
-<section class="channels-page subpage">
-  <%= render :partial => "header" %>
-  <div class="modal-window-scroll-content">
-    <aside>
-      <ul>
-        <%- Node.with_channels.each do |n| %>
-          <%- if Node.with_channels.size > 1 %>
-            <li class="network-separator">
-              Node: <strong><%= n.name %></strong>
-              <p><%= n.channels.real.size %> channels</p>
-            </li>
-          <%- end %>
-          <%- n.channels.real.each do |c| -%>
-            <li class="<%= 'selected' if @selected_channel && c.id == @selected_channel.id %>">
-              <a href="/channels/<%= c.id %>" data-tab="channels">
-                <strong>@<%= c.name %></strong> (<%= pluralize(c.users.registered.size, "user") %>)
-                <%- if current_user.subscribed?(c) %>
-                  <p>&#10003; listening</p>
-                <%- end %>
-              </a>
-            </li>
-          <%- end -%>
+<%= render :partial => "header" %>
+<div class="modal-window-scroll-content">
+  <aside>
+    <ul>
+      <%- Node.with_channels.each do |n| %>
+        <%- if Node.with_channels.size > 1 %>
+          <li class="network-separator">
+            Node: <strong><%= n.name %></strong>
+            <p><%= n.channels.real.size %> channels</p>
+          </li>
         <%- end %>
-      </ul>
-    </aside>
-    <output data-tab="channels" class="content">
-      <%- if @selected_channel %>
-        <%= render :partial => 'channel_details', :locals => { :channel => @selected_channel } %>
-      <%- else %>
-        <p class="hint">Please choose a channel from the left or <%= link_to "click here", new_channel_path, :class => 'promotion-link' %> to create a new one.</p>
+        <%- n.channels.real.each do |c| -%>
+          <li class="<%= 'selected' if @selected_channel && c.id == @selected_channel.id %>">
+            <a href="/channels/<%= c.id %>" data-tab="channels">
+              <strong>@<%= c.name %></strong> (<%= pluralize(c.users.registered.size, "user") %>)
+              <%- if current_user.subscribed?(c) %>
+                <p>&#10003; listening</p>
+              <%- end %>
+            </a>
+          </li>
+        <%- end -%>
       <%- end %>
-    </output>
-  </div>
-</section>
+    </ul>
+  </aside>
+  <output data-tab="channels" class="content">
+    <%- if @selected_channel %>
+      <%= render :partial => 'channel_details', :locals => { :channel => @selected_channel } %>
+    <%- else %>
+      <p class="hint">Please choose a channel from the left or <%= link_to "click here", new_channel_path, :class => 'promotion-link' %> to create a new one.</p>
+    <%- end %>
+  </output>
+</div>

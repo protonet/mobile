@@ -1,23 +1,21 @@
-<section class="channels-page subpage">
-  <%= render :partial => "header" %>
-  <div class="modal-window-scroll-content">
-    <output class="content">
-      <h2>Create new</h2>
-      <p class="hint">
-        Channels are like groups. You can create one for each topic (eg. Music, Project XYZ).<br>
-        Further configuration settings can be set after the channel has been created.
-      </p>
-      <%= form_for :channel, :url => { :action => :create }, :remote => true, :html => { 'data-type' => 'html' } do |f| -%>
-        <div class="form-field">
-          <%= f.label :name, 'Name:' %>
-          <%= f.text_field :name, { :autofocus => 'autofocus', :maxlength => 30, :placeholder => 'eg. Music, Project XYZ, Java, ...' } %>
-        </div>
-        <div class="form-field">
-          <%= f.label :description, 'Description (optional):' %>
-          <%= f.text_area :description %>
-        </div>
-        <%= button 'Create' %>
-      <%- end -%>
-    </output>
-  </div>
-</section>
+<%= render :partial => "header" %>
+<div class="modal-window-scroll-content">
+  <output class="content">
+    <h2>Create new</h2>
+    <p class="hint">
+      Channels are like groups. You can create one for each topic (eg. Music, Project XYZ).<br>
+      Further configuration settings can be set after the channel has been created.
+    </p>
+    <%= form_for :channel, :url => { :action => :create }, :remote => true, :html => { 'data-type' => 'html' } do |f| -%>
+      <div class="form-field">
+        <%= f.label :name, 'Name:' %>
+        <%= f.text_field :name, { :autofocus => 'autofocus', :maxlength => 30, :placeholder => 'eg. Music, Project XYZ, Java, ...' } %>
+      </div>
+      <div class="form-field">
+        <%= f.label :description, 'Description (optional):' %>
+        <%= f.text_area :description %>
+      </div>
+      <%= button 'Create' %>
+    <%- end -%>
+  </output>
+</div>

@@ -127,11 +127,23 @@ $.behaviors({
   },
   
   ".subpage:ajax:beforeSend": function(element, event) {
-    $(event.target).addClass("loading").find("input, textarea, select, button").prop("disabled", true);
+    $(event.target)
+      .addClass("loading")
+      .find("input, textarea, select, button")
+        .prop("disabled", true)
+        .end()
+      .find(".loading-hint")
+        .fadeIn("fast");
   },
   
   ".subpage:ajax:complete": function(element, event, xhr) {
-    $(event.target).removeClass("loading").find("input, textarea, select, button").prop("disabled", false);
+    $(event.target)
+      .removeClass("loading")
+      .find("input, textarea, select, button")
+        .prop("disabled", false)
+        .end()
+      .find(".loading-hint")
+        .hide();
     
     $.each({
       "X-Error-Message":  "flash_message.error",
@@ -149,12 +161,6 @@ $.behaviors({
       if (!html) { return; }
       $tempElement = $tempElement || $("<div>");
       $tempElement[0].innerHTML = html;
-      $tempElement.find("script[src]").each(function() {
-        $("script[src='" + this.src + "']").remove();
-      });
-      $tempElement.find("link[href]").each(function() {
-        $("link[href='" + this.href + "']").remove();
-      });
       $(element).replaceWith(html);
       
       var newUrl = xhr.getResponseHeader("X-Url");
