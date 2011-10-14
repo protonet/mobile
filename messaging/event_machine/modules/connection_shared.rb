@@ -59,7 +59,7 @@ module ConnectionShared
             when 'users.update_status'
               users_to_remove, users_to_add = update_remote_users(@tracker, @user.node_id, @socket_id, json)
               users_to_add.each do |user_id|
-                request_remote_avatar(user_id, @tracker.client_tracker.remote_users[user_id]["avatar"])
+                request_remote_avatar(user_id, @tracker.remote_users[user_id]["avatar"])
               end
             when 'user.came_online', 'user.goes_offline'
               update_online_state("#{@user.node_id}_#{json["id"]}", @socket_id, json)

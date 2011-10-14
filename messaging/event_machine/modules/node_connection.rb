@@ -141,7 +141,7 @@ class NodeConnection < FlashConnection
           end
         end
       when 'users.update_status'
-        users_to_remove, users_to_add = update_remote_users(@tracker.client_tracker, @node.id, node_socket_id)
+        users_to_remove, users_to_add = update_remote_users(@tracker.client_tracker, @node.id, node_socket_id, json)
         users_to_add.each do |user_id|
           request_remote_avatar(user_id, @tracker.client_tracker.remote_users[user_id]["avatar"])
         end
