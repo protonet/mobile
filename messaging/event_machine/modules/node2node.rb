@@ -4,6 +4,7 @@ module Node2Node
     if (url = remote_avatar_url.match(/^(\/system.*)\?.*/).try(:[], 1)) && !File.exists?("#{Rails.root}/public#{url}")
       avatar_filename = remote_avatar_url.match(/original\/(.*)\?/).try(:[], 1)
       return unless avatar_filename
+      # todo move to single operation/trigger
       send_json :trigger => "rpc.get_avatar", :operation => "rpc.get_avatar", :avatar_filename => avatar_filename, :user_id => user_id
     end
   end
@@ -54,6 +55,7 @@ module Node2Node
     avatar_filename = json["avatar_filename"].match(/[\w]*\./).try(:[], 0) #security cleanup
     file_path = "#{Rails.root}/public/system/avatars/#{local_user_id}/original/" + avatar_filename
     image = ActiveSupport::Base64.encode64(File.read(file_path)) rescue nil
+    # todo move to single operation/trigger
     send_json(:operation => 'rpc.get_avatar_answer', :trigger => 'rpc.get_avatar_answer', :user_id => local_user_id, :avatar_filename => avatar_filename, :image => image) if image
   end
   
