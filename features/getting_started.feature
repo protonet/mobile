@@ -22,7 +22,6 @@ Feature: Getting Started
     # step 2: upload avatar
     Then I attach "profile_pic.png" to "avatar_file"
     And I press "Upload photo"
-    Then I wait 2 seconds
     Then I should see the profile image "profile_pic.png" in my profile details
     Then I close the modal window
     And I should not see the modal window
@@ -49,7 +48,6 @@ Feature: Getting Started
     
     # step 5: write meep
     Then I send the message "Hallo!"
-    And I wait 2 seconds
     Then I should not see the getting started box
   
   @javascript
@@ -76,7 +74,6 @@ Feature: Getting Started
     Then I should see "@hornyboy52" within ".users-page h2"
     Then I attach "profile_pic.png" to "avatar_file"
     And I press "Upload photo"
-    Then I wait 2 seconds
     Then I should see the profile image "profile_pic.png" in my profile details
     Then I close the modal window
     And I should not see the modal window
@@ -85,11 +82,9 @@ Feature: Getting Started
     # step 2: listen to channel
     Then I follow the getting started "create-channel" link
     Then I should see the modal window
-    Then I wait 10 seconds
     Then I select the channel "movies" in the channel list
     And press "Subscribe" within ".channels-page"
     
     # step 3: write meep
     Then I send the message "Hallo!"
-    And I wait 2 seconds
     Then I should not see the getting started box

@@ -40,8 +40,6 @@ Feature: Using the protonet channel management
         And I am logged in as "batman"
         And I go to the channels page
         And I select the channel "privatechannel" in the channel list
-        # need to wait for appearance of listen in channels-details
-        And I wait 1 seconds 
         Then I press "Subscribe"
         Then I go to the start page
         Then I should not see "Privatechannel" in the channel selector

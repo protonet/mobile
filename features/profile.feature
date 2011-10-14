@@ -41,6 +41,5 @@ Feature: Managing your profile
     Then I should see "Upload photo" within ".users-page"
     And I attach "profile_pic.png" to "avatar_file"
     And I press "Upload photo"
-    And I wait 2 seconds
     Then I should see the profile image "profile_pic.png" in my profile details
     Then I should see the profile image "profile_pic.png" in the top right navi

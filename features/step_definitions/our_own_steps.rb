@@ -183,7 +183,10 @@ Then /^I should see the profile image "([^\"]*)" in my profile details$/ do |ima
     "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
   }[image_name]
   image_selector = ".users-page .user-avatar[src*='#{src}']"
-  find(:css, image_selector)
+  
+  wait_until(10) do
+    find(:css, image_selector)
+  end
 end
 
 Then /^I should see the profile image "([^\"]*)" in the top right navi$/ do |image_name|
@@ -192,7 +195,9 @@ Then /^I should see the profile image "([^\"]*)" in the top right navi$/ do |ima
     "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
   }[image_name]
   image_selector = ".welcome img[src*='#{src}']"
-  find(:css, image_selector)
+  wait_until(10) do
+    find(:css, image_selector)
+  end
 end
 
 Given /^strangers are not allowed to register$/ do
@@ -259,7 +264,9 @@ Then /^I should see the getting started box containing (\d+) steps$/ do |step_si
 end
 
 Then /^I should not see the getting started box$/ do
-  all(:css, '.getting-started', :visible => true).empty?.should == true
+  wait_until(10) do
+    all(:css, '.getting-started', :visible => true).empty?.should == true
+  end
 end
 
 Then /^I follow the getting started "([^\"]*)" link$/ do |link_name|
