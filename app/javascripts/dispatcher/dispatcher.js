@@ -41,14 +41,23 @@ protonet.dispatcher = {
   },
   
   create: function() {
-    for (var i in this.provider) {
+    var queryParams = location.search, i;
+    if (queryParams.indexOf("noflash=1") !== -1) {
+      delete this.provider.FlashSocket;
+    }
+    
+    if (queryParams.indexOf("forcexhr=1") !== -1) {
+      this.provider = [this.provider.HttpStreaming];
+    }
+    
+    for (i in this.provider) {
       if (this.provider[i].isSupported()) {
         this.currentProvider = this.provider[i];
         break;
       }
     }
     
-    this.currentProvider.initialize();
+    this.currentProvider && this.currentProvider.initialize();
   },
   
   connect: function() {

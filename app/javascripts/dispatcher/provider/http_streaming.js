@@ -38,10 +38,18 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
           },
           queryParams         = encodeURIComponent(JSON.stringify(authenticationData)),
           url                 = protonet.config.xhr_streaming_url + "?" + queryParams,
-          connected;
-          
-      // Make sure that an already running request is aborted
-      this.disconnect();
+          connected,
+          undef,
+          abortOldRequest     = (function(oldRequest) {
+            return function() {
+              if (oldRequest) {
+                oldRequest.abort();
+                oldRequest = undef;
+              }
+            };
+          })(this.ajax);
+      
+      clearTimeout(this.reconnectTimeout);
       
       // Use IE-proprietary XDomainRequest for same-origin requests
       // XMLHttpRequest doesn't work with http streaming since IE refuses to fill the responseText
@@ -49,9 +57,16 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
       if (win.XDomainRequest) {
         this.ajax = new win.XDomainRequest();
         this.ajax.onprogress = function() {
+          abortOldRequest();
+          if (connected === undef) {
+            connected = true;
+            protonet.trigger("socket.connected", connected);
+          }
+          
           if (this.ajax.responseText.length === byteOffset) {
             return;
           }
+          
           var responseText = this.ajax.responseText || "",
               rawData      = responseText.substring(byteOffset);
           byteOffset = responseText.length;
@@ -61,7 +76,9 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
       } else {
         this.ajax = new win.XMLHttpRequest();
         this.ajax.onreadystatechange = function() {
-          if (this.ajax.readyState >= 3 && connected === undefined) {
+          abortOldRequest();
+          
+          if (this.ajax.readyState >= 3 && connected === undef) {
             connected = (this.ajax.status == 200);
             protonet.trigger("socket.connected", connected);
           }
@@ -86,22 +103,27 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
       this.ajax.activeSince = new Date();
       this.ajax.open("GET", url, true);
       this.ajax.send(null);
+      
+      // iOS can only keep a request open for 60 seconds
+      // So we open a new socket connection after 55 seconds to make sure the user function doesn't go offline
+      // during reconnect
+      this.reconnectTimeout = setTimeout(this._connect.bind(this, win), 55000);
     },
     
-    _shouldReconnect: function(ajaxObj) {
+    _shouldReconnect: function(currentRequest) {
       var now = new Date();
-      return  ajaxObj.readyState  === 4 &&
+      return  currentRequest.readyState  === 4 &&
               (
-                ajaxObj.status    === 200 ||
+                currentRequest.status    === 200 ||
                 // 0 === request got aborted (iOS seems to have a request timeout after 60 sec)
-                ajaxObj.status    === 0
+                currentRequest.status    === 0
               ) &&
               // only reconnect when the previous request was active for more than 10 sec
-              (now - ajaxObj.activeSince) > 10000;
+              (now - currentRequest.activeSince) > 10000;
     },
     
-    _hasReceivedData: function(ajaxObj) {
-      return ajaxObj.readyState === 3 || ajaxObj.readyState === 4;
+    _hasReceivedData: function(currentRequest) {
+      return currentRequest.readyState === 3 || currentRequest.readyState === 4;
     },
     
     disconnect: function() {

@@ -18,17 +18,19 @@ var magickCommand = function(obj) {
   obj.cropResize = function(width, height) {
     return obj.crop(width, height).resize(width, height);
   };
-  obj.resizeMagick = function(width, height) {
-    return obj
+  obj.resizeMagick = function(width, height, shouldExtent) {
+    obj = obj
       .stripMetaData()
       .colorSpace('RGB')
       .resample(72)
       .gravity("center")
       .resize(width, height)
-      // Following line mangles gif animations:
-      // .extent(width, height)
       .background("none")
       .coalesce();
+    if (shouldExtent) {
+      obj.extent(width, height);
+    }
+    return obj;
   };
   obj.resize = function(width, height) {
     var wh = width + "x" + height + "^";

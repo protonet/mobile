@@ -12,13 +12,12 @@ var http      = require("http"),
 
 exports.proxy = function(params, headers, response) {
   function resultingfileName(params, base) {
-    var base = base || false;
     var baseString = process.cwd() + "/public/externals/image_proxy/" + md5(params.url);
     if(base) {
       return(baseString);
     }
     if(params.width && params.height) {
-      baseString = baseString + "_" + params.width + "_" + params.height;
+      baseString += "_" + params.width + "_" + params.height;
     }
     return(baseString);
   }
@@ -76,10 +75,10 @@ exports.proxy = function(params, headers, response) {
       var fileSize = 0;
     }
     if(fileSize > 0) {
-      if(size["height"] && size["width"]) {
+      if(size.height && size.width) {
         magick
           .createCommand(from)
-          .resizeMagick(size["width"], size["height"])
+          .resizeMagick(size.width, size.height, parsedUrl.pathname.indexOf(".gif") === -1)
           .write(to, function() {
             sys.puts("Done resizing.");
             successCallback(to);

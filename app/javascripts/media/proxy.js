@@ -33,7 +33,7 @@ protonet.media.Proxy = (function() {
   
   /**
    * Takes a url like
-   * http://localhost:8124/image_proxy?url=http%3A%2F%2Flocalhost%3A3000%2Fsystem%2Favatars%2F3%2Foriginal%2FFoto%204.jpg%3F1300993152&width=36&height=36&fileType=.jpg
+   * http://localhost:8124/image_proxy?url=http%3A%2F%2Flocalhost%3A3000%2Fsystem%2Favatars%2F3%2Foriginal%2FFoto%204.jpg%3F1300993152&width=36&height=36&type=.jpg
    * and extracts + returns the proxied url
    */
   function extractOriginalImageUrl(url) {
@@ -59,7 +59,7 @@ protonet.media.Proxy = (function() {
     if (size) {
       imageUrl += "&width=" + size.width + "&height=" + size.height;
     }
-    return imageUrl + "&fileType=.jpg"; // append fake file type for easy file detection later
+    return imageUrl + "&type=.jpg"; // append fake file type for easy file detection later
   }
   
   return {

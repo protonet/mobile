@@ -1,5 +1,5 @@
 Feature: Using the protonet dashboards multi-user realtime functionalities
-
+  
   @javascript
   Scenario: Writing a meep
     Given a user with the login "dudemeister"
@@ -17,7 +17,7 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
     #dudemeister
     And I am using the first browser
       Then I should see "Hallo!" in the timeline
-      
+  
   @javascript
   Scenario: Creating a user and seeing him in the userlist and the autocompletion
     Given a user with the login "dudemeister"
@@ -31,7 +31,7 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
       Then I should see /justadded/ within "#user-widget ul"
       And I fill in "message" with "Hallo @just"
       Then the message field should contain "Hallo @justadded"
-      
+  
   @javascript
   Scenario: Keeping the user list updated
     Given a user with the login "dudemeister"
@@ -54,7 +54,15 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
     # the second user should now be alone
     Given I am using the second browser
       Then I should not see "dudemeister" online in the user widget
-
-  @wip
+  
   @javascript
-  Scenario: Adding a new channel should be highlighted after creation
+  Scenario: Testing xhr streaming
+    Given a user with the login "spongebob"
+    # seeing strangers in the user list
+    And I visit "/?forcexhr=1"
+      And wait for socket
+      Then I should see one stranger online
+      # and then he's gone
+    Given I am logged in as "spongebob"
+      And I visit "/?forcexhr=1"
+      Then I should see no strangers online

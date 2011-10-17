@@ -22,6 +22,10 @@ When /^(?:|I )go unauthenticated to the start page$/ do
   find(:css, "body")
 end
 
+Given /^I visit "(.*)"$/ do |url|
+  visit url
+end
+
 # When /^(?:|I )go to (.+)$/ do |page_name|
 #   visit path_to(page_name)
 #   sleep 1
