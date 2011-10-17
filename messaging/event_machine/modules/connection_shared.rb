@@ -150,8 +150,10 @@ module ConnectionShared
   
   def refresh_users
     channel_users = @tracker.channel_subscriptions_for(@channel_queues.keys)
+    all_users_in_subscribed_channels = channel_users.map {|k,v| v}.flatten.uniq
     online_users  = @tracker.global_online_users
     online_users  = online_users.reject {|k,v| k.to_s.match(/^#{@user.node_id}_/)} if node_connection?
+    online_users  = online_users.reject {|k,v| !all_users_in_subscribed_channels.include?(k)}
     data = {
       :trigger => 'users.update_status',
       :online_users => online_users,
