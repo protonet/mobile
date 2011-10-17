@@ -21,7 +21,8 @@ class Meep < ActiveRecord::Base
 
   attr_accessor :socket_id, :remote_user_id
   
-  after_create :set_avatar, :send_to_queue
+  before_create :set_avatar
+  after_create :send_to_queue
   
   def self.prepare_for_frontend(meeps, additional_attributes = {})
     meeps.map do |m|
@@ -106,7 +107,9 @@ class Meep < ActiveRecord::Base
   end
   
   def set_avatar
-    self.avatar ||= configatron.default_avatar
+    if self.avatar.blank? 
+      self.avatar = (user.avatar.url || configatron.default_avatar rescue configatron.default_avatar)
+    end
   end
 end
 
