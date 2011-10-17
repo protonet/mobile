@@ -251,11 +251,11 @@ protonet.timeline.Channels = {
     
       protonet
         .bind("node.connected", function(e, data) {
-          this.tabs.filter("[data-node-id=" + data["node_id"] + "]").removeClass("offline");
+          this.tabs.filter("[data-node-id=" + data.node_id + "]").removeClass("offline");
         }.bind(this))
         
         .bind("node.disconnected", function(e, data) {
-          this.tabs.filter("[data-node-id=" + data["node_id"] + "]").addClass("offline");
+          this.tabs.filter("[data-node-id=" + data.node_id + "]").addClass("offline");
         }.bind(this));
     
     /**
@@ -394,6 +394,7 @@ protonet.timeline.Channels = {
         });
         
         this._instantiateChannel(data).renderTab(this.tabContainer).render(this.container);
+        this.tabs = $("#channels [data-channel-id]");
         this.data.push(data);
         this._updateSubscribedChannels();
         
