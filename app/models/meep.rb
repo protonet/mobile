@@ -19,7 +19,7 @@ class Meep < ActiveRecord::Base
   scope :recent, :order => "meeps.id DESC"
   validates_presence_of :message, :unless => Proc.new { |meep| meep.text_extension? }
 
-  attr_accessor :socket_id, :remote_user_id
+  attr_accessor :socket_id
   
   before_create :set_avatar
   after_create :send_to_queue
@@ -50,13 +50,13 @@ class Meep < ActiveRecord::Base
   def send_to_queue
     self.text_extension = JSON.parse(text_extension) rescue nil
     data = self.attributes.merge({
-      :socket_id    => socket_id,
-      :channel_id   => channel.id,
-      :channel_uuid => channel.uuid,
-      :node_uuid    => node.uuid,
-      :trigger      => 'meep.receive'
+      :socket_id      => socket_id,
+      :channel_id     => channel.id,
+      :channel_uuid   => channel.uuid,
+      :node_uuid      => node.uuid,
+      :remote_user_id => remote_user_id,
+      :trigger        => 'meep.receive'
     })
-    data[:user_id] = remote_user_id if remote_user_id
     publish 'channels', channel.uuid, data
   end
 
@@ -111,5 +111,6 @@ class Meep < ActiveRecord::Base
       self.avatar = (user.avatar.url || configatron.default_avatar rescue configatron.default_avatar)
     end
   end
+  
 end
 

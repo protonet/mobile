@@ -401,7 +401,7 @@
         !previousMeep.error &&
         !newMeepData.text_extension &&
         newMeepData.user_id === previousMeepData.user_id &&
-        newMeepData.node_uuid === previousMeepData.node_uuid &&
+        (newMeepData.remote_user_id ? newMeepData.remote_user_id === previousMeepData.remote_user_id : true) &&
         new Date(newMeepData.created_at) - new Date(previousMeepData.created_at) < MERGE_MEEPS_TIMEFRAME;
     },
 
