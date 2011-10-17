@@ -22,7 +22,7 @@ class ClientTracker
   end
   
   def add_user user, conn
-    @online_users[user.id] = {}
+    @online_users[user.id] ||= {}
     @online_users[user.id]['id']            ||= user.id
     @online_users[user.id]['name']          ||= user.display_name
     @online_users[user.id]['avatar']        ||= user.avatar.url
