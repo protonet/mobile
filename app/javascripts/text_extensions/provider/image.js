@@ -15,17 +15,19 @@ protonet.text_extensions.provider.Image = {
     // Handle already proxied images
     url = protonet.media.Proxy.extractOriginalImageUrl(url);
     
-    var testImg  = new Image(),
-        urlParts = protonet.utils.parseUrl(url);
-        
-    testImg.onerror = onFailure;
-    testImg.onload = function() {
-      onSuccess({
-        url:   url,
-        title: urlParts.filename,
-        image: url
-      });
-    };
-    testImg.src = url;
+    var testImg       = new Image(),
+        urlParts      = protonet.utils.parseUrl(url),
+        titleAppendix,
+        fileName      = urlParts.filename.replace(/[_-]/g, " ").replace(/\.(jpe?g|gif|png).*/, function(match, $1) {
+          titleAppendix = $1;
+          return "";
+        });
+    
+    onSuccess({
+      url:            url,
+      title:          fileName,
+      titleAppendix:  titleAppendix,
+      image:          url
+    });
   }
 };

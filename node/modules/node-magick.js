@@ -19,7 +19,16 @@ var magickCommand = function(obj) {
     return obj.crop(width, height).resize(width, height);
   };
   obj.resizeMagick = function(width, height) {
-    return obj.stripMetaData().colorSpace('RGB').resample(72).gravity("center").resize(width, height).extent(width, height).background("none").coalesce();
+    return obj
+      .stripMetaData()
+      .colorSpace('RGB')
+      .resample(72)
+      .gravity("center")
+      .resize(width, height)
+      // Following line mangles gif animations:
+      // .extent(width, height)
+      .background("none")
+      .coalesce();
   };
   obj.resize = function(width, height) {
     var wh = width + "x" + height + "^";
