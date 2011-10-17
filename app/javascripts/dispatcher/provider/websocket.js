@@ -1,6 +1,5 @@
 protonet.dispatcher.provider.WebSocket = {
   isSupported: function() {
-    return false;
     return !protonet.config.force_xhr_streaming && protonet.user.Browser.SUPPORTS_HTML5_WEBSOCKET();
   },
   
