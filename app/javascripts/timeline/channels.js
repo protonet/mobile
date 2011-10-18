@@ -2,6 +2,8 @@
 //= require "../utils/browser_title.js"
 //= require "../utils/is_window_focused.js"
 //= require "../utils/url_behaviors.js"
+//= require "../utils/get_channel_name.js"
+//= require "../utils/get_channel_uuid.js"
 //= require "channel.js"
 //= require "rendezvous.js"
 
@@ -13,7 +15,7 @@
  *    channel.subscribe       - Call this when you want to subscribe a new channel by id
  */
 protonet.timeline.Channels = {
-  availableChannels: protonet.config.available_channels || {},
+  availableChannels: protonet.config.channel_name_to_id_mapping || {},
   
   initialize: function() {
     this.container    = $("#timeline");
@@ -25,9 +27,6 @@ protonet.timeline.Channels = {
     this.channels             = {};
     this.channelsBeingLoaded  = {};
     this.rendezvous           = {};
-    
-    this.channelUuidToId      = {};
-    this.channelIdToUuid      = protonet.config.channel_id_to_uuid_mapping;
     
     /**
      * Ajax history to enable forward and backward
@@ -89,14 +88,14 @@ protonet.timeline.Channels = {
       
       "a[data-meep-share]:click": function(element, event) {
         protonet
-          .trigger("form.share_meep", +$(element).data("meep-share"))
+          .trigger("form.share_meep", $(element).data("meep-share"))
           .trigger("modal_window.hide");
         event.preventDefault();
       },
       
       "a[data-rendezvous-with]:click": function(element, event) {
         protonet
-          .trigger("rendezvous.start", +$(element).data("rendezvous-with"))
+          .trigger("rendezvous.start", $(element).data("rendezvous-with"))
           .trigger("modal_window.hide");
         event.preventDefault();
       }
@@ -117,13 +116,17 @@ protonet.timeline.Channels = {
           return;
         }
         
-        if ($.inArray(id, this.subscribedChannels) == -1) {
+        if ($.inArray(id, this.subscribedChannels) === -1) {
           protonet.trigger("channel.subscribe", id);
           return;
         }
         
+        protonet
+          .trigger("channel" + id + ".select")
+          .trigger("channel" + this.selected + ".unselect");
+        
         this.selected = id;
-        this.selectedUuid = protonet.timeline.Channels.channelIdToUuid[id];
+        this.selectedUuid = protonet.utils.getChannelUuid(id);
         
         if (!avoidHistoryChange) {
           protonet.utils.History.push("/?channel_id=" + id);
@@ -182,9 +185,7 @@ protonet.timeline.Channels = {
           type:     "post",
           dataType: "json",
           url:      "/listens",
-          data:     {
-            channel_id: id,
-          },
+          data:     { channel_id: id, },
           success: function(data) {
             if (data.success) {
               data.already_subscribed ? protonet.trigger("channel.load", { channel_id: id }) : success();
@@ -247,21 +248,19 @@ protonet.timeline.Channels = {
             });
           }
         });
-      }.bind(this));
+      }.bind(this))
+      
+      .bind("node.connected", function(e, data) {
+        this.tabs.filter("[data-node-id=" + data.node_id + "]").removeClass("offline");
+      }.bind(this))
+      
+      .bind("node.disconnected", function(e, data) {
+        this.tabs.filter("[data-node-id=" + data.node_id + "]").addClass("offline");
+      }.bind(this))
     
-      protonet
-        .bind("node.connected", function(e, data) {
-          this.tabs.filter("[data-node-id=" + data.node_id + "]").removeClass("offline");
-        }.bind(this))
-        
-        .bind("node.disconnected", function(e, data) {
-          this.tabs.filter("[data-node-id=" + data.node_id + "]").addClass("offline");
-        }.bind(this));
-    
-    /**
-     * Rendezvous
-     */
-    protonet
+      /**
+       * Rendezvous
+       */
       .bind("rendezvous.start", function(e, partner) {
         if (!partner) {
           return;
@@ -296,8 +295,8 @@ protonet.timeline.Channels = {
         url:    "/users/update_last_read_meeps",
         type:   "PUT",
         data:   {
-          id:                 protonet.config.user_id,
-          mapping:            lastReadMeeps
+          id:      protonet.config.user_id,
+          mapping: lastReadMeeps
         }
       });
     }.bind(this));
@@ -338,9 +337,7 @@ protonet.timeline.Channels = {
     } else {
       instance = new protonet.timeline.Channel(channelData);
     }
-    this.channelUuidToId[channelData.uuid]  = channelData.id;
-    this.channelIdToUuid[channelData.id]    = channelData.uuid;
-    return this.channels[channelData.id]    = instance;
+    return this.channels[channelData.id] = instance;
   },
   
   /**

@@ -31,7 +31,19 @@ class Channel < ActiveRecord::Base
   scope :real,  :conditions => {:rendezvous => nil}
   scope :verified, :conditions => {:listens => {:verified => true}}
   scope :local, :conditions => {:node_id => 1}
-
+  
+  def self.id_to_uuid_mapping
+    mapping = {}
+    real.all.each {|c| mapping[c.id] = c.uuid }
+    mapping
+  end
+  
+  def self.name_to_id_mapping
+    mapping = {}
+    Channel.real.all.each { |c| mapping[c.name] = c.id }
+    mapping
+  end
+  
   def self.home
     begin
       find(1)
@@ -183,8 +195,9 @@ class Channel < ActiveRecord::Base
     def send_channel_notification
       publish "system", "channels", {
         :trigger      => 'channel.added',
-        :name         => self.name,
-        :id           => self.id
+        :name         => self.display_name,
+        :id           => self.id,
+        :uuid         => self.uuid
       }
     end
 end

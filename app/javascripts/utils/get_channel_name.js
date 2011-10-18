@@ -2,15 +2,18 @@
  * Returns the channel name for the given id
  */
 protonet.utils.getChannelName = (function() {
-  var channels = protonet.config.available_channels || {}; // format: { "channel_name": channel_id, ... }
+  var channelNameToIdMapping = protonet.config.channel_name_to_id_mapping || {},
+      channelIdToNameMapping = {},
+      channelName;
+  for (channelName in channelNameToIdMapping) {
+    channelIdToNameMapping[channelNameToIdMapping[channelName]] = channelName;
+  }
+  
+  protonet.bind("channel.added", function(e, channel) {
+    channelIdToNameMapping[channel.id] = channel.name;
+  });
+  
   return function(id) {
-    var channelName;
-    id = +id;
-    for (channelName in channels) {
-      if (channels[channelName] === id) {
-        return channelName;
-      }
-    }
-    return "";
+    return channelIdToNameMapping[id];
   };
 })();

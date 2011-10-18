@@ -16,15 +16,15 @@ protonet.timeline.Form.extensions.AutoCompleter = function(input) {
      * Add users to Autocompleter when loaded
      */
     .bind("users.data_available", function(e, users) {
-      $.each(users, function(key, value) { userNames.push(value.name); });
+      userNames = $.map(users, function(user) { return user.name; });
       autoCompleter.setData(userNames.concat(channelNames));
     })
   
     /**
      * Add channel names to autocompleter when initialized
      */
-    .bind("channels.data_available", function(e, channelData, channels) {
-      $.each(channels, function(key, value) { channelNames.push(key); });
+    .bind("channels.data_available", function(e, channelData, channelNameToIdMapping) {
+      channelNames = Object.keys(channelNameToIdMapping);
       autoCompleter.setData(userNames.concat(channelNames));
     })
     

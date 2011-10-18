@@ -1,5 +1,6 @@
 //= require "../ui/resizer.js"
 //= require "../media/proxy.js"
+//= require "../utils/get_channel_uuid.js"
 
 protonet.widgets.User = Class.create({
   initialize: function() {
@@ -13,7 +14,7 @@ protonet.widgets.User = Class.create({
 
     this.list.find("a").each(function(i, link) {
       var $link     = $(link),
-          $listItem = $link.parent();
+          $listItem = $link.parent(),
           userId    = $link.data("user-id");
       this.usersData[userId] = {
         element:              $listItem,
@@ -22,10 +23,8 @@ protonet.widgets.User = Class.create({
         isStranger:           false,
         avatar:               $link.data("user-avatar"),
         channelSubscriptions: $.map($link.data("user-channel-subscriptions"), function(channelId) {
-          var channelUuid = protonet.timeline.Channels.channelIdToUuid[channelId];
-          if(!this.channelSubscriptions[channelUuid]) {
-            this.channelSubscriptions[channelUuid] = [];
-          }
+          var channelUuid = protonet.utils.getChannelUuid(channelId);
+          this.channelSubscriptions[channelUuid] = this.channelSubscriptions[channelUuid] || [];
           this.channelSubscriptions[channelUuid].push(userId);
           return channelUuid;
         }.bind(this))
@@ -268,14 +267,14 @@ protonet.widgets.User = Class.create({
   
   filterChannelUsers: function(channelId) {
     channelId = channelId || protonet.timeline.Channels.selected;
-    if(!channelId || !protonet.timeline.Channels.channelIdToUuid) {
+    if (!channelId) {
       return;
     }
     // transform input (id or uuid) to uuid
-    if(channelId && channelId.toString().match("-")) {
+    if (channelId && channelId.toString().match("-")) {
       channelUuid = channelId;
     } else {
-      channelUuid = protonet.timeline.Channels.channelIdToUuid[channelId];
+      channelUuid = protonet.utils.getChannelUuid(channelId);
     }
     
     var channelSubscriptions = this.channelSubscriptions[channelUuid];

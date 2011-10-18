@@ -1,4 +1,5 @@
 //= require "template.js"
+//= require "get_channel_id.js"
 
 /**
  * Highlights channel replies in a string
@@ -11,23 +12,14 @@
  */
 protonet.utils.highlightChannelReplies = (function() {
   var REG_EXP         = /(\s|^|\()@([\w\.\-_@]+)/g,
-      TRAILING_CHARS  = /[\.\-_]+$/,
-      channelMapping  = {};
-  
-  $.each(protonet.config.available_channels, function(channelName, channelId) {
-    channelMapping[channelName.toLowerCase()] = channelId;
-  });
-  
-  protonet.bind("channel.added", function(e, channel) {
-    channelMapping[channel.name.toLowerCase()] = channel.id;
-  });
+      TRAILING_CHARS  = /[\.\-_]+$/;
   
   return function(str) {
     var result = arguments.callee.result = [];
     return str.replace(REG_EXP, function(original, $1, $2) {
       var trailingChars = ($2.match(TRAILING_CHARS) || [""])[0],
           channelName   = trailingChars ? $2.replace(TRAILING_CHARS, "") : $2,
-          channelId     = channelMapping[channelName.toLowerCase()];
+          channelId     = protonet.utils.getChannelId(channelName);
       
       if (!channelId) {
         return original;

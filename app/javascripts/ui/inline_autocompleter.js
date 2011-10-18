@@ -124,7 +124,7 @@ protonet.ui.InlineAutocompleter = Class.create({
      * (also known as the "andreas.gehret bug")
      */
     if (enteredCharacter.toLowerCase() == characterBeforeCaret.toLowerCase()) {
-      var currentSuggestion = this.currentSuggestions[this.currentSuggestionIndex];
+      var currentSuggestion = this.currentSuggestions[this.currentSuggestionIndex],
           newValue          = value.substr(0, currentlyTypedWordStart)
             + currentlyTypedWord
             + this.currentSuggestions[this.currentSuggestionIndex]
