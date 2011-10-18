@@ -29,7 +29,15 @@ protonet.widgets.File = Class.create({
     protonet
       .bind("channel.change", function(event, channelId) {
         this._resetHistory();
-        protonet.trigger("files.load", channelId);
+        protonet.trigger("files.load", channelId).trigger("file_widget.show");
+      }.bind(this))
+      
+      .bind("file_widget.hide", function() {
+        this.container.hide();
+      }.bind(this))
+      
+      .bind("file_widget.show", function() {
+        this.container.show();
       }.bind(this))
       
       .bind("files.load", function(event, channelId, path, fromHistory) {

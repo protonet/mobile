@@ -8,8 +8,9 @@ class ApplicationController < ActionController::Base
   before_filter :set_backend_for_development, :captive_check, :current_user, :set_current_user_for_authorization, :guest_login
   before_filter :detect_xhr_redirect
   
-  after_filter :set_flash_message_to_header, :if => Proc.new { |a| a.request.xhr? }
-  after_filter :set_request_url_to_header, :if => Proc.new { |a| a.request.xhr? }
+  after_filter :set_flash_message_to_header,  :if => Proc.new { |a| a.request.xhr? }
+  after_filter :set_request_url_to_header,    :if => Proc.new { |a| a.request.xhr? }
+  after_filter :compress,                     :if => Proc.new { |a| a.response.content_type == "application/json" }
   
   # TODO check with @dudemeister
   layout Proc.new { |a| return a.request.xhr? ? 'ajax' : 'application' }
@@ -20,6 +21,21 @@ class ApplicationController < ActionController::Base
   end
   
   private
+  
+  def compress
+    if self.response.headers["Content-Transfer-Encoding"] != 'binary'
+      begin
+        ostream = StringIO.new
+        gz = Zlib::GzipWriter.new(ostream)
+        gz.write(self.response.body)
+        self.response.body = ostream.string
+        self.response.headers['Content-Encoding'] = 'gzip'
+        self.response.headers['Expect'] = '100-continue'
+      ensure
+        gz.close
+      end
+    end
+  end
   
   # https://bugzilla.mozilla.org/show_bug.cgi?id=553888
   def xhr_redirect_to(options)

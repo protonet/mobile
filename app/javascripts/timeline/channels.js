@@ -6,6 +6,7 @@
 //= require "../utils/get_channel_uuid.js"
 //= require "channel.js"
 //= require "rendezvous.js"
+//= require "remote_channel.js"
 
 /**
  * @events
@@ -76,12 +77,8 @@ protonet.timeline.Channels = {
       "a[data-channel-id]:click": function(element, event) {
         var $element  = $(element),
             id        = +$element.data("channel-id");
-            
-        if (!$element.is(".active")) {
-          protonet.trigger("channel.change", id);
-        }
         
-        protonet.trigger("modal_window.hide");
+        protonet.trigger("modal_window.hide").trigger("channel.change", id);
         
         event.preventDefault();
       },
@@ -111,6 +108,8 @@ protonet.timeline.Channels = {
        * will fire the channel.subscribe event
        */
       .bind("channel.change", function(e, id, avoidHistoryChange) {
+        avoidHistoryChange = avoidHistoryChange || protonet.ui.ModalWindow.isVisible();
+        
         id = +id; // + Makes sure that id is a Number
         if (this.selected === id) {
           return;
@@ -120,10 +119,6 @@ protonet.timeline.Channels = {
           protonet.trigger("channel.subscribe", id);
           return;
         }
-        
-        protonet
-          .trigger("channel" + id + ".select")
-          .trigger("channel" + this.selected + ".unselect");
         
         this.selected = id;
         this.selectedUuid = protonet.utils.getChannelUuid(id);
@@ -142,9 +137,7 @@ protonet.timeline.Channels = {
        * Start rendezvous if param in url is given
        */
       .bind("channels.initialized", function() {
-        protonet.utils.urlBehaviors({
-          "rendezvous.start": /(?:\?|&)rendezvous_with=([^&#$]+)(.*)/
-        });
+        protonet.utils.urlBehaviors({ "rendezvous.start": /(?:\?|&)rendezvous_with=([^&#$]+)(.*)/ });
       })
       
       .bind("channels.change_to_first", function() {
@@ -249,14 +242,6 @@ protonet.timeline.Channels = {
           }
         });
       }.bind(this))
-      
-      .bind("node.connected", function(e, data) {
-        this.tabs.filter("[data-node-id=" + data.node_id + "]").removeClass("offline");
-      }.bind(this))
-      
-      .bind("node.disconnected", function(e, data) {
-        this.tabs.filter("[data-node-id=" + data.node_id + "]").addClass("offline");
-      }.bind(this))
     
       /**
        * Rendezvous
@@ -334,6 +319,8 @@ protonet.timeline.Channels = {
     if (channelData.rendezvous) {
       instance = new protonet.timeline.Rendezvous(channelData);
       this.rendezvous[channelData.rendezvous] = instance;
+    } else if (channelData.remote) {
+      instance = new protonet.timeline.RemoteChannel(channelData);
     } else {
       instance = new protonet.timeline.Channel(channelData);
     }
@@ -425,6 +412,10 @@ protonet.timeline.Channels = {
     });
     
     this._updateSubscribedChannels();
+    
+    if (this.selected === channelId) {
+      protonet.trigger("channels.change_to_first");
+    }
   },
   
   _collectLastReadMeeps: function() {

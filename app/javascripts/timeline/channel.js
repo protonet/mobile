@@ -154,13 +154,11 @@
          * Set tab to active and store state
          */
         .bind("channel.change", function(e, channelId) {
-          this.isSelected = channelId == this.data.id;
-          this.toggle();
+          this.toggle(channelId == this.data.id);
         }.bind(this))
         
         .bind("channel.hide", function() {
-          this.isSelected = false;
-          this.toggle();
+          this.toggle(false);
         }.bind(this))
         
         /**
@@ -246,8 +244,10 @@
     /**
      * Decide whether the channel should be shown or hidden
      */
-    toggle: function() {
-      if (this.isSelected) {
+    toggle: function(selected) {
+      this.isSelected = selected;
+      
+      if (selected) {
         this.unreadReplies = this.unreadMeeps = 0;
         var lastMeep = this.data.meeps[this.data.meeps.length - 1];
         this.data.last_read_meep = lastMeep && lastMeep.id;
@@ -288,11 +288,9 @@
       this.tab = $("<li>");
       
       this.link = $("<a>", {
-        href:                 "/?channel_id=" + this.data.id,
-        'data-channel-id':    this.data.id,
-        'data-channel-uuid':  this.data.uuid,
-        text:                 this.data.display_name,
-        'class':              (this.data.remote ? 'global' : null)
+        href:               "/?channel_id=" + this.data.id,
+        "data-channel-id":  this.data.id,
+        text:               this.data.display_name
       });
       
       this.link .appendTo(this.tab);

@@ -66,7 +66,8 @@ class Channel < ActiveRecord::Base
     {
       :id               => channel.id,
       :uuid             => channel.uuid,
-      :remote           => channel.node_id != 1,
+      :node_id          => channel.node_id,
+      :remote           => !channel.locally_hosted?,
       :rendezvous       => channel.rendezvous,
       :name             => channel.name,
       :display_name     => channel.rendezvous_name(current_user) || channel.display_name,

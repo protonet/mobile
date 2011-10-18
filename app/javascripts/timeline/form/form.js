@@ -9,10 +9,10 @@
 protonet.timeline.Form = {
   initialize: function() {
     this.form               = $("#message-form");
-    this.wrapper            = this.form.find("#textarea-wrapper-inner");
-    this.input              = this.form.find("#message");
-    this.channelIdInput     = this.form.find("#meep_channel_id");
-    this.socketIdInput      = this.form.find("#meep_socket_id");
+    this.wrapper            = $("#textarea-wrapper-inner");
+    this.input              = $("#message");
+    this.channelIdInput     = $("#meep_channel_id");
+    this.socketIdInput      = $("#meep_socket_id");
     this.$window            = $(window);
     this.typing             = false;
     
@@ -36,7 +36,7 @@ protonet.timeline.Form = {
   },
   
   _observe: function() {
-    var preventFocus = protonet.config.user_is_stranger || protonet.user.Browser.IS_TOUCH_DEVICE();
+    var preventInitialFocus = protonet.config.user_is_stranger;
     
     protonet
       .bind("user.changed_avatar", function(e, user) {
@@ -46,24 +46,24 @@ protonet.timeline.Form = {
       }.bind(this))
       
       .bind("channel.hide", function() {
-        this.input.prop("disabled", true);
-      }.bind(this))
+        protonet.trigger("form.disable");
+      })
       
       /**
        * Focus input after channel switch
        * and update hidden channel id
        */
       .bind("channel.change", function(e, channelId) {
-        this.input.prop("disabled", false);
+        protonet.trigger("form.enable");
         
         // When loading the page a "channel.change" event is initially fired
         // This causes problems when the user already focused the login form and started to type
         // in his password. Uygar from XING even almost accidentally submitted her password
-        if (!preventFocus) {
+        if (!preventInitialFocus && !protonet.user.Browser.IS_TOUCH_DEVICE()) {
           this.input.focus();
         }
         
-        preventFocus = false;
+        preventInitialFocus = false;
         this.channelIdInput.val(channelId);
       }.bind(this))
       
@@ -141,6 +141,15 @@ protonet.timeline.Form = {
         
         this.input.val(beforeCaret + text + afterCaret);
         inputElement.selectionStart = inputElement.selectionEnd = beforeCaret.length + text.length;
+      }.bind(this))
+      
+      .bind("form.enable", function() {
+        this.form.removeClass("disabled");
+      }.bind(this))
+      
+      .bind("form.disable", function() {
+        this.form.addClass("disabled");
+        this.input.blur();
       }.bind(this))
       
       /**
