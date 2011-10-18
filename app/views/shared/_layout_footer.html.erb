@@ -30,7 +30,9 @@
   <%= render :partial => 'meeps/meep_actions' %>
 </script>
 <script type="protonet/template" id="search-page-template">
-  <%= render :template => 'search/index' %>
+  <section class="subpage search-page">
+    <%= render :template => 'search/index' %>
+  </section>
 </script>
 
 <%= sprockets_include_tag(:default) %>
