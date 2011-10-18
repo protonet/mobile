@@ -5,6 +5,6 @@ protonet.utils.getChannelUuid = (function() {
   });
   
   return function(channelId) {
-    return channels[channelId];
+    return mapping[channelId];
   };
 })();
