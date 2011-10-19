@@ -1,10 +1,17 @@
 protonet.utils.getChannelUuid = (function() {
-  var mapping = protonet.config.channel_id_to_uuid_mapping || {};
-  protonet.bind("channel.added", function(e, channel) {
-    mapping[channel.id] = channel.uuid;
+  var channelUuidToIdMapping = protonet.config.channel_uuid_to_id_mapping || {},
+      channelIdToUuidMapping = {},
+      channelUuid;
+  
+  for (channelUuid in channelUuidToIdMapping) {
+    channelIdToUuidMapping[channelUuidToIdMapping[channelUuid]] = channelUuid;
+  }
+  
+  protonet.bind("channel.added channel.initialized", function(e, channel) {
+    channelIdToUuidMapping[channel.id] = channel.uuid;
   });
   
   return function(channelId) {
-    return mapping[channelId];
+    return channelIdToUuidMapping[channelId];
   };
 })();

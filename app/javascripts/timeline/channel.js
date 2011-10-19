@@ -12,6 +12,7 @@
  *    new protonet.timeline.Channel(channelData).render("#channel-container");
  *
  *  @events
+ *    channel.initialized   - Triggered when data is available and channel is ready for rendering
  *    channel.change        - Call this with the channel id if you want to switch the channel
  *    channel.rendered      - Triggered when channel, including meeps, is completely rendered
  *    channel.meep_receive  - Triggered after a meep has been received and rendered
@@ -31,6 +32,8 @@
       this._getTab();
       
       this._observe();
+      
+      protonet.trigger("channel.initialized", data);
     },
     
     _getTab: function() {
