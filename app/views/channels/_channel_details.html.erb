@@ -69,10 +69,12 @@
       <%= f.check_box :public %>
       public (users can subscribe without verification)
     </label>
-    <label class="checkbox-row" for="channel_global">
-      <%= f.check_box :global %>
-      global (channel is visible from external nodes and clients)
-    </label>
+    <%- if request.domain == "team.protonet.info" || Rails.env != "production" %>
+      <label class="checkbox-row" for="channel_global">
+        <%= f.check_box :global %>
+        global (channel is visible from external nodes and clients)
+      </label>
+    <%- end %>
   <%- end %>
   
   <h3>Details <a data-hover-hint="top" title="Only visible to admins and the channel owner" class="hint">(?)</a></h3>
