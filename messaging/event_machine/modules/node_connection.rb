@@ -123,6 +123,8 @@ class NodeConnection < FlashConnection
         json['node_uuid'] = @node.uuid
         user_id = remote_user_id(json["user_id"])
         
+        request_remote_avatar(user_id, json["avatar"]) unless @remote_avatar_mapping[user_id]
+        
         Meep.create(:user_id => -1,
           :author => json['author'],
           :message => json['message'],
@@ -141,10 +143,7 @@ class NodeConnection < FlashConnection
           end
         end
       when 'users.update_status'
-        users_to_remove, users_to_add = update_remote_users(@tracker.client_tracker, @node.id, node_socket_id, json)
-        users_to_add.each do |user_id|
-          request_remote_avatar(user_id, @tracker.client_tracker.remote_users[user_id]["avatar"])
-        end
+        update_remote_users(@tracker.client_tracker, @node.id, node_socket_id, json)
       when 'user.came_online', 'user.goes_offline'
         unless json["id"].to_s.match(/#{@remote_node_id}_/)
           update_remote_online_state(remote_user_id(json["id"]), node_socket_id, json)

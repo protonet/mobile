@@ -40,6 +40,9 @@ module ConnectionShared
           send_work_request(json)
         when 'remote.meep'
           channel_id = @tracker.channel_id_for(json['channel_uuid'])
+          user_id = remote_user_id(json['user_id'])
+          request_remote_avatar(user_id, json["avatar"]) unless @remote_avatar_mapping[user_id]
+
           channel_id && Meep.create(:user_id => @user.id,
                   :author => json['author'],
                   :message => json['message'],
@@ -47,8 +50,8 @@ module ConnectionShared
                   :node_id => @user.node.id,
                   :channel_id => channel_id,
                   :socket_id  => @socket_id,
-                  :remote_user_id => remote_user_id(json['user_id']),
-                  :avatar => @remote_avatar_mapping[remote_user_id(json['user_id'])] || configatron.default_avatar)
+                  :remote_user_id => user_id,
+                  :avatar => @remote_avatar_mapping[remote_user_id(user_id)] || configatron.default_avatar)
         when 'rpc.get_avatar'
           send_avatar(json) if node_connection?
         when 'rpc.get_avatar_answer'
@@ -57,10 +60,7 @@ module ConnectionShared
           if node_connection? # remote node
             case json['trigger']
             when 'users.update_status'
-              users_to_remove, users_to_add = update_remote_users(@tracker, @user.node_id, @socket_id, json)
-              users_to_add.each do |user_id|
-                request_remote_avatar(user_id, @tracker.remote_users[user_id]["avatar"])
-              end
+              update_remote_users(@tracker, @user.node_id, @socket_id, json)
             when 'user.came_online', 'user.goes_offline'
               update_remote_online_state("#{@user.node_id}_#{json["id"]}", @socket_id, json)
             else
