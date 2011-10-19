@@ -141,9 +141,9 @@ protonet.timeline.Channels = {
       })
       
       .bind("channels.change_to_first", function() {
-        var firstChannel = this.data[0];
-        if (firstChannel) {
-          protonet.trigger("channel.change", this.data[0].id);
+        var firstChannel = this.tabs.eq(0);
+        if (firstChannel.length) {
+          protonet.trigger("channel.change", firstChannel.data("channel-id"));
         }
       }.bind(this))
       
@@ -334,7 +334,7 @@ protonet.timeline.Channels = {
    */
   _selectChannel: function() {
     var urlChannelId      = +protonet.utils.parseQueryString(location.search).channel_id,
-        selectedChannelId = urlChannelId || (this.data[0] ? this.data[0].id : null);
+        selectedChannelId = urlChannelId || this.tabs.eq(0).data("channel-id");
     if (selectedChannelId) {
       protonet.trigger("channel.change", [selectedChannelId, true]);
     }
