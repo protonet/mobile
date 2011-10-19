@@ -12,7 +12,7 @@
     <!-- tabindex="-1" ensures that the element is focusable via css -->
     <% users.each do |user| -%>
       <li <%= raw 'class="myself"' if user.id == current_user.id %>>
-        <a href="/users/<%= user.id %>" tabindex="-1" data-user-id="<%= user.id %>" data-user-avatar="<%= user.avatar.url %>" data-user-channel-subscriptions="<%= user.channels.map(&:id).to_json %>" title="<%= user.display_name %>"><%= user.display_name %></a>
+        <a href="/users/<%= user.id %>" tabindex="-1" data-user-id="<%= user.id %>" data-user-avatar="<%= user.avatar.url %>" data-user-channel-subscriptions="<%= user.channels.real.map(&:id).to_json %>" title="<%= user.display_name %>"><%= user.display_name %></a>
       </li>
     <% end -%>
   </ul>
