@@ -62,6 +62,5 @@ privileges do
   privilege :create, :includes => :new
   privilege :update, :includes => :edit
   privilege :delete, :includes => :destroy
-  privilege :accept # used for listens
   privilege :change_password
 end

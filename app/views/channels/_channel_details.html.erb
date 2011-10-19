@@ -20,11 +20,11 @@
           <%= raw("<strong>(owner)</strong>") if channel.owned_by?(listen.user) %>
           <%= raw("<strong>(awaiting verification)</strong>") unless listen.verified? %>
           <a href="/users/<%= user.id %>" class="action">show profile</a>
-          <%- if permitted_to?(:delete, :listens) %>
+          <%- if channel.owned_by?(current_user) || current_user.admin? %>
             <%= link_to('remove', listen_path(listen), :method => :delete, :remote => true, :class => "action") %>
-          <%- end %>
-          <%- if permitted_to?(:accept, :listens) && !listen.verified? %>
-            <%= link_to('verify', listen_accept_path(listen), :method => :post, :remote => true, :class => "action", 'data-cucumber' => 'verify') %>
+            <%- unless listen.verified? %>
+              <%= link_to('verify', listen_accept_path(listen), :method => :post, :remote => true, :class => "action", 'data-cucumber' => 'verify') %>
+            <%- end %>
           <%- end %>
         </li>
       <%- end %>
