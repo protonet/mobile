@@ -12,8 +12,11 @@ class RegistrationsController < Devise::RegistrationsController
     build_resource
     # handle invitations
     resource.invitation_token = params[:invitation_token]
-
-    if resource.save
+    
+    # TODO:
+    # Following line somehow causes an exception when the user already exists
+    saved = resource.save rescue false
+    if saved
       if resource.active_for_authentication?
         set_flash_message :notice, :signed_up
         sign_in_and_redirect(resource_name, resource)
