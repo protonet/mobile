@@ -1,6 +1,6 @@
 <h2>Publish to web</h2>
 <p>Make your node available to the entire world not just your local network.</p>
-<%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
+<%= form_tag preferences_publish_to_web_update_path, { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag(:section, 'publish_to_web') %>
   <div class="form-field">
     <%= label_tag 'preferences[publish_to_web_name]', 'URL:' %>
