@@ -3,7 +3,6 @@
   <%= form_for :meep, :url => meeps_path, :html => { :id => "message-form" } do |f| -%>
     <%= f.hidden_field(:channel_id, :name => "meep[channel_id]", :autocomplete => "off") %>
     <%= f.hidden_field(:socket_id) %>
-    <%= f.hidden_field(:avatar, :value => current_user.avatar.url) %>
     <%= f.hidden_field(:author, :value => current_user.display_name) %>
     <%= f.hidden_field(:text_extension, :id => 'text-extension-input', :value => "", :autocomplete => "off") %>
     <div id="textarea-wrapper">
