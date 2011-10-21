@@ -14,7 +14,7 @@ module Node2Node
   
   def store_remote_avatar(json)
     user_id = remote_user_id(json["user_id"])
-    filename  = cleanup_avatar_filename(filename)
+    filename  = cleanup_avatar_filename(json["avatar_filename"])
     directory = "#{Rails.root}/public/system/avatars/#{user_id}/original"
     full_path = "#{directory}/#{filename}"
     url       = "/system/avatars/#{user_id}/original/#{filename}"
