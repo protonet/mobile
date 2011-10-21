@@ -123,6 +123,7 @@ class ClientTracker
   end
   
   def remove_channel_subscription(user_id, channel_uuid)
+    return unless channel_users[channel_uuid]
     channel_users[channel_uuid].delete(user_id)
     channel_users.delete(channel_uuid) if channel_users[channel_uuid].empty?
   end
