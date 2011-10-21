@@ -32,15 +32,15 @@ class Channel < ActiveRecord::Base
   scope :verified, :conditions => {:listens => {:verified => true}}
   scope :local, :conditions => {:node_id => 1}
   
-  def self.id_to_uuid_mapping
+  def self.uuid_to_id_mapping
     mapping = {}
-    real.all.each {|c| mapping[c.id] = c.uuid }
+    real.all.each {|c| mapping[c.uuid] = c.id }
     mapping
   end
   
   def self.name_to_id_mapping
     mapping = {}
-    Channel.real.all.each { |c| mapping[c.name] = c.id }
+    real.all.each { |c| mapping[c.name] = c.id }
     mapping
   end
   

@@ -1,6 +1,6 @@
 //= require "../ui/resizer.js"
 //= require "../media/proxy.js"
-//= require "../utils/get_channel_uuid.js"
+//= require "../utils/get_channel_id_for_uuid.js"
 
 protonet.widgets.User = Class.create({
   initialize: function() {
@@ -23,10 +23,9 @@ protonet.widgets.User = Class.create({
         isStranger:           false,
         avatar:               $link.data("user-avatar"),
         channelSubscriptions: $.map($link.data("user-channel-subscriptions"), function(channelId) {
-          var channelUuid = protonet.utils.getChannelUuid(channelId);
-          this.channelSubscriptions[channelUuid] = this.channelSubscriptions[channelUuid] || [];
-          this.channelSubscriptions[channelUuid].push(userId);
-          return channelUuid;
+          this.channelSubscriptions[channelId] = this.channelSubscriptions[channelId] || [];
+          this.channelSubscriptions[channelId].push(userId);
+          return channelId;
         }.bind(this))
       };
     }.bind(this));
@@ -51,7 +50,7 @@ protonet.widgets.User = Class.create({
       }.bind(this))
       
       .bind("user.typing", function(e, data) {
-        this._typingStart(data.user_id, data.channel_uuid);
+        this._typingStart(data.user_id, protonet.utils.getChannelIdForUuid(data.channel_uuid));
       }.bind(this))
       
       .bind("user.typing_end", function(e, data) {
@@ -59,12 +58,12 @@ protonet.widgets.User = Class.create({
       }.bind(this))
       
       .bind("user.subscribed_channel", function(e, data) {
-        this._userSubscribedChannel(data.user_id, data.channel_uuid);
+        this._userSubscribedChannel(data.user_id, protonet.utils.getChannelIdForUuid(data.channel_uuid));
         this.filterChannelUsers();
       }.bind(this))
       
       .bind("user.unsubscribed_channel", function(e, data) {
-        this._userUnsubscribedChannel(data.user_id, data.channel_uuid);
+        this._userUnsubscribedChannel(data.user_id, protonet.utils.getChannelIdForUuid(data.channel_uuid));
         this.filterChannelUsers();
       }.bind(this))
 
@@ -104,7 +103,7 @@ protonet.widgets.User = Class.create({
       }.bind(this))
       
       .bind("channel.change", function(e, channelId) {
-        this.filterChannelUsers(+channelId);
+        this.filterChannelUsers(channelId);
       }.bind(this));
     
     /**
@@ -253,14 +252,15 @@ protonet.widgets.User = Class.create({
   },
   
   updateSubscriptions: function(channelSubscriptions) {
-    if(!channelSubscriptions) {
+    if (!channelSubscriptions) {
       return;
     }
-    $.each(channelSubscriptions, function(channelUuid, subscriptions){
-      if(protonet.config.show_only_online_users) {
-        this.channelSubscriptions[channelUuid] = subscriptions;
+    $.each(channelSubscriptions, function(channelUuid, subscriptions) {
+      var channelId = protonet.utils.getChannelIdForUuid(channelUuid);
+      if (protonet.config.show_only_online_users) {
+        this.channelSubscriptions[channelId] = subscriptions;
       } else {
-        this.channelSubscriptions[channelUuid] = $.merge(this.channelSubscriptions[channelUuid] || [], subscriptions).unique();
+        this.channelSubscriptions[channelId] = $.merge(this.channelSubscriptions[channelId] || [], subscriptions).unique();
       }
     }.bind(this));
   },
@@ -270,20 +270,12 @@ protonet.widgets.User = Class.create({
     if (!channelId) {
       return;
     }
-    // transform input (id or uuid) to uuid
-    if (channelId && channelId.toString().match("-")) {
-      channelUuid = channelId;
-    } else {
-      channelUuid = protonet.utils.getChannelUuid(channelId);
-    }
     
-    var channelSubscriptions = this.channelSubscriptions[channelUuid];
-    if (!this.channelSubscriptions[channelUuid]) {
+    var channelSubscriptions = this.channelSubscriptions[channelId];
+    if (!this.channelSubscriptions[channelId]) {
       return;
     }
-    
     this.list.children().hide();
-    
     for (var i=0, l=channelSubscriptions.length; i<l; i++) {
       var userId = channelSubscriptions[i],
           user = this.usersData[userId];
@@ -317,7 +309,8 @@ protonet.widgets.User = Class.create({
     this.updateUser(userData.id, onlineUsers);
     
     // handle channel subscriptions
-    $.each(userData.subscribed_channel_ids, function(i, channelId) {
+    $.each(userData.subscribed_channel_ids, function(i, channelUuid) {
+      var channelId = protonet.utils.getChannelIdForUuid(channelUuid);
       if (this.channelSubscriptions[channelId]) {
         this.channelSubscriptions[channelId].push(userData.id);
       }
@@ -366,8 +359,8 @@ protonet.widgets.User = Class.create({
     }
   },
   
-  _typingStart: function(userId, channelUuid) {
-    if (channelUuid == protonet.timeline.Channels.selectedUuid) {
+  _typingStart: function(userId, channelId) {
+    if (channelId == protonet.timeline.Channels.selected) {
       var user = this.usersData[userId] || {};
       if (user.element) {
         user.element.prependTo(this.list).addClass("typing");

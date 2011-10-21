@@ -9,7 +9,7 @@ protonet.utils.getChannelName = (function() {
     channelIdToNameMapping[channelNameToIdMapping[channelName]] = channelName;
   }
   
-  protonet.bind("channel.added", function(e, channel) {
+  protonet.bind("channel.added channel.initialized", function(e, channel) {
     channelIdToNameMapping[channel.id] = channel.name;
   });
   

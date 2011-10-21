@@ -76,6 +76,7 @@ Dashboard::Application.routes.draw do
   namespace :preferences do
     match 'privacy/update'  => 'privacy#update', :as => :privacy_update
     match 'wifi/update'     => 'wifi#update', :as => :wifi_update
+    match 'publish_to_web/update'     => 'publish_to_web#update', :as => :publish_to_web_update
     match 'vpn/update'      => 'vpn#update', :as => :vpn_update
     match 'wifi/interface_status'     => 'wifi#interface_status', :as => :interface_status
     match 'vpn/on'    => 'vpn#on', :as => :vpn_on

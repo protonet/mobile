@@ -1,7 +1,7 @@
 /**
  * Returns the channel id for the given name
  */
-protonet.utils.getChannelId = (function() {
+protonet.utils.getChannelIdForName = (function() {
   var channelNameToIdMapping = protonet.config.channel_name_to_id_mapping || {},
       channelLowerCaseNameToIdMapping = {},
       channelName;
@@ -10,7 +10,7 @@ protonet.utils.getChannelId = (function() {
     channelLowerCaseNameToIdMapping[channelName.toLowerCase()] = channelNameToIdMapping[channelName];
   }
   
-  protonet.bind("channel.added", function(e, channel) {
+  protonet.bind("channel.added channel.initialized", function(e, channel) {
     channelLowerCaseNameToIdMapping[channel.name.toLowerCase()] = channel.id;
   });
   

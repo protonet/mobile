@@ -3,7 +3,6 @@
 //= require "../utils/is_window_focused.js"
 //= require "../utils/url_behaviors.js"
 //= require "../utils/get_channel_name.js"
-//= require "../utils/get_channel_uuid.js"
 //= require "channel.js"
 //= require "rendezvous.js"
 //= require "remote_channel.js"
@@ -121,7 +120,6 @@ protonet.timeline.Channels = {
         }
         
         this.selected = id;
-        this.selectedUuid = protonet.utils.getChannelUuid(id);
         
         if (!avoidHistoryChange) {
           protonet.utils.History.push("/?channel_id=" + id);
@@ -149,7 +147,6 @@ protonet.timeline.Channels = {
       
       .bind("channel.hide", function() {
         this.selected = null;
-        this.selectedUuid = null;
       }.bind(this))
       
       .bind("channel.load", function(e, data) {

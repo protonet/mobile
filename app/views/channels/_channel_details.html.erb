@@ -6,7 +6,7 @@
 </h2>
 <p><%= channel_description(channel) %></p>
 
-<h3 class="belongs-to-list">Subscribers (<%= channel.users.registered.size %>)</h3>
+<h3 class="belongs-to-list"><%= channel.locally_hosted? ? "Subscribers" : "Subscribers from this node" %> (<%= channel.users.registered.size %>)</h3>
 
 <%- if channel.users.registered.size == 0 %>
   <p class="hint">There are currently no users that subscribed to this channel. Be the first!</p>
@@ -20,11 +20,11 @@
           <%= raw("<strong>(owner)</strong>") if channel.owned_by?(listen.user) %>
           <%= raw("<strong>(awaiting verification)</strong>") unless listen.verified? %>
           <a href="/users/<%= user.id %>" class="action">show profile</a>
-          <%- if permitted_to?(:delete, :listens) %>
+          <%- if channel.owned_by?(current_user) || current_user.admin? %>
             <%= link_to('remove', listen_path(listen), :method => :delete, :remote => true, :class => "action") %>
-          <%- end %>
-          <%- if permitted_to?(:accept, :listens) && !listen.verified? %>
-            <%= link_to('verify', listen_accept_path(listen), :method => :post, :remote => true, :class => "action", 'data-cucumber' => 'verify') %>
+            <%- unless listen.verified? %>
+              <%= link_to('verify', listen_accept_path(listen), :method => :post, :remote => true, :class => "action", 'data-cucumber' => 'verify') %>
+            <%- end %>
           <%- end %>
         </li>
       <%- end %>
@@ -79,7 +79,7 @@
   
   <h3>Details <a data-hover-hint="top" title="Only visible to admins and the channel owner" class="hint">(?)</a></h3>
   <dl>
-    <dt>Network: </dt><dd>channel.node.name</dd>
+    <dt>Network: </dt><dd><%= channel.node.name %></dd>
     <dt>Channel UUID: </dt><dd><%= channel.uuid %></dd>
     <dt>Created: </dt><dd title="<%= channel.created_at %>"><%= time_ago_in_words(channel.created_at) %> ago</dd>
     <dt>Messages: </dt><dd><%= channel.meeps.size %></dd>

@@ -12,7 +12,7 @@
         <%- n.channels.real.each do |c| -%>
           <li class="<%= 'selected' if @selected_channel && c.id == @selected_channel.id %>">
             <a href="/channels/<%= c.id %>" data-tab="channels">
-              <strong>@<%= c.name %></strong> (<%= pluralize(c.users.registered.size, "user") %>)
+              <strong>@<%= c.name %></strong> (<%= pluralize(c.users.registered.size, c.locally_hosted? ? "user" : "local user") %>)
               <%- if current_user.subscribed?(c) %>
                 <p>&#10003; susbcribed</p>
               <%- end %>
