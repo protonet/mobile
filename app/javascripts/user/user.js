@@ -65,7 +65,7 @@ protonet.user = {
         closeContextMenu();
       }.bind(this),
       "send @reply": function(link, closeContextMenu) {
-        var user = this.usersData[+link.data("user-id")] || (function() {
+        var user = this.usersData[link.data("user-id")] || (function() {
           var meep = link.parents("article").data("meep");
           return meep && { name: meep.author };
         })();
