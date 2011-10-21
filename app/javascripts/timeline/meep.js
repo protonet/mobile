@@ -57,6 +57,10 @@
         this.data = this._parseForm(dataOrForm);
       } else {
         this.data = dataOrForm;
+        if(this.data.remote_user_id) {
+          this.data.local_user_id = this.data.user_id;
+          this.data.user_id       = this.data.remote_user_id;
+        }
       }
 
       meepDataCache[this.data.id] = this.data;
