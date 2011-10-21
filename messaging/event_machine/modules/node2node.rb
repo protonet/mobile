@@ -14,7 +14,7 @@ module Node2Node
   
   def store_remote_avatar(json)
     user_id = remote_user_id(json["user_id"])
-    filename  = json["avatar_filename"].match(/[\w]*\./).try(:[], 0) #security cleanup
+    filename  = cleanup_avatar_filename(filename)
     directory = "#{Rails.root}/public/system/avatars/#{user_id}/original"
     full_path = "#{directory}/#{filename}"
     url       = "/system/avatars/#{user_id}/original/#{filename}"
@@ -53,10 +53,10 @@ module Node2Node
   end
   
   def send_avatar(json)
-    # image = ActiveSupport::Base64.encode64(open("http://image.com/img.jpg") { |io| io.read })
     local_user_id = json["user_id"].match(/.*_([0-9]*)/).try(:[], 1) # match + security cleanup
-    avatar_filename = json["avatar_filename"].match(/[\w]*\.[\w]*/).try(:[], 0) #security cleanup
+    avatar_filename = cleanup_avatar_filename(json["avatar_filename"])
     file_path = "#{Rails.root}/public/system/avatars/#{local_user_id}/original/" + avatar_filename
+    # image = ActiveSupport::Base64.encode64(open("http://image.com/img.jpg") { |io| io.read })
     image = ActiveSupport::Base64.encode64(File.read(file_path)) rescue nil
     # todo move to single operation/trigger
     send_json(:operation => 'rpc.get_avatar_answer', :trigger => 'rpc.get_avatar_answer', :user_id => local_user_id, :avatar_filename => avatar_filename, :image => image) if image
@@ -67,5 +67,10 @@ module Node2Node
     raise RuntimeError unless node_id
     "#{node_id}_#{user_id}"
   end
+  
+  def cleanup_avatar_filename(filename)
+    filename.match(/[\w]*\.[\w]*/).try(:[], 0) #security cleanup
+  end
+  
   
 end
