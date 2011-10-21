@@ -52,7 +52,7 @@ module ConnectionShared
                   :channel_id => channel_id,
                   :socket_id  => @socket_id,
                   :remote_user_id => user_id,
-                  :avatar => @remote_avatar_mapping[remote_user_id(user_id)] || configatron.default_avatar)
+                  :avatar => @remote_avatar_mapping[user_id] || configatron.default_avatar)
         when 'rpc.get_avatar'
           send_avatar(json) if node_connection?
         when 'rpc.get_avatar_answer'
