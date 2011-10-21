@@ -41,7 +41,8 @@ module ConnectionShared
         when 'remote.meep'
           channel_id = @tracker.channel_id_for(json['channel_uuid'])
           user_id = remote_user_id(json['user_id'])
-          request_remote_avatar(user_id, json["avatar"]) unless @remote_avatar_mapping[user_id]
+
+          @remote_avatar_mapping[user_id] ||= request_remote_avatar(user_id, json["avatar"])
 
           channel_id && Meep.create(:user_id => @user.id,
                   :author => json['author'],

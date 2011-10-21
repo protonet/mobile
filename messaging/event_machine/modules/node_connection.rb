@@ -123,12 +123,12 @@ class NodeConnection < FlashConnection
         json['node_uuid'] = @node.uuid
         user_id = remote_user_id(json["user_id"])
         
-        request_remote_avatar(user_id, json["avatar"]) unless @remote_avatar_mapping[user_id]
+        @remote_avatar_mapping[user_id] ||= request_remote_avatar(user_id, json["avatar"])
         
         Meep.create(:user_id => -1,
           :author => json['author'],
           :message => json['message'],
-          :text_extension => json['text_extension'].to_json,
+          :text_extension => json['text_extension'] && json['text_extension'].to_json,
           :node_id => @node.id,
           :channel_id => channel.id,
           :remote_user_id => user_id,
