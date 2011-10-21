@@ -7,6 +7,7 @@ module Node2Node
       return unless avatar_filename
       # todo move to single operation/trigger
       send_json :trigger => "rpc.get_avatar", :operation => "rpc.get_avatar", :avatar_filename => avatar_filename, :user_id => user_id
+      nil
     end
   end
   
