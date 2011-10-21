@@ -55,7 +55,7 @@ module Node2Node
   def send_avatar(json)
     # image = ActiveSupport::Base64.encode64(open("http://image.com/img.jpg") { |io| io.read })
     local_user_id = json["user_id"].match(/.*_([0-9]*)/).try(:[], 1) # match + security cleanup
-    avatar_filename = json["avatar_filename"].match(/[\w]*\./).try(:[], 0) #security cleanup
+    avatar_filename = json["avatar_filename"].match(/[\w]*\.[\w]*/).try(:[], 0) #security cleanup
     file_path = "#{Rails.root}/public/system/avatars/#{local_user_id}/original/" + avatar_filename
     image = ActiveSupport::Base64.encode64(File.read(file_path)) rescue nil
     # todo move to single operation/trigger
