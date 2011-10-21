@@ -54,9 +54,12 @@ class Meep < ActiveRecord::Base
       :channel_id     => channel.id,
       :channel_uuid   => channel.uuid,
       :node_uuid      => node.uuid,
-      :remote_user_id => remote_user_id,
       :trigger        => 'meep.receive'
     })
+    if remote_user_id
+      data[:user_id] = remote_user_id
+      data[:local_user_id] = user_id
+    end
     publish 'channels', channel.uuid, data
   end
 
