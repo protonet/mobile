@@ -49,7 +49,7 @@ module ConnectionShared
           channel_id && Meep.create(:user_id => @user.id,
                   :author => json['author'],
                   :message => json['message'],
-                  :text_extension => json['text_extension'],
+                  :text_extension => json['text_extension'].to_json,
                   :node_id => @user.node.id,
                   :channel_id => channel_id,
                   :socket_id  => @socket_id,
