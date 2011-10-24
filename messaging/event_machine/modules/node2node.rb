@@ -1,10 +1,10 @@
 module Node2Node
   
   def request_remote_avatar(user_id, remote_avatar_url)
-    if (url = remote_avatar_url.match(/^(\/system.*)(\?.*)?/).try(:[], 1))
+    if (url = (remote_avatar_url.split("?").first)
       local_url = url.gsub(/avatars\/.*\/original/, "avatars/#{user_id}/original")
       return local_url if File.exists?("#{Rails.root}/public#{local_url}")
-      avatar_filename = remote_avatar_url.match(/original\/(.*)(\?)?/).try(:[], 1)
+      avatar_filename = remote_avatar_url.match(/original\/(.*)/).try(:[], 1)
       return unless avatar_filename
       # todo move to single operation/trigger
       send_json :trigger => "rpc.get_avatar", :operation => "rpc.get_avatar", :avatar_filename => avatar_filename, :user_id => user_id
@@ -72,5 +72,9 @@ module Node2Node
     filename.match(/[\w]*\.[\w]*/).try(:[], 0) #security cleanup
   end
   
+  def avatar_exists?(user_id, avatar_url)
+    avatar_basename = File.basename(avatar_url).sub(/\?[0-9]*/, "")
+    @remote_avatar_mapping[user_id] && (File.basename(@remote_avatar_mapping[user_id]) == avatar_basename)
+  end
   
 end
