@@ -1,7 +1,7 @@
 module Node2Node
   
   def request_remote_avatar(user_id, remote_avatar_url)
-    if (url = (remote_avatar_url.split("?").first)
+    if (url = (remote_avatar_url.split("?").first))
       local_url = url.gsub(/avatars\/.*\/original/, "avatars/#{user_id}/original")
       return local_url if File.exists?("#{Rails.root}/public#{local_url}")
       avatar_filename = remote_avatar_url.match(/original\/(.*)/).try(:[], 1)
