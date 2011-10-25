@@ -83,8 +83,8 @@
   background: url(/img/spr_channel_icons.png) no-repeat 0 0;
 }
 
-.selected .channel-icons li {
-  opacity: 1;
+.selected .channel-icons {
+  display: none;
 }
 
 .channel-icons .subscribed {
