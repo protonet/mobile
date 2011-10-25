@@ -1,6 +1,6 @@
 <nav>
   <%= link_to "Browse channels", list_channels_path                 unless action_name == 'list' || action_name == 'show' %>
-  <%= link_to "Discover global channels", global_channels_path unless action_name == 'list_global' || action_name == 'show_global' %>
+  <%= link_to "Discover global channels", list_global_channels_path unless action_name == 'list_global' || action_name == 'show_global' %>
   <%= link_to "Overview", channels_path                             unless action_name == 'index' %>
   <%= link_to "Create new", new_channel_path                        unless action_name == 'new' %>
 </nav>

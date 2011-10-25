@@ -4,7 +4,7 @@
   -moz-border-radius: 8px;
   -webkit-border-radius: 8px;
   border-radius: 8px;
-  background-color: #F2F2F2;
+  background-color: #F6F6F6;
   border: 1px solid rgb(180, 180, 180);
   margin: 0 20px 10px 45px;
   padding: 1px 10px 3px;
@@ -29,7 +29,7 @@
 }
 
 .own.meep {
-  background: #fef6f3;
+  background: #fff5ef;
 }
 
 .meep .author {
@@ -53,13 +53,13 @@
 }
 
 .meep .author {
-  background: url(/img/icn_message_arrow.png) no-repeat left bottom;
+  background: url(/img/spr_message_arrows_r1.png) no-repeat left bottom;
   margin-left: -25px;
   padding-left: 25px;
 }
 
 .own.meep .author {
-  background-image: url(/img/icn_own_message_arrow.png);
+  background-position: -985px 0;
 }
 
 .meep article q:before,

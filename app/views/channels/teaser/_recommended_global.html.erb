@@ -7,4 +7,7 @@
       <%- end %>
     </li>
   <%- end %>
+  <%- if node.global_channels.empty? %>
+    <p class="hint">There are no global channels available.</p>
+  <%- end %>
 </ul>

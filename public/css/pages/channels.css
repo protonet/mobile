@@ -11,6 +11,7 @@
   display: inline-block;
   vertical-align: top;
   min-width: 200px;
+  margin-bottom: 5px;
 }
 
 .channel-teaser a {
@@ -74,7 +75,7 @@
 
 .channel-icons li {
   cursor: help;
-  opacity: 0.8;
+  opacity: 0.75;
   vertical-align: middle;
   display: inline-block;
   width: 16px;

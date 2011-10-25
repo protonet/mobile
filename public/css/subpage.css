@@ -142,7 +142,8 @@
   width: 0;
   height: 0;
   right: -28px;
-  top: 5px;
+  margin-top: -27px;
+  top: 50%;
   border-left: 28px solid #487bff;
   border-top: 28px solid transparent;
   border-bottom: 28px solid transparent;
@@ -150,8 +151,7 @@
 
 .subpage aside a {
   display: block;
-  padding: 10px 10px 10px 30px;
-  height: 45px;
+  padding: 20px 10px 20px 30px;
   text-decoration: none;
   border-bottom: 1px solid #fff;
   background: #eee;
