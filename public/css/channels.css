@@ -66,38 +66,6 @@
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0.1)), to(transparent));
 }
 
-#channels .global {
-  background: url(../img/mesh_global.png) no-repeat 6px 3px,
-    -moz-linear-gradient(100% 100% 90deg, rgba(0, 0, 0, 0.1), transparent);
-  background: url(../img/mesh_global.png) no-repeat 6px 3px,
-    -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.1)));
-  padding-left: 27px;
-}
-
-#channels .global.offline {
-  background: url(../img/mesh_global_offline.png) no-repeat 6px 3px, 
-    -moz-linear-gradient(100% 100% 90deg, rgba(0, 0, 0, 0.1), transparent);
-  background: url(../img/mesh_global_offline.png) no-repeat 6px 3px,
-    -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.1)));
-}
-
-#channels .global.offline:focus,
-#channels .global.offline:active,
-#channels .global.offline.active {
-  background: white url(../img/mesh_global_offline.png) no-repeat 6px 3px;
-}
-
-#channels .global:focus,
-#channels .global:active,
-#channels .global.active {
-  background: white url(../img/mesh_global.png) no-repeat 6px 3px;
-}
-
-#channels .global.active,
-#channels .global.offline.active {
-  background-position: 6px 5px;
-}
-
 #channels .badge-container {
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
@@ -149,6 +117,10 @@
   margin-top: -10px;
 }
 
+#channels .global {
+  padding-left: 27px;
+}
+
 #channels .rendezvous {
   background: #FFE0CC;
   background: -moz-linear-gradient(100% 100% 90deg, rgba(255, 127, 49, 0.1), transparent);
@@ -179,16 +151,28 @@
   margin-top: -4px;
 }
 
-/* online status */
+#channels .global:before,
 #channels .rendezvous:before {
-  background: url(../img/spr_user_status.png) no-repeat 0 -20px;
   content: "";
   position: absolute;
   top: 50%;
   margin-top: -8px;
-  left: 4px;
   width: 16px;
   height: 16px;
+}
+
+#channels .global:before {
+  left: 6px;
+  background: url(/img/spr_channel_status.png) no-repeat;
+}
+
+#channels .global.offline:before {
+  background-position: 0 -16px;
+}
+
+#channels .rendezvous:before {
+  left: 4px;
+  background: url(/img/spr_user_status.png) no-repeat 0 -20px;
 }
 
 #channels .rendezvous.online:before {
