@@ -124,6 +124,10 @@
   color: #999;
 }
 
+#user-widget li.myself.online a {
+  color: #000;
+}
+
 #user-widget li.typing a {
   background-position: 5px -42px;
 }
@@ -268,15 +272,15 @@
   color: #fff;
   text-decoration: none;
   text-align: center;
-  line-height: 24px;
-  background: rgb(170, 170, 170);
+  line-height: 30px;
+  background: #999;
   font-weight: bold;
   cursor: pointer;
 }
 
 #file-widget .add-objects:focus,
 #file-widget .add-objects:hover {
-  background: #999;
+  background: #666;
 }
 
 /* When browser supports drag/drop we show a an drop area */
@@ -288,26 +292,19 @@
 }
 
 #file-widget #drop-area {
+  box-shadow: inset 0 1px 2px #666;
   display: none;
-  background: rgb(72, 123, 255) url(../img/bg_scanlines.png);
-  background: url(../img/bg_scanlines.png),
-              -moz-linear-gradient(top, rgba(72, 123, 255, 0.9), rgba(72, 123, 255, 0.6));
-  background: url(../img/bg_scanlines.png),
-              -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.9)), to(rgba(72, 123, 255, 0.6)));
-  line-height: 24px;
+  background: #aaa url(/img/bg_scanlines.png);
+  line-height: 30px;
   font-size: 10px;
   text-align: center;
   color: #fff;
+  margin-top: -1px;
 }
 
 #file-widget.dragdrop #drop-area {
   display: block;
 }
-
-#file-widget.dragdrop.dragenter {
-  border: 1px solid rgb(255, 127, 49);
-}
-
 
 #file-widget.dragdrop.dragenter #drop-area {
   background: rgb(255, 127, 49) url(../img/bg_scanlines.png);

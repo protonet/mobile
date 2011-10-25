@@ -50,6 +50,16 @@ class User < ActiveRecord::Base
     end
   end
   
+  def self.recent_active
+    find(
+      Meep.connection.select_values("
+        SELECT user_id, count(meeps.id) as counter FROM meeps left outer join users on users.id = meeps.user_id
+        WHERE users.temporary_identifier IS NULL AND (users.id != -1) AND meeps.created_at > '#{(Time.now - 2.weeks).to_s(:db)}'
+        GROUP BY user_id ORDER BY counter DESC, meeps.id DESC LIMIT 20
+      ")
+    )
+  end
+  
   # devise 1.2.1 calls this
   def valid_password?(password)
     if SystemPreferences.remote_ldap_sign_on == true

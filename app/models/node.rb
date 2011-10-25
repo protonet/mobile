@@ -8,7 +8,14 @@ class Node < ActiveRecord::Base
   
   after_create  :generate_uuid, :if => lambda {|n| n.uuid.blank? }
   
+  scope :remote, :conditions => 'nodes.id != 1'
+  
   class << self
+    
+    def team
+      from_url("https://team.protonet.info")
+    end
+    
     def couple(node_data)
       unless node = find_by_uuid(node_data[:uuid])
         node = from_url(node_data[:url])

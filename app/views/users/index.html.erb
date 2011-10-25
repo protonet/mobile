@@ -16,9 +16,9 @@
       <p>This node doesn't have any administrators. Anarchy!</p>
     <%- end -%>
     
-    <%- unless @active_users.empty? %>
-      <h3>Recent active users</h3>
-      <%- @active_users.each do |u| %>
+    <%- unless User.recent_active.empty? %>
+      <h3>Recently active users</h3>
+      <%- User.recent_active.each do |u| %>
         <%= link_to(user_path(u)) { avatar(u, :width => 48, :height => 48, 'data-hover-hint' => 'top') } %>
       <%- end %>
     <%- end %>

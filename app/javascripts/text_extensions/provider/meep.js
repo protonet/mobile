@@ -24,9 +24,8 @@ protonet.text_extensions.provider.Meep = {
           imageWidth:         24,
           imageHeight:        24,
           preventHoverEffect: true,
-          title:              "Message from @" + data.author,
-          titleAppendix:      data.text_extension && "incl. " + data.text_extension.type + " attachment",
-          description:        data.message
+          title:              "@" + data.author + ":",
+          description:        data.message || data.text_extension.url
         });
       },
       error: onFailure

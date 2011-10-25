@@ -66,7 +66,7 @@ protonet.user = {
       }.bind(this),
       "send @reply": function(link, closeContextMenu) {
         var user = this.usersData[link.data("user-id")] || (function() {
-          var meep = link.parents("article").data("meep");
+          var meep = link.parents("li").data("meep");
           return meep && { name: meep.author };
         })();
         if (user) {
@@ -83,14 +83,14 @@ protonet.user = {
     var contextMenu = new protonet.ui.ContextMenu("a[data-user-id]", contextOptions, "context-menu-users");
     contextMenu.bind("opening", function(e, menu, target) {
       var userId = target.data("user-id");
-      if(userId.toString().match(/_/)) {
+      if (userId.toString().match(/_/) || userId == -1) {
         $.each(["show profile", "start private chat"], function(i, element){
           menu.list.children("li:contains('" + element + "')").hide();
-        }.bind(this));
+        });
       } else {
         $.each(["show profile", "start private chat"], function(i, element){
           menu.list.children("li:contains('" + element + "')").show();
-        }.bind(this));
+        });
       }
     });
   },

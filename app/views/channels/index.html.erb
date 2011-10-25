@@ -1,32 +1,18 @@
 <%= render :partial => "header" %>
 <div class="modal-window-scroll-content">
-  <aside>
-    <ul>
-      <%- Node.with_channels.each do |n| %>
-        <%- if Node.with_channels.size > 1 %>
-          <li class="network-separator">
-            Node: <strong><%= n.name %></strong>
-            <p><%= n.channels.real.size %> channels</p>
-          </li>
-        <%- end %>
-        <%- n.channels.real.each do |c| -%>
-          <li class="<%= 'selected' if @selected_channel && c.id == @selected_channel.id %>">
-            <a href="/channels/<%= c.id %>" data-tab="channels">
-              <strong>@<%= c.name %></strong> (<%= pluralize(c.users.registered.size, c.locally_hosted? ? "user" : "local user") %>)
-              <%- if current_user.subscribed?(c) %>
-                <p>&#10003; susbcribed</p>
-              <%- end %>
-            </a>
-          </li>
-        <%- end -%>
-      <%- end %>
-    </ul>
-  </aside>
-  <output data-tab="channels" class="content">
-    <%- if @selected_channel %>
-      <%= render :partial => 'channel_details', :locals => { :channel => @selected_channel } %>
-    <%- else %>
-      <p class="hint">Please choose a channel from the left or <%= link_to "click here", new_channel_path, :class => 'promotion-link' %> to create a new one.</p>
-    <%- end %>
+  <output class="content">
+    <h2>Channels</h2>
+    <p>
+      This node has <strong><%= Channel.real.size %></strong> channels.
+      You can browse through them <%= link_to "here", list_channels_path, :class => 'promotion-link' %>.
+    </p>
+    
+    <h3>Recently active channels</h3>
+    <%= render :partial => 'channels/teaser/recently_active' %>
+    
+    <h3>Global channels <a data-hover-hint="top" title="Channels from other protonet nodes" class="hint">(?)</a></h3>
+    <output data-recommended-global-channels></output>
+    <div class="progress"></div>
+    
   </output>
 </div>

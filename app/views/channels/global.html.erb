@@ -1,6 +1,0 @@
-Remote Node status: <%= !!@node.coupled? %>
-<ul>
-<% @channels.each do |channel| %>
-  <li><%= channel.name %> <%= link_to "Subscribe", listen_to_global_channel_path(@node.uuid, channel.uuid, { :node_data => @node.couple_data }) %>, subscribed? <%= current_user.subscribed?(Channel.find_by_uuid(channel.uuid)) %></li>
-<% end %>
-</ul>

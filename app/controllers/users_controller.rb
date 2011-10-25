@@ -6,13 +6,6 @@ class UsersController < ApplicationController
   before_filter :prepare_target_users, :only => [:send_system_message, :send_javascript]
   
   def index
-    @active_users = User.find(
-      Meep.connection.select_values("
-        SELECT user_id, count(meeps.id) as counter FROM meeps left outer join users on users.id = meeps.user_id
-        WHERE users.temporary_identifier IS NULL AND (users.id != -1) AND meeps.created_at > '#{(Time.now - 2.weeks).to_s(:db)}'
-        GROUP BY user_id ORDER BY counter DESC, meeps.id DESC LIMIT 20
-      ")
-    )
   end
   
   def show

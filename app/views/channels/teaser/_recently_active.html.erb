@@ -1,0 +1,10 @@
+<ul class="channel-teaser">
+  <%- Channel.recent_active.each do |channel| %>
+    <li>
+      <%= link_to channel do %>
+        @<h4 class="reply channel"><%= channel.name %></h4>
+        <p><%= channel_description(channel, 140) %></p>
+      <%- end %>
+    </li>
+  <%- end %>
+</ul>

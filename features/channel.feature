@@ -6,6 +6,7 @@ Feature: Using the protonet channel management
     Given a user with the login "dudemeister"
     And I am logged in as "dudemeister"
     And I go to the channels page
+    And I follow "Browse channels"
       Then I should see "home" in the channel list
       And I select the channel "home" in the channel list
       And I should see "home" in the channel details pane
@@ -39,6 +40,7 @@ Feature: Using the protonet channel management
         And go unauthenticated to the start page
         And I am logged in as "batman"
         And I go to the channels page
+        And I follow "Browse channels"
         And I select the channel "privatechannel" in the channel list
         Then I press "Subscribe"
         Then I go to the start page
@@ -46,6 +48,7 @@ Feature: Using the protonet channel management
     #dudemeister verifies batman
           And I am using the first browser
           And I go to the channels page
+          And I follow "Browse channels"
             Then I verify the user "batman" for the channel "privatechannel"
     #batman goes start page checks channel appears
               And I am using the second browser

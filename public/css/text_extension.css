@@ -305,11 +305,10 @@ pre .dec { color: #606; }
 /* =MEEP TEXT EXTENSION
 --------------------------------------------------------------------------- */
 .text-extension-results.Meep {
-  -moz-border-radius: 8px;
-  -webkit-border-radius: 8px;
-  border-radius: 8px;
-  background-color: #F2F2F2;
-  border: 1px solid rgb(180, 180, 180);
+  background-color: rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 1px 1px 1px #999;
+  -webkit-box-shadow: inset 1px 1px 2px #999;
+  box-shadow: inset 1px 1px 2px #999;
   padding: 6px 8px;
 }
 
@@ -317,13 +316,23 @@ pre .dec { color: #606; }
   display: none;
 }
 
+.text-extension-results.Meep .title {
+  margin: 0;
+  float: left;
+  min-width: 0;
+  margin-right: 6px;
+}
+
 .text-extension-results.Meep .description {
   color: #000;
 }
 
+.text-extension-results.Meep .media {
+  margin-right: 4px;
+}
+
 .text-extension-results.Meep img {
   outline: 2px solid #fff;
-  border: 1px solid #666;
   width: 24px !important;
   height: 24px !important;
   -webkit-box-shadow: none !important;
@@ -333,6 +342,6 @@ pre .dec { color: #606; }
 
 .text-extension-results.Meep .media,
 .text-extension-results.Meep .media a {
-  width: 26px !important;
-  height: 26px !important;
+  width: 24px !important;
+  height: 24px !important;
 }

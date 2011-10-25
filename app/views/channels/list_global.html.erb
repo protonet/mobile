@@ -1,0 +1,27 @@
+<%= render :partial => "header" %>
+<div class="modal-window-scroll-content">
+  <aside>
+    <ul>
+      <%- Node.remote.with_channels.each do |n| %>
+        <li class="network-separator">
+          Node: <strong><%= n.name %></strong>
+          <p><%= n.global_channels.size %> channels</p>
+        </li>
+        <%- n.global_channels.each do |c| -%>
+          <li class="<%= 'selected' if @selected_channel && c.uuid == @selected_channel.uuid %>">
+            <%- link_to show_global_channel_path(:uuid => c.uuid, :node => { :uuid => n.uuid, :url => n.url }), 'data-tab' => 'channels' do %>
+              <strong>@<%= c.name %></strong>
+            <%- end %>
+          </li>
+        <%- end -%>
+      <%- end %>
+    </ul>
+  </aside>
+  <output data-tab="channels" class="content">
+    <%- if @selected_channel %>
+      <%= render :partial => 'channel_details', :locals => { :channel => @selected_channel } %>
+    <%- else %>
+      <p class="hint">Please choose a global channel from the left.</p>
+    <%- end %>
+  </output>
+</div>

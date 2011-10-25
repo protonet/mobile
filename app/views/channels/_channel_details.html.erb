@@ -69,7 +69,7 @@
       <%= f.check_box :public %>
       public (users can subscribe without verification)
     </label>
-    <%- if request.domain == "team.protonet.info" || Rails.env != "production" %>
+    <%- if request.domain == "protonet.info" || Rails.env != "production" %>
       <label class="checkbox-row" for="channel_global">
         <%= f.check_box :global %>
         global (channel is visible from external nodes and clients)
@@ -86,14 +86,16 @@
     <dt>Messages + attachment: </dt><dd><%= channel.meeps.where('text_extension != ""').size %></dd>
   </dl>
   
-  <h3>Delete channel <a data-hover-hint="top" title="Only visible to admins and the channel owner" class="hint">(?)</a></h3>
-  <p>Delete this channel and all messages posted in it.</p>
-  <%= form_tag("/channels/#{channel.id}", {
-    :remote     => true,
-    :method     => :delete,
-    'data-type' => 'html',
-    'class'     => 'single-button-form'
-  }) do -%>
-    <%= button "Delete", 'data-confirm' => 'Do you really want to delete this channel? There\'s no undo.' %>
+  <%- if channel.locally_hosted? %>
+    <h3>Delete channel <a data-hover-hint="top" title="Only visible to admins and the channel owner" class="hint">(?)</a></h3>
+    <p>Delete this channel and all messages posted in it.</p>
+    <%= form_tag("/channels/#{channel.id}", {
+      :remote     => true,
+      :method     => :delete,
+      'data-type' => 'html',
+      'class'     => 'single-button-form'
+    }) do -%>
+      <%= button "Delete", 'data-confirm' => 'Do you really want to delete this channel? There\'s no undo.' %>
+    <%- end %>
   <%- end %>
 <%- end %>
