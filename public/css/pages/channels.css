@@ -66,6 +66,8 @@
 
 .channel-teaser p {
   font-size: 10px;
+  margin: 0;
+  width: 200px;
 }
 
 .channel-icons {
