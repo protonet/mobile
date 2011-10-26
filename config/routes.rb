@@ -6,9 +6,10 @@ Dashboard::Application.routes.draw do
   
   # Channels
   match 'channels/:id/guest/:token' => 'channels#guest_access', :as => :channel_guest_access
-  match 'channels/search' => 'channels#search'
-  match 'channels/list.:format' => 'channels#list', :as => :list_channels
-  match 'users/sort_channels' => 'users#sort_channels', :via => [:post]
+  match 'channels/list' => 'channels#list', :as => :list_channels
+  match 'channels/list_global' => 'channels#list_global', :as => :list_global_channels
+  match 'channels/show_global' => 'channels#show_global', :as => :show_global_channel
+  match 'channels/recommended_global_teaser' => 'channels#recommended_global_teaser'
   
   resources :channels do
     resources :meeps
@@ -31,7 +32,6 @@ Dashboard::Application.routes.draw do
   resources :meeps
   
   match 'listens/create' => 'listens#create', :as => :listen_to_channel
-  match 'listens/node/:node_uuid/channel/:channel_uuid' => 'listens#global', :as => :listen_to_global_channel
   
   # Listens
   resources :listens do

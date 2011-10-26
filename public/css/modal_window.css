@@ -16,7 +16,6 @@
   position: relative;
   width: 90%;
   margin: 0 auto;
-  border-bottom: 5px solid #999;
 }
 
 .modal-window > output {
@@ -31,8 +30,8 @@
 .modal-window .close-link {
   position: absolute;
   z-index: 2;
-  top: -16px;
-  right: -16px;
+  top: -18px;
+  right: -18px;
 }
 
 .modal-window.loading {

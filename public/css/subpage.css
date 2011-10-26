@@ -77,27 +77,20 @@
 }
 
 .subpage > nav > a {
-  color: #eee;
+  margin-left: 1px;
   font-size: 12px;
-  padding: 0 10px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+  padding: 0 20px;
   line-height: 56px;
   display: inline-block;
   position: relative;
-  background: rgba(255, 255, 255, 0.1);
-  border-right: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.subpage > nav > a:first-child {
-  border-left: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.subpage > nav > a:hover,
-.subpage > nav > a:focus {
   color: #fff;
-  background: rgba(255, 255, 255, 0.2);
+  text-decoration: none;
+  font-weight: bold;
 }
 
-.subpage > nav > a:active {
+.subpage > nav > a.selected,
+.subpage > nav > a:hover {
   background: rgba(255, 255, 255, 0.3);
 }
 
@@ -117,7 +110,7 @@
   left: 250px;
 }
 
-.subpage aside li {
+.subpage aside > ul > li {
   word-wrap: break-word;
   position: relative;
   border-bottom: 1px solid #999;
@@ -144,7 +137,8 @@
   width: 0;
   height: 0;
   right: -28px;
-  top: 5px;
+  margin-top: -27px;
+  top: 50%;
   border-left: 28px solid #487bff;
   border-top: 28px solid transparent;
   border-bottom: 28px solid transparent;
@@ -152,8 +146,7 @@
 
 .subpage aside a {
   display: block;
-  padding: 10px 10px 10px 30px;
-  height: 45px;
+  padding: 20px 10px 20px 30px;
   text-decoration: none;
   border-bottom: 1px solid #fff;
   background: #eee;

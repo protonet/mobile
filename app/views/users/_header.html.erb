@@ -1,9 +1,5 @@
 <nav>
-  <%- unless action_name == 'index'  %>
-    <a href="/users/">Overview</a>
-  <%- end %>
-  <%- if action_name != 'show' || (action_name == 'show' && @user != current_user) %>
-    <%= link_to("My profile", user_path(current_user)) %>
-  <%- end %>
+  <%= link_to "Overview", users_path, :class => action_name == 'index' ? "selected" : nil %>
+  <%= link_to "My profile", user_path(current_user), :class => action_name == 'show' && @user == current_user  ? "selected" : nil %>
 </nav>
 <h1>Users</h1>

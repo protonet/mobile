@@ -1,9 +1,14 @@
 class ChannelsController < ApplicationController
   
-  filter_resource_access :collection => [:index, :global]
+  filter_resource_access :collection => [:index, :list_global, :show_global, :recommended_global_teaser, :list]
+  
+  before_filter :couple_node, :only => [:show_global, :list_global]
   
   def index
-    @selected_channel = Channel.find(params[:id]) rescue nil
+  end
+  
+  def list
+    @selected_channel = Channel.find_by_id(params[:id])
   end
   
   def show
@@ -13,13 +18,26 @@ class ChannelsController < ApplicationController
           render :partial => "channel_details", :locals => { :channel => Channel.find(params[:id]) }
         else
           @selected_channel = Channel.find(params[:id])
-          render :index
+          render :list
         end
       end
       format.json do
         render :json => Channel.prepare_for_frontend(current_user.channels.find(params[:id]), current_user)
       end
     end
+  end
+  
+  def show_global
+    if request.headers['X-Request-Type'] == 'tab'
+      render :partial => "channel_details", :locals => { :channel => Channel.find(@remote_channel_id) }
+    else
+      @selected_channel = Channel.find(@remote_channel_id)
+      render :list_global
+    end
+  end
+  
+  def list_global
+    @selected_channel = Channel.find_by_id(@remote_channel_id)
   end
   
   def new
@@ -30,7 +48,7 @@ class ChannelsController < ApplicationController
     success = channel && channel.save
     if success && channel.errors.empty?
       flash[:notice] = "Successfully created channel '#{params[:channel][:name]}'"
-      xhr_redirect_to :action => 'index', :id => channel.id
+      xhr_redirect_to :action => 'show', :id => channel.id
     else
       flash[:error] = "Could not create channel, #{channel.errors.map().join(' ')}"
       head(417)
@@ -45,7 +63,7 @@ class ChannelsController < ApplicationController
     else
       flash[:error] = "Could not update channel '#{channel.name}'"
     end
-    xhr_redirect_to :action => 'index', :id => channel.id
+    xhr_redirect_to :action => 'show', :id => channel.id
   end
   
   def destroy
@@ -54,25 +72,20 @@ class ChannelsController < ApplicationController
     success = channel.destroy
     if success && channel.errors.empty?
       flash[:notice] = "Successfully deleted channel '#{channel_name}'"
-      xhr_redirect_to :action => 'index'
+      xhr_redirect_to :action => 'list'
     else
       flash[:error] = "Could not delete channel '#{channel_name}'"
     end
   end
   
-  def global
-    @node = Node.from_url("https://team.protonet.info")
-    @channels = @node.global_channels
-    
-    render :global
+  def recommended_global_teaser
+    render :partial => 'channels/teaser/recommended_global', :locals => { :node => Node.team }
   end
-
-  def list
-    respond_to do |format|
-      format.json do
-        channels = Channel.all.collect { |c| {:id => c.id, :name => c.name, :description => c.description, :uuid => c.uuid}}
-        render :json => {:channels => channels}
-      end
+  
+  private
+    def couple_node
+      Node.couple(params[:node]).attach_global_channel(params[:uuid]) rescue nil
+      @remote_channel_id = Channel.find_by_uuid(params[:uuid])
+      true
     end
-  end
 end

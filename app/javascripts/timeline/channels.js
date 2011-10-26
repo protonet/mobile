@@ -316,7 +316,7 @@ protonet.timeline.Channels = {
     if (channelData.rendezvous) {
       instance = new protonet.timeline.Rendezvous(channelData);
       this.rendezvous[channelData.rendezvous] = instance;
-    } else if (channelData.remote) {
+    } else if (channelData.global) {
       instance = new protonet.timeline.RemoteChannel(channelData);
     } else {
       instance = new protonet.timeline.Channel(channelData);

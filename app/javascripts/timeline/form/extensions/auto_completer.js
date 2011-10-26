@@ -16,7 +16,14 @@ protonet.timeline.Form.extensions.AutoCompleter = function(input) {
      * Add users to Autocompleter when loaded
      */
     .bind("users.data_available", function(e, users) {
-      userNames = $.map(users, function(user) { return user.name; });
+      userNames = [];
+      $.each(users, function(id, user) {
+        if (user.isOnline) {
+          userNames.unshift(user.name);
+        } else {
+          userNames.push(user.name);
+        }
+      });
       autoCompleter.setData(userNames.concat(channelNames));
     })
   
@@ -25,20 +32,6 @@ protonet.timeline.Form.extensions.AutoCompleter = function(input) {
      */
     .bind("channels.data_available", function(e, channelData, channelNameToIdMapping) {
       channelNames = Object.keys(channelNameToIdMapping);
-      autoCompleter.setData(userNames.concat(channelNames));
-    })
-    
-    /**
-     * Sort users in autocompleter by online status
-     */
-    .bind("users.update_status", function(e, data) {
-      $.each(data.online_users, function(id, user) {
-        var index = userNames.indexOf(user.name);
-        if (index !== -1) {
-          userNames.splice(index, 1);
-        }
-        userNames.unshift(user.name);
-      });
       autoCompleter.setData(userNames.concat(channelNames));
     })
     

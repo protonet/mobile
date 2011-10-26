@@ -19,8 +19,12 @@
   margin-top: 0;
 }
 
+.users-page .channel-list a {
+  margin-bottom: 5px;
+}
+
 .users-page .meep {
-  background: #F2F2F2;
+  background: #F6F6F6;
   margin-right: 0;
   margin-left: 0;
 }

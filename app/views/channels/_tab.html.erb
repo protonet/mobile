@@ -1,7 +1,7 @@
 <li>
   <%= link_to channel.display_name, { :channel_id => channel.id }, {
-    :title => channel.description,
-    :class => channel.locally_hosted? ? nil : 'global',
+    :title => channel.description ? truncate(channel.description, :length => 140) : nil,
+    :class => channel.global? ? 'global' : nil,
     'data-channel-id' => channel.id
   } %>
 </li>

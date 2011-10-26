@@ -20,7 +20,7 @@ $.behaviors({
   },
   
   "img[data-src]:inview": function(element) {
-    $element = $(element);
+    var $element = $(element);
     $element.attr("src", $element.attr("data-src")).removeAttr("data-src");
   },
   

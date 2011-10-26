@@ -6,3 +6,103 @@
   margin-top: 30px;
   border-bottom: 1px solid #fff;
 }
+
+.channel-teaser li {
+  display: inline-block;
+  vertical-align: top;
+  min-width: 200px;
+  margin-bottom: 5px;
+}
+
+.channel-teaser a {
+  display: block;
+  padding: 10px;
+  min-height: 50px;
+  border-radius: 10px;
+  border: 1px solid #999;
+  text-decoration: none;
+  background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.08));
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.08)));
+}
+
+.channel-teaser a:hover {
+  color: #000;
+  background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.12));
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.12)));
+}
+
+.channel-teaser a:active {
+  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0.08), transparent);
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0.08)), to(transparent));
+}
+
+.channel-teaser a:hover h4 {
+  background-color: #487BFF;
+}
+
+.channel-teaser .official-channel {
+  padding-right: 80px;
+  background-repeat: no-repeat;
+  background-position: right 0;
+  background-image: url(/img/founder.png),
+                    -moz-linear-gradient(top, transparent, rgba(72, 123, 255, 0.2));
+  background-image: url(/img/founder.png),
+                    -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(72, 123, 255, 0.2)));
+}
+
+.channel-teaser .official-channel:hover {
+  background-image: url(/img/founder.png),
+                    -moz-linear-gradient(top, transparent, rgba(72, 123, 255, 0.3));
+  background-image: url(/img/founder.png),
+                    -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(72, 123, 255, 0.3)));
+}
+
+.channel-teaser .official-channel:active {
+  background-image: url(/img/founder.png),
+                    -moz-linear-gradient(top, rgba(72, 123, 255, 0.2), transparent);
+  background-image: url(/img/founder.png),
+                    -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.2)), to(transparent));
+}
+
+.channel-teaser p {
+  font-size: 10px;
+  margin: 0;
+  width: 200px;
+}
+
+.channel-icons {
+  margin-top: 6px;
+  display: block;
+}
+
+.channel-icons li {
+  cursor: help;
+  opacity: 0.75;
+  vertical-align: middle;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: url(/img/spr_channel_icons.png) no-repeat 0 0;
+}
+
+.selected .channel-icons {
+  display: none;
+}
+
+.channel-icons .subscribed {
+  background-position: 0 -50px;
+}
+
+.channel-icons .private {
+  background-position: 0 -25px;
+}
+
+.channel-icons .count {
+  width: auto;
+  color: #000;
+  font-weight: bold;
+  height: 15px;
+  padding-top: 1px;
+  line-height: 15px;
+  padding-left: 18px;
+}

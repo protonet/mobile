@@ -32,6 +32,16 @@ class Channel < ActiveRecord::Base
   scope :verified, :conditions => {:listens => {:verified => true}}
   scope :local, :conditions => {:node_id => 1}
   
+  def self.recent_active
+    channel_ids = Channel.connection.select_values("
+      SELECT channel_id, count(meeps.id) as counter FROM meeps left outer join channels on channels.id = meeps.channel_id
+      WHERE meeps.created_at > '#{(Time.now - 2.weeks).to_s(:db)}' AND channels.node_id = 1 AND rendezvous IS NULL
+      GROUP BY channel_id ORDER BY counter DESC, meeps.id DESC LIMIT 5
+    ")
+    
+    channel_ids.empty? ? [home] : find(channel_ids)
+  end
+  
   def self.uuid_to_id_mapping
     mapping = {}
     real.all.each {|c| mapping[c.uuid] = c.id }
@@ -67,7 +77,7 @@ class Channel < ActiveRecord::Base
       :id               => channel.id,
       :uuid             => channel.uuid,
       :node_id          => channel.node_id,
-      :remote           => !channel.locally_hosted?,
+      :global           => channel.global?,
       :rendezvous       => channel.rendezvous,
       :name             => channel.name,
       :display_name     => channel.rendezvous_name(current_user) || channel.display_name,
@@ -120,6 +130,10 @@ class Channel < ActiveRecord::Base
 
   def last_read_meep
     super.to_i
+  end
+  
+  def global?
+    super || !locally_hosted?
   end
   
   def home?

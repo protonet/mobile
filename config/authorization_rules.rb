@@ -1,12 +1,12 @@
 authorization do
   role :guest do
-    has_permission_on :users, :to => [:show_only, :rendezvous, :update_last_read_meeps]
-    has_permission_on :channels, :to => [:show_only]
+    has_permission_on :users, :to => [:read, :rendezvous, :update_last_read_meeps]
+    has_permission_on :channels, :to => [:read]
   end
   
   role :invitee do
-    has_permission_on :users, :to => [:show_only, :rendezvous, :update_last_read_meeps, :newbie]
-    has_permission_on :channels, :to => [:show_only]
+    has_permission_on :users, :to => [:read, :rendezvous, :update_last_read_meeps, :newbie]
+    has_permission_on :channels, :to => [:read]
     has_permission_on :users do 
       to [:manage, :change_password]
       if_attribute :id => is {user.id}
@@ -30,7 +30,7 @@ authorization do
       if_attribute :owner => is {user}
     end
     # todo, this is too much
-    has_permission_on :users, :to => [:show_only, :rendezvous, :update_last_read_meeps, :newbie]
+    has_permission_on :users, :to => [:read, :rendezvous, :update_last_read_meeps, :newbie]
     has_permission_on :users do 
       to [:manage, :change_password]
       if_attribute :id => is {user.id}
@@ -49,16 +49,12 @@ end
 privileges do
   # default privilege hierarchies to facilitate RESTful Rails apps
   privilege :manage, :includes => [:create, :read, :update, :delete, :destroy, :show,
-    :change_password, :update_user_admin_flag, :generate_new_password, :search, :meeps_with_text_extension, :send_javascript, :send_system_message]
-  privilege :manage_globals, :includes => [:global]
-  privilege :read, :includes => [:index, :show]
+    :change_password, :update_user_admin_flag, :generate_new_password, :search, :send_javascript, :send_system_message]
+  privilege :read, :includes => [:index, :show, :search, :list, :list_global, :show_global, :recommended_global_teaser, :meeps_with_text_extension]
   privilege :newbie, :includes => [:remove_newbie_flag, :newbie_todo_list]
   privilege :rendezvous, :includes => [:start_rendezvous]
-  privilege :meeps_with_text_extension
   privilege :update_last_read_meeps
-  privilege :search
   privilege :delete_stranger_older_than_two_days
-  privilege :show_only, :includes => [:index, :show, :search, :meeps_with_text_extension]
   privilege :create, :includes => :new
   privilege :update, :includes => :edit
   privilege :delete, :includes => :destroy
