@@ -40,13 +40,13 @@ protonet.timeline.Form = {
     var preventInitialFocus = protonet.config.user_is_stranger;
     
     protonet
-      .bind("user.changed_avatar", function(e, user) {
+      .on("user.changed_avatar", function(user) {
         if (user.id == protonet.config.user_id) {
           this.form.find("[name='meep[avatar]']").val(user.avatar);
         }
       }.bind(this))
       
-      .bind("channel.hide", function() {
+      .on("channel.hide", function() {
         protonet.trigger("form.disable");
       })
       
@@ -54,8 +54,8 @@ protonet.timeline.Form = {
        * Focus input after channel switch
        * and update hidden channel id
        */
-      .bind("channel.change", function(e, channelId) {
-        protonet.trigger("form.enable");
+      .on("channel.change", function(channelId) {
+        // protonet.trigger("form.enable");
         
         // When loading the page a "channel.change" event is initially fired
         // This causes problems when the user already focused the login form and started to type
@@ -71,14 +71,14 @@ protonet.timeline.Form = {
       /**
        * Update socket id
        */
-     .bind("socket.update_id", function(e, data) {
+     .on("socket.update_id", function(data) {
         this.socketIdInput.val(data.socket_id);
       }.bind(this))
     
       /**
        * Create replies on demand
        */
-      .bind("form.create_reply", function(e, userName) {
+      .on("form.create_reply", function(userName) {
         var value = this.input.focus().val(),
             reply = "@" + userName + " ";
         if (value.indexOf(reply) === -1) { // Only insert "@username" when not already in input
@@ -89,7 +89,7 @@ protonet.timeline.Form = {
       /**
        * Submit form with custom message or textExtension
        */
-      .bind("form.custom_submit", function(e, message, textExtension) {
+      .on("form.custom_submit", function(message, textExtension) {
         if (message) {
           this.input.focus().val(message);
         }
@@ -99,7 +99,7 @@ protonet.timeline.Form = {
         this.form.submit();
       }.bind(this))
       
-      .bind("form.fill", function(e, message, mark) {
+      .on("form.fill", function(message, mark) {
         var value = this.input.focus().val();
         // add a white space before message if neccessary
         message = ((!value || value.slice(-1) == " ") ? "" : " ") + message;
@@ -115,15 +115,14 @@ protonet.timeline.Form = {
       /**
        * Focus the input
        */
-      .bind("form.focus", function(e, message, mark) {
+      .on("form.focus", function() {
         this.input.focus();
       }.bind(this))
       
       /**
        * Insert text at the caret/cursor position
        */
-      .bind("form.insert", function(e, text) {
-
+      .on("form.insert", function(text) {
         var value         = this.input.focus().val(),
             inputElement  = this.input[0],
             // TODO: This doesn't work as expected in IE8 + 9!
@@ -144,11 +143,11 @@ protonet.timeline.Form = {
         inputElement.selectionStart = inputElement.selectionEnd = beforeCaret.length + text.length;
       }.bind(this))
       
-      .bind("form.enable", function() {
+      .on("form.enable", function() {
         this.form.removeClass("disabled");
       }.bind(this))
       
-      .bind("form.disable", function() {
+      .on("form.disable", function() {
         this.form.addClass("disabled");
         this.input.blur();
       }.bind(this))
@@ -156,14 +155,14 @@ protonet.timeline.Form = {
       /**
        * Update input value
        */
-      .bind("meep.error", function(e, element, data) {
+      .on("meep.error", function(element, data) {
         var value = this.input.focus().val();
         if (!$.trim(value)) {
           this.input.val(data.message);
         }
       }.bind(this))
       
-      .bind("form.share_meep", function(e, id) {
+      .on("form.share_meep", function(id) {
         protonet.timeline.Meep.get(id, function(data) {
           if (data.author !== protonet.config.user_name) {
             protonet.trigger("form.create_reply", data.author);
@@ -218,8 +217,8 @@ protonet.timeline.Form = {
     this._typingEnd();
     
     protonet
-      .trigger("meep.send",       [this.form, true])
-      .trigger("form.submitted",  [this.form]);
+      .trigger("meep.send",       this.form, true)
+      .trigger("form.submitted",  this.form);
     
     this.input.val("");
   },

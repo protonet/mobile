@@ -173,7 +173,7 @@
       this.article = this.element.is("article") ? this.element : this.element.find("article");
       this.article.add(this.element).data(data);
 
-      protonet.trigger("meep.rendered", [this.element, this.data, this]);
+      protonet.trigger("meep.rendered", this.element, this.data, this);
     },
 
     /**
@@ -210,7 +210,7 @@
           this.data.id = +response;
 
           (onSuccess || $.noop)();
-          protonet.trigger("meep.sent", [this.data, this.element, this]);
+          protonet.trigger("meep.sent", this.data, this.element, this);
         }.bind(this),
         error:      function() {
           protonet.trigger("flash_message.error", protonet.t("MEEP_ERROR_LONG"));
@@ -223,7 +223,7 @@
           this.error = true;
 
           (onFailure || $.noop)();
-          protonet.trigger("meep.error", [this.element, this.data, this]);
+          protonet.trigger("meep.error", this.element, this.data, this);
         }.bind(this)
       };
 

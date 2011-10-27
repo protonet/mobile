@@ -47,7 +47,7 @@
          * Render new meep in selected channel
          * when event is triggered
          */
-        .bind("meep.send", function(e, dataOrForm, post) {
+        .on("meep.send", function(dataOrForm, post) {
           if (!this.isSelected) {
             return;
           }
@@ -57,7 +57,7 @@
         /**
          * Render meep when received
          */
-        .bind("meep.receive", function(e, meepData) {
+        .on("meep.receive", function(meepData) {
           if (meepData.channel_id != this.data.id) {
             return;
           }
@@ -68,7 +68,7 @@
             var instance = this._renderMeep(meepData, this.channelList);
             this._notifications();
             this._replyNotifications(meepData, instance);
-            protonet.trigger("channel.meep_receive", [meepData, instance, this]);
+            protonet.trigger("channel.meep_receive", meepData, instance, this);
           }.bind(this)).when({
             scrollTopGreaterThan: this.channelList.offset().top + 50,
             and:                  this.isSelected
@@ -78,7 +78,7 @@
         /**
          * Render meep in this channel if it contains a channel reply
          */
-        .bind("meep.sent", function(e, meepData, meepElement, instance) {
+        .on("meep.sent", function(meepData, meepElement, instance) {
           if (meepData.channel_id == this.data.id) {
             return;
           }
@@ -105,7 +105,7 @@
           this._renderMeep(newMeepData, this.channelList, true);
         }.bind(this))
 
-        .bind("meep.receive meep.sent", function(e, meepData) {
+        .on("meep.receive meep.sent", function(meepData) {
           if (meepData.channel_id == this.data.id) {
             this.data.meeps.push(meepData);
             if (this.isSelected) {
@@ -117,7 +117,7 @@
         /**
          * Count unread meeps
          */
-        .bind("meep.rendered", function(e, meepElement, meepData, instance) {
+        .on("meep.rendered", function(meepElement, meepData, instance) {
           // Meep counts as unread ...
           
           // ... when meep is posted in this channel
@@ -147,7 +147,7 @@
           }
         }.bind(this))
         
-        .bind("channel.rendered_more", function(e, channelList, meepsData, instance) {
+        .on("channel.rendered_more", function(channelList, meepsData, instance) {
           if (instance == this) {
             Array.prototype.unshift.apply(this.data.meeps, meepsData);
           }
@@ -156,18 +156,18 @@
         /**
          * Set tab to active and store state
          */
-        .bind("channel.change", function(e, channelId) {
+        .on("channel.change", function(channelId) {
           this.toggle(channelId == this.data.id);
         }.bind(this))
         
-        .bind("channel.hide", function() {
+        .on("channel.hide", function() {
           this.toggle(false);
         }.bind(this))
         
         /**
          * Init endless scroller and no meeps hint after meeps are rendered
          */
-        .bind("channel.rendered channel.rendered_more", function(e, channelList, data, instance) {
+        .on("channel.rendered channel.rendered_more", function(channelList, data, instance) {
           if (instance != this) {
             return;
           }
@@ -277,7 +277,7 @@
       }).data({ channel: this.data, instance: this });
       
       this._renderMeeps(this.data.meeps, this.channelList, function() {
-        protonet.trigger("channel.rendered", [this.channelList, this.data, this]);
+        protonet.trigger("channel.rendered", this.channelList, this.data, this);
         this._initGarbageCollector();
         this._toggleBadge(true);
       }.bind(this));
@@ -333,7 +333,7 @@
       var tempContainer = $("<ul>");
       this._renderMeeps(meepsData, tempContainer, function() {
         this.channelList.append(tempContainer.children());
-        protonet.trigger("channel.rendered_more", [this.channelList, meepsData, this]);
+        protonet.trigger("channel.rendered_more", this.channelList, meepsData, this);
       }.bind(this), true);
     },
 
@@ -435,7 +435,7 @@
         "class": "no-meeps-available"
       }).hide().html(protonet.t("NO_MEEPS_AVAILABLE")).appendTo(this.container);
       
-      protonet.bind("channel.change", function(e, id) {
+      protonet.on("channel.change", function(id) {
         if (this.data.id == id && !this.data.meeps.length) {
           this.noMeepsHint.show();
         } else {
@@ -444,7 +444,7 @@
       }.bind(this));
       
       // TODO: meep.rendered should be unbinded when the noMeepsHint has been removed
-      protonet.bind("meep.rendered", function(e, meepElement, meepData) {
+      protonet.on("meep.rendered", function(meepElement, meepData) {
         if (meepData.channel_id != this.data.id) {
           return;
         }

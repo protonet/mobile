@@ -72,7 +72,7 @@ protonet.timeline.Form.extensions.AutoResizer = function(input, wrapper) {
     })
     .css("overflow-y", overflowY);
   
-  protonet.bind("form.submitted", function() {
+  protonet.on("form.submitted", function() {
     // delay for performance reasons
     setTimeout(updateHeight, 0);
   });

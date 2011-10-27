@@ -4,36 +4,62 @@
  * central pub sub point
  */
 $.extend(protonet, (function() {
-  var $host = $(document.documentElement);
+  var events = {},
+      WHITE_SPACE = /\s+/;
   
-  function bind(event, handler) {
-    $host.bind(event, handler);
+  function _on(eventName, handler) {
+    var handlerArray = events[eventName] || (events[eventName] = []);
+    handlerArray.push(handler);
+  }
+  
+  function on(eventNames, handler) {
+    $.each(eventNames.split(WHITE_SPACE), function(i, eventName) {
+      _on(eventName, handler);
+    });
     return this;
   }
   
-  function unbind(event, handler) {
-    $host.unbind(event, handler);
+  function _off(eventName, handler) {
+    events[eventName] = handler ? $.map(events[eventName] || [], function(currentHandler) {
+      return handler === currentHandler ? null : currentHandler;
+    }) : [];
     return this;
   }
   
-  function trigger(event, data) {
+  function off(eventNames, handler) {
+    $.each(eventNames.split(WHITE_SPACE), function(i, eventName) {
+      _off(eventName, handler);
+    });
+    return this;
+  }
+  
+  function one(eventName, handler) {
+    return on(eventName, function() {
+      off(eventName, handler);
+      handler.apply(this, $.makeArray(arguments));
+    });
+  }
+  
+  function trigger() {
+    var args      = $.makeArray(arguments),
+        eventName = args.shift();
     if (protonet.config.debug_mode) {
-      console.log(event, data);
+      console.log(eventName, arguments);
     }
     
-    $host.trigger(event, data);
+    $.each(events[eventName] || [], function(i, handler) {
+      handler.apply(protonet, args);
+    });
     return this;
   }
   
-  function one(event, handler) {
-    $host.one(event, handler);
-    return this;
-  }
-  
-  return protonet.Emitter = {
-    bind:    bind,
-    unbind:  unbind,
-    trigger: trigger,
-    one:     one
-  };
+  return (protonet.Emitter = {
+    on:       on,
+    off:      off,
+    trigger:  trigger,
+    one:      one,
+    // legacy:
+    bind:     on,
+    unbind:   off
+  });
 })());

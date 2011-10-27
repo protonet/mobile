@@ -17,17 +17,17 @@ protonet.user = {
      * Highlight meep when sent by current user
      */
     protonet
-      .bind("meep.rendered", function(e, element, data, instance) {
+      .on("meep.rendered", function(element, data, instance) {
         if (data.author == protonet.config.user_name && data.user_id == protonet.config.user_id && !instance.merged) {
           element.addClass("own");
         }
       }.bind(this))
       
-      .bind("users.data_available", function(event, usersData) {
+      .on("users.data_available", function(usersData) {
         this.usersData = usersData;
       }.bind(this))
       
-      .bind("user.changed_avatar", function(e, user) {
+      .on("user.changed_avatar", function(user) {
         var selector = [
           "a[data-user-id='" + user.id + "'] > img",
           "img[data-user-avatar='" + user.id + "']"

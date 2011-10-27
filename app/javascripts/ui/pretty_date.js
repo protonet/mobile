@@ -22,7 +22,7 @@
     });
   }
   
-  protonet.bind("meep.rendered", function(e, meepElement, meepData, instance) {
+  protonet.on("meep.rendered", function(meepElement, meepData, instance) {
     if (instance.merged) {
       return;
     }

@@ -11,27 +11,27 @@ protonet.dispatcher = {
   
   _observe: function() {
     protonet
-      .bind("socket.initialized", function() {
+      .on("socket.initialized", function() {
         this.initializeCallback();
       }.bind(this))
       
-      .bind("socket.connected", function(e, status) {
+      .on("socket.connected", function(status) {
         this.connectCallback(status);
       }.bind(this))
       
-      .bind("socket.send", function(e, data) {
+      .on("socket.send", function(data) {
         this.send(data);
       }.bind(this))
       
-      .bind("socket.receive", function(e, data) {
+      .on("socket.receive", function(data) {
         this.receive(data);
       }.bind(this))
       
-      .bind("socket.ping_received", function() {
+      .on("socket.ping_received", function() {
         this.pingCallback();
       }.bind(this))
       
-      .bind("socket.reconnect", function() {
+      .on("socket.reconnect", function() {
         this.reconnect();
       }.bind(this));
       
@@ -162,7 +162,7 @@ protonet.dispatcher = {
     dataArr = $.makeArray(dataArr);
     $.each(dataArr, function(i, data) {
       if (data.trigger) {
-        protonet.trigger(data.trigger, [data]);
+        protonet.trigger(data.trigger, data);
       } else if (data.x_target) {
         eval(data.x_target + "(data)");
       } else if (data.eval) {

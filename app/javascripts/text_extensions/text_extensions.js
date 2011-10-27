@@ -3,13 +3,13 @@
       currentChannelId;
   
   protonet
-    .bind("channel.change", function(e, channelId) {
+    .on("channel.change", function(channelId) {
       currentChannelId = channelId;
       setTimeout(function() {
         _renderQueue(channelId);
       }, 0);
     })
-    .bind("meep.rendered", function(e, $meepElement, meepData) {
+    .on("meep.rendered", function($meepElement, meepData) {
       if (!meepData.text_extension) {
         return;
       }

@@ -30,9 +30,9 @@ protonet.text_extensions.Input.prototype = {
       .bind("click",          this._cancel.bind(this));
     
     protonet
-      .bind("form.submitted", this._submitted.bind(this))
-      .bind("text_extension_input.render", function(e, data)  { this.render(data);  }.bind(this))
-      .bind("text_extension_input.select", function(e, url)   { this.select(url);   }.bind(this));
+      .on("form.submitted",               this._submitted.bind(this))
+      .on("text_extension_input.render",  this.render.bind(this))
+      .on("text_extension_input.select",  this.select.bind(this));
   },
   
   _paste: function() {
