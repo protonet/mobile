@@ -122,7 +122,7 @@
 }
 
 #channels .rendezvous {
-  background: #FFE0CC;
+  background: #fff5ef;
   background: -moz-linear-gradient(100% 100% 90deg, rgba(255, 127, 49, 0.1), transparent);
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(255, 127, 49, 0.1)));
   padding-right: 23px;

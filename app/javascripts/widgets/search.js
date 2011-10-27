@@ -7,7 +7,7 @@ protonet.widgets.Search = Class.create({
   },
   
   _observe: function() {
-    if (protonet.user.Browser.IS_TOUCH_DEVICE() || !protonet.config.allow_modal_views) {
+    if (protonet.user.Browser.IS_TOUCH_DEVICE() || !protonet.config.allow_modal_views || $.browser.msie) {
       return;
     }
     

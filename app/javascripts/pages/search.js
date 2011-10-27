@@ -18,7 +18,6 @@ protonet.pages.Search = {
     
     this._observe();
     
-    var keyword = this.$input.val();
     if (this.$input.val()) {
       this.$form.trigger("submit");
     } else {
@@ -104,10 +103,9 @@ protonet.pages.Search = {
       return;
     }
     
-    if (!this.$meepList[0].parentNode) {
+    if (this.$meepList.parent() !== this.$container) {
       this.$container.html(this.$meepList);
     }
-    
     
     this.load(keyword, this.pageNum, function(data) {
       this.render(this.$meepList, data, this._afterRendering.bind(this));
@@ -123,7 +121,6 @@ protonet.pages.Search = {
       this.renderHint("NO_RESULTS_FOUND");
       return;
     }
-    
     data.reverse().chunk(function(meepData) {
       return new protonet.timeline.Meep(meepData).render($container);
     }, function(meeps) {

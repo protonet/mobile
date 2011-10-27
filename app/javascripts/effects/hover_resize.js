@@ -36,8 +36,8 @@ protonet.effects.HoverResize.prototype = {
     var tmpImg = new Image();
     tmpImg.onload = function() {
       callback({
-        width: tmpImg.naturalWidth,
-        height: tmpImg.naturalHeight
+        width:  tmpImg.width,
+        height: tmpImg.height
       });
       this.element.css("cursor", "");
     }.bind(this);

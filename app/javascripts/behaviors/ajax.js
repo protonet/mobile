@@ -64,7 +64,7 @@ protonet.open = (function() {
       return fallback(eventOrUrl);
     }
     
-    if (link.pathname === "/") {
+    if (link.pathname === "/" || !link.pathname) {
       return fallback(eventOrUrl);
     }
 

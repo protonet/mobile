@@ -56,7 +56,7 @@ form.disabled #textarea-wrapper:after {
 
 #textarea-wrapper [type=submit] {
   width: 50px;
-  background: rgb(170, 170,170) url(/img/return.png) center center no-repeat;
+  background: rgb(170, 170, 170) url(/img/return.png) center center no-repeat;
   background: url(/img/return.png) center center no-repeat,
               -moz-linear-gradient(top, rgba(134, 134, 134, 0.7), rgba(134, 134, 134, 1));
   background: url(/img/return.png) center center no-repeat,

@@ -55,7 +55,7 @@ protonet.timeline.Form = {
        * and update hidden channel id
        */
       .on("channel.change", function(channelId) {
-        // protonet.trigger("form.enable");
+        protonet.trigger("form.enable");
         
         // When loading the page a "channel.change" event is initially fired
         // This causes problems when the user already focused the login form and started to type

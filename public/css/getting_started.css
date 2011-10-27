@@ -100,9 +100,8 @@
 }
 
 .getting-started li.done:before {
-  content: "\2713";
-  color: #00cc00;
-  background: #fff !important;
+  content: "";
+  background: #fff url(/img/icn_check_mark.png) no-repeat center center !important;
 }
 
 .getting-started li:hover:before {

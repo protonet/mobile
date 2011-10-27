@@ -36,7 +36,7 @@ $(function() {
   protonet.ui.Logo.initialize();
   
   // Clouds
-  if (protonet.config.show_clouds) {
+  if (protonet.config.show_clouds && !$.browser.msie) {
     // Frickin' stunning cloud graphics (makes your squirrel run in circles!!)
     setTimeout(function() {
       new protonet.effects.Clouds($("#cloud-container"), {

@@ -43,7 +43,7 @@ $.behaviors({
       var $subMeepParagaph  = $(subMeepParagaph),
           meepId            = $subMeepParagaph.data("meep").id,
           $actionLinks      = new protonet.utils.Template("meep-actions-template", { id: meepId }).toElement();
-      $actionLinks.mousedown(false).appendTo($subMeepParagaph);
+      $actionLinks.unbind(".meep_focus").bind("beforeactivate.meep_focus mousedown.meep_focus", false).appendTo($subMeepParagaph);
     });
     
     $element.addClass("focus");

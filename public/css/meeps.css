@@ -18,7 +18,7 @@
   background: -moz-linear-gradient(top, rgba(72, 123, 255, 0.3), rgba(72, 123, 255, 0.7));
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.3)), to(rgba(72, 123, 255, 0.7)));
   position: absolute;
-  z-index: 2;
+  z-index: 5;
   right: 0;
   top: 0;
   bottom: 0;
