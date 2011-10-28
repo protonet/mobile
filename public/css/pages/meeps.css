@@ -105,7 +105,8 @@
   margin-top: -40px;
 }
 
-.meeps-page .next:hover {
+.meeps-page .next:hover,
+.meeps-page .next.active {
   border-color: transparent transparent #000 transparent;
 }
 
@@ -114,12 +115,13 @@
   margin-top: 5px;
 }
 
-.meeps-page .previous:hover {
+.meeps-page .previous:hover,
+.meeps-page .previous.active {
   border-color: #000 transparent transparent transparent;
 }
 
 .meeps-page .meep {
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
 .meeps-page .meep:not(.selected) a {

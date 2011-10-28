@@ -4,22 +4,19 @@
 /**
  * Resizes an image when hovering
  *
- * TODO: this needs heavy refactoring since the code is outdated and buggy
- *
  * @constructor
  *
  * @param {Element} element jQuery reference to the image element that should be resized
  * @param {Object} [config]
  *    - newSrc:     Url to the image that should be shown while hovering
  *    - newSize:    Desired hover size (depends on natural size of the hover image when keepRatio == true)
- *    - proxy:      Whether the image should be proxied
  *    - keepRatio:  Whether the natural image size ratio of the hover image should be honored
  */
 protonet.effects.HoverResize = function(element, config) {
   this.element = element;
   this.config = config || {};
-  if (this.config.proxy && this.config.newSrc) {
-    this.config.newSrc = protonet.media.Proxy.getImageUrl(this.config.newSrc, this.config.newSize);
+  if (this.config.newSrc) {
+    this.config.newSrc = protonet.media.Proxy.getImageUrl(this.config.newSrc);
   }
   
   this.element.hover(this._mouseOver.bind(this), this._mouseOut.bind(this));
@@ -80,7 +77,7 @@ protonet.effects.HoverResize.prototype = {
       this.element
         .stop()
         .css({
-          "z-index": 10, "position": "absolute"
+          zIndex: 10, position: "absolute", imageRendering: "optimizeQuality"
         })
         .animate({
           width: this.config.newSize.width.px(), height: this.config.newSize.height.px()
