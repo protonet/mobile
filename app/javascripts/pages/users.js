@@ -49,7 +49,7 @@ $(function() {
         var body     = $iframe[0].contentWindow.document.documentElement,
             response = JSON.parse($.trim(body.innerText || body.textContent));
       } catch(e) {}
-
+      
       if (!response || !response.avatar) {
         protonet.trigger("flash_message.error", (response && response.error) || protonet.t("AVATAR_UPLOAD_ERROR"));
       } else {

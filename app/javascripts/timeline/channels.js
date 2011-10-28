@@ -12,7 +12,6 @@
  *    channels.data_available - Called when data is available and the class itself is initialized and ready
  *    channels.initialized    - Called when all channels are initialized and the data is available
  *    channel.change          - Invoked when user wants to switch to another channel (eg. by clicking on a channel link)
- *    channel.subscribe       - Call this when you want to subscribe a new channel by id
  */
 protonet.timeline.Channels = {
   availableChannels: protonet.config.channel_name_to_id_mapping || {},
@@ -74,13 +73,18 @@ protonet.timeline.Channels = {
   _observe: function() {
     $.behaviors({
       "a[data-channel-id]:click": function(element, event) {
-        var $element  = $(element),
-            id        = +$element.data("channel-id");
+        var $element      = $(element),
+            id            = $element.data("channel-id"),
+            isSubscribed  = $.inArray(id, this.subscribedChannels) !== -1;
         
-        protonet.trigger("modal_window.hide").trigger("channel.change", id);
+        if (isSubscribed) {
+          protonet.trigger("channel.change", id);
+        } else {
+          protonet.open("/channels/" + id);
+        }
         
         event.preventDefault();
-      },
+      }.bind(this),
       
       "a[data-meep-share]:click": function(element, event) {
         protonet
@@ -102,9 +106,6 @@ protonet.timeline.Channels = {
        * Track selected channel
        * Sometimes we have to prevent the hash from changing
        * to avoid creating new browser history entries
-       *
-       * If the desired channel is not already subscribed this
-       * will fire the channel.subscribe event
        */
       .on("channel.change", function(id, avoidHistoryChange) {
         avoidHistoryChange = avoidHistoryChange || protonet.ui.ModalWindow.isVisible();
@@ -114,9 +115,10 @@ protonet.timeline.Channels = {
         }
         
         if ($.inArray(id, this.subscribedChannels) === -1) {
-          protonet.trigger("channel.subscribe", id);
           return;
         }
+        
+        protonet.trigger("modal_window.hide");
         
         this.selected = id;
         
