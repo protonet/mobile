@@ -6,9 +6,7 @@ $(function() {
       $avatarForm       = $fileInput.parents("form"),
       $meepList         = $("<ul>", { "class": "meeps" });
   
-  $meepContainer.bind("inview", function() {
-    $meepContainer.unbind("inview");
-    
+  $meepContainer.one("inview", function() {
     function fallback() {
       $meepContainer.html($("<p>", { "class": "hint", text: protonet.t("NO_MEEPS_FOR_USER_AVAILABLE") }));
     }

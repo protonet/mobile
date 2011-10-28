@@ -425,11 +425,11 @@ header .hearts {
   line-height: 13px;
   vertical-align: middle;
   padding: 0 6px 1px;
-  border-right: 1px solid #999;
+  border-left: 1px solid #999;
 }
 
-#user-navigation > li:last-child,
-#user-navigation > li:first-child {
+#user-navigation > .welcome,
+#user-navigation > .welcome + li {
   border: 0;
 }
 
