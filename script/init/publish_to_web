@@ -7,19 +7,20 @@ export HOME=$CURRENT_PATH/../..
 . $HOME/../.profile
 cd $SHARED
 export SHARED=`pwd`
-export AUTOSSH_PIDFILE=$SHARED/pids/publish_to_web.pid
+export PIDFILE=$SHARED/pids/publish_to_web.pid
 export PORT=$1
 shift 1
 case $1 in
-   start)
-      /usr/bin/autossh -M 0 localtunnel@directory.protonet.info -o ServerAliveInterval=15 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22666 -R $PORT:127.0.0.1:80 -i $SHARED/config/protonet.d/proxy_dsa -nT
+    start)
+      screen -d -m /usr/bin/ssh localtunnel@directory.protonet.info -o ServerAliveInterval=15 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22666 -R $PORT:127.0.0.1:80 -i $SHARED/config/protonet.d/proxy_dsa -t
+      echo `ps aux | grep -e "ssh localtunnel.*$PORT" | grep -v 'grep' | grep -v 'SCREEN' | awk '{ print $2 }'` > $PIDFILE
       ;;
-    stop)  
-      kill `cat $AUTOSSH_PIDFILE`
+    stop)
+      kill `cat $PIDFILE`
       ;;
     status)
-      if [ -f $AUTOSSH_PIDFILE ]; then
-        if ( kill -0 `cat $AUTOSSH_PIDFILE` 2> /dev/null ); then
+      if [ -f $PIDFILE ]; then
+        if ( kill -0 `cat $PIDFILE` 2> /dev/null ); then
           echo "The proxying is running."
           exit 0
         else
@@ -32,6 +33,6 @@ case $1 in
       fi
       ;;
     *)  
-      echo "usage: publish_to_web rails-app-path remote_port {start|stop|status}" ;;
+      echo "usage: publish_to_web remote_port {start|stop|status}" ;;
 esac
 exit 0
