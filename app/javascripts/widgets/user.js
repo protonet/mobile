@@ -39,7 +39,7 @@ protonet.widgets.User = Class.create({
   
   _observe: function() {
     protonet
-      .bind("user.added", function(e, data) {
+      .on("user.added", function(data) {
         /**
          * Creating a user will trigger the user.added event
          * and the user.subscribed_channel afterwards
@@ -49,41 +49,41 @@ protonet.widgets.User = Class.create({
         }
       }.bind(this))
       
-      .bind("user.typing", function(e, data) {
+      .on("user.typing", function(data) {
         this._typingStart(data.user_id, protonet.utils.getChannelIdForUuid(data.channel_uuid));
       }.bind(this))
       
-      .bind("user.typing_end", function(e, data) {
+      .on("user.typing_end", function(data) {
         this._typingEnd(data.user_id);
       }.bind(this))
       
-      .bind("user.subscribed_channel", function(e, data) {
+      .on("user.subscribed_channel", function(data) {
         this._userSubscribedChannel(data.user_id, protonet.utils.getChannelIdForUuid(data.channel_uuid));
         this.filterChannelUsers();
       }.bind(this))
       
-      .bind("user.unsubscribed_channel", function(e, data) {
+      .on("user.unsubscribed_channel", function(data) {
         this._userUnsubscribedChannel(data.user_id, protonet.utils.getChannelIdForUuid(data.channel_uuid));
         this.filterChannelUsers();
       }.bind(this))
 
-      .bind("user.came_online", function(e, data) {
+      .on("user.came_online", function(data) {
         this.userCameOnline(data);
         this.filterChannelUsers();
       }.bind(this))
 
-      .bind("user.goes_offline", function(e, data) {
+      .on("user.goes_offline", function(data) {
         this.userWentOffline(data);
         this.filterChannelUsers();
       }.bind(this))
       
-      .bind("users.update_status", function(e, data) {
+      .on("users.update_status", function(data) {
         this.updateUsers(data.online_users);
         this.updateSubscriptions(data.channel_users);
         this.filterChannelUsers();
       }.bind(this))
       
-      .bind("user.changed_avatar", function(e, data) {
+      .on("user.changed_avatar", function(data) {
         var user = this.usersData[data.id];
         if (user) {
           user.avatar = data.avatar;
@@ -93,18 +93,16 @@ protonet.widgets.User = Class.create({
       /**
        * Update subscriptions for all subscribed channels
        */
-      .bind("channels.update_subscriptions", function(e, channelSubscriptions) {
+      .on("channels.update_subscriptions", function(channelSubscriptions) {
         this.updateSubscriptions(channelSubscriptions.data);
         this.filterChannelUsers();
       }.bind(this))
       
-      .bind("socket.disconnected", function() {
+      .on("socket.disconnected", function() {
         protonet.trigger("users.update_status", { online_users: {} });
       }.bind(this))
       
-      .bind("channel.change", function(e, channelId) {
-        this.filterChannelUsers(channelId);
-      }.bind(this));
+      .on("channel.change", this.filterChannelUsers.bind(this));
     
     /**
      * Show user image onmouseover

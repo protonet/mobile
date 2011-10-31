@@ -25,17 +25,18 @@ protonet.ui.MeepScroller = (function() {
       });
 
       if (meepToSelect.length) {
-        this.select(meepToSelect, 500, 0);
+        this.select(meepToSelect);
       } else {
         this.loading();
         protonet.timeline.Meep.get(id, function(data) {
+          this.loadingEnd();
           // Make sure that the meep doesn't conflict with channels
           this.channelName = protonet.utils.getChannelName(data.channel_id || data.posted_in) || protonet.t("UNKNOWN_CHANNEL");
           delete data.channel_id;
           delete data.posted_in;
           
           this.select(
-            new protonet.timeline.Meep(data).render(this.$meepList), 500, 0
+            new protonet.timeline.Meep(data).render(this.$meepList)
           );
         }.bind(this));
       }
@@ -58,14 +59,16 @@ protonet.ui.MeepScroller = (function() {
       }.bind(this));
 
       $document.delegate("pre", "mousewheel.meep_scroller DOMMouseScroll.meep_scroller", function(event) {
-        event.stopImmediatePropagation();
+        if (this.scrollHeight > this.offsetHeight) {
+          event.stopImmediatePropagation();
+        }
       });
 
       if (protonet.user.Browser.SUPPORTS_EVENT("DOMMouseScroll")) {
         // Firefox 4 only supports DOMMouseScroll on the $document object
         $document.bind("DOMMouseScroll.meep_scroller", function(event) {
           event = event.originalEvent;
-          if (event.axis == event.VERTICAL_AXIS && event.detail != 0) {
+          if (event.axis === event.VERTICAL_AXIS && event.detail !== 0) {
             spawnScrolling(event.detail < 0 ? 1 : -1);
           }
           event.preventDefault();
@@ -73,7 +76,7 @@ protonet.ui.MeepScroller = (function() {
       } else if (protonet.user.Browser.SUPPORTS_EVENT("mousewheel")) {
         $document.bind("mousewheel.meep_scroller", function(event) {
           event = event.originalEvent;
-          if (event.wheelDeltaY != 0) {
+          if (event.wheelDeltaY !== 0) {
             spawnScrolling(event.wheelDeltaY < 0 ? -1 : 1);
           }
           event.preventDefault();
@@ -85,7 +88,7 @@ protonet.ui.MeepScroller = (function() {
 
       this.$meepList
         .delegate("li:not(.selected)", "click.meep_scroller", function(event) {
-          this.select($(event.currentTarget), 250, 250);
+          this.select($(event.currentTarget));
           event.preventDefault();
           event.stopPropagation();
         }.bind(this))
@@ -95,7 +98,7 @@ protonet.ui.MeepScroller = (function() {
           if ($this.is(".selected")) {
             this.adjust($this.data("instance"));
           } else {
-            this.select($this, 250, 250);
+            this.select($this);
           }
         }.bind(this))
 
@@ -106,7 +109,7 @@ protonet.ui.MeepScroller = (function() {
           }
         }.bind(this))
 
-        .delegate("li:first", "inview.meep_scroller", function(event, isInView) {
+        .delegate("li:first-child", "inview.meep_scroller", function(event, isInView) {
           var $this = $(event.currentTarget);
           if (!$this.data("already_loaded_after") && isInView) {
             this._loadAndRender("after", $this.data("instance"));
@@ -114,7 +117,7 @@ protonet.ui.MeepScroller = (function() {
           }
         }.bind(this))
 
-        .delegate("li:last", "inview.meep_scroller", function(event, isInView) {
+        .delegate("li:last-child", "inview.meep_scroller", function(event, isInView) {
           var $this = $(event.currentTarget);
           if (!$this.data("already_loaded_before") && isInView) {
             this._loadAndRender("before", $this.data("instance"));
@@ -133,20 +136,24 @@ protonet.ui.MeepScroller = (function() {
     scrollByOffset: function(offset) {
       var meepElementToScrollTo;
 
-      if (offset == 0) {
+      if (offset === 0) {
         return;
       } else if (offset > 0) {
+        this.$next.addClass("active");
+        setTimeout(function() { this.$next.removeClass("active"); }.bind(this), 100);
         meepElementToScrollTo = this.currentMeep.element.prevAll().eq(offset - 1);
       } else if (offset < 0) {
+        this.$previous.addClass("active");
+        setTimeout(function() { this.$previous.removeClass("active"); }.bind(this), 100);
         meepElementToScrollTo = this.currentMeep.element.nextAll().eq(-offset - 1);
       }
 
       if (meepElementToScrollTo.length) {
-        this.select(meepElementToScrollTo, 250, 250);
+        this.select(meepElementToScrollTo);
       }
     },
 
-    select: function(meep, borderAnimationDuration, meepListAnimationDuration) {
+    select: function(meep) {
       // Takes a jquery meep object or the class meep instance as 'meep' param
       if (meep instanceof jQuery) {
         meep = meep.data("instance");
@@ -166,7 +173,7 @@ protonet.ui.MeepScroller = (function() {
         .data("meep-share", meep.data.id);
       
       this.currentMeep = meep;
-      this.adjust(meep, borderAnimationDuration, meepListAnimationDuration);
+      this.adjust(meep);
     },
 
     loading: function() {
@@ -186,26 +193,23 @@ protonet.ui.MeepScroller = (function() {
             return;
           }
           
-          this.$meepList.queue(function(next) {
-            var $tempContainer = $("<ul>");
-            $.each(data, function(i, meepData) {
-              delete meepData.channel_id;
-              new protonet.timeline.Meep(meepData).render($tempContainer);
-            });
-            if (position == "after") {
-              var oldMeepListHeight     = this.$meepList.outerHeight(),
-                  oldMeepListMarginTop  = this.$meepList.cssUnit("margin-top")[0],
-                  newMeepListHeight,
-                  diffMeepListHeight;
-              meep.element.before($tempContainer.children());
-              newMeepListHeight = this.$meepList.outerHeight();
-              diffMeepListHeight = newMeepListHeight - oldMeepListHeight;
-              this.$meepList.css("margin-top", (oldMeepListMarginTop - diffMeepListHeight).px());
-            } else {
-              meep.element.after($tempContainer.children());
-            }
-            next();
-          }.bind(this));
+          var $tempContainer = $("<ul>");
+          $.each(data, function(i, meepData) {
+            delete meepData.channel_id;
+            new protonet.timeline.Meep(meepData).render($tempContainer);
+          });
+          if (position === "after") {
+            var oldMeepListHeight     = this.$meepList.outerHeight(),
+                oldMeepListMarginTop  = this.$meepList.cssUnit("margin-top")[0],
+                newMeepListHeight,
+                diffMeepListHeight;
+            meep.element.before($tempContainer.children());
+            newMeepListHeight = this.$meepList.outerHeight();
+            diffMeepListHeight = newMeepListHeight - oldMeepListHeight;
+            this.$meepList.css("margin-top", (oldMeepListMarginTop - diffMeepListHeight).px());
+          } else {
+            meep.element.after($tempContainer.children());
+          }
         }.bind(this),
         error: function() {
           protonet.trigger("flash_message.error", protonet.t("DETAIL_VIEW_LOADING_ERROR"));
@@ -213,50 +217,26 @@ protonet.ui.MeepScroller = (function() {
       });
     },
 
-    adjust: function(meep, borderAnimationDuration, meepListAnimationDuration) {
-      borderAnimationDuration   = borderAnimationDuration   || 0;
-      meepListAnimationDuration = meepListAnimationDuration || 0;
-      if (protonet.user.Browser.IS_TOUCH_DEVICE()) {
-        // iPad is unbelievable slow that's why we force it to immediately adjust
-        borderAnimationDuration = meepListAnimationDuration = 0;
-      }
+    adjust: function(meep) {
+      var meepHeight              = meep.element.outerHeight(),
+          newBorderMarginTop      = -(meepHeight + this.$border.outerHeight() - this.$border.height()) / 2,
+          prevSiblings            = meep.element.prevAll(),
+          newMarginTop            = -meepHeight / 2,
+          additionalOffset        = $.browser.mozilla ? 0.2 : 0; // Don't ask. Needed to satisfy firefox
       
-      this.$meepList.queue(function(next) {
-        var meepHeight              = meep.element.outerHeight(),
-            newBorderMarginTop      = -(meepHeight + this.$border.outerHeight() - this.$border.height()) / 2,
-            prevSiblings            = meep.element.prevAll(),
-            newMarginTop            = -meepHeight / 2,
-            additionalOffset        = $.browser.mozilla ? 0.2 : 0, // Don't ask. Needed to satisfy firefox
-            nextCalled              = 0,
-            nextIfAnimationComplete = function() {
-              if (++nextCalled >= 2) {
-                this.loadingEnd();
-                meep.element.addClass("selected");
-                next();
-              }
-            }.bind(this);
-
-        prevSiblings.each(function(i, element) { newMarginTop -= $(element).outerHeight(true) - additionalOffset; });
-
-        this.$meepList.children().removeClass("selected");
-        this.loading();
-        
-        this.$meepList.stop().animate({
-          marginTop:  newMarginTop.px()
-        }, {
-          queue:      false,
-          duration:   meepListAnimationDuration,
-          complete:   nextIfAnimationComplete
-        });
-        this.$border.stop().animate({
-          marginTop:  newBorderMarginTop.px(),
-          height:     meepHeight.px()
-        }, {
-          queue:      false,
-          duration:   borderAnimationDuration,
-          complete:   nextIfAnimationComplete
-        });
-      }.bind(this));
+      prevSiblings.each(function(i, element) { newMarginTop -= $(element).outerHeight(true) - additionalOffset; });
+      
+      this.$meepList.children().removeClass("selected");
+      
+      this.$meepList.css({
+        marginTop:  newMarginTop.px()
+      });
+      this.$border.css({
+        marginTop:  newBorderMarginTop.px(),
+        height:     meepHeight.px()
+      });
+      
+      meep.element.addClass("selected");
     }
   });
 })();

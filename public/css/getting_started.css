@@ -39,7 +39,7 @@
   font-size: 18px;
   color: #333;
   margin-bottom: 20px;
-  text-shadow: -1px 1px 1px rgba(255, 255, 255, 0.6);
+  text-shadow: 0 1px 1px #fff;
 }
 
 .getting-started-close-link {
@@ -100,9 +100,8 @@
 }
 
 .getting-started li.done:before {
-  content: "\2713";
-  color: #00cc00;
-  background: #fff !important;
+  content: "";
+  background: #fff url(/img/icn_check_mark.png) no-repeat center center !important;
 }
 
 .getting-started li:hover:before {

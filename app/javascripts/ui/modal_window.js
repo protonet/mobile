@@ -31,7 +31,7 @@ protonet.ui.ModalWindow = (function() {
       $window                       = $(window);
   
   // Needed to restore the history when modal window closes
-  protonet.bind("history.change", function(event) {
+  protonet.on("history.change", function() {
     if (!visible) {
       setTimeout(function() { urlBeforeOpened = location.href; }, 0);
     }
@@ -84,7 +84,7 @@ protonet.ui.ModalWindow = (function() {
     
     elements.closeLink.bind("click.modal_window", hide);
     
-    protonet.bind("modal_window.hide", hide);
+    protonet.on("modal_window.hide", hide);
   }
   
   function _unobserve() {
@@ -94,7 +94,7 @@ protonet.ui.ModalWindow = (function() {
       .add(elements.closeLink)
       .unbind(".modal_window");
     
-    protonet.unbind("modal_window.hide", hide);
+    protonet.off("modal_window.hide", hide);
   }
   
   function _hideScrollbar() {

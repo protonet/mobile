@@ -58,9 +58,9 @@
 .upload-button-container [type=file] {
   opacity: 0;
   filter: Alpha(Opacity=0);
-  font-size: 25px;
+  font-size: 50px;
   position: absolute;
-  left: 0;
+  right: 0;
   top: 0;
   margin: 0;
   padding: 0;

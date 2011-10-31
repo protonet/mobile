@@ -7,7 +7,7 @@
     
     _observe: function($super) {
       protonet
-        .bind("node.connected", function(e, data) {
+        .on("node.connected", function(data) {
           if (this.data.node_id == data.node_id) {
             this.link.removeClass("offline");
             this.isOnline = true;
@@ -15,7 +15,7 @@
           }
         }.bind(this))
         
-        .bind("node.disconnected", function(e, data) {
+        .on("node.disconnected", function(data) {
           if (this.data.node_id == data.node_id) {
             this.link.addClass("offline");
             this.isOnline = false;

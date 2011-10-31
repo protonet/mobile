@@ -11,7 +11,7 @@ protonet.media.Proxy = (function() {
    */
   function httpGet(url, onSuccess, onFailure) {
     var timeout = setTimeout(function() {
-      protonet.unbind("http_proxy.workdone");
+      protonet.off("http_proxy.workdone");
       onFailure();
     }, HTTP_TIMEOUT);
     

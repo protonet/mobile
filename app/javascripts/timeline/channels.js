@@ -12,7 +12,6 @@
  *    channels.data_available - Called when data is available and the class itself is initialized and ready
  *    channels.initialized    - Called when all channels are initialized and the data is available
  *    channel.change          - Invoked when user wants to switch to another channel (eg. by clicking on a channel link)
- *    channel.subscribe       - Call this when you want to subscribe a new channel by id
  */
 protonet.timeline.Channels = {
   availableChannels: protonet.config.channel_name_to_id_mapping || {},
@@ -46,7 +45,7 @@ protonet.timeline.Channels = {
     
     this._updateSubscribedChannels();
     
-    protonet.trigger("channels.data_available", [this.data, this.availableChannels, this.subscribedChannels]);
+    protonet.trigger("channels.data_available", this.data, this.availableChannels, this.subscribedChannels);
     
     this._observe();
     this._render();
@@ -74,13 +73,18 @@ protonet.timeline.Channels = {
   _observe: function() {
     $.behaviors({
       "a[data-channel-id]:click": function(element, event) {
-        var $element  = $(element),
-            id        = +$element.data("channel-id");
+        var $element      = $(element),
+            id            = $element.data("channel-id"),
+            isSubscribed  = $.inArray(id, this.subscribedChannels) !== -1;
         
-        protonet.trigger("modal_window.hide").trigger("channel.change", id);
+        if (isSubscribed) {
+          protonet.trigger("channel.change", id);
+        } else {
+          protonet.open("/channels/" + id);
+        }
         
         event.preventDefault();
-      },
+      }.bind(this),
       
       "a[data-meep-share]:click": function(element, event) {
         protonet
@@ -102,22 +106,19 @@ protonet.timeline.Channels = {
        * Track selected channel
        * Sometimes we have to prevent the hash from changing
        * to avoid creating new browser history entries
-       *
-       * If the desired channel is not already subscribed this
-       * will fire the channel.subscribe event
        */
-      .bind("channel.change", function(e, id, avoidHistoryChange) {
+      .on("channel.change", function(id, avoidHistoryChange) {
         avoidHistoryChange = avoidHistoryChange || protonet.ui.ModalWindow.isVisible();
-        
         id = +id; // + Makes sure that id is a Number
         if (this.selected === id) {
           return;
         }
         
         if ($.inArray(id, this.subscribedChannels) === -1) {
-          protonet.trigger("channel.subscribe", id);
           return;
         }
+        
+        protonet.trigger("modal_window.hide");
         
         this.selected = id;
         
@@ -129,34 +130,34 @@ protonet.timeline.Channels = {
       /**
        * Select initial channel when channels are rendered/initialized
        */
-      .bind("channels.initialized", this._selectChannel.bind(this))
+      .on("channels.initialized", this._selectChannel.bind(this))
       
       /**
        * Start rendezvous if param in url is given
        */
-      .bind("channels.initialized", function() {
+      .on("channels.initialized", function() {
         protonet.utils.urlBehaviors({ "rendezvous.start": /(?:\?|&)rendezvous_with=([^&#$]+)(.*)/ });
       })
       
-      .bind("channels.change_to_first", function() {
+      .on("channels.change_to_first", function() {
         var firstChannel = this.tabs.eq(0);
         if (firstChannel.length) {
           protonet.trigger("channel.change", firstChannel.data("channel-id"));
         }
       }.bind(this))
       
-      .bind("channel.hide", function() {
+      .on("channel.hide", function() {
         this.selected = null;
       }.bind(this))
       
-      .bind("channel.load", function(e, data) {
+      .on("channel.load", function(data) {
         this.loadChannel(data.channel_id);
       }.bind(this))
       
       /**
        * Subscribe a new channel by id
        */
-      .bind("channel.subscribe", function(e, id) {
+      .on("channel.subscribe", function(id) {
         protonet.trigger("channel.hide").trigger("timeline.loading_start");
         
         var identifier = protonet.utils.getChannelName(id) || "#" + id;
@@ -187,7 +188,7 @@ protonet.timeline.Channels = {
         });
       }.bind(this))
       
-      .bind("meep.receive", function(e, meepData) {
+      .on("meep.receive", function(meepData) {
         if (this.channels[meepData.channel_id]) {
           return;
         }
@@ -197,7 +198,7 @@ protonet.timeline.Channels = {
       /**
        * Create a tab handle and render meeps for the newly subscribed channel
        */
-      .bind("user.subscribed_channel", function(e, data) {
+      .on("user.subscribed_channel", function(data) {
         var channelId = data.channel_id;
         if (protonet.config.user_id != data.user_id) {
           return;
@@ -208,7 +209,7 @@ protonet.timeline.Channels = {
       /**
        * Remove the tab handle, all meeps and all other dependencies of a channel
        */
-      .bind("user.unsubscribed_channel", function(e, data) {
+      .on("user.unsubscribed_channel", function(data) {
         var channelId = data.channel_id;
         if (protonet.config.user_id != data.user_id) {
           return;
@@ -220,7 +221,7 @@ protonet.timeline.Channels = {
       /**
        * Logic for loading meeps that were send when the user was disconnected
        */
-      .bind("socket.reconnected", function(event) {
+      .on("socket.reconnected", function() {
         var channelStates = {};
         $.each(this.data, function(i, channel) {
           var latestMeepData = channel.meeps[channel.meeps.length - 1];
@@ -233,7 +234,7 @@ protonet.timeline.Channels = {
           success: function(response) {
             $.each(response, function(channelId, meeps) {
               $.each(meeps, function(i, meepData) {
-                protonet.trigger("meep.receive", [meepData]);
+                protonet.trigger("meep.receive", meepData);
               });
             });
           }
@@ -243,7 +244,7 @@ protonet.timeline.Channels = {
       /**
        * Rendezvous
        */
-      .bind("rendezvous.start", function(e, partner) {
+      .on("rendezvous.start", function(partner) {
         if (!partner) {
           return;
         }
@@ -307,7 +308,7 @@ protonet.timeline.Channels = {
         channel.renderTab(this.tabContainer, true);
       }
     }.bind(this), function() {
-      protonet.trigger("channels.initialized", [this.data, this.channels]);
+      protonet.trigger("channels.initialized", this.data, this.channels);
     }.bind(this));
   },
   
@@ -333,7 +334,7 @@ protonet.timeline.Channels = {
     var urlChannelId      = +protonet.utils.parseQueryString(location.search).channel_id,
         selectedChannelId = urlChannelId || this.tabs.eq(0).data("channel-id");
     if (selectedChannelId) {
-      protonet.trigger("channel.change", [selectedChannelId, true]);
+      protonet.trigger("channel.change", selectedChannelId, true);
     }
   },
   
@@ -349,15 +350,15 @@ protonet.timeline.Channels = {
       protonet.trigger("timeline.loading_start");
     }
     
-    var eventName                 = "meep.receive." + channelId,
-        meepsReceivedWhileLoading = this.channelsBeingLoaded[channelId] = {};
+    var meepsReceivedWhileLoading = this.channelsBeingLoaded[channelId] = {},
+        meepReceiveCallback       = function(meepData) {
+          if (meepData.channel_id === channelId) {
+            // queue them while the channel is being loaded
+            meepsReceivedWhileLoading[meepData.id] = meepData;
+          }
+        };
     
-    protonet.bind(eventName, function(e, meepData) {
-      if (meepData.channel_id === channelId) {
-        // queue them while the channel is being loaded
-        meepsReceivedWhileLoading[meepData.id] = meepData;
-      }
-    });
+    protonet.on("meep.receive", meepReceiveCallback);
     
     // queue the meep that triggered the channel to load
     if (triggerMeepData) {
@@ -384,7 +385,7 @@ protonet.timeline.Channels = {
           protonet.trigger("channel.change", channelId);
         }
         
-        protonet.unbind(eventName);
+        protonet.off("meep.receive", meepReceiveCallback);
         $.each(meepsReceivedWhileLoading, function(id, meepData) {
           protonet.trigger("meep.receive", meepData);
         });

@@ -27,31 +27,29 @@ protonet.widgets.File = Class.create({
   
   _observe: function() {
     protonet
-      .bind("channel.change", function(event, channelId) {
+      .on("channel.change", function(channelId) {
         this._resetHistory();
         protonet.trigger("files.load", channelId).trigger("file_widget.show");
       }.bind(this))
       
-      .bind("file_widget.hide", function() {
+      .on("file_widget.hide", function() {
         this.container.hide();
       }.bind(this))
       
-      .bind("file_widget.show", function() {
+      .on("file_widget.show", function() {
         this.container.show();
       }.bind(this))
       
-      .bind("files.load", function(event, channelId, path, fromHistory) {
-        this.load(channelId, path, fromHistory);
-      }.bind(this))
+      .on("files.load", this.load.bind(this))
       
-      .bind("file.removed", function(event, data) {
+      .on("file.removed", function(data) {
         if (data.channel_id != this.channelId) {
           return;
         }
         $("#file-widget [data-file-path='" + protonet.utils.escapeForCssQuery(data.path) + "']").remove();
       }.bind(this))
       
-      .bind("file.added", function(event, data) {
+      .on("file.added", function(data) {
         if (data.channel_id != this.channelId || data.path != this.path) {
           return;
         }
@@ -60,16 +58,16 @@ protonet.widgets.File = Class.create({
         this.renderItem("file", data.file_name)
           .css("backgroundColor", "#ffff99")
           .animate({ "backgroundColor": "#ffffff" }, { duration: 1000 });
-      }.bind(this))
+        }.bind(this))
       
-      .bind("directory.removed", function(event, data) {
+      .on("directory.removed", function(data) {
         if (data.channel_id != this.channelId) {
           return;
         }
         $("#file-widget [data-directory-path='" + protonet.utils.escapeForCssQuery(data.path) + "']").remove();
       }.bind(this))
       
-      .bind("directory.added", function(event, data) {
+      .on("directory.added", function(data) {
         if (data.channel_id != this.channelId || data.path != this.path) {
           return;
         }
@@ -85,16 +83,16 @@ protonet.widgets.File = Class.create({
     this.container
       .delegate(".address-bar [data-directory-path]", "click", function(event) {
         var path = $(event.currentTarget).data("directory-path");
-        protonet.trigger("files.load", [this.channelId, path]);
+        protonet.trigger("files.load", this.channelId, path);
         event.preventDefault();
       }.bind(this))
       
       .delegate(".enabled[rel=backward]", "click", function(event) {
-        protonet.trigger("files.load", [this.channelId, this.history[--this.historyIndex], true]);
+        protonet.trigger("files.load", this.channelId, this.history[--this.historyIndex], true);
       }.bind(this))
       
       .delegate(".enabled[rel=forward]", "click", function(event) {
-        protonet.trigger("files.load", [this.channelId, this.history[++this.historyIndex], true]);
+        protonet.trigger("files.load", this.channelId, this.history[++this.historyIndex], true);
       }.bind(this))
       
       .delegate("li.disabled", "click", function(event) {
@@ -158,7 +156,7 @@ protonet.widgets.File = Class.create({
     new protonet.ui.ContextMenu("#file-widget ul [data-directory-path]", {
       "<strong>open</strong>":   function(li, closeContextMenu) {
         var path = li.data("directory-path");
-        protonet.trigger("files.load", [this.channelId, path]);
+        protonet.trigger("files.load", this.channelId, path);
         closeContextMenu();
       }.bind(this),
       "delete": function(li, closeContextMenu) {

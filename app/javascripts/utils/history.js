@@ -45,7 +45,7 @@ protonet.utils.History = (function() {
     return this;
   }
   
-  protonet.bind("history.change", function(e, path, additionalParams) {
+  protonet.on("history.change", function(path, additionalParams) {
     var i = 0, j = 0, hooksLength = hooks.length, fallbacksLength = fallbacks.length, returnValue;
     for (; i<hooksLength; i++) {
       returnValue = returnValue || hooks[i](path, additionalParams);
@@ -65,7 +65,7 @@ protonet.utils.History = (function() {
       return;
     }
     var state = event.originalEvent.state || { url: location.href };
-    protonet.trigger("history.change", [state.url, state]);
+    protonet.trigger("history.change", state.url, state);
   });
   
   return {

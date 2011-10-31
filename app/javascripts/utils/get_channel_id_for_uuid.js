@@ -1,7 +1,7 @@
 protonet.utils.getChannelIdForUuid = (function() {
   var mapping = protonet.config.channel_uuid_to_id_mapping || {};
   
-  protonet.bind("channel.added channel.initialized", function(e, channel) {
+  protonet.on("channel.added channel.initialized", function(channel) {
     mapping[channel.uuid] = channel.id;
   });
   

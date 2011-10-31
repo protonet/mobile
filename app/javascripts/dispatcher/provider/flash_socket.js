@@ -22,7 +22,7 @@ protonet.dispatcher.provider.FlashSocket = {
     );
   },
   
-  _authenticate: function(e, connected) {
+  _authenticate: function(connected) {
     if (!connected) {
       return false;
     }
@@ -58,9 +58,11 @@ protonet.dispatcher.provider.FlashSocket = {
     
     // the flash socket will trigger the socket.connected event
     this._authenticateMethod = this._authenticateMethod || this._authenticate.bind(this);
+    
     // Make sure that we unbind old listeners first
-    protonet.unbind("socket.connected", this._authenticateMethod);
-    protonet.bind("socket.connected", this._authenticateMethod);
+    protonet
+      .off("socket.connected", this._authenticateMethod)
+      .on("socket.connected", this._authenticateMethod);
   },
   
   disconnect: function() {

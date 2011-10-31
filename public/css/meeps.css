@@ -53,13 +53,13 @@
 }
 
 .meep .author {
-  background: url(/img/spr_message_arrows_r1.png) no-repeat left bottom;
+  background: url(/img/spr_message_arrows_r2.png) no-repeat 0 0;
   margin-left: -25px;
   padding-left: 25px;
 }
 
 .own.meep .author {
-  background-position: -985px 0;
+  background-position: 0 -81px;
 }
 
 .meep article q:before,

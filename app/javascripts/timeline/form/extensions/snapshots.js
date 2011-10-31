@@ -22,8 +22,8 @@ protonet.timeline.Form.extensions.Snapshots = function($input, $wrapper, $form) 
   $link.click(function() {
     protonet.ui.ModalWindow.show("/snapshots");
     
-    protonet.unbind("snapshot:done.form").bind("snapshot:done.form", function(e, photoUrl) {
-      protonet.ui.ModalWindow.hide();
+    protonet.off("snapshot:done").on("snapshot:done", function(photoUrl) {
+      protonet.trigger("modal_window.hide");
       
       var oldTextExtension = getCurrentTextExtension(),
           newTextExtension = { type: "snapshot", url: photoUrl },

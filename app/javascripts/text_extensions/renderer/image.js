@@ -31,7 +31,6 @@ protonet.text_extensions.render.image = function(data, preventResizing) {
     new protonet.effects.HoverResize(image, {
       newSize:    hoverImageSize,
       newSrc:     data.image,
-      proxy:      true,
       keepRatio:  true
     });
   }

@@ -43,27 +43,27 @@ protonet.user.initGettingStarted = (function() {
       });
     
     protonet
-      .bind("user.changed_avatar", function(e, user) {
+      .on("user.changed_avatar", function(user) {
         if (user.id == viewer) {
           _done("upload-avatar");
         }
       })
       
-      .bind("meep.rendered", function(e, $element, data) {
+      .on("meep.rendered", function($element, data) {
         if (data.user_id == viewer) {
           _done("write-meep");
         }
       })
       
-      .bind("user.added", function() {
+      .on("user.added", function() {
         _done("invite-user");
       })
       
-      .bind("user.changed_password", function() {
+      .on("user.changed_password", function() {
         _done("change-password");
       })
       
-      .bind("user.subscribed_channel", function(e, data) {
+      .on("user.subscribed_channel", function(data) {
         if (data.user_id == viewer && !data.rendezvous) {
           _done("create-channel");
         }

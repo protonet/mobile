@@ -6,9 +6,7 @@ $(function() {
       $avatarForm       = $fileInput.parents("form"),
       $meepList         = $("<ul>", { "class": "meeps" });
   
-  $meepContainer.bind("inview", function() {
-    $meepContainer.unbind("inview");
-    
+  $meepContainer.one("inview", function() {
     function fallback() {
       $meepContainer.html($("<p>", { "class": "hint", text: protonet.t("NO_MEEPS_FOR_USER_AVAILABLE") }));
     }
@@ -51,7 +49,7 @@ $(function() {
         var body     = $iframe[0].contentWindow.document.documentElement,
             response = JSON.parse($.trim(body.innerText || body.textContent));
       } catch(e) {}
-
+      
       if (!response || !response.avatar) {
         protonet.trigger("flash_message.error", (response && response.error) || protonet.t("AVATAR_UPLOAD_ERROR"));
       } else {

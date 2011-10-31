@@ -94,49 +94,49 @@
     
     _observe: function($super) {
       protonet
-        .bind("rendezvous.start", function(e, partner) {
+        .on("rendezvous.start", function(partner) {
           if (partner == this.partner) {
             protonet.trigger("channel.change", this.data.id);
           }
         }.bind(this))
         
-        .bind("channel.change", function(e, channelId) {
+        .on("channel.change", function(channelId) {
           if (channelId === this.data.id) {
             this.show();
           }
         }.bind(this))
         
-        .bind("meep.receive", function(e, meepData) {
+        .on("meep.receive", function(meepData) {
           if (meepData.channel_id === this.data.id) {
             this.show();
           }
         }.bind(this))
         
-        .bind("user.came_online", function(e, userData) {
+        .on("user.came_online", function(userData) {
           if (userData.id === this.partner) {
             this.link.addClass("online");
           }
         }.bind(this))
         
-        .bind("user.goes_offline", function(e, userData) {
+        .on("user.goes_offline", function(userData) {
           if (userData.id === this.partner) {
             this.link.removeClass("online").removeClass("typing");
           }
         }.bind(this))
         
-        .bind("user.typing", function(e, data) {
+        .on("user.typing", function(data) {
           if (data.user_id === this.partner && data.channel_id === this.data.id) {
             this.link.addClass("typing");
           }
         }.bind(this))
         
-        .bind("user.typing_end", function(e, data) {
+        .on("user.typing_end", function(data) {
           if (data.user_id === this.partner) {
             this.link.removeClass("typing");
           }
         }.bind(this))
         
-        .bind("users.update_status", function(e, data) {
+        .on("users.update_status", function(data) {
           var onlineUsers = data.online_users;
           if (onlineUsers[this.partner]) {
             this.link.addClass("online");

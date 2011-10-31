@@ -64,7 +64,7 @@ protonet.open = (function() {
       return fallback(eventOrUrl);
     }
     
-    if (link.pathname === "/") {
+    if (link.pathname === "/" || !link.pathname) {
       return fallback(eventOrUrl);
     }
 
@@ -144,7 +144,6 @@ $.behaviors({
         .end()
       .find(".loading-hint")
         .hide();
-    
     $.each({
       "X-Error-Message":  "flash_message.error",
       "X-Notice-Message": "flash_message.notice",
@@ -153,26 +152,20 @@ $.behaviors({
       var message = xhr.getResponseHeader(header);
       message && protonet.trigger(eventName, message);
     });
-  },
-  
-  ".subpage:ajax:success": (function() {
-    var $tempElement;
-    return function(element, event, html, statusText, xhr) {
+    
+    var status = xhr.status,
+        html   = xhr.responseText;
+    if (status >= 200 && status < 300 || status === 304) {
       if (!html) { return; }
-      $tempElement = $tempElement || $("<div>");
-      $tempElement[0].innerHTML = html;
       $(element).replaceWith(html);
-      
       var newUrl = xhr.getResponseHeader("X-Url");
       newUrl && protonet.utils.History.push(newUrl);
-    };
-  })(),
-  
-  ".subpage:ajax:error": function(xhr) {
-    if (xhr.status === 403) {
-      protonet.trigger("flash_message.error", protonet.t("NO_RIGHTS_ERROR"));
     } else {
-      protonet.trigger("flash_message.error", protonet.t("FORM_SUBMIT_ERROR"));
+      if (status === 403) {
+        protonet.trigger("flash_message.error", protonet.t("NO_RIGHTS_ERROR"));
+      } else {
+        protonet.trigger("flash_message.error", protonet.t("FORM_SUBMIT_ERROR"));
+      }
     }
   },
   

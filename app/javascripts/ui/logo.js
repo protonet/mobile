@@ -19,9 +19,9 @@ protonet.ui.Logo = {
   
   _observe: function() {
     protonet
-      .bind("monster.jump", this.jumpMonster.bind(this))
-      .bind("monster.in_love", this.hearts.bind(this))
-      .bind("channel.meep_receive", function(e, meepData, instance, channel) {
+      .on("monster.jump", this.jumpMonster.bind(this))
+      .on("monster.in_love", this.hearts.bind(this))
+      .on("channel.meep_receive", function(meepData, instance, channel) {
         if (!channel.isSelected) {
           return;
         }

@@ -85,7 +85,13 @@ Given /^I log out$/ do
 end
 
 Given /^I select the channel "([^\"]*)" in the channel list$/ do |linktext|
-  find(:css, "a[data-tab='channels'] strong", :text => "@#{linktext}", :visible => true).click
+  selector = "a[data-tab='channels'] strong"
+  
+  wait_until(10) do
+    page.has_css?(selector)
+  end
+  
+  find(:css, selector, :text => "@#{linktext}", :visible => true).click
 end
 
 Then /^I should see "([^\"]*)" in the channel list$/ do |channel_name|

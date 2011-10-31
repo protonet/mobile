@@ -1,7 +1,6 @@
 // ---- LIBRARIES
 //= require "lib/simple-javascript-airbrake-notifier/notifier.js"
-//= require "lib/shimprove.1-0-1.min.js"
-//= require "lib/jquery-1.6.4.min.js"
+//= require "lib/jquery-1.7.min.js"
 //= require "lib/jquery-ui-1.8.11.custom.min.js"
 //= require "lib/swfobject-2.2.js"
 //= require "lib/jquery-class-create/class.js"
@@ -37,7 +36,7 @@ $(function() {
   protonet.ui.Logo.initialize();
   
   // Clouds
-  if (protonet.config.show_clouds) {
+  if (protonet.config.show_clouds && !$.browser.msie) {
     // Frickin' stunning cloud graphics (makes your squirrel run in circles!!)
     setTimeout(function() {
       new protonet.effects.Clouds($("#cloud-container"), {

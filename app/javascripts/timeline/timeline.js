@@ -13,10 +13,10 @@ $.extend(protonet.timeline, {
     var $loadingIndicator = $("#timeline-loading");
     
     protonet
-      .bind("timeline.loading_start", function() {
+      .on("timeline.loading_start", function() {
         $loadingIndicator.show();
       })
-      .bind("timeline.loading_end", function() {
+      .on("timeline.loading_end", function() {
         $loadingIndicator.hide();
       });
   },

@@ -29,10 +29,9 @@ protonet.ui.FlashMessage = {
   },
   
   _observe: function() {
-    protonet
-      .bind("flash_message.error flash_message.notice flash_message.warning flash_message.sticky", function(event, message) {
-        this.show(event.handleObj.namespace, message);
-      }.bind(this));
+    $.each(["error", "notice", "warning", "sticky"], function(i, type) {
+      protonet.on("flash_message." + type, function(message) { this.show(type, message); }.bind(this))
+    }.bind(this));
   },
   
   show: function(type, message) {
