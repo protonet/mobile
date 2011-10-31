@@ -46,7 +46,6 @@ EventMachine::run do
   port              = !configatron.socket.port.nil? && configatron.socket.port || 5000
   longpolling_port  = !configatron.xhr_streaming.port.nil? && configatron.xhr_streaming.port || 8000
   websocket_port    = !configatron.websocket.port.nil? && configatron.websocket.port || 5001
-  nodesocket_port   = !configatron.nodesocket.port.nil? && configatron.nodesocket.port || 5002
   
   client_tracker = ClientTracker.new
     

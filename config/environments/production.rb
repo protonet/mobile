@@ -40,7 +40,6 @@ Dashboard::Application.configure do
   configatron.socket.port         = 5000
   configatron.xhr_streaming.port  = 8000
   configatron.websocket.port      = 5001
-  configatron.nodesocket.port     = 5002
   configatron.nodejs.port         = 8124
   # checks for stage specific config files
   stage_config = "#{configatron.shared_file_path}/config/stage.rb"
