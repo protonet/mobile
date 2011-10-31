@@ -205,14 +205,14 @@
       }
       
       this.badgeContainer = this.badgeContainer || $("<div>", {
-        "class":  "badge-container"
+        "class": "badge-container"
       }).appendTo(this.link);
       
       if (this.unreadReplies > 0) {
         this.replyBadge = this.replyBadge || $("<span>", {
           "class": "reply-badge"
         }).prependTo(this.badgeContainer);
-        this.replyBadge.text(this.unreadReplies > 20 ? "20+" : this.unreadReplies).show();
+        this.replyBadge.text(this.unreadReplies > 20 ? "20+" : this.unreadReplies).css("display", "inline-block");
       } else {
         this.replyBadge && this.replyBadge.hide();
       }
@@ -223,7 +223,7 @@
         }).appendTo(this.badgeContainer);
         
         this.badgeContainer.show();
-        this.meepBadge.text(this.unreadMeeps > 20 ? "20+" : this.unreadMeeps).show();
+        this.meepBadge.text(this.unreadMeeps > 20 ? "20+" : this.unreadMeeps).css("display", "inline-block");
         if (!this.badgeContainer.is(":animated") && !preventEffect) {
           this.badgeContainer.effect("bounce", { times: 3, distance: 12 }, 125);
         }
