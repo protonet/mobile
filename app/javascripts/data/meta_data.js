@@ -57,7 +57,7 @@ protonet.data.MetaData = {
     
     // handle meta elements
     $.each(metaTags, function(i, metaTag) {
-      if (typeof(metaTag.name) == "string" && typeof(metaTag.content) == "string") {
+      if (metaTag && typeof(metaTag.name) == "string" && typeof(metaTag.content) == "string") {
         // Handling Dublin Core Meta Tags http://www.seoconsultants.com/meta-tags/dublin/
         var name    = $.trim(metaTag.name.toLowerCase()).replace(this.regExps.DUBLIN_CORE, ""),
             content = $.trim(metaTag.content);
@@ -67,7 +67,7 @@ protonet.data.MetaData = {
     
     // handle opengraph meta tags
     $.each(metaTags, function(i, metaTag) {
-      if (String(metaTag.property).startsWith("og:") && typeof(metaTag.content) == "string") {
+      if (metaTag && String(metaTag.property).startsWith("og:") && typeof(metaTag.content) == "string") {
         var key = metaTag.property.substr(3).toLowerCase();
         if (key == "image") {
           key = "image_src";
@@ -81,7 +81,7 @@ protonet.data.MetaData = {
     
     // handle link elements
     $.each($.makeArray(response.link), function(i, linkTag) {
-      if (typeof(linkTag.href) == "string" && linkTag.href.length && $.inArray(linkTag.rel, this.LINK_REL) != -1) {
+      if (linkTag && typeof(linkTag.href) == "string" && linkTag.href.length && $.inArray(linkTag.rel, this.LINK_REL) != -1) {
         var src = $.trim(linkTag.href);
         data[linkTag.rel.toLowerCase()] = protonet.utils.convertToAbsoluteUrl(src, url);
       }
