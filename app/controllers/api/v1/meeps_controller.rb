@@ -23,7 +23,7 @@ class Api::V1::MeepsController < Api::V1::MasterController
   # CREATE A MEEP/TWEET
   def create
     return head :unprocessable_entity if (params[:message].blank? && params[:text_extension].blank?) || params[:channel_id].blank?
-    text_extension = if text_extension.blank?
+    text_extension = if params[:text_extension].blank?
       nil
     else
       params[:text_extension].to_json rescue nil
