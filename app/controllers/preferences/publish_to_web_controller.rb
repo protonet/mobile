@@ -17,6 +17,8 @@ module Preferences
       else
         turn_off_publishing
       end
+      
+      respond_to_preference_update
     end
     
     private
