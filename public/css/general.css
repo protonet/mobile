@@ -354,6 +354,7 @@ header .logo {
   height: 125px;
   text-indent: -9999px;
   width: 225px;
+  outline: 0;
 }
 
 header .monster {

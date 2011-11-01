@@ -67,14 +67,19 @@ protonet.widgets.User = Class.create({
         this.filterChannelUsers();
       }.bind(this))
 
-      .on("user.came_online", function(data) {
-        this.userCameOnline(data);
+      .on("user.came_online", function(user) {
+        clearTimeout(this["timeout" + user.id]);
+        this.userCameOnline(user);
         this.filterChannelUsers();
       }.bind(this))
 
-      .on("user.goes_offline", function(data) {
-        this.userWentOffline(data);
-        this.filterChannelUsers();
+      .on("user.goes_offline", function(user) {
+        // Delay setting offline to prevent flashing entries in user widget
+        // when some users are connected via xhr streaming
+        this["timeout" + user.id] = setTimeout(function() {
+          this.userWentOffline(user);
+          this.filterChannelUsers();
+        }.bind(this), 500);
       }.bind(this))
       
       .on("users.update_status", function(data) {
