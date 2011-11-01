@@ -9,7 +9,6 @@ class InvitationsController < ApplicationController
   
   def create
     @invitation = current_user.invitations.new(params[:invitation])
-    @channels = current_user.owned_channels.real | Channel.public
     
     if @invitation.save
       flash[:notice] = "Your invitation has been successfully sent!"

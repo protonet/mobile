@@ -137,6 +137,10 @@ $.behaviors({
   },
   
   ".subpage:ajax:complete": function(element, event, xhr) {
+    var flashMessageSet,
+        status = xhr.status,
+        html   = xhr.responseText;
+    
     $(event.target)
       .removeClass("loading")
       .find("input, textarea, select, button")
@@ -150,17 +154,18 @@ $.behaviors({
       "X-Sticky-Message": "flash_message.sticky"
     }, function(header, eventName) {
       var message = xhr.getResponseHeader(header);
-      message && protonet.trigger(eventName, message);
+      if (message) {
+        protonet.trigger(eventName, message);
+        flashMessageSet = true;
+      }
     });
     
-    var status = xhr.status,
-        html   = xhr.responseText;
     if (status >= 200 && status < 300 || status === 304) {
       if (!html) { return; }
       $(element).replaceWith(html);
       var newUrl = xhr.getResponseHeader("X-Url");
       newUrl && protonet.utils.History.push(newUrl);
-    } else {
+    } else if (!flashMessageSet) {
       if (status === 403) {
         protonet.trigger("flash_message.error", protonet.t("NO_RIGHTS_ERROR"));
       } else {
