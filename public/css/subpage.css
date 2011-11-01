@@ -158,8 +158,8 @@
 .subpage aside a:hover,
 .subpage aside a:focus {
   color: #000;
-  background: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.15));
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.15)));
+  background: -moz-linear-gradient(top, #eee, #ccc);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#ccc));
 }
 
 .subpage aside a:active {
@@ -169,6 +169,12 @@
 
 .subpage aside strong {
   font-size: 14px;
+  text-shadow: 0 1px 1px #fff;
+}
+
+.subpage aside .selected strong {
+  font-size: 14px;
+  text-shadow: none;
 }
 
 .subpage aside p {
