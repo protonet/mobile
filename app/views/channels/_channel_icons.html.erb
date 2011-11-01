@@ -1,7 +1,4 @@
 <ul class="channel-icons">
-  <%- if current_user.subscribed?(channel) %>
-    <li class="subscribed" title="You are subscribed" data-hover-hint="top"></li>
-  <%- end %>
   <%- unless channel.public? %>
     <li class="private" title="This channel is private" data-hover-hint="top"></li>
   <%- end %>

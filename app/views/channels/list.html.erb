@@ -3,7 +3,7 @@
   <aside>
     <ul>
       <%- Channel.real.local.each do |c| -%>
-        <li class="<%= 'selected' if @selected_channel && c.id == @selected_channel.id %>">
+        <li class="<%= 'selected' if @selected_channel && c.id == @selected_channel.id %><%= ' subscribed' if current_user.subscribed?(c) %>">
           <a href="/channels/<%= c.id %>" data-tab="channels">
             <strong>@<%= c.name %></strong>
             <%= render :partial => 'channel_icons', :locals => { :channel => c } %>

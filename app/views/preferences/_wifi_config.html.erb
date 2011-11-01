@@ -1,9 +1,9 @@
 <h2>WLAN settings</h2>
 
 <%- if SystemWifi.supported? %>
-  <p>You can have one private and one public wireless access point (WPA 2). Here you can configure them.<br>
+  <p>You can have one private and one public wireless access point (WPA 2). Here you can configure them.</p>
   <%- if incoming_interface.starts_with? "wlan" %>
-    <strong>Please note:</strong> Turning off both wireless networks will lock yourself out.</strong></p>
+    <p class="info-message"><strong>Please note:</strong> Turning off both wireless networks will lock yourself out.</p>
   <%- end %>
 
   <%= form_tag preferences_wifi_update_path, { :remote => true, 'data-type' => 'html', :class => 'wifi' }  do %>

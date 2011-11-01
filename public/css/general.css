@@ -569,3 +569,13 @@ h2 .action-link {
   padding-left: 0;
   padding-right: 22px;
 }
+
+
+.info-message {
+  color: #333;
+  background: #F7F1A8;
+  padding: 10px;
+  border-top: 1px solid #8C8C8C;
+  border-bottom: 1px solid #8C8C8C;
+  margin: 10px 0 20px;
+}

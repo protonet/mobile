@@ -340,7 +340,6 @@ a.loading {
 }
 
 .subpage .form-field > label {
-  font-weight: bold;
   float: left;
   width: 220px;
 }

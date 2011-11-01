@@ -7,33 +7,51 @@
   border-bottom: 1px solid #fff;
 }
 
-.channel-teaser li {
+.subpage aside .subscribed a:before {
+  content: "";
+  left: 0;
+  top: 0;
+  bottom: 1px;
+  width: 4px;
+  position: absolute;
+  border-right: 1px solid #fff;
+  background: #00cc00;
+  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.3)));
+}
+
+.subpage aside .subscribed a:active:before {
+  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0.3)), to(rgba(0, 0, 0, 0)));
+}
+
+.channel-teaser > li {
   display: inline-block;
+  margin-right: 10px;
   vertical-align: top;
   min-width: 200px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 .channel-teaser a {
+  color: #000;
   display: block;
   padding: 10px;
-  min-height: 50px;
-  border-radius: 10px;
-  border: 1px solid #999;
+  min-height: 70px;
+  border-bottom: 1px solid #999;
   text-decoration: none;
-  background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.08));
-  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.08)));
+  background-image: -moz-linear-gradient(top, #fff, #ddd);
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ddd));
 }
 
-.channel-teaser a:hover {
-  color: #000;
-  background-image: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.12));
-  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.12)));
+.channel-teaser .channel-icons {
+  display: inline-block;
+  margin: 0 0 0 5px;
 }
 
 .channel-teaser a:active {
-  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0.08), transparent);
-  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0.08)), to(transparent));
+  background-image: -moz-linear-gradient(top, #ddd, #fff);
+  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ddd), to(#fff));
 }
 
 .channel-teaser a:hover h4 {
@@ -43,30 +61,23 @@
 .channel-teaser .official-channel {
   padding-right: 80px;
   background-repeat: no-repeat;
-  background-position: right 0;
+  background-position: right bottom;
   background-image: url(/img/founder.png),
-                    -moz-linear-gradient(top, transparent, rgba(72, 123, 255, 0.2));
+                    -moz-linear-gradient(top, #fff, #DAE4FF);
   background-image: url(/img/founder.png),
-                    -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(72, 123, 255, 0.2)));
-}
-
-.channel-teaser .official-channel:hover {
-  background-image: url(/img/founder.png),
-                    -moz-linear-gradient(top, transparent, rgba(72, 123, 255, 0.3));
-  background-image: url(/img/founder.png),
-                    -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(72, 123, 255, 0.3)));
+                    -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#DAE4FF));
 }
 
 .channel-teaser .official-channel:active {
   background-image: url(/img/founder.png),
-                    -moz-linear-gradient(top, rgba(72, 123, 255, 0.2), transparent);
+                    -moz-linear-gradient(top, #DAE4FF, #fff);
   background-image: url(/img/founder.png),
-                    -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.2)), to(transparent));
+                    -webkit-gradient(linear, 0% 0%, 0% 100%, from(#DAE4FF), to(#fff));
 }
 
 .channel-teaser a p {
   font-size: 10px;
-  margin: 0;
+  margin: 5px 0 0;
   width: 200px;
 }
 

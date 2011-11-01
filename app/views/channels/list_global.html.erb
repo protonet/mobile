@@ -8,7 +8,7 @@
           <p><%= n.global_channels.size %> channels</p>
         </li>
         <%- n.global_channels.each do |c| -%>
-          <li class="<%= 'selected' if @selected_channel && c.uuid == @selected_channel.uuid %>">
+          <li class="<%= 'selected' if @selected_channel && c.uuid == @selected_channel.uuid %><%= ' subscribed' if current_user.subscribed? Channel.find_by_uuid(c.uuid) %>">
             <%- link_to show_global_channel_path(:uuid => c.uuid, :node => { :uuid => n.uuid, :url => n.url }), 'data-tab' => 'channels' do %>
               <strong>@<%= c.name %></strong>
             <%- end %>
