@@ -16,7 +16,12 @@ class SystemPublishToWeb
     end
     
     def ssh_keys
-      SystemPreferences.proxy_ssh_keys ||= create_keys
+      filename = "#{configatron.shared_file_path}/config/protonet.d/proxy_dsa"
+      if SystemPreferences.proxy_ssh_keys && (SystemPreferences.proxy_ssh_keys["private"] == File.read(filename))
+        SystemPreferences.proxy_ssh_keys
+      else
+        SystemPreferences.proxy_ssh_keys = create_keys
+      end
     end
     
     def create_keys
