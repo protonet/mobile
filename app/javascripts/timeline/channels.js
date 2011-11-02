@@ -289,9 +289,11 @@ protonet.timeline.Channels = {
       $.each(this.channels, function(id, channel) {
         totalUnreadMeeps += channel.unreadMeeps || 0;
       });
-
+      
       if (totalUnreadMeeps) {
         protonet.utils.BrowserTitle.setPrefix(totalUnreadMeeps);
+      } else {
+        protonet.utils.BrowserTitle.restore();
       }
     }.bind(this), 1000);
     
