@@ -23,10 +23,11 @@ protonet.utils.convertToAbsoluteUrl = (function() {
       return parentUrlParts.protocol + "//" + parentUrlParts.host + relativeUrl;
     }
     
+    var path = parentUrlParts.path || parentUrlParts.pathname;
     // Folder-relative (eg. "foo.jpg" or "../foo.jpg")
     return parentUrlParts.protocol + "//" +
            parentUrlParts.host +
-           parentUrlParts.path.substring(0, parentUrlParts.path.lastIndexOf("/")) + "/" +
+           path.substring(0, path.lastIndexOf("/")) + "/" +
            relativeUrl;
   };
 })();
