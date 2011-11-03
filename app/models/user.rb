@@ -265,6 +265,12 @@ class User < ActiveRecord::Base
     !temporary_identifier.blank?
   end
   
+  def channel_uuid_to_id_mapping
+    mapping = {}
+    channels.each {|c| mapping[c.uuid] = c.id }
+    mapping
+  end
+  
   def assign_roles_and_channels
     if invitation_token
       if invitation = Invitation.unaccepted.find_by_token(invitation_token)

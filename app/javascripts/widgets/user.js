@@ -16,20 +16,22 @@ protonet.widgets.User = Class.create({
       var $link     = $(link),
           $listItem = $link.parent(),
           userId    = $link.data("user-id");
+      
       this.usersData[userId] = {
-        element:              $listItem,
-        name:                 $.trim($link.text()),
-        isViewer:             $listItem.hasClass("myself"),
-        isStranger:           false,
-        avatar:               $link.data("user-avatar"),
-        channelSubscriptions: $.map($link.data("user-channel-subscriptions"), function(channelId) {
-          this.channelSubscriptions[channelId] = this.channelSubscriptions[channelId] || [];
-          this.channelSubscriptions[channelId].push(userId);
-          return channelId;
-        }.bind(this))
+        element:     $listItem,
+        name:        $.trim($link.text()),
+        isViewer:    $listItem.hasClass("myself"),
+        isStranger:  false,
+        avatar:      $link.data("user-avatar")
       };
+      
+      $.each($link.data("user-channel-subscriptions"), function(i, channelId) {
+        this.channelSubscriptions[channelId] = this.channelSubscriptions[channelId] || [];
+        this.channelSubscriptions[channelId].push(userId);
+      }.bind(this));
+      
     }.bind(this));
-
+    
     protonet.trigger("users.data_available", this.usersData);
 
     new protonet.ui.Resizer(this.list, this.resizer, { storageKey: "user_widget_height" });
@@ -219,7 +221,6 @@ protonet.widgets.User = Class.create({
       isViewer:               isViewer,
       isStranger:             isStranger,
       avatar:                 user.avatar,
-      channelSubscriptions:   [],
       element:                $element
     };
   },
@@ -270,37 +271,31 @@ protonet.widgets.User = Class.create({
   
   filterChannelUsers: function(channelId) {
     channelId = channelId || protonet.timeline.Channels.selected;
-    if (!channelId) {
+    
+    var channelSubscriptions = this.channelSubscriptions[channelId];
+    if (!channelSubscriptions) {
       return;
     }
     
-    var channelSubscriptions = this.channelSubscriptions[channelId];
-    if (!this.channelSubscriptions[channelId]) {
-      return;
-    }
     this.list.children().hide();
-    for (var i=0, l=channelSubscriptions.length; i<l; i++) {
-      var userId = channelSubscriptions[i],
-          user = this.usersData[userId];
-      if (user) {
-        user.element.show();
-      }
-    }
+    $.each(channelSubscriptions, function(i, userId) {
+      var user = this.usersData[userId];
+      user && user.element.show();
+    }.bind(this));
     
     this.updateCount();
   },
   
   updateCount: function() {
     var total = 0, online = 0;
-    for (var i in this.usersData) {
-      var user = this.usersData[i];
+    $.each(this.usersData, function(i, user) {
       if (user.element.is(":visible")) {
         total++;
-        if (this.usersData[i].isOnline) {
+        if (user.isOnline) {
           online++;
         }
       }
-    }
+    });
     
     this.onlineUsersCount.text("(" + online + "/" + total + ")");
   },
@@ -340,9 +335,10 @@ protonet.widgets.User = Class.create({
   },
   
   _userUnsubscribedChannel: function(userId, channelId) {
-    var channelUsers = this.channelSubscriptions[channelId];
-    if (channelUsers) {
-      channelUsers.splice(channelUsers.indexOf(userId), 1);
+    var channelUsers  = this.channelSubscriptions[channelId],
+        indexOfUserId = channelUsers.indexOf(userId);
+    if (channelUsers && indexOfUserId !== -1) {
+      channelUsers.splice(indexOfUserId, 1);
     }
     if (channelId == protonet.timeline.Channels.selected) {
       var user = this.usersData[userId];
