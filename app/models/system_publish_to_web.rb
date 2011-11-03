@@ -31,12 +31,12 @@ class SystemPublishToWeb
       # and generate
       `/usr/bin/ssh-keygen -t dsa -f #{filename} -N ''`
       `/bin/chmod og-rwx #{filename}`
-      keys = {"private" => File.read(filename), "public" => File.read(filename + ".pub")}
+      keys = {"private" => File.read(filename).strip, "public" => File.read(filename + ".pub").strip}
     end
     
     def port
       license_key = SystemBackend.license_key
-      url = "http://directory.protonet.info/show?node_name=#{SystemPreferences.publish_to_web_name}&license_key=#{license_key}"
+      url = "http://directory.protonet.info/show?node_name=#{SystemPreferences.publish_to_web_name}&license_key=#{license_key}&public_key_sha=#{Digest::SHA1.hexdigest(ssh_keys)}"
       response = HTTParty.get(url, :timeout => 10).body
       if response.match(/error/)
         register_options = {:node_name => SystemPreferences.publish_to_web_name, :license_key => license_key, :public_key => ssh_keys["public"], :uuid => Network.local.uuid}
