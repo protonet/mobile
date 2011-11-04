@@ -78,7 +78,7 @@ protonet.timeline.Channels = {
             isSubscribed  = $.inArray(id, this.subscribedChannels) !== -1;
         
         if (isSubscribed) {
-          protonet.trigger("channel.change", id);
+          protonet.trigger("modal_window.hide").trigger("channel.change", id);
         } else {
           protonet.open("/channels/" + id);
         }
@@ -117,8 +117,6 @@ protonet.timeline.Channels = {
         if ($.inArray(id, this.subscribedChannels) === -1) {
           return;
         }
-        
-        protonet.trigger("modal_window.hide");
         
         this.selected = id;
         
