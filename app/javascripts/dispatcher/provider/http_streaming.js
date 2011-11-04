@@ -79,7 +79,7 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
           abortOldRequest();
           
           if (this.ajax.readyState >= 3 && connected === undef) {
-            connected = (this.ajax.status == 200);
+            connected = (this.ajax.status === 200);
             protonet.trigger("socket.connected", connected);
           }
 
@@ -89,9 +89,13 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
 
           if (this._hasReceivedData(this.ajax)) {
             var responseText = this.ajax.responseText || "",
-                rawData      = responseText.substring(byteOffset);
-            byteOffset = responseText.length;
-            protonet.trigger("socket.receive", rawData);
+                rawData      = responseText.substr(byteOffset),
+                boundary     = rawData.lastIndexOf("<\/script>");
+            if (boundary !== -1) {
+              rawData = rawData.substr(0, boundary + 9);
+              byteOffset = byteOffset + rawData.length;
+              protonet.trigger("socket.receive", rawData);
+            }
           }
 
           if (this._shouldReconnect(this.ajax)) {
@@ -123,7 +127,7 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
     },
     
     _hasReceivedData: function(currentRequest) {
-      return currentRequest.readyState === 3 || currentRequest.readyState === 4;
+      return currentRequest.readyState >= 3;
     },
     
     disconnect: function() {
