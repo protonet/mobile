@@ -106,11 +106,21 @@
   height: 16px;
   width: 21px;
   right: 0;
-  background: transparent url(/img/icn_close_grey.png) no-repeat 5px center;
 }
 
 #channels .hide-link:hover {
   opacity: 1;
+}
+
+#channels .hide-link:before {
+  content: "\00D7";
+  color: #666;
+  font-weight: bold;
+  right: 0;
+  top: 0;
+  left: 2px;
+  line-height: 16px;
+  position: absolute;
 }
 
 #channels .active + .hide-link {
