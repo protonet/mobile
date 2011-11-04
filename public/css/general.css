@@ -27,17 +27,17 @@ body {
 body ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
-  background: #fff;
+  background: transparent;
 }
 
 body ::-webkit-scrollbar-thumb {
-  border: 2px solid #fff;
-  background: #fff;
+  background: transparent;
   border-radius: 5px;
 }
 
 body :hover::-webkit-scrollbar-thumb {
   background: #bbb;
+  border: 2px solid #fff;
 }
 
 .inner-body {
