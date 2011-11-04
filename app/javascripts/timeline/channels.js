@@ -79,7 +79,7 @@ protonet.timeline.Channels = {
         
         if (isSubscribed) {
           protonet.trigger("modal_window.hide").trigger("channel.change", id);
-        } else {
+        } else if (protonet.config.allow_modal_views) {
           protonet.open("/channels/" + id);
         }
         
