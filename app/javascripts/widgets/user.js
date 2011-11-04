@@ -73,6 +73,7 @@ protonet.widgets.User = Class.create({
         clearTimeout(this["timeout" + user.id]);
         this.userCameOnline(user);
         this.filterChannelUsers();
+        delete this["timeout" + user.id];
       }.bind(this))
 
       .on("user.goes_offline", function(user) {
