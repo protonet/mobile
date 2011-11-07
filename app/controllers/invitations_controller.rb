@@ -15,7 +15,7 @@ class InvitationsController < ApplicationController
       head(204)
     else
       flash[:error] = @invitation.errors.full_messages.to_sentence
-      head(417)
+      head(412)
     end
   end
   

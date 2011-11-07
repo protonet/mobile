@@ -27,11 +27,16 @@ $(function() {
   });
   
   $page.delegate("form.publish-to-web input[type=radio]", "change", function(i,j,k) {
-    if($(i.currentTarget).val() == "true") {
-      $("#preferences_publish_to_web_name").attr('disabled', true);
-    } else {
-      $("#preferences_publish_to_web_name").attr('disabled', false);
+    if($(i.currentTarget).val() != "true") {
+      $("#preferences_publish_to_web_name").attr('readonly', false);
     }
   });
+  
+  $page.delegate("form.publish-to-web", "ajax:complete", function() {
+    if($("form.publish-to-web input[type=radio]").val() == "true") {
+      $("#preferences_publish_to_web_name").attr('readonly', true);
+    }
+  });
+  
   
 });

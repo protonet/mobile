@@ -51,7 +51,7 @@ class ChannelsController < ApplicationController
       xhr_redirect_to :action => 'show', :id => channel.id
     else
       flash[:error] = "Could not create channel, #{channel.errors.map().join(' ')}"
-      head(417)
+      head(412)
     end
   end
   
