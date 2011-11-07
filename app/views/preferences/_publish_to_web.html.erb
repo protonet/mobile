@@ -7,7 +7,7 @@
   <%= hidden_field_tag(:section, 'publish_to_web') %>
   <div class="form-field">
     <%= label_tag 'preferences[publish_to_web_name]', 'URL:' %>
-    https:// <%= text_field_tag 'preferences[publish_to_web_name]', SystemPreferences.publish_to_web_name, :disabled => SystemPublishToWeb.status %>.protonet.info <a title="This is your node's external web address" data-hover-hint="top" class="hint">(?)</a>
+    https:// <%= text_field_tag 'preferences[publish_to_web_name]', SystemPreferences.publish_to_web_name, :readonly => SystemPublishToWeb.status %>.protonet.info <a title="This is your node's external web address" data-hover-hint="top" class="hint">(?)</a>
   </div>
   <div class="form-field">
     <%= label_tag 'preferences[publish_to_web]', 'Status:' %>

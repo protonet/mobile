@@ -4,7 +4,7 @@ module Preferences
     def update
       if (setting = params[:preferences][:publish_to_web] == "true") && params[:preferences][:publish_to_web_name].blank?
         flash[:error] = "Please enter a proper url"
-        return respond_to_preference_update(412)
+        redirect_to(:controller => "/preferences", :action => "show", :section => "publish_to_web") and return
       end
       
       SystemPreferences.publish_to_web_name = params[:preferences][:publish_to_web_name]
@@ -15,12 +15,11 @@ module Preferences
         SystemPreferences.public_host_https = true
         success, error = turn_on_publishing
       else
-        success = turn_off_publishing
+        turn_off_publishing
       end
       
       flash[:error] = "Publish to web error: " + error.inspect + "." if error
-      
-      respond_to_preference_update(success ? 204 : 412)
+      redirect_to(:controller => "/preferences", :action => "show", :section => "publish_to_web")
     end
     
     def publish_status
