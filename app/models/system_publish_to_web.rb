@@ -5,11 +5,13 @@ class SystemPublishToWeb
     def publish
       return [false, "doesn't work in non-production environments"] unless Rails.env == 'production'
       monitor_service
+      true
     end
     
     def unpublish
       return [false, "doesn't work in non-production environments"] unless Rails.env == 'production'
       SystemMonit.remove(:publish_to_web) if SystemMonit.exists?(:publish_to_web)
+      true
     end
     
     def status

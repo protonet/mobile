@@ -1,7 +1,7 @@
 #!/bin/bash
 
 export CURRENT_PATH=$(cd `dirname $0` && cd ../.. && pwd)
-export SHARED=$CURRENT_PATH/../shared
+export SHARED=$CURRENT_PATH/../../shared
 export HOME=$CURRENT_PATH/../..
 . $HOME/../.bashrc
 . $HOME/../.profile
