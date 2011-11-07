@@ -147,7 +147,6 @@ button:disabled {
 }
 
 input[readonly] {
-  background-color: #eee;
   color: #666;
 }
 

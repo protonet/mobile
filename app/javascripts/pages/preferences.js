@@ -22,12 +22,16 @@ $(function() {
     return false;
   });
   
-  $page.delegate("form.wifi, form.publish-to-web", "ajax:complete", function() {
+  $page.delegate("form.wifi", "ajax:complete", function() {
     $(this).find(".reload-link").click();
   });
   
   $page.delegate("form.publish-to-web", "ajax:complete", function() {
     $("#preferences_publish_to_web_name").attr('readonly', $("form.publish-to-web input[type=radio]:checked").val() == "true");
+  });
+  
+  $page.delegate("form.publish-to-web", "ajax:complete", function() {
+    $(".reload-link").click();
   });
   
   
