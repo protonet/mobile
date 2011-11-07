@@ -74,15 +74,16 @@ Dashboard::Application.routes.draw do
 
   # Preferences
   namespace :preferences do
-    match 'privacy/update'  => 'privacy#update', :as => :privacy_update
-    match 'wifi/update'     => 'wifi#update', :as => :wifi_update
-    match 'publish_to_web/update'     => 'publish_to_web#update', :as => :publish_to_web_update
-    match 'vpn/update'      => 'vpn#update', :as => :vpn_update
-    match 'wifi/interface_status'     => 'wifi#interface_status', :as => :interface_status
-    match 'vpn/on'    => 'vpn#on', :as => :vpn_on
-    match 'vpn/off'   => 'vpn#off', :as => :vpn_off
-    match 'wifi/on'   => 'wifi#on', :as => :wifi_on
-    match 'wifi/off'  => 'wifi#off', :as => :wifi_off
+    match 'privacy/update'  => 'privacy#update',  :as => :privacy_update
+    match 'wifi/update'     => 'wifi#update',     :as => :wifi_update
+    match 'publish_to_web/update'     => 'publish_to_web#update',         :as => :publish_to_web_update
+    match 'publish_to_web/status'     => 'publish_to_web#publish_status', :as => :publish_to_web_status
+    match 'vpn/update'      => 'vpn#update',      :as => :vpn_update
+    match 'wifi/interface_status'     => 'wifi#interface_status',         :as => :interface_status
+    match 'vpn/on'    => 'vpn#on',                :as => :vpn_on
+    match 'vpn/off'   => 'vpn#off',               :as => :vpn_off
+    match 'wifi/on'   => 'wifi#on',               :as => :wifi_on
+    match 'wifi/off'  => 'wifi#off',              :as => :wifi_off
     match 'releases/update' => 'releases#update', :as => :release_update
   end
   

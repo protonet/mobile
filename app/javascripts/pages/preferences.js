@@ -13,7 +13,7 @@ $(function() {
     $link.addClass("reloading");
 
     $.ajax({
-      url:      "/preferences/wifi/interface_status",
+      url:      $link.data('refresh-url'),
       cache:    false,
       data:     { "interface": interfaceName },
       success:  function(html) { $container.html(html); }
@@ -22,7 +22,16 @@ $(function() {
     return false;
   });
   
-  $page.delegate("form.wifi", "ajax:complete", function() {
+  $page.delegate("form.wifi, form.publish-to-web", "ajax:complete", function() {
     $(this).find(".reload-link").click();
   });
+  
+  $page.delegate("form.publish-to-web input[type=radio]", "change", function(i,j,k) {
+    if($(i.currentTarget).val() == "true") {
+      $("#preferences_publish_to_web_name").attr('disabled', true);
+    } else {
+      $("#preferences_publish_to_web_name").attr('disabled', false);
+    }
+  });
+  
 });

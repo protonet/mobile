@@ -15,6 +15,11 @@ class SystemPublishToWeb
       system(service_command(0, 'status'))
     end
     
+    def remote_status
+      return false unless Rails.env == 'production'
+      open("https://#{SystemPreferences.publish_to_web_name}.protonet.info").status == ['200', 'OK']
+    end
+    
     def ssh_keys
       filename = "#{configatron.shared_file_path}/config/protonet.d/proxy_dsa"
       if SystemPreferences.proxy_ssh_keys && (SystemPreferences.proxy_ssh_keys["private"] == File.read(filename))
