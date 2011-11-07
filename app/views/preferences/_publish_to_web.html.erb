@@ -1,6 +1,6 @@
 <h2>Publish to web</h2>
-<div class="status-box">
-  <%= render :partial => 'preferences/publish_to_web/status' %>
+<div class="status-box publish-to-web">
+  <%= @nofetch = true; render :partial => 'preferences/publish_to_web/status' %>
 </div>
 <p>Make your node available to the entire world not just your local network.</p>
 <%= form_tag preferences_publish_to_web_update_path, { :remote => true, 'data-type' => 'html', :class => 'publish-to-web' } do -%>

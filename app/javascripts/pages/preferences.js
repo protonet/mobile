@@ -26,4 +26,6 @@ $(function() {
     $(this).find(".reload-link").click();
   });
   
+  $page.find(".status-box.publish-to-web .reload-link").click();
+  
 });
