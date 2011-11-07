@@ -17,8 +17,10 @@ module Preferences
       else
         turn_off_publishing
       end
-      
-      flash[:error] = "Publish to web error: " + error.inspect + "." if error
+      if error
+        error_message = JSON.parse(error.message)["errors"].join(", ") rescue error.message
+        flash[:error] = "Publish to web error: " + error_message + "."
+      end
       redirect_to(:controller => "/preferences", :action => "show", :section => "publish_to_web")
     end
     
