@@ -18,7 +18,7 @@ module System
         begin
           full_directory_path = "/#{params[:channel_id]}#{params[:file_path]}#{params[:directory_name]}"
           FileUtils.mkdir(SystemFileSystem.cleared_path(full_directory_path))
-          FileUtils.chmod(0640, SystemFileSystem.cleared_path(full_directory_path))
+          FileUtils.chmod(0741, SystemFileSystem.cleared_path(full_directory_path))
           
           channel = Channel.find(params[:channel_id])
           publish 'files', ['channel', channel.uuid],
