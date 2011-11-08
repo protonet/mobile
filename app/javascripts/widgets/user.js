@@ -336,10 +336,12 @@ protonet.widgets.User = Class.create({
   },
   
   _userUnsubscribedChannel: function(userId, channelId) {
-    var channelUsers  = this.channelSubscriptions[channelId],
-        indexOfUserId = channelUsers.indexOf(userId);
-    if (channelUsers && indexOfUserId !== -1) {
-      channelUsers.splice(indexOfUserId, 1);
+    var channelUsers = this.channelSubscriptions[channelId];
+    if (channelUsers) {
+      var indexOfUserId = channelUsers.indexOf(userId);
+      if (indexOfUserId !== -1) {
+        channelUsers.splice(indexOfUserId, 1);
+      }
     }
     if (channelId == protonet.timeline.Channels.selected) {
       var user = this.usersData[userId];

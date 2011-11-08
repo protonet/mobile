@@ -10,7 +10,7 @@ protonet.text_extensions.utils.insertBaseUrl = (function() {
         }
       } else if ($.type(data[i]) === "array") {
         data[i] = $.map(data[i], function(value) {
-          if (value.startsWith(localUrlPlaceholder)) {
+          if (typeof(value) === "string" && value.startsWith(localUrlPlaceholder)) {
             return currentBaseUrl + value.substr(localUrlPlaceholder.length);
           } else {
             return value;

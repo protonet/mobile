@@ -211,16 +211,15 @@ protonet.widgets.File = Class.create({
      * The browse link is part of the context menu which doesn't exist yet
      */
     var timestamp     = new Date().getTime(),
-        maxFileSize   = $.browser.mozilla ? "100mb" : "1000mb",
+        maxFileSize   = ($.browser.mozilla && !window.FormData) ? "100mb" : "2000mb",
         list          = this.uploadContextMenu.list,
         filesInQueue  = [],
-        browseLink    = list.children(":eq(1)").attr("id", "browse:" + timestamp),
+        $browseLink    = list.children(":eq(1)").attr("id", "browse:" + timestamp),
         progress      = $("<span>", { "class": "progress", text: "(0 %) " });
     
     this.uploader = new plupload.Uploader({
       runtimes:       "html5,flash",
-      browse_button:  browseLink.attr("id"),
-      container:      browseLink.attr("id"),
+      browse_button:  $browseLink.attr("id"),
       max_file_size:  maxFileSize,
       url:            "",
       flash_swf_url:  "/flash/plupload.flash.swf",
@@ -259,9 +258,9 @@ protonet.widgets.File = Class.create({
     }.bind(this));
     
     this.uploader.bind("BeforeUpload", function(uploader, file) {
-      window.onbeforeunload = function() {
+      $(window).bind("beforeunload.uploader", function() {
         return protonet.t("UPLOAD_IN_PROGRESS");
-      };
+      });
     });
     
     /**
@@ -270,8 +269,9 @@ protonet.widgets.File = Class.create({
      * downloaded 
      */
     this.uploader.bind("FileUploaded", function(uploader, file) {
-      window.onbeforeunload = null;
       if (uploader.total.percent >= 100 && uploader.total.queued <= 1) {
+        $(window).unbind("beforeunload.uploader");
+        
         // Using a timeout here could fix a problem in some webkit based browsers
         // where the UI partially freezes after executing the confirm()
         setTimeout(function() {
@@ -287,7 +287,7 @@ protonet.widgets.File = Class.create({
     
     
     this.uploader.bind("Error", function(uploader, error) {
-      window.onbeforeunload = null;
+      $(window).unbind("beforeunload.uploader");
       
       /**
        * Ignore initialization errors
