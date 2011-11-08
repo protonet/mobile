@@ -10,7 +10,7 @@ protonet.text_extensions.utils.replaceBaseUrl = (function() {
         }
       } else if ($.type(data[i]) === "array") {
         data[i] = $.map(data[i], function(value) {
-          if (value.startsWith(currentBaseUrl)) {
+          if (typeof(value) === "string" && value.startsWith(currentBaseUrl)) {
             return localUrlPlaceholder + value.substr(currentBaseUrl.length);
           } else {
             return value;
