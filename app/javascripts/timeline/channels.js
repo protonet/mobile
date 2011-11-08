@@ -301,11 +301,6 @@ protonet.timeline.Channels = {
   },
   
   _render: function() {
-    // Needed to debug a strange unreproducible js error (cblum)
-    if (!this.data.chunk) {
-      throw new Error("Custom error! this.data type: " + $.type(this.data) + ", value: " + this.data);
-    }
-    
     this.data.chunk(function(channelData) {
       var channel = this._instantiateChannel(channelData).render(this.container);
       // Render tab if not existing
