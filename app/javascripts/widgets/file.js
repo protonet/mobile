@@ -202,7 +202,20 @@ protonet.widgets.File = Class.create({
       this.uploader.trigger("Refresh");
     }.bind(this);
     
-    this.uploadContextMenu.bind("open", refresh).bind("close", refresh);
+    var $window = $(window);
+    
+    this.uploadContextMenu
+      .bind("close", function() {
+        $window.unbind("resize.plupload");
+        refresh();
+      })
+      .bind("open", function() {
+        $("div.plupload.flash").unbind("mousedown.plupload").bind("mousedown.plupload", function(event) {
+          event.stopPropagation();
+        });
+        $window.bind("resize.plupload", refresh);
+        refresh();
+      });
     this.uploadContextMenu.create();
   },
   
