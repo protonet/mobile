@@ -54,7 +54,7 @@ protonet.text_extensions.provider.Maps = (function() {
     }
     
     return imageUrl
-      .replace("{center}",  coordinates || extractQuery(url) || this._extractHNear(url))
+      .replace("{center}",  coordinates || extractQuery(url) || extractHNear(url))
       .replace("{zoom}",    extractZoom(url))
       .replace("{maptype}", extractMapType(url));
   }

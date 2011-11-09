@@ -210,7 +210,7 @@ class Channel < ActiveRecord::Base
     def send_channel_notification
       publish "system", "channels", {
         :trigger      => 'channel.added',
-        :name         => self.display_name,
+        :name         => self.name,
         :id           => self.id,
         :uuid         => self.uuid
       }
