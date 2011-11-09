@@ -8,7 +8,7 @@ protonet.dispatcher.provider.WebSocket = {
   },
 
   connect: function() {
-    if (location.protocol == 'https:') {
+    if (location.protocol == 'https:' && !protonet.user.Browser.IS_SAFARI()) {
       this.socket = new WebSocket("wss://" + protonet.config.dispatching_server + ":" + protonet.config.dispatching_websocket_ssl_port + "/");
     } else {
       this.socket = new WebSocket("ws://" + protonet.config.dispatching_server + ":" + protonet.config.dispatching_websocket_port + "/");

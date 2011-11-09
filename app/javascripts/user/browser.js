@@ -86,5 +86,9 @@ protonet.user.Browser = {
   IS_ANDROID_WEBKIT: function() {
     var userAgent = navigator.userAgent.toLowerCase();
     return userAgent.indexOf("android") !== -1 && userAgent.indexOf("webkit") !== -1;
+  },
+  
+  IS_SAFARI: function() {
+    $.browser.safari && !navigator.userAgent.match(/chrome/i);
   }
 };
