@@ -89,6 +89,6 @@ protonet.user.Browser = {
   },
   
   IS_SAFARI: function() {
-    $.browser.safari && !navigator.userAgent.match(/chrome/i);
+    return $.browser.safari && !navigator.userAgent.match(/chrome/i);
   }
 };
