@@ -9,7 +9,11 @@ protonet.dispatcher.provider.WebSocket = {
   },
 
   connect: function() {
-    this.socket = new WebSocket("ws://" + protonet.config.dispatching_server + ":" + protonet.config.dispatching_websocket_port + "/");
+    if (location.protocol == 'https:') {
+      this.socket = new WebSocket("wss://" + protonet.config.dispatching_server + ":" + protonet.config.dispatching_websocket_ssl_port + "/");
+    } else {
+      this.socket = new WebSocket("ws://" + protonet.config.dispatching_server + ":" + protonet.config.dispatching_websocket_port + "/");
+    }
     
     this.socket.onmessage = function(event) { 
       protonet.trigger("socket.receive", event.data);

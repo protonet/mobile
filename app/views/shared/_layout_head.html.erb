@@ -19,6 +19,7 @@
       dispatching_server:         "<%= server_name %>",
       dispatching_server_port:    "<%= configatron.socket.port %>",
       dispatching_websocket_port: "<%= configatron.websocket.port %>",
+      dispatching_websocket_ssl_port: "<%= configatron.websocket_ssl.port %>",
       force_xhr_streaming:        <%= raw(incoming_interface == "published_to_web" ? "true" : "false") %>,
       token:                      "<%= current_user.communication_token %>",
       node_uuid:                  "<%= Node.local.uuid %>",

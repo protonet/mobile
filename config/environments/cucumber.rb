@@ -35,6 +35,7 @@ Dashboard::Application.configure do
   
   configatron.socket.port         = 5005
   configatron.websocket.port      = 5006
+  configatron.websocket_ssl.port  = 5007
   configatron.xhr_streaming.port  = 8001
   configatron.nodejs.port         = 8125
   configatron.js_dispatching_active = true

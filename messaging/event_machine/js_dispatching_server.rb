@@ -13,6 +13,7 @@ require File.dirname(__FILE__) + '/modules/node_connection.rb'
 require File.dirname(__FILE__) + '/modules/client_connection.rb'
 require File.dirname(__FILE__) + '/modules/http_connection.rb'
 require File.dirname(__FILE__) + '/modules/websocket_connection.rb'
+require File.dirname(__FILE__) + '/modules/websocket_ssl_connection.rb'
 require File.dirname(__FILE__) + '/client_tracker.rb'
 require File.dirname(__FILE__) + '/node_tracker.rb'
 
@@ -46,6 +47,8 @@ EventMachine::run do
   port              = !configatron.socket.port.nil? && configatron.socket.port || 5000
   longpolling_port  = !configatron.xhr_streaming.port.nil? && configatron.xhr_streaming.port || 8000
   websocket_port    = !configatron.websocket.port.nil? && configatron.websocket.port || 5001
+  websocket_ssl_port= !configatron.websocket_ssl.port.nil? && configatron.websocket_ssl.port || 5002
+
   
   client_tracker = ClientTracker.new
     
@@ -53,6 +56,7 @@ EventMachine::run do
   EventMachine::start_server host, port, ClientConnection, client_tracker
   EventMachine::start_server host, longpolling_port, HttpConnection, client_tracker
   EventMachine::start_server host, websocket_port, WebsocketConnection, client_tracker
+  EventMachine::start_server host, websocket_ssl_port, WebsocketSslConnection, client_tracker
   
   puts "Started socket server on #{host}:#{port}..."
   puts $$

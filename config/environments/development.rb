@@ -27,6 +27,7 @@ Dashboard::Application.configure do
   configatron.socket.port        = 5000
   configatron.xhr_streaming.port = 8000
   configatron.websocket.port     = 5001
+  configatron.websocket_ssl.port = 5002
   
   # Log all js event notifications
   configatron.log_event_notifications = true
