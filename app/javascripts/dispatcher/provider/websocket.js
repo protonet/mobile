@@ -1,7 +1,6 @@
 protonet.dispatcher.provider.WebSocket = {
   isSupported: function() {
-    // We are not supporting https yet (dudemeister, said that he has an idea but he was not willing to share it with me)
-    return protonet.user.Browser.SUPPORTS_HTML5_WEBSOCKET() && location.protocol === "http:";
+    return protonet.user.Browser.SUPPORTS_HTML5_WEBSOCKET();
   },
   
   initialize: function() {
