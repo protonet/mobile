@@ -60,12 +60,12 @@ protonet.widgets.User = Class.create({
       }.bind(this))
       
       .on("user.subscribed_channel", function(data) {
-        this._userSubscribedChannel(data.user_id, protonet.utils.getChannelIdForUuid(data.channel_uuid));
+        this._userSubscribedChannel(data.user_id, data.channel_id);
         this.filterChannelUsers();
       }.bind(this))
       
       .on("user.unsubscribed_channel", function(data) {
-        this._userUnsubscribedChannel(data.user_id, protonet.utils.getChannelIdForUuid(data.channel_uuid));
+        this._userUnsubscribedChannel(data.user_id, data.channel_id);
         this.filterChannelUsers();
       }.bind(this))
 
