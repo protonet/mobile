@@ -39,10 +39,12 @@ protonet.timeline.Form.extensions.AutoCompleter = function(input) {
      * Add newly registered user to auto completer
      */
     .on("user.added", function(user) {
+      userNames.unshift(user.name);
       autoCompleter.addData(user.name, true);
     })
     
     .on("channel.added", function(channel) {
+      channelNames.unshift(channel.name);
       autoCompleter.addData(channel.name, true);
     });
 };
