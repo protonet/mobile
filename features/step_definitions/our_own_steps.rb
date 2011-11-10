@@ -42,6 +42,11 @@ Given /^I am logged in as "([^\"]*)"(?: with password "([^\"]*)")?$/ do|username
     fill_in 'login_password', :with => password
     click_button('login')
   end
+  
+  wait_until(10) do
+    page.has_css?("#user-navigation")
+  end
+  
   within('#user-navigation') do
     page.has_content?(username).should == true
   end
