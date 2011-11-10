@@ -127,7 +127,7 @@ class UsersController < ApplicationController
       xhr_redirect_to :controller => :users, :action => :show, :id => @user.id
     else
       flash[:error] = "Couldn't find user with identifier '#{params[:search_term]}'"
-      xhr_redirect_to :index
+      xhr_redirect_to :controller => :users, :action => :index
     end
   end
   
