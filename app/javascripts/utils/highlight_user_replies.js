@@ -38,7 +38,7 @@ protonet.utils.highlightUserReplies = (function() {
         return original;
       }
       
-      result.push(userId);
+      result.push(userId + "");
       return $1 + new protonet.utils.Template("user-reply-template", {
         user_id:    userId,
         user_name:  userName,

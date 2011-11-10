@@ -141,7 +141,7 @@
           }
           
           this.unreadMeeps++;
-          var isReplyToViewer = instance.userReplies.indexOf(protonet.config.user_id) !== -1;
+          var isReplyToViewer = instance.userReplies.indexOf(protonet.config.user_id + "") !== -1;
           if (isReplyToViewer) {
             this.unreadReplies++;
           }
@@ -482,7 +482,7 @@
     _replyNotifications: function(meepData, instance) {
       var isWindowFocused             = protonet.utils.isWindowFocused(),
           isAllowedToDoNotifications  = protonet.user.Config.get("reply_notification"),
-          isReplyToViewer             = instance.userReplies.indexOf(protonet.config.user_id) !== -1;
+          isReplyToViewer             = instance.userReplies.indexOf(protonet.config.user_id + "") !== -1;
 
       if (isReplyToViewer && isAllowedToDoNotifications && !isWindowFocused) {
         new protonet.ui.Notification({
