@@ -11,6 +11,7 @@ module ConnectionShared
     
     @queues = []
     @channel_queues = {}
+    @channel_file_queues = {}
     @remote_avatar_mapping = {}
     
     @socket_id = rand(100000000)
@@ -246,8 +247,10 @@ module ConnectionShared
         case json['trigger']
         when 'user.subscribed_channel'
           bind_channel(json['channel_uuid'])
+          bind_files_for_channel(json['channel_uuid'])
         when 'user.unsubscribed_channel'
           unbind_channel(json['channel_uuid'])
+          unbind_files_for_channel(json['channel_uuid'])
         end
         publish_channel_subscriptions(json['channel_uuid'])
       end
@@ -258,11 +261,17 @@ module ConnectionShared
   end
 
   def bind_files_for_channel(channel)
-    bind 'files', 'channel', channel.uuid do |json|
+    uuid = channel.is_a?(Channel) ? channel.uuid : channel
+    @channel_file_queues[uuid] = bind 'files', 'channel', channel.uuid do |json|
         send_json json
     end
   rescue MQ::Error => e
     log("bind_files_for_channel error: " + e.inspect)
+  end
+  
+  def unbind_files_for_channel(channel_uuid)
+    queue = @channel_file_queues.delete(channel_uuid)
+    queue.delete if queue
   end
 
   def bind_user
