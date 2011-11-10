@@ -583,3 +583,7 @@ h2 .action-link {
   border-bottom: 1px solid #8C8C8C;
   margin: 10px 0 20px;
 }
+
+.fix-firefox3 {
+  display: block;
+}

@@ -2,8 +2,10 @@
   <%- node.global_channels.each do |channel| %>
     <li>
       <%= link_to show_global_channel_path(:uuid => channel.uuid, :node => { :uuid => node.uuid, :url => node.url }), :class => global_channel_class(node, channel) do %>
-        @<h4 class="reply channel"><%= channel.name %></h4>
-        <p><%= channel_description(channel, 140) %></p>
+        <span class="fix-firefox3">
+          @<h4 class="reply channel"><%= channel.name %></h4>
+          <p><%= channel_description(channel, 140) %></p>
+        </span>
       <%- end %>
     </li>
   <%- end %>

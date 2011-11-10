@@ -2,9 +2,11 @@
   <%- Channel.recent_active.each do |channel| %>
     <li>
       <%= link_to channel do %>
+      <span class="fix-firefox3">
         @<h4 class="reply channel"><%= channel.name %></h4>
         <%= render :partial => '/channels/channel_icons', :locals => { :channel => channel } %>
         <p><%= channel_description(channel, 140) %></p>
+      </span>
       <%- end %>
     </li>
   <%- end %>
