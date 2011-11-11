@@ -262,8 +262,8 @@ module ConnectionShared
 
   def bind_files_for_channel(channel)
     uuid = channel.is_a?(Channel) ? channel.uuid : channel
-    @channel_file_queues[uuid] = bind 'files', 'channel', channel.uuid do |json|
-        send_json json
+    @channel_file_queues[uuid] = bind 'files', 'channel', uuid do |json|
+      send_json json
     end
   rescue MQ::Error => e
     log("bind_files_for_channel error: " + e.inspect)
