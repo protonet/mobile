@@ -54,5 +54,5 @@ group :test, :cucumber do
   gem "launchy"
   gem "rspec-rails"
   gem "email_spec"
-  gem "selenium-webdriver", "2.5.0"
+  gem "selenium-webdriver", "2.12.0"
 end
