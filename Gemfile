@@ -47,12 +47,12 @@ group :test, :cucumber do
   gem "random_data", "1.5.1"
   gem "mocha", "0.9.8"
   gem "factory_girl_rails"
-  gem 'cucumber-rails', '1.0.2'
-  gem 'capybara', '1.1.0.rc1'
+  gem 'cucumber-rails', '1.2.0'
+  gem 'capybara', '1.1.1'
   gem "database_cleaner"
   gem "pickle"
   gem "launchy"
   gem "rspec-rails"
   gem "email_spec"
-  gem "selenium-webdriver", "2.12.0"
+  gem "selenium-webdriver", "2.10.0"
 end
