@@ -55,5 +55,12 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:custom_css_type] = "append"
   SystemPreferences.defaults[:index_meeps] = true
 
-  SystemPreferences.publish_to_web_name ||= "protonet-#{ActiveSupport::SecureRandom.hex(3)}"
+  # catching exceptions since this can be called even before the database has
+  # been created and would cause ActiveRecord to raise an sql table missing error
+  begin
+    ptw_name = "protonet-#{ActiveSupport::SecureRandom.hex(3)}"
+    SystemPreferences.publish_to_web_name ||= ptw_name
+  rescue
+    SystemPreferences.defaults[:publish_to_web_name] = ptw_name
+  end
 end
