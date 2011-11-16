@@ -18,6 +18,9 @@ $(function() {
   resizeContainer();
   
   $(".modal-window > output").css("overflow", "visible");
+  protonet.one("modal_window.loaded", function() {
+    $(".modal-window > output").css("overflow", "");
+  });
   
   new protonet.ui.MeepScroller($container, $headline).show($container.data("meep-scroller-for"));
 });

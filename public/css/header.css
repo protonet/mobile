@@ -1,5 +1,7 @@
 header {
   border-bottom:  1px solid #3a62cc;
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   position: fixed;
   z-index: 12;
@@ -94,7 +96,7 @@ header li li a {
 
 header .logo a {
   padding: 0;
-  width: 170px;
+  width: 192px;
   height: 44px;
   background: url(/img/logo_new.png) no-repeat 20px 0;
   text-indent: -9999px;

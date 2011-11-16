@@ -14,6 +14,8 @@ protonet.widgets.User = Class.create({
     this.channelSubscriptions = {};
     this.adminIds = protonet.config.admin_ids || [];
     
+    
+    var regExpTrailingAsterisk = /\*$/;
     this.list.find("a").each(function(i, link) {
       var $link     = $(link),
           $listItem = $link.parent(),
@@ -21,7 +23,7 @@ protonet.widgets.User = Class.create({
       
       this.usersData[userId] = {
         element:     $listItem,
-        name:        $.trim($link.text()),
+        name:        $.trim($link.text().replace(regExpTrailingAsterisk, "")),
         isAdmin:     this.adminIds.indexOf(userId) !== -1,
         isViewer:    $listItem.hasClass("myself"),
         isStranger:  false,
