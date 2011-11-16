@@ -28,9 +28,7 @@ protonet.user.Config = {
   },
   
   initialize: function() {
-    if (protonet.config.show_user_navigation) {
-      this._renderConfigs();
-    }
+    this._renderConfigs();
   },
   
   set: function(key, value) {
@@ -63,7 +61,7 @@ protonet.user.Config = {
   },
   
   _renderConfigs: function() {
-    var container = $("#user-navigation .settings");
+    var container = $("#my-widget .settings");
         list = $("<ul>");
     $.each(this.configs, function(key, config) {
       this._getElement(key, config).appendTo(list);

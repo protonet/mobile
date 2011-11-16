@@ -1,20 +1,21 @@
 class UsersController < ApplicationController
   include Rabbit
   
-  filter_resource_access
+  filter_resource_access :collection => [:index, :my]
   
-  before_filter :prepare_target_users, :only => [:send_system_message, :send_javascript]
+  before_filter :redirect_to_my_profile,  :only => :show
+  before_filter :prepare_target_users,    :only => [:send_system_message, :send_javascript]
+  after_filter  :publish_admin_users,     :only => :update_user_admin_flag
   
   def index
   end
   
   def show
-    @user = User.find(params[:id])
-    if params[:no_redirect] || !@user.external_profile_url
-      render
-    else
-      redirect_to(@user.external_profile_url)
-    end
+    render_profile User.find(params[:id])
+  end
+  
+  def my
+    render_profile current_user
   end
   
   def new
@@ -159,6 +160,23 @@ class UsersController < ApplicationController
   end
   
   private
+    def render_profile(user)
+      @user = user
+      if params[:no_redirect] || !@user.external_profile_url
+        render :show
+      else
+        redirect_to(@user.external_profile_url)
+      end
+    end
+    
+    def redirect_to_my_profile
+      xhr_redirect_to(:controller => :users, :action => :my) if current_user.id == params[:id].to_i
+    end
+  
+    def publish_admin_users
+      admin_ids = User.admins.map(&:id)
+      publish "system", "users", { :trigger => 'users.update_admin_status', :admin_ids => admin_ids }
+    end
     
     def prepare_target_users
       @target_users = params[:target_all] ? User.registered : User.find_by_id_or_login(params[:target]).to_a

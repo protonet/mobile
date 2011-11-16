@@ -50,6 +50,10 @@ class User < ActiveRecord::Base
     end
   end
   
+  def self.admins
+    Role.find_by_title('admin').users
+  end
+  
   def self.recent_active
     find(
       Meep.connection.select_values("

@@ -1,7 +1,0 @@
-<nav>
-  <%= link_to "Overview", channels_path, :class => action_name == "index"  ? "selected" : nil %>
-  <%= link_to "Browse channels", list_channels_path, :class => ["list", "show"].include?(action_name) ? "selected" : nil %>
-  <%= link_to "Discover global channels", list_global_channels_path, :class => ["list_global", "show_global"].include?(action_name)  ? "selected" : nil %>
-  <%= link_to "Create new", new_channel_path, :class => action_name == "new"  ? "selected" : nil %>
-</nav>
-<h1>Channels</h1>

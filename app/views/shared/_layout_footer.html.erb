@@ -29,11 +29,15 @@
 <script type="protonet/template" id="meep-actions-template">
   <%= render :partial => 'meeps/meep_actions' %>
 </script>
-<script type="protonet/template" id="search-page-template">
+<script type="protonet/template" id="admin-flag-template">
+  <%= render :partial => 'users/admin_flag' %>
+</script>
+<style type="protonet/template" id="search-page-template">
   <section class="subpage search-page">
     <%= render :template => 'search/index' %>
+    <%= sprockets_include_tag(:search) %>
   </section>
-</script>
+</style>
 
 <%= sprockets_include_tag(:default) %>
 <%= sprockets_include_tag(controller_name.to_sym) rescue nil %>

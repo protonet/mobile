@@ -8,9 +8,10 @@ class ApplicationController < ActionController::Base
   before_filter :set_backend_for_development, :captive_check, :current_user, :set_current_user_for_authorization, :guest_login
   before_filter :detect_xhr_redirect
   
-  after_filter :set_flash_message_to_header,  :if => Proc.new { |a| a.request.xhr? }
-  after_filter :set_request_url_to_header,    :if => Proc.new { |a| a.request.xhr? }
-  after_filter :compress,                     :if => Proc.new { |a| a.response.content_type == "application/json" }
+  after_filter :set_flash_message_to_header,    :if => Proc.new { |a| a.request.xhr? }
+  after_filter :set_request_url_to_header,      :if => Proc.new { |a| a.request.xhr? }
+  after_filter :compress,                       :if => Proc.new { |a| a.response.content_type == "application/json" }
+  after_filter :set_controller_name_to_header,  :if => Proc.new { |a| a.request.xhr? }
   
   # TODO check with @dudemeister
   layout Proc.new { |a| return a.request.xhr? ? 'ajax' : 'application' }
@@ -39,11 +40,20 @@ class ApplicationController < ActionController::Base
   
   # https://bugzilla.mozilla.org/show_bug.cgi?id=553888
   def xhr_redirect_to(options)
-    redirect_to options.merge('_xhr_redirect' => 1)
+    if request.xhr?
+      redirect_to options.merge('_xhr_redirect' => 1)
+    else
+      redirect_to options
+    end
   end
   
   def detect_xhr_redirect
     request.env['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest' if request.url.include?('_xhr_redirect=1')
+  end
+  
+  def set_controller_name_to_header
+    response.headers['X-Controller-Name'] = controller_name
+    response.headers['X-Action-Name']     = action_name
   end
   
   # needed for ajax requests
@@ -58,7 +68,7 @@ class ApplicationController < ActionController::Base
   
   # needed because js can't figure out at which url an ajax request ended (redirects, ...) 
   def set_request_url_to_header
-    response.headers['X-URL'] = request.url.sub(/_xhr_redirect=1&?/, '')
+    response.headers['X-Url'] = request.url.sub(/_xhr_redirect=1&?/, '').sub(/\?$/, '')
   end
   
   def guest_login

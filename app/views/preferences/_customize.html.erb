@@ -10,11 +10,6 @@
     <%= text_field_tag 'preferences[browser_title]', SystemPreferences.browser_title %>
   </div>
   <div class="form-field">
-    <%= hidden_field_tag 'preferences[show_user_navigation]', false, {:id => nil} %>
-    <%= label_tag 'preferences[show_user_navigation]', 'Show navigation' %> <%= check_box_tag 'preferences[show_user_navigation]', true, SystemPreferences.show_user_navigation %>
-    <a class="hint" data-hover-hint="top" title="Whether the navigation on the upper right should be shown">(?)</a>
-  </div>
-  <div class="form-field">
     <%= hidden_field_tag 'preferences[show_clouds]', false, {:id => nil}  %>
     <%= label_tag 'preferences[show_clouds]', 'Show clouds in background' %> <%= check_box_tag 'preferences[show_clouds]', true, SystemPreferences.show_clouds %>
     <a class="hint" data-hover-hint="top" title="Turning this off will make the interface a bit more performant">(?)</a>

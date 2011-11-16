@@ -187,7 +187,7 @@ $.behaviors({
         tabName             = $tabLink.data("tab"),
         url                 = $tabLink.prop("href"),
         $tabContainer       = $("output[data-tab='" + tabName + "']"),
-        $scrollContainer    = $tabContainer.parents(".modal-window-scroll-content"),
+        $scrollContainer    = $(".modal-window > output:visible"),
         $tabLinks           = $("a[data-tab='" + tabName + "']"),
         originalPaddingTop  = (function() {
           var paddingTop = $tabContainer.data("original-padding-top");
@@ -200,7 +200,6 @@ $.behaviors({
     
     $.ajax({
       url:      $tabLink.prop("href"),
-      data:     { ajax: 1 },
       headers:  { "X-Request-Type": "tab" },
       beforeSend: function() {
         var hint = $("<p>", { "class": "hint", text: protonet.t("LOADING") });

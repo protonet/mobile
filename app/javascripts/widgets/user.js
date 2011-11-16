@@ -1,6 +1,7 @@
 //= require "../ui/resizer.js"
 //= require "../media/proxy.js"
 //= require "../utils/get_channel_id_for_uuid.js"
+//= require "../utils/template.js"
 
 protonet.widgets.User = Class.create({
   initialize: function() {
@@ -11,7 +12,8 @@ protonet.widgets.User = Class.create({
     this.onlineUsersCount = this.container.find("output.count");
     this.usersData = {};
     this.channelSubscriptions = {};
-
+    this.adminIds = protonet.config.admin_ids || [];
+    
     this.list.find("a").each(function(i, link) {
       var $link     = $(link),
           $listItem = $link.parent(),
@@ -20,6 +22,7 @@ protonet.widgets.User = Class.create({
       this.usersData[userId] = {
         element:     $listItem,
         name:        $.trim($link.text()),
+        isAdmin:     this.adminIds.indexOf(userId) !== -1,
         isViewer:    $listItem.hasClass("myself"),
         isStranger:  false,
         avatar:      $link.data("user-avatar")
@@ -49,6 +52,10 @@ protonet.widgets.User = Class.create({
         if (!protonet.config.show_only_online_users) {
           this.createUser(data.id, data, true);
         }
+      }.bind(this))
+      
+      .on("users.update_admin_status", function(data) {
+        this.updateAdminStatus(data.admin_ids);
       }.bind(this))
       
       .on("user.typing", function(data) {
@@ -207,13 +214,14 @@ protonet.widgets.User = Class.create({
   },
   
   createUser: function(userId, user, hide) {
-    if (this.usersData[userId] || !user.id) {
+    if (this.usersData[userId] || !user.id || !user.name) {
       return;
     }
     
-    var isViewer = protonet.config.user_id == user.id,
-        isStranger = user.name.startsWith("stranger_"),
-        $element = this.createElement(user, isViewer, isStranger);
+    var isViewer    = protonet.config.user_id == user.id,
+        isAdmin     = this.adminIds.indexOf(+user.id) !== -1,
+        isStranger  = user.name.startsWith("stranger_"),
+        $element    = this.createElement(user, isViewer, isStranger, isAdmin);
     
     hide && $element.hide();
     
@@ -226,7 +234,8 @@ protonet.widgets.User = Class.create({
     };
   },
   
-  createElement: function(user, isViewer, isStranger) {
+  createElement: function(user, isViewer, isStranger, isAdmin) {
+    var adminFlag = isAdmin ? (" " + new protonet.utils.Template("admin-flag-template")) : "";
     return $("<li>",{
       "class": [isViewer ? "myself" : "", isStranger ? "stranger" : ""].join(" ")
     }).append(
@@ -235,7 +244,7 @@ protonet.widgets.User = Class.create({
         title:           user.name,
         "data-user-id":  user.id,
         tabindex:        -1,
-        text:            user.name
+        html:            user.name + adminFlag
       })
     ).appendTo(this.list);
   },
@@ -285,6 +294,17 @@ protonet.widgets.User = Class.create({
     }.bind(this));
     
     this.updateCount();
+  },
+  
+  updateAdminStatus: function(adminIds) {
+    this.adminIds = adminIds;
+    $.each(this.usersData, function(userId, user) {
+      user.isAdmin = adminIds.indexOf(+userId) !== -1;
+      user.element.find(".admin-flag").remove();
+      if (user.isAdmin) {
+        user.element.find("a").append(" " + new protonet.utils.Template("admin-flag-template"));
+      }
+    }.bind(this));
   },
   
   updateCount: function() {

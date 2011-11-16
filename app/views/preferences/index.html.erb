@@ -1,25 +1,23 @@
-<%= render :partial => "header" %>
-<div class="modal-window-scroll-content">
-  <%- if @preferences.empty? %>
-    <p class="hint">No preferences available. Maybe you don't have admin rights?</p>
-  <%- else -%>
-    <aside>
-      <ul>
-        <%- @preferences.each do |preference| %>
-          <li class="<%= 'selected' if preference[:section] == @selected_section %>">
-            <a href="/preferences/show?section=<%= preference[:section] %>" data-tab="preferences">
-              <strong><%= preference[:name] %></strong>
-            </a>
-          </li>
-        <%- end %>
-      </ul>
-    </aside>
-    <output data-tab="preferences" class="content">
-      <%- if @selected_section %>
-        <%= render :partial => @selected_section %>
-      <%- else %>
-        <p class="hint">Here you can administrate your node. Only admins can see this.<br>Please note that you can administrate <%= link_to 'users', users_path, { :class => 'promotion-link' } %> and <%= link_to 'channels', channels_path, { :class => 'promotion-link' } %> on their corresponding page.</p>
+<%- if @preferences.empty? %>
+  <p class="hint">No preferences available. Maybe you don't have admin rights?</p>
+<%- else -%>
+  <aside>
+    <ul>
+      <%- @preferences.each do |preference| %>
+        <li class="<%= 'selected' if preference[:section] == @selected_section %>">
+          <a href="/preferences/show?section=<%= preference[:section] %>" data-tab="preferences">
+            <strong><%= preference[:name] %></strong>
+          </a>
+        </li>
       <%- end %>
-    </output>
-  <%- end %>
-</div>
+    </ul>
+  </aside>
+  <output data-tab="preferences" class="content">
+    <%- if @selected_section %>
+      <%= render :partial => @selected_section %>
+    <%- else %>
+      <h2>Administration</h2>
+      <p class="hint">Here you can administrate your node. Only admins can see this.<br>Please note that you can administrate <%= link_to 'users', users_path, { :class => 'promotion-link' } %> and <%= link_to 'channels', channels_path, { :class => 'promotion-link' } %> on their corresponding page.</p>
+    <%- end %>
+  </output>
+<%- end %>

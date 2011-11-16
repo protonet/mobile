@@ -13,6 +13,7 @@
   display: block;
   height: 0;
   clear: both;
+  overflow: hidden;
   visibility: hidden;
 }
 
@@ -22,29 +23,6 @@
   box-shadow: none;
   background: transparent;
   height: 100%;
-}
-
-.modal-window .modal-window-scroll-content {
-  top: 56px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  position: absolute;
-  overflow-y: scroll;
-}
-
-
-
-
-
-.subpage h1 {
-  background: rgb(72, 123, 255);
-  background: -webkit-gradient(linear, left top, left bottom, from(#a4bdff), to(#487bff));
-  background: -moz-linear-gradient(top, #a4bdff, #487bff);
-  font-size: 18px;
-  line-height: 56px;
-  padding: 0 0 0 30px;
-  color: #fff;
 }
 
 .subpage h2 {
@@ -67,35 +45,10 @@
 .subpage h2,
 .subpage h3,
 .subpage p {
-  margin-bottom: 10px;
-}
-
-.subpage > nav {
-  float: right;
-  margin-right: 30px;
-  font-size: 0;
-}
-
-.subpage > nav > a {
-  margin-left: 1px;
-  font-size: 12px;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
-  padding: 0 20px;
-  line-height: 56px;
-  display: inline-block;
-  position: relative;
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.subpage > nav > a.selected,
-.subpage > nav > a:hover {
-  background: rgba(255, 255, 255, 0.3);
+  margin-bottom: 15px;
 }
 
 .subpage aside {
-  margin-top: 1px;
   float: left;
   width: 250px;
   border-right: 1px solid #999;
@@ -196,7 +149,7 @@
 }
 
 .subpage .content {
-  padding: 20px 30px 20px 30px;
+  padding: 20px;
 }
 
 .subpage .content[data-tab] {

@@ -1,15 +1,28 @@
-.search-page h1 {
-  padding: 0;
-  text-align: center;
+.search-page {
+  padding: 20px 20px 0 20px;
 }
 
-.search-page output {
-  margin: 0 0 0 -10px;
+.search-page .content {
+  margin: 0 0 0 -20px;
+  padding: 0;
 }
 
 .search-page input[type=search] {
-  width: 616px;
-  background-position: 624px;
+  padding: 10px 5px 10px 28px;
+  width: 220px;
+  border: 1px solid #999;
+  font-size: 14px;
+  height: 34px;
+  display: block;
+  margin: 0 auto;
+  -webkit-box-shadow: 0 0 3px #666 inset;
+  -moz-box-shadow: 0 0 3px #666 inset;
+  box-shadow: 0 0 3px #666 inset;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: 20px;
 }
 
 .loading.search-page input[type=search] {
@@ -22,10 +35,6 @@
 
 .search-page .no-meeps-available {
   display: block;
-}
-
-.search-page .meeps {
-  margin-left: -20px;
 }
 
 .search-page .meep {

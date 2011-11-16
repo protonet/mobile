@@ -20,7 +20,7 @@
 //= require "behaviors/ajax.js"
 //= require "utils/inline_hint.js"
 //= require "ui/flash_message.js"
-//= require "ui/logo.js"
+//= require "ui/header.js"
 //= require "ui/modal_window.js"
 //= require "utils/toggle_element.js"
 //= require "utils/rails.js"
@@ -33,7 +33,7 @@
 $(function() {
   protonet.user.initialize();
   protonet.ui.FlashMessage.initialize();
-  protonet.ui.Logo.initialize();
+  protonet.ui.Header.initialize();
   
   // Clouds
   if (protonet.config.show_clouds && !$.browser.msie) {

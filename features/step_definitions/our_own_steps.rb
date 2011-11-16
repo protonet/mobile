@@ -44,10 +44,10 @@ Given /^I am logged in as "([^\"]*)"(?: with password "([^\"]*)")?$/ do|username
   end
   
   wait_until(10) do
-    page.has_css?("#user-navigation")
+    page.has_css?("#my-widget")
   end
   
-  within('#user-navigation') do
+  within('#my-widget') do
     page.has_content?(username).should == true
   end
 end
@@ -60,7 +60,7 @@ Given /^I register as "([^\"]*)"$/ do |username|
     fill_in 'user_password_confirmation', :with => '123456'
     click_button('sign up')
   end
-  within('#user-navigation') do
+  within('#my-widget') do
     page.has_content?(username).should == true
   end
 end
@@ -177,7 +177,7 @@ Then /^I should not find "([^\"]*)" on the page$/ do |selector|
 end
 
 Then /^I should be logged in as "([^\"]*)"$/ do |username|
-  within('#user-navigation') do
+  within('#my-widget') do
     page.has_content?(username).should == true
   end
 end
@@ -194,7 +194,7 @@ end
 
 Then /^I should see the profile image "([^\"]*)" in my profile details$/ do |image_name|
   src = {
-    "user_picture_r2.png" => "user_picture_r2.png", #default
+    "user_picture_r3.png" => "user_picture_r3.png", #default
     "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
   }[image_name]
   
@@ -205,12 +205,12 @@ end
 
 Then /^I should see the profile image "([^\"]*)" in the top right navi$/ do |image_name|
   src = {
-    "user_picture_r2.png" => "user_picture_r2.png", #default
+    "user_picture_r3.png" => "user_picture_r3.png", #default
     "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
   }[image_name]
   
   wait_until(10) do
-    find(:css, ".welcome img[src*='#{src}']")
+    find(:css, "#my-widget img[src*='#{src}']")
   end
 end
 

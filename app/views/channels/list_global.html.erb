@@ -1,27 +1,25 @@
-<%= render :partial => "header" %>
-<div class="modal-window-scroll-content">
-  <aside>
-    <ul>
-      <%- Node.remote.with_channels.each do |n| %>
-        <li class="network-separator">
-          Node: <strong><%= n.name %></strong>
-          <p><%= n.global_channels.size %> channels</p>
+<aside>
+  <ul>
+    <%- Node.remote.with_channels.each do |n| %>
+      <li class="network-separator">
+        Node: <strong><%= n.name %></strong>
+        <p><%= n.global_channels.size %> channels</p>
+      </li>
+      <%- n.global_channels.each do |c| -%>
+        <li class="<%= 'selected' if @selected_channel && c.uuid == @selected_channel.uuid %><%= ' subscribed' if current_user.subscribed? Channel.find_by_uuid(c.uuid) %>">
+          <%- link_to show_global_channel_path(:uuid => c.uuid, :node => { :uuid => n.uuid, :url => n.url }), 'data-tab' => 'channels' do %>
+            <strong>@<%= c.name %></strong>
+          <%- end %>
         </li>
-        <%- n.global_channels.each do |c| -%>
-          <li class="<%= 'selected' if @selected_channel && c.uuid == @selected_channel.uuid %><%= ' subscribed' if current_user.subscribed? Channel.find_by_uuid(c.uuid) %>">
-            <%- link_to show_global_channel_path(:uuid => c.uuid, :node => { :uuid => n.uuid, :url => n.url }), 'data-tab' => 'channels' do %>
-              <strong>@<%= c.name %></strong>
-            <%- end %>
-          </li>
-        <%- end -%>
-      <%- end %>
-    </ul>
-  </aside>
-  <output data-tab="channels" class="content">
-    <%- if @selected_channel %>
-      <%= render :partial => 'channel_details', :locals => { :channel => @selected_channel } %>
-    <%- else %>
-      <p class="hint">Please choose a global channel from the left.</p>
+      <%- end -%>
     <%- end %>
-  </output>
-</div>
+  </ul>
+</aside>
+<output data-tab="channels" class="content">
+  <%- if @selected_channel %>
+    <%= render :partial => 'channel_details', :locals => { :channel => @selected_channel } %>
+  <%- else %>
+    <h2>Discover global channels</h2>
+    <p class="hint">Here you can discover channels from other protonet nodes. Please choose one from the left.</p>
+  <%- end %>
+</output>

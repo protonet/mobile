@@ -3,17 +3,21 @@
 $(function() {
   var $page         = $(".meeps-page"),
       $container    = $page.find("output"),
-      $headline     = $(".modal-window h1, .meeps-page h1"),
+      $headline     = $(".meeps-page h2"),
       isModalWindow = $(".modal-window").length > 0;
   
   function resizeContainer() {
-    $container.css("height", $(window).height() - $container.offset().top + "px");
+    if (isModalWindow) {
+      $container.css("height", "100%");
+    } else {
+      $container.css("height", $(window).height() - $container.offset().top + "px");
+    }
   }
   
-  if (!isModalWindow) {
-    $(window).resize(resizeContainer);
-    resizeContainer();
-  }
+  $(window).resize(resizeContainer);
+  resizeContainer();
+  
+  $(".modal-window > output").css("overflow", "visible");
   
   new protonet.ui.MeepScroller($container, $headline).show($container.data("meep-scroller-for"));
 });

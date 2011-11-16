@@ -1,5 +1,0 @@
-<nav>
-  <%= link_to "Overview", users_path, :class => action_name == 'index' ? "selected" : nil %>
-  <%= link_to "My profile", user_path(current_user), :class => action_name == 'show' && @user == current_user  ? "selected" : nil %>
-</nav>
-<h1>Users</h1>

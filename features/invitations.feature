@@ -13,7 +13,7 @@ Feature: Invitations
     Given I go unauthenticated to the start page
     And I am logged in as "dudemeister"
     And I go to the new invitation page
-    Then I should see "Grow your network!"
+    Then I should see "Invite people"
     When I fill in "invitation_email" with "friend@protonet.com"
     And I click on the element ".invitation-message-link"
     And I fill in "invitation_message" with "Come join us"
@@ -38,7 +38,7 @@ Feature: Invitations
     And I fill in "user_password" with "friendly"
     And I fill in "user_password_confirmation" with "friendly"
     And I press "sign up"
-    Then I should see "friend" within ".welcome"
+    Then I should see "friend" within "#my-widget"
     And I should see "You have signed up successfull"
     And I should see "Public" within "#channels"
     And I should not see "Notpublic" within "#channels"

@@ -1,6 +1,6 @@
 <% users = SystemPreferences.show_only_online_users ? [] : User.registered.all -%>
 <div id="user-widget" class="widget">
-  <h3>
+  <h3 class="gradient">
     <% if SystemPreferences.show_only_online_users -%>
       Online Users
     <% else -%>
@@ -9,10 +9,9 @@
     <span class="loading-hint">loading ...</span>
   </h3>
   <ul>
-    <!-- tabindex="-1" ensures that the element is focusable via css -->
-    <% users.each do |user| -%>
+    <%- users.each do |user| -%>
       <li <%= raw 'class="myself"' if user.id == current_user.id %>>
-        <a href="/users/<%= user.id %>" data-user-id="<%= user.id %>" data-user-avatar="<%= user.avatar.url %>" data-user-channel-subscriptions="<%= user.channels.map(&:id).to_json %>" title="<%= user.display_name %>"><%= user.display_name %></a>
+        <a href="/users/<%= user.id %>" data-user-id="<%= user.id %>" data-user-avatar="<%= user.avatar.url %>" data-user-channel-subscriptions="<%= user.channels.map(&:id).to_json %>" title="<%= user.display_name %>"><%= user.display_name %> <%= user_flags(user) %></a>
       </li>
     <% end -%>
   </ul>

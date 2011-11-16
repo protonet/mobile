@@ -43,7 +43,6 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:public_host_https]  = false
   SystemPreferences.defaults[:captive_portal_greeting] = "Das ist das Captive Portal, Hallo!"
   SystemPreferences.defaults[:browser_title] = "protonet - it's yours"
-  SystemPreferences.defaults[:show_user_navigation] = true
   SystemPreferences.defaults[:show_clouds] = true
   SystemPreferences.defaults[:show_search_widget] = true
   SystemPreferences.defaults[:show_user_widget] = true

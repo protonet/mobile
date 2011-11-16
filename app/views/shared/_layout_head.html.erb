@@ -3,16 +3,16 @@
   <meta charset="UTF-8">
   <meta property="og:image" content="/img/apple-touch-icon.png">
   <meta property="og:title" content="<%= SystemPreferences.browser_title %>">
-  <link rel="shortcut icon" href="/img/favicon.png" type="image/png">
+  <link rel="shortcut icon" href="/img/favicon_r1.png" type="image/png">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
   <link rel="fluid-icon" href="/img/apple-touch-icon.png" title="<%= SystemPreferences.browser_title %>">
   <link rel="image_src" href="/img/apple-touch-icon.png" type="image/png">
-  <title>
-    <%= SystemPreferences.browser_title %>
-  </title>
+  <title><%= SystemPreferences.browser_title %></title>
   <script>
     var protonet = protonet || {};
     protonet.config = {
+      controller_name:            "<%= controller_name %>",
+      action_name:                "<%= action_name %>",
       base_url:                   location.protocol + "//" + location.host,
       node_base_url:              "<%= node_base_url %>",
       xhr_streaming_url:          "<%= xhr_streaming_url %>",
@@ -22,17 +22,15 @@
       dispatching_websocket_ssl_port: "<%= configatron.websocket_ssl.port %>",
       force_xhr_streaming:        <%= raw(incoming_interface == "published_to_web" ? "true" : "false") %>,
       token:                      "<%= current_user.communication_token %>",
-      node_uuid:                  "<%= Node.local.uuid %>",
       default_avatar:             "<%= configatron.default_avatar %>",
+      admin_ids:                  <%= User.admins.map(&:id).to_json %>,
       user_name:                  "<%= current_user.display_name %>",
       user_id:                    <%= current_user.id %>,
-      user_is_admin:              <%= current_user.admin?.to_json %>,
       user_is_stranger:           <%= current_user.stranger?.to_json %>,
       show_file_widget:           <%= SystemPreferences.show_file_widget.to_json %>,
       show_user_widget:           <%= SystemPreferences.show_user_widget.to_json %>,
       show_search_widget:         <%= SystemPreferences.show_search_widget.to_json %>,
       show_clouds:                <%= SystemPreferences.show_clouds.to_json %>,
-      show_user_navigation:       <%= SystemPreferences.show_user_navigation.to_json %>,
       show_only_online_users:     <%= SystemPreferences.show_only_online_users.to_json %>,
       allow_modal_views:          <%= SystemPreferences.allow_modal_views.to_json %>,
       session_id:                 "<%= cookies['_rails_dashboard_session'] %>",

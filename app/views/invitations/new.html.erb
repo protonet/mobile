@@ -1,37 +1,34 @@
-<h1>Grow your network!</h1>
-<div class="modal-window-scroll-content">
-  <output class="content">
-    <%= form_for(@invitation, :remote => true, :html => { "data-type" => 'html' }) do |f| %>
-      <h2>Invite people <a data-hover-hint="top" title="Only admins can invite people" class="hint">(?)</a></h2>
-      <p>You can easily invite other people to your network. Just enter an e-mail address and select at least one channel.</p>
-      
-      <%- unless SystemPublishToWeb.status %>
-        <p class="info-message">
-          <strong>Please note:</strong>
-          This only works when you turned on <a href="/preferences/show?section=publish_to_web">Publish to web</a>.
-          <a data-hover-hint="top" title="Inviting people from around the world via e-mail requires a url that is publicly accessible" class="hint">(?)</a>
-        </p>
+<output class="content">
+  <%= form_for(@invitation, :remote => true, :html => { "data-type" => 'html' }) do |f| %>
+    <h2>Invite people <a data-hover-hint="top" title="Only admins can invite people" class="hint">(?)</a></h2>
+    <p>You can easily invite other people to your network. Just enter an e-mail address and select at least one channel.</p>
+    
+    <%- unless SystemPublishToWeb.status %>
+      <p class="info-message">
+        <strong>Please note:</strong>
+        This only works when you turned on <a href="/preferences/show?section=publish_to_web">Publish to web</a>.
+        <a data-hover-hint="top" title="Inviting people from around the world via e-mail requires a url that is publicly accessible" class="hint">(?)</a>
+      </p>
+    <%- end %>
+    
+    <div class="form-field">
+      <%= f.label :email, "E-Mail:" %>
+      <input id="invitation_email" name="invitation[email]" type="email" autofocus>
+    </div>
+    <div class="form-field">
+      <%= f.label :channel, "Channels:" %>
+      <%- @channels.each do |channel| %>
+        <div class="channel-checkboxes">
+        <%= check_box_tag "invitation[channel_ids][]", channel.id, @channels.size == 1 || params[:channel_id].to_i == channel.id, :id => dom_id(channel, "invitation") %>
+        <%= label_tag dom_id(channel, "invitation"), channel.name, { :class => 'reply channel' } %> <%= raw("<span class='hint'>(from remote node)</span>") unless channel.locally_hosted? %>
+        </div>
       <%- end %>
-      
-      <div class="form-field">
-        <%= f.label :email, "E-Mail:" %>
-        <input id="invitation_email" name="invitation[email]" type="email" autofocus>
-      </div>
-      <div class="form-field">
-        <%= f.label :channel, "Channels:" %>
-        <%- @channels.each do |channel| %>
-          <div class="channel-checkboxes">
-          <%= check_box_tag "invitation[channel_ids][]", channel.id, @channels.size == 1 || params[:channel_id].to_i == channel.id, :id => dom_id(channel, "invitation") %>
-          <%= label_tag dom_id(channel, "invitation"), channel.name, { :class => 'reply channel' } %> <%= raw("<span class='hint'>(from remote node)</span>") unless channel.locally_hosted? %>
-          </div>
-        <%- end %>
-      </div>
-      <a class="invitation-message-link">+ Add a message (optional)</a>
-      <div class="form-field invitation-message">
-        <%= f.label :message, "Message (optional):" %>
-        <%= f.text_area :message %>
-      </div>
-      <%= button 'Invite' %>
-    <% end %>
-  </output>
-</div>
+    </div>
+    <a class="invitation-message-link">+ Add a message (optional)</a>
+    <div class="form-field invitation-message">
+      <%= f.label :message, "Message (optional):" %>
+      <%= f.text_area :message %>
+    </div>
+    <%= button 'Invite' %>
+  <% end %>
+</output>

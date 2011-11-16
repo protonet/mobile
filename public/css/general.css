@@ -21,28 +21,31 @@ body {
   overflow-y: scroll;
   background: #dae4ff; /* Same as rgba(72, 123, 255, 0.2); which creates a very buggy background effect in opera 10.64 */
   color: #000;
-  min-height: 100%;
-}
-
-body ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-  background: transparent;
-}
-
-body ::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 5px;
-}
-
-body :hover::-webkit-scrollbar-thumb {
-  background: #bbb;
-  border: 2px solid #fff;
+  padding-top: 65px;
 }
 
 .inner-body {
   margin: 0 auto;
   width: 940px;
+}
+
+.modal-window ::-webkit-scrollbar,
+.inner-body ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background: transparent;
+}
+
+.modal-window ::-webkit-scrollbar-thumb,
+.inner-body ::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 5px;
+}
+
+.modal-window :hover::-webkit-scrollbar-thumb,
+.inner-body :hover::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border: 2px solid #fff;
 }
 
 body,
@@ -150,7 +153,6 @@ input[readonly] {
   color: #666;
 }
 
-input[type=search],
 .inset-border {
   padding: 5px;
   font-size: 14px;
@@ -159,17 +161,17 @@ input[type=search],
 }
 
 input[type=search] {
-  padding-right: 27px;
+  padding-left: 29px;
   width: 182px;
-  background: #fff url(../img/icn_search.png) 190px center no-repeat;
+  background: #fff url(../img/icn_search.png) 6px center no-repeat;
 }
 
 .subpage,
 .main-content,
 .side-content {
-  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   background: #fff;
   display: inline-block;
   vertical-align: top;
@@ -188,8 +190,9 @@ input[type=search] {
 }
 
 #cloud-container {
-  position: absolute;
+  position: fixed;
   overflow: hidden;
+  top: 40px;
   height: 450px;
   left: 0;
   right: 0;
@@ -251,25 +254,25 @@ textarea {
 a.close-link {
   text-decoration: none;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 14px;
   color: #fff;
   text-align: center;
-  width: 30px;
-  height: 30px;
-  line-height: 29px; /* 29px for firefox */
+  width: 24px;
+  height: 24px;
+  line-height: 23px; /* for firefox */
   background: #000;
   border: 3px solid #fff;
   border-radius: 30px;
   -moz-border-radius: 30px;
   -webkit-border-radius: 30px;
-  box-shadow: 0 0 2px 1px #666;
-  -webkit-box-shadow: 0 0 2px 1px #666;
-  -moz-box-shadow: 0 0 2px 1px #666;
+  box-shadow: 0 0 2px #666;
+  -webkit-box-shadow: 0 0 2px #666;
+  -moz-box-shadow: 0 0 2px #666;
 }
 
 a.close-link:hover {
-  -webkit-transform: scale(1.2);
-  -moz-transform: scale(1.2);
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
   background: #487bff;
 }
 
@@ -288,19 +291,21 @@ pre {
 }
 
 .flash-message {
-  top: -50px;
+  display: none;
   left: 0;
   right: 0;
-  position: absolute;
-  z-index: 100000;
+  top: 45px;
+  position: fixed;
+  z-index: 11;
   color: #fff;
-  padding: 8px;
+  padding: 0 8px;
+  line-height: 36px;
   font-size: 16px;
   cursor: pointer;
 }
 
 .flash-message > p {
-  width: 950px;
+  width: 900px;
   margin: 0 auto;
 }
 
@@ -320,12 +325,7 @@ pre {
 
 .flash-message.notice {
   background: rgb(0, 204, 0);
-  background: rgba(0, 204, 0, 0.7);
-}
-
-.flash-message.notice:hover {
-  background: rgb(0, 204, 0);
-  background: rgba(0, 204, 0, 1);
+  background: rgba(0, 204, 0, 0.8);
 }
 
 .flash-message.warning,
@@ -341,164 +341,6 @@ pre {
   cursor: default;
   color: #000;
 }
-
-
-/* =HEADER
-=========================================================================== */
-header {
-  position: relative;
-  display: block;
-  height: 88px;
-}
-
-header .logo {
-  left: -13px;
-  position: absolute;
-  background: url(/img/logo.png) no-repeat;
-  height: 125px;
-  text-indent: -9999px;
-  width: 225px;
-  outline: 0;
-}
-
-header .monster {
-  outline: 0;
-  position: absolute;
-  bottom: -4px;
-  left: 136px;
-  width: 73px;
-  height: 72px;
-  font-size: 9px;
-  background: url(/img/spr_monsters.png) no-repeat;
-  color: #999;
-  text-decoration: none;
-  white-space: nowrap;
-  line-height: 42px;
-  text-indent: -9999px;
-}
-
-header .monster:hover {
-  text-indent: 66px;
-}
-
-header .monster.default {
-  background-position: 2px bottom;
-}
-
-header .monster.business {
-  background-position: -74px bottom;
-}
-
-header .monster.female {
-  background-position: -147px bottom;
-}
-
-header .monster.surfer {
-  background-position: -217px bottom;
-}
-
-header .monster.nerd {
-  background-position: -292px bottom;
-}
-
-header .hearts {
-  position: absolute;
-  color: #e75c79;
-  font-size: 13px;
-  text-shadow: 1px 1px 1px #999;
-  width: 70px;
-  left: 136px;
-  top: 50px;
-  text-align: center;
-}
-
-/* =USER NAVIGATION
-=========================================================================== */
-#user-navigation  {
-  position: absolute;
-  right: 0;
-  top: 6px;
-  font-size: 11px;
-}
-
-#user-navigation > li {
-  float: left;
-  line-height: 13px;
-  vertical-align: middle;
-  padding: 0 6px 1px;
-  border-left: 1px solid #999;
-}
-
-#user-navigation > .welcome,
-#user-navigation > .welcome + li {
-  border: 0;
-}
-
-#user-navigation > li > a {
-  color: #487bff;
-}
-
-#user-navigation .welcome {
-  padding-right: 0;
-  color: #666;
-}
-
-#user-navigation .welcome a {
-  text-decoration: none;
-  color: inherit;
-  position: relative;
-  padding-right: 26px;
-  display: block;
-}
-
-#user-navigation .welcome img {
-  border: 2px solid #fff;
-  position: absolute;
-  right: 0;
-  top: -3px;
-}
-
-#user-navigation > .settings:hover,
-#user-navigation > .settings:focus {
-  background: #fff;
-}
-
-#user-navigation .settings:hover a,
-#user-navigation .settings:focus a {
-  text-decoration: none;
-}
-
-#user-navigation .settings:focus ul,
-#user-navigation .settings:hover ul {
-  display: block;
-}
-
-#user-navigation .settings ul {
-  display: none;
-  position: absolute;
-  z-index: 1;
-  background: #fff;
-  margin: 1px 0 0 -7px;
-  min-width: 140px;
-  border: 1px solid #999;
-  border-top: 0;
-}
-
-#user-navigation .settings li {
-  cursor: pointer;
-  color: #999;
-  padding: 4px 6px;
-  border-top: 1px solid #ccc;
-}
-
-#user-navigation .settings .on {
-  color: #00cc00;
-}
-
-#user-navigation .settings .off {
-  color: #e75c79;
-}
-
 
 /** Hover Hint */
 .hover-hint {
@@ -586,4 +428,52 @@ h2 .action-link {
 
 .fix-firefox3 {
   display: block;
+}
+
+.gradient {
+  background-color: #487bff;
+  background-image: -o-linear-gradient(bottom, #487bff, #769cff);
+  background-image: -moz-linear-gradient(bottom, #487bff, #769cff);
+  background-image: -webkit-linear-gradient(bottom, #487bff, #769cff);
+  background-image: -ms-linear-gradient(bottom, #487bff, #769cff);
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #487bff),
+    color-stop(1, #769cff)
+  );
+  background-image: linear-gradient(bottom, #487bff, #769cff);
+}
+
+.ribbon {
+  color: #fff;
+  background-color: #487bff;
+}
+
+.ribbon:before,
+.ribbon:after {
+  display: block;
+  position: absolute;
+  bottom: -10px;
+  content: "";
+  z-index: -2;
+  border-style: solid;
+  border-color: #062984 transparent transparent transparent;
+}
+
+.ribbon:after {
+  right: 0;
+  border-width: 10px 10px 0 0;
+}
+
+.ribbon:before {
+  left: 0;
+  border-width: 10px 0 0 10px;
+}
+
+
+.admin-flag {
+  font-weight: bold;
+  color: #ff7f31;
 }

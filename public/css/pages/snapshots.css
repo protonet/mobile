@@ -1,5 +1,6 @@
 .snapshots-page {
   text-align: center;
+  padding: 20px;
 }
 
 .snapshots-page h1 {
@@ -13,10 +14,6 @@
   height: 380px;
   margin: 0 auto;
   max-width: 800px;
-}
-
-.snapshots-page .modal-window-scroll-content {
-  padding: 10px;
 }
 
 .snapshots-page label,

@@ -1,30 +1,11 @@
 .meeps-page {
   padding-bottom: 0;
-  overflow: hidden;
 }
 
 .meeps-page .content {
   padding: 0 50px 0 50px;
   position: relative;
-  margin-top: -10px;
-}
-
-.modal-window .meeps-page {
-  position: absolute;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  top: 0;
-}
-
-.modal-window .meeps-page .content {
-  margin-top: 0;
-  top: 56px;
-  bottom: 0;
-  position: absolute;
-  left: 50%;
-  width: 650px;
-  margin-left: -345px;
+  overflow: hidden;
 }
 
 .meeps-page .meeps {
@@ -46,9 +27,6 @@
 .meeps-page .border {
   height: 90px;
   border: 7px solid rgb(72, 123, 255);
-  -webkit-box-shadow: 0 0 4px #000;
-  -moz-box-shadow: 0 0 4px #000;
-  box-shadow: 0 0 4px #000;
   -webkit-border-radius: 1.2em;
   -moz-border-radius: 1.2em;
   border-radius: 1.2em;
@@ -58,7 +36,7 @@
   top: 50%;
   padding: 7px;
   margin-top: -70px;
-  width: 654px;
+  width: 653px;
   background: #fff;
 }
 
@@ -66,14 +44,13 @@
   background: transparent url(/img/icn_loading_big.gif) center center no-repeat;
 }
 
-.meeps-page h1 {
-  position: relative;
-  z-index: 1;
+.meeps-page h2 {
+  margin-bottom: 8px;
 }
 
-.meeps-page h1 img {
-  height: 22px;
-  width: 22px;
+.meeps-page h2 img {
+  height: 20px;
+  width: 20px;
   border: 2px solid #fff;
   margin-top: -2px;
   vertical-align: middle;
@@ -81,7 +58,7 @@
 
 .meeps-page .share {
   background: transparent url(/img/share_arrow.png) 0 0 no-repeat;
-  right: -8px;
+  right: -7px;
   bottom: -13px;
   z-index: 10;
   position: absolute;
@@ -150,4 +127,18 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   right: 0;
+}
+
+.meeps-page .info {
+  right: 0;
+  position: absolute;
+  z-index: 11;
+  left: -10px;
+  right: -10px;
+  top: 10px;
+  padding: 20px 30px;
+}
+
+.meeps-page .info p {
+  margin: 0;
 }

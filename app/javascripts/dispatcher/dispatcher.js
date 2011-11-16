@@ -79,7 +79,6 @@ protonet.dispatcher = {
         this._reconnect = false;
         protonet
           .trigger("flash_message.notice", protonet.t("SOCKET_RECONNECTED"))
-          .trigger("monster.jump")
           .trigger("socket.reconnected");
       }
     } else {

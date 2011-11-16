@@ -3,8 +3,12 @@
   text-align: left;
   background: #999;
   color: #fff;
-  margin-top: 30px;
+  margin-top: 20px;
   border-bottom: 1px solid #fff;
+}
+
+.subpage aside .network-separator strong {
+  text-shadow: none;
 }
 
 .subpage aside .subscribed a:before {

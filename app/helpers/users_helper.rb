@@ -1,5 +1,7 @@
 module UsersHelper
-  
+  def user_flags(user)
+    render(:partial => 'users/admin_flag') if user.admin?
+  end
   #
   # Use this to wrap view elements that the user can't access.
   # !! Note: this is an *interface*, not *security* feature !!

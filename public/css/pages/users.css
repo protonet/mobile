@@ -1,5 +1,6 @@
 .users-edit-page .content,
-.users-show-page .content {
+.users-show-page .content,
+.users-my-page .content {
   margin-left: 260px;
   position: relative;
   min-height: 300px;
@@ -8,7 +9,7 @@
 .users-page .content > img {
   position: absolute;
   top: 20px;
-  left: -230px
+  left: -240px;
 }
 
 .users-page .content > img.loading {

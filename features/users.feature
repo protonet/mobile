@@ -56,7 +56,7 @@ Background:
 
   @javascript
   Scenario: Seeing my own profile and doing changes
-    And I follow "My profile" within ".users-page"
+    And I follow "My profile" within "header"
     Then I should see "@dudemeister" within ".users-page h2"
     And I should see "edit" within ".users-page"
     And I follow "edit" within ".users-page"

@@ -14,9 +14,6 @@
   padding: 0 7px;
   font-size: 13px;
   line-height: 27px;
-  background: rgb(72, 123, 255);
-  background: -moz-linear-gradient(top, rgba(72, 123, 255, 0.6), rgba(72, 123, 255, 1));
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.6)), to(rgba(72, 123, 255, 1)));
 }
 
 .widget h3 a {
@@ -313,7 +310,123 @@
               -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 127, 49, 1)), to(rgba(255, 127, 49, 0.7)));
 }
 
-/*--------------------------------- SEARCH WIDGET ---------------------------------*/
-.side-content .search-form {
+/*--------------------------------- MY WIDGET ---------------------------------*/
+#my-widget {
+  padding: 2px 0 5px;
+  border-bottom: 1px solid #ccc;
   margin-bottom: 20px;
+  position: relative;
+  padding-left: 45px;
+  height: 36px;
+}
+
+#my-widget h4 {
+  display: block;
+}
+
+#my-widget h4 a {
+  color: #000;
+}
+
+#my-widget a {
+  color: #666;
+  text-decoration: none;
+}
+
+#my-widget a:hover {
+  color: #333;
+}
+
+#my-widget .avatar {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+#my-widget nav > ul {
+  font-size: 0;
+}
+
+#my-widget nav > ul > li {
+  font-size: 11px;
+  display: inline-block;
+  position: relative;
+  margin-left: 14px;
+  padding-left: 4px;
+}
+
+#my-widget nav > ul > li:first-child {
+  margin: 0;
+  padding: 0;
+}
+
+#my-widget nav > ul > li:before {
+  color: #666;
+  position: absolute;
+  width: 18px;
+  display: block;
+  text-align: center;
+  content: "\2022";
+  left: -14px;
+  top: 0;
+}
+
+#my-widget nav > ul > li:first-child:before {
+  display: none;
+}
+
+#my-widget .settings {
+  padding-right: 15px;
+}
+
+#my-widget .settings:hover {
+  background: #eee;
+}
+
+#my-widget .settings:hover:after {
+  border-top: 4px solid #333;
+}
+
+#my-widget .settings:after {
+  content: "";
+  position: absolute;
+  right: 5px;
+  top: 7px;
+  width: 0;
+  height: 0;
+  border: 4px solid transparent;
+  border-top: 4px solid #666;
+}
+
+#my-widget .settings ul {
+  display: none;
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  background: #fff;
+  min-width: 140px;
+  border: 1px solid #ccc;
+}
+
+#my-widget .settings:hover ul {
+  display: block;
+}
+
+#my-widget .settings li {
+  cursor: pointer;
+  color: #666;
+  padding: 4px 6px;
+  border-top: 1px solid #ccc;
+}
+
+#my-widget .settings li:first-child {
+  border: 0;
+}
+
+#my-widget .settings .on {
+  color: #00cc00;
+}
+
+#my-widget .settings .off {
+  color: #e75c79;
 }

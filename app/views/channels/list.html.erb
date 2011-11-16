@@ -1,24 +1,22 @@
-<%= render :partial => "header" %>
-<div class="modal-window-scroll-content">
-  <aside>
-    <ul>
-      <%- Channel.real.local.each do |c| -%>
-        <li class="<%= 'selected' if @selected_channel && c.id == @selected_channel.id %><%= ' subscribed' if current_user.subscribed?(c) %>">
-          <a href="/channels/<%= c.id %>" data-tab="channels">
-            <span class="fix-firefox3">
-              <strong>@<%= c.name %></strong>
-              <%= render :partial => 'channel_icons', :locals => { :channel => c } %>
-            </span>
-          </a>
-        </li>
-      <%- end -%>
-    </ul>
-  </aside>
-  <output data-tab="channels" class="content">
-    <%- if @selected_channel %>
-      <%= render :partial => 'channel_details', :locals => { :channel => @selected_channel } %>
-    <%- else %>
-      <p class="hint">Please choose a channel from the left or <%= link_to "click here", new_channel_path, :class => 'promotion-link' %> to create a new one.</p>
-    <%- end %>
-  </output>
-</div>
+<aside>
+  <ul>
+    <%- Channel.real.local.each do |c| -%>
+      <li class="<%= 'selected' if @selected_channel && c.id == @selected_channel.id %><%= ' subscribed' if current_user.subscribed?(c) %>">
+        <a href="/channels/<%= c.id %>" data-tab="channels">
+          <span class="fix-firefox3">
+            <strong>@<%= c.name %></strong>
+            <%= render :partial => 'channel_icons', :locals => { :channel => c } %>
+          </span>
+        </a>
+      </li>
+    <%- end -%>
+  </ul>
+</aside>
+<output data-tab="channels" class="content">
+  <%- if @selected_channel %>
+    <%= render :partial => 'channel_details', :locals => { :channel => @selected_channel } %>
+  <%- else %>
+    <h2>Browse channels</h2>
+    <p class="hint">Please choose a channel from the left or <%= link_to "click here", new_channel_path, :class => 'promotion-link' %> to create a new one.</p>
+  <%- end %>
+</output>

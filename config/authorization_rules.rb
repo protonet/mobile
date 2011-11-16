@@ -50,7 +50,7 @@ privileges do
   # default privilege hierarchies to facilitate RESTful Rails apps
   privilege :manage, :includes => [:create, :read, :update, :delete, :destroy, :show,
     :change_password, :update_user_admin_flag, :generate_new_password, :search, :send_javascript, :send_system_message]
-  privilege :read, :includes => [:index, :show, :search, :list, :list_global, :show_global, :recommended_global_teaser, :meeps_with_text_extension]
+  privilege :read, :includes => [:index, :show, :my, :search, :list, :list_global, :show_global, :recommended_global_teaser, :meeps_with_text_extension]
   privilege :newbie, :includes => [:remove_newbie_flag, :newbie_todo_list]
   privilege :rendezvous, :includes => [:start_rendezvous]
   privilege :create, :includes => :new

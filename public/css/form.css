@@ -1,5 +1,5 @@
 #message-form {
-  margin: 20px 20px 4px 30px;
+  margin: 20px 20px 4px;
   position: relative;
 }
 
@@ -45,7 +45,7 @@ form.disabled #textarea-wrapper:after {
 }
 
 #textarea-wrapper textarea {
-  width: 506px;
+  width: 516px;
   padding: 3px;
   font-size: 14px;
   resize: none;
@@ -104,20 +104,4 @@ form.disabled #textarea-wrapper:after {
               -moz-linear-gradient(top, rgba(153, 153, 153, 1), rgba(153, 153, 153, 0.7));
   background: url(/img/return.png) center center no-repeat,
               -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(153, 153, 153, 1)), to(rgba(153, 153, 153, 0.7)));
-}
-
-#message-form .avatar {
-  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  position: absolute;
-  left: -55px;
-  top: 0;
-  height: 48px;
-  width: 22px;
-}
-
-#message-form .avatar img {
-  background: #fff;
-  padding: 6px;
 }

@@ -47,7 +47,7 @@ protonet.ui.FlashMessage = {
       this.element.addClass(type);
     }
     
-    this.element.stop().css("position", "fixed").animate({ top: "0px" });
+    this.element.stop().fadeIn();
     
     clearTimeout(this.timeout);
     
@@ -69,13 +69,7 @@ protonet.ui.FlashMessage = {
       return;
     }
     
-    this.element.stop().animate({ top: (-this.element.outerHeight()).px() }, function() {
-      /**
-       * Set it back to absolute to avoid scrolling performance issues
-       * in webkit browsers
-       */
-      this.element.css("position", "absolute");
-    }.bind(this));
+    this.element.stop().fadeOut();
     
     event && event.preventDefault && event.preventDefault();
   }

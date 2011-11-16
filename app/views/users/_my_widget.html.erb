@@ -1,0 +1,17 @@
+<div id="my-widget">
+  <a href="/users/<%= current_user.id %>" class="avatar">
+    <%= avatar(current_user, :width => 36, :height => 36, :title => "That's you!") %>
+  </a>
+  <h4>
+    <%= link_to user_path(current_user) do %>
+      <%= current_user.display_name %>
+      <%= user_flags(current_user) %>
+    <% end %>
+  </h4>
+  <nav>
+    <ul>
+      <li><%= link_to "logout", destroy_user_session_path, 'data-avoid-ajax' => 1 %></li>
+      <li class="settings"><a>settings</a></li>
+    </ul>
+  </nav>
+</div>

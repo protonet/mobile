@@ -1,0 +1,132 @@
+header {
+  border-bottom:  1px solid #3a62cc;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  position: fixed;
+  z-index: 12;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: block;
+  height: 44px;
+}
+
+header nav {
+  font-size: 0;
+}
+
+header nav li {
+  display: inline-block;
+  font-size: 14px;
+  color: #fff;
+  margin-right: 1px;
+}
+
+header nav a {
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+  padding: 0 20px;
+  display: block;
+  line-height: 44px;
+  color: #fff !important;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+header nav li:hover,
+header nav li:focus,
+header nav .selected {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+header nav > ul {
+  width: 940px;
+  margin: 0 auto;
+}
+
+header li ul {
+  left: -9999px;
+  background-color: #fff;
+  min-width: 177px;
+  position: absolute;
+  top: 42px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+header li ul:before {
+  top: -18px;
+  left: 15px;
+  content: "";
+  width: 0;
+  height: 0;
+  position: absolute;
+  border: 9px solid transparent;
+  border-bottom: 9px solid #fff;
+}
+
+header li:hover ul,
+header li:focus ul {
+  left: auto;
+}
+
+header li li {
+  margin-right: 0;
+  border-top: 1px solid #ccc;
+  display: block;
+  text-shadow: none;
+}
+
+header li li:first-child {
+  border-top: 0;
+}
+
+header li li:hover,
+header li .selected {
+  background: #eee;
+}
+
+header li li a {
+  color: #444 !important;
+  text-shadow: none;
+  font-weight: normal;
+  line-height: 34px;
+  font-size: 12px;
+}
+
+
+header .logo a {
+  padding: 0;
+  width: 170px;
+  height: 44px;
+  background: url(/img/logo_new.png) no-repeat 20px 0;
+  text-indent: -9999px;
+  outline: 0;
+}
+
+header .hearts {
+  position: absolute;
+  color: #e75c79;
+  font-size: 13px;
+  text-shadow: 1px 1px 1px #999;
+  width: 70px;
+  left: 136px;
+  top: 50px;
+  text-align: center;
+}
+
+header .search {
+  float: right;
+  margin: 5px 26px 0 0;
+}
+
+header [type=search] {
+  padding: 5px 5px 5px 28px;
+  width: 220px;
+  border: 1px solid #3a62cc;
+  font-size: 14px;
+  height: 34px;
+  -webkit-box-shadow: 0 0 3px #666 inset;
+  -moz-box-shadow: 0 0 3px #666 inset;
+  box-shadow: 0 0 3px #666 inset;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}

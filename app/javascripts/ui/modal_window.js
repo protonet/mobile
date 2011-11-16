@@ -13,7 +13,8 @@ protonet.ui.ModalWindow = (function() {
       currentRequest,
       urlBeforeOpened               = location.href,
       // Margin top and bottom (TODO: extract this logic to a css file)
-      offset                        = 40,
+      offsetTop                     = 65,
+      offsetBottom                  = 20,
       visible                       = false,
       embedMapping                  = {
         "image":    "image",
@@ -126,13 +127,10 @@ protonet.ui.ModalWindow = (function() {
         stylesheetsToLoad++;
         
         var placeholder = "<!--" + href + "-->";
-        $.ajax({
-          url:     href,
-          success: function(css) {
-            html = html.replace(placeholder, "<style>\n" + css + "\n</style>");
-            if (--stylesheetsToLoad === 0) {
-              callback(html);
-            }
+        $.ajax(href).done(function(css) {
+          html = html.replace(placeholder, "<style>\n" + css + "\n</style>");
+          if (--stylesheetsToLoad === 0) {
+            callback(html);
           }
         });
         return placeholder;
@@ -151,25 +149,27 @@ protonet.ui.ModalWindow = (function() {
     _abortCurrentRequest();
     
     currentRequest = $.ajax({
-      url:     url,
-      data:    { ajax: 1 },
-      success: function(response, statusText, xhr) {
-        var contentType = xhr.getResponseHeader("Content-Type");
-        if (contentType.startsWith("text/html")) {
-          _loadStylesheets(response, function(html) {
-            content(html, true);
-            elements.dialog.removeClass("loading");
-          });
-        } else if (contentType.startsWith("text/")) {
-          content(response);
+      url:     url
+    }).done(function(response, statusText, xhr) {
+      var contentType = xhr.getResponseHeader("Content-Type");
+      if (contentType.startsWith("text/html")) {
+        _loadStylesheets(response, function(html) {
+          content(html, true);
           elements.dialog.removeClass("loading");
-        }
-      },
-      error: function() {
-        protonet.trigger("flash_message.error", protonet.t("PAGE_LOADING_ERROR"));
+        });
+      } else if (contentType.startsWith("text/")) {
+        content(response);
         elements.dialog.removeClass("loading");
-      },
-      timeout: 15000
+      }
+      
+      var responseUrl = xhr.getResponseHeader("X-Url");
+      if (responseUrl !== url) {
+        protonet.utils.History.replace(responseUrl);
+      }
+      protonet.trigger("modal_window.loaded", response, xhr);
+    }).fail(function() {
+      protonet.trigger("flash_message.error", protonet.t("PAGE_LOADING_ERROR"));
+      elements.dialog.removeClass("loading");
     });
   }
   
@@ -218,6 +218,8 @@ protonet.ui.ModalWindow = (function() {
       protonet.utils.History.push(url);
     }
     
+    protonet.trigger("modal_window.shown");
+    
     return this;
   }
   
@@ -236,6 +238,7 @@ protonet.ui.ModalWindow = (function() {
     visible = false;
     
     protonet.utils.History.push(urlBeforeOpened);
+    protonet.trigger("modal_window.hidden");
     
     return this;
   }
@@ -251,13 +254,13 @@ protonet.ui.ModalWindow = (function() {
   }
   
   function position() {
-    var top = ($window.scrollTop() + offset).px();
+    var top = ($window.scrollTop() + offsetTop).px();
     elements.dialog.css("top", top);
     return this;
   }
   
   function resize(immediately) {
-    var height = ($window.height() - 2 * offset);
+    var height = ($window.height() - (offsetTop + offsetBottom));
     elements.content.css("height", height);
     return this;
   }
