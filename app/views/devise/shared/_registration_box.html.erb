@@ -35,7 +35,7 @@
   <%- end %>
 <%- end %>
 
-<%= form_tag user_session_path, { :class => "login #{'no-register' unless allow_signup?}" } do -%>
+<%= form_for :user, :url =>  user_session_path, :html => { :class => "login #{'no-register' unless allow_signup?}" } do |f| -%>
   <fieldset>
     <%- if SystemPreferences.remote_ldap_sign_on == true %>
       <legend><strong>Log in</strong> with your ldap credentials</legend>
@@ -45,13 +45,13 @@
       <legend>or <strong>logging in</strong></legend>
     <%- end %>
     <label>
-      <%= text_field :user, :login, :value => @login, :placeholder => "user name", :id => "login_login" %>
+      <%= f.text_field :login, :placeholder => "user name", :id => "login_login" %>
     </label>
     <label>
-      <%= password_field :user, :password, :value => nil, :placeholder => "password", :id => "login_password" %>
+      <%= f.password_field :password, :value => nil, :placeholder => "password", :id => "login_password" %>
     </label>
     <label>
-      <%= check_box :user, :remember_me %> <span class="hint">Keep logged in?</span>
+      <%= f.check_box :remember_me %> <span class="hint">Keep logged in?</span>
     </label>
     <button type="submit" name="commit">login</button>
   </fieldset>
