@@ -56,6 +56,16 @@
 <%- end %>
 
 <%- if permitted_to?(:update, channel) %>
+
+  <h3>Subscribe users</h3>
+  <p>Enter the exact user name or user id into the input field to subscribe him to this channel.</p>
+  <%= form_tag(listen_for_user_path, { :remote => true, 'data-type' => 'html', :class => 'single-button-form', :method => 'post' }) do %>
+    <%= hidden_field_tag :id, current_user.id %>
+    <%= hidden_field_tag :user_id, current_user.id %>
+    <%= hidden_field_tag :channel_id, channel.id %>
+    <input type="search" placeholder="User name or id ..." name="search_term" id="users_search_term"> <%= button 'Subscribe' %>
+  <% end %>
+
   <%- if current_user.admin? %>
     <h3>Invite people <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
     <p>Grow your network by <%= link_to("inviting people", new_invitation_path(:channel_id => channel.id), :class => 'promotion-link') %> to this and other channels.</p>

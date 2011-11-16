@@ -32,7 +32,7 @@ Dashboard::Application.routes.draw do
   resources :meeps
   
   match 'listens/create' => 'listens#create', :as => :listen_to_channel
-  
+  match 'listens/create_for_user' => 'listens#create_for_user', :as => :listen_for_user
   # Listens
   resources :listens do
     match '/accept' => 'listens#accept', :as => :accept

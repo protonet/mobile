@@ -2,7 +2,7 @@ class ListensController < ApplicationController
   include Rabbit
   
   before_filter :set_listen_id
-  filter_resource_access :collection => [:index]
+  filter_resource_access :collection => [:index, :create_for_user]
   
   def index
     redirect_to listen_to_channel_path(:channel_name => params[:channel_name]) if params[:channel_name]
@@ -43,6 +43,22 @@ class ListensController < ApplicationController
       redirect_to_channel(channel)
     else
       head(500)
+    end
+  end
+  
+  def create_for_user
+    channel = Channel.find(params[:channel_id])
+    user = User.find_by_id_or_login(params[:search_term])
+    if user
+      user.subscribe(channel)
+      listen = user.listens.find_by_channel_id(channel.id)
+      listen.verified = true
+      listen.save
+      flash[:notice] = "You successfully subscribed @#{listen.user.display_name} to #{channel.name}"
+      redirect_to_channel(channel)
+    else
+      flash[:error] = "Couldn't find user with identifier '#{params[:search_term]}'"
+      redirect_to_channel(channel)
     end
   end
   

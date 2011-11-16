@@ -20,7 +20,7 @@ authorization do
       if_attribute :user => is {user}
     end
     has_permission_on :listens do
-      to [:accept, :delete]
+      to [:accept, :delete, :create_for_user]
       if_attribute :channel => { :owner => is {user} }
     end
     
@@ -39,7 +39,7 @@ authorization do
   
   role :admin do
     has_permission_on :channels, :to => [:manage, :manage_globals]
-    has_permission_on :listens, :to => [:manage, :accept, :manage_globals]
+    has_permission_on :listens, :to => [:manage, :accept, :manage_globals, :create_for_user]
     has_permission_on :invitations, :to => :manage
     has_permission_on :authorization_rules, :to => :read
     has_permission_on :users, :to => [:manage, :delete_stranger_older_than_two_days, :rendezvous, :update_last_read_meeps, :newbie]
@@ -53,10 +53,7 @@ privileges do
   privilege :read, :includes => [:index, :show, :search, :list, :list_global, :show_global, :recommended_global_teaser, :meeps_with_text_extension]
   privilege :newbie, :includes => [:remove_newbie_flag, :newbie_todo_list]
   privilege :rendezvous, :includes => [:start_rendezvous]
-  privilege :update_last_read_meeps
-  privilege :delete_stranger_older_than_two_days
   privilege :create, :includes => :new
   privilege :update, :includes => :edit
   privilege :delete, :includes => :destroy
-  privilege :change_password
 end
