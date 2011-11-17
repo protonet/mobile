@@ -13,6 +13,7 @@ module Preferences
       if SystemPreferences.publish_to_web
         SystemPreferences.public_host = "#{SystemPreferences.publish_to_web_name}.protonet.info"
         SystemPreferences.public_host_https = true
+        turn_off_publishing
         success, error = turn_on_publishing
       else
         turn_off_publishing
