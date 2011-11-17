@@ -45,7 +45,7 @@
           this.hint && this.hint.detach();
           protonet.trigger("form.enable");
         } else {
-          this.hint = this.hint || $("<p>", { text: "The node of this channel is currently offline", "class": "info-message node-offline-hint" });
+          this.hint = this.hint || $("<p>", { text: "The node of this channel is currently offline", "class": "info-message" });
           this.hint.prependTo(this.container);
           protonet.trigger("form.disable");
         }

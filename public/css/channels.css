@@ -9,6 +9,7 @@
 
 #channels ul {
   margin: 0 22px -1px 0;
+  min-height: 20px;
   overflow: hidden;
 }
 
@@ -190,4 +191,10 @@
 
 #channels .rendezvous.typing:before {
   background-position: 0 -45px;
+}
+
+#timeline > .info-message {
+  border: 0;
+  border-bottom: 1px solid #8C8C8C;
+  margin: -10px 20px 10px;
 }

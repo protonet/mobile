@@ -37,6 +37,8 @@ protonet.timeline.Channels = {
         return true;
       }
     }.bind(this));
+    
+    this._initNoChannelsHint();
   },
   
   render: function(data) {
@@ -64,6 +66,28 @@ protonet.timeline.Channels = {
     var activeRendezvousChannels = Object.keys(protonet.storage.get("active_rendezvous") || {});
     
     return activeChannels.concat(activeRendezvousChannels);
+  },
+  
+  _initNoChannelsHint: function() {
+    var $hint;
+    protonet.after("channels.data_available channel.unload", function() {
+      if (this.data.length) {
+        return;
+      }
+      
+      if (!$hint) {
+        $hint = $("<p>", {
+          html: protonet.t("NO_CHANNELS_SUBSCRIBED", { user_id: protonet.config.admin_ids[0] }),
+          "class": "info-message"
+        });
+      }
+      
+      $hint.prependTo(this.container);
+      
+      protonet.one("channel.initialized", function() {
+        $hint.detach();
+      });
+    }.bind(this));
   },
   
   _updateSubscribedChannels: function() {
@@ -138,9 +162,10 @@ protonet.timeline.Channels = {
       })
       
       .on("channels.change_to_first", function() {
-        var firstChannel = this.tabs.eq(0);
-        if (firstChannel.length) {
-          protonet.trigger("channel.change", firstChannel.data("channel-id"));
+        var $firstChannel = this.tabs.filter(":visible:eq(0)");
+        protonet.trigger("form.disable");
+        if ($firstChannel.length) {
+          protonet.trigger("channel.change", $firstChannel.data("channel-id"));
         }
       }.bind(this))
       
@@ -150,6 +175,10 @@ protonet.timeline.Channels = {
       
       .on("channel.load", function(data) {
         this.loadChannel(data.channel_id);
+      }.bind(this))
+      
+      .on("channel.unload", function(data) {
+        this.unloadChannel(data.channel_id);
       }.bind(this))
       
       /**
@@ -174,7 +203,7 @@ protonet.timeline.Channels = {
           type:     "post",
           dataType: "json",
           url:      "/listens",
-          data:     { channel_id: id, },
+          data:     { channel_id: id },
           success: function(data) {
             if (data.success) {
               data.already_subscribed ? protonet.trigger("channel.load", { channel_id: id }) : success();
@@ -208,12 +237,11 @@ protonet.timeline.Channels = {
        * Remove the tab handle, all meeps and all other dependencies of a channel
        */
       .on("user.unsubscribed_channel", function(data) {
-        var channelId = data.channel_id;
         if (protonet.config.user_id != data.user_id) {
           return;
         }
         
-        this.unloadChannel(channelId);
+        protonet.trigger("channel.unload", data);
       }.bind(this))
       
       /**
@@ -408,6 +436,8 @@ protonet.timeline.Channels = {
     this.data = $.map(this.channels, function(instance) {
       return instance.data;
     });
+    
+    this.tabs = $("#channels [data-channel-id]");
     
     this._updateSubscribedChannels();
     

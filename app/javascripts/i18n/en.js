@@ -4,6 +4,7 @@ protonet.i18n = {
   MEEP_SENDING: "[sending...]",
   MEEP_ERROR_LONG: "Olala... your message hasn't been sent. Try again!",
   NO_MEEPS_AVAILABLE: "Hurry! Be the first one to post a message here.",
+  NO_CHANNELS_SUBSCRIBED: "You can't post any messages because you haven't subscribed to any channels. Click <a href='/channels'>here</a> to do so or contact an <a data-contact-admin href='/?rendezvous_with=#{user_id}'>admin</a>.",
   NO_MEEPS_FOR_USER_AVAILABLE: "No messages with attachments available",
   REPLY_NOTIFICATION_TITLE: "new reply from #{author}",
   RENDEZVOUS_NOTIFICATION_TITLE: "new private chat message from #{author}",
