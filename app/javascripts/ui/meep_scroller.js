@@ -53,10 +53,11 @@ protonet.ui.MeepScroller = (function() {
         var keyCode = event.keyCode;
         if (keyCode === 40) { // arrow down
           this.scrollByOffset(-1);
+          event.preventDefault();
         } else if (keyCode === 38) { // arrow up
           this.scrollByOffset(+1);
+          event.preventDefault();
         }
-        event.preventDefault();
       }.bind(this));
 
       $document.delegate("pre", "mousewheel.meep_scroller DOMMouseScroll.meep_scroller", function(event) {
