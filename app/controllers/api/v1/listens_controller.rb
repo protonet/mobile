@@ -6,7 +6,9 @@ class Api::V1::ListensController < Api::V1::MasterController
       unless @current_user.admin? || @current_user.roles.include?(Role.find_by_title("api-node")) && channel.global
         return head :unprocessable_entity
       end
-      if User.find(params[:user_id]).subscribe(channel)
+      u = User.find(params[:user_id])
+      u.subscribe(channel)
+      if u.subscribed?(channel)
         head :ok
       else
         head :unprocessable_entity
@@ -22,7 +24,9 @@ class Api::V1::ListensController < Api::V1::MasterController
       unless @current_user.admin? || @current_user.roles.include?(Role.find_by_title("api-node")) && channel.global
         return head :unprocessable_entity
       end
-      if User.find(params[:user_id]).unsubscribe(channel)
+      u = User.find(params[:user_id])
+      u.unsubscribe(channel)
+      if !u.subscribed?(channel)
         head :ok
       else
         head :unprocessable_entity
