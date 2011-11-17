@@ -18,7 +18,7 @@ $(function() {
   resizeContainer();
   
   $(".modal-window > output").css("overflow", "visible");
-  protonet.one("modal_window.loaded", function() {
+  protonet.one("modal_window.rendered", function() {
     $(".modal-window > output").css("overflow", "");
   });
   

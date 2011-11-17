@@ -260,6 +260,7 @@ protonet.ui.ModalWindow = (function() {
     } else {
       $element.text(content);
     }
+    protonet.trigger("modal_window.rendered");
     return this;
   }
   
