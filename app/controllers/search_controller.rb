@@ -1,6 +1,5 @@
 class SearchController < ApplicationController
-  before_filter :load_channels
-
+  
   def index
     respond_to do |format|
       format.html {
@@ -13,35 +12,9 @@ class SearchController < ApplicationController
         render :json => @search_results.hits.map {|hit|
           meep = hit.instance
           meep.text_extension = JSON.parse(meep.text_extension) rescue nil
-          meep.attributes.merge({ :channel_id => nil, :posted_in => meep.channel.id })
+          meep.attributes.merge({ "channel_id" => nil, "posted_in" => meep.channel.id })
         }.to_json
       }
-    end
-  end
-  
-  def more_meeps
-    respond_to do |format|
-      format.json do
-        perform_search
-
-        channel = Channel.find(params[:channel_id])
-        channel = nil if !@channels.map(&:id).include?(channel.id)
-        meep = channel.meeps.find params[:meep_id]
-        later = params[:later].to_i
-        earlier = params[:earlier].to_i
-        channel_id = channel.id
-        meeps = meep.from_minutes_after(later,channel_id) + [meep] + meep.from_minutes_before(earlier,channel_id)
-        
-        render :partial => 'search/search_result',
-          :locals => {
-            :meep    => meep,
-            :meeps    => meeps,
-            :channel   => channel,
-            :pos       => params[:pos],
-            :more_time => later,
-            :less_time => earlier
-          }
-      end
     end
   end
 
@@ -63,9 +36,5 @@ class SearchController < ApplicationController
         end
       end
     end
-  end
-
-  def load_channels
-    @channels = current_user.channels.verified
   end
 end
