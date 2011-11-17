@@ -11,7 +11,7 @@
 <%- if channel.users.registered.size == 0 %>
   <p class="hint">There are currently no users that subscribed to this channel. Be the first!</p>
 <%- else %>
-  <ul class="list">
+  <ul class="subscribers-list list">
     <%- channel.listens.all(:include => :user, :order => 'verified ASC', :limit => configatron.max_list_size).each do |listen| %>
       <%- if !listen.user.stranger? && user = listen.user %>
         <li data-cucumber="<%= listen.user.id %>" tabindex="-1">

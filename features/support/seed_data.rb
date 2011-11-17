@@ -10,7 +10,10 @@ Before do
       "allow_dashboard_for_strangers" => true,
       "allow_registrations_for_strangers" => true
     }
-  } 
+  }
+  # always use the same uuid for the cucumber node
+  SystemPreferences.node_uuid = "2b30721c-e4f4-11e0-b0b6-00264a1815fc"
+  Node.local.update_attribute(:uuid, SystemPreferences.node_uuid)
 end
 
 After do
@@ -29,15 +32,3 @@ After do
   # reset connection tracker
   # `kill -1 #{SystemServices.services["js_dispatching_server"][2].pid}`
 end
-
-# AfterStep do
-#   if Capybara.send(:session_pool).size > 1
-#     old_session = Capybara.session_name
-#     old_driver  = Capybara.current_driver
-#     Capybara.session_name = "second"
-#     Capybara.current_driver = :selenium
-#     Capybara.current_session.driver.execute_script("console.log('ping')")
-#     Capybara.session_name = old_session
-#     Capybara.current_driver = old_driver
-#   end
-# end
