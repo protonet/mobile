@@ -63,7 +63,7 @@
     <%= hidden_field_tag :id, current_user.id %>
     <%= hidden_field_tag :user_id, current_user.id %>
     <%= hidden_field_tag :channel_id, channel.id %>
-    <input type="search" placeholder="User name or id ..." name="search_term" id="users_search_term"> <%= button 'Subscribe' %>
+    <input type="text" placeholder="User name or id ..." name="search_term" > <%= button 'Subscribe' %>
   <% end %>
 
   <%- if current_user.admin? %>
@@ -89,7 +89,7 @@
   
   <h3>Details <a data-hover-hint="top" title="Only visible to admins and the channel owner" class="hint">(?)</a></h3>
   <dl>
-    <dt>Network: </dt><dd><%= channel.node.name %></dd>
+    <dt>Node: </dt><dd><%= channel.node.name %><%= " (remote)" unless channel.node.local? %></dd>
     <dt>Channel UUID: </dt><dd><%= channel.uuid %></dd>
     <dt>Created: </dt><dd title="<%= channel.created_at %>"><%= time_ago_in_words(channel.created_at) %> ago</dd>
     <dt>Messages: </dt><dd><%= channel.meeps.size %></dd>

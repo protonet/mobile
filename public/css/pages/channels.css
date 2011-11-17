@@ -121,3 +121,7 @@
   line-height: 15px;
   padding-left: 18px;
 }
+
+.channels-page input[name=search_term] {
+  width: 150px;
+}
