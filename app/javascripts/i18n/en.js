@@ -28,6 +28,8 @@ protonet.i18n = {
   MEEP_HEADLINE: "#{avatar} Message ##{id} posted in @#{channel_name}",
   DETAIL_VIEW_LOADING_ERROR: "Something went wrong while loading the context for the current message.",
   PAGE_LOADING_ERROR: "Page couldn't be loaded.",
+  PAGE_ACCESS_FORBIDDEN: "You are not allowed to see this page.",
+  PLEASE_LOGIN: "Please login or sign up!",
   FLASH_DISABLED_MESSAGE: "Protonet requires the flash plugin. Please enable it by clicking below.",
   SNAPSHOT_TITLE: "Snapshot{s} by @#{user_name}",
   RENDEZVOUS_ERROR: "An error appeared while setting up a private chat.",

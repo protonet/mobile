@@ -1,7 +1,6 @@
 authorization do
   role :guest do
-    has_permission_on :users, :to => [:read, :rendezvous, :update_last_read_meeps]
-    has_permission_on :channels, :to => [:read]
+    has_permission_on :users, :to => [:rendezvous, :update_last_read_meeps]
   end
   
   role :invitee do

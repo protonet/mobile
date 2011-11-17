@@ -75,7 +75,7 @@ protonet.timeline.Channels = {
       "a[data-channel-id]:click": function(element, event) {
         var $element      = $(element),
             id            = $element.data("channel-id"),
-            isSubscribed  = $.inArray(id, this.subscribedChannels) !== -1;
+            isSubscribed  = this.subscribedChannels.indexOf(id) !== -1;
         
         if (isSubscribed) {
           protonet.trigger("modal_window.hide").trigger("channel.change", id);
@@ -114,7 +114,7 @@ protonet.timeline.Channels = {
           return;
         }
         
-        if ($.inArray(id, this.subscribedChannels) === -1) {
+        if (this.subscribedChannels.indexOf(id) === -1) {
           return;
         }
         

@@ -167,8 +167,18 @@ protonet.ui.ModalWindow = (function() {
         protonet.utils.History.replace(responseUrl);
       }
       protonet.trigger("modal_window.loaded", response, xhr);
-    }).fail(function() {
-      protonet.trigger("flash_message.error", protonet.t("PAGE_LOADING_ERROR"));
+    }).fail(function(xhr) {
+      var textResource;
+      if (xhr.status === 403) {
+        textResource = protonet.t("PAGE_ACCESS_FORBIDDEN");
+        if (protonet.config.user_is_stranger) {
+          textResource += " " + protonet.t("PLEASE_LOGIN");
+        }
+      } else {
+        textResource = protonet.t("PAGE_LOADING_ERROR");
+      }
+      
+      protonet.trigger("flash_message.error", textResource);
       elements.dialog.removeClass("loading");
     });
   }
