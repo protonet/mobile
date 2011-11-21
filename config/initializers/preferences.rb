@@ -26,11 +26,11 @@ Dashboard::Application.config.to_prepare do
     }
   }
   SystemPreferences.defaults[:wifi] = {
-    "mode" => :dual,
+    "mode" => "wlan0",
     "channel" => 5, # should be 5 - 11 since 1 - 4 don't support multiple ssids
     "wlan0" => {
       "name" => "protonet-private",
-      "password" => ActiveSupport::SecureRandom.base64(10),
+      "password" => "Changeme!123",
       "sharing"  => true,
       "ip" => "10.42.0.1"
     },
