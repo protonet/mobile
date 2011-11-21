@@ -54,15 +54,7 @@ protonet.user.Browser = {
   })(),
   
   IS_TOUCH_DEVICE: function() {
-    var returnValue;
-    try {
-      document.createEvent("TouchEvent");
-      returnValue = true;
-    } catch (e) {
-      returnValue = false;
-    }
-    this.IS_TOUCH_DEVICE = function() { return returnValue; };
-    return returnValue;
+    return this.SUPPORTS_EVENT("touchmove");
   },
   
   /**
