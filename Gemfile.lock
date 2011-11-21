@@ -74,7 +74,7 @@ GEM
       net-ssh-gateway (>= 1.0.0)
     capistrano-ext (1.2.1)
       capistrano (>= 1.0.0)
-    capybara (1.1.1)
+    capybara (1.1.2)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
       rack (>= 1.0.0)
@@ -124,7 +124,7 @@ GEM
       railties (>= 3.0.0)
     faker (0.9.5)
       i18n (~> 0.4)
-    ffi (1.0.9)
+    ffi (1.0.11)
     fishman-eventmachine_httpserver (0.2.2)
     foreman (0.16.0)
       term-ansicolor (~> 1.0.5)
@@ -220,9 +220,9 @@ GEM
     ruby-ip (0.9.0)
     ruby-net-ldap (0.0.4)
     rubyzip (0.9.4)
-    selenium-webdriver (2.10.0)
+    selenium-webdriver (2.13.0)
       childprocess (>= 0.2.1)
-      ffi (= 1.0.9)
+      ffi (~> 1.0.9)
       json_pure
       rubyzip
     sprockets (1.0.2)
@@ -250,7 +250,7 @@ DEPENDENCIES
   bundler (= 1.0.11)
   capistrano (= 2.5.19)
   capistrano-ext (= 1.2.1)
-  capybara (= 1.1.1)
+  capybara (= 1.1.2)
   configatron (= 2.6.3)
   cucumber-rails (= 1.2.0)
   daemon_controller (~> 0.2.6)
@@ -287,7 +287,7 @@ DEPENDENCIES
   ruby-ifconfig!
   ruby-ip (= 0.9.0)
   ruby-net-ldap (= 0.0.4)
-  selenium-webdriver (= 2.10.0)
+  selenium-webdriver
   sprockets
   sprockets-rails!
   sunspot!
