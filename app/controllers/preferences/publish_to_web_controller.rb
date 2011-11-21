@@ -22,7 +22,7 @@ module Preferences
         error_message = JSON.parse(error.message)["errors"].join(", ") rescue error.message
         flash[:error] = "Publish to web error: " + error_message + "."
       end
-      redirect_to(:controller => "/preferences", :action => "show", :section => "publish_to_web")
+      respond_to_preference_update
     end
     
     def publish_status
