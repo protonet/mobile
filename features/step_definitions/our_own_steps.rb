@@ -216,7 +216,7 @@ Then /^I should see the profile image "([^\"]*)" in my profile details$/ do |ima
     "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
   }[image_name]
   
-  wait_until(10) do
+  wait_until(20) do
     page.has_css?(".users-page .user-avatar[src*='#{src}']")
   end
 end
@@ -227,7 +227,7 @@ Then /^I should see the profile image "([^\"]*)" in the top right navi$/ do |ima
     "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
   }[image_name]
   
-  wait_until(10) do
+  wait_until(20) do
     find(:css, "#my-widget img[src*='#{src}']")
   end
 end
