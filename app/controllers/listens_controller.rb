@@ -36,9 +36,7 @@ class ListensController < ApplicationController
   def accept
     listen = Listen.find(params[:id])
     channel = listen.channel
-    listen.verified = true
-    if listen.save
-      publish "users", listen.user.id, { :trigger => 'channel.load', :channel_id => channel.id }
+    if listen.set_verified!
       flash[:notice] = "You successfully verified the subscription of @#{listen.user.display_name}"
       redirect_to_channel(channel)
     else
@@ -55,8 +53,7 @@ class ListensController < ApplicationController
     if user
       user.subscribe(channel)
       listen = user.listens.find_by_channel_id(channel.id)
-      listen.verified = true
-      listen.save
+      listen.set_verified!
       flash[:notice] = "You successfully subscribed @#{listen.user.display_name} to #{channel.name}"
       redirect_to_channel(channel)
     else

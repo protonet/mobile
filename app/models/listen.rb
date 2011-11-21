@@ -50,4 +50,12 @@ class Listen < ActiveRecord::Base
     save
   end
   
+  def set_verified!
+    self.verified = true
+    if save
+      send_subscribe_notification
+      publish "users", user_id, { :trigger => 'channel.load', :channel_id => channel_id }
+    end
+  end
+  
 end
