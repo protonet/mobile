@@ -16,7 +16,7 @@ Dashboard::Application.config.to_prepare do
       "allow_dashboard_for_strangers" => true,
       "allow_registrations_for_strangers" => true
     },
-    "publish_to_web" => {
+    "published_to_web" => {
       "allow_dashboard_for_strangers" => false,
       "allow_registrations_for_strangers" => false
     },
