@@ -58,12 +58,14 @@
 <%- if permitted_to?(:update, channel) %>
 
   <h3>Subscribe users</h3>
-  <p>Enter the exact user name or user id into the input field to subscribe him to this channel.</p>
-  <%= form_tag(listen_for_user_path, { :remote => true, 'data-type' => 'html', :class => 'single-button-form', :method => 'post' }) do %>
+  <p>
+    Enter the exact user name or user id into the input field to subscribe him to this channel,<br>or enter an email address to invite users to your node.
+  </p>
+  <%= form_tag(listen_for_user_path, { :remote => true, 'data-type' => 'html', :class => 'single-button-form subscribe-user', :method => 'post' }) do %>
     <%= hidden_field_tag :id, current_user.id %>
     <%= hidden_field_tag :user_id, current_user.id %>
     <%= hidden_field_tag :channel_id, channel.id %>
-    <input type="text" placeholder="User name or id ..." name="search_term" > <%= button 'Subscribe' %>
+    <input type="text" placeholder="User name, id or email ..." name="search_term" > <%= button 'Subscribe' %>
   <% end %>
 
   <%- if current_user.admin? %>

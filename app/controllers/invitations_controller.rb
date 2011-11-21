@@ -3,6 +3,7 @@ class InvitationsController < ApplicationController
   filter_resource_access
   
   def new
+    @invitee_email = params[:invitee_email]
     @invitation = current_user.invitations.new
     @channels = current_user.owned_channels.real | Channel.public
   end

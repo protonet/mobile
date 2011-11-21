@@ -13,7 +13,7 @@
     
     <div class="form-field">
       <%= f.label :email, "E-Mail:" %>
-      <input id="invitation_email" name="invitation[email]" type="email" autofocus>
+      <input id="invitation_email" name="invitation[email]" type="email" value="<%= @invitee_email %>" autofocus>
     </div>
     <div class="form-field">
       <%= f.label :channel, "Channels:" %>

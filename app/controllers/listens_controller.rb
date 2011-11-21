@@ -47,6 +47,9 @@ class ListensController < ApplicationController
   end
   
   def create_for_user
+    if params[:search_term].try(:match, /@.*\./)
+      redirect_to(:controller => :invitations, :action => :new, :invitee_email => params[:search_term], :channel_id => params[:channel_id]) and return
+    end
     channel = Channel.find(params[:channel_id])
     user = User.find_by_id_or_login(params[:search_term])
     if user

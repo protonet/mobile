@@ -344,3 +344,14 @@ end
 Then /^the channel "([^"]*)" should be remotely connected$/ do |arg1|
   find(:css, ".global").native["class"] == "global" # and not offline
 end
+
+Then /^I subscribe the user "([^"]*)"$/ do |user_identifier|
+  within(".subscribe-user") do
+    fill_in 'search_term',    :with => user_identifier
+    click_button('Subscribe')
+  end
+end
+
+Then /^I should see the invitation page$/ do
+  find(:css, "h2", :text => "Invite people")
+end

@@ -11,17 +11,6 @@ Feature: Using the protonet channel management
       And I select the channel "home" in the channel list
       And I should see "home" in the channel details pane
 
-  @wip
-  Scenario: Creating and making a channel private
-    Given a user exists with login: "dudemeister"
-    And I go to the start page
-    And I am logged in as "dudemeister"
-    And I go to the channels page
-      Then I create a channel
-      Then I select that channel
-      Then make it private
-
-
   @javascript
   Scenario: Trying to subscribe to a private channel
     Given a user exists with login: "dudemeister"
@@ -54,4 +43,17 @@ Feature: Using the protonet channel management
               And I am using the second browser
               And I go to the start page
                 Then I should see "Privatechannel" in the channel selector
-  
+
+  @javascript
+  Scenario: Subscribing an user to a channel
+    Given I go to the start page
+    Given a user with the login "dudemeister"
+    And I am logged in as "admin" with password "admin"
+    And I go to the channels page
+    And I follow "Browse channels"
+    Then I should see "home" in the channel list
+    And I select the channel "home" in the channel list
+    And I subscribe the user "dudemeister"
+    Then I should see "dudemeister" in the channel subscriber list
+    And I subscribe the user "foo@bar.com"
+    Then I should see the invitation page
