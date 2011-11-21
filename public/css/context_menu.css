@@ -5,20 +5,15 @@
   position: absolute;
   display: none;
   border: 1px solid #487bff;
-  border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
   font-size: 10px;
-  box-shadow: 3px 3px 3px #999;
-  -webkit-box-shadow: 3px 3px 3px #999;
-  -moz-box-shadow: 3px 3px 3px #999;
   z-index: 21;
   margin-top: 2px;
   min-width: 100px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
 }
 
 .context-menu:before {
-  content: " ";
+  content: "";
   display: block;
   left: 50%;
   position: absolute;
