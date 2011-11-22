@@ -7,6 +7,7 @@ export HOME=$CURRENT_PATH/../..
 . $HOME/../.profile
 cd $SHARED
 export SHARED=`pwd`
+cd $CURRENT_PATH
 case $1 in
    update)
       bundle exec whenever --update-crontab
