@@ -48,11 +48,12 @@ Feature: Using the protonet channel management
   Scenario: Subscribing an user to a channel
     Given I go to the start page
     Given a user with the login "dudemeister"
+    Given a channel exists with name: "somechannel"
     And I am logged in as "admin" with password "admin"
     And I go to the channels page
     And I follow "Browse channels"
-    Then I should see "home" in the channel list
-    And I select the channel "home" in the channel list
+    Then I should see "somechannel" in the channel list
+    And I select the channel "somechannel" in the channel list
     And I subscribe the user "dudemeister"
     Then I should see "dudemeister" in the channel subscriber list
     And I subscribe the user "foo@bar.com"
