@@ -9,10 +9,10 @@ cd $SHARED
 export SHARED=`pwd`
 case $1 in
    update)
-      whenever --update-crontab
+      bundle exec whenever --update-crontab
       ;;
     clear)
-      whenever --clear-crontab
+      bundle exec whenever --clear-crontab
       ;;
     *)  
       echo "usage: cron {update|clear}" ;;
