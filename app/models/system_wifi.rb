@@ -7,6 +7,11 @@ class SystemWifi
       `lspci`.include?("Wireless Network")
     end
     
+    # eg. SystemWifi.supports_standard?("wlan0", "n")
+    def supports_standard?(interface, standard)
+      !!`iwconfig`.match(Regexp.new("#{interface}\\s+IEEE\\s+802\\.11\\w*?#{standard}"))
+    end
+    
     def start
       return unless Rails.env == 'production'
       if SystemMonit.exists?(:wifi)
@@ -113,7 +118,7 @@ class SystemWifi
 driver=nl80211
 hw_mode=g
 wme_enabled=1
-ieee80211n=1
+#{'ieee80211n=1' if supports_standard?('wlan0', 'n')}
 ht_capab=[HT40-][SHORT-GI-40][DSSS_CCK-40]"
     end
     
