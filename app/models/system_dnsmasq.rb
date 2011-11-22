@@ -43,7 +43,7 @@ class SystemDnsmasq
 
     def configure(interface)
       ip = IP.new(SystemPreferences.wifi[interface]["ip"])
-      File.open(config_file(interface), 'w') {|f| f.write("interface=#{interface}\naddress=/protonet/#{ip}\ndhcp-range=#{interface},#{ip.network(1)},#{ip.network(200)},4h\nbind-interfaces\nexcept-interface=lo") }
+      File.open(config_file(interface), 'w') {|f| f.write("interface=#{interface}\naddress=/protonet/#{ip}\naddress=/#{SystemBackend.hostname}/#{ip}\ndhcp-range=#{interface},#{ip.network(1)},#{ip.network(200)},4h\nbind-interfaces\nexcept-interface=lo") }
     end
     
     def config_file(interface)
