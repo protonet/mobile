@@ -46,7 +46,7 @@ class Listen < ActiveRecord::Base
   end
   
   def auto_set_verification
-    self.verified = true if channel.public? || channel.owned_by?(user) || channel.rendezvous_participant?(user)
+    self.verified = true if channel.public? || channel.owned_by?(user) || channel.rendezvous_participant?(user) || user.admin?
     save
   end
   
