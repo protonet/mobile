@@ -1,0 +1,20 @@
+#!/bin/bash
+
+export CURRENT_PATH=$(cd `dirname $0` && cd ../.. && pwd)
+export SHARED=$CURRENT_PATH/../../shared
+export HOME=$CURRENT_PATH/../..
+. $HOME/../.bashrc
+. $HOME/../.profile
+cd $SHARED
+export SHARED=`pwd`
+case $1 in
+   update)
+      whenever --update-crontab
+      ;;
+    clear)
+      whenever --clear-crontab
+      ;;
+    *)  
+      echo "usage: cron {update|clear}" ;;
+esac
+exit 0
