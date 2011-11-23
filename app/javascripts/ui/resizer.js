@@ -18,6 +18,7 @@ protonet.ui.Resizer.prototype = {
     
     this.handle.bind("mousedown", function(event) {
       currentPos = event.pageY;
+      event.preventDefault();
     });
     
     $("body")
