@@ -97,7 +97,7 @@ cd /tmp
 rm -rf deployer
 git clone git@github.com:protonet/deploy.git deployer
 cd deployer
-git reset --hard d97ca193351d79879959422c91e68e9a658d4a94
+git reset --hard 258e5aad399c67c6a2c4e03533a39397b5aad476
 cd /tmp
 rm -rf deployer/.git
 rm -rf deployer/Gemfile.lock
