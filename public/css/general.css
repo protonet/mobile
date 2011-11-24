@@ -38,14 +38,14 @@ body {
 
 .modal-window ::-webkit-scrollbar-thumb,
 .inner-body ::-webkit-scrollbar-thumb {
-  background: transparent;
+  background: #eee;
+  border: 2px solid #fff;
   border-radius: 5px;
 }
 
 .modal-window :hover::-webkit-scrollbar-thumb,
 .inner-body :hover::-webkit-scrollbar-thumb {
   background: #bbb;
-  border: 2px solid #fff;
 }
 
 body,
