@@ -18,7 +18,13 @@ class NodeConnection < FlashConnection
       host = uri.host
       port = 5000
       EventMachine.next_tick do
-        conn = EventMachine.connect host, port, NodeConnection, node, tracker
+        begin
+          conn = EventMachine.connect(host, port, NodeConnection, node, tracker)
+        rescue
+          EventMachine::add_timer(30) {
+            NodeConnection.connect node, tracker
+          }
+        end
       end
     end
     
