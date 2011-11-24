@@ -30,7 +30,7 @@ protonet.ui.FlashMessage = {
   
   _observe: function() {
     $.each(["error", "notice", "warning", "sticky"], function(i, type) {
-      protonet.on("flash_message." + type, function(message) { this.show(type, message); }.bind(this))
+      protonet.on("flash_message." + type, function(message) { this.show(type, message); }.bind(this));
     }.bind(this));
   },
   
@@ -47,7 +47,7 @@ protonet.ui.FlashMessage = {
       this.element.addClass(type);
     }
     
-    this.element.stop().fadeIn();
+    this.element.stop(true, true).hide().fadeIn();
     
     clearTimeout(this.timeout);
     

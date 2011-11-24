@@ -311,7 +311,7 @@ pre {
 
 .flash-message .flash-message-close-link {
   position: absolute;
-  top: 8px;
+  top: 0;
   right: 8px;
   display: none;
   font-size: 16px;
