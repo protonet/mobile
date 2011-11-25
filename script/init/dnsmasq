@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# start hostapd manually in foreground:
+# sudo /usr/local/bin/hostapd -d -P ~/dashboard/shared/pids/hostapd.pid ~/dashboard/shared/config/hostapd.d/config
+
 export CURRENT_PATH=$(cd `dirname $0` && cd ../.. && pwd)
 export SHARED=$CURRENT_PATH/../../shared
 export HOME=$CURRENT_PATH/../..
@@ -15,6 +18,7 @@ export CONFIG_FILE=$SHARED/config/dnsmasq.d/$INTERFACE
 echo $CONFIG_FILE
 case $1 in
    start)
+      start-stop-daemon --stop --pidfile $PIDFILE
       start-stop-daemon --start --make-pidfile --pidfile $PIDFILE --background --exec /usr/sbin/dnsmasq -- -C $CONFIG_FILE -k
       ;;
     stop)

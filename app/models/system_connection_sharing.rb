@@ -8,7 +8,7 @@ class SystemConnectionSharing
     
     def stop(intif)
       extif = SystemBackend.current_internet_interface
-      service_command("stop", extif, intif)
+      service_command("remove", extif, intif)
       SystemNetworking.remove_interface_script("connection_sharing", intif)
     end
     
