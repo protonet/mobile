@@ -34,18 +34,18 @@
 <p>Non-members coming via <i><%= SystemPreferences.publish_to_web_name %>.protonet.info</i> ...</p>
 <%= form_tag(preferences_privacy_update_path, { 'data-ajax-auto-submit' => '1' }) do %>
   <%= hidden_field_tag 'section', 'publish_to_web' %>
-  <%= hidden_field_tag 'interface', 'publish_to_web'  %>
+  <%= hidden_field_tag 'interface', 'published_to_web'  %>
   <%= hidden_field_tag 'preferences[allow_dashboard_for_strangers]', false  %>
   <label class="checkbox-row">
-    <%= check_box_tag 'preferences[allow_dashboard_for_strangers]', true, (SystemPreferences.privacy['publish_to_web']["allow_dashboard_for_strangers"] rescue false) %> can chat without registering
+    <%= check_box_tag 'preferences[allow_dashboard_for_strangers]', true, (SystemPreferences.privacy['published_to_web']["allow_dashboard_for_strangers"] rescue false) %> can chat without registering
   </label>
 <%- end %>
 <%= form_tag(preferences_privacy_update_path, { 'data-ajax-auto-submit' => '1' }) do %>
   <%= hidden_field_tag 'section', 'publish_to_web' %>
-  <%= hidden_field_tag 'interface', 'publish_to_web'  %>
+  <%= hidden_field_tag 'interface', 'published_to_web'  %>
   <%= hidden_field_tag 'preferences[allow_registrations_for_strangers]', false  %>
   <label class="checkbox-row">
-    <%= check_box_tag 'preferences[allow_registrations_for_strangers]', true, (SystemPreferences.privacy['publish_to_web']["allow_registrations_for_strangers"] rescue false) %> can register
+    <%= check_box_tag 'preferences[allow_registrations_for_strangers]', true, (SystemPreferences.privacy['published_to_web']["allow_registrations_for_strangers"] rescue false) %> can register
   </label>
 <%- end %>
 
