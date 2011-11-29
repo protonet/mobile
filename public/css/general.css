@@ -211,6 +211,11 @@ textarea {
   height: 18px;
 }
 
+select {
+  border: 1px solid #999;
+  height: 24px;
+}
+
 textarea {
   height: 150px;
 }
@@ -476,4 +481,31 @@ h2 .action-link {
 .admin-flag {
   font-weight: bold;
   color: #ff7f31;
+}
+
+.overlay {
+  background: #fff;
+  background: rgba(255, 255, 255, 0.8);
+  display: none;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  position: fixed;
+  z-index: 101;
+}
+
+.overlay .info-message {
+  border: 0;
+  position: absolute;
+  box-shadow: 0 0 5px #666;
+  width: 400px;
+  margin-left: -220px;
+  left: 50%;
+  top: 100px;
+  padding: 20px;
+}
+
+.overlay h3 {
+  margin-bottom: 20px;
 }

@@ -1,3 +1,5 @@
+//= require "../ui/overlay.js"
+
 $(function() {
   var $page = $(".preferences-page");
   
@@ -27,4 +29,10 @@ $(function() {
   });
   
   $page.find(".status-box.publish-to-web .reload-link").click();
+  
+  $page.delegate("form.wifi", "ajax:success", function(event, xhr) {
+    if (protonet.config.incoming_interface.startsWith("wlan") && !xhr.getResponseHeader("X-Error-Message")) {
+      new protonet.ui.Overlay(protonet.t("WLAN_UPDATED"));
+    }
+  });
 });

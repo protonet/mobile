@@ -4,7 +4,7 @@
 
 <%= form_tag preferences_vpn_update_path, { :remote => true, 'data-type' => 'html' }  do %>
   <%= hidden_field_tag 'section', 'vpn_settings' %>
-  <div class="form-field">
+  <div class="form-field short">
     <label>Status:</label>
     <span>
       <label><input type="radio" name="vpn_status" value="true" <%= "checked" if vpn_status %>> On</label>

@@ -20,7 +20,7 @@
       dispatching_server_port:    "<%= configatron.socket.port %>",
       dispatching_websocket_port: "<%= configatron.websocket.port %>",
       dispatching_websocket_ssl_port: "<%= configatron.websocket_ssl.port %>",
-      force_xhr_streaming:        <%= raw(incoming_interface == "published_to_web" ? "true" : "false") %>,
+      force_xhr_streaming:        <%= incoming_interface == "published_to_web" ? "true" : "false" %>,
       token:                      "<%= current_user.communication_token %>",
       default_avatar:             "<%= configatron.default_avatar %>",
       admin_ids:                  <%= User.admins.map(&:id).to_json %>,
@@ -38,6 +38,7 @@
       channel_name_to_id_mapping: <%= raw Channel.name_to_id_mapping.to_json %>,
       channel_uuid_to_id_mapping: <%= raw Channel.uuid_to_id_mapping.merge(current_user.channel_uuid_to_id_mapping).to_json %>,
       server:                     "<%= request.server_software %>",
+      incoming_interface:         <%= raw incoming_interface.to_json %>,
       debug_mode:                 <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>
     };
     

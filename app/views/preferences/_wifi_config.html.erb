@@ -2,9 +2,15 @@
 
 <%- if SystemWifi.supported? %>
   <p>You can have one private and one public wireless access point (WPA 2). Here you can configure them.</p>
-  <%- if incoming_interface.starts_with? "wlan" %>
-    <p class="info-message"><strong>Please note:</strong> Turning off both wireless networks will lock yourself out.</p>
-  <%- end %>
+  
+  <p class="info-message">
+    <strong>Please note:</strong>
+    Any change will restart the WiFI service and all connected users will have to reconnect.
+    <%- if incoming_interface.starts_with? "wlan" %>
+      Also turning off both wireless networks will <strong>lock yourself out</strong>.
+    <%- end %>
+    
+  </p>
 
   <%= form_tag preferences_wifi_update_path, { :remote => true, 'data-type' => 'html', :class => 'wifi' }  do %>
     <% {"private" => "wlan0", "public" => "wlan1"}.each do |type, interface| %>
@@ -38,7 +44,7 @@
             <input type="radio" name="preferences[<%= interface %>][sharing]" value="false" <%= "checked" unless SystemConnectionSharing.status(interface) %>>
             Off
           </label>
-          <a class="hint" data-hover-hint="top" title="Allow others to use your internet connection. When turned 'off' users will only be able to reach the protonet chat. No other website.">(?)</a>
+          <a class="hint" data-hover-hint="top" title="Allow others to use your internet connection. When turned 'off' users will only be able to reach the protonet chat.">(?)</a>
         </span>
       </div>
   

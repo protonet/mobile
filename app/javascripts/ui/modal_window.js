@@ -174,6 +174,9 @@ protonet.ui.ModalWindow = (function() {
         if (protonet.config.user_is_stranger) {
           textResource += " " + protonet.t("PLEASE_LOGIN");
         }
+      } else if (xhr.status === 0) {
+        // Request aborted
+        return;
       } else {
         textResource = protonet.t("PAGE_LOADING_ERROR");
       }

@@ -37,8 +37,11 @@ $.extend(protonet.timeline, {
       complete: function() {
         protonet.trigger("timeline.loading_end");
       },
-      error: function() {
-        protonet.trigger("flash_message.error", protonet.t("LOADING_MEEPS_ERROR"));
+      error: function(xhr) {
+        var isAborted = xhr.status === 0;
+        if (!isAborted) {
+          protonet.trigger("flash_message.error", protonet.t("LOADING_MEEPS_ERROR"));
+        }
       }
     });
   },

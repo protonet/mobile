@@ -159,11 +159,11 @@
 }
 
 .subpage dt {
-  width: 30%;
+  width: 35%;
 }
 
 .subpage dd {
-  width: 70%;
+  width: 65%;
 }
 
 .subpage dt,
@@ -185,7 +185,6 @@
 .subpage input[type=email] {
   width: 300px;
 }
-
 
 
 
@@ -300,7 +299,12 @@ a.loading {
 
 .subpage .form-field > label {
   float: left;
-  width: 220px;
+  padding-top: 3px;
+  width: 180px;
+}
+
+.subpage .form-field.short > label {
+  width: 80px;
 }
 
 .subpage .form-field + button {
