@@ -7,8 +7,8 @@ protonet.utils.isServerReachable = (function() {
     }
     
     var aborted,
+        timeout,
         xhr = new XMLHttpRequest();
-    
     xhr.onreadystatechange = function() {
       if (aborted) {
         return;
@@ -18,6 +18,7 @@ protonet.utils.isServerReachable = (function() {
         return;
       }
       
+      clearTimeout(timeout);
       if (xhr.status === 0) {
         callback(false);
       } else {
@@ -25,15 +26,15 @@ protonet.utils.isServerReachable = (function() {
       }
     };
     
-    // phone home
     xhr.open("HEAD", "/empty.html", true);
     
     try {
       xhr.send();
-      setTimeout(function() {
+      timeout = setTimeout(function() {
         aborted = true;
         xhr.abort();
-      }, 1000);
+        callback(false);
+      }, 3000);
     } catch(e) {
       callback(false);
     }

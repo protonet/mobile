@@ -1,5 +1,6 @@
 class SystemWifi
-
+  include Rabbit
+  
   class << self
     
     def supported?
@@ -79,7 +80,7 @@ class SystemWifi
         settings += wpa_settings(SystemPreferences.wifi["wlan1"]["name"], SystemPreferences.wifi["wlan1"]["password"])
         generate_config(settings)
         restart
-        sleep 15
+        sleep 10
         ["wlan0", "wlan1"].each do |interface|
           SystemDnsmasq.start(interface)
           SystemConnectionSharing.start(interface) if SystemPreferences.wifi[interface]["sharing"]
@@ -91,7 +92,7 @@ class SystemWifi
         settings += wpa_settings(SystemPreferences.wifi["wlan0"]["name"], SystemPreferences.wifi["wlan0"]["password"])
         generate_config(settings)
         restart
-        sleep 15
+        sleep 10
         SystemDnsmasq.start("wlan0")
         SystemConnectionSharing.start("wlan0") if SystemPreferences.wifi["wlan0"]["sharing"]
       when "wlan1"
@@ -102,7 +103,7 @@ class SystemWifi
         settings += wpa_settings(SystemPreferences.wifi["wlan1"]["name"], SystemPreferences.wifi["wlan1"]["password"])
         generate_config(settings)
         restart
-        sleep 15
+        sleep 10
         SystemDnsmasq.start("wlan0")
         SystemConnectionSharing.start("wlan0") if SystemPreferences.wifi["wlan0"]["sharing"]
       when nil

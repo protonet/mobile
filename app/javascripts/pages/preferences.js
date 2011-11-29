@@ -56,7 +56,7 @@ $(function() {
             clearInterval(interval);
           }
         });
-      }, 2000);
+      }, 3000);
     });
   }
 });
