@@ -8,5 +8,11 @@ protonet.ui.Overlay = (function() {
     $textContainer.html(text);
     $textContainer.appendTo($overlay);
     $overlay.appendTo("body").fadeIn();
+    
+    this.hide = function() {
+      $overlay.fadeOut("fast", function() {
+        $overlay.detach();
+      });
+    };
   };
 })();

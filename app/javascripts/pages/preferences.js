@@ -30,9 +30,35 @@ $(function() {
   
   $page.find(".status-box.publish-to-web .reload-link").click();
   
-  $page.delegate("form.wifi", "ajax:success", function(event, data, textStatus, xhr) {
-    if (protonet.config.incoming_interface.startsWith("wlan") && !xhr.getResponseHeader("X-Error-Message")) {
-      new protonet.ui.Overlay(protonet.t("WLAN_UPDATED"));
-    }
-  });
+  if (protonet.config.incoming_interface.startsWith("wlan")) {
+    var $overlay,
+        timeout,
+        $window = $(window),
+        showOverlay = function() {
+          $overlay = new protonet.ui.Overlay(protonet.t("WLAN_UPDATED"));
+        },
+        hideOverlay = function() {
+          $overlay && $overlay.hide();
+        };
+    
+    $page.delegate("form.wifi", "submit", function() {
+      if ("onLine" in navigator) {
+        $window
+          .unbind(".wifi")
+          .one("offline.wifi", showOverlay)
+          .one("online.wifi", function() {
+            $window.unbind(".wifi");
+            hideOverlay();
+          });
+      } else {
+        timeout = setTimeout(showOverlay, 6000);
+      }
+    });
+    
+    $page.delegate("form.wifi", "ajax:complete", function() {
+      clearTimeout(timeout);
+      $window.unbind(".wifi");
+      hideOverlay();
+    });
+  }
 });

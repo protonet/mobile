@@ -13,7 +13,7 @@
   </p>
 
   <%= form_tag preferences_wifi_update_path, { :remote => true, 'data-type' => 'html', :class => 'wifi' }  do %>
-    <% {"private" => "wlan0", "public" => "wlan1"}.each do |type, interface| %>
+    <% {"public" => "wlan1", "private" => "wlan0"}.each do |type, interface| %>
       <%= hidden_field_tag 'section', 'wifi_config' %>
       <h3><%= type.capitalize %> <i class="hint">(Network interface: <%= interface %>)</i></h3>
       <div class="status-box" data-interface="<%= interface %>">
