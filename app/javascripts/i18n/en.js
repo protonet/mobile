@@ -10,7 +10,7 @@ protonet.i18n = {
   RENDEZVOUS_NOTIFICATION_TITLE: "new private chat message from #{author}",
   CHANNEL_SUBSCRIPTION_ERROR: "Could not subscribe to channel '#{identifier}'",
   CHANNEL_SUBSCRIPTION_SUCCESS: "You successfully subcribed to channel '#{identifier}'",
-  SOCKET_DISCONNECTED: "There has been a connection problem. Please wait a few seconds and try again.",
+  SOCKET_DISCONNECTED: "There has been a connection problem. Please wait a few seconds. It might heal itself.",
   SOCKET_RECONNECTED: "Ok, you are online again!",
   SOCKET_FAILURE: "Oopsy daisy. Something went wrong. We weren't able to establish a connection with the chat server.",
   FILE_DELETE_ERROR: "File couldn't be deleted",

@@ -1,4 +1,5 @@
 //= require "../ui/overlay.js"
+//= require "../utils/is_server_reachable.js"
 
 $(function() {
   var $page = $(".preferences-page");
@@ -31,34 +32,31 @@ $(function() {
   $page.find(".status-box.publish-to-web .reload-link").click();
   
   if (protonet.config.incoming_interface.startsWith("wlan")) {
-    var $overlay,
-        timeout,
-        $window = $(window),
+    var overlay,
+        interval,
         showOverlay = function() {
-          $overlay = new protonet.ui.Overlay(protonet.t("WLAN_UPDATED"));
+          overlay = new protonet.ui.Overlay(protonet.t("WLAN_UPDATED"));
         },
         hideOverlay = function() {
-          $overlay && $overlay.hide();
+          overlay && overlay.hide();
         };
     
+    // The quality of the following LOC is my ticket to hell.
+    // I'm sure I'll laugh about this as soon as I've my own helicopter. (Anonymous, 29/11/2011)
     $page.delegate("form.wifi", "submit", function() {
-      if ("onLine" in navigator) {
-        $window
-          .unbind(".wifi")
-          .one("offline.wifi", showOverlay)
-          .one("online.wifi", function() {
-            $window.unbind(".wifi");
+      var hasBeenUnreachable;
+      clearInterval(interval);
+      interval = setInterval(function() {
+        protonet.utils.isServerReachable(function(isReachable) {
+          if (isReachable && hasBeenUnreachable) {
             hideOverlay();
-          });
-      } else {
-        timeout = setTimeout(showOverlay, 6000);
-      }
-    });
-    
-    $page.delegate("form.wifi", "ajax:complete", function() {
-      clearTimeout(timeout);
-      $window.unbind(".wifi");
-      hideOverlay();
+          } else if (!isReachable && !hasBeenUnreachable) {
+            hasBeenUnreachable = true;
+            showOverlay();
+            clearInterval(interval);
+          }
+        });
+      }, 2000);
     });
   }
 });

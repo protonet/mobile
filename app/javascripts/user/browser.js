@@ -82,5 +82,9 @@ protonet.user.Browser = {
   
   IS_SAFARI: function() {
     return $.browser.safari && !navigator.userAgent.match(/chrome/i);
+  },
+  
+  SUPPORTS_ONLINE_DETECTION: function() {
+    return "onLine" in navigator && navigator.userAgent.match(/chrome/i);
   }
 };
