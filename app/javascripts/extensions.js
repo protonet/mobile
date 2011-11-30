@@ -127,6 +127,11 @@ Number.prototype.px = function() {
 };
 
 
+Number.protototype.second = Number.protototype.seconds = function() {
+  return this * 1000;
+};
+
+
 //---------------------------- AUDIO ------------------------------
 (function() {
   /**

@@ -26,7 +26,7 @@ $(function() {
   });
   
   $page.delegate("form.wifi, form.publish-to-web", "ajax:complete", function() {
-    setTimeout(function() { $(this).find(".reload-link").click(); }.bind(this), 500);
+    setTimeout(function() { $(this).find(".reload-link").click(); }.bind(this), (0.5).seconds());
   });
   
   $page.find(".status-box.publish-to-web .reload-link").click();
@@ -67,29 +67,14 @@ $(function() {
     });
   })();
   
-  
-  (function() {
-    var interval;
-    $page.delegate("form.software-update", "ajax:complete", function(event, xhr) {
-      if (xhr.getResponseHeader("X-Error-Message")) {
-        return;
-      }
-
-      var hasBeenUnreachable;
-      clearInterval(interval);
-      interval = setInterval(function() {
-        protonet.utils.isServerReachable(function(isReachable) {
-          if (isReachable && hasBeenUnreachable) {
-            clearInterval(interval);
-            location.href = "/";
-          } else if (!isReachable && !hasBeenUnreachable) {
-            hasBeenUnreachable = true;
-            new protonet.ui.Overlay(protonet.t("SOFTWARE_UPDATE_SUCCESSFUL"));
-          }
-        });
-      }, 3000);
-      
-      event.stopPropagation();
-    });
-  })();
+  $page.delegate("form.software-update", "ajax:complete", function(event, xhr) {
+    if (xhr.getResponseHeader("X-Error-Message")) {
+      return;
+    }
+    
+    new protonet.ui.Overlay(protonet.t("SOFTWARE_UPDATE_SUCCESSFUL"));
+    setTimeout(function() { location.href = "/"; }, (15).seconds());
+    
+    event.stopPropagation();
+  });
 });

@@ -47,7 +47,7 @@ $(function() {
         amount:           25,
         animated:         false
       });
-    }, 100);
+    }, (0.1).seconds());
   }
   
   // Facebook/Twitter Connect

@@ -118,12 +118,12 @@ protonet.dispatcher = {
   startReconnect: function() {
     this.stopReconnect();
     this._reconnect = true;
-    this.reconnectTimeout = setTimeout(this.connect.bind(this), 5000);
+    this.reconnectTimeout = setTimeout(this.connect.bind(this), (5).seconds());
   },
   
   reconnect: function() {
     this.disconnect();
-    setTimeout(this.connect.bind(this), 1000);
+    setTimeout(this.connect.bind(this), (1).second());
   },
   
   /**
@@ -133,7 +133,7 @@ protonet.dispatcher = {
    */
   startCheck: function() {
     this.stopCheck();
-    this.checkInterval = setInterval(this.ping.bind(this), 20000);
+    this.checkInterval = setInterval(this.ping.bind(this), (20).seconds());
   },
   
   stopCheck: function() {
@@ -142,7 +142,7 @@ protonet.dispatcher = {
   
   ping: function() {
     clearTimeout(this.offlineTimeout);
-    this.offlineTimeout = setTimeout(this.disconnect.bind(this), 5000);
+    this.offlineTimeout = setTimeout(this.disconnect.bind(this), (5).seconds());
     
     protonet.trigger("socket.send", { operation: "ping" });
   },
