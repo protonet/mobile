@@ -31,7 +31,16 @@ $(function() {
   
   $page.find(".status-box.publish-to-web .reload-link").click();
   
-  if (protonet.config.incoming_interface.startsWith("wlan")) {
+  
+  // The quality of the following LOC is my ticket to hell.
+  // Luckily Terry Tate isn't working for protonet (yet) http://www.youtube.com/watch?v=RzToNo7A-94
+  // I'm sure I'll laugh about this as soon as I've my own helicopter. (Anonymous, 29/11/2011)
+  // One day this should move into a $.events.special.online module
+  (function() {
+    if (!protonet.config.incoming_interface.startsWith("wlan")) {
+      return;
+    }
+    
     var overlay,
         interval,
         showOverlay = function() {
@@ -40,10 +49,7 @@ $(function() {
         hideOverlay = function() {
           overlay && overlay.hide();
         };
-    
-    // The quality of the following LOC is my ticket to hell.
-    // I'm sure I'll laugh about this as soon as I've my own helicopter. (Anonymous, 29/11/2011)
-    // One day this should move into a $.events.special.online module
+
     $page.delegate("form.wifi", "submit", function() {
       var hasBeenUnreachable;
       clearInterval(interval);
@@ -59,5 +65,31 @@ $(function() {
         });
       }, 3000);
     });
-  }
+  })();
+  
+  
+  (function() {
+    var interval;
+    $page.delegate("form.software-update", "ajax:complete", function(event, xhr) {
+      if (xhr.getResponseHeader("X-Error-Message")) {
+        return;
+      }
+
+      var hasBeenUnreachable;
+      clearInterval(interval);
+      interval = setInterval(function() {
+        protonet.utils.isServerReachable(function(isReachable) {
+          if (isReachable && hasBeenUnreachable) {
+            clearInterval(interval);
+            location.href = "/";
+          } else if (!isReachable && !hasBeenUnreachable) {
+            hasBeenUnreachable = true;
+            new protonet.ui.Overlay(protonet.t("SOFTWARE_UPDATE_SUCCESSFUL"));
+          }
+        });
+      }, 3000);
+      
+      event.stopPropagation();
+    });
+  })();
 });

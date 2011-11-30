@@ -44,5 +44,6 @@ protonet.i18n = {
   PLEASE_ENTER_KEYWORD: "Please enter a keyword to search",
   NO_RESULTS_FOUND: "No results found",
   AVATAR_UPLOAD_ERROR: "Your photo couldn't be upload. Please try again or contact the administrator.",
-  WLAN_UPDATED: "<h3>Your WLAN has been updated and restarted</h3>You probably have lost your connection. Please reconnect and reload this page."
+  WLAN_UPDATED: "<h3>Your WLAN has been updated and restarted</h3>You probably have lost your connection. Please reconnect and reload this page.",
+  SOFTWARE_UPDATE_SUCCESSFUL: "<h3>Congrats, the software update was successful</h3>All services are now going down for reboot. Please wait a few more seconds. You'll then be redirected to the home page."
 };
