@@ -3,8 +3,8 @@
 
 <dl>
   <dt>Current version:</dt><dd><%= SystemRelease.current_version %>/<%= SystemRelease.current_type %></dd>
-  <dt>Latest stable version is:</dt><dd><%= SystemRelease.latest_version %></dd>
-  <dt>Latest beta version is:</dt><dd><%= SystemRelease.latest_beta_version %> <a class="hint" data-hover-hint="top" title="Please note that beta software may be unstable">(?)</a></dd>
+  <dt>Latest stable version:</dt><dd><%= SystemRelease.latest_version %></dd>
+  <dt>Latest beta version:</dt><dd><%= SystemRelease.latest_beta_version %> <a class="hint" data-hover-hint="top" title="Please note that beta software may be unstable">(?)</a></dd>
   <dt>Stable update available:</dt><dd><%= raw(SystemRelease.most_recent? ? '<span class="off">no</span>' : '<span class="on">yes</span>') %></dd>
 </dl>
 
