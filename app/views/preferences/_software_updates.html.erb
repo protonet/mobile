@@ -9,7 +9,7 @@
 </dl>
 
 <h3>Update to newer version</h3>
-<%= form_tag(preferences_release_update_path, { :remote => true, 'data-type' => 'html' }) do %>
+<%= form_tag(preferences_release_update_path, { :remote => true, 'data-type' => 'html', :class => "software-update" }) do %>
   <%= hidden_field_tag 'section', 'software_updates' %>
   <div class="form-field">
     <%= label_tag          :password, 'Your node password:' %>
