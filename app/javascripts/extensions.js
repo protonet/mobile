@@ -127,7 +127,7 @@ Number.prototype.px = function() {
 };
 
 
-Number.protototype.second = Number.protototype.seconds = function() {
+Number.prototype.second = Number.prototype.seconds = function() {
   return this * 1000;
 };
 
