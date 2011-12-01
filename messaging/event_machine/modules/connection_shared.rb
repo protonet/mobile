@@ -88,7 +88,7 @@ module ConnectionShared
     type = auth_data['type'] || 'api'
     case type
     
-      when 'web', 'api'
+      when 'web', 'api', 'node'
         return false if auth_data['user_id'] == 0
         potential_user = begin 
           User.find(auth_data['user_id'])
@@ -133,11 +133,13 @@ module ConnectionShared
 
   def add_to_online_users
     @tracker.add_user @user, self
-    data = {
-      :subscribed_channel_ids => @user.channels.verified.map {|c| c.uuid},
-      :trigger => 'user.came_online'
-    }.merge(@tracker.online_users[@user.id])
-    publish 'system', 'users', data
+    if real_user?(@user)
+      data = {
+        :subscribed_channel_ids => @user.channels.verified.map {|c| c.uuid},
+        :trigger => 'user.came_online'
+      }.merge(@tracker.online_users[@user.id])
+      publish 'system', 'users', data
+    end
   end
 
   def remove_from_online_users
@@ -156,8 +158,9 @@ module ConnectionShared
     channel_users = @tracker.channel_subscriptions_for(@channel_queues.keys)
     all_users_in_subscribed_channels = channel_users.map {|k,v| v}.flatten.uniq
     online_users  = @tracker.global_online_users
-    online_users  = online_users.reject {|k,v| k.to_s.match(/^#{@user.node_id}_/)} if node_connection?
-    online_users  = online_users.reject {|k,v| !all_users_in_subscribed_channels.include?(k)}
+    online_users  = online_users.reject {|id, user| id.to_s.match(/^#{@user.node_id}_/) } if node_connection?
+    online_users  = online_users.reject {|id, user| !all_users_in_subscribed_channels.include?(id)}
+    online_users  = online_users.reject {|id, user| !real_user?(user) }
     data = {
       :trigger => 'users.update_status',
       :online_users => online_users,
@@ -287,4 +290,9 @@ module ConnectionShared
   
   def queue_id; "consumer-#{@socket_id}"; end
   def to_s; @socket_id; end
+  
+  def real_user?(u)
+    # TODO: This should be refactored to check the connection type instead of the user name
+    !(u['display_name'] || u['name']).match(/api_local_\d+/)
+  end
 end

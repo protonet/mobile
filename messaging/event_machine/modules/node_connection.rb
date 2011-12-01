@@ -59,7 +59,7 @@ class NodeConnection < FlashConnection
     @remote_node_id = remote_user.node_id
     
     send_json :operation => 'authenticate',
-              :payload => {:type => 'web', :user_id => @node.api_user_id, :token => token}
+              :payload => {:type => 'node', :user_id => @node.api_user_id, :token => token}
     
     periodic_ping
     send_connected_message
