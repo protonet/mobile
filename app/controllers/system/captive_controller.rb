@@ -2,11 +2,11 @@ module System
   class CaptiveController < ApplicationController
   
     def index
-      flash[:sticky] = "you've now got access to the internet!"
+      flash[:sticky] = "please login or create an account to be able to use the internet!"
       render :layout => "registrations"
     end
   
-    # this works fine, but nicer would be to solve this in rack. So not Rails handles 404
+    # this works fine, should/could be handled in rack, no idea though
     def catchall
       render :file => "#{Rails.root}/public/404.html", :status => 404
     end

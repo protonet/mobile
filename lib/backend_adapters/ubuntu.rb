@@ -67,7 +67,7 @@ module BackendAdapters
         "10.42.0.1",
         "10.43.0.1",
         "protonet"
-      ] | ::Linux::Commands.ifconfig.map { |i, data| data['inet addr'] }).compact
+      ] | SystemBackend.get_active_interfaces.map {|i| i.addresses.first.to_s})
     end
     
     def check_locality(host)

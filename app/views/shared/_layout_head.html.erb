@@ -39,6 +39,7 @@
       channel_uuid_to_id_mapping: <%= raw Channel.uuid_to_id_mapping.merge(current_user.channel_uuid_to_id_mapping).to_json %>,
       server:                     "<%= request.server_software %>",
       incoming_interface:         <%= raw incoming_interface.to_json %>,
+      captive_redirect_url:       "<%= raw session[:captive_redirect_url] %>",
       debug_mode:                 <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>
     };
     

@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   helper_method :logged_in?, :allow_signup?, :node_privacy_settings, :incoming_interface
   
   # hack for reload problem in development
-  before_filter :set_backend_for_development, :captive_check, :current_user, :set_current_user_for_authorization, :guest_login
+  before_filter :set_backend_for_development, :current_user, :set_current_user_for_authorization, :guest_login, :captive_check
   before_filter :detect_xhr_redirect
   
   after_filter :set_flash_message_to_header,    :if => Proc.new { |a| a.request.xhr? }
@@ -85,11 +85,17 @@ class ApplicationController < ActionController::Base
   end
   
   def captive_check
-    return true
+    return true if SystemPreferences.captive != true ||
+      Rails.cache.read("captive_accepted.#{@current_user.id}", {:expires_in => 4.hours}) ||
+      session[:captive_redirect_url]
+    
     requested_uri = request.protocol + request.host_with_port + request.fullpath
     return true if SystemBackend.requested_host_local?(request.host)
-    # otherwise redirect to captive? and the url
-    redirect_to "http://protonet/captive?req=" + URI.escape(requested_uri)
+    session[:captive_redirect_url] = requested_uri
+    flash["sticky"] = "Please log in or create an account to be able to surf the internet."
+    
+    redirect_to "http://protonet"
+    # redirect_to "http://protonet/captive?req=" + URI.escape(requested_uri)
   end
   
   def only_registered

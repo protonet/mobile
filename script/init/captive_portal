@@ -11,7 +11,7 @@ export IPT=/sbin/iptables
 export EXTIF=$1
 export INTIF=$2
 export REDIRECTION_TARGET=$3
-shift 2
+shift 3
 case $1 in
     start)      
       echo "   External Interface:          $EXTIF"
@@ -36,6 +36,8 @@ case $1 in
 
 
       echo "   allow traffic from all stored (and authorized) mac addresses"
+      touch $SHARED/config/ifconfig.d/allowed_clients
+      chown protonet:protonet $SHARED/config/ifconfig.d/allowed_clients
       awk 'BEGIN { FS="\t"; } { system("$IPT -t nat -A unknown_user -m mac --mac-source "$4" -j RETURN"); }' $SHARED/config/ifconfig.d/allowed_clients
 
       echo "   mark all traffic from the unknown_user chain as 99 (untrusted)"
