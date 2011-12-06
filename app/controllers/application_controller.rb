@@ -86,16 +86,12 @@ class ApplicationController < ActionController::Base
   
   def captive_check
     return true if SystemPreferences.captive != true ||
-      Rails.cache.read("captive_accepted.#{@current_user.id}", {:expires_in => 4.hours}) ||
-      session[:captive_redirect_url]
-    
+      Rails.cache.read("captive_accepted.#{@current_user.id}", {:expires_in => 4.hours})
+
     requested_uri = request.protocol + request.host_with_port + request.fullpath
     return true if SystemBackend.requested_host_local?(request.host)
-    session[:captive_redirect_url] = requested_uri
-    flash["sticky"] = "Please log in or create an account to be able to surf the internet."
-    
-    redirect_to "http://protonet"
-    # redirect_to "http://protonet/captive?req=" + URI.escape(requested_uri)
+
+    redirect_to "http://protonet/?captive_redirect_url=" + URI.escape(requested_uri)
   end
   
   def only_registered

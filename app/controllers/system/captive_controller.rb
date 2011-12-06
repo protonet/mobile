@@ -10,15 +10,20 @@ module System
     def catchall
       render :file => "#{Rails.root}/public/404.html", :status => 404
     end
+    
+    def store_redirect
+      session[:captive_redirect_url] = params[:captive_redirect_url]
+      head :ok
+    end
   
     def login
       SystemBackend.grant_internet_access(request.remote_ip)
       sleep 3
       
-      if params[:req]
-        redirect_to params[:req]
+      if params[:captive_redirect_url]
+        redirect_to params[:captive_redirect_url]
       else
-        redirect_to request.referer
+        redirect_to session[:captive_redirect_url]
       end
       
     end
