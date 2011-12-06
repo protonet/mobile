@@ -85,49 +85,58 @@ module BackendAdapters
     end
     
     # private
-      def parse_raw_ifconfig raw, keys=nil
-        data = {}
+    def parse_raw_ifconfig raw, keys=nil
+      data = {}
+      
+      # The first line is a little strange because the interface name
+      # can contain spaces and HWaddr doesn't have a colon.
+      # TODO: Use some OOP stuff instead of =~ and $~
+      raw =~ /^Link encap:(.+?)  (?:HWaddr ([0-9a-fA-F:]+))?/
+      data['type'], data['MAC'] = $~.captures
+      
+      keys ||= ['inet addr', 'inet6 addr', 'RX packets', 'TX packets', 'RX bytes', 'TX bytes']
+      keys.each do |key|
+        next unless raw.include? key
         
-        # The first line is a little strange because the interface name
-        # can contain spaces and HWaddr doesn't have a colon.
-        # TODO: Use some OOP stuff instead of =~ and $~
-        raw =~ /^Link encap:(.+?)  (?:HWaddr ([0-9a-fA-F:]+))?/
-        data['type'], data['MAC'] = $~.captures
-        
-        keys ||= ['inet addr', 'inet6 addr', 'RX packets', 'TX packets', 'RX bytes', 'TX bytes']
-        keys.each do |key|
-          next unless raw.include? key
-          
-          start = raw.index(key) + key.size + 1 # account for the colon
-          space = raw.index(' ', start + 1) - 1 # trim space
-          data[key] = raw[start..space].strip
-        end
-        
-        data
+        start = raw.index(key) + key.size + 1 # account for the colon
+        space = raw.index(' ', start + 1) - 1 # trim space
+        data[key] = raw[start..space].strip
       end
       
-    def grant_internet_access(ip)
+      data
+    end
+    
+    def internet_access_grants_file
+      "#{configatron.shared_file_path}/config/ifconfig.d/allowed_clients"
+    end
+    
+    def iptables_command
+      "/usr/bin/sudo /sbin/iptables"
+    end
+    
+    def grant_internet_access(ip, username = nil)
       # Add computer addresses to file
-      captivefile = "#{configatron.shared_file_path}/config/ifconfig.d/allowed_clients"
       doc = ip + "\t" + get_mac_for_ip(ip) + "\t"  + Time.now().strftime("%d.%m.%y") + "\n"
-      File.open(captivefile, 'a') {|f| f.write(doc) }
+      File.open(internet_access_grants_file, 'a') {|f| f.write(doc) }
     
       # Add PC to the firewall
-      `/usr/bin/sudo /sbin/iptables -I unknown_user 1 -t nat -m mac --mac-source #{get_mac_for_ip(ip)} -j RETURN`
-
+      `#{iptables_command} -I unknown_user 1 -t nat -m mac --mac-source #{get_mac_for_ip(ip)} -j RETURN -m comment --comment "#{username} #{ip}"`
+      
       # The following line removes connection tracking for the PC
       # This clears any previous (incorrect) route info for the redirection
       `/usr/bin/sudo rmtrack #{ip}`
     end
 
-    def is_internet_access_granted(ip)
-      # check computer address in file
-      captivefile = 'tmp/captive_users'
-      open(captivefile).grep(/#{ip}/).size > 0
+    def internet_access_granted?(ip)
+      `#{iptables_command} -L -v --line-numbers`.match(get_mac_for_ip(ip))
+    end
+    
+    def in_grants_file?(ip)
+      open(internet_access_grants_file).grep(/#{ip}/).size > 0
     end
     
     def revoke_internet_access(ip)
-
+      `#{iptables_command} -L -v --line-numbers | awk '/#{get_mac_for_ip(ip)}/ {print "/usr/bin/sudo /sbin/iptables -t nat -L unknown_user -D " $1}' | sort -r | bash`
     end
     
     def current_internet_interface
