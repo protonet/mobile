@@ -17,14 +17,14 @@ module System
     end
   
     def login
-      SystemBackend.grant_internet_access(request.remote_ip, @current_user.try(:login))
+      SystemBackend.grant_internet_access(request.remote_ip, (@current_user.try(:login) || "n_a"))
       sleep 3
       
       if params[:captive_redirect_url]
         redirect_to params[:captive_redirect_url]
       else
         session[:captive_redirect_url] = nil
-        redirect_to session[:captive_redirect_url]
+        redirect_to(session[:captive_redirect_url] || "http://www.google.de")
       end
       
     end

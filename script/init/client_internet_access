@@ -20,8 +20,8 @@ case $COMMAND in
       $IPT -I unknown_user 1 -t nat -m mac --mac-source $MAC -j RETURN -m comment --comment "$USERNAME $IP"
       ;;
     revoke)
-      echo "Revoking internet access from $MAC with ip $IP"
-      CMD="$IPT -L unknown_user -v -t nat --line-numbers | awk '/$MAC/ {print \"$IPT -t nat -L unknown_user -D \" \$1}' | sort -r | bash"
+      echo "Revoking internet access from $MAC"
+      CMD="$IPT -L unknown_user -v -t nat --line-numbers | awk '/$MAC/ {print \"$IPT -t nat -D \" \$1}' | sort -r | bash"
       echo $CMD | bash
       ;;
     status)

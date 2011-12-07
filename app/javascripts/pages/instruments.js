@@ -28,8 +28,7 @@ $(function() {
     if (protonet.config.user_is_stranger) {
       protonet.trigger('flash_message.sticky', 'please login to get access to internet, thank you!');
     } else {
-      var ov = new protonet.ui.Overlay("you've been captive portalled! " + protonet.config.captive_redirect_url);
-      setTimeout((5).seconds(), ov.hide);
+      var ov = new protonet.ui.Overlay("You've been captive portalled! " + protonet.config.captive_redirect_url + "<br>Click <a class='close' data-avoid-ajax=1 target='_blank' href='/captive/login?captive_redirect_url=" + protonet.config.captive_redirect_url + "'>here</a> to get access to the internet and open your requested page.");
     }
   }
   
