@@ -9,6 +9,7 @@ class SystemBackend
     :get_ips_of_currently_connected_clients,
     :grant_internet_access,
     :revoke_internet_access,
+    :internet_access_granted?,
     :ssid_of_base_station,
     :server_ips,
     :get_interfaces,

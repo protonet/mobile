@@ -1,0 +1,40 @@
+#!/bin/bash
+
+export CURRENT_PATH=$(cd `dirname $0` && cd ../.. && pwd)
+export SHARED=$CURRENT_PATH/../../shared
+export HOME=$CURRENT_PATH/../..
+. $HOME/../.bashrc
+. $HOME/../.profile
+cd $SHARED
+export SHARED=`pwd`
+export IPT=/sbin/iptables
+export COMMAND=$1
+shift 1
+export MAC=$1
+export IP=$2
+export USERNAME=$3
+
+case $COMMAND in
+   grant)
+      echo "Granting internet access to $USERNAME, $MAC with ip $IP"
+      $IPT -I unknown_user 1 -t nat -m mac --mac-source $MAC -j RETURN -m comment --comment "$USERNAME $IP"
+      ;;
+    revoke)
+      echo "Revoking internet access from $MAC with ip $IP"
+      CMD="$IPT -L unknown_user -v -t nat --line-numbers | awk '/$MAC/ {print \"$IPT -t nat -L unknown_user -D \" \$1}' | sort -r | bash"
+      echo $CMD | bash
+      ;;
+    status)
+      if $IPT -L unknown_user -v -t nat --line-numbers  | grep -q $MAC; then
+        echo "Granted"
+        exit 0
+      else
+        echo "Not Granted"
+        exit 1
+      fi
+      ;;
+    *)  
+      echo "usage: client_internet_access {grant|revoke|status} mac_address ip (username)" ;;
+esac
+exit 0
+

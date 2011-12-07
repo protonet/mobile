@@ -91,7 +91,7 @@ class ApplicationController < ActionController::Base
     requested_uri = request.protocol + request.host_with_port + request.fullpath
     return true if SystemBackend.requested_host_local?(request.host)
 
-    redirect_to "http://protonet/?captive_redirect_url=" + URI.escape(requested_uri)
+    redirect_to "http://#{address_for_current_interface}/?captive_redirect_url=" + URI.escape(requested_uri)
   end
   
   def only_registered
@@ -153,6 +153,12 @@ class ApplicationController < ActionController::Base
     interface = mapping[IP.new("#{request.remote_addr}/16").network.to_s] || "fallback"
     Rails.logger.info("request coming in on #{interface} with remote addr #{request.remote_addr}")
     interface
+  end
+  
+  def address_for_current_interface
+    SystemBackend.get_interfaces[incoming_interface].addresses.find {|ip| ip if ip.ipv4?}.to_s
+  rescue
+    "protonet"
   end
   
   def node_privacy_settings

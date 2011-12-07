@@ -119,16 +119,12 @@ module BackendAdapters
       doc = ip + "\t" + get_mac_for_ip(ip) + "\t"  + Time.now().strftime("%d.%m.%y") + "\n"
       File.open(internet_access_grants_file, 'a') {|f| f.write(doc) }
     
-      # Add PC to the firewall
-      `#{iptables_command} -I unknown_user 1 -t nat -m mac --mac-source #{get_mac_for_ip(ip)} -j RETURN -m comment --comment "#{username} #{ip}"`
-      
-      # The following line removes connection tracking for the PC
-      # This clears any previous (incorrect) route info for the redirection
-      `/usr/bin/sudo rmtrack #{ip}`
+      # Add mac to granted clients
+      `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access grant #{get_mac_for_ip(ip)} #{ip} #{username}`
     end
 
     def internet_access_granted?(ip)
-      `#{iptables_command} -L -v --line-numbers`.match(get_mac_for_ip(ip))
+      `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access status #{get_mac_for_ip(ip)}`
     end
     
     def in_grants_file?(ip)
@@ -136,7 +132,13 @@ module BackendAdapters
     end
     
     def revoke_internet_access(ip)
-      `#{iptables_command} -L -v --line-numbers | awk '/#{get_mac_for_ip(ip)}/ {print "/usr/bin/sudo /sbin/iptables -t nat -L unknown_user -D " $1}' | sort -r | bash`
+      `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access revoke #{get_mac_for_ip(ip)}`
+      lines = File.readlines(internet_access_grants_file)
+      File.open(internet_access_grants_file, 'w') do |f|
+        lines.each do |line|
+          f.write(line) unless line.match(ip)
+        end
+      end
     end
     
     def current_internet_interface
@@ -182,7 +184,7 @@ module BackendAdapters
       def get_mac_for_ip(ip)
         match = `/usr/sbin/arp -a #{ip}`
         match = match.match(REGEXPS[:mac])
-        match && match[0]
+        match && match[0].upcase
       end
   end
 end
