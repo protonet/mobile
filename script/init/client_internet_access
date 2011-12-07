@@ -21,7 +21,7 @@ case $COMMAND in
       ;;
     revoke)
       echo "Revoking internet access from $MAC"
-      CMD="$IPT -L unknown_user -v -t nat --line-numbers | awk '/$MAC/ {print \"$IPT -t nat -D \" \$1}' | sort -r | bash"
+      CMD="$IPT -L unknown_user -v -t nat --line-numbers | awk '/$MAC/ {print \"$IPT -t nat -D unknown_user \" \$1}' | sort -r | bash"
       echo $CMD | bash
       ;;
     status)

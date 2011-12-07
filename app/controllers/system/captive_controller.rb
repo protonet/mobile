@@ -18,7 +18,7 @@ module System
   
     def login
       SystemBackend.grant_internet_access(request.remote_ip, (@current_user.try(:login) || "n_a"))
-      sleep 3
+      sleep 10
       
       if params[:captive_redirect_url]
         redirect_to params[:captive_redirect_url]
