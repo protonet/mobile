@@ -28,7 +28,7 @@ $(function() {
     if (protonet.config.user_is_stranger) {
       protonet.trigger('flash_message.sticky', 'Please login or register to get access to internet, thank you!');
     } else {
-      var ov = new protonet.ui.Overlay("<br>Click <a class='close' data-avoid-ajax=1 target='_blank' href='/captive/login?captive_redirect_url=" + protonet.config.captive_redirect_url + "'>here</a> to get access to the internet and open your requested page (" + protonet.config.captive_redirect_url+ ").");
+      new protonet.ui.Overlay("Thank you!<br>Click <a class='close' data-avoid-ajax=1 target='_blank' href='/captive/login?captive_redirect_url=" + protonet.config.captive_redirect_url + "'>here</a> to get access to the internet and open your requested page (" + protonet.config.captive_redirect_url+ ").");
     }
   }
   
