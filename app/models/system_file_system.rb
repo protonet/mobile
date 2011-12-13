@@ -5,8 +5,11 @@ class SystemFileSystem
     Dir.chdir(cleared_path(directory)) do
       target_dir = Dir.glob("*")
       target_dir.each do |entry|
-        files[File.ftype(entry)] ||= []
-        files[File.ftype(entry)].push(entry)
+        file_type = File.ftype(entry)
+        # incorrect, only works on linked directories not linked files
+        file_type = "directory" if file_type == 'link'
+        files[file_type] ||= []
+        files[file_type].push(entry)
       end
     end
     # sort alphabetically since not all systems return fs entries in the correct order
