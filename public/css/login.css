@@ -98,20 +98,4 @@
   width: 280px;
 }
 
-.external-login {
-  background: url(/img/spr_icn_connect.png) no-repeat 0 0;
-  width: 32px;
-  height: 32px;
-  display: none;
-  vertical-align: middle;
-  overflow: hidden;
-  text-indent: -9999px;
-  margin-top: -6px;
-  margin-bottom: -3px;
-}
-
-.external-login.facebook {
-  background-position: -32px 0;
-}
-
 /* ================================================================ LOGIN = */
