@@ -1,7 +1,6 @@
 //= require "../ui/resizer.js"
 //= require "../media/proxy.js"
 //= require "../utils/get_channel_id_for_uuid.js"
-//= require "../utils/template.js"
 
 protonet.widgets.User = Class.create({
   initialize: function() {

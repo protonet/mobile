@@ -1,4 +1,3 @@
-//= require "template.js"
 //= require "get_channel_id_for_name.js"
 
 /**

@@ -1,5 +1,4 @@
 //= require "../utils/get_scrollbar_width.js"
-//= require "../utils/template.js"
 
 protonet.ui.Header = {
   initialize: function() {

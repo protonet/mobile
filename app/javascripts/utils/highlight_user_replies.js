@@ -1,5 +1,3 @@
-//= require "template.js"
-
 /**
  * Highlights user replies in a string
  *

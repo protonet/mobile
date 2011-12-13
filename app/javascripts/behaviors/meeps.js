@@ -1,5 +1,3 @@
-//= require "../utils/template.js"
-
 $.behaviors({
   "li.meep:focus": function(element, event) {
     var $target     = $(event.target),

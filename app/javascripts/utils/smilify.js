@@ -1,6 +1,4 @@
 //= require "escape_for_reg_exp.js"
-//= require "template.js"
-
 /**
  * Replaces text smilies with images :-)
  *

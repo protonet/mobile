@@ -10,7 +10,6 @@
 //= require "../utils/quotify.js"
 //= require "../utils/highlight_channel_replies.js"
 //= require "../utils/highlight_user_replies.js"
-//= require "../utils/template.js"
 //= require "../utils/parse_query_string.js"
 //= require "../utils/get_channel_name.js"
 //= require "../media/proxy.js"

@@ -18,6 +18,7 @@
 //= require "utils/history.js"
 //= require "behaviors/main.js"
 //= require "behaviors/ajax.js"
+//= require "utils/template.js"
 //= require "utils/inline_hint.js"
 //= require "ui/flash_message.js"
 //= require "ui/header.js"

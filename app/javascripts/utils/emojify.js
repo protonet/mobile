@@ -1,5 +1,3 @@
-//= require "template.js"
-
 /**
  * Replaces text emoji with images :-)
  *

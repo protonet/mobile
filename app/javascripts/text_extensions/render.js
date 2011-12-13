@@ -1,7 +1,6 @@
 //= require "../utils/escape_html.js"
 //= require "../utils/strip_tags.js"
 //= require "../utils/parse_url.js"
-//= require "../utils/template.js"
 //= require "utils/insert_base_url.js"
 
 /**

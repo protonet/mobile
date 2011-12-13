@@ -17,8 +17,7 @@ protonet.utils.Template = function(id, params) {
   this.html = this._getTemplate(id);
   
   $.each(params || {}, function(key, value) {
-    key = protonet.utils.escapeForRegExp("#{" + key + "}");
-    this.html = this.html.replace(new RegExp(key, "g"), value);
+    this.html = this.html.split("#{" + key + "}").join(value);
   }.bind(this));
 };
 
