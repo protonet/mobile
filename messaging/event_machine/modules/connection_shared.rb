@@ -4,7 +4,7 @@ require File.join(File.dirname(__FILE__), 'node2node')
 module ConnectionShared
   include Node2Node
 
-  attr_accessor :socket_id, :type, :tracker, :queues
+  attr_accessor :socket_id, :type, :tracker, :queues, :user
   
   def custom_post_initialize
     @tracker.add_conn self
@@ -74,6 +74,7 @@ module ConnectionShared
       end
     else
       # play echoserver if request could not be understood
+      puts "Something is using an obsolete interface! #{json.inspect}"
       send_json(json)
     end
   end
@@ -210,7 +211,7 @@ module ConnectionShared
     bind 'system', '#' do |json|
       log("got system message: #{json.inspect}")
       
-      send_json json unless json["socket_id"] == @socket_id
+      send_json json if @socket_id && json["socket_id"] != @socket_id
     end
   rescue MQ::Error => e
     log("bind_socket_to_system_queue error: #{e.inspect}")

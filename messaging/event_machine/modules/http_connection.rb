@@ -8,6 +8,8 @@ class HttpConnection < EM::Connection
   def post_init
     super
     custom_post_initialize # from ConnectionShared
+    
+    @socket_id = nil
   end
   
   @response_initialized = false
@@ -48,31 +50,57 @@ class HttpConnection < EM::Connection
     # the http request details are available via the following instance variables:
     #   @http_protocol, @http_request_method, @http_cookie, @http_if_none_match, @http_content_type, @http_path_info
     #   @http_request_uri, @http_query_string, @http_post_content, @http_headers
+    
+    @response = EM::DelegatedHttpResponse.new(self)
+    
+    # Tell the browser to let us POST stuff
+    @response.headers['Access-Control-Allow-Origin'] = '*'
+    @response.headers['Access-Control-Allow-Methods'] = 'GET, POST'
+    @response.content_type 'text/plain'
 
-    unless @response_initialized
+    if @http_request_method == 'GET' && !@response_initialized
       @response_initialized = true
+      @socket_id = rand(100000000)
 
-      # generate http response object but don't close afterwards
-      @response = EM::DelegatedHttpResponse.new(self)
-      
-      # Ensure that every host can acess this via cross domain ajax request in no-production mode
-      # We need this for bloody IE who isn't able to do XHR streaming with XMLHttpRequest
-      # Instead we abuse XDomainRequest which needs this header:
-      @response.headers['Access-Control-Allow-Origin'] = '*';
-      @response.content_type 'text/plain'
       @response.xhr_streaming_enable true
       @response.send_response
       
       begin
         @params = JSON.parse(CGI::unescape(@http_query_string || ''))
-        if autosubscribe(@params)
-          return
-        end
+        return if autosubscribe(@params)
       rescue
       end
       
       @response.close_connection
+      return
+    
+    elsif @http_request_method == 'POST'
+      @params = JSON.parse(CGI::unescape(@http_query_string || ''))
+      
+      # {"token"=>"acSdRNUxpCBjQTh5vHQE", "type"=>"web", "user_id"=>1, "socket_id"=>28711967}
+      
+      @socket = @tracker.open_sockets.find {|socket| socket.socket_id == @params['socket_id'] }
+      
+      if !@socket || !@socket.user.communication_token_valid?(@params['token'])
+        # Invalid auth
+        @response.content = 'Invalid token or socket ID'
+        @response.send_response
+        
+        return
+      end
+      
+      begin
+        @socket.receive_json JSON.parse(@http_post_content)
+      rescue JSON::ParserError, TypeError
+        log "JSON parsing error: #{@http_post_content.inspect}"
+      end
+      
+      # All good
+      @response.content = 'Sent.'
+      @response.send_response
     end
+    
+    @response.close_connection_after_writing
   end
   #
 

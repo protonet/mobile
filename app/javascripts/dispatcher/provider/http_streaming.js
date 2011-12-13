@@ -16,6 +16,16 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
 
     initialize: function() {
       protonet.trigger("socket.initialized");
+      this.observe();
+    },
+    
+    observe: function() {
+      /**
+       * Update socket id
+       */
+      protonet.on("socket.update_id", function(data) {
+        this.socketId = data.socket_id;
+      }.bind(this));
     },
 
     connect: function() {
@@ -28,16 +38,22 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
       }.bind(this)).appendTo("body");
     },
     
+    _buildUrl: function(additionalData) {
+      var data  = $.extend({
+            user_id:  protonet.config.user_id,
+            token:    protonet.config.token,
+            type:     "web",
+          }, additionalData),
+          queryParams         = encodeURIComponent(JSON.stringify(data)),
+          url                 = protonet.config.xhr_streaming_url + "?" + queryParams;
+      
+      return url;
+    },
+    
     _connect: function(win) {
       win = win || window;
       var byteOffset          = 0,
-          authenticationData  = {
-            user_id:  protonet.config.user_id,
-            token:    protonet.config.token,
-            type:     "web"
-          },
-          queryParams         = encodeURIComponent(JSON.stringify(authenticationData)),
-          url                 = protonet.config.xhr_streaming_url + "?" + queryParams,
+          url                 = this._buildUrl(),
           connected,
           undef,
           abortOldRequest     = (function(oldRequest) {
@@ -86,7 +102,7 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
           if (!connected) {
             return;
           }
-
+          
           if (this._hasReceivedData(this.ajax)) {
             var responseText = this.ajax.responseText || "",
                 rawData      = responseText.substr(byteOffset),
@@ -135,13 +151,20 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
     },
 
     send: function(data) {
-      // Simulate ping, just check whether the ajax streaming request is still going
-      var ajaxStillRunning = this.ajax.readyState !== 4;
-      if (data.operation === "ping" && ajaxStillRunning) {
-        setTimeout(function() {
-          protonet.trigger("socket.ping_received");
-        }, 0);
+      var ajax;
+      // Use IE-proprietary XDomainRequest for same-origin requests
+      // XMLHttpRequest doesn't work with http streaming since IE refuses to fill the responseText
+      // property unless readyState == 4
+      if (window.XDomainRequest) {
+        ajax = new XDomainRequest();
+      } else {
+        ajax = new XMLHttpRequest();
       }
+      
+      var url = this._buildUrl({ socket_id: this.socketId });
+      ajax.open("POST", url, true);
+      if (ajax.setRequestHeader) ajax.setRequestHeader('Content-Type', 'text/plain');
+      ajax.send(JSON.stringify(data));
     },
 
     receive: function(rawData) {
