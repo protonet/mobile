@@ -40,9 +40,7 @@
 
 .users-page [type=search] {
   border-width: 2px;
-  padding-top: 3px;
-  padding-left: 3px;
-  padding-bottom: 3px;
+  padding-left: 28px;
 }
 
 .users-page .user-avatar.loading {

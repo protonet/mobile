@@ -23,12 +23,20 @@ $(function() {
   $("section.main-content").css("min-height", $("aside.side-content").outerHeight().px());
   
   // there's a captive portal redirect request and the user is logged in
-  if (!!protonet.config.captive_redirect_url) {
-    $.post("/captive/store_redirect", {"captive_redirect_url": protonet.config.captive_redirect_url});
+  if (protonet.config.captive_redirect_url) {
+    $.post("/captive/store_redirect", { captive_redirect_url: protonet.config.captive_redirect_url });
     if (protonet.config.user_is_stranger) {
-      protonet.trigger('flash_message.sticky', 'Please login or register to get access to internet, thank you!');
+      protonet.trigger('flash_message.sticky', 'Welcome. Please login or register to get access to internet, thank you!');
     } else {
-      new protonet.ui.Overlay("Thank you!<br>Click <a class='close' data-avoid-ajax=1 target='_blank' href='/captive/login?captive_redirect_url=" + protonet.config.captive_redirect_url + "'>here</a> to get access to the internet and open your requested page (" + protonet.config.captive_redirect_url+ ").");
+      var htmlEscapedUrl = protonet.utils.escapeHtml(protonet.config.captive_redirect_url),
+          urlEncodedUrl  = encodeURIComponent(protonet.config.captive_redirect_url);
+      new protonet.ui.Overlay(
+        "<h4>Hi " + protonet.config.user_name + ",</h4>" +
+        "<br>Welcome to protonet. Click the following button to enable internet access and to open " +
+        "<strong>" + htmlEscapedUrl.truncate(30) + "</strong>.<br>" +
+        '<a class="button close" data-avoid-ajax="1" href="/captive/login?captive_redirect_url=' + urlEncodedUrl + '" target="_blank">' +
+        'Get internet access</a>'
+      );
     }
   }
   

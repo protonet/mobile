@@ -26,6 +26,6 @@
   <%= form_tag({ :action => 'search' }, { :remote => true, 'data-type' => 'html', :class => 'single-button-form', :method => 'get' }) do %>
     <%= hidden_field_tag :id, current_user.id %>
     <%= hidden_field_tag :user_id, current_user.id %>
-    <input type="search" placeholder="User name or id ..." name="search_term" id="users_search_term"> <%= button 'Go' %>
+    <input type="search" placeholder="User name or id ..." name="search_term" id="users_search_term" class="inset-border"> <%= button 'Go' %>
   <% end %>
 </output>

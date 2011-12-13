@@ -27,6 +27,7 @@ case $1 in
       $IPT -t nat -A PREROUTING -i $INTIF -p udp -m udp --destination $REDIRECTION_TARGET --dport 67   -j ACCEPT
       $IPT -t nat -A PREROUTING -i $INTIF -p udp -m udp --destination $REDIRECTION_TARGET --dport 53   -j ACCEPT
       $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 5000 -j ACCEPT
+      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 5001 -j ACCEPT
 
       echo "   send all public traffic to the unknown_user chain"
       $IPT -t nat -A PREROUTING -i $INTIF -j unknown_user
@@ -69,6 +70,6 @@ case $1 in
       fi
       ;;
     *)  
-      echo "usage: captive_portal public_interface external_interface {start|status}" ;;
+      echo "usage: captive_portal internet_interface internal_interface redirection_target {start|status}" ;;
 esac
 exit 0
