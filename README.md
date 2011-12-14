@@ -74,6 +74,8 @@ install the needed gems:
 do the db
 
     rake db:setup
+    
+This will create a user "admin" with password "admin" who has admin permissions.
 
 MESSAGING
 ---------
@@ -85,10 +87,10 @@ Install our messaging broker:
 NODE.JS
 -------
 
-Install node.js (0.2.6):
+Install node.js (0.6.5):
 
-    download the 0.2.6 version of node at
-    http://nodejs.org/dist/node-v0.2.6.tar.gz
+    download the 0.6.5 version of node at
+    http://nodejs.org/dist/v0.6.5/node-v0.6.5.tar.gz
     ./configure
     make
     sudo make install
