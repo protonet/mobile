@@ -81,7 +81,7 @@ class HttpConnection < EM::Connection
       
       @socket = @tracker.open_sockets.find {|socket| socket.socket_id == @params['socket_id'] }
       
-      if !@socket || !@socket.user || !@socket.user.communication_token_valid?(@params['token'])
+      if !@socket || !@socket.user.try(:communication_token_valid?, @params['token'])
         # Invalid auth
         @response.content = 'Invalid token or socket ID'
         @response.send_response
