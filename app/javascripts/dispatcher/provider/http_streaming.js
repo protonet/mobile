@@ -88,7 +88,11 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
           byteOffset = responseText.length;
           protonet.trigger("socket.receive", rawData);
         }.bind(this);
-        this.ajax.onload = this._connect.bind(this, win);
+        this.ajax.onload = function() {
+          if (this._activeForMoreThan10seconds(this.ajax)) {
+            this._connect(win);
+          }
+        }.bind(this);
       } else {
         this.ajax = new win.XMLHttpRequest();
         this.ajax.onreadystatechange = function() {
@@ -130,16 +134,18 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
       this.reconnectTimeout = setTimeout(this._connect.bind(this, win), 55000);
     },
     
-    _shouldReconnect: function(currentRequest) {
-      var now = new Date();
-      return  currentRequest.readyState  === 4 &&
+    _shouldReconnect: function(request) {
+      return  request.readyState  === 4 &&
               (
-                currentRequest.status    === 200 ||
+                request.status    === 200 ||
                 // 0 === request got aborted (iOS seems to have a request timeout after 60 sec)
-                currentRequest.status    === 0
-              ) &&
-              // only reconnect when the previous request was active for more than 10 sec
-              (now - currentRequest.activeSince) > 10000;
+                request.status    === 0
+              ) && this._activeForMoreThan10seconds(request);
+    },
+    
+    _activeForMoreThan10seconds: function(request) {
+      var now = new Date();
+      return (now - request.activeSince) > 10000;
     },
     
     _hasReceivedData: function(currentRequest) {
