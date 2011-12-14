@@ -91,11 +91,7 @@ module ConnectionShared
     
       when 'web', 'api', 'node'
         return false if auth_data['user_id'] == 0
-        potential_user = begin 
-          User.find(auth_data['user_id'])
-        rescue ActiveRecord::RecordNotFound
-          nil
-        end
+        potential_user = User.find_by_id(auth_data['user_id'])
         @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data['token'])
         
         if @user

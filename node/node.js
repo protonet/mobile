@@ -28,11 +28,10 @@ connection.addListener("ready", function() {
       userExchange  = connection.exchange("users"),
       workerQueue   = connection.queue("node-worker");
   
-  workerQueue.bind(exchange, "#");
+  workerQueue.bind(exchange, "worker.#");
   workerQueue.subscribeJSON(function(message) {
-    sys.puts("worker queue message");
-    sys.puts(message.data);
     message = JSON.parse(message.data);
+    sys.puts("worker queue message: " + utils.inspect(message));
     
     var publish = function(result, trigger) {
       userExchange.publish("users." + message.user_id, { result: result, trigger: (trigger + ".workdone") });
@@ -77,6 +76,9 @@ http.createServer(function(request, response) {
       break;
     case "snapshooter":
       require("./tasks/snapshot").save(request, response);
+      break;
+    case "upload":
+      require("./tasks/upload").save(request, response, connection);
       break;
     default:
       response.writeHead(200, {'Content-Type': 'text/plain'});
