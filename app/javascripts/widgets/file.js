@@ -2,9 +2,9 @@
 //= require "../utils/parse_url.js"
 //= require "../utils/escape_for_css_query.js"
 //= require "../ui/resizer.js"
-//= require "../lib/plupload.min.js"
-//= require "../lib/plupload.html5.min.js"
-//= require "../lib/plupload.flash.min.js"
+//-= require "../lib/plupload.min.js"
+//-= require "../lib/plupload.html5.min.js"
+//-= require "../lib/plupload.flash.min.js"
 protonet.widgets.File = Class.create({
   initialize: function() {
     this.container      = $("#file-widget");
@@ -220,6 +220,7 @@ protonet.widgets.File = Class.create({
   },
   
   _initFileUpload: function() {
+    return;
     /**
      * The browse link is part of the context menu which doesn't exist yet
      */

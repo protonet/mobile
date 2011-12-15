@@ -2,7 +2,7 @@
  * Webcam snapshots
  */
 protonet.timeline.Form.extensions.Snapshots = function($input, $wrapper, $form) {
-  $link = $form.find("[data-extension=snapshot]");
+  var $link = $form.find("[data-extension=snapshot]");
   
   if (!protonet.user.Browser.HAS_FLASH(9)) {
     $link.hide();

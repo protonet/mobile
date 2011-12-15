@@ -26,23 +26,26 @@ exports.save = function(request, response, amqpConnection) {
       if (!message.result) {
         return;
       }
+      
+      var directory = USERS_DIR + message.params.user_id + '/';
+
+      try {
+        fs.mkdirSync(directory);
+      } catch (e) {}
+
+      message.files.forEach(function(file) {
+        fs.rename(file.path, directory + file.name);
+      });
     });
-    /*
-        var directory = USERS_DIR + fields['user_id'] + '/';
-
-
-        try {
-          fs.mkdirSync(directory);
-        } catch (e) {}
-
-        files.forEach(function(file) {
-          fs.rename(file.path, directory + file.name)
-        });
-
-        response.writeHead(200, {'content-type': 'application/json'});
-
-        var fileNames    = files.map(function(f) { return file.name; }),
-            responseBody = JSON.stringify(fileNames);*/
+  }
+  
+  response.setHeader('Access-Control-Allow-Origin', '*');
+  response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, POST');
+  
+  if (request.method == 'OPTIONS') {
+    response.writeHead(200);
+    response.end();
+    return;
   }
   
   form
