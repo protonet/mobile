@@ -63,8 +63,11 @@ exports.save = function(request, response, amqpConnection) {
       exchange.publish("rpc.requests", { method: 'check_auth', params: fields, files: files });
       sys.puts("Published RPC call");
       
-      response.writeHead(204);
-      response.end();
+      response.writeHead(200);
+      
+      // we need to have something in the response body
+      // so that flash can detect a successful upload
+      response.end("success");
     });
   
   form.parse(request);
