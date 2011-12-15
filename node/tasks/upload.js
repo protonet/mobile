@@ -1,6 +1,7 @@
 var sys             = require("sys"),
     fs              = require("fs"),
     util            = require('util'),
+    path            = require('path'),
     amqp            = require('../modules/node-amqp/amqp'),
     formidable      = require("../modules/node-formidable"),
     USERS_DIR       = "../shared/files/users/",
@@ -23,18 +24,21 @@ exports.save = function(request, response, amqpConnection) {
       message = JSON.parse(message.data);
       sys.puts("upload verification queue message: " + util.inspect(message));
       
-      if (!message.result) {
-        return;
-      }
+      if (!message.result) { return; }
       
-      var directory = USERS_DIR + message.params.user_id + '/';
+      var userDirectory = USERS_DIR + message.params.user_id + '/',
+          channelDirectory = CHANNELS_DIR + message.params.channel_id + '/';
 
-      try {
-        fs.mkdirSync(directory);
-      } catch (e) {}
+      try { fs.mkdirSync(userDirectory);    } catch (e) {}
+      try { fs.mkdirSync(channelDirectory); } catch (e) {}
 
       message.files.forEach(function(file) {
-        fs.rename(file.path, directory + file.name);
+        var userFile    = userDirectory + file.name,
+            channelFile = channelDirectory + file.name,
+            symlink     = path.relative(path.dirname(channelFile), userFile);
+        
+        fs.rename(file.path, userFile);
+        fs.symlink(symlink, channelFile);
       });
     });
   }

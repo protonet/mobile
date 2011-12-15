@@ -15,6 +15,10 @@ class RPC
         # Verify the communication token
         valid = user && user.communication_token_valid?(params['token'])
         
+        if valid && params.include?('channel_id')
+          valid = user.channels.verified.map(&:id).include? params['channel_id'].to_i
+        end
+        
         puts "Result: #{valid.inspect}"
         
         # Send the result boolean back
