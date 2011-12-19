@@ -36,7 +36,7 @@ module Rpc
       objects[name]
     end
     
-    def initialize
+    def bind
       bind 'rpc', 'requests' do |json|
         p json
 

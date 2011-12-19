@@ -18,7 +18,7 @@ require File.dirname(__FILE__) + '/client_tracker.rb'
 require File.dirname(__FILE__) + '/node_tracker.rb'
 
 # RPC handler
-require 'lib/rpc/handler'
+require File.join(::Rails.root, 'lib', 'rpc', 'handler')
 
 def solr_index_processing
   begin
@@ -53,10 +53,10 @@ EventMachine::run do
   websocket_ssl_port= !configatron.websocket_ssl.port.nil? && configatron.websocket_ssl.port || 5002
 
   puts "Starting AMQ RPC server"
-  rpc = Rpc::Handler.new
+  rpc = Rpc::Handler.new.bind
   
   client_tracker = ClientTracker.new
-    
+  
   EventMachine.epoll if RUBY_PLATFORM =~ /linux/ #sky is the limit
   EventMachine::start_server host, port, ClientConnection, client_tracker
   EventMachine::start_server host, longpolling_port, HttpConnection, client_tracker
