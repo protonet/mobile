@@ -2,7 +2,7 @@ module Rpc
   class Handler
     include Rabbit
     
-    OBJECT_PATH = File.join(RAILS_ROOT, 'lib', 'rpc', 'objects')
+    OBJECT_PATH = File.join(::Rails.root, 'lib', 'rpc', 'objects')
     
     # Load a list of known objects from the file system. Returns an array of names.
     def known_objects
