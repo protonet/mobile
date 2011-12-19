@@ -2,6 +2,7 @@
 //= require "../../../lib/plupload/src/javascript/plupload.html5.js"
 //= require "../../../lib/plupload/src/javascript/plupload.html4.js"
 //= require "../../../lib/plupload/src/javascript/plupload.flash.js"
+//= require "../../../ui/file_queue.js"
 
 /**
  * File attachments
@@ -32,14 +33,6 @@ protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
     drop_element:   $form.attr("id")
   });
   
-  protonet.on("channel.change", function(channelId) {
-    uploader.settings.multipart_params = {
-      channel_id: channelId,
-      user_id:    protonet.config.user_id,
-      token:      protonet.config.token
-    };
-  });
-  
   uploader.bind("QueueChanged", function(uploader, files) {
     uploader.start();
   });
@@ -49,43 +42,58 @@ protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
   });
   
   uploader.bind("FilesAdded", function(uploader, files) {
+    protonet.ui.FileQueue.initialize();
     $form.trigger("dragleave");
+    $.each(files, function(i, file) {
+      protonet.ui.FileQueue.add(file);
+    });
   });
   
   uploader.init();
   
-  var timeout;
+  protonet.on("channel.change", function(channelId) {
+    uploader.settings.multipart_params = {
+      channel_id: channelId,
+      user_id:    protonet.config.user_id,
+      token:      protonet.config.token
+    };
+  });
   
   if (uploader.features.dragdrop) {
+    var bodyTimeout,
+        formTimeout;
+    
     $body.bind("dragover", function(event) {
-      console.log("dragenter");
       if (!hasFiles(event.originalEvent.dataTransfer)) {
         return;
       }
       
-      clearTimeout(timeout);
-      timeout = setTimeout(function() {
+      clearTimeout(bodyTimeout);
+      bodyTimeout = setTimeout(function() {
         $body.add($form).removeClass("dragenter");
       }, (1.5).seconds());
       
       event.preventDefault();
-    
+      
       $dropArea = $dropArea || $('<div>', {
-        "class": "drop-area",
-        text: "Drop it like it's hot!"
+        "class":  "drop-area",
+        text:     "Drop it like it's hot!"
       }).appendTo($form);
-    
+      
       $body.addClass("dragenter");
     });
     
-    $form.bind({
-      dragenter: function() {
-        $form.addClass("dragenter");
-      },
-      
-      dragleave: function() {
-        $form.removeClass("dragenter");
+    $form.bind("dragover", function(event) {
+      if (!hasFiles(event.originalEvent.dataTransfer)) {
+        return;
       }
+    
+      clearTimeout(formTimeout);
+      formTimeout = setTimeout(function() {
+        $form.removeClass("dragenter");
+      }, (0.5).seconds());
+      
+      $form.addClass("dragenter");
     });
   }
 };

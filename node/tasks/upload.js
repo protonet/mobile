@@ -39,7 +39,7 @@ exports.save = function(request, response, amqpConnection) {
         
         fs.rename(file.path, userFile);
         fs.chmod(userFile, 640);
-        fs.symlink(symlink, channelFile);
+        try { fs.symlink(symlink, channelFile); } catch(e) {}
       });
     });
   }

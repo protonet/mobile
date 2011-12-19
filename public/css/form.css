@@ -116,7 +116,7 @@ form.disabled #textarea-wrapper:after {
   font-size: 16px;
   font-weight: bold;
   line-height: 72px;
-  background-color: rgba(255, 127, 49, 0.5);
+  background-color: rgba(0, 204, 0, 0.5);
   border: 6px dashed rgba(255, 255, 255, 0.7);
   text-align: center;
   vertical-align: middle;
@@ -124,7 +124,7 @@ form.disabled #textarea-wrapper:after {
 }
 
 form.dragenter .drop-area {
-  background-color: rgba(255, 127, 49, 0.7);
+  background-color: rgba(0, 204, 0, 0.75);
 }
 
 body.dragenter .drop-area {
