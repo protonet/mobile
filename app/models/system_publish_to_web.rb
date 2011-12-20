@@ -48,7 +48,7 @@ class SystemPublishToWeb
     def port
       license_key = SystemBackend.license_key
       url = "http://directory.protonet.info/show?node_name=#{SystemPreferences.publish_to_web_name}&license_key=#{license_key}&public_key_sha=#{Digest::SHA1.hexdigest(ssh_keys["public"])}"
-      response = HTTParty.get(url, :timeout => 10).body
+      response = HTTParty.get(url, :timeout => 30).body
       if response.match(/error/)
         register_options = {:node_name => SystemPreferences.publish_to_web_name, :license_key => license_key, :public_key => ssh_keys["public"], :uuid => Network.local.uuid}
         register_url = "http://directory.protonet.info/register"
