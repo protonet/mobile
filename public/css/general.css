@@ -281,20 +281,6 @@ a.close-link:hover {
   background: #487bff;
 }
 
-pre {
-  margin: 5px 0;
-  max-height: 200px;
-  overflow-y: scroll;
-  overflow-x: auto;
-  display: block;
-  font-size: 12px;
-  word-wrap: normal;
-  background-color: #fff;
-  padding: 5px;
-  border: 1px solid #ccc;
-  font-family: Courier New, Courier;
-}
-
 .flash-message {
   display: none;
   left: 0;

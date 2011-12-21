@@ -134,6 +134,20 @@
   color: red;
 }
 
+.meep pre {
+  margin: 5px 0;
+  max-height: 200px;
+  overflow-y: scroll;
+  overflow-x: auto;
+  display: block;
+  font-size: 12px;
+  word-wrap: normal;
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #ccc;
+  font-family: Courier New, Courier;
+}
+
 div.progress {
   height: 48px;
   background: transparent url(/img/icn_loading_big.gif) center center no-repeat;

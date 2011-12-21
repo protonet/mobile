@@ -158,7 +158,7 @@ protonet.ui.ModalWindow = (function() {
           elements.dialog.removeClass("loading");
         });
       } else if (contentType.startsWith("text/")) {
-        content(response);
+        content($("<pre>", { text: response }), true);
         elements.dialog.removeClass("loading");
       }
       
