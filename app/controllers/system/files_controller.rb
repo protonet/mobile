@@ -86,7 +86,7 @@ module System
         file_path = URI.unescape(params[:file_path])
         force_download = Mime::Type.lookup("application/octet-stream")
         mime_type = Mime::Type.lookup_by_extension((m = file_path.match(/.*\.(.*)/)) && m[1].downcase) || force_download
-        if !mime_type.to_s.starts_with?("image/") && mime_type.to_s != "application/pdf"
+        if !mime_type.to_s.starts_with?("image/") && mime_type.to_s != "application/pdf" && mime_type.to_s != "text/plain"
           mime_type = force_download
         end
         send_file(SystemFileSystem.cleared_path(file_path), :type => mime_type, :disposition => (params[:download] == 1 ? 'attachment': 'inline')) rescue head(:error)
