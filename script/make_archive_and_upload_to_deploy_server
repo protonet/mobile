@@ -61,9 +61,17 @@ fi
 echo $last_version > RELEASE
 
 # set release_versions in bootstrap script
-cat script/ptn_bootstrap_start    | sed -i'' -e "s/RELEASE_VERSION=\"\"/RELEASE_VERSION=\"$last_version\"/g" script/ptn_bootstrap_start
-cat script/ptn_bootstrap_continue | sed -i'' -e "s/RELEASE_VERSION=\"\"/RELEASE_VERSION=\"$last_version\"/g" script/ptn_bootstrap_continue
-cat script/ptn_bootstrap_babushka | sed -i'' -e "s/RELEASE_VERSION=\"\"/RELEASE_VERSION=\"$last_version\"/g" script/ptn_bootstrap_babushka
+# this if handles os x and ubuntu systems, it's not DRYed yet but works
+if [[ $OSTYPE == darwin* ]]; then
+  cat script/ptn_bootstrap_start    | sed -i '' -e "s/RELEASE_VERSION=\"\"/RELEASE_VERSION=\"$last_version\"/g" script/ptn_bootstrap_start
+  cat script/ptn_bootstrap_continue | sed -i '' -e "s/RELEASE_VERSION=\"\"/RELEASE_VERSION=\"$last_version\"/g" script/ptn_bootstrap_continue
+  cat script/ptn_bootstrap_babushka | sed -i '' -e "s/RELEASE_VERSION=\"\"/RELEASE_VERSION=\"$last_version\"/g" script/ptn_bootstrap_babushka
+else
+  cat script/ptn_bootstrap_start    | sed -i'' -e "s/RELEASE_VERSION=\"\"/RELEASE_VERSION=\"$last_version\"/g" script/ptn_bootstrap_start
+  cat script/ptn_bootstrap_continue | sed -i'' -e "s/RELEASE_VERSION=\"\"/RELEASE_VERSION=\"$last_version\"/g" script/ptn_bootstrap_continue
+  cat script/ptn_bootstrap_babushka | sed -i'' -e "s/RELEASE_VERSION=\"\"/RELEASE_VERSION=\"$last_version\"/g" script/ptn_bootstrap_babushka
+fi
+
 
 # now create an archive
 cd /tmp
