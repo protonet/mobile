@@ -27,16 +27,16 @@ connection.addListener("ready", function() {
   var exchange      = connection.exchange("worker"),
       userExchange  = connection.exchange("users"),
       workerQueue   = connection.queue("node-worker");
-  
+
   workerQueue.bind(exchange, "worker.#");
   workerQueue.subscribeJSON(function(message) {
     message = JSON.parse(message.data);
     sys.puts("worker queue message: " + utils.inspect(message));
-    
+
     var publish = function(result, trigger) {
       userExchange.publish("users." + message.user_id, { result: result, trigger: (trigger + ".workdone") });
     };
-    
+
     switch(message.task) {
       // example, remove for production
       case "eval":
@@ -52,6 +52,40 @@ connection.addListener("ready", function() {
         require("./tasks/http_proxy").get(message.url, publish);
         break;
     }
+  });
+
+
+  // Filesystem worker queue
+  // Kept separate because it's not necessarily called by a client
+  // (it's really just used for the evented I/O)
+  //
+  // Send JSON requests to the fs.worker queue:
+  //   {"queue":"a fs. queue that you'll listen for a response on",
+  //    "operation":"operation to run, i.e. list, copy, move, delete, info",
+  //    "params":{"param-name":"param-value"}}
+  //
+  // Anything else that is in the object can be used as state values, as the
+  // entire object is sent back in response, along with additional keys
+  // (either "response" or "error", depending on what happened).
+  var fsExchange = connection.exchange("fs"),
+      fsQueue    = connection.queue("worker");
+
+  fsQueue.bind(fsExchange, "fs.worker");
+  fsQueue.subscribeJSON(function(message) {
+    message = JSON.parse(message.data);
+    sys.puts("filesystem worker queue message: " + utils.inspect(message));
+
+    var callback = function(err, result) {
+      if (err) {
+        message.error = err;
+      } else {
+        message.result = result;
+      }
+
+      fsExchange.publish("fs." + message.queue, message);
+    }
+
+    require("./tasks/fs_worker")[message.operation](message.params, callback);
   });
 });
 
@@ -84,7 +118,7 @@ http.createServer(function(request, response) {
       response.writeHead(200, {'Content-Type': 'text/plain'});
       response.end('WTF?\n');
   }
-  
+
 }).listen(htmlTaskPort);
 
 /*----------------------------------- STARTUP STUFF -----------------------------------*/

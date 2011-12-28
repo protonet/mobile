@@ -1,0 +1,50 @@
+HTTP:
+  /files/upload: POST
+    - files
+    - parent_path: 'channel/2'
+  /files/download
+    - path: list of paths
+      - zip files if multiple or folder
+    - share_key: optional
+  /files/display
+    - path: single path
+  /files/thumbnail
+    - path
+    - size
+    - share_key: optional
+
+Socket RPC methods:
+  filesystem.info(): free space, used space
+  
+  file.list('user/5/folder1/asdf'): filename, mimetype, size, isdisplayable
+      .list('channel'): filename, mimetype, size, isdisplayable
+  
+      .move(['channel/2/asdf.txt', 'channel/2/jkl.txt'], 'channel/2')
+      
+      .copy(['user/2/asdf.txt', 'user/2/jkl.txt'], 'channel/3') - copy a list of files
+      .copy('user/2/asdf.txt',    'channel/3') - make a symlink
+      .copy('channel/2/asdf.txt', 'channel/3') - copy the symlink
+      .copy('channel/2/asdf.txt', 'user/3')    - copy the actual file
+      .copy('user/2/asdf.txt',    'user/3')    - copy the actual file
+      
+      .delete(['list', 'of', 'files', 'or', 'folders'])
+      
+      .info(['user/2/file'])
+      
+  folder.new(['user/2/movies'])
+        .info(['user/2/movies'])
+
+
+Socket triggers:
+  file.created
+      .moved
+      .copied
+      .deleted
+      .accessed
+  folder.created
+
+copying in a userdir: copy actual file
+             channeldir: copy symlink
+
+Always check the user and channel (if any)
+  admins can work with any file/folder
