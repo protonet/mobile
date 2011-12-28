@@ -79,7 +79,7 @@ module ConnectionShared
           object, method = json['operation'].split('.')
           
           begin
-            result = invoke object, method, json['params']
+            result = @tracker.rpc.invoke object, method, json['params'], @user
 
             # Send the return value back
             send_json json.merge(
