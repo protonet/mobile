@@ -44,7 +44,9 @@ module Rpc
       end
     end
     
-    def invoke object, method, params={}
+    def invoke object, method, params={}, user=nil
+      params ||= {}
+      
       # Look up the object
       instance = get_object object
       raise NameError, "undefined RPC object '#{object}'" unless instance
@@ -54,7 +56,13 @@ module Rpc
       handler = instance.method method.to_sym
 
       # Invoke the method
-      handler.call(params || {})
+      if handler.arity == 1
+        # Can only take at most one param. Ignore any auth.
+        handler.call params
+      else
+        # Takes additional params. Hand it the current user as well.
+        handler.call params, user
+      end
     end
     
     protected
@@ -73,7 +81,8 @@ module Rpc
           :status => 'error',
           :error => {
             :type => ex.class,
-            :message => ex.message}
+            :message => ex.message,
+            :backtrace => ex.backtrace}
       end
       
       def reply json, response

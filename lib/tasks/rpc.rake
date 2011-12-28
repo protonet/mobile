@@ -13,6 +13,7 @@ namespace :rpc do
       STDOUT.flush
       
       line = STDIN.gets
+      break unless line
       match = line.match(regex)
       
       unless match
@@ -23,14 +24,16 @@ namespace :rpc do
       
       object, method, params = match.captures
       
-      params = eval("{#{params}}") if params
-      
       begin
-        puts "  => #{handler.invoke(object, method, params).inspect}"
+        params = eval("{#{params}}") if params
+      
+        puts "  => #{handler.invoke(object, method, params, User.find(1)).inspect}"
       rescue => ex
         puts "  #{ex.class}: #{ex.message}"
       end
     end
+    
+    puts
   end
 
 end
