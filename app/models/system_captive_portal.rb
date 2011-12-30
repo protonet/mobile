@@ -2,24 +2,21 @@ class SystemCaptivePortal
   
   class << self
     
-    def start(external_interface, internal_interface)
-      `#{service_command} start`
+    def start
+      `#{service_command("start")}`
     end
     
-    def stop(external_interface, internal_interface)
-      `#{service_command} stop`
+    def stop
+      `#{service_command("stop")}`
     end
     
     def captive_status
-      # `#{service_command} check`
-      true
+      `#{service_command("status")}`
     end
     
     private
-    def service_command(external_interface, internal_interface)
-      public_interface = "foo"
-      external_interface = "bar"
-      "/usr/bin/sudo #{configatron.current_file_path}/script/init/captive_portal #{public_interface} #{external_interface}"
+    def service_command(argument)
+      "/usr/bin/sudo #{configatron.current_file_path}/script/init/captive_portal #{SystemPreferences.captive_external_interface} #{SystemPreferences.captive_internal_interface} #{SystemPreferences.captive_redirection_target} #{argument}"
     end
     
   end

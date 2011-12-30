@@ -1,0 +1,36 @@
+<h2>Advanced settings</h2>
+<p><strong>Caution:</strong> These settings are meant for advanced users only, please be careful.</p>
+<h3>Captive Portal <a data-hover-hint="top" title="Users need to authenticate before receiving internet access" class="hint">(?)</a></h3>
+<%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
+  <%= hidden_field_tag 'section', 'advanced_settings' %>
+  <div class="form-field">
+    <label>Status:</label>
+    <span>
+      <label>
+        <input type="radio" name="preferences[captive]" value="true" <%= 'checked' if SystemPreferences.captive %>>
+        On
+      </label>
+      <label>
+        <input type="radio" name="preferences[captive]" value="false" <%= 'checked' unless SystemPreferences.captive %>> 
+        Off
+      </label>
+    </span>
+  </div>
+  <div class="form-field">
+    <%= label_tag 'preferences[captive_authorization_url]', 'Captive authorization URL:' %>
+    <%= text_field_tag 'preferences[captive_authorization_url]', SystemPreferences.captive_authorization_url %>
+  </div>
+  <div class="form-field">
+    <%= label_tag 'preferences[captive_external_interface]', 'External IF:' %>
+    <%= text_field_tag 'preferences[captive_external_interface]', SystemPreferences.captive_external_interface %>
+  </div>
+  <div class="form-field">
+    <%= label_tag 'preferences[captive_internal_interface]', 'Internal IF:' %>
+    <%= text_field_tag 'preferences[captive_internal_interface]', SystemPreferences.captive_internal_interface %>
+  </div>
+  <div class="form-field">
+    <%= label_tag 'preferences[captive_redirection_target]', 'Redirection target:' %>
+    <%= text_field_tag 'preferences[captive_redirection_target]', SystemPreferences.captive_redirection_target %>
+  </div>
+  <%= button "Save" %>
+<%- end -%>

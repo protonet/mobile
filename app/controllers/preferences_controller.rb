@@ -31,6 +31,7 @@ class PreferencesController < ApplicationController
       #{:url => 'webhook_settings', :name => 'Webhook settings'},
       {:section => 'privacy_settings',  :name => 'Privacy settings'},
       {:section => 'vpn_settings',      :name => 'VPN settings'},
+      {:section => 'advanced_settings', :name => 'Advanced settings'},
       {:section => 'software_updates',  :name => 'Software updates'},
       {:section => 'information',       :name => 'Information'}
     ] : []
