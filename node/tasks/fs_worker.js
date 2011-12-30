@@ -167,11 +167,19 @@ exports.list = function(params, reply) {
       var fullpath = path.join(dir, filelist[file]);
 
       var stats = fs.statSync(fullpath);
-      files[filelist[file]] = {
-        size: stats.size,
-        created: stats.ctime,
-        mime: lookup_mime(filelist[file])
-      };
+      if (stats.isDirectory()) {
+        files[filelist[file]] = {
+          created: stats.ctime,
+          type: 'folder'
+        };
+      } else {
+        files[filelist[file]] = {
+          size: stats.size,
+          created: stats.ctime,
+          mime: lookup_mime(filelist[file]),
+          type: 'file'
+        };
+      }
     }
 
     reply(err, files);
@@ -211,8 +219,12 @@ exports.copy = function(params, reply) {
 exports.delete = function(params, reply) {
   Step(function() {
     for (var i in params.paths) {
-      var file = path.join(ROOT_DIR, params.paths[i]);
-      remove(file, this.parallel());
+      // TODO: don't want a bad person who found a bug to just rm the
+      // whole store but this isn't good either
+      if (params.paths[i].split('/').length >= 3) {
+        var file = path.join(ROOT_DIR, params.paths[i]);
+        remove(file, this.parallel());
+      }
     }
   }, reply);
 }

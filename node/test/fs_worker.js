@@ -25,7 +25,7 @@ Step(
 
   function() { worker.delete({paths: ['channels/1/jkl;/it works.pdf']}, this); },
   function() { worker.delete({paths: ['channels/1/asdf']}, this); },
-  function() { worker.delete({paths: ['channels/1/jkl;']}, this); },
+  //function() { worker.delete({paths: ['channels/1/jkl;']}, this); },
 
   function() { console.log('All tests completed'); this(); }
 );

@@ -1,5 +1,6 @@
-var sys = require("sys");
-var fs  = require("fs");
+var sys  = require("sys"),
+    fs   = require("fs"),
+    util = require("util");
 
 /*----------------------------------- CONFIG  ----------------------------------------*/
 var htmlTaskPort = 8124;
@@ -31,7 +32,7 @@ connection.addListener("ready", function() {
   workerQueue.bind(exchange, "worker.#");
   workerQueue.subscribeJSON(function(message) {
     message = JSON.parse(message.data);
-    sys.puts("worker queue message: " + utils.inspect(message));
+    sys.puts("worker queue message: " + util.inspect(message));
 
     var publish = function(result, trigger) {
       userExchange.publish("users." + message.user_id, { result: result, trigger: (trigger + ".workdone") });
@@ -55,37 +56,36 @@ connection.addListener("ready", function() {
   });
 
 
-  // Filesystem worker queue
-  // Kept separate because it's not necessarily called by a client
-  // (it's really just used for the evented I/O)
-  //
-  // Send JSON requests to the fs.worker queue:
-  //   {"queue":"a fs. queue that you'll listen for a response on",
-  //    "operation":"operation to run, i.e. list, copy, move, delete, info",
-  //    "params":{"param-name":"param-value"}}
-  //
-  // Anything else that is in the object can be used as state values, as the
-  // entire object is sent back in response, along with additional keys
-  // (either "response" or "error", depending on what happened).
-  var fsExchange = connection.exchange("fs"),
-      fsQueue    = connection.queue("worker");
+  /**
+   * RPC queue
+   * Kept separate because it's not called directly by a client
+   * (it's really just used for the evented filesystem I/O)
+   *
+   * Send JSON requests to the rpc.node queue:
+   *   {"queue":"a queue on the rpc exchange that you'll listen for a response on",
+   *    "method":"operation to run, i.e. list, copy, move, delete, info",
+   *    "params":{"param-name":"param-value"}}
+   *
+   * Anything else that is in the object can be used as state values, as the
+   * entire object is sent back in response, along with additional keys
+   * (either "response" or "error", depending on what happened).
+   */
+  var rpcExchange = connection.exchange("rpc"),
+      rpcQueue    = connection.queue("node");
 
-  fsQueue.bind(fsExchange, "fs.worker");
-  fsQueue.subscribeJSON(function(message) {
+  rpcQueue.bind(rpcExchange, "rpc.node");
+  rpcQueue.subscribeJSON(function(message) {
     message = JSON.parse(message.data);
-    sys.puts("filesystem worker queue message: " + utils.inspect(message));
+    sys.puts("rpc worker queue message: " + util.inspect(message));
 
     var callback = function(err, result) {
-      if (err) {
-        message.error = err;
-      } else {
-        message.result = result;
-      }
+      message.error = err;
+      message.result = result;
 
-      fsExchange.publish("fs." + message.queue, message);
+      rpcExchange.publish('rpc.' + message.queue, message);
     }
 
-    require("./tasks/fs_worker")[message.operation](message.params, callback);
+    require("./tasks/fs_worker")[message.method](message.params, callback);
   });
 });
 
