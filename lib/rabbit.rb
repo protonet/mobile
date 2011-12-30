@@ -4,15 +4,15 @@
 module Rabbit
   def amq;    @amq ||= MQ.new; end
   def queues; @queues ||= [];  end
-  
+
   def _log message
-    puts message #if $DEBUG
+    puts message if $DEBUG
   end
-  
+
   def bind topic, *keys, &handler
     keys.unshift(topic)
     key = keys.join('.')
-    
+
     queue = amq.queue "#{queue_id}.#{key}", :auto_delete => true
     queue.bind(amq.topic(topic), :key => key).subscribe do |packet|
       _log "Received rabbitmq packet from #{key}"
@@ -22,7 +22,7 @@ module Rabbit
         _log "JSON parsing error from rabbitmq packet"
       end
     end
-    
+
     queues << queue
     queue
   end
@@ -34,12 +34,12 @@ module Rabbit
     _log "Publishing rabbitmq packet to #{key}"
     amq.topic(topic).publish data.to_json, :key => key
   end
-  
+
   def unbind_queues
     queues.each {|q| q.unsubscribe }
   end
-  
+
   def queue_id
-    "#{self.class}-#{self.object_id}"
+    "ruby.#{self.class}-#{self.object_id}"
   end
 end
