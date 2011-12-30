@@ -64,6 +64,15 @@ class Rpc::Objects::Fs < Rpc::Base
     end
   end
 
+  # Get some info about a list of paths.
+  def info params, user, &handler
+    check_perms params['paths'], user
+
+    @client.call :fs, :info, params do |resp|
+      handler.call resp['result']
+    end
+  end
+
   protected
     # Parse a string path into (at most 3) string components.
     def parse_path path

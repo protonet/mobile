@@ -227,7 +227,7 @@ exports.delete = function(params, reply) {
       }
     }
   }, reply);
-}
+};
 
 exports.mkdir = function(params, reply) {
   var dir;
@@ -238,26 +238,45 @@ exports.mkdir = function(params, reply) {
   }
 
   fs.mkdir(dir, reply);
+};
+
+exports.info = function(params, reply) {
+  var results = {};
+
+  for (var i in params.paths) {
+    var info;
+
+    try {
+      var file = path.join(ROOT_DIR, params.paths[i]);
+      var stat = fs.statSync(file);
+      var lstat = fs.lstatSync(file);
+
+      if (stat.isDirectory()) {
+        info = {
+          type: 'folder'
+        };
+      } else {
+        info = {
+          size: stat.size,
+          mime: lookup_mime(params.paths[i]),
+          type: 'file'
+        };
+      }
+
+      info.uploaded =  stat.ctime.getTime();
+      info.added    = lstat.ctime.getTime();
+
+      var real = file;
+      while (isLink(real)) {
+        real = path.join(path.dirname(real), fs.readlinkSync(real));
+      }
+      info.uploader = path.relative(ROOT_DIR, real).split('/')[1];
+    } catch(ex) {
+      info = { type: 'missing' };
+    }
+
+    results[params.paths[i]] = info;
+  }
+
+  reply(null, results);
 }
-
-/*
-  filesystem.info(): free space, used space
-
-  file.list('user/5/folder1/asdf'): filename, mimetype, size, isdisplayable
-      .list('channel'): filename, mimetype, size, isdisplayable
-
-      .move(['channel/2/asdf.txt', 'channel/2/jkl.txt'], 'channel/2')
-
-      .copy(['user/2/asdf.txt', 'user/2/jkl.txt'], 'channel/3') - copy a list of files
-      .copy('user/2/asdf.txt',    'channel/3') - make a symlink
-      .copy('channel/2/asdf.txt', 'channel/3') - copy the symlink
-      .copy('channel/2/asdf.txt', 'user/3')    - copy the actual file
-      .copy('user/2/asdf.txt',    'user/3')    - copy the actual file
-
-      .delete(['list', 'of', 'files', 'or', 'folders'])
-
-      .info(['user/2/file'])
-
-  folder.new(['user/2/movies'])
-        .info(['user/2/movies'])
-*/
