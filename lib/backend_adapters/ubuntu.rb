@@ -142,7 +142,7 @@ module BackendAdapters
     end
     
     def current_internet_interface
-      `/sbin/route`.match(/.*UG.*/).to_s.split(" ").last rescue nil
+      `/sbin/route -n`.match(/.*UG.*/).to_s.split(" ").last rescue nil
     end
     
     def license_key

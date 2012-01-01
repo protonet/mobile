@@ -57,7 +57,7 @@
     <h3>WLAN Channel</h3>
     <div class="form-field">
       <%= label_tag "preferences[channel]", "Channel:" %>
-      <%= select_tag "preferences[channel]", options_for_select(5..11, SystemPreferences.wifi['channel']) %> <a class="hint" data-hover-hint="top" title="Change this if you are experiencing connection problems">(?)</a>
+      <%= select_tag "preferences[channel]", options_for_select(1..11, SystemPreferences.wifi['channel']) %> <a class="hint" data-hover-hint="top" title="Change this if you are experiencing connection problems">(?)</a>
     </div>
   
     <div>

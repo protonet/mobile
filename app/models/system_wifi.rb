@@ -10,7 +10,7 @@ class SystemWifi
     
     # eg. SystemWifi.supports_standard?("wlan0", "n")
     def supports_standard?(interface, standard)
-      !!`iwconfig`.match(Regexp.new("#{interface}\\s+IEEE\\s+802\\.11\\w*?#{standard}"))
+      !!`/sbin/iwconfig #{interface}`.match(Regexp.new("\\s+IEEE\\s+802\\.11\\w*?#{standard}"))
     end
     
     def start
@@ -70,11 +70,12 @@ class SystemWifi
       sleep 5
       # and start with new config
       settings = ""
+      settings += default_settings
+      settings += channel_settings(SystemPreferences.wifi["channel"])
+      
       case SystemPreferences.wifi["mode"]
       when :dual
-        settings += default_settings
-        settings += "\nchannel=#{SystemPreferences.wifi["channel"]}"
-        settings += "\nssid=#{SystemPreferences.wifi["wlan0"]["name"]}\ninterface=wlan0\n"
+        settings += "ssid=#{SystemPreferences.wifi["wlan0"]["name"]}\ninterface=wlan0\n"
         settings += wpa_settings(SystemPreferences.wifi["wlan0"]["name"], SystemPreferences.wifi["wlan0"]["password"])
         settings += "\nbss=wlan1\nssid=#{SystemPreferences.wifi["wlan1"]["name"]}\nbssid=00:13:10:95:fe:0b\n"
         settings += wpa_settings(SystemPreferences.wifi["wlan1"]["name"], SystemPreferences.wifi["wlan1"]["password"])
@@ -86,9 +87,7 @@ class SystemWifi
           SystemConnectionSharing.start(interface) if SystemPreferences.wifi[interface]["sharing"]
         end
       when "wlan0"
-        settings += default_settings
-        settings += "\nchannel=#{SystemPreferences.wifi["channel"]}"
-        settings += "\nssid=#{SystemPreferences.wifi["wlan0"]["name"]}\ninterface=wlan0\n"
+        settings += "ssid=#{SystemPreferences.wifi["wlan0"]["name"]}\ninterface=wlan0\n"
         settings += wpa_settings(SystemPreferences.wifi["wlan0"]["name"], SystemPreferences.wifi["wlan0"]["password"])
         generate_config(settings)
         restart
@@ -96,10 +95,7 @@ class SystemWifi
         SystemDnsmasq.start("wlan0")
         SystemConnectionSharing.start("wlan0") if SystemPreferences.wifi["wlan0"]["sharing"]
       when "wlan1"
-        # we're still using the same interface only the settings change
-        settings += default_settings
-        settings += "\nchannel=#{SystemPreferences.wifi["channel"]}"
-        settings += "\nssid=#{SystemPreferences.wifi["wlan1"]["name"]}\ninterface=wlan0\n"
+        settings += "ssid=#{SystemPreferences.wifi["wlan1"]["name"]}\ninterface=wlan0\n"
         settings += wpa_settings(SystemPreferences.wifi["wlan1"]["name"], SystemPreferences.wifi["wlan1"]["password"])
         generate_config(settings)
         restart
@@ -113,14 +109,20 @@ class SystemWifi
     end
     
     private
+    def channel_settings(channel)
+      ht_capab = channel < 8 ? "[HT40+][SHORT-GI-40][DSSS_CCK-40]" : "[HT40-][SHORT-GI-40][DSSS_CCK-40]"
+      "channel=#{channel}
+ht_capab=#{ht_capab}\n"
+    end
+    
     def default_settings
       # whitespaces are important
       "ctrl_interface=/var/run/hostapd
 driver=nl80211
 hw_mode=g
 wme_enabled=1
-#{'ieee80211n=1' if supports_standard?('wlan0', 'n')}
-ht_capab=[HT40-][SHORT-GI-40][DSSS_CCK-40]"
+wmm_enabled=1
+ieee80211n=1\n"
     end
     
     def wpa_settings(ssid_name, password)
