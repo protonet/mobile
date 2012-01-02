@@ -75,7 +75,9 @@ protonet.user = {
         closeContextMenu();
       }.bind(this),
       "start private chat": function(link, closeContextMenu) {
-        protonet.trigger("rendezvous.start", +link.data("user-id"));
+        protonet
+          .trigger("rendezvous.start", +link.data("user-id"))
+          .trigger("modal_window.hide");
         closeContextMenu();
       }.bind(this)
     };
