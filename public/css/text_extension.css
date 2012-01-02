@@ -345,3 +345,7 @@ pre .dec { color: #606; }
   width: 24px !important;
   height: 24px !important;
 }
+
+.remote-channel .text-extension-results.Meep a {
+  cursor: default;
+}

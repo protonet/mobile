@@ -294,6 +294,7 @@ module ConnectionShared
   
   def real_user?(u)
     # TODO: This should be refactored to check the connection type instead of the user name
-    !(u['display_name'] || u['name']).match(/api_local_\d+/)
+    display_name = u.display_name rescue (u['name'] || "")
+    !display_name.match(/api_local_\d+/)
   end
 end

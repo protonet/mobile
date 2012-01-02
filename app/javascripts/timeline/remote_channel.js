@@ -21,6 +21,12 @@
             this.isOnline = false;
             this.updateState();
           }
+        }.bind(this))
+        
+        .on("channel.rendered channel.rendered_more", function(channelList, data, instance) {
+          if (instance === this) {
+            channelList.addClass("remote-channel");
+          }
         }.bind(this));
       
       $super();
