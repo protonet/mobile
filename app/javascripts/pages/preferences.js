@@ -29,8 +29,12 @@ $(function() {
     setTimeout(function() { $(this).find(".reload-link").click(); }.bind(this), (0.5).seconds());
   });
   
-  $page.find(".status-box.publish-to-web .reload-link").click();
+  function reloadPublishToWebStatus() {
+    $page.find(".status-box.publish-to-web .reload-link").click();
+  }
   
+  $page.delegate("output[data-tab]", "tab:updated", reloadPublishToWebStatus);
+  reloadPublishToWebStatus();
   
   // The quality of the following LOC is my ticket to hell.
   // Luckily Terry Tate isn't working for protonet (yet) http://www.youtube.com/watch?v=RzToNo7A-94

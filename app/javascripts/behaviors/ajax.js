@@ -212,6 +212,7 @@ $.behaviors({
       success: function(html) {
         $tabContainer.html(html).hide().fadeIn("fast");
         $tabContainer.css("padding-top", (originalPaddingTop + $scrollContainer.scrollTop()).px());
+        $tabContainer.trigger("tab:updated");
       }
     });
     event.preventDefault();
