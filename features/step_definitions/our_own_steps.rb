@@ -212,7 +212,7 @@ end
 
 Then /^I should see the profile image "([^\"]*)" in my profile details$/ do |image_name|
   src = {
-    "user_picture_r3.png" => "user_picture_r3.png", #default
+    "user_picture_r4.png" => "user_picture_r4.png", #default
     "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
   }[image_name]
 
@@ -223,7 +223,7 @@ end
 
 Then /^I should see the profile image "([^\"]*)" in the top right navi$/ do |image_name|
   src = {
-    "user_picture_r3.png" => "user_picture_r3.png", #default
+    "user_picture_r4.png" => "user_picture_r4.png", #default
     "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
   }[image_name]
 
