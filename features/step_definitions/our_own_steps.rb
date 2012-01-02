@@ -42,11 +42,11 @@ Given /^I am logged in as "([^\"]*)"(?: with password "([^\"]*)")?$/ do|username
     fill_in 'login_password', :with => password
     click_button('login')
   end
-  
+
   wait_until(10) do
     page.has_css?("#my-widget")
   end
-  
+
   within('#my-widget') do
     page.has_content?(username).should == true
   end
@@ -91,21 +91,21 @@ end
 
 Given /^I select the channel "([^\"]*)" in the channel list$/ do |linktext|
   selector = "a[data-tab='channels'] strong"
-  
+
   wait_until(10) do
     page.has_css?(selector)
   end
-  
+
   find(:css, selector, :text => "@#{linktext}", :visible => true).click
 end
 
 Given /^I select the global channel "([^\"]*)" in the channel overview$/ do |linktext|
   selector = "output[data-recommended-global-channels] ul a h4"
-  
+
   wait_until(10) do
     page.has_css?(selector)
   end
-  
+
   find(:css, selector, :text => "#{linktext}", :visible => true).click
 end
 
@@ -215,7 +215,7 @@ Then /^I should see the profile image "([^\"]*)" in my profile details$/ do |ima
     "user_picture_r3.png" => "user_picture_r3.png", #default
     "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
   }[image_name]
-  
+
   wait_until(20) do
     page.has_css?(".users-page .user-avatar[src*='#{src}']")
   end
@@ -226,7 +226,7 @@ Then /^I should see the profile image "([^\"]*)" in the top right navi$/ do |ima
     "user_picture_r3.png" => "user_picture_r3.png", #default
     "profile_pic.png"  => "c65d62eccba91b692bd9278e12a6e535"  #user-defined md5'ved
   }[image_name]
-  
+
   wait_until(20) do
     find(:css, "#my-widget img[src*='#{src}']")
   end
@@ -253,7 +253,7 @@ When /^I accept the invitation with the token "([^\"]*)"$/ do |token|
 end
 
 Then /^I should see all settings$/ do
-  all(:css, "a[data-tab='preferences']").size.should == 8
+  all(:css, "a[data-tab='preferences']").size.should == 9
 end
 
 Given /^I start a rendezvous chat with "([^\"]*)"$/ do |username|
