@@ -170,14 +170,14 @@ exports.list = function(params, reply) {
       if (stats.isDirectory()) {
         files[filelist[file]] = {
           created: stats.ctime,
-          type: 'folder'
+          type:    'folder'
         };
       } else {
         files[filelist[file]] = {
-          size: stats.size,
-          created: stats.ctime,
-          mime: lookup_mime(filelist[file]),
-          type: 'file'
+          size:  stats.size,
+          added: stats.ctime,
+          mime:  lookup_mime(filelist[file]),
+          type:  'file'
         };
       }
     }
@@ -248,6 +248,7 @@ exports.info = function(params, reply) {
 
     try {
       var file = path.join(ROOT_DIR, params.paths[i]);
+
       var stat = fs.statSync(file);
       var lstat = fs.lstatSync(file);
 
@@ -270,7 +271,11 @@ exports.info = function(params, reply) {
       while (isLink(real)) {
         real = path.join(path.dirname(real), fs.readlinkSync(real));
       }
-      info.uploader = path.relative(ROOT_DIR, real).split('/')[1];
+
+      var parts = path.relative(ROOT_DIR, real).split('/');
+      if (parts.length > 1) {
+        info.uploader = Number(parts[1]);
+      }
     } catch(ex) {
       info = { type: 'missing' };
     }
