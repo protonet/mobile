@@ -110,6 +110,8 @@ class SystemWifi
     
     private
     def channel_settings(channel)
+      # TODO consider adding this to the ht_capab [MAX-AMSDU-3839][TX-STBC][RX-STBC1]
+      # This might only work with AR9285 chipset
       ht_capab = channel < 8 ? "[HT40+][SHORT-GI-40][DSSS_CCK-40]" : "[HT40-][SHORT-GI-40][DSSS_CCK-40]"
       "channel=#{channel}
 ht_capab=#{ht_capab}\n"
@@ -120,9 +122,11 @@ ht_capab=#{ht_capab}\n"
       "ctrl_interface=/var/run/hostapd
 driver=nl80211
 hw_mode=g
+ieee80211n=1
+ieee80211d=1
+country_code=US
 wme_enabled=1
-wmm_enabled=1
-ieee80211n=1\n"
+wmm_enabled=1\n"
     end
     
     def wpa_settings(ssid_name, password)
@@ -134,8 +138,7 @@ ignore_broadcast_ssid=0
 wpa=2
 wpa_psk=#{SystemBackend.wpa_passphrase(ssid_name, password)}
 wpa_key_mgmt=WPA-PSK
-wpa_pairwise=TKIP
-rsn_pairwise=CCMP\n"
+wpa_pairwise=TKIP CCMP\n"
     end
     
     def generate_config(config)
