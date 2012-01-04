@@ -1,8 +1,8 @@
 var fs              = require('fs'),
     path            = require('path'),
     util            = require('util'),
-    Step            = require('./../modules/step'),
 
+    Step            = require('../modules/step'),
     lookup_mime     = require('../modules/node-mime').lookup,
 
     ROOT_DIR        = './../shared/files',

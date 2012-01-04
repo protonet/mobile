@@ -87,6 +87,10 @@ connection.addListener("ready", function() {
 
     require("./tasks/fs_worker")[message.method](message.params, callback);
   });
+
+  // Bind the HTTP filesystem task to RabbitMQ so that
+  // it can receive authorization responses from Ruby.
+  require("./tasks/fs_http").bind(connection);
 });
 
 /*----------------------------------- HTTP TASKS  ----------------------------------*/
@@ -98,7 +102,7 @@ http.createServer(function(request, response) {
 
   var parsedUrl = parseUrl(request.url, true),
       params    = parsedUrl.query,
-      task      = parsedUrl.pathname.replace(/\//g, ""),
+      task      = parsedUrl.pathname.replace(/^\/|\/$/g, ""),
       headers   = request.headers;
 
   switch(task) {
@@ -111,9 +115,19 @@ http.createServer(function(request, response) {
     case "snapshooter":
       require("./tasks/snapshot").save(request, response);
       break;
-    case "upload":
-      require("./tasks/upload").save(request, response, connection);
+    case "upload": // depreciated
+      console.log("HTTP call to depreciated path /upload");
+      require("./tasks/fs_http").upload(request, response, connection);
       break;
+
+    case "fs/upload":
+    case "fs/download":
+    case "fs/display":
+    case "fs/thumbnail":
+      var method = require("./tasks/fs_http")[task.split("/")[1]];
+      method(request, response);
+      break;
+
     default:
       response.writeHead(200, {'Content-Type': 'text/plain'});
       response.end('WTF?\n');
