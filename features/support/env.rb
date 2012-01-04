@@ -66,6 +66,9 @@ FileUtils.rm_rf(Rails.root + "/public/sprockets/*")
 
 SystemServices.start_all
 
+# only test local delivery
+SystemPreferences.local_email_delivery = true
+
 Capybara::Selenium::Driver
 class Capybara::Selenium::Driver
   def browser
