@@ -10,7 +10,7 @@ class SystemWifi
     
     # eg. SystemWifi.supports_standard?("wlan0", "n")
     def supports_standard?(interface, standard)
-      !!`/sbin/iwconfig #{interface}`.match(Regexp.new("\\s+IEEE\\s+802\\.11\\w*?#{standard}"))
+      !!`/sbin/iwconfig #{interface}`.match(/\s+IEEE\s+802\.11\w*?#{standard}/)
     end
     
     def start
@@ -109,12 +109,13 @@ class SystemWifi
     end
     
     private
+    
     def channel_settings(channel)
       # TODO consider adding this to the ht_capab [MAX-AMSDU-3839][TX-STBC][RX-STBC1]
       # This might only work with AR9285 chipset
-      ht_capab = channel < 8 ? "[HT40+][SHORT-GI-40][DSSS_CCK-40]" : "[HT40-][SHORT-GI-40][DSSS_CCK-40]"
-      "channel=#{channel}
-ht_capab=#{ht_capab}\n"
+      channel_width_set = channel < 8 ? "+" : "-"
+      ht_capab = "[HT40#{channel_width_set}][SHORT-GI-40][DSSS_CCK-40][MAX-AMSDU-3839][TX-STBC][RX-STBC1]"
+      "channel=#{channel}\nht_capab=#{ht_capab}\n"
     end
     
     def default_settings
@@ -122,7 +123,7 @@ ht_capab=#{ht_capab}\n"
       "ctrl_interface=/var/run/hostapd
 driver=nl80211
 hw_mode=g
-ieee80211n=1
+#{'ieee80211n=1' if supports_standard?('wlan0', 'n')}
 ieee80211d=1
 country_code=US
 wme_enabled=1
