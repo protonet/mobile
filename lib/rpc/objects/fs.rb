@@ -2,7 +2,7 @@ require 'lib/rpc/base'
 require 'lib/rpc/client'
 
 class Rpc::Objects::Fs < Rpc::Base
-  attr_invokable :list, :move, :copy, :delete, :info
+  attr_invokable :list, :move, :copy, :delete, :info, :check_auth
 
   def initialize
     @client = Rpc::Client.new 'node'
@@ -24,7 +24,7 @@ class Rpc::Objects::Fs < Rpc::Base
     check_perms [params['parent']], user
 
     @client.call :fs, :list, params do |resp|
-      handler.call resp['result']
+      handler.call resp['error'], resp['result']
     end
   end
 
@@ -33,7 +33,7 @@ class Rpc::Objects::Fs < Rpc::Base
     check_perms (params['from'] + [params['to']]), user
 
     @client.call :fs, :move, params do |resp|
-      handler.call resp['result']
+      handler.call resp['error'], resp['result']
     end
   end
 
@@ -42,7 +42,7 @@ class Rpc::Objects::Fs < Rpc::Base
     check_perms (params['from'] + [params['to']]), user
 
     @client.call :fs, :copy, params do |resp|
-      handler.call resp['result']
+      handler.call resp['error'], resp['result']
     end
   end
 
@@ -51,7 +51,7 @@ class Rpc::Objects::Fs < Rpc::Base
     check_perms params['paths'], user
 
     @client.call :fs, :delete, params do |resp|
-      handler.call resp['result']
+      handler.call resp['error'], resp['result']
     end
   end
 
@@ -60,7 +60,7 @@ class Rpc::Objects::Fs < Rpc::Base
     check_perms (params['path'] || params['parent']), user
 
     @client.call :fs, :mkdir, params do |resp|
-      handler.call resp['result']
+      handler.call resp['error'], resp['result']
     end
   end
 
@@ -69,7 +69,26 @@ class Rpc::Objects::Fs < Rpc::Base
     check_perms params['paths'], user
 
     @client.call :fs, :info, params do |resp|
-      handler.call resp['result']
+      handler.call resp['error'], resp['result']
+    end
+  end
+
+  # Checks a user_id and token to ensure that the combination is valid,
+  # as well as checking that the user can access the paths.
+  def check_auth params, user, &handler
+    if !user
+      # Find the acclaimed user
+      return handler.call nil, false unless user = User.find_by_id(params['user_id'])
+
+      # Verify the communication token
+      return handler.call nil, false unless user.communication_token_valid?(params['token'])
+    end
+
+    begin
+      check_perms params['paths'], user
+      handler.call nil, true
+    rescue Rpc::RpcError => ex
+      handler.call ex, false
     end
   end
 
@@ -128,7 +147,6 @@ class Rpc::Objects::Fs < Rpc::Base
           raise Rpc::RpcError, "Tried accessing unknown file namespace #{namespace}"
         end
       end
-
     end
 
     # Resolve a relative or parsed path to the filesystem.

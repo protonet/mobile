@@ -63,10 +63,6 @@ module Rpc
         # Takes additional params. Hand it the current user as well.
         handler.call params, user, &callback
       end
-
-      if result == nil
-        callback.call([nil, result])
-      end
     end
 
     protected
@@ -92,9 +88,7 @@ module Rpc
       end
 
       def reply json, response
-        response queue
         publish 'rpc', 'responses', json.merge(response)
       end
   end
 end
-
