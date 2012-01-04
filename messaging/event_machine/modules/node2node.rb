@@ -28,6 +28,7 @@ module Node2Node
   def update_remote_users(client_tracker, node_id, socket_key, json)
     users_to_remove, users_to_add = client_tracker.update_remote_users(node_id, json['online_users'], json['channel_users'])
     users_to_remove.each do |user_id|
+      next unless client_tracker.real_user?(user_id)
       json = {
         :id => user_id,
         :trigger    => 'user.goes_offline',
@@ -36,6 +37,7 @@ module Node2Node
       publish 'system', 'users', json
     end
     users_to_add.each do |user_id|
+      next unless client_tracker.real_user?(user_id)
       json = {
         :subscribed_channel_ids => client_tracker.global_channel_users.map {|channel_uuid, users| channel_uuid if users.include?(user_id)}.compact,
         :trigger    => 'user.came_online',

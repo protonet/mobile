@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
   has_attached_file :avatar, :default_url => configatron.default_avatar
   
   
-  scope :registered, :conditions => "temporary_identifier IS NULL AND users.id != -1"
+  scope :registered, :conditions => "temporary_identifier IS NULL AND users.id != -1 AND users.node_id = 1"
   scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"
   
   before_validation :download_remote_avatar, :if => :avatar_url_provided?

@@ -196,7 +196,8 @@ protonet.widgets.User = Class.create({
       user.element.addClass("online");
     } else {
       user.element.removeClass("online").removeClass("typing");
-      if (protonet.config.show_only_online_users) {
+      var isRemoteChannel = protonet.timeline.Channels.channels[protonet.timeline.Channels.selected] instanceof protonet.timeline.RemoteChannel;
+      if (protonet.config.show_only_online_users || isRemoteChannel) {
         delete this.usersData[userId];
         user.element.remove();
       }

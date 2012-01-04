@@ -58,7 +58,8 @@ class Channel < ActiveRecord::Base
     begin
       find(1)
     rescue ActiveRecord::RecordNotFound
-      channel = Channel.new(:name => 'home', :description => 'your homebase - your node :)', :owner_id => -1)
+      owner_id = User.admins.first.id rescue -1
+      channel = Channel.new(:name => 'home', :description => 'This node\'s main channel', :owner_id => owner_id)
       channel.id = 1
       channel.save
       channel.reload

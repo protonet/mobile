@@ -39,7 +39,7 @@ Feature: Invitations
     And I fill in "user_password_confirmation" with "friendly"
     And I press "sign up"
     Then I should see "friend" within "#my-widget"
-    And I should see "You have signed up successfull"
+    And I should see "You have signed up successfully"
     And I should see "Public" within "#channels"
     And I should not see "Notpublic" within "#channels"
     
