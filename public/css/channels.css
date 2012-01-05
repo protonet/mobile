@@ -157,6 +157,27 @@
   color: #ff7f31;
 }
 
+#channels .system {
+  background: #e3ebff;
+  background: -moz-linear-gradient(bottom, rgba(72, 123, 255, 0.25), rgba(72, 123, 255, 0));
+  background: -webkit-linear-gradient(bottom, rgba(72, 123, 255, 0.25), rgba(72, 123, 255, 0));
+  background: linear-gradient(bottom, rgba(72, 123, 255, 0.25), rgba(72, 123, 255, 0));
+  padding-left: 23px;
+}
+
+#channels .system:before {
+  left: 4px;
+  background: url(/img/spr_channel_status_r2.png) no-repeat;
+  background-position: 0 -32px;
+}
+
+#channels .system:focus,
+#channels .system:active {
+  background: -moz-linear-gradient(bottom, rgba(72, 123, 255, 0), rgba(72, 123, 255, 0.25));
+  background: -webkit-linear-gradient(bottom, rgba(72, 123, 255, 0), rgba(72, 123, 255, 0.25));
+  background: linear-gradient(bottom, rgba(72, 123, 255, 0), rgba(72, 123, 255, 0.25));
+}
+
 #channels .active {
   background: #fff;
   border-bottom: 1px solid #fff;
@@ -166,7 +187,8 @@
 }
 
 #channels .global:before,
-#channels .rendezvous:before {
+#channels .rendezvous:before,
+#channels .system:before {
   content: "";
   position: absolute;
   top: 50%;
@@ -177,7 +199,7 @@
 
 #channels .global:before {
   left: 6px;
-  background: url(/img/spr_channel_status.png) no-repeat;
+  background: url(/img/spr_channel_status_r2.png) no-repeat;
 }
 
 #channels .global.offline:before {
@@ -195,12 +217,6 @@
 
 #channels .rendezvous.typing:before {
   background-position: 0 -45px;
-}
-
-#channels .system {
-  background: -moz-linear-gradient(bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.3));
-  background: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.3));
-  background: linear-gradient(bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.3));
 }
 
 #timeline > .info-message {

@@ -25,10 +25,9 @@ class Channel < ActiveRecord::Base
   attr_accessor   :skip_autosubscribe
   attr_accessible :skip_autosubscribe, :name, :description, :owner, :owner_id, :node, :node_id, :display_name, :public, :global, :system
 
-  scope :public,   :conditions => {:public => true}
-
-  # TODO handle 1on1's correctly
-  scope :real,  :conditions => {:rendezvous => nil, :system => false}
+  scope :without_system, :conditions => {:system => false}
+  scope :public, :conditions => {:public => true}
+  scope :real,  :conditions => {:rendezvous => nil}
   scope :verified, :conditions => {:listens => {:verified => true}}
   scope :local, :conditions => {:node_id => 1}
   
@@ -71,8 +70,21 @@ class Channel < ActiveRecord::Base
   def self.system
     system_channel = find_by_system(true)
     unless system_channel
-      description = 'This is the node\'s system channel. The node itself will publish any system relevant notifications here. Only administrators can see this.'
-      system_channel = create(:name => 'System', :description => description, :owner => User.anonymous, :system => true, :public => false)
+      description = "This is the node's system channel. The node itself will publish any system relevant notifications here."
+      message     = "Hi,\n\nThis is your node speaking. I will publish any system relevant messages here (eg. Hard disk failures).\n" +
+                    "Only administrators of this node can see this channel.\n\nYours faithfully,\nprotonet node"
+      system_channel = Channel.create(
+        :name         => 'System',
+        :description  => description,
+        :owner        => User.system,
+        :system       => true,
+        :public       => false
+      )
+      Meep.create(
+        :message  => message,
+        :user     => User.system,
+        :channel  => system_channel
+      )
       User.admins.each { |admin| admin.subscribe(system_channel) }
     end
     system_channel

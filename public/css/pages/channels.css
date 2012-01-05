@@ -125,3 +125,11 @@
 .channels-page input[name=search_term] {
   width: 180px;
 }
+
+.add-channel-link {
+  display: block;
+  padding: 10px 10px 10px 30px;
+  text-decoration: none;
+  color: #487bff;
+  font-size: 14px;
+}

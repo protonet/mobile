@@ -141,7 +141,7 @@ class UsersController < ApplicationController
     render :json => {
       'change-password' => !current_user.valid_password?('admin'),
       'upload-avatar'   => current_user.avatar.file?,
-      'create-channel'  => current_user.channels.real.local.size > 1,
+      'create-channel'  => current_user.channels.real.local.without_system.size > 1,
       'invite-user'     => User.registered.size > 1,
       'write-meep'      => Meep.find_all_by_user_id(current_user.id).size > 0
     }

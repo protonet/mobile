@@ -48,6 +48,7 @@ class User < ActiveRecord::Base
       find(-1)
     rescue ActiveRecord::RecordNotFound
       user = new(:name => 'System', :login => 'system')
+      user.avatar = File.new("#{Rails.root}/public#{configatron.system_avatar}")
       user.id = -1
       user.save!(:validate => false)
       find(-1)
