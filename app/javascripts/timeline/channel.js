@@ -66,7 +66,7 @@
           // (eg. to watch a video) while new meep occurs
           protonet.utils.ensureScrollPosition(function() {
             var instance = this._renderMeep(meepData, this.channelList);
-            this._notifications();
+            this._notifications(meepData);
             this._replyNotifications(meepData, instance);
             protonet.trigger("channel.meep_receive", meepData, instance, this);
           }.bind(this)).when({
@@ -459,10 +459,14 @@
      *    - Play sound when page is not focused
      *    - Show badge in channel link when page is not focused
      */
-    _notifications: function() {
+    _notifications: function(meepData) {
       var isWindowFocused       = protonet.utils.isWindowFocused(),
           isAllowedToPlaySound  = protonet.user.Config.get("sound");
-
+      
+      if (meepData.user_id == protonet.config.user_id) {
+        return;
+      }
+      
       if (!isWindowFocused && this.isSelected) {
         protonet.utils.BrowserTitle.animate("+++ New messages");
       }
