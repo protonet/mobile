@@ -23,7 +23,7 @@ class Channel < ActiveRecord::Base
   after_create  :send_channel_notification,         :if => lambda {|c| !c.rendezvous? }
 
   attr_accessor   :skip_autosubscribe
-  attr_accessible :skip_autosubscribe, :name, :description, :owner, :owner_id, :node, :node_id, :display_name, :public, :global
+  attr_accessible :skip_autosubscribe, :name, :description, :owner, :owner_id, :node, :node_id, :display_name, :public, :global, :system
 
   scope :public,   :conditions => {:public => true}
 
@@ -58,8 +58,8 @@ class Channel < ActiveRecord::Base
     begin
       find(1)
     rescue ActiveRecord::RecordNotFound
-      owner_id = User.admins.first.id rescue -1
-      channel = Channel.new(:name => 'home', :description => 'This node\'s main channel', :owner_id => owner_id)
+      owner = User.admins.first || User.anonymous
+      channel = Channel.new(:name => 'home', :description => 'This node\'s main channel', :owner => owner)
       channel.id = 1
       channel.save
       channel.reload
@@ -72,7 +72,7 @@ class Channel < ActiveRecord::Base
     system_channel = find_by_system(true)
     unless system_channel
       description = 'This is the node\'s system channel. The node itself will publish any system relevant notifications here. Only administrators can see this.'
-      system_channel = create(:name => 'System', :description => description, :owner_id => User.anonymous.id, :system => true, :public => false)
+      system_channel = create(:name => 'System', :description => description, :owner => User.anonymous, :system => true, :public => false)
       User.admins.each { |admin| admin.subscribe(system_channel) }
     end
     system_channel
@@ -90,7 +90,7 @@ class Channel < ActiveRecord::Base
       :node_id          => channel.node_id,
       :global           => channel.global?,
       :rendezvous       => channel.rendezvous,
-      :system           => channel.system?
+      :system           => channel.system?,
       :name             => channel.name,
       :display_name     => channel.rendezvous_name(current_user) || channel.display_name,
       :last_read_meep   => (channel.last_read_meep rescue nil),

@@ -41,8 +41,9 @@
   -webkit-border-top-right-radius: 8px;
   background: #eee;
   background: rgba(0, 0, 0, 0.1);
-  background: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.1));
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.1)));
+  background: -moz-linear-gradient(bottom, rgba(0, 0, 0, 0.1), transparent);
+  background: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.1), transparent);
+  background: linear-gradient(bottom, rgba(0, 0, 0, 0.1), transparent);
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   border: 1px solid #999;
@@ -62,8 +63,9 @@
 
 #channels li a:focus,
 #channels li a:active {
-  background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.1), transparent);
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0.1)), to(transparent));
+  background: -moz-linear-gradient(bottom, transparent, rgba(0, 0, 0, 0.1));
+  background: -webkit-linear-gradient(bottom, transparent, rgba(0, 0, 0, 0.1));
+  background: linear-gradient(bottom, transparent, rgba(0, 0, 0, 0.1));
 }
 
 #channels .badge-container {
@@ -133,16 +135,18 @@
 
 #channels .rendezvous {
   background: #fff5ef;
-  background: -moz-linear-gradient(100% 100% 90deg, rgba(255, 127, 49, 0.1), transparent);
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(255, 127, 49, 0.1)));
+  background: -moz-linear-gradient(bottom, rgba(255, 127, 49, 0.1), transparent);
+  background: -webkit-linear-gradient(bottom, rgba(255, 127, 49, 0.1), transparent);
+  background: linear-gradient(bottom, rgba(255, 127, 49, 0.1), transparent);
   padding-right: 23px;
   padding-left: 22px;
 }
 
 #channels .rendezvous:focus,
 #channels .rendezvous:active {
-  background: -moz-linear-gradient(100% 100% 90deg, transparent, rgba(255, 127, 49, 0.1));
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 127, 49, 0.1)), to(transparent));
+  background: -moz-linear-gradient(bottom, transparent, rgba(255, 127, 49, 0.1));
+  background: -webkit-linear-gradient(bottom, transparent, rgba(255, 127, 49, 0.1));
+  background: linear-gradient(bottom, transparent, rgba(255, 127, 49, 0.1));
 }
 
 #channels .rendezvous:hover {
@@ -191,6 +195,12 @@
 
 #channels .rendezvous.typing:before {
   background-position: 0 -45px;
+}
+
+#channels .system {
+  background: -moz-linear-gradient(bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.3));
+  background: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.3));
+  background: linear-gradient(bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.3));
 }
 
 #timeline > .info-message {
