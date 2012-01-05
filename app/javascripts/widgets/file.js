@@ -131,7 +131,7 @@ protonet.widgets.File = Class.create({
          * Success response comes as event notification
          */
         $.ajax({
-          url:        "system/files/delete",
+          url:        "/system/files/delete",
           type:       "post",
           data:       {
             file_path:  li.data("file-path"),
