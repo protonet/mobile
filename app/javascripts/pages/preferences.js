@@ -26,7 +26,7 @@ $(function() {
   });
   
   $page.delegate("form.wifi, form.publish-to-web", "ajax:complete", function() {
-    setTimeout(function() { $(this).find(".reload-link").click(); }.bind(this), (2).seconds());
+    setTimeout(function() { $(this).find(".reload-link").click(); }.bind(this), (1).seconds());
   });
   
   function reloadPublishToWebStatus() {

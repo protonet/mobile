@@ -28,7 +28,7 @@ class Channel < ActiveRecord::Base
   scope :public,   :conditions => {:public => true}
 
   # TODO handle 1on1's correctly
-  scope :real,  :conditions => {:rendezvous => nil}
+  scope :real,  :conditions => {:rendezvous => nil, :system => false}
   scope :verified, :conditions => {:listens => {:verified => true}}
   scope :local, :conditions => {:node_id => 1}
   
@@ -66,6 +66,16 @@ class Channel < ActiveRecord::Base
       channel.create_folder
       channel
     end
+  end
+  
+  def self.system
+    system_channel = find_by_system(true)
+    unless system_channel
+      description = 'This is the node\'s system channel. The node itself will publish any system relevant notifications here. Only administrators can see this.'
+      system_channel = create(:name => 'System', :description => description, :owner_id => User.anonymous.id, :system => true, :public => false)
+      User.admins.each { |admin| admin.subscribe(system_channel) }
+    end
+    system_channel
   end
 
   def self.names

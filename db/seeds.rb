@@ -11,6 +11,7 @@ Node.local
 end
 User.anonymous
 Channel.home
+Channel.system
 admin = User.create(:login => 'admin', :email => 'admin@protonet.local', :password => 'admin')
 admin.roles << Role.find_or_create_by_title('admin')
 if Rails.env.production?

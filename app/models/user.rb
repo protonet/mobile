@@ -39,11 +39,15 @@ class User < ActiveRecord::Base
     find_by_id(id_or_login) || find_by_login(id_or_login)
   end
   
+  def self.system
+    self.anonymous
+  end
+  
   def self.anonymous
     begin
       find(-1)
     rescue ActiveRecord::RecordNotFound
-      user = new(:name => 'Anonymous', :login => 'Anonymous')
+      user = new(:name => 'System', :login => 'system')
       user.id = -1
       user.save!(:validate => false)
       find(-1)
