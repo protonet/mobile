@@ -8,5 +8,6 @@ class AddSystemToChannels < ActiveRecord::Migration
   def self.down
     remove_column :channels, :system
     User.anonymous.update_attributes({ :login => "Anonymous", :name => "Anonymous" })
+    Channel.system.destroy
   end
 end

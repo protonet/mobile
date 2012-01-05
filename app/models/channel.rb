@@ -84,18 +84,22 @@ class Channel < ActiveRecord::Base
   
   def self.prepare_for_frontend(channel, current_user)
     meeps = channel.meeps.includes(:user).recent.all(:limit => 25)
-    {
+    obj = {
       :id               => channel.id,
       :uuid             => channel.uuid,
       :node_id          => channel.node_id,
       :global           => channel.global?,
       :rendezvous       => channel.rendezvous,
+      :system           => channel.system?
       :name             => channel.name,
       :display_name     => channel.rendezvous_name(current_user) || channel.display_name,
       :last_read_meep   => (channel.last_read_meep rescue nil),
       :listen_id        => (channel.listen_id rescue nil),
       :meeps            => Meep.prepare_for_frontend(meeps, { :channel_id => channel.id })
     }
+    
+    # delete falsy values to save some bytes
+    obj.delete_if { |key,value| !value }
   end
   
   # TODO:

@@ -6,6 +6,7 @@
 //= require "channel.js"
 //= require "rendezvous.js"
 //= require "remote_channel.js"
+//= require "system_channel.js"
 
 /**
  * @events
@@ -347,6 +348,8 @@ protonet.timeline.Channels = {
       this.rendezvous[channelData.rendezvous] = instance;
     } else if (channelData.global) {
       instance = new protonet.timeline.RemoteChannel(channelData);
+    } else if (channelData.system) {
+      instance = new protonet.timeline.SystemChannel(channelData);
     } else {
       instance = new protonet.timeline.Channel(channelData);
     }

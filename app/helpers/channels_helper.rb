@@ -12,4 +12,11 @@ module ChannelsHelper
       "official-channel"
     end
   end
+  
+  def channel_tab_classes(channel)
+    classes = []
+    classes << 'global' if channel.global?
+    classes << 'system' if channel.system?
+    classes.join(" ")
+  end
 end

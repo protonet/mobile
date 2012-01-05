@@ -201,24 +201,17 @@ class User < ActiveRecord::Base
   def add_to_role(role_name)
     role = Role.find_by_title!(role_name.to_s)
     self.roles << role unless roles.include?(role)
+    unsubscribe(Channel.system) if role_name == 'admin'
   end
   
   def remove_from_role(role_name)
     role = Role.find_by_title!(role_name.to_s)
     self.roles -= [role]
+    unsubscribe(Channel.system) if role_name == 'admin'
   end
   
   def admin?
     role_symbols.include?(:admin)
-  end
-  
-  def make_admin(key)
-    return :admin_already_set if SystemPreferences.admin_set == true
-    if key == SystemPreferences.admin_key
-      (add_to_role(:admin) && SystemPreferences.admin_set = true) ? :ok : :error
-    else
-      :key_error
-    end
   end
   
   def can_edit?(user)
@@ -226,7 +219,7 @@ class User < ActiveRecord::Base
   end
   
   def can_be_edited_by?(user)
-    self.id != 0 && self.type != "FacebookUser" && self.type != "TwitterUser" &&!user.stranger? && (user.admin? || user.id == self.id)
+    self.id != 0 && self.type != "FacebookUser" && self.type != "TwitterUser" && !user.stranger? && (user.admin? || user.id == self.id)
   end
   
   def invitee?

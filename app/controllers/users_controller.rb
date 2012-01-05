@@ -60,10 +60,10 @@ class UsersController < ApplicationController
     if current_user.admin? && current_user.valid_password?(params[:admin_password])
       user = User.find(params[:user_id])
       if params[:admin] == 'true'
-        user.add_to_role(:admin)
+        user.add_to_role('admin')
         flash[:notice] = "Successfully made '#{user.login}' an admin!"
       else
-        user.remove_from_role(:admin)
+        user.remove_from_role('admin')
         flash[:notice] = "Successfully removed '#{user.login}' from the list of admins!"
       end
       
