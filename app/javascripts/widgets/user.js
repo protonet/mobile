@@ -196,8 +196,7 @@ protonet.widgets.User = Class.create({
       user.element.addClass("online");
     } else {
       user.element.removeClass("online").removeClass("typing");
-      var isRemoteChannel = protonet.timeline.Channels.channels[protonet.timeline.Channels.selected] instanceof protonet.timeline.RemoteChannel;
-      if (protonet.config.show_only_online_users || isRemoteChannel) {
+      if (protonet.config.show_only_online_users) {
         delete this.usersData[userId];
         user.element.remove();
       }
@@ -284,7 +283,8 @@ protonet.widgets.User = Class.create({
   filterChannelUsers: function(channelId) {
     channelId = channelId || protonet.timeline.Channels.selected;
     
-    var channelSubscriptions = this.channelSubscriptions[channelId];
+    var channelSubscriptions = this.channelSubscriptions[channelId],
+        isRemoteChannel = protonet.timeline.Channels.channels[channelId] instanceof protonet.timeline.RemoteChannel;
     if (!channelSubscriptions) {
       return;
     }
@@ -292,7 +292,14 @@ protonet.widgets.User = Class.create({
     this.list.children().hide();
     $.each(channelSubscriptions, function(i, userId) {
       var user = this.usersData[userId];
-      user && user.element.show();
+      if (!user) {
+        return;
+      }
+      if (isRemoteChannel) {
+        user.isOnline && user.element.show();
+      } else {
+        user.element.show();
+      }
     }.bind(this));
     
     this.updateCount();
