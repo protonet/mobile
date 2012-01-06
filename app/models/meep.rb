@@ -22,6 +22,7 @@ class Meep < ActiveRecord::Base
   attr_accessor :socket_id
   
   before_create :set_avatar
+  before_create :set_author
   after_create :send_to_queue
   
   def self.prepare_for_frontend(meeps, additional_attributes = {})
@@ -110,8 +111,14 @@ class Meep < ActiveRecord::Base
   end
   
   def set_avatar
-    if self.avatar.blank? 
+    if self.avatar.blank?
       self.avatar = (user.avatar.url || configatron.default_avatar rescue configatron.default_avatar)
+    end
+  end
+  
+  def set_author
+    if self.author.blank? 
+      self.author = user.display_name
     end
   end
   

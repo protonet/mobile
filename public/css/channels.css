@@ -41,8 +41,9 @@
   -webkit-border-top-right-radius: 8px;
   background: #eee;
   background: rgba(0, 0, 0, 0.1);
-  background: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.1));
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(0, 0, 0, 0.1)));
+  background: -moz-linear-gradient(bottom, rgba(0, 0, 0, 0.1), transparent);
+  background: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.1), transparent);
+  background: linear-gradient(bottom, rgba(0, 0, 0, 0.1), transparent);
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   border: 1px solid #999;
@@ -62,8 +63,9 @@
 
 #channels li a:focus,
 #channels li a:active {
-  background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.1), transparent);
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0.1)), to(transparent));
+  background: -moz-linear-gradient(bottom, transparent, rgba(0, 0, 0, 0.1));
+  background: -webkit-linear-gradient(bottom, transparent, rgba(0, 0, 0, 0.1));
+  background: linear-gradient(bottom, transparent, rgba(0, 0, 0, 0.1));
 }
 
 #channels .badge-container {
@@ -133,16 +135,18 @@
 
 #channels .rendezvous {
   background: #fff5ef;
-  background: -moz-linear-gradient(100% 100% 90deg, rgba(255, 127, 49, 0.1), transparent);
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(transparent), to(rgba(255, 127, 49, 0.1)));
+  background: -moz-linear-gradient(bottom, rgba(255, 127, 49, 0.1), transparent);
+  background: -webkit-linear-gradient(bottom, rgba(255, 127, 49, 0.1), transparent);
+  background: linear-gradient(bottom, rgba(255, 127, 49, 0.1), transparent);
   padding-right: 23px;
   padding-left: 22px;
 }
 
 #channels .rendezvous:focus,
 #channels .rendezvous:active {
-  background: -moz-linear-gradient(100% 100% 90deg, transparent, rgba(255, 127, 49, 0.1));
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 127, 49, 0.1)), to(transparent));
+  background: -moz-linear-gradient(bottom, transparent, rgba(255, 127, 49, 0.1));
+  background: -webkit-linear-gradient(bottom, transparent, rgba(255, 127, 49, 0.1));
+  background: linear-gradient(bottom, transparent, rgba(255, 127, 49, 0.1));
 }
 
 #channels .rendezvous:hover {
@@ -151,6 +155,27 @@
 
 #channels .rendezvous.active {
   color: #ff7f31;
+}
+
+#channels .system {
+  background: #e3ebff;
+  background: -moz-linear-gradient(bottom, rgba(72, 123, 255, 0.25), rgba(72, 123, 255, 0));
+  background: -webkit-linear-gradient(bottom, rgba(72, 123, 255, 0.25), rgba(72, 123, 255, 0));
+  background: linear-gradient(bottom, rgba(72, 123, 255, 0.25), rgba(72, 123, 255, 0));
+  padding-left: 23px;
+}
+
+#channels .system:before {
+  left: 4px;
+  background: url(/img/spr_channel_status_r2.png) no-repeat;
+  background-position: 0 -32px;
+}
+
+#channels .system:focus,
+#channels .system:active {
+  background: -moz-linear-gradient(bottom, rgba(72, 123, 255, 0), rgba(72, 123, 255, 0.25));
+  background: -webkit-linear-gradient(bottom, rgba(72, 123, 255, 0), rgba(72, 123, 255, 0.25));
+  background: linear-gradient(bottom, rgba(72, 123, 255, 0), rgba(72, 123, 255, 0.25));
 }
 
 #channels .active {
@@ -162,7 +187,8 @@
 }
 
 #channels .global:before,
-#channels .rendezvous:before {
+#channels .rendezvous:before,
+#channels .system:before {
   content: "";
   position: absolute;
   top: 50%;
@@ -173,7 +199,7 @@
 
 #channels .global:before {
   left: 6px;
-  background: url(/img/spr_channel_status.png) no-repeat;
+  background: url(/img/spr_channel_status_r2.png) no-repeat;
 }
 
 #channels .global.offline:before {

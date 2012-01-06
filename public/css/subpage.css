@@ -97,7 +97,7 @@
   border-bottom: 28px solid transparent;
 }
 
-.subpage aside a {
+.subpage aside li a {
   display: block;
   padding: 20px 10px 20px 30px;
   text-decoration: none;
@@ -108,14 +108,14 @@
   outline: 0;
 }
 
-.subpage aside a:hover,
-.subpage aside a:focus {
+.subpage aside li a:hover,
+.subpage aside li a:focus {
   color: #000;
   background: -moz-linear-gradient(top, #eee, #ccc);
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eee), to(#ccc));
 }
 
-.subpage aside a:active {
+.subpage aside li a:active {
   background: -moz-linear-gradient(top, rgba(0, 0, 0, 0.1), transparent);
   background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0.1)), to(transparent));
 }
