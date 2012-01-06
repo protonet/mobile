@@ -49,6 +49,7 @@ exports.make_and_send = function(url, response) {
       fileName      = process.cwd() + "/" + directory + "/" + baseName + "-clipped.png",
       // DANGER TODO FIXME -> escape url or sanitize it
       sanitizedUrl  = url.replace('"', '');
+      sanitizedUrl  = sanitizedUrl.replace("'", '');
 
 
   function screenshotCommand(sanitizedUrl, fileName, baseName, directory) {
