@@ -27,54 +27,6 @@ ActiveRecord::Schema.define(:version => 20120106094821) do
     t.boolean  "system",       :default => false
   end
 
-  create_table "cowork_ticket_logs", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "ticket_id"
-    t.string   "ip"
-    t.string   "mac"
-    t.string   "device_name"
-    t.string   "usage"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "cowork_tickets", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "creator_id"
-    t.boolean  "in_use",      :default => false
-    t.date     "in_use_date"
-    t.boolean  "is_valid",    :default => true
-    t.datetime "used_on"
-    t.date     "expire_date"
-    t.string   "type"
-    t.boolean  "is_halfday"
-    t.datetime "start_time"
-    t.integer  "day_count"
-    t.integer  "days_left"
-    t.date     "first_date"
-    t.date     "last_date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "cowork_versacommerce_webhook", :force => true do |t|
-    t.text     "body"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "from"
-    t.string   "to"
-    t.string   "subject"
-    t.string   "status",                                          :default => "Nicht versendet"
-    t.decimal  "total",            :precision => 10, :scale => 2
-    t.string   "payment_method"
-    t.string   "delivery_service"
-    t.string   "customer_name"
-    t.string   "customer_email"
-    t.string   "delivery_cost"
-    t.text     "export_items"
-    t.string   "order_code"
-  end
-
   create_table "images_avatars", :force => true do |t|
     t.string   "name"
     t.integer  "user_id"
