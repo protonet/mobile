@@ -12,6 +12,10 @@ header {
   height: 44px;
 }
 
+.touch-device header {
+  position: absolute;
+}
+
 header nav {
   font-size: 0;
 }

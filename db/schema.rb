@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120104160755) do
+ActiveRecord::Schema.define(:version => 20120106094821) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -25,6 +25,67 @@ ActiveRecord::Schema.define(:version => 20120104160755) do
     t.boolean  "global",       :default => false
     t.string   "rendezvous"
     t.boolean  "system",       :default => false
+  end
+
+  create_table "cowork_ticket_logs", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "ticket_id"
+    t.string   "ip"
+    t.string   "mac"
+    t.string   "device_name"
+    t.string   "usage"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "cowork_tickets", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "creator_id"
+    t.boolean  "in_use",      :default => false
+    t.date     "in_use_date"
+    t.boolean  "is_valid",    :default => true
+    t.datetime "used_on"
+    t.date     "expire_date"
+    t.string   "type"
+    t.boolean  "is_halfday"
+    t.datetime "start_time"
+    t.integer  "day_count"
+    t.integer  "days_left"
+    t.date     "first_date"
+    t.date     "last_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "cowork_versacommerce_webhook", :force => true do |t|
+    t.text     "body"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "from"
+    t.string   "to"
+    t.string   "subject"
+    t.string   "status",                                          :default => "Nicht versendet"
+    t.decimal  "total",            :precision => 10, :scale => 2
+    t.string   "payment_method"
+    t.string   "delivery_service"
+    t.string   "customer_name"
+    t.string   "customer_email"
+    t.string   "delivery_cost"
+    t.text     "export_items"
+    t.string   "order_code"
+  end
+
+  create_table "images_avatars", :force => true do |t|
+    t.string   "name"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "images_externals", :force => true do |t|
+    t.text     "image_url"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "invitations", :force => true do |t|
@@ -109,6 +170,13 @@ ActiveRecord::Schema.define(:version => 20120104160755) do
 
   add_index "roles_users", ["role_id", "user_id"], :name => "index_roles_users_on_role_id_and_user_id", :unique => true
 
+  create_table "says", :force => true do |t|
+    t.integer  "channel_id"
+    t.integer  "tweet_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "sunspot_index_queue_entries", :force => true do |t|
     t.string   "record_class_name",                                    :null => false
     t.string   "record_id",                                            :null => false
@@ -133,6 +201,17 @@ ActiveRecord::Schema.define(:version => 20120104160755) do
   end
 
   add_index "system_preferences", ["object_type", "object_id", "var"], :name => "index_system_preferences_on_object_type_and_object_id_and_var", :unique => true
+
+  create_table "tweets", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "author"
+    t.text     "message"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "text_extension"
+    t.integer  "network_id",     :default => 1
+    t.integer  "reply_from"
+  end
 
   create_table "users", :force => true do |t|
     t.string   "login",                          :limit => 40
