@@ -29,7 +29,7 @@ Feature: Invitations
 
   @javascript
   Scenario: Invitee accepts invitation
-    Given an invitation exists with token: "1234567890", email: "friend@protonet.com", channel_ids: "3", user: user "dudemeister"
+    Given I invite "friend@protonet.com" to channel "Public" with token "1234567890" as "dudemeister"
     And I go unauthenticated to the start page
     When I accept the invitation with the token "1234567890"
     Then I should see "Get started by signing up"
@@ -45,9 +45,10 @@ Feature: Invitations
     
   @javascript
   Scenario: Invitee tries to accept an invitation that has already been accepted
-    Given an invitation exists with token: "1122334455", email: "friend@protonet.com", channel_ids: "1", user: user "dudemeister", accepted_at: "2011-01-15 10:00:00"
+    Given I invite "friend@protonet.com" to channel "Home" with token "1122334455" as "dudemeister"
+    And somebody accepts the invitation with token "1122334455"
     And I go unauthenticated to the start page
-    When I accept the invitation with the token "1122334455"
+    And I accept the invitation with the token "1122334455"
     Then I should be on the new_user_session page
     And I should see "The invitation token is invalid"
     

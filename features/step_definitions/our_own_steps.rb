@@ -327,13 +327,13 @@ end
 
 # channels-controller-link
 
-Given /^I click on "([^"]*)" in the main navigation$/ do |link_name|
+Given /^I click on "([^\"]*)" in the main navigation$/ do |link_name|
   first, second = link_name.split(":")
   find(:css, ".#{first}-controller-link").click
   find(:css, ".#{first}-controller-link .sub-nav-link a", :text => second.humanize).click if second
 end
 
-Then /^I should see "([^"]*)" in the channel subscriber list$/ do |username|
+Then /^I should see "([^\"]*)" in the channel subscriber list$/ do |username|
   find(:css, ".subscribers-list", :text => username)
 end
 
@@ -341,11 +341,11 @@ Then /^I close the lightbox$/ do
   find(:css, ".close-link").click
 end
 
-Then /^the channel "([^"]*)" should be remotely connected$/ do |arg1|
+Then /^the channel "([^\"]*)" should be remotely connected$/ do |arg1|
   find(:css, ".global").native["class"] == "global" # and not offline
 end
 
-Then /^I subscribe the user "([^"]*)"$/ do |user_identifier|
+Then /^I subscribe the user "([^\"]*)"$/ do |user_identifier|
   within(".subscribe-user") do
     fill_in 'search_term',    :with => user_identifier
     sleep 0.2
@@ -355,4 +355,17 @@ end
 
 Then /^I should see the invitation page$/ do
   find(:css, "h2", :text => "Invite people")
+end
+
+Then /^I invite "([^\"]*)" to channel "([^\"]*)" with token "([^\"]*)" as "([^\"]*)"/ do |email, channel_name, token, user_name|
+  Invitation.create(
+    :token => token,
+    :email => email,
+    :channel_ids => Channel.find_by_name(channel_name).id,
+    :user => User.find_by_login(user_name)
+  )
+end
+
+Then /^somebody accepts the invitation with token "([^\"]*)"/ do |token|
+  Invitation.find_by_token(token).update_attribute("accepted_at", "2011-01-15 10:00:00")
 end

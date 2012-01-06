@@ -7,6 +7,10 @@ Feature: Getting Started
     And I should see the registration form
     Given I am logged in as "admin" with password "admin"
     Then "admin" should be an admin
+    Then I should see "System" in the channel selector
+    Then I switch to the channel "System"
+    Then I should see "This is your node speaking" in the timeline
+    Then I switch to the channel "Home"
     And I should see the getting started box containing 5 steps
     
     # step 1: change password

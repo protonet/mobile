@@ -11,9 +11,9 @@ Node.local
 end
 User.anonymous
 Channel.home
-Channel.system
 admin = User.create(:login => 'admin', :email => 'admin@protonet.local', :password => 'admin')
 admin.roles << Role.find_or_create_by_title('admin')
+Channel.system
 if Rails.env.production?
   begin
     support_channel_uuid = "b0138cc6-ffbb-11e0-92ce-0024215f2168"
