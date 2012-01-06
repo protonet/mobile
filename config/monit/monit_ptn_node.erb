@@ -60,7 +60,7 @@ check process solr with pidfile <%= shared_path %>/pids/sunspot-solr.pid
 # Watch for dropped RAID disks hourly
 # Return status is flipped (1 is good) so that the output can be used at some point
 check program raid with path "<%= current_path %>/script/monit_raid_check"
-  if status == 0 then exec "/bin/bash -l -c 'cd <%= current_path %> && bundle exec rake report:raid_fail'"
+  if status == 0 then exec "/bin/bash -l -c 'cd <%= current_path %> && RAILS_ENV=production bundle exec rake report:raid_fail'"
   every 120 cycles
 
 <% if false && jabber_bridge_active %>
