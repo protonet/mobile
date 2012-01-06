@@ -48,9 +48,7 @@ exports.make_and_send = function(url, response) {
       directory     = "public/externals/screenshots",
       fileName      = process.cwd() + "/" + directory + "/" + baseName + "-clipped.png",
       // DANGER TODO FIXME -> escape url or sanitize it
-      sanitizedUrl  = url.replace('"', '');
-      sanitizedUrl  = sanitizedUrl.replace("'", '');
-
+      sanitizedUrl  = url.replace(/["']/g, '');
 
   function screenshotCommand(sanitizedUrl, fileName, baseName, directory) {
     if(systemType == 'linux') {
