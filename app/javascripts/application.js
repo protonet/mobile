@@ -48,6 +48,10 @@ $(function() {
         amount:           25,
         animated:         false
       });
-    }, (0.1).seconds());
+    }, (0.5).seconds());
+  }
+  
+  if (protonet.user.Browser.IS_TOUCH_DEVICE()) {
+    $("body").addClass("touch-device");
   }
 });

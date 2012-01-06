@@ -25,7 +25,9 @@ protonet.open = (function() {
   ].join(",");
 
   var prototype = Element.prototype || {};
-
+  
+  var isTouchDevice = protonet.user.Browser.IS_TOUCH_DEVICE();
+  
   var matchesSelector = prototype.matchesSelector
     || prototype.webkitMatchesSelector
     || prototype.mozMatchesSelector
@@ -52,7 +54,7 @@ protonet.open = (function() {
         })(),
         url     = link.href;
     
-    if (!protonet.config.allow_modal_views) {
+    if (!protonet.config.allow_modal_views || isTouchDevice) {
       return fallback(eventOrUrl);
     }
 
