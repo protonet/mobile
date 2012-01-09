@@ -12,7 +12,8 @@ send_log "[exec date] starting ptn_deployer_update\n"
 set timeout -1
 
 # This spawns the babushka protonet migration
-spawn babushka "protonet:app deployer update"
+spawn bash -l -c "babushka \"protonet:app deployer update\""
+
 set license [lindex $argv 0]
 # The script expects Password any number of times and answers with the correct password
 expect {

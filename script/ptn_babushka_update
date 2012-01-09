@@ -13,7 +13,8 @@ set timeout -1
 set license [lindex $argv 0]
 
 # This spawns the babushka protonet migration
-spawn babushka "dudemeister:protonet babushka update"
+spawn bash -l -c "babushka \"dudemeister:protonet babushka update\""
+
 
 # The script expects Password any number of times and answers with the correct password
 expect {
