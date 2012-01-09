@@ -1,10 +1,12 @@
 #!/usr/bin/expect
 
-log_file -noappend /tmp/ptn_update_migrations.log
+log_file /tmp/ptn_release_update.log
 proc do_exit {msg} {
     puts stderr $msg
     exit 1
 }
+
+send_log "[exec date] starting ptn_babushka_migrations\n"
 
 # never time out
 set timeout -1
