@@ -8,7 +8,7 @@ class Rpc::Objects::Fs < Rpc::Base
     @client = Rpc::Client.new 'node'
   end
 
-  # List the files in a folder. To non-admins, certain paths (such as '/channels')
+  # List the files in a folder. To non-admins, certain paths (such as '/channels')
   # return results that are not actually based on the actual underlying filesystem.
   def list params, user, &handler
     if user && !user.admin? && params['parent'] == 'channels'
@@ -28,7 +28,7 @@ class Rpc::Objects::Fs < Rpc::Base
     end
   end
 
-  # Move files (doesn't always correspond to raw disk-level moving)
+  # Move files (doesn't always correspond to raw disk-level moving)
   def move params, user, &handler
     check_perms (params['from'] + [params['to']]), user
 
@@ -73,8 +73,8 @@ class Rpc::Objects::Fs < Rpc::Base
     end
   end
 
-  # Checks a user_id and token to ensure that the combination is valid,
-  # as well as checking that the user can access the paths.
+  # Checks a user_id and token to ensure that the combination is valid,
+  # as well as checking that the user can access the paths.
   def check_auth params, user, &handler
     if !user
       # Find the acclaimed user
@@ -93,7 +93,7 @@ class Rpc::Objects::Fs < Rpc::Base
   end
 
   protected
-    # Parse a string path into (at most 3) string components.
+    # Parse a string path into (at most 3) string components.
     def parse_path path
       # Might be a little overkill but it really works :)
       # Just don't use .. in the client to go up a folder.
@@ -107,9 +107,9 @@ class Rpc::Objects::Fs < Rpc::Base
       paths.map {|path| parse_path path }
     end
 
-    # Check that the user can access everything in an array of paths.
+    # Check that the user can access everything in an array of paths.
     #
-    # Access basically means the user can act on the file in any way, but
+    # Access basically means the user can act on the file in any way, but
     # each command should do some sanity checks.
     #
     # The only access states are forbidden and full access. In the case of a
@@ -118,33 +118,33 @@ class Rpc::Objects::Fs < Rpc::Base
     # the permissions check.
     def check_perms paths, user
       if user
-        # All hail the admins
+        # All hail the admins
         return true if user.admin?
       else
-        # TODO: check the share key, if there is one, and if each file is shared
+        # TODO: check the share key, if there is one, and if each file is shared
         raise Rpc::AuthError, 'Not authed'
       end
 
-      # Accept strings as well
+      # Accept strings as well
       paths = parse_paths(paths) if paths.first.is_a? String
 
       # Cache the user's channels
       channels = user.channels.verified.map(&:id)
 
       paths.each do |(namespace, id, path)|
-        # Non-admins can't escape outside of any object (except for commands that
+        # Non-admins can't escape outside of any object (except for commands that
         # hardcode bypasses, such as file.list('channels') to list all channels)
         # Each command needs to make sure that they still don't do unwanted actions,
         # like a guest deleting the entire namespace or something like that.
         raise Rpc::RpcError, 'Tried escaping from the file tree' unless path
 
-        # Whitelist of namespaces and what specifies access.
+        # Whitelist of namespaces and what specifies access.
         if namespace == 'users'
           raise Rpc::RpcError, "Tried accessing a different user's files" unless id.to_i == user.id
         elsif namespace == 'channels'
           raise Rpc::RpcError, "Not subscribed to channel #{id.to_i}" unless channels.include? id.to_i
         else
-          raise Rpc::RpcError, "Tried accessing unknown file namespace #{namespace}"
+          raise Rpc::RpcError, "Tried accessing unknown file namespace #{namespace}"
         end
       end
     end

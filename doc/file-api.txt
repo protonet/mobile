@@ -1,5 +1,5 @@
 HTTP: (Only upload is implemented)
-  /fs/upload: POST (currently as /upload)
+  /fs/upload: POST (currently as /upload)
     - files
     - parent: 'users/1'
   /fs/download
@@ -14,7 +14,7 @@ HTTP: (Only upload is implemented)
     - share_key: optional
 
 Socket RPC methods: (Implemented)
-  fs.list(parent: 'users/5/folder') - type, added[, size, mime]
+  fs.list(parent: 'users/5/folder') - type, added, owner[, size, mime]
     .list(parent: 'channels')       - list only current user's channels
 
     .move(from: ['channels/2/asdf.txt',
@@ -29,7 +29,7 @@ Socket RPC methods: (Implemented)
 
       user    -> channel: Make a symlink
       channel -> channel: Copy the symlink
-      channel -> user:    Copy the actual file
+      channel -> user:    Copy the actual file
       user    -> user:    Copy the actual file
 
     .delete(paths: ['channels/1/file',

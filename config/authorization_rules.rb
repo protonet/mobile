@@ -6,6 +6,7 @@ authorization do
   role :invitee do
     has_permission_on :users, :to => [:read, :rendezvous, :update_last_read_meeps, :newbie]
     has_permission_on :channels, :to => [:read]
+    has_permission_on :files, :to => [:read]
     has_permission_on :users do 
       to [:manage, :change_password]
       if_attribute :id => is {user.id}
@@ -13,6 +14,7 @@ authorization do
   end
   
   role :user do
+    has_permission_on :files, :to => [:read]
     has_permission_on :listens, :to => [:create]
     has_permission_on :listens do
       to [:read, :delete, :update]
@@ -37,6 +39,7 @@ authorization do
   end
   
   role :admin do
+    has_permission_on :files, :to => [:read]
     has_permission_on :channels, :to => [:manage, :manage_globals]
     has_permission_on :listens, :to => [:manage, :accept, :manage_globals, :create_for_user]
     has_permission_on :invitations, :to => :manage

@@ -32,7 +32,7 @@ function getType(path) {
 // Low-level copy operation helper.
 function lowLevelCopy(source, target, reply) {
   var newFile, oldFile;
-console.log('copying ' + source + ' to ' + target);
+  console.log('copying ' + source + ' to ' + target);
 
   oldFile = fs.createReadStream(source);
   newFile = fs.createWriteStream(target);
@@ -66,7 +66,7 @@ function copyTo(source, target, reply) {
       var symlink = path.relative(path.dirname(target), source);
 
       try {
-console.log('linking ' + target + ' to ' + symlink);
+        console.log('linking ' + target + ' to ' + symlink);
         fs.symlink(symlink, target, function() {
           fs.chmod(target, PERMISSIONS);
           reply(null, true);
@@ -94,7 +94,7 @@ function moveTo(source, target, reply) {
   if (shouldBeLink(target)) {
     copyTo(source, target, function(err) {
       if (isLink(source)) {
-console.log('unlinking ' + source);
+        console.log('unlinking ' + source);
         fs.unlink(source, reply);
       } else {
         reply(err, true);
@@ -107,7 +107,7 @@ console.log('unlinking ' + source);
 
     if (isLink(source)) {
       copyTo(source, target, function(err) {
-console.log('unlinking ' + source);
+        console.log('unlinking ' + source);
         fs.unlink(source, reply);
       });
     } else {
@@ -115,7 +115,7 @@ console.log('unlinking ' + source);
         source = path.join(path.dirname(source), fs.readlinkSync(source));
       }
 
-console.log('renaming ' + source + ' to ' + target);
+      console.log('renaming ' + source + ' to ' + target);
       fs.rename(source, target, reply);
     }
   }
@@ -137,7 +137,7 @@ function remove(target, reply) {
   if (getType(target) == 'dir') {
     fs.readdir(target, function(err, files) {
       if (files.length == 0) {
-console.log('removing empty dir ' + target);
+        console.log('removing empty dir ' + target);
         fs.rmdir(target, reply);
       } else {
         Step(function() {
@@ -145,13 +145,13 @@ console.log('removing empty dir ' + target);
             remove(path.join(target, files[i]), this.parallel());
           }
         }, function() {
-console.log('removing dir ' + target);
+          console.log('removing dir ' + target);
           fs.rmdir(target, reply);
         });
       }
     });
   } else {
-console.log('unlinking ' + target);
+    console.log('unlinking ' + target);
     fs.unlink(target, reply);
   }
 }
@@ -284,4 +284,4 @@ exports.info = function(params, reply) {
   }
 
   reply(null, results);
-}
+};

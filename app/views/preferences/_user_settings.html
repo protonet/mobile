@@ -61,11 +61,3 @@
   </div>
   <%= button "Send" %>
 <%- end %>
-
-<h3>Clean up strangers <i class="hint">(<%= User.strangers.count %>)</i></h3>
-<p>Every time a logged-out user visits your node, he's turned into a so called "stranger". Strangers are temporary users that should be deleted once in a while.</p>
-<%= form_tag delete_stranger_older_than_two_days_path, { :remote => true, 'data-type' => 'html', :class => 'single-button-form' } do %>
-  <%= hidden_field_tag 'id', current_user.id %>
-  <%= hidden_field_tag 'section', 'user_settings' %>
-  <%= button "Delete strangers older than 2 days" %>
-<%- end %>

@@ -83,7 +83,7 @@ connection.addListener("ready", function() {
       message.result = result;
 
       rpcExchange.publish('rpc.' + message.queue, message);
-    }
+    };
 
     require("./tasks/fs_worker")[message.method](message.params, callback);
   });

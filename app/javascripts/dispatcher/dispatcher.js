@@ -11,33 +11,16 @@ protonet.dispatcher = {
   
   _observe: function() {
     protonet
-      .on("socket.initialized", function() {
-        this.initializeCallback();
-      }.bind(this))
-      
-      .on("socket.connected", function(status) {
-        this.connectCallback(status);
-      }.bind(this))
-      
-      .on("socket.send", function(data) {
-        this.send(data);
-      }.bind(this))
-      
-      .on("socket.receive", function(data) {
-        this.receive(data);
-      }.bind(this))
-      
-      .on("socket.ping_received", function() {
-        this.pingCallback();
-      }.bind(this))
-      
-      .on("socket.reconnect", function() {
-        this.reconnect();
-      }.bind(this));
+      .on("socket.initialized",   this.initializeCallback.bind(this))
+      .on("socket.connected",     this.connectCallback.bind(this))
+      .on("socket.send",          this.send.bind(this))
+      .on("socket.receive",       this.receive.bind(this))
+      .on("socket.ping_received", this.pingCallback.bind(this))
+      .on("socket.reconnect",     this.reconnect.bind(this));
       
     $(window)
       .bind("offline unload", this.disconnect.bind(this))
-      .bind("online focus", this.connect.bind(this));
+      .bind("online focus",   this.connect.bind(this));
   },
   
   create: function() {
@@ -72,7 +55,7 @@ protonet.dispatcher = {
   connectCallback: function(status) {
     this.connecting = false;
     
-    if (status) {
+    if (status === true) {
       this.connected = true;
       this.startCheck();
       if (this._reconnect) {
@@ -147,7 +130,7 @@ protonet.dispatcher = {
     protonet.trigger("socket.send", { operation: "ping" });
   },
   
-  pingCallback: function(message) {
+  pingCallback: function() {
     clearTimeout(this.offlineTimeout);
   },
 
