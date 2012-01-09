@@ -56,7 +56,7 @@ class User < ActiveRecord::Base
   end
   
   def self.admins
-    Role.find_by_title('admin').users
+    Role.find_by_title('admin').users rescue []
   end
   
   def self.recent_active

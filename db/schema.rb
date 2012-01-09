@@ -27,19 +27,6 @@ ActiveRecord::Schema.define(:version => 20120106094821) do
     t.boolean  "system",       :default => false
   end
 
-  create_table "images_avatars", :force => true do |t|
-    t.string   "name"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "images_externals", :force => true do |t|
-    t.text     "image_url"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "invitations", :force => true do |t|
     t.text     "message"
     t.integer  "user_id"
@@ -122,13 +109,6 @@ ActiveRecord::Schema.define(:version => 20120106094821) do
 
   add_index "roles_users", ["role_id", "user_id"], :name => "index_roles_users_on_role_id_and_user_id", :unique => true
 
-  create_table "says", :force => true do |t|
-    t.integer  "channel_id"
-    t.integer  "tweet_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "sunspot_index_queue_entries", :force => true do |t|
     t.string   "record_class_name",                                    :null => false
     t.string   "record_id",                                            :null => false
@@ -153,17 +133,6 @@ ActiveRecord::Schema.define(:version => 20120106094821) do
   end
 
   add_index "system_preferences", ["object_type", "object_id", "var"], :name => "index_system_preferences_on_object_type_and_object_id_and_var", :unique => true
-
-  create_table "tweets", :force => true do |t|
-    t.integer  "user_id"
-    t.string   "author"
-    t.text     "message"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.text     "text_extension"
-    t.integer  "network_id",     :default => 1
-    t.integer  "reply_from"
-  end
 
   create_table "users", :force => true do |t|
     t.string   "login",                          :limit => 40
