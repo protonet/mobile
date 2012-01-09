@@ -12,8 +12,8 @@ set logfile syslog facility log_daemon
 set httpd port 2812
 allow @admin
 allow localhost
-# following line is added since
-allow protonet:<%= ActiveSupport::SecureRandom.base64(10) %>
+# following line is added since monit command line needs this to communicate with the monitoring
+allow protonet:<%= monit_password %>
 
 ##########################################################################
 # default processes, more are added in runtime at shared/config/monit.d/*
