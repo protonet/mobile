@@ -36,7 +36,7 @@ Feature: Managing your profile
     Given I follow "My profile" within "header"
     Then I should see "@dudemeister" within ".users-page h2"
     # standard image
-    Then I should see the profile image "user_picture_r3.png" in my profile details
+    Then I should see the profile image "user_picture_r4.png" in my profile details
     Then I follow "edit" within ".users-page"
     Then I should see "Upload photo" within ".users-page"
     And I attach "profile_pic.png" to "avatar_file"

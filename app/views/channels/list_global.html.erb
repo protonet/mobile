@@ -1,6 +1,6 @@
 <aside>
   <ul>
-    <%- Node.remote.with_channels.each do |n| %>
+    <%- Node.remote.each do |n| %>
       <li class="network-separator">
         Node: <strong><%= n.name %></strong>
         <p><%= n.global_channels.size %> channels</p>

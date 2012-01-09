@@ -17,12 +17,14 @@ $(function() {
   $(window).resize(resizeContainer);
   resizeContainer();
   
-  $(".modal-window > output").css("overflow", "visible");
   
   protonet.one("modal_window.rendered", function() {
-    protonet.one("modal_window.rendered", function() {
-      $(".modal-window > output").css("overflow", "");
-    });
+    $(".modal-window > output").css("overflow", "visible");
+    setTimeout(function() {
+      protonet.one("modal_window.rendered", function() {
+        $(".modal-window > output").css("overflow", "");
+      });
+    }, 0);
   });
   
   new protonet.ui.MeepScroller($container, $headline).show($container.data("meep-scroller-for"));

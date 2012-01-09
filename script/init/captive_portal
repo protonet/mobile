@@ -8,7 +8,9 @@ export HOME=$CURRENT_PATH/../..
 cd $SHARED
 export SHARED=`pwd`
 export IPT=/sbin/iptables
+# the interface with the internetz
 export EXTIF=$1
+# the interface with the local or captivated clients
 export INTIF=$2
 export REDIRECTION_TARGET=$3
 shift 3

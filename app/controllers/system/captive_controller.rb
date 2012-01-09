@@ -17,16 +17,34 @@ module System
     end
   
     def login
-      SystemBackend.grant_internet_access(request.remote_ip, (@current_user.try(:login) || "n_a"))
-      sleep 10
-      
-      if params[:captive_redirect_url]
-        redirect_to params[:captive_redirect_url]
+      if SystemPreferences.captive_authorization_url
+
+        if Net::HTTP.get_response(URI.parse(SystemPreferences.captive_authorization_url + "&nickname=#{current_user.login}")).code == "200"
+          SystemBackend.grant_internet_access(request.remote_ip, (@current_user.try(:login) || "n_a"))
+          sleep 10
+          if params[:captive_redirect_url]
+            redirect_to params[:captive_redirect_url]
+          else
+            session[:captive_redirect_url] = nil
+            redirect_to(session[:captive_redirect_url] || "http://www.google.de")
+          end
+        else
+          flash[:error] = "Please contact the frontdesk / the administrator for internet access."
+          redirect_to :root
+        end
+
       else
-        session[:captive_redirect_url] = nil
-        redirect_to(session[:captive_redirect_url] || "http://www.google.de")
+
+        SystemBackend.grant_internet_access(request.remote_ip, (@current_user.try(:login) || "n_a"))
+        sleep 10
+        if params[:captive_redirect_url]
+          redirect_to params[:captive_redirect_url]
+        else
+          session[:captive_redirect_url] = nil
+          redirect_to(session[:captive_redirect_url] || "http://www.google.de")
+        end
+
       end
-      
     end
     
     def self.matches?(url)

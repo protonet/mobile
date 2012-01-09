@@ -6,14 +6,12 @@
 set daemon 30
 
 # logfile configuration
-set logfile syslog facility log_daemon 
+set logfile syslog facility log_daemon
 
 # control and http interface
 set httpd port 2812
-
-# TODO: add some real user/password
-allow protonet:admin
-
+allow localhost
+allow @admin
 
 ##########################################################################
 # default processes, more are added in runtime at shared/config/monit.d/*
@@ -34,7 +32,7 @@ check process apache2 with pidfile /var/run/apache2.pid
   if totalmem > 500.0 MB for 5 cycles then restart
   if children > 250 then restart
   depends on rabbitmq
-  
+
 check process node.js with pidfile <%= shared_path %>/pids/node_8124.pid
   group daemons
   start program = "<%= current_path %>/script/init/node start"
@@ -56,6 +54,12 @@ check process solr with pidfile <%= shared_path %>/pids/sunspot-solr.pid
   start program = "<%= current_path %>/script/init/solr start"
   stop program  = "<%= current_path %>/script/init/solr stop"
   if 3 restarts within 5 cycles then timeout
+
+# Watch for dropped RAID disks hourly
+# Return status is flipped (1 is good) so that the output can be used at some point
+check program raid with path "<%= current_path %>/script/monit_raid_check"
+  if status == 0 then exec "/bin/bash -l -c 'cd <%= current_path %> && RAILS_ENV=production bundle exec rake report:raid_fail'"
+  every 120 cycles
 
 <% if false && jabber_bridge_active %>
   check process jabber.rb with pidfile <%= shared_path %>/pids/jabber.rb.pid

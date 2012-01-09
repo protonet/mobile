@@ -12,22 +12,21 @@
   <p class="hint">There are currently no users that subscribed to this channel. Be the first!</p>
 <%- else %>
   <ul class="subscribers-list list">
-    <%- channel.listens.all(:include => :user, :order => 'verified ASC', :limit => configatron.max_list_size).each do |listen| %>
-      <%- if !listen.user.stranger? && user = listen.user %>
-        <li data-cucumber="<%= listen.user.id %>" tabindex="-1">
-          <%= avatar(user, :width => 20, :height => 20, :lazy_load => true) %>
-          <%= user.display_name %>
-          <%= raw("<strong>(owner)</strong>") if channel.owned_by?(listen.user) %>
-          <%= raw("<strong>(awaiting verification)</strong>") unless listen.verified? %>
-          <a href="/users/<%= user.id %>" class="action">show profile</a>
-          <%- if channel.owned_by?(current_user) || current_user.admin? %>
-            <%= link_to('remove', listen_path(listen), :method => :delete, :remote => true, :class => "action") %>
-            <%- unless listen.verified? %>
-              <%= link_to('verify', listen_accept_path(listen), :method => :post, :remote => true, :class => "action", 'data-cucumber' => 'verify') %>
-            <%- end %>
+    <%- channel.listens.registered.all(:include => :user, :order => 'verified ASC', :limit => configatron.max_list_size).each do |listen| %>
+      <%- user = listen.user  %>
+      <li data-cucumber="<%= listen.user.id %>" tabindex="-1">
+        <%= avatar(user, :width => 20, :height => 20, :lazy_load => true) %>
+        <%= user.display_name %>
+        <%= raw("<strong>(owner)</strong>") if channel.owned_by?(listen.user) %>
+        <%= raw("<strong>(awaiting verification)</strong>") unless listen.verified? %>
+        <a href="/users/<%= user.id %>" class="action">show profile</a>
+        <%- if channel.owned_by?(current_user) || current_user.admin? %>
+          <%= link_to('remove', listen_path(listen), :method => :delete, :remote => true, :class => "action") %>
+          <%- unless listen.verified? %>
+            <%= link_to('verify', listen_accept_path(listen), :method => :post, :remote => true, :class => "action", 'data-cucumber' => 'verify') %>
           <%- end %>
-        </li>
-      <%- end %>
+        <%- end %>
+      </li>
     <%- end %>
   </ul>
 <%- end %>
@@ -37,7 +36,7 @@
     :remote => true,
     :method => :delete,
     'data-type' => 'html',
-    :class => "single-button-form"
+    :class => "single-button-form subscribe-channel-form"
   }) do -%>
     <%= button "Unsubscribe" %>
   <%- end %>
@@ -46,7 +45,7 @@
     :remote => true,
     :method => :post,
     'data-type' => 'html',
-    :class => "single-button-form"
+    :class => "single-button-form subscribe-channel-form"
   }) do -%>
     <%= button "Subscribe" %>
     <%- unless channel.public? %>

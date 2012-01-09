@@ -30,7 +30,6 @@ class Api::V1::MeepsController < Api::V1::MasterController
     end
 
     meep = @current_user.meeps.build({
-      :author => @current_user.display_name,
       :channel => Channel.find(params[:channel_id]),
       :message => params[:message],
       :text_extension => text_extension

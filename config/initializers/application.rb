@@ -63,6 +63,7 @@ if defined?(PhusionPassenger)
 end
 
 configatron.max_list_size = 1500
-configatron.default_avatar = '/img/user_picture_r3.png'
+configatron.default_avatar = '/img/user_picture_r4.png'
+configatron.system_avatar = '/img/system_picture_r2.png'
 
 require 'net/ldap'

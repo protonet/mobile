@@ -5,6 +5,7 @@ class Listen < ActiveRecord::Base
   belongs_to :channel
   
   scope :verified, :conditions => {:verified => true}
+  scope :registered, :conditions => "users.temporary_identifier IS NULL AND users.id != -1 AND users.node_id = 1"
   
   # if a channel is public we set the verified status to public
   after_create  :auto_set_verification,:set_last_read_meep

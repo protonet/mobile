@@ -17,6 +17,7 @@ class ChannelsController < ApplicationController
         if request.headers['X-Request-Type'] == 'tab'
           render :partial => "channel_details", :locals => { :channel => Channel.find(params[:id]) }
         else
+          # TODO: This can be used to get the content of any channel #security
           @selected_channel = Channel.find(params[:id])
           render :list
         end

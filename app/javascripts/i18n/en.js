@@ -8,6 +8,7 @@ protonet.i18n = {
   NO_MEEPS_FOR_USER_AVAILABLE: "No messages with attachments available",
   REPLY_NOTIFICATION_TITLE: "new reply from #{author}",
   RENDEZVOUS_NOTIFICATION_TITLE: "new private chat message from #{author}",
+  SYSTEM_NOTIFICATION_TITLE: "new message from your protonet node",
   CHANNEL_SUBSCRIPTION_ERROR: "Could not subscribe to channel '#{identifier}'",
   CHANNEL_SUBSCRIPTION_SUCCESS: "You successfully subcribed to channel '#{identifier}'",
   SOCKET_DISCONNECTED: "There has been a connection problem. Please wait a few seconds. It might heal itself.",

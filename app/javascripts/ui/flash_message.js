@@ -54,7 +54,7 @@ protonet.ui.FlashMessage = {
     // also non stickies auto hide after TIMEOUT seconds
     if (!this.element.hasClass("sticky")) {
       // auto hide after 5 sec (but only if the user has already seen it)
-      if (protonet.utils.isWindowFocused()) {
+      if (protonet.utils.isWindowFocused() || type !== "error") {
         this.timeout = setTimeout(this.hide.bind(this), this.TIMEOUT);
       } else {
         $(window).one("focus", function() {

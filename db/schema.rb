@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111017143205) do
+ActiveRecord::Schema.define(:version => 20120106094821) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(:version => 20111017143205) do
     t.boolean  "public",       :default => true
     t.boolean  "global",       :default => false
     t.string   "rendezvous"
+    t.boolean  "system",       :default => false
   end
 
   create_table "invitations", :force => true do |t|

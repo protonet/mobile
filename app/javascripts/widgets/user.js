@@ -283,7 +283,8 @@ protonet.widgets.User = Class.create({
   filterChannelUsers: function(channelId) {
     channelId = channelId || protonet.timeline.Channels.selected;
     
-    var channelSubscriptions = this.channelSubscriptions[channelId];
+    var channelSubscriptions = this.channelSubscriptions[channelId],
+        isRemoteChannel = protonet.timeline.Channels.channels[channelId] instanceof protonet.timeline.RemoteChannel;
     if (!channelSubscriptions) {
       return;
     }
@@ -291,7 +292,14 @@ protonet.widgets.User = Class.create({
     this.list.children().hide();
     $.each(channelSubscriptions, function(i, userId) {
       var user = this.usersData[userId];
-      user && user.element.show();
+      if (!user) {
+        return;
+      }
+      if (isRemoteChannel) {
+        user.isOnline && user.element.show();
+      } else {
+        user.element.show();
+      }
     }.bind(this));
     
     this.updateCount();

@@ -11,6 +11,7 @@
       </li>
     <%- end -%>
   </ul>
+  <%= link_to "+ Add channel", new_channel_path, :class => 'add-channel-link' %>
 </aside>
 <output data-tab="channels" class="content">
   <%- if @selected_channel %>

@@ -1,7 +1,11 @@
+<%-
+  # This logic is duplicated. If you change anything here you'll also have to change the corresponding javascript
+  #  => protonet.timeline.Channel.prototype.renderTab
+-%>
 <li>
   <%= link_to channel.display_name, { :channel_id => channel.id }, {
     :title => channel.description ? truncate(channel.description, :length => 140) : nil,
-    :class => channel.global? ? 'global' : nil,
+    :class => channel_tab_classes(channel),
     'data-channel-id' => channel.id
   } %>
 </li>

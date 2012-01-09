@@ -8,9 +8,11 @@ class Node < ActiveRecord::Base
   
   after_create  :generate_uuid, :if => lambda {|n| n.uuid.blank? }
   
-  scope :remote, :conditions => 'nodes.id != 1'
-  
   class << self
+    
+    def remote
+      [team]
+    end
     
     def team
       from_url("https://team.protonet.info")
@@ -46,10 +48,6 @@ class Node < ActiveRecord::Base
         node.description = node_data.description
         node
       end
-    end
-    
-    def with_channels
-      all.select {|n| n.channels.real.size > 0 }
     end
     
   end

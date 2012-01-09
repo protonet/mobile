@@ -60,7 +60,7 @@
   content: counter(li);
   counter-increment: li;
   font-size: 16px;
-  background: rgba(0, 0, 0, 0.2);
+  background: #3962cc;
   color: #fff;
   font-weight: bold;
   line-height: 21px;
@@ -78,7 +78,7 @@
 }
 
 .getting-started li:hover:before {
-  background: rgba(0, 0, 0, 0.8);
+  background: #0e1833;
 }
 
 .getting-started strong {

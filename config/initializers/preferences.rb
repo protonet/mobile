@@ -27,7 +27,7 @@ Dashboard::Application.config.to_prepare do
   }
   SystemPreferences.defaults[:wifi] = {
     "mode" => "wlan0",
-    "channel" => 5, # should be 5 - 11 since 1 - 4 don't support multiple ssids
+    "channel" => 1,
     "wlan0" => {
       "name" => "protonet-private",
       "password" => "Changeme!123",

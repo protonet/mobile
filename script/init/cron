@@ -10,10 +10,10 @@ export SHARED=`pwd`
 cd $CURRENT_PATH
 case $1 in
    update)
-      bundle exec whenever --update-crontab
+      bundle exec whenever --update-crontab dashboard
       ;;
     clear)
-      bundle exec whenever --clear-crontab
+      bundle exec whenever --clear-crontab dashboard
       ;;
     *)  
       echo "usage: cron {update|clear}" ;;

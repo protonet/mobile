@@ -30,6 +30,10 @@
   box-sizing: border-box;
 }
 
+.modal-window > output > pre {
+  padding: 20px;
+}
+
 .modal-window .close-link {
   z-index: 15;
   position: absolute;

@@ -1,0 +1,2 @@
+#!/bin/bash
+grep \[[U_]\*_[U_]\*\] /proc/mdstat

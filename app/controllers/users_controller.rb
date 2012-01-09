@@ -60,10 +60,10 @@ class UsersController < ApplicationController
     if current_user.admin? && current_user.valid_password?(params[:admin_password])
       user = User.find(params[:user_id])
       if params[:admin] == 'true'
-        user.add_to_role(:admin)
+        user.add_to_role('admin')
         flash[:notice] = "Successfully made '#{user.login}' an admin!"
       else
-        user.remove_from_role(:admin)
+        user.remove_from_role('admin')
         flash[:notice] = "Successfully removed '#{user.login}' from the list of admins!"
       end
       
@@ -141,7 +141,7 @@ class UsersController < ApplicationController
     render :json => {
       'change-password' => !current_user.valid_password?('admin'),
       'upload-avatar'   => current_user.avatar.file?,
-      'create-channel'  => current_user.channels.real.local.size > 1,
+      'create-channel'  => current_user.channels.real.local.without_system.size > 1,
       'invite-user'     => User.registered.size > 1,
       'write-meep'      => Meep.find_all_by_user_id(current_user.id).size > 0
     }

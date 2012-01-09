@@ -14,7 +14,7 @@ module BackendAdapters
       ["10.25.1.2", "10.25.1.3", "10.25.1.4"]
     end
   
-    def grant_internet_access(ip)
+    def grant_internet_access(ip, username)
     
     end
   

@@ -7,10 +7,10 @@ Background:
   And I go to the users page
 
   @javascript
-  Scenario: Seeing the anonymous users profile
-    Then I fill in "users_search_term" with "anonymous" within ".users-page"
+  Scenario: Seeing the system user's profile
+    Then I fill in "users_search_term" with "system" within ".users-page"
     Then I press "Go" within ".users-page"
-    Then I should see "@Anonymous" within ".users-page h2"
+    Then I should see "@System" within ".users-page h2"
     Then I should not see "edit" within ".users-page"
 
   @javascript
@@ -41,19 +41,21 @@ Background:
     Then I should see "Successfully made" within ".flash-message"
     Then I visit the profile of "someotherdude"
     Then I should see "admin" within "dl[data-cucumber='roles']"
+    And I should see "System" within ".channel-list"
     And I follow "edit"
     And uncheck "admin" within "form[data-cucumber='admin-settings']"
     And I fill in "admin_password" with "123456" within "form[data-cucumber='admin-settings']"
     And press "Save" within "form[data-cucumber='admin-settings']"
     Then I visit the profile of "someotherdude"
     Then I should not see "admin" within "dl[data-cucumber='roles']"
+    And I should not see "System" within ".channel-list"
     And I follow "edit"
     And I fill in "admin_password" with "123456" within "form[data-cucumber='change-password']"
     And press "Generate new password" within "form[data-cucumber='change-password']"
     And I store /"(.*)"/ from ".flash-message p" into "password"
     And I go unauthenticated to the start page
     And I am logged in as "someotherdude"
-
+  
   @javascript
   Scenario: Seeing my own profile and doing changes
     And I follow "My profile" within "header"

@@ -7,7 +7,7 @@ Feature: Using global channels
     And I click on "channels:overview" in the main navigation
     And I select the global channel "protonet-devs" in the channel overview
     Then I should see "protonet-devs" in the channel details pane
-    And I press "Subscribe"
+    And I press "Subscribe" within ".subscribe-channel-form"
     Then I should see "admin" in the channel subscriber list
     And I close the lightbox
     Then the channel "protonet-devs" should be remotely connected

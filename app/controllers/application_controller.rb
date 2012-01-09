@@ -97,7 +97,6 @@ class ApplicationController < ActionController::Base
   def only_registered
     if current_user.stranger?
       if node_privacy_settings["allow_dashboard_for_strangers"] != true
-        flash[:error] = "Please authenticate :) !"
         return redirect_to(new_user_session_path)
       else
         # check wether it is an allowed uri

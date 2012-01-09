@@ -1,7 +1,7 @@
-var http = require('http')
-  , url = require('url')
-  , sys = require('sys')
-  ;
+var http  = require('http'),
+    https = require('https'),
+    url   = require('url'),
+    sys   = require('sys');
 
 var toBase64 = function(str) {
   return  (new Buffer(str || "", "ascii")).toString("base64");
@@ -46,19 +46,18 @@ function request (options, callback) {
     sys.error('options.bodyStream is deprecated. use options.reponseBodyStream instead.');
     options.responseBodyStream = options.bodyStream;
   }
-  if (options.proxy) {
-    var secure = (options.proxy.protocol == 'https:') ? true : false 
-    options.client = options.client ? options.client : http.createClient(options.proxy.port, options.proxy.hostname, secure);
-  } else {
-    var secure = (options.uri.protocol == 'https:') ? true : false
-    options.client = options.client ? options.client : http.createClient(options.uri.port, options.uri.hostname, secure);
-  }
+  
+  var actualUri = (options.proxy ? options.proxy : options.uri);
+  
+  var secure = (actualUri.protocol == 'https:');
+  options.client = (secure ? https : http);
+  options.host = actualUri.hostname;
+  options.port = actualUri.port;
   
   var clientErrorHandler = function (error) {
     if (setHost) delete options.headers.host;
     if (callback) callback(error);
   }
-  options.client.addListener('error', clientErrorHandler);
   
   if (options.uri.auth && !options.headers.authorization) {
     options.headers.authorization = "Basic " + toBase64(options.uri.auth);
@@ -67,14 +66,13 @@ function request (options, callback) {
     options.headers['proxy-authorization'] = "Basic " + toBase64(options.proxy.auth);
   }
   
-  options.fullpath = options.uri.href.replace(options.uri.protocol + '//' + options.uri.host, '');
-  if (options.fullpath.length === 0) options.fullpath = '/' 
+  options.path = options.uri.href.replace(options.uri.protocol + '//' + options.uri.host, '');
+  if (options.path.length === 0) options.path = '/' 
   
-  if (options.proxy) options.fullpath = (options.uri.protocol + '//' + options.uri.host + options.fullpath)
+  if (options.proxy) options.path = (options.uri.protocol + '//' + options.uri.host + options.path)
   
   if (options.body) {options.headers['content-length'] = options.body.length}
-  options.request = options.client.request(options.method, options.fullpath, options.headers);
-  options.request.addListener("response", function (response) {
+  options.request = options.client.request(options, function (response) {
     var buffer;
     if (options.responseBodyStream) {
       buffer = options.responseBodyStream;
@@ -88,7 +86,7 @@ function request (options, callback) {
     }
     
     response.addListener("end", function () {
-      options.client.removeListener("error", clientErrorHandler);
+      options.request.removeListener("error", clientErrorHandler);
       
       if (response.statusCode > 299 && response.statusCode < 400 && options.followRedirect && response.headers.location && (options._redirectsFollowed < options.maxRedirects) ) {
         options._redirectsFollowed += 1
@@ -105,6 +103,7 @@ function request (options, callback) {
       if (callback) callback(null, response, buffer);
     })
   })
+  options.request.addListener('error', clientErrorHandler);
   
   if (options.body) {
     options.request.write(options.body, 'binary');

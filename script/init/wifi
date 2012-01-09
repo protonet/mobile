@@ -9,6 +9,7 @@ cd $SHARED
 export SHARED=`pwd`
 case $1 in
    start)
+      # sudo /usr/local/bin/hostapd -dd -P ~/dashboard/shared/pids/hostapd.pid ~/dashboard/shared/config/hostapd.d/config
       /usr/local/bin/hostapd -d -P $SHARED/pids/hostapd.pid -B $SHARED/config/hostapd.d/config
       sleep 10
       ifup --force wlan0

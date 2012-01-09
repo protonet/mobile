@@ -138,5 +138,11 @@ class ClientTracker
     end
   end
   
+  def real_user?(id)
+    user = self.global_online_users[id]
+    return unless user
+    is_node = user['connections'].all? {|connection| connection.include?("node") }
+    !is_node
+  end
 
 end

@@ -1,17 +1,20 @@
 #!/usr/bin/expect
 
-log_file -noappend /tmp/ptn_update_babushka.log
+log_file /tmp/ptn_release_update.log
 proc do_exit {msg} {
     puts stderr $msg
     exit 1
 }
+
+send_log "[exec date] starting ptn_babushka_update\n"
 
 # never time out
 set timeout -1
 set license [lindex $argv 0]
 
 # This spawns the babushka protonet migration
-spawn babushka "dudemeister:protonet babushka update"
+spawn bash -l -c "babushka \"dudemeister:protonet babushka update\""
+
 
 # The script expects Password any number of times and answers with the correct password
 expect {

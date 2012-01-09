@@ -31,7 +31,7 @@ Feature: Using the protonet channel management
         And I go to the channels page
         And I follow "Browse channels"
         And I select the channel "privatechannel" in the channel list
-        Then I press "Subscribe"
+        Then I press "Subscribe" within ".subscribe-channel-form"
         Then I go to the start page
         Then I should not see "Privatechannel" in the channel selector
     #dudemeister verifies batman
