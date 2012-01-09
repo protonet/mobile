@@ -9,11 +9,7 @@ set daemon 30
 set logfile syslog facility log_daemon
 
 # control and http interface
-set httpd port 2812
-
-# TODO: add some real user/password
-allow protonet:admin
-
+set httpd port 2812 allow @admin
 
 ##########################################################################
 # default processes, more are added in runtime at shared/config/monit.d/*
