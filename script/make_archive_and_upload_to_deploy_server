@@ -31,6 +31,14 @@ done
 
 #  prepare the basics
 
+git ls-remote origin -h refs/heads/master | grep `git rev-parse HEAD`
+if [ $? != 0 ]; then
+  echo "Your master is not up to date, you cannot create a release package."
+  exit 1
+fi
+
+check wether current master is uptodate
+
 #  generate a new version
 export last_version=`curl http://releases.protonet.info/beta/version`
 
@@ -56,7 +64,9 @@ rm -rf .git
 
 #  write version information
 if [ "$release_type" != "OVERWRITE LAST" ]; then
-   echo $release_type > TYPE
+  echo $release_type > TYPE
+else
+  scp protonet-live:$UPLOAD_PATH/releases/$last_version/TYPE /tmp/dashboard/TYPE
 fi
 echo $last_version > RELEASE
 
