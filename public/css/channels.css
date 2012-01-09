@@ -158,10 +158,6 @@
 }
 
 #channels .system {
-  background: #e3ebff;
-  background: -moz-linear-gradient(bottom, rgba(72, 123, 255, 0.25), rgba(72, 123, 255, 0));
-  background: -webkit-linear-gradient(bottom, rgba(72, 123, 255, 0.25), rgba(72, 123, 255, 0));
-  background: linear-gradient(bottom, rgba(72, 123, 255, 0.25), rgba(72, 123, 255, 0));
   padding-left: 23px;
 }
 
@@ -169,13 +165,6 @@
   left: 4px;
   background: url(/img/spr_channel_status_r2.png) no-repeat;
   background-position: 0 -32px;
-}
-
-#channels .system:focus,
-#channels .system:active {
-  background: -moz-linear-gradient(bottom, rgba(72, 123, 255, 0), rgba(72, 123, 255, 0.25));
-  background: -webkit-linear-gradient(bottom, rgba(72, 123, 255, 0), rgba(72, 123, 255, 0.25));
-  background: linear-gradient(bottom, rgba(72, 123, 255, 0), rgba(72, 123, 255, 0.25));
 }
 
 #channels .active {

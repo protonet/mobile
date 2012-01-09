@@ -43,16 +43,8 @@
             </ul>
           </li>
           
-          <li class="nav-link users-controller-link">
-            <%= link_to "Files", users_path %>
-            <ul>
-              <li class="sub-nav-link index-action-link">
-                <%= link_to "Overview", users_path %>
-              </li>
-              <li class="sub-nav-link my-action-link">
-                <%= link_to "My profile", my_user_path %>
-              </li>
-            </ul>
+          <li class="nav-link files-controller-link">
+            <%= link_to "Files", files_path %>
           </li>
         <%- end %>
         <%- if SystemPreferences.show_search_widget -%>

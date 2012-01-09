@@ -11,7 +11,7 @@
         <menu>
           <li data-extension="smiley" title="Insert emoticon" data-hover-hint="right">Insert emoticon</li>
           <li data-extension="snapshot" title="Attach snapshot" data-hover-hint="right">Attach snapshot</li>
-          <%- if SystemPreferences.show_file_widget -%>
+          <%- if SystemPreferences.show_file_widget && !current_user.stranger? -%>
             <li data-extension="file" title="Attach file(s)" id="attach-file-extension" data-hover-hint="right">Attach file(s)</li>
           <%- end -%>
         </menu>
@@ -36,7 +36,7 @@
   <div class="progress" id="timeline-loading"></div>
 </section>
 
-<%- if SystemPreferences.show_user_widget || SystemPreferences.show_file_widget -%>
+<%- if current_user.newbie? || !current_user.stranger? || SystemPreferences.show_user_widget %>
   <aside class="side-content">
     <%- if current_user.newbie? %>
       <%= render(:partial => 'users/getting_started_admin') if current_user.first_admin? %>
@@ -49,4 +49,4 @@
       <%= render :partial => 'users/user_widget' %>
     <%- end -%>
   </aside>
-<%- end -%>
+<%- end %>

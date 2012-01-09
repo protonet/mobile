@@ -89,6 +89,9 @@ Dashboard::Application.routes.draw do
     match 'releases/update' => 'releases#update', :as => :release_update
   end
   
+  # Files
+  resources :files
+  
   # System
   namespace :system do
     match 'preferences/update' => 'preferences#update', :as => :preferences_update
