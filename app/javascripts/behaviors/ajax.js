@@ -70,7 +70,7 @@ protonet.open = (function() {
 
     // could be: audio, html, video, ... (see guess_file_type.js)
     var fileType = protonet.utils.guessFileType(url).type;
-    if (fileType === "unknown" && url.indexOf("/system/files/show") !== -1) {
+    if (fileType === "unknown") {
       return fallback(eventOrUrl);
     }
 

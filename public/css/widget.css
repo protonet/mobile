@@ -52,7 +52,7 @@
   border: 1px #6D95FF solid;
   overflow-y: auto;
   overflow-x: hidden;
-  height: 250px;
+  height: 350px;
   min-height: 50px;
   padding: 4px 0 3px;
 }
@@ -91,17 +91,6 @@
 .widget.loading .loading-hint {
   display: inline;
   color: rgba(255, 255, 255, 0.3);
-}
-
-/*--------------------------------- NETWORK WIDGET ---------------------------------*/
-#network-widget #network-monitor {
-  width: 216px;
-  height: 170px;
-}
-
-#network-widget h3 a {
-  float: right;
-  color: rgba(255, 255, 255, 0.8);
 }
 
 /*--------------------------------- USER WIDGET ---------------------------------*/
@@ -152,7 +141,7 @@
 /*--------------------------------- MY WIDGET ---------------------------------*/
 #my-widget {
   padding: 2px 0 5px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #8C8C8C;
   margin-bottom: 20px;
   position: relative;
   padding-left: 45px;

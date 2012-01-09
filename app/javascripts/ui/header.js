@@ -43,11 +43,6 @@ protonet.ui.Header = {
       .on("modal_window.hidden", function() {
         this.$header.css("padding-right", "");
         this.select(initialControllerName, initialActionName);
-      }.bind(this))
-      
-      .on("modal_window.shown", function() {
-        // Chrome needs some redrawing...
-        this.$header.css("padding-right", protonet.utils.getScrollbarWidth().px()).toggleClass("redraw");
       }.bind(this));
   },
   

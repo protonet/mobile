@@ -124,6 +124,10 @@ class User < ActiveRecord::Base
   def anonymous?
     id == -1
   end
+  
+  def system?
+    id == -1
+  end
 
   def login=(value)
     write_attribute :login, (value ? value.downcase : nil)
