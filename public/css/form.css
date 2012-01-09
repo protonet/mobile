@@ -45,7 +45,7 @@ form.disabled #textarea-wrapper:after {
 }
 
 #textarea-wrapper textarea {
-  width: 516px;
+  width: 576px;
   padding: 3px;
   font-size: 14px;
   resize: none;

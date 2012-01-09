@@ -26,7 +26,7 @@ body {
 
 .inner-body {
   margin: 0 auto;
-  width: 940px;
+  width: 1000px;
 }
 
 .modal-window ::-webkit-scrollbar,
@@ -178,7 +178,7 @@ input[type=search] {
 }
 
 .main-content {
-  width: 650px;
+  width: 710px;
   min-height: 700px;
   margin: 0 20px 0 0;
   position: relative;

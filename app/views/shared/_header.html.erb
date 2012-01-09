@@ -6,45 +6,55 @@
       </li>
       
       <%- unless current_user.stranger? %>
-        <li class="nav-link instruments-controller-link">
-          <%= link_to "Chat", root_path %>
-        </li>
-      
         <%- if current_user.admin? %>
           <li class="nav-link preferences-controller-link">
             <%= link_to "Administration", preferences_path %>
           </li>
         <%- end %>
-      
-        <li class="nav-link channels-controller-link">
-          <%= link_to "Channels", channels_path %>
-          <ul>
-            <li class="sub-nav-link index-action-link">
-              <%= link_to "Overview", channels_path %>
-            </li>
-            <li class="sub-nav-link show-action-link list-action-link">
-              <%= link_to "Browse channels", list_channels_path %>
-            </li>
-            <li class="sub-nav-link show_global-action-link list_global-action-link">
-              <%= link_to "Discover global channels", list_global_channels_path %>
-            </li>
-            <li class="sub-nav-link new-action-link">
-              <%= link_to "Create new", new_channel_path %>
-            </li>
-          </ul>
-        </li>
-      
-        <li class="nav-link users-controller-link">
-          <%= link_to "Users", users_path %>
-          <ul>
-            <li class="sub-nav-link index-action-link">
-              <%= link_to "Overview", users_path %>
-            </li>
-            <li class="sub-nav-link my-action-link">
-              <%= link_to "My profile", my_user_path %>
-            </li>
-          </ul>
-        </li>
+        
+        <%- unless current_user.stranger? %>
+          <li class="nav-link channels-controller-link">
+            <%= link_to "Channels", channels_path %>
+            <ul>
+              <li class="sub-nav-link index-action-link">
+                <%= link_to "Overview", channels_path %>
+              </li>
+              <li class="sub-nav-link show-action-link list-action-link">
+                <%= link_to "Browse channels", list_channels_path %>
+              </li>
+              <li class="sub-nav-link show_global-action-link list_global-action-link">
+                <%= link_to "Discover global channels", list_global_channels_path %>
+              </li>
+              <li class="sub-nav-link new-action-link">
+                <%= link_to "Create new", new_channel_path %>
+              </li>
+            </ul>
+          </li>
+          
+          <li class="nav-link users-controller-link">
+            <%= link_to "Users", users_path %>
+            <ul>
+              <li class="sub-nav-link index-action-link">
+                <%= link_to "Overview", users_path %>
+              </li>
+              <li class="sub-nav-link my-action-link">
+                <%= link_to "My profile", my_user_path %>
+              </li>
+            </ul>
+          </li>
+          
+          <li class="nav-link users-controller-link">
+            <%= link_to "Files", users_path %>
+            <ul>
+              <li class="sub-nav-link index-action-link">
+                <%= link_to "Overview", users_path %>
+              </li>
+              <li class="sub-nav-link my-action-link">
+                <%= link_to "My profile", my_user_path %>
+              </li>
+            </ul>
+          </li>
+        <%- end %>
         <%- if SystemPreferences.show_search_widget -%>
           <li class="search">
             <%= render :partial => 'search/search_form' %>

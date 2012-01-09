@@ -11,7 +11,7 @@ protonet.utils.autoLink = (function() {
    */
   var URL_REG_EXP           = /(https?:\/\/|www\.)[^\s<]{3,}/gi,
       TRAILING_CHAR_REG_EXP = /([^\w\/-])$/i,
-      MAX_DISPLAY_LENGTH    = 55,
+      MAX_DISPLAY_LENGTH    = 70,
       BRACKETS              = {
         ")": "(",
         "]": "[",
