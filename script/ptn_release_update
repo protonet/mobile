@@ -11,4 +11,4 @@ export HOME=$SHARED_PATH/../..
 cd $HOME/deployer
 export BUNDLE_GEMFILE=''
 bundle install --without=test --gemfile=Gemfile
-bundle exec bin/dep -r protonet -e production -m deploy -c $SHARED_PATH/config/protonet.d/deploy_config 2>&1 > /tmp/ptn_release_update.log
+bundle exec bin/dep -r protonet -e production -m deploy -c $SHARED_PATH/config/protonet.d/deploy_config 2>&1 >> /tmp/ptn_release_update.log
