@@ -168,7 +168,7 @@ input[type=search] {
 }
 
 .subpage,
-.main-content,
+.instruments-page,
 .side-content {
   -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
@@ -178,7 +178,7 @@ input[type=search] {
   vertical-align: top;
 }
 
-.main-content {
+.instruments-page {
   width: 710px;
   min-height: 700px;
   margin: 0 20px 0 0;

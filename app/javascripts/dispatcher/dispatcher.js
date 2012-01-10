@@ -142,10 +142,9 @@ protonet.dispatcher = {
     
     dataArr = $.makeArray(dataArr);
     $.each(dataArr, function(i, data) {
-      if (data.trigger) {
-        protonet.trigger(data.trigger, data);
-      } else if (data.x_target) {
-        eval(data.x_target + "(data)");
+      var trigger = data.trigger || data.operation;
+      if (trigger) {
+        protonet.trigger(trigger, data);
       } else if (data.eval) {
         eval(data.eval);
       }

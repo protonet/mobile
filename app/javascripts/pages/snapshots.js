@@ -1,8 +1,7 @@
 //= require "../lib/webcam.js"
 
-$(function() {
+protonet.p("snapshots", function($page) {
   var photoUrl,
-      $page         = $(".snapshots-page"),
       $container    = $page.find("output"),
       $urlInput     = $page.find("input"),
       $label        = $page.find("label"),

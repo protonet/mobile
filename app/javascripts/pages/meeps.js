@@ -1,8 +1,7 @@
 //= require "../ui/meep_scroller.js"
 
-$(function() {
-  var $page         = $(".meeps-page"),
-      $container    = $page.find("output"),
+protonet.p("meeps", function($page) {
+  var $container    = $page.find("output"),
       $headline     = $(".meeps-page h2"),
       isModalWindow = $(".modal-window").length > 0;
   

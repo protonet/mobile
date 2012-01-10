@@ -80,7 +80,7 @@ module ConnectionShared
           
           begin
             @tracker.rpc.invoke object, method, json['params'], @user do |err, result|
-              raise 'Error' if err
+              raise if err
               send_json json.merge(
                 :status => 'success',
                 :result => result
@@ -132,7 +132,7 @@ module ConnectionShared
   end
   
   def send_reload_request
-    send_json :x_target => 'document.location.reload'
+    send_json :eval => 'location.reload()'
   end
   
   def send_reconnect_request

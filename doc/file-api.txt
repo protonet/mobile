@@ -14,7 +14,7 @@ HTTP: (Only upload is implemented)
     - share_key: optional
 
 Socket RPC methods: (Implemented)
-  fs.list(parent: 'users/5/folder') - type, added, owner[, size, mime]
+  fs.list(parent: 'users/5/folder') - type, added[, size, mime]
     .list(parent: 'channels')       - list only current user's channels
 
     .move(from: ['channels/2/asdf.txt',

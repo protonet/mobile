@@ -1,6 +1,5 @@
-$(function() {
-  var $subpage                = $(".channels-index-page"),
-      $globalChannelContainer = $subpage.find("[data-recommended-global-channels]"),
+protonet.p("channels-index", function($page) {
+  var $globalChannelContainer = $page.find("[data-recommended-global-channels]"),
       $loadingIndicator       = $globalChannelContainer.next(".progress");
   
   $globalChannelContainer.bind("inview", function() {

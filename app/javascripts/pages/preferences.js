@@ -1,9 +1,7 @@
 //= require "../ui/overlay.js"
 //= require "../utils/is_server_reachable.js"
 
-$(function() {
-  var $page = $(".preferences-page");
-  
+protonet.p("preferences", function($page) {
   $page.delegate("a.reload-link", "click", function() {
     var $link         = $(this),
         $container    = $link.parents(".status-box"),

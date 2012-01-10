@@ -28,6 +28,7 @@
 //= require "text_extensions/text_extensions.js"
 //= require "timeline/meep.js"
 //= require "effects/clouds.js"
+//= require "pages/_superclass.js"
 
 //---------------------------- INITIALIZE APPLICATION ----------------------------
 

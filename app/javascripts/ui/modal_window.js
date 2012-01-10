@@ -148,9 +148,7 @@ protonet.ui.ModalWindow = (function() {
     elements.dialog.addClass("loading");
     _abortCurrentRequest();
     
-    currentRequest = $.ajax({
-      url:     url
-    }).done(function(response, statusText, xhr) {
+    currentRequest = $.ajax(url).done(function(response, statusText, xhr) {
       var contentType = xhr.getResponseHeader("Content-Type");
       if (contentType.startsWith("text/html")) {
         _loadStylesheets(response, function(html) {
@@ -213,7 +211,9 @@ protonet.ui.ModalWindow = (function() {
       _create();
     }
     
-    if (!visible) {
+    if (visible) {
+      elements.dialog.find("section.subpage").trigger("unload");
+    } else {
       _observe();
       _hideScrollbar();
       elements.container.hide().appendTo($body).fadeIn("fast");
@@ -229,6 +229,8 @@ protonet.ui.ModalWindow = (function() {
     if (url) {
       _load(url);
       protonet.utils.History.push(url);
+    } else {
+      content("", true);
     }
     
     protonet.trigger("modal_window.shown");
@@ -241,6 +243,7 @@ protonet.ui.ModalWindow = (function() {
       return this;
     }
     
+    elements.dialog.find("section.subpage").trigger("unload");
     elements.container.detach();
     content("");
     
@@ -263,7 +266,6 @@ protonet.ui.ModalWindow = (function() {
     } else {
       $element.text(content);
     }
-    protonet.trigger("modal_window.rendered");
     return this;
   }
   

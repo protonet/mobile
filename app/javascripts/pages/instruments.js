@@ -7,7 +7,7 @@
 //= require "../ui/overlay.js"
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
-$(function() {
+protonet.p("instruments", function($page) {
   protonet.dispatcher.initialize();
   protonet.timeline.initialize();
   
@@ -20,7 +20,7 @@ $(function() {
     new protonet.widgets.File();
   }
   
-  $("section.main-content").css("min-height", $("aside.side-content").outerHeight().px());
+  $page.css("min-height", $("aside.side-content").outerHeight().px());
   
   // there's a captive portal redirect request and the user is logged in
   if (protonet.config.captive_redirect_url) {
@@ -39,5 +39,4 @@ $(function() {
       );
     }
   }
-  
 });
