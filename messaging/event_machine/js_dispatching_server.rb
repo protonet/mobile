@@ -59,11 +59,11 @@ EventMachine::run do
   client_tracker = ClientTracker.new
   node_tracker = NodeTracker.new(client_tracker)
   node_tracker.bind_nodes_queue
-  puts "  - Created client and node trackers"
+  puts "  - Created client and node trackers"
   
   if RUBY_PLATFORM =~ /linux/
     EventMachine.epoll
-    puts "  - Using EPoll; the sky is the limit"
+    puts "  - Using EPoll; the sky is the limit"
   end
   
   EventMachine::start_server host, socket_port,        ClientConnection,       client_tracker

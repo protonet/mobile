@@ -57,7 +57,7 @@ module Rpc
 
       # Invoke the method
       result = if handler.arity == 1
-        # Can only take at most one param. Ignore any auth.
+        # Can only take at most one param. Ignore any auth.
         handler.call params, &callback
       else
         # Takes additional params. Hand it the current user as well.

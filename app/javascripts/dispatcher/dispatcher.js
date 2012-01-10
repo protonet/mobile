@@ -16,8 +16,7 @@ protonet.dispatcher = {
       .on("socket.send",          this.send.bind(this))
       .on("socket.receive",       this.receive.bind(this))
       .on("socket.ping_received", this.pingCallback.bind(this))
-      .on("socket.reconnect",     this.reconnect.bind(this));
-      
+    
     $(window)
       .bind("offline unload", this.disconnect.bind(this))
       .bind("online focus",   this.connect.bind(this));

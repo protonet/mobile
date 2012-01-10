@@ -6,7 +6,7 @@ module Rabbit
   def queues; @queues ||= [];  end
 
   def _log message
-    puts message #if $DEBUG
+    puts message if $DEBUG
   end
 
   def bind topic, *keys, &handler

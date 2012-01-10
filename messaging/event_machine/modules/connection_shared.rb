@@ -75,20 +75,20 @@ module ConnectionShared
           end
           
         else
-          # Experimental RPC interface
+          # Experimental RPC interface
           object, method = json['operation'].split('.')
           
           begin
-            result = @tracker.rpc.invoke object, method, json['params'], @user
-
-            # Send the return value back
-            send_json json.merge(
-              :status => 'success',
-              :result => result)
-            
-          # Handle any possible errors
+            @tracker.rpc.invoke object, method, json['params'], @user do |err, result|
+              raise 'Error' if err
+              send_json json.merge(
+                :status => 'success',
+                :result => result
+              )
+            end
+          # Handle any possible errors
           rescue => ex
-            puts "Error during RPC call: #{ex.class}", ex.message, ex.backtrace
+            puts "Error during RPC call: #{ex.class}", ex.message, ex.backtrace
             
             # Send some info on the error that occured
             send_json json.merge(
@@ -100,7 +100,7 @@ module ConnectionShared
       end
     else
       # play echoserver if request could not be understood
-      puts "Something is using an obsolete interface! #{json.inspect}"
+      puts "Something is using an obsolete interface! #{json.inspect}"
       send_json(json)
     end
   end
