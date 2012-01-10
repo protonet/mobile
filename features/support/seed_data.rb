@@ -14,6 +14,8 @@ Before do
   # always use the same uuid for the cucumber node
   SystemPreferences.node_uuid = "2b30721c-e4f4-11e0-b0b6-00264a1815fc"
   Node.local.update_attribute(:uuid, SystemPreferences.node_uuid)
+  # only test local delivery
+  SystemPreferences.local_email_delivery = true
 end
 
 After do
