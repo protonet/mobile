@@ -13,10 +13,25 @@ protonet.p("files", function($page) {
   };
   
   var ui = {
-    renderList: function() {
+    list: function(data) {
+      $.each(data, function(name, info) {
+        
+      });
+    },
+    
+    item: function(name, info) {
+      protonet.utils.Template("file-item-template", {
+        name:     name.truncate(60),
+        title:    name,
+        size:     ,
+        modified: 
+      });
       var $tr         = $("<tr>"),
-          $tdName     = $("<td>", { "class": "file-name" }),
-          $tdUpdated  = $("<td>", { "class": "file-updated" });
+          $tdName     = $("<td>", { "class": "file-name" })                   .appendTo($tr),
+          $tdUpdated  = $("<td>", { "class": "file-modified" })               .appendTo($tr),
+          $tdSize     = $("<td>", { "class": "file-size" })                   .appendTo($tr);
+          $link       = $("<a>",  { "class": "file", href: filePath + name }) .appendTo($tdName);
+      return $tr;
     }
   };
   
