@@ -5,6 +5,7 @@ protonet.ui.FileQueue = (function() {
   var collapsed     = true,
       queue         = {},
       lastAction    = new Date(),
+      $status,
       $container,
       $list;
   
@@ -16,6 +17,7 @@ protonet.ui.FileQueue = (function() {
       
       $container  = new protonet.utils.Template("file-queue-template").to$();
       $list       = $container.find("ol");
+      $status     = $container.find(".status");
       
       this.uploader = new protonet.utils.Uploader(config);
       
@@ -46,6 +48,15 @@ protonet.ui.FileQueue = (function() {
       if (file.percent >= 100) {
         queue[file.id].addClass("done");
       }
+      this.status(file);
+    },
+    
+    status: function(file) {
+      $status.text(file.name + " (" + file.percent + " %)");
+    },
+    
+    statusDone: function() {
+      $status.text(protonet.t("UPLOAD_SUCCESSFUL"));
     },
     
     remove: function() {
@@ -107,11 +118,11 @@ protonet.ui.FileQueue = (function() {
         }.bind(this));
       }.bind(this));
       
-      this.uploader.bind("UploadComplete", function() {
-        console.log("All files have been uploaded.");
-      });
+      this.uploader.bind("UploadComplete", this.statusDone.bind(this));
       
       $container.on("click", ".status", this.toggle.bind(this));
+      
+      $container.on("click", ".file", false);
     }
   };
 })();
