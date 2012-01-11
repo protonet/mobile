@@ -1,4 +1,5 @@
 //= require "../utils/get_channel_name.js"
+//= require "../lib/jquery.fcbkcomplete.js"
 
 $.behaviors({
   "ul.remote-channel .text-extension-results.Meep a:click": function(element, event) {
@@ -112,7 +113,11 @@ $.behaviors({
       }
       $bubble.hide().fadeIn("fast");
     };
-  })()
+  })(),
+  
+  "select[data-multi-select]": function(element) {
+    $(element).fcbkcomplete({addontab: true, width: "400px"});
+  }
 });
 
 if (protonet.user.Browser.IS_TOUCH_DEVICE()) {

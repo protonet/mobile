@@ -4,10 +4,10 @@ authorization do
   end
   
   role :invitee do
-    has_permission_on :users, :to => [:read, :rendezvous, :update_last_read_meeps, :newbie]
-    has_permission_on :channels, :to => [:read]
+    has_permission_on :users, :to => [:show, :rendezvous, :update_last_read_meeps, :newbie]
+    # has_permission_on :channels, :to => [:read]
     has_permission_on :users do 
-      to [:manage, :change_password]
+      to [:update, :show, :change_password, :my]
       if_attribute :id => is {user.id}
     end
   end
@@ -41,7 +41,7 @@ authorization do
     has_permission_on :listens, :to => [:manage, :accept, :manage_globals, :create_for_user]
     has_permission_on :invitations, :to => :manage
     has_permission_on :authorization_rules, :to => :read
-    has_permission_on :users, :to => [:manage, :delete_stranger_older_than_two_days, :rendezvous, :update_last_read_meeps, :newbie]
+    has_permission_on :users, :to => [:manage, :delete_stranger_older_than_two_days, :rendezvous, :update_last_read_meeps, :newbie, :update_roles]
   end
 end
 

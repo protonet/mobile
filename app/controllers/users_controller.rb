@@ -74,6 +74,24 @@ class UsersController < ApplicationController
     end
   end
   
+  def update_roles
+    if current_user.admin?
+      user = User.find(params[:user_id])
+      selected_roles = params[:user][:roles].reject {|role| role == "admin" || role.blank?}
+      selected_roles = Role.find(selected_roles)
+      selected_roles.push(Role.find_by_title("admin")) if user.admin?
+      user.roles = selected_roles
+      flash[:notice] = "Successfully update roles!"
+      respond_to_user_update(user)
+    else
+      flash[:error] = "Only admins can do that!"
+      head(403)
+    end
+  rescue
+    flash[:error] = "Could not update the roles, sorry."
+    head(403)
+  end
+  
   def generate_new_password
     if current_user.admin? && current_user.valid_password?(params[:admin_password])
       user = User.find(params[:user_id])
