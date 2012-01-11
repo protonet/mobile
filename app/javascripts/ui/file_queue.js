@@ -1,28 +1,39 @@
+//= require "../utils/prettify_file_size.js"
+//= require "../utils/uploader.js"
+
 protonet.ui.FileQueue = (function() {
-  var collapsed = true,
+  var collapsed     = true,
+      queue         = {},
+      lastAction    = new Date(),
       $container,
       $list;
   
   return {
-    initialize: function() {
-      if (!$container) {
-        $container = new protonet.utils.Template("file-queue-template").toElement();
-        $list = $("<ol>").appendTo($container);
-        this._observe();
+    initialize: function(config) {
+      if (this.uploader) {
+        return this;
       }
       
-      return this.show();
+      $container  = new protonet.utils.Template("file-queue-template").to$();
+      $list       = $container.find("ol");
+      
+      this.uploader = new protonet.utils.Uploader(config);
+      
+      this._observe();
+      
+      return this;
     },
     
     add: function(file) {
-      var $item = $("<li>"),
-          $link = $("<a>", {
-            href:     file.name,
-            text:     file.name,
-            "class":  "file"
-          }).appendTo($item);
+      var $item = new protonet.utils.Template("file-queue-item-template", {
+        name: file.name,
+        size: protonet.utils.prettifyFileSize(file.size)
+      }, true).to$();
       
       $item.appendTo($list);
+      
+      queue[file.id] = $item;
+      
       if (collapsed) {
         this.expand();
       }
@@ -30,12 +41,19 @@ protonet.ui.FileQueue = (function() {
       return this;
     },
     
-    remove: function(file) {
+    progress: function(file) {
+      queue[file.id].find(".progress").css("width", file.percent + "%");
+      if (file.percent >= 100) {
+        queue[file.id].addClass("done");
+      }
+    },
+    
+    remove: function() {
       
     },
     
     show: function() {
-      $container.appendTo(".inner-body").css("bottom", (-$list.outerHeight()).px());
+      $container.appendTo(".inner-body");
       return this;
     },
     
@@ -70,6 +88,29 @@ protonet.ui.FileQueue = (function() {
     },
     
     _observe: function() {
+      protonet.on("channel.change", function(channelId) {
+        this.uploader.settings.multipart_params = {
+          channel_id: channelId,
+          user_id:    protonet.config.user_id,
+          token:      protonet.config.token
+        };
+      }.bind(this));
+      
+      this.uploader.bind("UploadProgress", function(uploader, file) {
+        this.progress(file);
+      }.bind(this));
+      
+      this.uploader.bind("FilesAdded", function(uploader, files) {
+        this.show();
+        $.each(files, function(i, file) {
+          this.add(file);
+        }.bind(this));
+      }.bind(this));
+      
+      this.uploader.bind("UploadComplete", function() {
+        console.log("All files have been uploaded.");
+      });
+      
       $container.on("click", ".status", this.toggle.bind(this));
     }
   };

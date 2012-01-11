@@ -40,7 +40,7 @@ $.behaviors({
     $subMeepParagaphs.each(function(i, subMeepParagaph) {
       var $subMeepParagaph  = $(subMeepParagaph),
           meepId            = $subMeepParagaph.data("meep").id,
-          $actionLinks      = new protonet.utils.Template("meep-actions-template", { id: meepId }).toElement();
+          $actionLinks      = new protonet.utils.Template("meep-actions-template", { id: meepId }).to$();
       $actionLinks.unbind(".meep_focus").bind("beforeactivate.meep_focus mousedown.meep_focus", false).appendTo($subMeepParagaph);
     });
     

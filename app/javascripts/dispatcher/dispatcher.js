@@ -54,7 +54,7 @@ protonet.dispatcher = {
   connectCallback: function(status) {
     this.connecting = false;
     
-    if (status === true) {
+    if (status) {
       this.connected = true;
       this.startCheck();
       if (this._reconnect) {

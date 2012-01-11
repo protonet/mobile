@@ -30,17 +30,17 @@ protonet.utils.Template.prototype = {
   
   _getTemplate: function(id) {
     if (!this.cache[id]) {
-      this.cache[id] = $("#" + id).html();
+      this.cache[id] = $.trim(document.getElementById(id).innerHTML);
     }
     
     return this.cache[id];
   },
   
   toString: function() {
-    return $.trim(this.html);
+    return this.html;
   },
   
-  toElement: function() {
+  to$: function() {
     return $(this.html);
   }
 };

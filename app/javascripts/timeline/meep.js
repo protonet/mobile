@@ -166,7 +166,7 @@
       });
 
       this.element = new protonet.utils.Template(template, templateData)
-        .toElement()
+        .to$()
         .prependTo(container);
 
       this.article = this.element.is("article") ? this.element : this.element.find("article");
@@ -239,7 +239,7 @@
 
       if (!this.status) {
         this.status = new protonet.utils.Template("meep-status-template")
-          .toElement()
+          .to$()
           .appendTo(this.element.find(".author"));
       }
 

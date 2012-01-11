@@ -12,7 +12,7 @@
 <%= form_tag(preferences_release_update_path, { :remote => true, 'data-type' => 'html', :class => "software-update" }) do %>
   <%= hidden_field_tag 'section', 'software_updates' %>
   <div class="form-field">
-    <%= label_tag          :password, 'Your node password:' %>
+    <%= label_tag          :password, 'Your node SSH password:' %>
     <%= password_field_tag :password, nil %>
   </div>
   <div class="form-field">

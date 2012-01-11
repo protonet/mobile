@@ -30,7 +30,7 @@ protonet.dispatcher.provider.WebSocket = {
       protonet.trigger("socket.connected", true);
     }.bind(this);
     
-    this.socket.onclose = function() { 
+    this.socket.onclose = function() {
       protonet.trigger("socket.connected", false);
     };
     

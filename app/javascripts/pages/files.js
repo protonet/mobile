@@ -51,7 +51,7 @@ protonet.p("files", function($page) {
     $.each(observer, function(methodName, method) {
       protonet.on("fs." + methodName, method);
     });
-    $page.on("unload", unobserve);
+    $page.on("modal_window.unload", unobserve);
   }
   
   function unobserve() {

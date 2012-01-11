@@ -1,15 +1,10 @@
-//= require "../../../lib/plupload/src/javascript/plupload.js"
-//= require "../../../lib/plupload/src/javascript/plupload.html5.js"
-//= require "../../../lib/plupload/src/javascript/plupload.html4.js"
-//= require "../../../lib/plupload/src/javascript/plupload.flash.js"
 //= require "../../../ui/file_queue.js"
 
 /**
  * File attachments
  */
 protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
-  var maxFileSize       = ($.browser.mozilla && !window.FormData) ? "100mb" : "2000mb",
-      $body             = $("body"),
+  var $body             = $("body"),
       $dropArea;
   
   function hasFiles(dataTransfer) {
@@ -24,42 +19,16 @@ protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
       types.length === 0;
   }
   
-  var uploader = new plupload.Uploader({
-    runtimes:       "html5,flash,html4",
-    browse_button:  "attach-file-extension",
-    max_file_size:  maxFileSize,
-    url:            protonet.config.node_base_url + "/upload",
-    flash_swf_url:  "/flash/plupload.flash.swf",
-    drop_element:   $form.attr("id")
+  var fileQueue = protonet.ui.FileQueue.initialize({
+    browse_button: "attach-file-extension",
+    drop_element:  $form.attr("id")
   });
   
-  uploader.bind("QueueChanged", function(uploader, files) {
-    uploader.start();
-  });
-  
-  uploader.bind("FileUploaded", function() {
-    console.log("PULPLOAD: ALL FILES HAVE BEEN UPLOADED");
-  });
-  
-  uploader.bind("FilesAdded", function(uploader, files) {
-    protonet.ui.FileQueue.initialize();
+  fileQueue.uploader.bind("FilesAdded", function() {
     $form.trigger("dragleave");
-    $.each(files, function(i, file) {
-      protonet.ui.FileQueue.add(file);
-    });
   });
   
-  uploader.init();
-  
-  protonet.on("channel.change", function(channelId) {
-    uploader.settings.multipart_params = {
-      channel_id: channelId,
-      user_id:    protonet.config.user_id,
-      token:      protonet.config.token
-    };
-  });
-  
-  if (uploader.features.dragdrop) {
+  if (fileQueue.uploader.features.dragdrop) {
     var bodyTimeout,
         formTimeout;
     

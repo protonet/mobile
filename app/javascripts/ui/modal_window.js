@@ -45,6 +45,10 @@ protonet.ui.ModalWindow = (function() {
     }
   });
   
+  function _fireUnload() {
+    elements.dialog.find("section.subpage").trigger("modal_window.unload");
+  }
+  
   function _abortCurrentRequest() {
     try { currentRequest.abort(); } catch(e) {}
   }
@@ -212,7 +216,7 @@ protonet.ui.ModalWindow = (function() {
     }
     
     if (visible) {
-      elements.dialog.find("section.subpage").trigger("unload");
+      _fireUnload();
     } else {
       _observe();
       _hideScrollbar();
@@ -243,7 +247,7 @@ protonet.ui.ModalWindow = (function() {
       return this;
     }
     
-    elements.dialog.find("section.subpage").trigger("unload");
+    _fireUnload();
     elements.container.detach();
     content("");
     
