@@ -62,6 +62,8 @@ case $1 in
       echo $GRANTS_CMD | bash
       PREROUTING_CMD="$IPT -L unknown_user -t nat -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D unknown_user \" \$1}' | sort -r | bash"
       echo $PREROUTING_CMD | bash
+      FORWARD_CMD="$IPT -L FORWARD | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D PREROUTING \" \$1}' | sort -r | bash"
+      echo $FORWARD_CMD | bash
       $IPT -X unknown_user -t nat
       # remove file
       rm -f $SHARED/config/ifconfig.d/allowed_clients

@@ -3,11 +3,11 @@ class SystemCaptivePortal
   class << self
     
     def start
-      (`#{service_command("start")}` && SystemPreferences.captive = true) if config_check
+      `#{service_command("start")}` if config_check
     end
     
     def stop
-      (`#{service_command("stop")}` && SystemPreferences.captive = false) if config_check
+      `#{service_command("stop")}` if config_check
     end
     
     def status
@@ -15,7 +15,7 @@ class SystemCaptivePortal
     end
 
     def list
-      `#{service_command("list")}` if config_check
+      `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access list`.strip if config_check
     end
     
     private
@@ -26,6 +26,7 @@ class SystemCaptivePortal
     def config_check
       return false if Rails.env.development?
       return false if [SystemPreferences.captive_external_interface, SystemPreferences.captive_internal_interface, SystemPreferences.captive_redirection_target].any? {|setting| setting.nil?}
+      true
     end
     
   end
