@@ -11,7 +11,7 @@ class SystemCaptivePortal
     end
     
     def status
-      `#{service_command("status")}` if config_check
+      system(service_command("status")) if config_check
     end
 
     def list
