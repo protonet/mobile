@@ -7,11 +7,11 @@
     <label>Status:</label>
     <span>
       <label>
-        <input type="radio" name="preferences[captive]" value="true" <%= 'checked' if SystemPreferences.captive %>>
+        <input type="radio" name="preferences[captive]" value="true" <%= 'checked' if SystemCaptivePortal.status %>>
         On
       </label>
       <label>
-        <input type="radio" name="preferences[captive]" value="false" <%= 'checked' unless SystemPreferences.captive %>> 
+        <input type="radio" name="preferences[captive]" value="false" <%= 'checked' unless SystemCaptivePortal.status %>> 
         Off
       </label>
     </span>
@@ -34,3 +34,31 @@
   </div>
   <%= button "Save" %>
 <%- end -%>
+
+<br />
+
+<%= form_tag "/captive/grant", { :remote => true, 'data-type' => 'html' } do -%>
+  <%= hidden_field_tag 'section', 'advanced_settings' %>
+  <div class="form-field">
+    <%= label_tag 'mac_address', 'Grant access for MAC:' %>
+    <%= text_field_tag 'mac_address' %>
+  </div>
+  <%= button "Grant" %>
+<%- end -%>
+
+<br />
+
+<%= form_tag "/captive/revoke", { :remote => true, 'data-type' => 'html' } do -%>
+  <%= hidden_field_tag 'section', 'advanced_settings' %>
+  <div class="form-field">
+    <%= label_tag 'mac_address', 'Revoke access for MAC:' %>
+    <%= text_field_tag 'mac_address' %>
+  </div>
+  <%= button "Revoke" %>
+<%- end -%>
+
+<br />
+
+List:
+
+<%= SystemCaptivePortal.list %>

@@ -13,9 +13,16 @@ export EXTIF=$1
 # the interface with the local or captivated clients
 export INTIF=$2
 export REDIRECTION_TARGET=$3
+export IPT_COMMENT="-m comment --comment protonet_captive"
 shift 3
 case $1 in
-    start)      
+    start)
+      if [ -z "`$IPT -L -t nat -v | grep unknown_user`" ]; then
+        echo "No captive portal rules active, starting up."
+      else
+        echo "Firewall rules seem to be active, exiting!"
+        exit 1
+      fi
       echo "   External Interface:          $EXTIF"
       echo "   Internal Interface:          $INTIF"
       
@@ -24,46 +31,43 @@ case $1 in
       
       echo "   manage traffic coming from the public interface.."
       # accept allow tcp:80, tcp:443, udp:67 (dhcp) and udp:53 (dns) and tcp:5000 (protonet-socket) requests
-      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 80   -j ACCEPT
-      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 443  -j ACCEPT
-      $IPT -t nat -A PREROUTING -i $INTIF -p udp -m udp --destination $REDIRECTION_TARGET --dport 67   -j ACCEPT
-      $IPT -t nat -A PREROUTING -i $INTIF -p udp -m udp --destination $REDIRECTION_TARGET --dport 53   -j ACCEPT
-      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 5000 -j ACCEPT
-      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 5001 -j ACCEPT
+      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 80   -j ACCEPT $IPT_COMMENT
+      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 443  -j ACCEPT $IPT_COMMENT
+      $IPT -t nat -A PREROUTING -i $INTIF -p udp -m udp --destination $REDIRECTION_TARGET --dport 67   -j ACCEPT $IPT_COMMENT
+      $IPT -t nat -A PREROUTING -i $INTIF -p udp -m udp --destination $REDIRECTION_TARGET --dport 53   -j ACCEPT $IPT_COMMENT
+      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 5000 -j ACCEPT $IPT_COMMENT
+      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 5001 -j ACCEPT $IPT_COMMENT
 
       echo "   send all public traffic to the unknown_user chain"
-      $IPT -t nat -A PREROUTING -i $INTIF -j unknown_user
+      $IPT -t nat -A PREROUTING -i $INTIF -j unknown_user $IPT_COMMENT
 
       echo "   and drop all forward pakets marked 99"
-      $IPT -t filter -A FORWARD -i $INTIF -m mark --mark 99 -j DROP
+      $IPT -t filter -A FORWARD -i $INTIF -m mark --mark 99 -j DROP $IPT_COMMENT
 
 
       echo "   allow traffic from all stored (and authorized) mac addresses"
       touch $SHARED/config/ifconfig.d/allowed_clients
       chown protonet:protonet $SHARED/config/ifconfig.d/allowed_clients
-      awk 'BEGIN { FS="\t"; } { system("$IPT -t nat -A unknown_user -m mac --mac-source "$4" -j RETURN"); }' $SHARED/config/ifconfig.d/allowed_clients
+      awk 'BEGIN { FS="\t"; } { system("$CURRENT_PATH/script/init/client_internet_access grant \"$2\" \"$1\" \"$4\""); }' $SHARED/config/ifconfig.d/allowed_clients
 
       echo "   mark all traffic from the unknown_user chain as 99 (untrusted)"
-      $IPT -t nat -A unknown_user -j MARK --set-mark 99
+      $IPT -t nat -A unknown_user -j MARK --set-mark 99 $IPT_COMMENT
 
       echo "   redirect all traffic to $REDIRECTION_TARGET"
-      $IPT -t nat -A unknown_user -m mark --mark 99 -p tcp --dport 80 -j DNAT --to-destination $REDIRECTION_TARGET
+      $IPT -t nat -A unknown_user -m mark --mark 99 -p tcp --dport 80 -j DNAT --to-destination $REDIRECTION_TARGET $IPT_COMMENT
       # create file
       ;;
     stop)
-      $IPT -F
-      $IPT -X
-      $IPT -t nat -F
-      $IPT -t nat -X
-      $IPT -t mangle -F
-      $IPT -t mangle -X
-      $IPT -P INPUT ACCEPT
-      $IPT -P FORWARD ACCEPT
-      $IPT -P OUTPUT ACCEPT
+      GRANTS_CMD="$IPT -L PREROUTING -t nat -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D PREROUTING \" \$1}' | sort -r | bash"
+      echo $GRANTS_CMD | bash
+      PREROUTING_CMD="$IPT -L unknown_user -t nat -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D unknown_user \" \$1}' | sort -r | bash"
+      echo $PREROUTING_CMD | bash
+      $IPT -X unknown_user -t nat
       # remove file
+      rm -f $SHARED/config/ifconfig.d/allowed_clients
       ;;
     status)
-      if [ -z "`$IPT -L -n | grep unknown_user`" ]; then
+      if [ -z "`$IPT -L -t nat -v | grep unknown_user`" ]; then
         echo "Couldn't find the unknown_user chain, probably down."
         exit 1
       else

@@ -116,8 +116,8 @@ module BackendAdapters
     
     def grant_internet_access(ip, username = nil)
       # Add computer addresses to file
-      doc = ip + "\t" + get_mac_for_ip(ip) + "\t"  + Time.now().strftime("%d.%m.%y") + "\n"
-      File.open(internet_access_grants_file, 'a') {|f| f.write(doc) }
+      grants_entry = "#{ip}\t#{get_mac_for_ip(ip)}\t#{Time.now().strftime("%d.%m.%y")}\t#{username}\n"
+      File.open(internet_access_grants_file, 'a') {|f| f.write(grants_entry) }
     
       # Add mac to granted clients
       `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access grant #{get_mac_for_ip(ip)} #{ip} #{username}`

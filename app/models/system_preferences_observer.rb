@@ -8,6 +8,8 @@ class SystemPreferencesObserver < ActiveRecord::Observer
       ActionMailer::Base.default_url_options[:protocol] = (SystemPreferences.public_host_https ? 'https' : 'http')
     when "index_meeps"
       Sunspot::IndexQueue::Entry.implementation =  (system_preference.value ? :active_record : :nil)
+    when "captive"
+      system_preference.value == true ? SystemCaptivePortal.start : SystemCaptivePortal.stop
     when "custom_css", "custom_javascript", "browser_title", "captive_url", "captive_authorization_url", "captive_external_interface", "captive_internal_interface", "captive_redirection_target"
       system_preference.destroy if system_preference.value.blank?
     end
