@@ -15,11 +15,11 @@ module BackendAdapters
     end
   
     def grant_internet_access(ip, username)
-    
+      true
     end
   
     def revoke_internet_access(ip)
-
+      true
     end
     
     def get_hostname_for_ip(ip)

@@ -40,8 +40,8 @@
 <%= form_tag "/captive/grant", { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'advanced_settings' %>
   <div class="form-field">
-    <%= label_tag 'mac_address', 'Grant access for MAC:' %>
-    <%= text_field_tag 'mac_address' %>
+    <%= label_tag 'ip_address', 'Grant access for IP:' %>
+    <%= text_field_tag 'ip_address' %>
   </div>
   <%= button "Grant" %>
 <%- end -%>
@@ -51,8 +51,8 @@
 <%= form_tag "/captive/revoke", { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'advanced_settings' %>
   <div class="form-field">
-    <%= label_tag 'mac_address', 'Revoke access for MAC:' %>
-    <%= text_field_tag 'mac_address' %>
+    <%= label_tag 'ip_address', 'Revoke access for IP:' %>
+    <%= text_field_tag 'ip_address' %>
   </div>
   <%= button "Revoke" %>
 <%- end -%>

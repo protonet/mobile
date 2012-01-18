@@ -4,7 +4,9 @@ Dashboard::Application.routes.draw do
   match 'captive' => 'system/captive#index'
   match 'captive/login' => 'system/captive#login'
   match 'captive/store_redirect' => 'system/captive#store_redirect'
-  
+  match 'captive/grant' => 'system/captive#grant'
+  match 'captive/revoke' => 'system/captive#revoke'
+
   # Channels
   match 'channels/:id/guest/:token' => 'channels#guest_access', :as => :channel_guest_access
   match 'channels/list' => 'channels#list', :as => :list_channels
