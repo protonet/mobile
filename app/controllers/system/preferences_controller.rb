@@ -1,5 +1,7 @@
 module System
   class PreferencesController < ApplicationController
+
+    filter_access_to :all
     
     def update
       (params[:preferences] || []).each do |k,v|

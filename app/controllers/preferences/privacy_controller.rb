@@ -1,5 +1,7 @@
 module Preferences
   class PrivacyController < ApplicationController
+    filter_access_to :all, :context => :preferences
+
     def update
       success = false
       if params[:preferences]

@@ -1,5 +1,6 @@
 module Preferences
   class ReleasesController < ApplicationController
+    filter_access_to :all, :context => :preferences
     
     def update
       if current_user.admin?

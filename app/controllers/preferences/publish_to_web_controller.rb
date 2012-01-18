@@ -1,5 +1,6 @@
 module Preferences
   class PublishToWebController < ApplicationController
+    filter_access_to :all, :context => :publish_to_web
     
     def update
       if (setting = params[:preferences][:publish_to_web] == "true") && params[:preferences][:publish_to_web_name].blank?
