@@ -6,7 +6,7 @@ class ProtonetEmailService
   end
 
   def deliver!(mail)
-    response = Net::HTTP.post_form(URI.parse("http://localhost:3001/email/send"), {
+    response = Net::HTTP.post_form(URI.parse("http://email.protonet.info/send"), {
       :license_key => SystemBackend.license_key,
       :to => mail.to,
       :bcc => mail.bcc,
