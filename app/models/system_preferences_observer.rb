@@ -10,7 +10,28 @@ class SystemPreferencesObserver < ActiveRecord::Observer
       Sunspot::IndexQueue::Entry.implementation =  (system_preference.value ? :active_record : :nil)
     when "captive"
       system_preference.value == true ? SystemCaptivePortal.start : SystemCaptivePortal.stop
-    when "custom_css", "custom_javascript", "browser_title", "captive_url", "captive_authorization_url", "captive_external_interface", "captive_internal_interface", "captive_redirection_target"
+    when "local_email_delivery", "smtp_address", "smtp_domain", "smtp_username", "smtp_password"
+      if system_preference.value == true
+        if ["smtp_address", "smtp_domain", "smtp_username", "smtp_password"].none? { |s| SystemPreferences[s].nil? }
+          ActionMailer::Base.smtp_settings = {
+            :address              => SystemPreferences.smtp_address,
+            :port                 => 587,
+            :domain               => SystemPreferences.smtp_domain,
+            :user_name            => SystemPreferences.smtp_username,
+            :password             => SystemPreferences.smtp_password,
+            :authentication       => "plain",
+            :enable_starttls_auto => true
+          }
+          ActionMailer::Base.delivery_method = :smtp
+        else
+          ActionMailer::Base.delivery_method = :sendmail
+        end
+      else
+        ActionMailer::Base.delivery_method = ProtonetEmailService
+      end
+    when "custom_css", "custom_javascript", "browser_title", "captive_url",
+      "captive_authorization_url", "captive_external_interface", "captive_internal_interface", "captive_redirection_target",
+      "smtp_address", "smtp_domain", "smtp_username", "smtp_password"
       system_preference.destroy if system_preference.value.blank?
     end
   end

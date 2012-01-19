@@ -58,6 +58,26 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:custom_css_type] = "append"
   SystemPreferences.defaults[:index_meeps] = true
 
+  # setup email settings from preferences
+  if SystemPreferences.local_email_delivery == true
+    if ["smtp_address", "smtp_domain", "smtp_username", "smtp_password"].none? { |s| SystemPreferences[s].nil? }
+      ActionMailer::Base.smtp_settings = {
+        :address              => SystemPreferences.smtp_address,
+        :port                 => 587,
+        :domain               => SystemPreferences.smtp_domain,
+        :user_name            => SystemPreferences.smtp_username,
+        :password             => SystemPreferences.smtp_password,
+        :authentication       => "plain",
+        :enable_starttls_auto => true
+      }
+      ActionMailer::Base.delivery_method = :smtp
+    else
+      ActionMailer::Base.delivery_method = :sendmail
+    end
+  else
+    ActionMailer::Base.delivery_method = ProtonetEmailService
+  end
+  
   # catching exceptions since this can be called even before the database has
   # been created and would cause ActiveRecord to raise an sql table missing error
   begin
