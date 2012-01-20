@@ -3,6 +3,9 @@
 //= require "../lib/plupload/src/javascript/plupload.html4.js"
 //= require "../lib/plupload/src/javascript/plupload.flash.js"
 
+/**
+ * Wrapper for the plupload lib
+ */
 protonet.utils.Uploader = (function() {
   var defaultConfig = {
     max_file_size:  ($.browser.mozilla && !window.FormData) ? "250mb" : "10000mb",
