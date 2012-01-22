@@ -26,7 +26,7 @@
  *
  */
 protonet.data.MetaData = {
-  QUERY: "SELECT * FROM html WHERE url = '{url}' AND xpath='descendant-or-self::title | descendant-or-self::meta | descendant-or-self::link | descendant-or-self::img[contains(concat(\" \", normalize-space(@class), \" \"), \" photo \")]'",
+  QUERY: "SELECT * FROM html WHERE url = '{url}' AND compat='html5' AND xpath='descendant-or-self::title | descendant-or-self::meta | descendant-or-self::link | descendant-or-self::img[contains(concat(\" \", normalize-space(@class), \" \"), \" photo \")]'",
   
   LINK_REL: ["video_src", "image_src", "audio_src"],
   
@@ -65,6 +65,14 @@ protonet.data.MetaData = {
       }
     }.bind(this));
     
+    // handle link elements
+    $.each($.makeArray(response.link), function(i, linkTag) {
+      if (linkTag && typeof(linkTag.href) == "string" && linkTag.href.length && $.inArray(linkTag.rel, this.LINK_REL) != -1) {
+        var src = $.trim(linkTag.href);
+        data[linkTag.rel.toLowerCase()] = protonet.utils.convertToAbsoluteUrl(src, url);
+      }
+    }.bind(this));
+    
     // handle opengraph meta tags
     $.each(metaTags, function(i, metaTag) {
       if (metaTag && String(metaTag.property).startsWith("og:") && typeof(metaTag.content) == "string") {
@@ -78,14 +86,6 @@ protonet.data.MetaData = {
         data[key] = $.trim(metaTag.content);
       }
     });
-    
-    // handle link elements
-    $.each($.makeArray(response.link), function(i, linkTag) {
-      if (linkTag && typeof(linkTag.href) == "string" && linkTag.href.length && $.inArray(linkTag.rel, this.LINK_REL) != -1) {
-        var src = $.trim(linkTag.href);
-        data[linkTag.rel.toLowerCase()] = protonet.utils.convertToAbsoluteUrl(src, url);
-      }
-    }.bind(this));
     
     onSuccess(data);
   }
