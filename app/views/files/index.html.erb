@@ -1,16 +1,18 @@
 <output class="content">
   <h2>Files: <output data-file-path><%= params[:path] || "/" %></output></h2>
   
-  <table>
-    <thead>
-      <tr>
-        <th class="file-name">Name</th>
-        <th class="file-modified">Last Modified</th>
-        <th class="file-size">Size</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th class="file-name">Name</th>
+          <th class="file-modified">Last Modified</th>
+          <th class="file-size">Size</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 </output>
 
 <script type="protonet/template" id="file-item-template">

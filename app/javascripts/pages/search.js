@@ -173,5 +173,5 @@ protonet.pages.Search = {
 };
 
 protonet.p("search", function() {
-  protonet.pages.Search.initialize
+  protonet.pages.Search.initialize();
 });

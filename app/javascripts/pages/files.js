@@ -1,9 +1,12 @@
 //= require "../utils/prettify_file_size.js"
 //= require "../utils/prettify_date.js"
 
-protonet.p("files", function($page) {
-  var filePath = $.trim($page.find("[data-file-path]").text()) || "/",
-      $tbody   = $page.find("tbody");
+protonet.p("files", function($page, $window) {
+  var currentFilePath = $.trim($page.find("[data-file-path]").text()) || "/",
+      isModalWindow   = $(".modal-window").length > 0,
+      $content        = $page.find(".content"),
+      $tableWrapper   = $page.find(".table-wrapper"),
+      $tbody          = $page.find("tbody");
   
   var observer = {
     list: function(data) {
@@ -71,7 +74,34 @@ protonet.p("files", function($page) {
     });
   }
   
+  function resizeFileArea() {
+    var currentHeight = $tableWrapper.outerHeight(),
+        newHeight     = $page.outerHeight() - $tableWrapper.prop("offsetTop") - 20;
+    $tableWrapper.css("min-height", newHeight.px());
+  }
+  
+  function resize() {
+    resizePage();
+    resizeFileArea();
+  }
+  
+  function resizePage() {
+    if (!isModalWindow) {
+      $content.css("height", ($window.height() - $content.offset().top - 40).px());
+    }
+  }
+  
+  $window.on("resize", resize);
+  resize();
+  
+  protonet.on("modal_window.unload", function() {
+    $window.off("resize", resize);
+  });
+  
   observe();
   
-  api.cd(filePath);
+  /**
+   * Ok, ready, set, go!
+   */
+  api.cd(currentFilePath);
 });
