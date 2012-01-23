@@ -65,8 +65,8 @@ check program raid with path "<%= current_path %>/script/monit_raid_check"
 
 # Watch netatalk/afpd
 check host afpd with address 127.0.0.1
-  start program = /usr/bin/sudo /etc/init.d/netatalk start
-  stop program  = /usr/bin/sudo /etc/init.d/netatalk stop
+  start program = "/usr/bin/sudo /etc/init.d/netatalk start"
+  stop program  = "/usr/bin/sudo /etc/init.d/netatalk stop"
   if failed port 548 for 5 cycles then restart
 
 <% if false && jabber_bridge_active %>
