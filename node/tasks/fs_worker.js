@@ -169,15 +169,15 @@ exports.list = function(params, reply) {
       var stats = fs.statSync(fullpath);
       if (stats.isDirectory()) {
         files[filelist[file]] = {
-          created: stats.ctime,
+          modified: stats.mtime,
           type:    'folder'
         };
       } else {
         files[filelist[file]] = {
-          size:  stats.size,
-          added: stats.ctime,
-          mime:  lookup_mime(filelist[file]),
-          type:  'file'
+          size:     stats.size,
+          modified: stats.mtime,
+          mime:     lookup_mime(filelist[file]),
+          type:     'file'
         };
       }
     }

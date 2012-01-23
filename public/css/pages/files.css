@@ -1,0 +1,76 @@
+.files-page table {
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid #aaa;
+  outline: 6px solid #eee;
+}
+
+.files-page .file-name {
+  width: 50%;
+}
+
+.files-page th.file-name {
+  padding-left: 48px;
+}
+
+.files-page .file-name,
+.files-page .file-modified {
+  text-align: left;
+}
+
+.files-page .file-size {
+  text-align: right;
+}
+
+.files-page td, .files-page th {
+  vertical-align: middle;
+  padding: 8px;
+}
+
+.files-page tr {
+  height: 26px;
+}
+
+.files-page tr:nth-child(even) {
+  background: #f0f5ff;
+}
+
+.files-page tr.focus {
+  background: ;
+  color: #fff;
+}
+
+.files-page tr.focus .file,
+.files-page tr.focus .folder {
+  background: rgba(72, 123, 255, 0.5);
+}
+
+.files-page th {
+  text-shadow: 0 1px 1px #fff;
+}
+
+.files-page thead tr {
+  border-bottom: 1px solid #aaa;
+  background-color: #ddd;
+  background-image: -o-linear-gradient(bottom, #ddd, #fff);
+  background-image: -moz-linear-gradient(bottom, #ddd, #fff);
+  background-image: -webkit-linear-gradient(bottom, #ddd, #fff);
+  background-image: -ms-linear-gradient(bottom, #ddd, #fff);
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #ddd),
+    color-stop(1, #fff)
+  );
+  background-image: linear-gradient(bottom, #ddd, #fff);
+}
+
+.files-page .file,
+.files-page .folder {
+  outline: 0;
+  cursor: default;
+}

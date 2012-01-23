@@ -13,7 +13,6 @@
 //= require "../utils/parse_query_string.js"
 //= require "../utils/get_channel_name.js"
 //= require "../media/proxy.js"
-//= require "../ui/pretty_date.js"
 
 /**
  * @example

@@ -39,7 +39,19 @@
 .file[href$=".wmv"]{ background-position: 0 -3198px; }
 .file[href$=".xls"]{ background-position: 0 -3280px; }
 .file[href$=".zip"]{ background-position: 0 -3362px; }
-.file, .folder { background: url(/img/spr_file_extensions.png) no-repeat top left; width: 32px; height: 32px; }
+.file, .folder {
+  background: url(/img/spr_file_extensions.png) no-repeat top left;
+  padding-left: 40px;
+  height: 32px;
+  line-height: 32px;
+  display: block;
+  text-decoration: none;
+}
+
+a.file, a.folder {
+  color: #000;
+}
+
 .file { background-position: 0 -328px; }
 .folder { background-position: 0 -3444px; }
 
@@ -105,7 +117,6 @@
   text-decoration: none;
   letter-spacing: -0.5px;
   white-space: nowrap;
-  height: 32px;
   width: 130px;
   overflow: hidden;
   position: relative;

@@ -95,7 +95,9 @@ module ConnectionShared
               :status => 'error',
               :error => {
                 :type => ex.class,
-                :message => ex.message})
+                :message => ex.message
+              }
+            )
           end
       end
     else

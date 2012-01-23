@@ -102,6 +102,9 @@ protonet.utils.History.addFallback(protonet.open);
 
 $.behaviors({
   "a[href]:click": function(link, event) {
+    if (event.isDefaultPrevented()) {
+      return;
+    }
     protonet.open(event);
   },
   
@@ -185,6 +188,9 @@ $.behaviors({
    *    <output data-tab="channel-container"></output>
    */
   "a[data-tab]:click": function(tabLink, event) {
+    if (event.isDefaultPrevented()) {
+      return;
+    }
     var $tabLink            = $(tabLink),
         tabName             = $tabLink.data("tab"),
         url                 = $tabLink.prop("href"),

@@ -1,4 +1,4 @@
-protonet.utils.convertToPrettyDate = (function() {
+protonet.utils.prettifyDate = (function() {
   var JUST_NOW = "Just now",
       MINUTES_AGO = "{t} minute{s} ago",
       HOURS_AGO = "{t} hour{s} ago",
@@ -56,6 +56,6 @@ protonet.utils.convertToPrettyDate = (function() {
       return prepareOutput(WEEKS_AGO, Math.ceil(difference / ONE_WEEK));
     }
     
-    return date.toLocaleString();
+    return date.toDateString();
   };
 })();
