@@ -63,6 +63,12 @@ check program raid with path "<%= current_path %>/script/monit_raid_check"
   if status == 0 then exec "/bin/bash -l -c 'cd <%= current_path %> && RAILS_ENV=production bundle exec rake report:raid_fail'"
   every 120 cycles
 
+# Watch netatalk/afpd
+check host afpd with address 127.0.0.1
+  start program = /usr/bin/sudo /etc/init.d/netatalk start
+  stop program  = /usr/bin/sudo /etc/init.d/netatalk stop
+  if failed port 548 for 5 cycles then restart
+
 <% if false && jabber_bridge_active %>
   check process jabber.rb with pidfile <%= shared_path %>/pids/jabber.rb.pid
     group daemons
