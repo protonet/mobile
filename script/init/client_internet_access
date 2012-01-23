@@ -17,12 +17,15 @@ export USERNAME=$3
 case $COMMAND in
    grant)
       echo "Granting internet access to $USERNAME, $MAC with ip $IP"
-      $IPT -I unknown_user 1 -t nat -m mac --mac-source $MAC -j RETURN -m comment --comment "$USERNAME $IP"
+      $IPT -I unknown_user 1 -t nat -m mac --mac-source $MAC -j RETURN -m comment --comment "$USERNAME $IP protonet_captive"
       ;;
     revoke)
       echo "Revoking internet access from $MAC"
-      CMD="$IPT -L unknown_user -v -t nat --line-numbers | awk '/$MAC/ {print \"$IPT -t nat -D unknown_user \" \$1}' | sort -r | bash"
+      CMD="$IPT -L unknown_user -v -t nat --line-numbers | awk 'tolower($0) ~ /$MAC/ {print \"$IPT -t nat -D unknown_user \" \$1}' | sort -r | bash"
       echo $CMD | bash
+      ;;
+    list)
+      $IPT -L unknown_user -v -t nat --line-numbers | grep protonet_captive | awk 'BEGIN { FS="      "; } { print $6}'
       ;;
     status)
       if $IPT -L unknown_user -v -t nat --line-numbers  | grep -q $MAC; then

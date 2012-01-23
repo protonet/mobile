@@ -12,7 +12,7 @@ class InvitationsController < ApplicationController
     @invitation = current_user.invitations.new(params[:invitation])
     
     if @invitation.save
-      flash[:notice] = "Your invitation has been successfully sent!"
+      flash[:sticky] = "Your invitation link (#{accept_invitation_url(:invitation_token => @invitation.token)}) has been successfully sent!"
       head(204)
     else
       flash[:error] = @invitation.errors.full_messages.to_sentence

@@ -1,5 +1,7 @@
 module System
   class CaptiveController < ApplicationController
+
+    before_filter :only_admin, :only => [:grant, :revoke]
   
     def index
       flash[:sticky] = "please login or create an account to be able to use the internet!"
@@ -14,6 +16,28 @@ module System
     def store_redirect
       session[:captive_redirect_url] = params[:captive_redirect_url]
       head :ok
+    end
+
+    def grant
+      response_code = if SystemBackend.grant_internet_access(request.remote_ip, "n_a")
+        flash[:notice] = "You've granted internet access to \"#{params[:ip_address]}\"."
+        204
+      else
+        flash[:error] = "Could not grant internet access to \"#{params[:ip_address]}\"."
+        400
+      end
+      respond_to_preference_update
+    end
+
+    def revoke
+      response_code = if SystemBackend.revoke_internet_access(request.remote_ip)
+        flash[:notice] = "You've revoked internet access from \"#{params[:ip_address]}\"."
+        204
+      else
+        flash[:error] = "Could not revoke internet access from \"#{params[:ip_address]}\"."
+        400
+      end
+      respond_to_preference_update
     end
   
     def login
@@ -49,6 +73,13 @@ module System
     
     def self.matches?(url)
       false
+    end
+
+    private
+    def only_admin
+      return true if current_user.admin?
+      flash[:error] = "Not authorized, only admins are allowed to do this."
+      head :unauthorized 
     end
 
   end

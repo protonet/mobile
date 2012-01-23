@@ -1,5 +1,7 @@
 module Preferences
   class VpnController < ApplicationController
+    filter_access_to :all, :context => :preferences
+    
     def update
       vpn_status = params[:vpn_status] == "true"
       vpn_status ? SystemVpn.start : SystemVpn.stop

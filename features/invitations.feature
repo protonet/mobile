@@ -19,7 +19,7 @@ Feature: Invitations
     And I fill in "invitation_message" with "Come join us"
     And I check "home"
     And I press "Invite"
-    Then I should see "Your invitation has been successfully sent!"
+    Then I should see "has been successfully sent!"
     # Invitation mail
     And "friend@protonet.com" should receive an email with subject "dudemeister wants you to join his protonet"
     When "friend@protonet.com" opens the email with subject "dudemeister wants you to join his protonet"

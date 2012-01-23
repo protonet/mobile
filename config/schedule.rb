@@ -5,14 +5,15 @@
 
 # Example:
 #
-# set :output, "/path/to/my/cron_log.log"
-#
 # every 2.hours do
 #   command "/usr/bin/some_great_command"
 #   runner "MyModel.some_method"
 #   rake "some:great:rake:task"
 # end
 #
+
+set(:output, "#{configatron.shared_file_path}/log/cron.log") unless configatron.shared_file_path.nil?
+
 every 4.days do
   runner "User.delete_strangers_older_than_two_days!"
 end

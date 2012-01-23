@@ -7,11 +7,11 @@
     <label>Status:</label>
     <span>
       <label>
-        <input type="radio" name="preferences[captive]" value="true" <%= 'checked' if SystemPreferences.captive %>>
+        <input type="radio" name="preferences[captive]" value="true" <%= 'checked' if SystemCaptivePortal.status %>>
         On
       </label>
       <label>
-        <input type="radio" name="preferences[captive]" value="false" <%= 'checked' unless SystemPreferences.captive %>> 
+        <input type="radio" name="preferences[captive]" value="false" <%= 'checked' unless SystemCaptivePortal.status %>> 
         Off
       </label>
     </span>
@@ -29,8 +29,72 @@
     <%= text_field_tag 'preferences[captive_internal_interface]', SystemPreferences.captive_internal_interface %>
   </div>
   <div class="form-field">
-    <%= label_tag 'preferences[captive_redirection_target]', 'Redirection target:' %>
+    <%= label_tag 'preferences[captive_redirection_target]', 'Redirection IP:' %>
     <%= text_field_tag 'preferences[captive_redirection_target]', SystemPreferences.captive_redirection_target %>
+  </div>
+  <%= button "Save" %>
+<%- end -%>
+
+<br />
+
+<%= form_tag "/captive/grant", { :remote => true, 'data-type' => 'html' } do -%>
+  <%= hidden_field_tag 'section', 'advanced_settings' %>
+  <div class="form-field">
+    <%= label_tag 'ip_address', 'Grant access for IP:' %>
+    <%= text_field_tag 'ip_address' %>
+  </div>
+  <%= button "Grant" %>
+<%- end -%>
+
+<br />
+
+<%= form_tag "/captive/revoke", { :remote => true, 'data-type' => 'html' } do -%>
+  <%= hidden_field_tag 'section', 'advanced_settings' %>
+  <div class="form-field">
+    <%= label_tag 'ip_address', 'Revoke access for IP:' %>
+    <%= text_field_tag 'ip_address' %>
+  </div>
+  <%= button "Revoke" %>
+<%- end -%>
+
+<br />
+
+List:
+
+<%= SystemCaptivePortal.list %>
+
+<h3>Email Settings <a data-hover-hint="top" title="Allows you to use external SMTP services to send emails" class="hint">(?)</a></h3>
+<%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
+  <%= hidden_field_tag 'section', 'advanced_settings' %>
+  <div class="form-field">
+    <label>Local email delivery:</label>
+    <span>
+      <label>
+        <input type="radio" name="preferences[local_email_delivery]" value="true" <%= 'checked' if SystemPreferences.local_email_delivery == true %>>
+        On
+      </label>
+      <label>
+        <input type="radio" name="preferences[local_email_delivery]" value="false" <%= 'checked' if SystemPreferences.local_email_delivery != true %>> 
+        Off
+      </label>
+    </span>
+  </div>
+  <p><strong>Info:</strong> Turning on local delivery and leaving the SMTP settings empty will make your node use sendmail.</p>
+  <div class="form-field">
+    <%= label_tag 'preferences[smtp_address]', 'SMTP Address:' %>
+    <%= text_field_tag 'preferences[smtp_address]', SystemPreferences.smtp_address %>
+  </div>
+  <div class="form-field">
+    <%= label_tag 'preferences[smtp_domain]', 'SMTP Domain:' %>
+    <%= text_field_tag 'preferences[smtp_domain]', SystemPreferences.smtp_domain %>
+  </div>
+  <div class="form-field">
+    <%= label_tag 'preferences[smtp_username]', 'SMTP Username:' %>
+    <%= text_field_tag 'preferences[smtp_username]', SystemPreferences.smtp_username %>
+  </div>
+  <div class="form-field">
+    <%= label_tag 'preferences[smtp_password]', 'SMTP Password:' %>
+    <%= password_field_tag 'preferences[smtp_password]', SystemPreferences.smtp_password %>
   </div>
   <%= button "Save" %>
 <%- end -%>

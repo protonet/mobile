@@ -101,6 +101,16 @@
   <%- end -%>
   
   <%- if current_user.admin? && !@user.anonymous? %>
+  <h3>User roles <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
+    <%= form_tag({ :action => 'update_roles' }, { :remote => true, :class => 'single-button-form role-selector', 'data-type' => 'html' }) do %>
+      <%= hidden_field_tag :user_id, @user.id %>
+      <%= hidden_field_tag :id, @user.id %>
+      <%= select_tag 'user[roles]', options_for_select(Role.where("title != 'admin'").all.map {|p| [ p.title, p.id ] }, @user.roles.collect(&:id)), { "data-multi-select" => true, :multiple => true } %>
+      <%= button "Save", 'data-confirm' => 'Are the roles correct?' %>
+    <% end %>
+  <%- end %>
+
+  <%- if current_user.admin? && !@user.anonymous? %>
     <h3>Delete user <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
     <%= form_tag({ :action => 'delete' }, { :remote => true, :class => 'single-button-form', 'data-type' => 'html' }) do %>
       <%= hidden_field_tag :user_id, @user.id %>
@@ -108,4 +118,5 @@
       <%= button "Delete", 'data-confirm' => 'Do you really want to delete this user? There\'s no undo.' %>
     <% end %>
   <%- end %>
+
 </output>

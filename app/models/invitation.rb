@@ -20,17 +20,6 @@ class Invitation < ActiveRecord::Base
   end
   
   def send_email
-    if SystemPreferences.local_email_delivery == true
-      Mailer.invitation(self).deliver
-    else
-      Net::HTTP.post_form(URI.parse("http://invitation.protonet.info/send"), {
-        :license_key => SystemBackend.license_key,
-        :inviter_name => user.login,
-        :inviter_email => user.email,
-        :invitee_email => email,
-        :message => message,
-        :token => token
-      })
-    end
+    Mailer.invitation(self).deliver
   end
 end

@@ -1,5 +1,6 @@
 module Preferences
   class WifiController < ApplicationController
+    filter_access_to :all, :context => :preferences
     
     def update
       wifi_preferences = SystemPreferences.wifi

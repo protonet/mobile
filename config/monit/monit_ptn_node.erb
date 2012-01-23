@@ -10,8 +10,10 @@ set logfile syslog facility log_daemon
 
 # control and http interface
 set httpd port 2812
-allow localhost
 allow @admin
+allow localhost
+# following line is added since monit command line needs this to communicate with the monitoring
+allow monituser:<%= monit_password %>
 
 ##########################################################################
 # default processes, more are added in runtime at shared/config/monit.d/*
@@ -60,6 +62,12 @@ check process solr with pidfile <%= shared_path %>/pids/sunspot-solr.pid
 check program raid with path "<%= current_path %>/script/monit_raid_check"
   if status == 0 then exec "/bin/bash -l -c 'cd <%= current_path %> && RAILS_ENV=production bundle exec rake report:raid_fail'"
   every 120 cycles
+
+# Watch netatalk/afpd
+check host afpd with address 127.0.0.1
+  start program = "/usr/bin/sudo /etc/init.d/netatalk start"
+  stop program  = "/usr/bin/sudo /etc/init.d/netatalk stop"
+  if failed port 548 for 5 cycles then restart
 
 <% if false && jabber_bridge_active %>
   check process jabber.rb with pidfile <%= shared_path %>/pids/jabber.rb.pid
