@@ -17,6 +17,11 @@ protonet.p("files", function($page, $window, $document) {
         return path;
       }
       return currentPath + path;
+    },
+    
+    getHttpPath: function(name) {
+      var path = this.getAbsolutePath(name);
+      return "/files/?path=" + encodeURIComponent(path);
     }
   };
   
@@ -38,6 +43,7 @@ protonet.p("files", function($page, $window, $document) {
   };
   
   
+  // --------------------------------- MARKER --------------------------------- \\
   var marker = {
     initialize: function() {
       this.$items = $();
@@ -140,6 +146,7 @@ protonet.p("files", function($page, $window, $document) {
     item: function(info) {
       var fileData = {
             path:         utils.getAbsolutePath(info.name),
+            httpPath:     utils.getHttpPath(info.name),
             name:         info.name.truncate(70),
             rawName:      info.name,
             size:         protonet.utils.prettifyFileSize(info.size),
