@@ -3,4 +3,28 @@
 
 APP_PATH = File.expand_path('../../config/application',  __FILE__)
 require File.expand_path('../../config/boot',  __FILE__)
+
+# THIS IS NEW:
+require "rails/commands/server"
+module Rails
+  class Server
+    def start
+      begin
+        if self.options[:environment] != "production"
+          # this is set here for all environments beside production since the port is set dynamically there
+          port_file_path = "#{Rails.root}/tmp/app_port_#{self.options[:environment]}"
+          port_number = self.options[:Port]
+          File.open(port_file_path, 'w') {|f| f.write(port_number)}
+          configatron.web_app_port = port_number
+          at_exit { File.delete(port_file_path) }
+        end
+      rescue
+        nil
+      end
+      super
+    end
+  end
+end
+# END OF CHANGE
+
 require 'rails/commands'

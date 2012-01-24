@@ -37,6 +37,7 @@ Dashboard::Application.configure do
   configatron.images.externals_path = "public/system/externals"
   
   configatron.ldap.active = false
+  configatron.web_app_port        = 80
   configatron.socket.port         = 5000
   configatron.xhr_streaming.port  = 8000
   configatron.websocket.port      = 5001

@@ -33,3 +33,4 @@ TYPE
 .project
 erl_crash.dump
 .monitor
+tmp/app_port*
