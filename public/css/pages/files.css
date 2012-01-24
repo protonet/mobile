@@ -14,6 +14,7 @@
 
 .files-page .file-name {
   width: 50%;
+  white-space: nowrap;
 }
 
 .files-page th.file-name {
@@ -35,16 +36,24 @@
 }
 
 .files-page tr {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
   height: 26px;
   border-bottom: 1px solid #fff;
 }
 
 .files-page tr:nth-child(even) {
-  background: #f0f5ff;
+  background: #eee;
 }
 
 .files-page tr.focus {
-  color: #fff;
+  background: rgba(72, 123, 255, 0.3);
+}
+
+.files-page tr.focus,
+.files-page tr.focus a {
+  color: #000;
 }
 
 .files-page th {
@@ -75,12 +84,8 @@
   cursor: default;
 }
 
-.files-page h2 output {
-  display: inline-block;
-}
-
 .files-page h2 {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .files-page .hint {
@@ -89,4 +94,19 @@
   left: 0;
   right: 0;
   text-align: center;
+}
+
+.files-page .address-bar {
+  display: inline-block;
+  font-weight: normal;
+}
+
+.files-page .address-bar a {
+  text-decoration: none;
+  color: #999;
+}
+
+.files-page .address-bar a:hover,
+.files-page .address-bar a:last-child {
+  color: #000;
 }

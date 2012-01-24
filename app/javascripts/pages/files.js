@@ -1,12 +1,13 @@
 //= require "../utils/prettify_file_size.js"
 //= require "../utils/prettify_date.js"
 
-protonet.p("files", function($page, $window) {
-  var currentPath     = $.trim($page.find("[data-address-bar]").text()) || "/",
-      isModalWindow   = $(".modal-window").length > 0,
+protonet.p("files", function($page, $window, $document) {
+  var $addressBar     = $page.find(".address-bar"),
       $content        = $page.find(".content"),
       $tableWrapper   = $page.find(".table-wrapper"),
-      $tbody          = $page.find("tbody");
+      $tbody          = $page.find("tbody"),
+      currentPath     = $.trim($addressBar.text()) || "/",
+      isModalWindow   = $(".modal-window").length > 0;
   
   
   // --------------------------------- UTILS --------------------------------- \\
@@ -37,6 +38,56 @@ protonet.p("files", function($page, $window) {
   };
   
   
+  var marker = {
+    initialize: function() {
+      this.$items = $();
+      this._observe();
+    },
+    
+    _observe: function() {
+      $page.on("mousedown", "tbody tr", function(event) {
+        var $current        = $(event.currentTarget),
+            alreadyFocused  = $current.hasClass("focus");
+        
+        if (event.ctrlKey || event.metaKey) {
+          if (alreadyFocused) {
+            $current.removeClass("focus");
+            this.$items = this.$items.not($current);
+          } else {
+            this.$items = this.$items.add($current);
+          }
+        } else if (event.shiftKey && this.$items.length) {
+          var $last = this.$items.last();
+          if ($last.index() < $current.index()) {
+            this.$items = this.$items.add($last.nextUntil($current.next()), ":not(.focus)");
+          } else if ($last.index() > $current.index()) {
+            this.$items = this.$items.add($last.prevUntil($current.prev()), ":not(.focus)");
+          }
+        } else {
+          this.$items.removeClass("focus");
+          this.$items = $current;
+        }
+        
+        this.$items.addClass("focus");
+        
+        event.preventDefault();
+        event.stopPropagation();
+      }.bind(this));
+      
+      var clear = this.clear.bind(this);
+      $document.on("mousedown", clear);
+      
+      protonet.one("modal_window.unload", function() {
+        $document.off("mousedown", clear);
+      });
+    },
+    
+    clear: function() {
+      this.$items.removeClass("focus");
+      this.$items = $();
+    }
+  };
+  
   // --------------------------------- UI --------------------------------- \\
   var ui = {
     initialize: function() {
@@ -48,9 +99,15 @@ protonet.p("files", function($page, $window) {
       $page.on("click", ".file, .folder", function(event) {
         event.preventDefault();
       });
-
+      
       $page.on("dblclick", "tr[data-folder-path]", function(event) {
         api.cd($(this).data("folder-path"));
+        event.preventDefault();
+      });
+      
+      $page.on("click", "a[data-folder-path]", function(event) {
+        api.cd($(this).data("folder-path"));
+        event.preventDefault();
       });
       
       var resize = this.resize.bind(this);
@@ -62,8 +119,13 @@ protonet.p("files", function($page, $window) {
     },
     
     list: function(files) {
+      marker.clear();
+      
       $tbody.empty();
+      
+      this.updateAddressBar();
       this.removeHint();
+      
       if (!files.length) {
         this.insertHint("This folder doesn't contain any files");
         return;
@@ -78,7 +140,7 @@ protonet.p("files", function($page, $window) {
     item: function(info) {
       var fileData = {
             path:         utils.getAbsolutePath(info.name),
-            name:         info.name.truncate(60),
+            name:         info.name.truncate(70),
             rawName:      info.name,
             size:         protonet.utils.prettifyFileSize(info.size),
             rawSize:      info.size,
@@ -116,6 +178,30 @@ protonet.p("files", function($page, $window) {
     resize: function() {
       this.resizePage();
       this.resizeFileArea();
+    },
+    
+    updateAddressBar: function() {
+      var folders     = currentPath.split("/"),
+          get$Element = function(name, path) {
+            return $("<a>", {
+              "data-folder-path": path,
+              text: name
+            });
+          },
+          $elements   = get$Element("protonet/", "/"),
+          path        = "/";
+      
+      $.each(folders, function(i, folder) {
+        if (!folder) {
+          return;
+        }
+        
+        folder += "/";
+        path += folder;
+        $elements = $elements.add(get$Element(folder, path));
+      });
+      
+      $addressBar.html($elements);
     }
   };
   
@@ -162,7 +248,8 @@ protonet.p("files", function($page, $window) {
   /**
    * Initialize
    */
-  ui.initialize();
+  try {ui.initialize();
+  marker.initialize();
   io.initialize();
-  api.initialize();
+  api.initialize();} catch(e) {alert(e)}
 });
