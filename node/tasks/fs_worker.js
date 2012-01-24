@@ -156,32 +156,50 @@ function remove(target, reply) {
   }
 }
 
+function sortAlphabetically(arr) {
+  arr.sort(function(a, b) {
+    a = a.name.toLowerCase();
+    b = b.name.toLowerCase();
+    if (a > b) { return 1; }
+    if (a < b) { return -1; }
+    return 0;
+  });
+}
+
 
 exports.list = function(params, reply) {
   var dir = path.join(ROOT_DIR, params.parent);
-
   fs.readdir(dir, function(err, filelist) {
-    var files = {};
+    var files = [];
 
     for (var file in filelist) {
       var fullpath = path.join(dir, filelist[file]);
 
-      var stats = fs.statSync(fullpath);
+      try {
+        var stats = fs.statSync(fullpath);
+      } catch(e) {
+        continue;
+      }
+      
       if (stats.isDirectory()) {
-        files[filelist[file]] = {
+        files.push({
+          name:     filelist[file],
           modified: stats.mtime,
-          type:    'folder'
-        };
+          type:     "folder"
+        });
       } else {
-        files[filelist[file]] = {
+        files.push({
+          name:     filelist[file],
           size:     stats.size,
           modified: stats.mtime,
           mime:     lookup_mime(filelist[file]),
-          type:     'file'
-        };
+          type:     "file"
+        });
       }
     }
-
+    
+    sortAlphabetically(files);
+    
     reply(err, files);
   });
 };

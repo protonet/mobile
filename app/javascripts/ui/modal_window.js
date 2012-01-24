@@ -46,7 +46,7 @@ protonet.ui.ModalWindow = (function() {
   });
   
   function _fireUnload() {
-    elements.dialog.find("section.subpage").trigger("modal_window.unload");
+    protonet.trigger("modal_window.unload");
   }
   
   function _abortCurrentRequest() {

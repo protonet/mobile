@@ -2,14 +2,32 @@
 //= require "../utils/prettify_date.js"
 
 protonet.p("files", function($page, $window) {
-  var currentFilePath = $.trim($page.find("[data-file-path]").text()) || "/",
+  var currentPath     = $.trim($page.find("[data-address-bar]").text()) || "/",
       isModalWindow   = $(".modal-window").length > 0,
       $content        = $page.find(".content"),
       $tableWrapper   = $page.find(".table-wrapper"),
       $tbody          = $page.find("tbody");
   
+  
+  // --------------------------------- UTILS --------------------------------- \\
+  var utils = {
+    getAbsolutePath: function(path) {
+      if (path.startsWith("/")) {
+        return path;
+      }
+      return currentPath + path;
+    }
+  };
+  
+  
+  // --------------------------------- OBSERVER --------------------------------- \\
   var observer = {
     list: function(data) {
+      currentPath = data.params.parent;
+      if (!currentPath.endsWith("/")) {
+        currentPath += "/";
+      }
+      
       ui.list(data.result);
     },
     
@@ -18,18 +36,50 @@ protonet.p("files", function($page, $window) {
     }
   };
   
+  
+  // --------------------------------- UI --------------------------------- \\
   var ui = {
-    list: function(data) {
-      $.each(data, function(name, info) {
-        var $item = this.item(name, info);
+    initialize: function() {
+      this._observe();
+      this.resize();
+    },
+    
+    _observe: function() {
+      $page.on("click", ".file, .folder", function(event) {
+        event.preventDefault();
+      });
+
+      $page.on("dblclick", "tr[data-folder-path]", function(event) {
+        api.cd($(this).data("folder-path"));
+      });
+      
+      var resize = this.resize.bind(this);
+      $window.on("resize", resize);
+      
+      protonet.one("modal_window.unload", function() {
+        $window.off("resize", resize);
+      });
+    },
+    
+    list: function(files) {
+      $tbody.empty();
+      this.removeHint();
+      if (!files.length) {
+        this.insertHint("This folder doesn't contain any files");
+        return;
+      }
+      
+      $.each(files, function(i, info) {
+        var $item = this.item(info);
         $item && $item.appendTo($tbody);
       }.bind(this));
     },
     
-    item: function(name, info) {
+    item: function(info) {
       var fileData = {
-            name:         name.truncate(60),
-            rawName:      name,
+            path:         utils.getAbsolutePath(info.name),
+            name:         info.name.truncate(60),
+            rawName:      info.name,
             size:         protonet.utils.prettifyFileSize(info.size),
             rawSize:      info.size,
             modified:     protonet.utils.prettifyDate(info.modified),
@@ -42,66 +92,77 @@ protonet.p("files", function($page, $window) {
         return new protonet.utils.Template("file-item-template", fileData).to$();
       }
     },
+    
+    insertHint: function(text) {
+      $("<p>", { "class": "hint", text: text }).appendTo($tableWrapper);
+    },
+
+    removeHint: function(text) {
+      $tableWrapper.find("p.hint").remove();
+    },
+    
+    resizePage: function() {
+      if (!isModalWindow) {
+        $content.css("height", ($window.height() - $content.offset().top - 40).px());
+      }
+    },
+    
+    resizeFileArea: function() {
+      var currentHeight = $tableWrapper.outerHeight(),
+          newHeight     = $page.outerHeight() - $tableWrapper.prop("offsetTop") - 20;
+      $tableWrapper.css("min-height", newHeight.px());
+    },
+
+    resize: function() {
+      this.resizePage();
+      this.resizeFileArea();
+    }
   };
   
+  
+  // --------------------------------- API --------------------------------- \\
   var api = {
+    initialize: function() {
+      this.cd(currentPath);
+    },
+    
     cd: function(path) {
-      send("fs.list", { parent: path });
+      io.send("fs.list", { parent: path });
     }
   };
   
-  function send(method, params) {
-    protonet.trigger("socket.send", $.extend({
-      operation: method
-    }, params));
-  }
   
-  function observe() {
-    $.each(observer, function(methodName, method) {
-      protonet.on("fs." + methodName, method);
-    });
+  // --------------------------------- IO --------------------------------- \\
+  var io = {
+    initialize: function() {
+      this._observe();
+    },
     
-    $page.on("modal_window.unload", unobserve);
+    _observe: function() {
+      $.each(observer, function(methodName, method) {
+        protonet.on("fs." + methodName, method);
+      });
+      
+      protonet.one("modal_window.unload", function() {
+        $.each(observer, function(methodName, method) {
+          protonet.off("fs." + methodName, method);
+        });
+      });
+    },
     
-    $page.on("click", ".file, .folder", function(event) {
-      event.preventDefault();
-    });
-  }
-  
-  function unobserve() {
-    $.each(observer, function(methodName, method) {
-      protonet.off("fs." + methodName, method);
-    });
-  }
-  
-  function resizeFileArea() {
-    var currentHeight = $tableWrapper.outerHeight(),
-        newHeight     = $page.outerHeight() - $tableWrapper.prop("offsetTop") - 20;
-    $tableWrapper.css("min-height", newHeight.px());
-  }
-  
-  function resize() {
-    resizePage();
-    resizeFileArea();
-  }
-  
-  function resizePage() {
-    if (!isModalWindow) {
-      $content.css("height", ($window.height() - $content.offset().top - 40).px());
+    send: function(method, params) {
+      protonet.trigger("socket.send", {
+        operation: method,
+        params:    params
+      });
     }
-  }
+  };
   
-  $window.on("resize", resize);
-  resize();
-  
-  protonet.on("modal_window.unload", function() {
-    $window.off("resize", resize);
-  });
-  
-  observe();
   
   /**
-   * Ok, ready, set, go!
+   * Initialize
    */
-  api.cd(currentFilePath);
+  ui.initialize();
+  io.initialize();
+  api.initialize();
 });

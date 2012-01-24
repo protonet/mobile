@@ -5,6 +5,7 @@
   box-sizing: border-box;
   border: 1px solid #aaa;
   outline: 6px solid #eee;
+  position: relative;
 }
 
 .files-page table {
@@ -80,4 +81,12 @@
 
 .files-page h2 {
   margin-bottom: 20px;
+}
+
+.files-page .hint {
+  position: absolute;
+  top: 40%;
+  left: 0;
+  right: 0;
+  text-align: center;
 }

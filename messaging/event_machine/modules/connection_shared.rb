@@ -80,24 +80,17 @@ module ConnectionShared
           
           begin
             @tracker.rpc.invoke object, method, json['params'], @user do |err, result|
-              raise if err
-              send_json json.merge(
-                :status => 'success',
-                :result => result
-              )
+              if err
+                send_rpc_error(json)
+              else
+                send_json json.merge(:status => 'success', :result => result)
+              end
             end
           # Handle any possible errors
           rescue => ex
             puts "Error during RPC call: #{ex.class}", ex.message, ex.backtrace
-            
             # Send some info on the error that occured
-            send_json json.merge(
-              :status => 'error',
-              :error => {
-                :type => ex.class,
-                :message => ex.message
-              }
-            )
+            send_rpc_error(json)
           end
       end
     else
@@ -105,6 +98,10 @@ module ConnectionShared
       puts "Something is using an obsolete interface! #{json.inspect}"
       send_json(json)
     end
+  end
+  
+  def send_rpc_error(json={})
+    send_json json.merge(:status => 'error')
   end
   
   def node_connection?
