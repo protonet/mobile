@@ -6,6 +6,8 @@
 protonet.p("files", function($page, $window, $document) {
   var $addressBar       = $page.find(".address-bar"),
       $content          = $page.find(".content"),
+      $fileDetails      = $page.find(".file-details"),
+      $fileList         = $page.find(".file-list"),
       $tableWrapper     = $page.find(".table-wrapper"),
       $tbody            = $page.find("tbody"),
       currentPath       = $.trim($addressBar.text()) || "/",
@@ -45,7 +47,9 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     info: function(data) {
-      
+      var result = data.result[0];
+      currentPath = result.path;
+      ui.info(result);
     }
   };
   
@@ -245,7 +249,7 @@ protonet.p("files", function($page, $window, $document) {
       });
       
       $page.on("click", "tr[data-file-path]", function(event) {
-        api.info($(this).data("file-path"));
+        api.open($(this).data("file-path"));
         event.preventDefault();
       });
       
@@ -260,8 +264,9 @@ protonet.p("files", function($page, $window, $document) {
     list: function(files) {
       marker.clear();
       
+      $fileList.show();
+      $fileDetails.hide();
       $tbody.empty();
-      history.push();
       
       this.updateAddressBar();
       this.removeHint();
@@ -275,6 +280,18 @@ protonet.p("files", function($page, $window, $document) {
         var $item = this.item(info);
         $item && $item.appendTo($tbody);
       }.bind(this));
+    },
+    
+    info: function(fileData) {
+      $fileList.hide();
+      $fileDetails.show();
+      
+      this.updateAddressBar();
+      this.removeHint();
+      
+      $fileDetails.html(
+        new protonet.utils.Template("file-details-template", fileData).to$()
+      );
     },
     
     item: function(info) {
@@ -322,7 +339,7 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     updateAddressBar: function() {
-      var folders     = currentPath.split("/"),
+      var pathParts   = currentPath.split("/"),
           get$Element = function(name, path) {
             return $("<a>", {
               "data-folder-path": path,
@@ -332,14 +349,20 @@ protonet.p("files", function($page, $window, $document) {
           $elements   = get$Element("protonet/", "/"),
           path        = "/";
       
-      $.each(folders, function(i, folder) {
-        if (!folder) {
+      history.push();
+      
+      $.each(pathParts, function(i, part) {
+        if (!part) {
           return;
         }
         
-        folder += "/";
-        path += folder;
-        $elements = $elements.add(get$Element(folder, path));
+        // Don't add a slash at the end of file paths
+        if (pathParts[i + 1]) {
+          part += "/";
+        }
+        
+        path += part;
+        $elements = $elements.add(get$Element(part, path));
       });
       
       $addressBar.html($elements);
@@ -366,7 +389,7 @@ protonet.p("files", function($page, $window, $document) {
         return false;
       }
       
-      api.cd(urlParameters.path || "/");
+      api.open(urlParameters.path);
       return true;
     },
     
@@ -385,11 +408,11 @@ protonet.p("files", function($page, $window, $document) {
   var api = {
     initialize: function() {
       if (protonet.dispatcher.connected) {
-        this.cd(currentPath);
+        this.open(currentPath);
       } else {
         protonet.one("socket.connected", function(status) {
           if (status) {
-            this.cd(currentPath);
+            this.open(currentPath);
           }
         }.bind(this));
       }
@@ -397,6 +420,17 @@ protonet.p("files", function($page, $window, $document) {
     
     cd: function(path) {
       io.send("fs.list", { parent: path });
+    },
+    
+    open: function(path) {
+      path = path || "/";
+      
+      var isFolder = path.endsWith("/");
+      if (isFolder) {
+        return api.cd(path);
+      }
+      
+      io.send("fs.info", { paths: [path] });
     }
   };
   

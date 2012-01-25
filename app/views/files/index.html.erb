@@ -2,7 +2,7 @@
   <h2>Files: <output class="address-bar"><%= params[:path] || "/" %></output></h2>
   
   <div class="table-wrapper">
-    <table>
+    <table class="file-list">
       <thead>
         <tr>
           <th class="file-name">Name</th>
@@ -12,6 +12,7 @@
       </thead>
       <tbody></tbody>
     </table>
+    <output class="file-details"></output>
   </div>
 </output>
 
@@ -20,4 +21,7 @@
 </script>
 <script type="protonet/template" id="folder-item-template">
   <%= render :partial => 'folder' %>
+</script>
+<script type="protonet/template" id="file-details-template">
+  <%= render :partial => 'file_details' %>
 </script>

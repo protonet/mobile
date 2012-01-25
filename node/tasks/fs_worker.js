@@ -259,7 +259,7 @@ exports.mkdir = function(params, reply) {
 };
 
 exports.info = function(params, reply) {
-  var results = {};
+  var results = [];
 
   for (var i in params.paths) {
     var info;
@@ -281,8 +281,9 @@ exports.info = function(params, reply) {
           type: 'file'
         };
       }
-
-      info.uploaded =  stat.ctime.getTime();
+      
+      info.path     = params.paths[i];
+      info.uploaded = stat.ctime.getTime();
       info.added    = lstat.ctime.getTime();
 
       var real = file;
@@ -298,7 +299,7 @@ exports.info = function(params, reply) {
       info = { type: 'missing' };
     }
 
-    results[params.paths[i]] = info;
+    results.push(info);
   }
 
   reply(null, results);

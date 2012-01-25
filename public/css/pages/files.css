@@ -6,6 +6,7 @@
   border: 1px solid #aaa;
   outline: 6px solid #eee;
   position: relative;
+  min-height: 200px;
 }
 
 .files-page table {
@@ -109,4 +110,9 @@
 .files-page .address-bar a:hover,
 .files-page .address-bar a:last-child {
   color: #000;
+}
+
+.files-page .file-details,
+.files-page .file-list {
+  display: none;
 }
