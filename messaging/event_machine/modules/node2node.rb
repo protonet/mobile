@@ -57,9 +57,16 @@ module Node2Node
   def send_avatar(json)
     local_user_id = json["user_id"].sub(/[0-9]*_/, '') # match + security cleanup
     avatar_filename = cleanup_avatar_filename(json["avatar_filename"])
-    file_path = "#{Rails.root}/public/system/avatars/#{local_user_id}/original/" + avatar_filename
-    # image = ActiveSupport::Base64.encode64(open("http://image.com/img.jpg") { |io| io.read })
-    image = ActiveSupport::Base64.encode64(File.read(file_path)) rescue nil
+    file_url = "http://localhost:#{configatron.web_app_port}/system/avatars/#{local_user_id}/original/" + avatar_filename
+    file_url = URI.escape(file_url, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
+
+    image = begin
+      ActiveSupport::Base64.encode64(
+        HTTParty.get("http://localhost:#{configatron.nodejs.port}/image_proxy?url=#{file_url}&width=240&height=240&type=.jpg", :timeout => 2).body
+      )
+    rescue
+      nil
+    end
     # todo move to single operation/trigger
     send_json(:operation => 'rpc.get_avatar_answer', :trigger => 'rpc.get_avatar_answer', :user_id => local_user_id, :avatar_filename => avatar_filename, :image => image) if image
   end

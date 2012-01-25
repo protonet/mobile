@@ -69,3 +69,6 @@ configatron.system_avatar = '/img/system_picture_r2.png'
 require 'net/ldap'
 
 require 'protonet_email_service'
+
+port_file_path = "#{Rails.root}/tmp/app_port_#{Rails.env}"
+configatron.web_app_port = File.read(port_file_path).to_i if File.exists?(port_file_path)
