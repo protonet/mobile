@@ -149,7 +149,23 @@ protonet.p("files", function($page, $window, $document) {
           preventDefault = true;
           break;
         default:
-          $newItems = this.$items;
+          var character = String.fromCharCode(keyCode).toLowerCase();
+          if (character.match(/\w/)) {
+            var $rows   = $tbody.children(),
+                i       = 0,
+                length  = $rows.length,
+                $row;
+            for (; i<length; i++) {
+              $row = $rows.eq(i);
+              if ($row.data("file").name.toLowerCase().startsWith(character)) {
+                $newItems = $row;
+                this.scrollTo($row);
+                break;
+              }
+            }
+          } else {
+            $newItems = this.$items;
+          }
       }
       
       this.set($newItems);
@@ -256,7 +272,8 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     item: function(info) {
-      var fileData = {
+      var template = info.type + "-item-template",
+          fileData = {
             path:         utils.getAbsolutePath(info.name),
             httpPath:     utils.getHttpPath(info.name),
             name:         info.name.truncate(70),
@@ -265,13 +282,12 @@ protonet.p("files", function($page, $window, $document) {
             rawSize:      info.size,
             modified:     protonet.utils.prettifyDate(info.modified),
             rawModified:  info.modified
-          };
+          },
+          $row = new protonet.utils.Template(template, fileData).to$();
       
-      if (info.type === "folder") {
-        return new protonet.utils.Template("folder-item-template", fileData).to$();
-      } else if (info.type === "file") {
-        return new protonet.utils.Template("file-item-template", fileData).to$();
-      }
+      $row.data("file", fileData);
+      
+      return $row;
     },
     
     insertHint: function(text) {
