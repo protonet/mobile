@@ -40,6 +40,13 @@ protonet.utils.History = (function() {
     return this;
   }
   
+  function removeHook(method) {
+    hooks = $.grep(hooks, function(hook) {
+      return hook !== method;
+    });
+    return this;
+  }
+  
   function addFallback(method) {
     fallbacks.push(method);
     return this;
@@ -72,6 +79,7 @@ protonet.utils.History = (function() {
     push:           push,
     replace:        replace,
     addFallback:    addFallback,
+    removeHook:     removeHook,
     addHook:        addHook
   };
 })();

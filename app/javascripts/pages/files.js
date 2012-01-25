@@ -1,5 +1,7 @@
 //= require "../utils/prettify_file_size.js"
 //= require "../utils/prettify_date.js"
+//= require "../utils/parse_url.js"
+//= require "../utils/parse_query_string.js"
 
 protonet.p("files", function($page, $window, $document) {
   var $addressBar     = $page.find(".address-bar"),
@@ -128,6 +130,7 @@ protonet.p("files", function($page, $window, $document) {
       marker.clear();
       
       $tbody.empty();
+      history.push();
       
       this.updateAddressBar();
       this.removeHint();
@@ -213,6 +216,40 @@ protonet.p("files", function($page, $window, $document) {
   };
   
   
+  // --------------------------------- HISTORY --------------------------------- \\
+  var history = {
+    initialize: function() {
+      this._observe();
+    },
+    
+    push: function() {
+      var url = currentPath === "/" ? "/files" : utils.getHttpPath(currentPath);
+      protonet.utils.History.push(url);
+    },
+    
+    change: function(url) {
+      var parsedUrl     = protonet.utils.parseUrl(url),
+          urlParameters = protonet.utils.parseQueryString(url);
+      
+      if (!parsedUrl.path.startsWith("/files")) {
+        return false;
+      }
+      
+      api.cd(urlParameters.path || "/");
+      return true;
+    },
+    
+    _observe: function() {
+      var hook = this.change.bind(this);
+      protonet.utils.History.addHook(hook);
+      
+      protonet.on("modal_window.unload", function() {
+        protonet.utils.History.removeHook(hook);
+      });
+    }
+  };
+  
+  
   // --------------------------------- API --------------------------------- \\
   var api = {
     initialize: function() {
@@ -255,8 +292,9 @@ protonet.p("files", function($page, $window, $document) {
   /**
    * Initialize
    */
-  try {ui.initialize();
+  ui.initialize();
+  history.initialize();
   marker.initialize();
   io.initialize();
-  api.initialize();} catch(e) {alert(e)}
+  api.initialize();
 });
