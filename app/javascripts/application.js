@@ -35,6 +35,8 @@
 
 $(function() {
   protonet.user.initialize();
+  protonet.dispatcher.initialize();
+  
   protonet.ui.FlashMessage.initialize();
   protonet.ui.Header.initialize();
   

@@ -243,6 +243,11 @@ protonet.p("files", function($page, $window, $document) {
         event.preventDefault();
       });
       
+      $page.on("click", "tr[data-file-path]", function(event) {
+        api.info($(this).data("file-path"));
+        event.preventDefault();
+      });
+      
       var resize = this.resize.bind(this);
       $window.on("resize", resize);
       

@@ -8,7 +8,6 @@
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
 protonet.p("instruments", function($page) {
-  protonet.dispatcher.initialize();
   protonet.timeline.initialize();
   
   // Init widgets
