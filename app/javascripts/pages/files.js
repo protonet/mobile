@@ -4,12 +4,17 @@
 //= require "../utils/parse_query_string.js"
 
 protonet.p("files", function($page, $window, $document) {
-  var $addressBar     = $page.find(".address-bar"),
-      $content        = $page.find(".content"),
-      $tableWrapper   = $page.find(".table-wrapper"),
-      $tbody          = $page.find("tbody"),
-      currentPath     = $.trim($addressBar.text()) || "/",
-      isModalWindow   = $(".modal-window").length > 0;
+  var $addressBar       = $page.find(".address-bar"),
+      $content          = $page.find(".content"),
+      $tableWrapper     = $page.find(".table-wrapper"),
+      $tbody            = $page.find("tbody"),
+      currentPath       = $.trim($addressBar.text()) || "/",
+      isModalWindow     = $(".modal-window").length > 0,
+      $scrollContainer  = isModalWindow ? $(".modal-window > output") : $("body, html"),
+      KEY_UP            = 38,
+      KEY_TAB           = 9,
+      KEY_DOWN          = 40,
+      KEY_ENTER         = 13;
   
   
   // --------------------------------- UTILS --------------------------------- \\
@@ -53,46 +58,150 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     _observe: function() {
-      $page.on("mousedown", "tbody tr", function(event) {
-        var $current        = $(event.currentTarget),
-            alreadyFocused  = $current.hasClass("focus");
-        
-        if (event.ctrlKey || event.metaKey) {
-          if (alreadyFocused) {
-            $current.removeClass("focus");
-            this.$items = this.$items.not($current);
-          } else {
-            this.$items = this.$items.add($current);
-          }
-        } else if (event.shiftKey && this.$items.length) {
-          var $last = this.$items.last();
-          if ($last.index() < $current.index()) {
-            this.$items = this.$items.add($last.nextUntil($current.next()), ":not(.focus)");
-          } else if ($last.index() > $current.index()) {
-            this.$items = this.$items.add($last.prevUntil($current.prev()), ":not(.focus)");
-          }
-        } else {
-          this.$items.removeClass("focus");
-          this.$items = $current;
-        }
-        
-        this.$items.addClass("focus");
-        
-        event.preventDefault();
-        event.stopPropagation();
-      }.bind(this));
+      $page.on("mousedown", "tbody tr", this._mousedown.bind(this));
       
-      var clear = this.clear.bind(this);
-      $document.on("mousedown", clear);
+      var clear   = this.clear.bind(this),
+          keydown = this._keydown.bind(this);
+      
+      $document
+        .on("mousedown", clear)
+        .on("keydown",   keydown);
       
       protonet.one("modal_window.unload", function() {
-        $document.off("mousedown", clear);
+        $document
+          .off("mousedown", clear)
+          .off("keydown",   keydown);
       });
     },
     
     clear: function() {
       this.$items.removeClass("focus");
       this.$items = $();
+    },
+    
+    set: function($newItems) {
+      this.$items.removeClass("focus");
+      this.$items = $newItems;
+      this.$items.addClass("focus");
+    },
+    
+    _keydown: function(event) {
+      var preventDefault,
+          shiftKey  = event.shiftKey,
+          keyCode   = event.keyCode,
+          $newItems = $();
+          
+      if (keyCode === KEY_TAB) {
+        keyCode = shiftKey ? KEY_UP : KEY_DOWN;
+        shiftKey = false;
+      }
+      
+      switch(keyCode) {
+        case KEY_ENTER:
+          if (this.$items.length === 1) {
+            preventDefault = true;
+            this.$items.trigger("dblclick");
+          }
+          break;
+        case KEY_UP:
+          var $first = this.$items.first(),
+              $prev  = $first.prev();
+          if ($first.length && $prev.length) {
+            if (shiftKey) {
+              $newItems = this.$items.add($prev);
+            } else {
+              $newItems = $prev;
+            }
+          } else {
+            if (shiftKey) {
+              $newItems = this.$items;
+            } else {
+              $newItems = $first;
+            }
+          }
+          
+          this.scrollTo($newItems.first(), true);
+          preventDefault = true;
+          break;
+        case KEY_DOWN:
+          var $last = this.$items.last(),
+              $next = $last.next();
+          if ($last.length && $next.length) {
+            if (shiftKey) {
+              $newItems = this.$items.add($next);
+            } else {
+              $newItems = $next;
+            }
+          } else {
+            if ($last.length) {
+              if (shiftKey) {
+                $newItems = this.$items;
+              } else {
+                $newItems = $last;
+              }
+            } else {
+              // select first
+              $newItems = $tbody.children().first();
+            }
+          }
+          
+          this.scrollTo($newItems.last(), false);
+          preventDefault = true;
+          break;
+        default:
+          $newItems = this.$items;
+      }
+      
+      this.set($newItems);
+      if (preventDefault) {
+        event.preventDefault();
+      }
+    },
+    
+    _mousedown: function(event) {
+      var $current        = $(event.currentTarget),
+          $newItems       = $(),
+          alreadyFocused  = $current.hasClass("focus");
+      
+      if (event.ctrlKey || event.metaKey) {
+        if (alreadyFocused) {
+          $newItems = this.$items.not($current);
+        } else {
+          $newItems = this.$items.add($current);
+        }
+      } else if (event.shiftKey && this.$items.length) {
+        var $last = this.$items.last();
+        if ($last.index() < $current.index()) {
+          $newItems = this.$items.add($last.nextUntil($current.next()));
+        } else if ($last.index() > $current.index()) {
+          $newItems = this.$items.add($last.prevUntil($current.prev()));
+        }
+      } else {
+        $newItems = $current;
+      }
+      
+      this.set($newItems);
+      
+      event.preventDefault();
+      event.stopPropagation();
+    },
+    
+    scrollTo: function($element, up) {
+      // Scroll to the very top when the element is the first row
+      if ($element.is(":first-child")) {
+        $scrollContainer.prop("scrollTop", 0);
+        return;
+      // scroll to the very bottom when the element is the last row
+      } else if ($element.is(":last-child")) {
+        $scrollContainer.prop("scrollTop", $scrollContainer.prop("scrollHeight"));
+        return;
+      }
+      
+      var $input    = $('<input style="width: 0; height: 0; position: absolute; border: 0;">'),
+          $sibling  = up ? $element.prev() : $element.next();
+      
+      $sibling.children().first().append($input);
+      $input.focus().remove();
     }
   };
   
@@ -175,7 +284,7 @@ protonet.p("files", function($page, $window, $document) {
     
     resizePage: function() {
       if (!isModalWindow) {
-        $content.css("height", ($window.height() - $content.offset().top - 40).px());
+        $content.css("min-height", ($window.height() - $content.offset().top - 40).px());
       }
     },
     
