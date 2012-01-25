@@ -221,6 +221,7 @@ protonet.p("files", function($page, $window, $document) {
     }
   };
   
+  
   // --------------------------------- UI --------------------------------- \\
   var ui = {
     initialize: function() {
@@ -383,7 +384,15 @@ protonet.p("files", function($page, $window, $document) {
   // --------------------------------- API --------------------------------- \\
   var api = {
     initialize: function() {
-      this.cd(currentPath);
+      if (protonet.dispatcher.connected) {
+        this.cd(currentPath);
+      } else {
+        protonet.one("socket.connected", function(status) {
+          if (status) {
+            this.cd(currentPath);
+          }
+        }.bind(this));
+      }
     },
     
     cd: function(path) {
