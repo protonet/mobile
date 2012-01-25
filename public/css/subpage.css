@@ -159,17 +159,16 @@
 }
 
 .subpage dt {
-  width: 35%;
+  width: 180px;
+  float: left;
 }
 
 .subpage dd {
-  width: 65%;
+  display: block;
 }
 
 .subpage dt,
 .subpage dd {
-  display: inline-block;
-  vertical-align: top;
   margin-bottom: 5px;
 }
 
