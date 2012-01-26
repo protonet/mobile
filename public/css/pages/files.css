@@ -86,7 +86,7 @@
 }
 
 .files-page h2 {
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
 .files-page .hint {
@@ -110,6 +110,10 @@
 .files-page .address-bar a:hover,
 .files-page .address-bar a:last-child {
   color: #000;
+}
+
+.files-page .file-details {
+  padding: 10px;
 }
 
 .files-page .file-details,

@@ -85,6 +85,10 @@ img:-moz-broken{
   -moz-force-broken-image-icon: 1;
 }
 
+abbr {
+  border-bottom: 1px dotted #ccc;
+}
+
 mark {
   display: inline;
   background: rgb(0, 204, 0);

@@ -282,9 +282,11 @@ exports.info = function(params, reply) {
         };
       }
       
+      info.name     = path.basename(params.paths[i]);
       info.path     = params.paths[i];
-      info.uploaded = stat.ctime.getTime();
-      info.added    = lstat.ctime.getTime();
+      info.uploaded = stat.ctime;
+      info.modified = stat.mtime;
+      info.added    = lstat.ctime;
 
       var real = file;
       while (isLink(real)) {

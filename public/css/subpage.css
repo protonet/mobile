@@ -42,6 +42,10 @@
   border-bottom: 1px solid #ccc;
 }
 
+.subpage h3:first-child {
+  margin-top: 0;
+}
+
 .subpage h2,
 .subpage h3,
 .subpage p {
@@ -161,6 +165,7 @@
 .subpage dt {
   width: 180px;
   float: left;
+  color: #666;
 }
 
 .subpage dd {

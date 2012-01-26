@@ -248,7 +248,7 @@ protonet.p("files", function($page, $window, $document) {
         event.preventDefault();
       });
       
-      $page.on("click", "tr[data-file-path]", function(event) {
+      $page.on("dblclick", "tr[data-file-path]", function(event) {
         api.open($(this).data("file-path"));
         event.preventDefault();
       });
@@ -289,6 +289,8 @@ protonet.p("files", function($page, $window, $document) {
       this.updateAddressBar();
       this.removeHint();
       
+      fileData = this.prepareFileData(fileData);
+      
       $fileDetails.html(
         new protonet.utils.Template("file-details-template", fileData).to$()
       );
@@ -296,21 +298,37 @@ protonet.p("files", function($page, $window, $document) {
     
     item: function(info) {
       var template = info.type + "-item-template",
-          fileData = {
-            path:         utils.getAbsolutePath(info.name),
-            httpPath:     utils.getHttpPath(info.name),
-            name:         info.name.truncate(70),
-            rawName:      info.name,
-            size:         protonet.utils.prettifyFileSize(info.size),
-            rawSize:      info.size,
-            modified:     protonet.utils.prettifyDate(info.modified),
-            rawModified:  info.modified
-          },
+          fileData = this.prepareFileData(info),
           $row = new protonet.utils.Template(template, fileData).to$();
       
       $row.data("file", fileData);
       
       return $row;
+    },
+    
+    prepareFileData: function(data) {
+      var result = {
+        path:         utils.getAbsolutePath(data.name),
+        httpPath:     utils.getHttpPath(data.name),
+        name:         data.name.truncate(70),
+        rawName:      data.name,
+        size:         protonet.utils.prettifyFileSize(data.size),
+        rawSize:      data.size,
+        modified:     protonet.utils.prettifyDate(data.modified),
+        rawModified:  data.modified,
+        mime:         data.mime
+      };
+      
+      if (data.uploaded) {
+        result.rawUploaded = data.uploaded;
+        result.uploaded = protonet.utils.prettifyDate(data.uploaded);
+      }
+      
+      if (data.uploader) {
+        result.uploader = data.uploader;
+      }
+      
+      return result;
     },
     
     insertHint: function(text) {
@@ -341,10 +359,17 @@ protonet.p("files", function($page, $window, $document) {
     updateAddressBar: function() {
       var pathParts   = currentPath.split("/"),
           get$Element = function(name, path) {
-            return $("<a>", {
-              "data-folder-path": path,
-              text: name
-            });
+            if (path.endsWith("/")) {
+              return $("<a>", {
+                "data-folder-path": path,
+                text: name
+              });
+            } else {
+              return $("<a>", {
+                "data-file-path": path,
+                text: name
+              });
+            }
           },
           $elements   = get$Element("protonet/", "/"),
           path        = "/";
