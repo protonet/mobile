@@ -1,6 +1,10 @@
 authorization do
   role :guest do
     has_permission_on :users, :to => [:rendezvous, :update_last_read_meeps]
+    has_permission_on :channels do
+      to [:show]
+      if_attribute :users => contains {user}
+    end
   end
   
   role :invitee do

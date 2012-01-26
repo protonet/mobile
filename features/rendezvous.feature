@@ -34,3 +34,10 @@ Feature: Initiating rendezvous chats
       Then I should see "Was geht?" in the timeline
       
       
+  @javascript
+  Scenario: Starting a rendezvous chat as a stranger
+    Given a user with the login "dudemeister"
+    And go unauthenticated to the start page
+    And I start a rendezvous chat with "dudemeister"
+      Then I should see a channel for "dudemeister"
+      And the protonet channel "dudemeister" should be active
