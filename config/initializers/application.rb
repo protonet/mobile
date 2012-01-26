@@ -42,7 +42,7 @@ unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || (defined?(Phusi
 end
 
 # Check systems in script/server mode (stuff like passenger runs them some other way?)
-if (!defined?(PhusionPassenger) && defined?(Rails::Server)) # && !(defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER)
+if (!defined?(PhusionPassenger) && defined?(Rails::Server))
   SystemServices.start_all
 
   at_exit do
