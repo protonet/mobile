@@ -90,10 +90,12 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     _keydown: function(event) {
+      this.typedCharacters = this.typedCharacters || "";
+      
       var preventDefault,
-          shiftKey  = event.shiftKey,
-          keyCode   = event.keyCode,
-          $newItems = $();
+          shiftKey        = event.shiftKey,
+          keyCode         = event.keyCode,
+          $newItems       = $();
           
       if (keyCode === KEY_TAB) {
         keyCode = shiftKey ? KEY_UP : KEY_DOWN;
@@ -154,14 +156,18 @@ protonet.p("files", function($page, $window, $document) {
           break;
         default:
           var character = String.fromCharCode(keyCode).toLowerCase();
-          if (character.match(/\w/)) {
+          if (character.match(/[\w\_\-\.]/)) {
+            clearTimeout(keydownTimeout);
+            var keydownTimeout = setTimeout(function() { this.typedCharacters = ""; }.bind(this), 1000);
+            this.typedCharacters += character;
             var $rows   = $tbody.children(),
                 i       = 0,
                 length  = $rows.length,
                 $row;
+            
             for (; i<length; i++) {
               $row = $rows.eq(i);
-              if ($row.data("file").name.toLowerCase().startsWith(character)) {
+              if ($row.data("file").name.toLowerCase().startsWith(this.typedCharacters)) {
                 $newItems = $row;
                 this.scrollTo($row);
                 break;
@@ -371,7 +377,7 @@ protonet.p("files", function($page, $window, $document) {
               });
             }
           },
-          $elements   = get$Element("protonet/", "/"),
+          $elements   = get$Element("protonet", "/"),
           path        = "/";
       
       history.push();
@@ -381,12 +387,12 @@ protonet.p("files", function($page, $window, $document) {
           return;
         }
         
+        path += part;
+        
         // Don't add a slash at the end of file paths
         if (pathParts[i + 1]) {
-          part += "/";
+          path += "/";
         }
-        
-        path += part;
         $elements = $elements.add(get$Element(part, path));
       });
       

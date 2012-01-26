@@ -1,44 +1,46 @@
-.file[href$=".ai"]{ background-position: 0 0; }
-.file[href$=".bin"]{ background-position: 0 -82px; }
-.file[href$=".cab"]{ background-position: 0 -164px; }
-.file[href$=".dat"]{ background-position: 0 -246px; }
-.file[href$=".divx"]{ background-position: 0 -410px; }
-.file[href$=".dll"]{ background-position: 0 -492px; }
-.file[href$=".dmg"]{ background-position: 0 -574px; }
-.file[href$=".doc"]{ background-position: 0 -656px; }
-.file[href$=".eps"]{ background-position: 0 -738px; }
-.file[href$=".exe"]{ background-position: 0 -820px; }
-.file[href$=".fla"]{ background-position: 0 -902px; }
-.file[href$=".flv"]{ background-position: 0 -984px; }
-.file[href$=".gif"]{ background-position: 0 -1066px; }
-.file[href$=".gz"]{ background-position: 0 -1148px; }
-.file[href$=".html"]{ background-position: 0 -1230px; }
-.file[href$=".iso"]{ background-position: 0 -1312px; }
-.file[href$=".jar"]{ background-position: 0 -1394px; }
-.file[href$=".jpg"]{ background-position: 0 -1476px; }
-.file[href$=".m4a"]{ background-position: 0 -1558px; }
-.file[href$=".m4v"]{ background-position: 0 -1640px; }
-.file[href$=".mov"]{ background-position: 0 -1722px; }
-.file[href$=".mp4"]{ background-position: 0 -1804px; }
-.file[href$=".mpeg"]{ background-position: 0 -1886px; }
-.file[href$=".msi"]{ background-position: 0 -1968px; }
-.file[href$=".ogg"]{ background-position: 0 -2050px; }
-.file[href$=".pdf"]{ background-position: 0 -2132px; }
-.file[href$=".png"]{ background-position: 0 -2214px; }
-.file[href$=".psd"]{ background-position: 0 -2296px; }
-.file[href$=".rar"]{ background-position: 0 -2378px; }
-.file[href$=".rtf"]{ background-position: 0 -2460px; }
-.file[href$=".swf"]{ background-position: 0 -2542px; }
-.file[href$=".tif"]{ background-position: 0 -2624px; }
-.file[href$=".tmp"]{ background-position: 0 -2706px; }
-.file[href$=".ttf"]{ background-position: 0 -2788px; }
-.file[href$=".txt"]{ background-position: 0 -2870px; }
-.file[href$=".vob"]{ background-position: 0 -2952px; }
-.file[href$=".wav"]{ background-position: 0 -3034px; }
-.file[href$=".wma"]{ background-position: 0 -3116px; }
-.file[href$=".wmv"]{ background-position: 0 -3198px; }
-.file[href$=".xls"]{ background-position: 0 -3280px; }
-.file[href$=".zip"]{ background-position: 0 -3362px; }
+.file[href$=".ai"] { background-position: 0 0; }
+.file[href$=".bin"] { background-position: 0 -82px; }
+.file[href$=".cab"] { background-position: 0 -164px; }
+.file[href$=".dat"] { background-position: 0 -246px; }
+.file[href$=".divx"] { background-position: 0 -410px; }
+.file[href$=".dll"] { background-position: 0 -492px; }
+.file[href$=".dmg"] { background-position: 0 -574px; }
+.file[href$=".doc"] { background-position: 0 -656px; }
+.file[href$=".eps"] { background-position: 0 -738px; }
+.file[href$=".exe"] { background-position: 0 -820px; }
+.file[href$=".fla"] { background-position: 0 -902px; }
+.file[href$=".flv"] { background-position: 0 -984px; }
+.file[href$=".gif"] { background-position: 0 -1066px; }
+.file[href$=".gz"] { background-position: 0 -1148px; }
+.file[href$=".html"] { background-position: 0 -1230px; }
+.file[href$=".iso"] { background-position: 0 -1312px; }
+.file[href$=".jar"] { background-position: 0 -1394px; }
+.file[href$=".jpg"] { background-position: 0 -1476px; }
+.file[href$=".m4a"] { background-position: 0 -1558px; }
+.file[href$=".m4v"] { background-position: 0 -1640px; }
+.file[href$=".mov"] { background-position: 0 -1722px; }
+.file[href$=".mp3"] { background-position: 0 -1804px; }
+.file[href$=".mp4"] { background-position: 0 -1886px; }
+.file[href$=".mpeg"] { background-position: 0 -1968px; }
+.file[href$=".msi"] { background-position: 0 -2050px; }
+.file[href$=".ogg"] { background-position: 0 -2132px; }
+.file[href$=".pdf"] { background-position: 0 -2214px; }
+.file[href$=".png"] { background-position: 0 -2296px; }
+.file[href$=".psd"] { background-position: 0 -2378px; }
+.file[href$=".rar"] { background-position: 0 -2460px; }
+.file[href$=".rtf"] { background-position: 0 -2542px; }
+.file[href$=".swf"] { background-position: 0 -2624px; }
+.file[href$=".tif"] { background-position: 0 -2706px; }
+.file[href$=".tmp"] { background-position: 0 -2788px; }
+.file[href$=".ttf"] { background-position: 0 -2870px; }
+.file[href$=".txt"] { background-position: 0 -2952px; }
+.file[href$=".vob"] { background-position: 0 -3034px; }
+.file[href$=".wav"] { background-position: 0 -3116px; }
+.file[href$=".wma"] { background-position: 0 -3198px; }
+.file[href$=".wmv"] { background-position: 0 -3280px; }
+.file[href$=".xls"] { background-position: 0 -3362px; }
+.file[href$=".zip"] { background-position: 0 -3444px; }
+
 .file, .folder {
   background: url(/img/spr_file_extensions.png) no-repeat top left;
   padding-left: 40px;
@@ -53,7 +55,7 @@ a.file, a.folder {
 }
 
 .file { background-position: 0 -328px; }
-.folder { background-position: 0 -3444px; }
+.folder { background-position: 0 -3526px; }
 
 
 #file-queue {

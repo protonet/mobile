@@ -99,12 +99,32 @@
 
 .files-page .address-bar {
   display: inline-block;
+  margin-left: 8px;
   font-weight: normal;
 }
 
 .files-page .address-bar a {
+  display: inline-block;
+  position: relative;
   text-decoration: none;
   color: #999;
+  margin-right: 6px;
+  padding-right: 16px;
+}
+
+.files-page .address-bar a:after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  border: 4px solid transparent;
+  border-left: 4px solid #ccc;
+  top: 5px;
+  width: 0;
+  height: 0;
+}
+
+.files-page .address-bar a:last-child:after {
+  display: none;
 }
 
 .files-page .address-bar a:hover,
