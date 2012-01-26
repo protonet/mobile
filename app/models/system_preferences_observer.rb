@@ -11,8 +11,8 @@ class SystemPreferencesObserver < ActiveRecord::Observer
     when "captive"
       system_preference.value == true ? SystemCaptivePortal.start : SystemCaptivePortal.stop
     when "local_email_delivery", "smtp_address", "smtp_domain", "smtp_username", "smtp_password"
-      if system_preference.value == true
-        if ["smtp_address", "smtp_domain", "smtp_username", "smtp_password"].none? { |s| SystemPreferences[s].nil? }
+      if system_preference.var == "local_email_delivery" && system_preference.value == true
+        if ["smtp_address", "smtp_domain", "smtp_username", "smtp_password"].none? { |s| SystemPreferences[s].blank? }
           ActionMailer::Base.smtp_settings = {
             :address              => SystemPreferences.smtp_address,
             :port                 => 587,

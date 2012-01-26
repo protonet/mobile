@@ -64,7 +64,12 @@ List:
 <%= SystemCaptivePortal.list %>
 
 <h3>Email Settings <a data-hover-hint="top" title="Allows you to use external SMTP services to send emails" class="hint">(?)</a></h3>
-<%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
+<p>
+  Currently using: <%= ActionMailer::Base.delivery_method %><br />
+  <% Mailer %>
+  Current base path: <%= "#{SystemPreferences.public_host_https ? 'https' : 'http'}://#{ActionMailer::Base.default_url_options[:host]}" %>
+</p>
+<%= form_tag system_preferences_update_path, {} do -%>
   <%= hidden_field_tag 'section', 'advanced_settings' %>
   <div class="form-field">
     <label>Local email delivery:</label>
