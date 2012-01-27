@@ -50,7 +50,7 @@ $.extend(protonet, (function() {
   
   function one(eventName, handler) {
     return on(eventName, function() {
-      off(eventName, handler);
+      off(eventName, arguments.callee);
       handler.apply(this, $.makeArray(arguments));
     });
   }
