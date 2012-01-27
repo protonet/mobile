@@ -1,6 +1,10 @@
 authorization do
   role :guest do
     has_permission_on :users, :to => [:rendezvous, :update_last_read_meeps]
+    has_permission_on :channels do
+      to [:show]
+      if_attribute :users => contains {user}
+    end
   end
   
   role :invitee do
@@ -49,6 +53,7 @@ authorization do
     has_permission_on :authorization_rules, :to => :read
     has_permission_on :users, :to => [:manage, :delete_stranger_older_than_two_days, :rendezvous, :update_last_read_meeps, :newbie, :update_roles]
     has_permission_on :preferences, :to => [:update, :interface_status]
+    has_permission_on :system_preferences, :to => :update
     has_permission_on :publish_to_web, :to => [:update, :publish_status]
   end
 end

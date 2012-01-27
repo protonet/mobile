@@ -27,9 +27,9 @@ class UsersController < ApplicationController
     user = User.find(params[user_type][:id])
     success = user && (user.update_attributes(params[user_type]) if user.can_edit?(user))
     if success && user.errors.empty?
-      flash[:notice] = "Successfully updated user '#{user.login}'"
+      flash[:notice] = "Successfully updated user"
     else
-      flash[:error] = "Could not update user '#{user.login}'"
+      flash[:error] = "Could not update user: #{user.errors.full_messages.to_sentence}"
     end
     xhr_redirect_to :action => 'edit', :id => user.id
   end

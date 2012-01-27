@@ -59,8 +59,9 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:index_meeps] = true
 
   # setup email settings from preferences
-  if SystemPreferences.local_email_delivery == true
-    if ["smtp_address", "smtp_domain", "smtp_username", "smtp_password"].none? { |s| SystemPreferences[s].nil? }
+  local_email_delivery = (SystemPreferences.local_email_delivery == true) rescue false
+  if local_email_delivery
+    if ["smtp_address", "smtp_domain", "smtp_username", "smtp_password"].none? { |s| SystemPreferences[s].blank? }
       ActionMailer::Base.smtp_settings = {
         :address              => SystemPreferences.smtp_address,
         :port                 => 587,

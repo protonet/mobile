@@ -15,6 +15,6 @@ class ProtonetEmailService
       :body => mail.body.to_s,
       :html_body => mail.body.to_s,
     })
-    response
+    response.code.match(/2../) rescue false
   end
 end
