@@ -55,7 +55,7 @@ module System
     def create
       if params[:file] && params[:channel_id] && params[:file_path]
         # FIXME make sure this is not hackable (filename could now be ../../.. and move basically anywhere)
-        filename = params[:file].original_filename.strip
+        filename = params[:name]
         
         # Fix file name encoding bug
         if request.env['HTTP_X_FIX_ENCODING'] == 'true'
