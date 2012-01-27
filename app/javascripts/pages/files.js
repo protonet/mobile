@@ -282,6 +282,8 @@ protonet.p("files", function($page, $window, $document) {
         return;
       }
       
+      files = sort.byName(files);
+      
       $.each(files, function(i, info) {
         var $item = this.item(info);
         $item && $item.appendTo($tbody);
@@ -492,6 +494,36 @@ protonet.p("files", function($page, $window, $document) {
     }
   };
   
+  
+  var sort = {
+    byName: function(fileList) {
+      var current,
+          folders = [],
+          files   = [],
+          i       = 0,
+          length  = fileList.length;
+      
+      for (; i<length; i++) {
+        current = fileList[i];
+        current.type === "folder" ? folders.push(current) : files.push(current);
+      }
+      
+      this._byName(folders);
+      this._byName(files);
+      
+      return folders.concat(files);
+    },
+    
+    _byName: function(arr) {
+      arr.sort(function(a, b) {
+        a = a.name.toLowerCase();
+        b = b.name.toLowerCase();
+        if (a > b) { return 1; }
+        if (a < b) { return -1; }
+        return 0;
+      });
+    }
+  };
   
   /**
    * Initialize

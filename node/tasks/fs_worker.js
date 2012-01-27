@@ -156,17 +156,6 @@ function remove(target, reply) {
   }
 }
 
-function sortAlphabetically(arr) {
-  arr.sort(function(a, b) {
-    a = a.name.toLowerCase();
-    b = b.name.toLowerCase();
-    if (a > b) { return 1; }
-    if (a < b) { return -1; }
-    return 0;
-  });
-}
-
-
 exports.list = function(params, reply) {
   var dir = path.join(ROOT_DIR, params.parent);
   fs.readdir(dir, function(err, filelist) {
@@ -197,9 +186,6 @@ exports.list = function(params, reply) {
         });
       }
     }
-    
-    sortAlphabetically(files);
-    
     reply(err, files);
   });
 };
