@@ -279,12 +279,12 @@ exports.info = function(params, reply) {
 
       var parts = path.relative(ROOT_DIR, real).split('/');
       if (parts.length > 1) {
-        info.uploader = Number(parts[1]);
+        info.uploader_id = Number(parts[1]);
       }
     } catch(ex) {
       info = {
         type: 'missing',
-        path: params.path[i]
+        path: params.paths[i]
       };
     }
 

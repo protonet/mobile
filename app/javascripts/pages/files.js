@@ -358,9 +358,9 @@ protonet.p("files", function($page, $window, $document) {
         result.uploaded = protonet.utils.prettifyDate(data.uploaded);
       }
       
-      if (data.uploader) {
-        result.uploader = data.uploader;
-      }
+      
+      result.uploaderId = data.uploader_id || -1;
+      result.uploaderName = data.uploader_name || "system user";
       
       return result;
     },
@@ -470,11 +470,14 @@ protonet.p("files", function($page, $window, $document) {
       if (protonet.dispatcher.connected) {
         this.open(currentPath);
       } else {
-        protonet.one("socket.connected", function(status) {
+        var connectCallback = function(status) {
           if (status) {
+            protonet.off("socket.connected", connectCallback);
             this.open(currentPath);
           }
-        }.bind(this));
+        }.bind(this);
+        
+        protonet.on("socket.connected", connectCallback);
       }
     },
     
