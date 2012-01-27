@@ -119,6 +119,7 @@ http.createServer(function(request, response) {
     case "fs/download":
     case "fs/display":
     case "fs/thumbnail":
+    case "fs/scan":
       var method = require("./tasks/fs_http")[task.split("/")[1]];
       method(request, response);
       break;

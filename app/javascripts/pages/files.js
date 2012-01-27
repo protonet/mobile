@@ -327,6 +327,10 @@ protonet.p("files", function($page, $window, $document) {
       marker.set($element);
       
       $fileDetails.html($element);
+      
+      io.scan(fileData.path, function() {
+        console.log(arguments);
+      });
     },
     
     item: function(info) {
@@ -520,6 +524,18 @@ protonet.p("files", function($page, $window, $document) {
       protonet.trigger("socket.send", {
         operation: method,
         params:    params
+      });
+    },
+    
+    scan: function(path, callback) {
+      // TODO: IE < 10 XDomainRequest
+      $.ajax({
+        url: protonet.config.node_base_url + "/fs/scan",
+        data: { path: path }
+      }).done(function(response) {
+        callback(response.malicious);
+      }).fail(function() {
+        callback(undefined);
       });
     }
   };

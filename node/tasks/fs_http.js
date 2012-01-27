@@ -12,7 +12,9 @@ var sys             = require("sys"),
     FILES_DIR       = "../shared/files/",
     USERS_DIR       = "../shared/files/users/",
     CHANNELS_DIR    = "../shared/files/channels/",
-
+    
+    virusScanCache  = {},
+    
     responses       = {},
     next_seq        = 0,
     queue,
@@ -172,4 +174,44 @@ exports.download = function(request, response) {
     seq: next_seq
   });
   sys.puts("Published RPC call");
+};
+
+exports.scan = function(request, response) {
+  response.setHeader('Access-Control-Allow-Origin', '*');
+  
+  var params = url.parse(request.url, true);
+  
+  var md5sum = spawn("md5sum", [params.query.path], { cwd: FILES_DIR });
+  
+  function respond(isMalicious) {
+    response.writeHead(200);
+    response.end(JSON.stringify({ malicious: isMalicious }));
+  };
+  
+  md5sum.stdout.on("data", function(data) {
+    var md5str = data.split(" ")[0];
+    
+    // is cached?
+    if (md5str in virusScanCache) {
+      respond(virusScanCache[md5str]);
+      return;
+    }
+    
+    var scan = spawn("clamscan", [params.query.path], { cwd: FILES_DIR });
+    scan.on('exit', function (code) {
+      var isMalicious;
+      if (code == 0) {
+        isMailicious = false;
+      } else if (code == 1) {
+        isMalicious = true;
+      }
+      
+      // cache
+      if (typeof(isMalicious) !== "undefined") {
+        virusScanCache[md5str] = isMalicious;
+      }
+      
+      respond(isMalicious);
+    });
+  });
 };

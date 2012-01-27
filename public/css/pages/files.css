@@ -89,7 +89,7 @@
   margin-bottom: 25px;
 }
 
-.files-page .hint {
+.files-page p.hint {
   position: absolute;
   top: 40%;
   left: 0;
@@ -139,4 +139,8 @@
 .files-page .file-details,
 .files-page .file-list {
   display: none;
+}
+
+.files-page .virus-check {
+  display: inline;
 }
