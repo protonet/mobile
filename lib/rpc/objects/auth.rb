@@ -3,10 +3,9 @@ require 'lib/rpc/base'
 class Rpc::Objects::Auth < Rpc::Base
   attr_invokable :check_token
 
-  # Checks a user_id and token to ensure that the combination is valid.
-  # Basically represents our version of SSO-like authentication.
+  # Checks a user_id and token to ensure that the combination is valid.
+  # Basically represents our version of SSO-like authentication.
   def check_token params
-
     # Find the acclaimed user
     return false unless user = User.find_by_id(params['user_id'])
 

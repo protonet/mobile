@@ -33,7 +33,6 @@
       show_clouds:                <%= SystemPreferences.show_clouds.to_json %>,
       show_only_online_users:     <%= SystemPreferences.show_only_online_users.to_json %>,
       allow_modal_views:          <%= SystemPreferences.allow_modal_views.to_json %>,
-      session_id:                 "<%= cookies['_rails_dashboard_session'] %>",
       authenticity_token:         "<%= form_authenticity_token %>",
       channel_name_to_id_mapping: <%= raw Channel.name_to_id_mapping.to_json %>,
       channel_uuid_to_id_mapping: <%= raw Channel.uuid_to_id_mapping.merge(current_user.channel_uuid_to_id_mapping).to_json %>,

@@ -25,12 +25,22 @@ protonet.p("files", function($page, $window, $document) {
       if (path.startsWith("/")) {
         return path;
       }
-      return currentPath + path;
+      
+      var folderPath = currentPath.replace(/[^\/]+$/, "");
+      
+      return folderPath + path;
     },
     
     getHttpPath: function(name) {
       var path = this.getAbsolutePath(name);
       return "/files/?path=" + encodeURIComponent(path);
+    },
+    
+    getDownloadPath: function(name) {
+      return protonet.config.node_base_url +
+        "/fs/download/?paths=" + encodeURIComponent(this.getAbsolutePath(name)) +
+        "&user_id="            + encodeURIComponent(protonet.config.user_id) + 
+        "&token="              + encodeURIComponent(protonet.config.token);
     }
   };
   
@@ -276,6 +286,10 @@ protonet.p("files", function($page, $window, $document) {
       
       this.updateAddressBar();
       this.removeHint();
+      if (!files) {
+        this.insertHint("This folder doesn't seem to exist anymore");
+        return;
+      }
       
       if (!files.length) {
         this.insertHint("This folder doesn't contain any files");
@@ -294,14 +308,25 @@ protonet.p("files", function($page, $window, $document) {
       $fileList.hide();
       $fileDetails.show();
       
+      $scrollContainer.scrollTop(0);
+      
       this.updateAddressBar();
+      
+      if (fileData.type === "missing") {
+         ui.insertHint("This file doesn't seem to exist anymore");
+         return;
+      }
+      
       this.removeHint();
       
       fileData = this.prepareFileData(fileData);
       
-      $fileDetails.html(
-        new protonet.utils.Template("file-details-template", fileData).to$()
-      );
+      var $element = new protonet.utils.Template("file-details-template", fileData).to$();
+      $element.data("file", fileData);
+      
+      marker.set($element);
+      
+      $fileDetails.html($element);
     },
     
     item: function(info) {
@@ -317,6 +342,7 @@ protonet.p("files", function($page, $window, $document) {
     prepareFileData: function(data) {
       var result = {
         path:         utils.getAbsolutePath(data.name),
+        downloadPath: utils.getDownloadPath(data.name),
         httpPath:     utils.getHttpPath(data.name),
         name:         data.name.truncate(70),
         rawName:      data.name,
@@ -340,10 +366,11 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     insertHint: function(text) {
+      this.removeHint();
       $("<p>", { "class": "hint", text: text }).appendTo($tableWrapper);
     },
 
-    removeHint: function(text) {
+    removeHint: function() {
       $tableWrapper.find("p.hint").remove();
     },
     
@@ -495,6 +522,7 @@ protonet.p("files", function($page, $window, $document) {
   };
   
   
+  // --------------------------------- SORTER --------------------------------- \\
   var sort = {
     byName: function(fileList) {
       var current,

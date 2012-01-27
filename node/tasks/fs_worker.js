@@ -1,7 +1,6 @@
 var fs              = require('fs'),
     path            = require('path'),
     util            = require('util'),
-
     Step            = require('../modules/step'),
     lookup_mime     = require('../modules/node-mime').lookup,
 
@@ -169,7 +168,6 @@ exports.list = function(params, reply) {
       } catch(e) {
         continue;
       }
-      
       if (stats.isDirectory()) {
         files.push({
           name:     filelist[file],
@@ -284,7 +282,10 @@ exports.info = function(params, reply) {
         info.uploader = Number(parts[1]);
       }
     } catch(ex) {
-      info = { type: 'missing' };
+      info = {
+        type: 'missing',
+        path: params.path[i]
+      };
     }
 
     results.push(info);

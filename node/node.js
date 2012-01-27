@@ -115,11 +115,6 @@ http.createServer(function(request, response) {
     case "snapshooter":
       require("./tasks/snapshot").save(request, response);
       break;
-    case "upload": // depreciated
-      console.log("HTTP call to depreciated path /upload");
-      require("./tasks/fs_http").upload(request, response, connection);
-      break;
-
     case "fs/upload":
     case "fs/download":
     case "fs/display":

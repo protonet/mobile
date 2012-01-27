@@ -52,13 +52,13 @@ exports.bind = function(amqpConnection) {
       case 'download':
         if (message.result) {
           try {
-            var files = message.params.file,
+            var files = message.params.paths,
                 header = {};
 
             if (typeof(files) == 'string') { files = [files]; }
-
+            
             var file = path.join(FILES_DIR, files[0]);
-            if (files.length == 1 && !fs.statSync(file).isDirectory()) {
+            if (files.length == 1 && !fs.statSync(file).isDirectory()) {
               header['Content-Type']        = lookup_mime(file);
               header['Content-Length']      = fs.statSync(file).size
               header['Content-Disposition'] = 'attachment;filename="' + path.basename(file) + '"';
@@ -74,12 +74,15 @@ exports.bind = function(amqpConnection) {
                 })
                 .addListener('end', function() {
                   response.end();
+                })
+                .addListener("error", function() {
+                  response.end('Error');
                 });
             } else {
               header['Content-Type'] = 'application/zip';
               header['Content-Disposition'] = 'attachment;filename="files.zip"';
               response.writeHead(200, header);
-
+              
               var zip = spawn('zip', ['-r', '--names-stdin', '-'], { cwd: FILES_DIR })
 
               zip.stdout.on('data', function(data) {
