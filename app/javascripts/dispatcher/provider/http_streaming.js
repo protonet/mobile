@@ -1,5 +1,4 @@
 //= require "../../utils/sandbox.js"
-//= require "../../utils/is_same_origin.js"
 
 /**
  * Recommended to read
@@ -157,20 +156,12 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
     },
 
     send: function(data) {
-      var ajax;
-      // Use IE-proprietary XDomainRequest for same-origin requests
-      // XMLHttpRequest doesn't work with http streaming since IE refuses to fill the responseText
-      // property unless readyState == 4
-      if (window.XDomainRequest) {
-        ajax = new XDomainRequest();
-      } else {
-        ajax = new XMLHttpRequest();
-      }
+      var url = this._buildUrl({ socket_id: this.socketId });
       
-      var url = this._buildUrl({ socket_id: this.socketId });
-      ajax.open("POST", url, true);
-      if (ajax.setRequestHeader) ajax.setRequestHeader('Content-Type', 'text/plain');
-      ajax.send(JSON.stringify(data));
+      protonet.utils.crossDomainXHR(url, {
+        type: "POST",
+        data: JSON.stringify(data)
+      });
     },
 
     receive: function(rawData) {

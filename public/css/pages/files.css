@@ -144,3 +144,12 @@
 .files-page .virus-check {
   display: inline;
 }
+
+.files-page .virus-check .positive {
+  color: green;
+}
+
+.files-page .virus-check .negative {
+  color: red;
+  font-weight: bold;
+}

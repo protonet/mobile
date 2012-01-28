@@ -328,8 +328,17 @@ protonet.p("files", function($page, $window, $document) {
       
       $fileDetails.html($element);
       
-      io.scan(fileData.path, function() {
-        console.log(arguments);
+      io.scan(fileData.path, function(isMalicious) {
+        var html;
+        if (isMalicious === true) {
+          html = "<span class='negative'>yes!</span>";
+        } else if (isMalicious === false) {
+          html = "<span class='positive'>no</span>";
+        } else {
+          html = "<span class='negative'>no virus scan available</span>";
+        }
+        
+        $fileDetails.find("output.virus-check").html(html);
       });
     },
     
@@ -528,14 +537,15 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     scan: function(path, callback) {
-      // TODO: IE < 10 XDomainRequest
-      $.ajax({
-        url: protonet.config.node_base_url + "/fs/scan",
-        data: { path: path }
-      }).done(function(response) {
-        callback(response.malicious);
-      }).fail(function() {
-        callback(undefined);
+      var url = protonet.config.node_base_url + "/fs/scan?path=" + encodeURIComponent(path);
+      protonet.utils.crossDomainXHR(url, {
+        success: function(responseText) {
+          var json = JSON.parse(responseText);
+          callback(json.malicious);
+        },
+        error: function() {
+          callback(undefined);
+        }
       });
     }
   };
