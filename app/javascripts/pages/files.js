@@ -331,7 +331,7 @@ protonet.p("files", function($page, $window, $document) {
       io.scan(fileData.path, function(isMalicious) {
         var html;
         if (isMalicious === true) {
-          html = "<span class='negative'>yes!</span>";
+          html = "<span class='negative'>Caution, this file might be malware or a virus!</span>";
         } else if (isMalicious === false) {
           html = "<span class='positive'>no</span>";
         } else {
