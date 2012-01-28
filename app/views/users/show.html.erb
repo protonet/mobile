@@ -1,5 +1,5 @@
 <output class="content">
-  <%= avatar(@user, :width => 240, :height => 240, :class => 'user-avatar') %>
+  <%= render :partial => 'avatar' %>
   
   <h2>
     @<%= @user.display_name %>

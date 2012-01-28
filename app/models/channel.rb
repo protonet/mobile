@@ -202,12 +202,7 @@ class Channel < ActiveRecord::Base
   end
   
   def create_folder
-    begin
-      path = SystemFileSystem.cleared_path("/#{id.to_s}")
-      FileUtils.mkdir(path)
-    rescue Errno::EEXIST
-      logger.warn("A path for the #{name} already exists at #{path}") and return true
-    end
+    FileUtils.mkdir_p(configatron.files_path + "/channels/#{name}")
   end
   
   def generate_uuid

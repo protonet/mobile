@@ -5,7 +5,7 @@ protonet.p("meeps", function($page, $window) {
       $headline     = $(".meeps-page h2"),
       isModalWindow = $(".modal-window").length > 0;
   
-  function resizeContainer() {
+  function resizePage() {
     if (isModalWindow) {
       $content.css("height", "100%");
     } else {
@@ -18,7 +18,7 @@ protonet.p("meeps", function($page, $window) {
   
   if (isModalWindow) {
     var $output = $(".modal-window > output").css("overflow", "visible");
-    $page.on("modal_window.unload", function() {
+    $page.one("modal_window.unload", function() {
       $window.off("resize", resizePage);
       $output.css("overflow", "");
     });

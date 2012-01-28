@@ -29,11 +29,14 @@ class User < ActiveRecord::Base
   after_create :send_create_notification, :unless => :anonymous?
   after_create :listen_to_channels, :unless => :anonymous?
   after_create :mark_invitation_as_accepted, :if => :invitation_token
+  after_create :create_folder, :if => lambda {|u| !u.stranger?}
   
   after_destroy :move_meeps_to_anonymous
   after_destroy :move_owned_channels_to_anonymous
   
   validates_uniqueness_of :email, :if => lambda {|u| !u.stranger?}
+  validates_uniqueness_of :login
+  
   
   def self.find_by_id_or_login(id_or_login)
     find_by_id(id_or_login) || find_by_login(id_or_login)
@@ -292,5 +295,8 @@ class User < ActiveRecord::Base
     end
   end
   
+  def create_folder
+    FileUtils.mkdir_p(configatron.files_path + "/users/#{name}")
+  end
 end
 

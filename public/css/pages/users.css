@@ -6,16 +6,6 @@
   min-height: 300px;
 }
 
-.users-page .content > img {
-  position: absolute;
-  top: 20px;
-  left: -240px;
-}
-
-.users-page .content > img.loading {
-  opacity: 0.5;
-}
-
 .users-page p .button {
   margin-top: 0;
 }
@@ -47,14 +37,34 @@
   opacity: 0.5;
 }
 
-.upload-button-container {
-  display: inline-block;
-  overflow: hidden;
-  position: relative;
-  padding-bottom: 2px;
+.users-page .avatar-container img.loading {
+  opacity: 0.5;
 }
 
-.upload-button-container [type=file] {
+.users-page .avatar-container {
+  position: absolute;
+  top: 20px;
+  left: -240px;
+}
+
+.users-page .avatar-container form {
+  filter: Alpha(Opacity=60);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 12px;
+  text-align: center;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  position: absolute;
+}
+
+.users-page .avatar-container form:hover {
+  filter: Alpha(Opacity=80);
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.users-page .avatar-container [type=file] {
   opacity: 0;
   filter: Alpha(Opacity=0);
   font-size: 50px;
