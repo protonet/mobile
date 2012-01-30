@@ -11,19 +11,14 @@ class Rpc::Objects::Fs < Rpc::Base
   # List the files in a folder. To non-admins, certain paths (such as '/channels')
   # return results that are not actually based on the actual underlying filesystem.
   def list params, user, &handler
-    if user && !user.admin? && params['parent'] == 'channels'
-      entries = {}
-
-      user.channels.verified.each do |chan|
-        entries[chan.id.to_s] = {:type => 'folder'}
-      end
-
-      return entries
-    end
-
     check_perms [params['parent']], user
-
+    
     @client.call :fs, :list, params do |resp|
+      if params['parent'] == 'channels'
+        resp['result'] = resp['result'].find_all do |chan|
+          user.allowed_channels.include?(chan.name.to_i)
+        end
+      end
       handler.call resp['error'], resp['result']
     end
   end
@@ -129,7 +124,7 @@ class Rpc::Objects::Fs < Rpc::Base
       paths = parse_paths(paths) if paths.first.is_a? String
 
       # Cache the user's channels
-      channels = user.channels.verified.map(&:id)
+      channels = user.allowed_channels.map(&:id)
 
       paths.each do |(namespace, id, path)|
         # Non-admins can't escape outside of any object (except for commands that

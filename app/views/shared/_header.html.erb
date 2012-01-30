@@ -46,7 +46,7 @@
           </li>
         <%- end %>
         
-        <%- if permitted_to?(:read, :files) -%>
+        <%- if SystemPreferences.show_file_widget && permitted_to?(:read, :files) -%>
           <li class="nav-link files-controller-link">
             <%= link_to "Files", files_path %>
           </li>

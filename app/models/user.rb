@@ -37,7 +37,6 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email, :if => lambda {|u| !u.stranger?}
   validates_uniqueness_of :login, :if => lambda {|u| !u.stranger?}
   
-  
   def self.find_by_id_or_login(id_or_login)
     find_by_id(id_or_login) || find_by_login(id_or_login)
   end
@@ -200,6 +199,15 @@ class User < ActiveRecord::Base
 
   def subscribed?(channel)
     channels.include?(channel)
+  end
+  
+  def allowed_channels
+    # admin: return all real channels + verified (don't show the admin rendezvous channel he didn't subscribe to)
+    return channels.real | channels.verified    if admin?
+    # user: return all public channels + verified
+    return channels.public | channels.verified  if !stranger? && !invitee?
+    # invitee & stranger: return all verified channels
+    return channels.verified
   end
 
   def password_required_with_logged_out_user?

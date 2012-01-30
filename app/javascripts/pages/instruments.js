@@ -1,5 +1,4 @@
 //= require "../timeline/timeline.js"
-//= require "../widgets/file.js"
 //= require "../widgets/user.js"
 //= require "../platforms/fluid.js"
 //= require "../platforms/prism.js"
@@ -15,17 +14,13 @@ protonet.p("instruments", function($page) {
     new protonet.widgets.User();
   }
   
-  if (protonet.config.show_file_widget) {
-    new protonet.widgets.File();
-  }
-  
   $page.css("min-height", $("aside.side-content").outerHeight().px());
   
   // there's a captive portal redirect request and the user is logged in
   if (protonet.config.captive_redirect_url) {
     $.post("/captive/store_redirect", { captive_redirect_url: protonet.config.captive_redirect_url });
     if (protonet.config.user_is_stranger) {
-      protonet.trigger('flash_message.sticky', 'Welcome. Please login or register to get access to internet, thank you!');
+      protonet.trigger('flash_message.sticky', 'Welcome. Please login or register to get access to the internet, thank you!');
     } else {
       var htmlEscapedUrl = protonet.utils.escapeHtml(protonet.config.captive_redirect_url),
           urlEncodedUrl  = encodeURIComponent(protonet.config.captive_redirect_url);
