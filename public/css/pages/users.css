@@ -41,6 +41,10 @@
   opacity: 0.5;
 }
 
+.users-page .avatar-container img {
+  border: 1px solid #666;
+}
+
 .users-page .avatar-container {
   position: absolute;
   top: 20px;

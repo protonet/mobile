@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
   after_destroy :move_owned_channels_to_anonymous
   
   validates_uniqueness_of :email, :if => lambda {|u| !u.stranger?}
-  validates_uniqueness_of :login
+  validates_uniqueness_of :login, :if => lambda {|u| !u.stranger?}
   
   
   def self.find_by_id_or_login(id_or_login)
