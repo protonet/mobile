@@ -11,8 +11,8 @@ process.argv.forEach(function(val){
   }
 });
 
-var Hoptoad = require('./modules/node-hoptoad/hoptoad-notifier').Hoptoad;
-Hoptoad.key = 'e0e395c06aa4a6756b5d585fee266999';
+// var Hoptoad = require('./modules/node-hoptoad/hoptoad-notifier').Hoptoad;
+// Hoptoad.key = 'e0e395c06aa4a6756b5d585fee266999';
 
 // process.addListener('uncaughtException', function(error) {
 //   Hoptoad.notify(error);

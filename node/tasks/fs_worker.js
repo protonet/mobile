@@ -4,7 +4,7 @@ var fs              = require('fs'),
     Step            = require('../modules/step'),
     lookup_mime     = require('../modules/node-mime').lookup,
 
-    ROOT_DIR        = './../shared/files',
+    ROOT_DIR        = './tmp/development/shared/files',
     PERMISSIONS     = 416; // 0640 (rw-r-----)
 
 

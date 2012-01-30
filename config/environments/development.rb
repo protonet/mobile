@@ -24,6 +24,7 @@ Dashboard::Application.configure do
   
   configatron.files_path = Rails.root.to_s + "/tmp/development/shared/files"
   FileUtils.mkdir_p(configatron.files_path)
+  
   configatron.images.avatars_path   = "public/avatars"
   configatron.images.externals_path = "public/externals"
   configatron.socket.port        = 5000

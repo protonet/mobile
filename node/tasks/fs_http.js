@@ -9,9 +9,9 @@ var sys             = require("sys"),
     formidable      = require('../modules/node-formidable'),
     lookup_mime     = require('../modules/node-mime').lookup,
 
-    FILES_DIR       = "../shared/files/",
-    USERS_DIR       = "../shared/files/users/",
-    CHANNELS_DIR    = "../shared/files/channels/",
+    FILES_DIR       = "./tmp/development/shared/files/",
+    USERS_DIR       = FILES_DIR + "/users/",
+    CHANNELS_DIR    = FILES_DIR + "/channels/",
     
     virusScanCache  = {},
     
@@ -29,7 +29,6 @@ exports.bind = function(amqpConnection) {
     message = JSON.parse(message.data);
     sys.puts(message.action + " verification queue message: " + util.inspect(message));
     var response = responses[message.seq];
-
     switch (message.action) {
       case 'upload':
         if (!message.result) { return; }
@@ -39,12 +38,15 @@ exports.bind = function(amqpConnection) {
 
         try { fs.mkdirSync(userDirectory);    } catch (e) {}
         try { fs.mkdirSync(channelDirectory); } catch (e) {}
-
+        
         message.files.forEach(function(file) {
           var userFile    = userDirectory + file.name,
               channelFile = channelDirectory + file.name,
               symlink     = path.relative(path.dirname(channelFile), userFile);
-
+          
+          delete virusScanCache[userFile];
+          delete virusScanCache[channelFile];
+          
           fs.rename(file.path, userFile);
           fs.chmod(userFile, 416); // 0640 (rw-r-----)
           try { fs.symlink(symlink, channelFile); } catch(e) {}
