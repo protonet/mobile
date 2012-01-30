@@ -296,7 +296,7 @@ class User < ActiveRecord::Base
   end
   
   def create_folder
-    FileUtils.mkdir_p(configatron.files_path + "/users/#{name}")
+    FileUtils.mkdir_p(configatron.files_path + "/users/#{login}")
   end
 end
 
