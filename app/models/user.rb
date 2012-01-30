@@ -29,7 +29,7 @@ class User < ActiveRecord::Base
   after_create :send_create_notification, :unless => :anonymous?
   after_create :listen_to_channels, :unless => :anonymous?
   after_create :mark_invitation_as_accepted, :if => :invitation_token
-  after_create :create_folder, :if => lambda {|u| !u.stranger?}
+  after_create :create_folder, :if => lambda {|u| !u.stranger? && !u.system? }
   
   after_destroy :move_meeps_to_anonymous
   after_destroy :move_owned_channels_to_anonymous
@@ -296,7 +296,7 @@ class User < ActiveRecord::Base
   end
   
   def create_folder
-    FileUtils.mkdir_p(configatron.files_path + "/users/#{login}")
+    FileUtils.mkdir_p(configatron.files_path + "/users/#{id}")
   end
 end
 

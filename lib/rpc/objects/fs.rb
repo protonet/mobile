@@ -69,13 +69,6 @@ class Rpc::Objects::Fs < Rpc::Base
     check_perms params['paths'], user
 
     @client.call :fs, :info, params do |resp|
-      if resp['result'].is_a?(Array)
-        resp['result'] = resp['result'].map do |file|
-          file['uploader_name'] = User.find_by_id(file['uploader_id']).display_name rescue nil
-          file
-        end
-      end
-      
       handler.call resp['error'], resp['result']
     end
   end

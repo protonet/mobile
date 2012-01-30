@@ -357,7 +357,7 @@ protonet.p("files", function($page, $window, $document) {
         path:         utils.getAbsolutePath(data.name),
         downloadPath: utils.getDownloadPath(data.name),
         httpPath:     utils.getHttpPath(data.name),
-        name:         data.name.truncate(70),
+        name:         (data.display_name || data.name).truncate(70),
         rawName:      data.name,
         size:         protonet.utils.prettifyFileSize(data.size),
         rawSize:      data.size,

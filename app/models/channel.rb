@@ -17,7 +17,7 @@ class Channel < ActiveRecord::Base
   before_validation :normalize_name,      :on => :create
   
   after_create  :generate_uuid,                     :if => lambda {|c| c.uuid.blank? }
-  after_create  :create_folder,                     :if => lambda {|c| !c.home? }
+  after_create  :create_folder
   after_create  :subscribe_owner,                   :if => lambda {|c| !c.home? && !c.skip_autosubscribe }
   after_create  :subscribe_rendezvous_participant,  :if => lambda {|c| c.rendezvous? }
   after_create  :send_channel_notification,         :if => lambda {|c| !c.rendezvous? }
@@ -202,7 +202,7 @@ class Channel < ActiveRecord::Base
   end
   
   def create_folder
-    FileUtils.mkdir_p(configatron.files_path + "/channels/#{name}")
+    FileUtils.mkdir_p(configatron.files_path + "/channels/#{id}")
   end
   
   def generate_uuid
