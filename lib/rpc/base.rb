@@ -3,6 +3,7 @@ module Rpc
   
   class RpcError < ::Exception; end
   class AuthError < RpcError; end
+  class AccessDeniedError < RpcError; end
   
   class Base
     # Marks methods as invokable via an RPC interface. Works like attr_accessible.

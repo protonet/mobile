@@ -80,17 +80,13 @@ module ConnectionShared
           
           begin
             @tracker.rpc.invoke object, method, json['params'], @user do |err, result|
-              if err
-                send_rpc_error(json)
-              else
-                send_json json.merge(:status => 'success', :result => result)
-              end
+              send_json json.merge(:status => 'success', :result => result) unless err
             end
           # Handle any possible errors
-          rescue => ex
+          rescue Rpc::RpcError => ex
             puts "Error during RPC call: #{ex.class}", ex.message, ex.backtrace
             # Send some info on the error that occured
-            send_rpc_error(json)
+            send_rpc_error json.merge(:status => 'error', :error => ex.class.to_s)
           end
       end
     else

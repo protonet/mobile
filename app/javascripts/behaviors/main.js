@@ -25,6 +25,15 @@ $.behaviors({
     }
   },
   
+  "a[download]:click": (function() {
+    var $iframe;
+    return function(element, event) {
+      $iframe = $iframe || $("<iframe style='width:0; height:0; border:0; display:none;'>");
+      $iframe.appendTo(document.body).attr("src", element.href);
+      event.preventDefault();
+    };
+  })(),
+  
   "img[data-src]:inview": function(element) {
     var $element = $(element);
     $element.attr("src", $element.attr("data-src")).removeAttr("data-src");

@@ -53,13 +53,13 @@ protonet.p("files", function($page, $window, $document) {
         currentPath += "/";
       }
       
-      ui.list(data.result);
+      ui.list(data.result, data);
     },
     
     info: function(data) {
       var result = data.result[0];
       currentPath = result.path;
-      ui.info(result);
+      ui.info(result, data);
     }
   };
   
@@ -277,7 +277,9 @@ protonet.p("files", function($page, $window, $document) {
       });
     },
     
-    list: function(files) {
+    list: function(files, data) {
+      data = data || {};
+      
       marker.clear();
       
       $fileList.show();
@@ -286,6 +288,12 @@ protonet.p("files", function($page, $window, $document) {
       
       this.updateAddressBar();
       this.removeHint();
+      
+      if (data.status == "error") {
+        this.showError(data);
+        return;
+      }
+      
       if (!files) {
         this.insertHint("This folder doesn't seem to exist anymore");
         return;
@@ -304,13 +312,20 @@ protonet.p("files", function($page, $window, $document) {
       }.bind(this));
     },
     
-    info: function(fileData) {
+    info: function(fileData, data) {
+      data = data || {};
+      
       $fileList.hide();
       $fileDetails.show();
       
       $scrollContainer.scrollTop(0);
       
       this.updateAddressBar();
+      
+      if (data.status == "error") {
+        this.showError(data);
+        return;
+      }
       
       if (fileData.type === "missing") {
          ui.insertHint("This file doesn't seem to exist anymore");
@@ -395,7 +410,7 @@ protonet.p("files", function($page, $window, $document) {
     
     resizeFileArea: function() {
       var currentHeight = $tableWrapper.outerHeight(),
-          newHeight     = $page.outerHeight() - $tableWrapper.prop("offsetTop") - 20;
+          newHeight     = $page.outerHeight() - $tableWrapper.prop("offsetTop") - 21;
       $tableWrapper.css("min-height", newHeight.px());
     },
 
@@ -439,6 +454,20 @@ protonet.p("files", function($page, $window, $document) {
       });
       
       $addressBar.html($elements);
+    },
+    
+    showError: function(data) {
+      var error = data.error,
+          errorMessage;
+      switch (error) {
+        case "Rpc::AccessDeniedError":
+          errorMessage = "You don't have access to this file or folder";
+          break;
+        default:
+          errorMessage = "Unknown error. Please try again.";
+      }
+
+      protonet.trigger("flash_message.error", errorMessage);
     }
   };
   

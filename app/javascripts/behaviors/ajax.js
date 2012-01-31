@@ -14,14 +14,14 @@ protonet.open = (function() {
     "[data-meep-share]",
     "[data-rendezvous-with]",
     "[data-reply-to]",
+    // Files that are meant to be downloaded instead of displayed
+    "[download]",
     // User profile links
     "[data-user-id]",
     "[data-tab]",
     // rails.js
     "[data-remote]",
-    "[data-method]",
-    // File widget
-    "#file-widget a"
+    "[data-method]"
   ].join(",");
 
   var prototype = Element.prototype || {};
@@ -62,7 +62,7 @@ protonet.open = (function() {
       return fallback(eventOrUrl);
     }
     
-    if (!protonet.utils.isSameOrigin(url) && !url.startsWith(protonet.config.node_base_url)) {
+    if (!protonet.utils.isSameOrigin(url)) {
       return fallback(eventOrUrl);
     }
     

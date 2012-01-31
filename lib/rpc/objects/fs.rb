@@ -14,7 +14,8 @@ class Rpc::Objects::Fs < Rpc::Base
     check_perms [params['parent']], user
     
     @client.call :fs, :list, params do |resp|
-      if params['parent'].gsub("/", "") == 'channels'
+      parent = params['parent'].sub(/^\//, "").sub(/\/\$/, "")
+      if parent == 'channels'
         allowed_channel_ids = user.allowed_channels.map(&:id)
         
         resp['result'] = resp['result'].find_all do |file|
@@ -98,7 +99,7 @@ class Rpc::Objects::Fs < Rpc::Base
       path = path.sub(/^\/+/, "")
       # Might be a little overkill but it really works :)
       # Just don't use .. in the client to go up a folder.
-      raise Rpc::RpcError, 'Detected attempt to escape the filesystem' if path.split('/').include? '..'
+      raise Rpc::AccessDeniedError, 'Detected attempt to escape the filesystem' if path.split('/').include? '..'
       path.split('/', 3)
     end
 
@@ -141,11 +142,11 @@ class Rpc::Objects::Fs < Rpc::Base
         
         # Whitelist of namespaces and what specifies access.
         if namespace == 'users'
-          raise Rpc::RpcError, "Tried accessing a different user's files" unless id.to_i == user.id
+          raise Rpc::AccessDeniedError, "Tried accessing a different user's files" unless id.to_i == user.id
         elsif namespace == 'channels'
-          raise Rpc::RpcError, "Not subscribed to channel #{id.to_i}" unless channels.include? id.to_i
+          raise Rpc::AccessDeniedError, "Not subscribed to channel #{id.to_i}" unless channels.include? id.to_i
         else
-          raise Rpc::RpcError, "Tried accessing unknown file namespace #{namespace}"
+          raise Rpc::AccessDeniedError, "Tried accessing unknown file namespace #{namespace}"
         end
       end
     end

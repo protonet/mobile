@@ -13,7 +13,7 @@ protonet.i18n = {
   CHANNEL_SUBSCRIPTION_SUCCESS: "You successfully subcribed to channel '#{identifier}'",
   SOCKET_DISCONNECTED: "There has been a connection problem. Please wait a few seconds. It might heal itself.",
   SOCKET_RECONNECTED: "Ok, you are online again!",
-  SOCKET_FAILURE: "Oopsy daisy. Something went wrong. We weren't able to establish a connection with the chat server.",
+  SOCKET_FAILURE: "Something went wrong. We weren't able to establish a connection with the chat server.",
   FILE_DELETE_ERROR: "File couldn't be deleted",
   DIRECTORY_DELETE_ERROR: "Folder couldn't be deleted",
   DIRECTORY_DELETE_CONFIRM: "Are you sure? This will delete the folder including all contents. There's no undo.",

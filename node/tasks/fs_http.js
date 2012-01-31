@@ -162,7 +162,7 @@ exports.upload = function(request, response) {
 
 exports.download = function(request, response) {
   response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, POST');
+  response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, POST, GET');
 
   next_seq += 1;
   responses[next_seq] = response;
