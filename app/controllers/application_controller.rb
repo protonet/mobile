@@ -97,6 +97,7 @@ class ApplicationController < ActionController::Base
     requested_uri = request.protocol + request.host_with_port + request.fullpath
 
     return true if SystemPreferences.captive != true
+    return true if incoming_interface == "publish_to_web"
     return true if SystemBackend.requested_host_local?(request.host)
     respond_to do |format|
       format.html {
