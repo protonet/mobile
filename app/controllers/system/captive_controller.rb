@@ -14,7 +14,7 @@ module System
     end
 
     def grant
-      response_code = if SystemBackend.grant_internet_access(request.remote_ip, "n_a")
+      response_code = if SystemBackend.grant_internet_access(params[:ip_address], "n_a")
         flash[:notice] = "You've granted internet access to \"#{params[:ip_address]}\"."
         204
       else
@@ -25,7 +25,7 @@ module System
     end
 
     def revoke
-      response_code = if SystemBackend.revoke_internet_access(request.remote_ip)
+      response_code = if SystemBackend.revoke_internet_access(params[:ip_address])
         flash[:notice] = "You've revoked internet access from \"#{params[:ip_address]}\"."
         204
       else
