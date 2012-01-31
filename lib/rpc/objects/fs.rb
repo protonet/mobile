@@ -14,11 +14,15 @@ class Rpc::Objects::Fs < Rpc::Base
     check_perms [params['parent']], user
     
     @client.call :fs, :list, params do |resp|
-      if params['parent'] == 'channels'
-        resp['result'] = resp['result'].find_all do |chan|
-          user.allowed_channels.include?(chan.name.to_i)
+      if params['parent'].gsub("/", "") == 'channels'
+        allowed_channel_ids = user.allowed_channels.map(&:id)
+        
+        resp['result'] = resp['result'].find_all do |file|
+          return true if file['type'] == 'file'
+          allowed_channel_ids.include?(file['name'].to_i)
         end
       end
+      
       handler.call resp['error'], resp['result']
     end
   end
@@ -90,9 +94,11 @@ class Rpc::Objects::Fs < Rpc::Base
   protected
     # Parse a string path into (at most 3) string components.
     def parse_path path
+      # strip slash at beginning
+      path = path.sub(/^\/+/, "")
       # Might be a little overkill but it really works :)
       # Just don't use .. in the client to go up a folder.
-      raise Rpc::RpcError, 'Detected attempt to escape the filesystem' if parth.split('/').include? '..'
+      raise Rpc::RpcError, 'Detected attempt to escape the filesystem' if path.split('/').include? '..'
       path.split('/', 3)
     end
 
@@ -119,20 +125,20 @@ class Rpc::Objects::Fs < Rpc::Base
         # TODO: check the share key, if there is one, and if each file is shared
         raise Rpc::AuthError, 'Not authed'
       end
-
+      
       # Accept strings as well
       paths = parse_paths(paths) if paths.first.is_a? String
 
       # Cache the user's channels
       channels = user.allowed_channels.map(&:id)
-
+      
       paths.each do |(namespace, id, path)|
-        # Non-admins can't escape outside of any object (except for commands that
-        # hardcode bypasses, such as file.list('channels') to list all channels)
-        # Each command needs to make sure that they still don't do unwanted actions,
-        # like a guest deleting the entire namespace or something like that.
-        raise Rpc::RpcError, 'Tried escaping from the file tree' unless path
-
+        # is root path?
+        next if namespace.nil? || namespace.empty?
+        
+        # is "/users" or "/channels"?
+        next if id.nil? || id.empty?
+        
         # Whitelist of namespaces and what specifies access.
         if namespace == 'users'
           raise Rpc::RpcError, "Tried accessing a different user's files" unless id.to_i == user.id
