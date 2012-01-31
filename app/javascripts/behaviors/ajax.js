@@ -1,5 +1,4 @@
 //= require "../utils/is_same_origin.js"
-//= require "../utils/guess_file_type.js"
 
 /**
  * AJAX Page Loads and Form Submits
@@ -67,16 +66,6 @@ protonet.open = (function() {
     }
     
     if (link.pathname === "/" || !link.pathname) {
-      return fallback(eventOrUrl);
-    }
-
-    // could be: audio, html, video, ... (see guess_file_type.js)
-    var fileType = protonet.utils.guessFileType(url).type;
-    if (fileType === "unknown" && url.indexOf("/system/files/show") !== -1) {
-      return fallback(eventOrUrl);
-    }
-    
-    if (!protonet.ui.ModalWindow.supportsFileType(fileType)) {
       return fallback(eventOrUrl);
     }
     

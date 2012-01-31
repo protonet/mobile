@@ -16,14 +16,6 @@ protonet.ui.ModalWindow = (function() {
       offsetTop                     = 65,
       offsetBottom                  = 20,
       visible                       = false,
-      embedMapping                  = {
-        "image":    "image",
-        "pdf":      "iframe",
-        "flash":    "iframe",
-        "html":     "xhr",
-        "text":     "xhr",
-        "unknown":  "xhr"
-      },
       // Needed to preload stylesheets before rendering the corresponding HTML
       regExpStylesheets             = /<link.*\shref=(?:\"|')([^>"]+?\.css(?:\?.+?)?)(?:\"|')[^>]+>/gi,
       // Cached references
@@ -148,27 +140,16 @@ protonet.ui.ModalWindow = (function() {
     }
   }
   
-  function _loadViaAjax(url) {
+  function _load(url) {
     elements.dialog.addClass("loading");
     _abortCurrentRequest();
     
     currentRequest = $.ajax(url).done(function(response, statusText, xhr) {
-      var contentType = xhr.getResponseHeader("Content-Type");
-      if (contentType.startsWith("text/html")) {
-        _loadStylesheets(response, function(html) {
-          content(html, true);
-          elements.dialog.removeClass("loading");
-        });
-      } else if (contentType.startsWith("text/")) {
-        content($("<pre>", { text: response }), true);
+      _loadStylesheets(response, function(html) {
+        content(html, true);
         elements.dialog.removeClass("loading");
-      }
-      
-      var responseUrl = xhr.getResponseHeader("X-Url");
-      if (responseUrl !== url) {
-        protonet.utils.History.replace(responseUrl);
-      }
-      protonet.trigger("modal_window.loaded", response, xhr);
+        protonet.trigger("modal_window.loaded", response, xhr);
+      });
     }).fail(function(xhr) {
       var textResource;
       if (xhr.status === 403) {
@@ -187,28 +168,6 @@ protonet.ui.ModalWindow = (function() {
       elements.dialog.removeClass("loading");
     });
   }
-  
-  function _load(url) {
-    content("", true);
-    
-    var fileType = protonet.utils.guessFileType(url).type;
-    
-    switch(fileType) {
-      case "image":
-        content(
-          $("<img>", { src: url }), true
-        );
-        break;
-      case "iframe":
-        content(
-          $("<iframe>", { src: url }), true
-        );
-        break;
-      default:
-        _loadViaAjax(url);
-    }
-  }
-    
   
   function show(url) {
     if (!elements) {
@@ -287,10 +246,6 @@ protonet.ui.ModalWindow = (function() {
     return this;
   }
   
-  function supportsFileType(fileType) {
-    return !!embedMapping[fileType];
-  }
-  
   function isVisible() {
     return visible;
   }
@@ -300,7 +255,6 @@ protonet.ui.ModalWindow = (function() {
     show:             show,
     hide:             hide,
     content:          content,
-    supportsFileType: supportsFileType,
     isVisible:        isVisible
   };
 })();
