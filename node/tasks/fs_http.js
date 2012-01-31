@@ -1,22 +1,23 @@
-var sys             = require("sys"),
-    fs              = require("fs"),
-    util            = require('util'),
-    path            = require('path'),
-    url             = require('url'),
-    spawn           = require('child_process').spawn,
+var sys                 = require("sys"),
+    fs                  = require("fs"),
+    util                = require('util'),
+    path                = require('path'),
+    url                 = require('url'),
+    spawn               = require('child_process').spawn,
 
-    amqp            = require('../modules/node-amqp/amqp'),
-    formidable      = require('../modules/node-formidable'),
-    lookup_mime     = require('../modules/node-mime').lookup,
+    amqp                = require('../modules/node-amqp/amqp'),
+    formidable          = require('../modules/node-formidable'),
+    lookup_mime         = require('../modules/node-mime').lookup,
 
-    FILES_DIR       = "./tmp/development/shared/files/",
-    USERS_DIR       = FILES_DIR + "/users/",
-    CHANNELS_DIR    = FILES_DIR + "/channels/",
+    FILES_DIR           = "./tmp/development/shared/files/",
+    USERS_DIR           = FILES_DIR + "/users/",
+    CHANNELS_DIR        = FILES_DIR + "/channels/",
     
-    virusScanCache  = {},
+    virusScanCache      = {},
+    virusScanResponder  = {},
     
-    responses       = {},
-    next_seq        = 0,
+    responses           = {},
+    next_seq            = 0,
     queue,
     exchange;
 
@@ -184,7 +185,7 @@ exports.scan = function(request, response) {
   function respond(isMalicious) {
     response.writeHead(200);
     response.end(JSON.stringify({ malicious: isMalicious }));
-  };
+  }
   
   var params = url.parse(request.url, true),
       file   = path.join(FILES_DIR, params.query.path);
@@ -195,21 +196,38 @@ exports.scan = function(request, response) {
     return;
   }
   
-  var scan = spawn("clamscan", [file]);
+  // Handle multiple scans for the same file at the same time
+  if (!virusScanResponder[file]) {
+    virusScanResponder[file] = [];
+    
+    var scan = spawn("clamscan", [file]);
+    scan.on('exit', function(code) {
+      var responder = virusScanResponder[file],
+          length    = responder.length,
+          i         = 0;
+      for (; i<length; i++) {
+        responder[i](code);
+      }
+      delete virusScanResponder[file];
+    });
+    
+    // kill the process if it runs longer than X seconds
+    setTimeout(function() { scan.kill(); }, 20000);
+  }
   
-  scan.on('exit', function(code) {
+  virusScanResponder[file].push(function(code) {
     var isMalicious;
     if (code == 0) {
       isMalicious = false;
     } else if (code == 1) {
       isMalicious = true;
     }
-    
+
     // cache
     if (typeof(isMalicious) !== "undefined") {
       virusScanCache[file] = isMalicious;
     }
-    
+
     respond(isMalicious);
   });
 };

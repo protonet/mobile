@@ -454,6 +454,12 @@ protonet.p("files", function($page, $window, $document) {
       });
       
       $addressBar.html($elements);
+      
+      if (currentPath.startsWith("/users/" + protonet.config.user_id + "/")) {
+        protonet.ui.Header.select("files", "my");
+      } else {
+        protonet.ui.Header.select("files", "index");
+      }
     },
     
     showError: function(data) {
