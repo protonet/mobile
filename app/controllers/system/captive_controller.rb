@@ -7,11 +7,6 @@ module System
       flash[:sticky] = "please login or create an account to be able to use the internet!"
       render :layout => "registrations"
     end
-  
-    # this works fine, should/could be handled in rack, no idea though
-    def catchall
-      render :file => "#{Rails.root}/public/404.html", :status => 404
-    end
     
     def store_redirect
       session[:captive_redirect_url] = params[:captive_redirect_url]

@@ -20,6 +20,15 @@ class ApplicationController < ActionController::Base
   def logged_in?
     user_signed_in?
   end
+
+  def render_404
+    requested_uri = request.protocol + request.host_with_port + request.fullpath
+    if SystemPreferences.captive && !SystemBackend.requested_host_local?(request.host)
+      redirect_to "http://#{address_for_current_interface}/?captive_redirect_url=" + URI.escape(requested_uri)
+    else
+      render :file => "#{Rails.root}/public/404.html", :status => 404
+    end
+  end
   
   private
   
@@ -85,15 +94,20 @@ class ApplicationController < ActionController::Base
   end
   
   def captive_check
-    return true if SystemPreferences.captive != true ||
-      Rails.cache.read("captive_accepted.#{@current_user.id}", {:expires_in => 4.hours})
-
     requested_uri = request.protocol + request.host_with_port + request.fullpath
-    return true if SystemBackend.requested_host_local?(request.host)
 
-    redirect_to "http://#{address_for_current_interface}/?captive_redirect_url=" + URI.escape(requested_uri)
-  end
-  
+    return true if SystemPreferences.captive != true
+    return true if SystemBackend.requested_host_local?(request.host)
+    respond_to do |format|
+      format.html {
+        redirect_to "http://#{address_for_current_interface}/?captive_redirect_url=" + URI.escape(requested_uri)
+      }
+      format.all {
+        return head 503
+      }
+    end
+  end  
+
   def only_registered
     if current_user.stranger?
       if node_privacy_settings["allow_dashboard_for_strangers"] != true
