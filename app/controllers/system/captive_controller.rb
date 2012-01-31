@@ -7,11 +7,6 @@ module System
       flash[:sticky] = "please login or create an account to be able to use the internet!"
       render :layout => "registrations"
     end
-  
-    # this works fine, should/could be handled in rack, no idea though
-    def catchall
-      render :file => "#{Rails.root}/public/404.html", :status => 404
-    end
     
     def store_redirect
       session[:captive_redirect_url] = params[:captive_redirect_url]
@@ -19,7 +14,7 @@ module System
     end
 
     def grant
-      response_code = if SystemBackend.grant_internet_access(request.remote_ip, "n_a")
+      response_code = if SystemBackend.grant_internet_access(params[:ip_address], "n_a")
         flash[:notice] = "You've granted internet access to \"#{params[:ip_address]}\"."
         204
       else
@@ -30,7 +25,7 @@ module System
     end
 
     def revoke
-      response_code = if SystemBackend.revoke_internet_access(request.remote_ip)
+      response_code = if SystemBackend.revoke_internet_access(params[:ip_address])
         flash[:notice] = "You've revoked internet access from \"#{params[:ip_address]}\"."
         204
       else

@@ -131,6 +131,5 @@ Dashboard::Application.routes.draw do
   match "channel_data" => "instruments#channel_data"
   
   match '/:controller(/:action(/:id))'
-  match '*path' => 'system/captive#catchall', :constraints => System::CaptiveController
-  
+  match '*a' => 'application#render_404'
 end

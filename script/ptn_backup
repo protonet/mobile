@@ -1,0 +1,35 @@
+#!/bin/bash
+# CAUTION HIGHLY EXPERIMENTAL! THINK BEFORE USE!
+
+CURRENT_VERSION=`cat /home/protonet/dashboard/current/RELEASE`
+TIMESTAMP=`date +%s`
+backup_folder="/tmp/protonet_backup_$TIMESTAMP"
+mkdir "$backup_folder"
+mysqldump -u root --opt dashboard_production > "$backup_folder/dashboard_production.sql"
+mysql -u root --password="" -e "drop database dashboard_production"
+cp -r /home/protonet/dashboard/shared/system/avatars "$backup_folder/avatars"
+cp -r /home/protonet/dashboard/shared/config "$backup_folder/config"
+cp -r /home/protonet/dashboard/shared/externals "$backup_folder/externals"
+cp -r /home/protonet/dashboard/shared/solr "$backup_folder/solr"
+cp -r /home/protonet/dashboard/shared/user-files "$backup_folder/user-files"
+/usr/sbin/monit -c /home/protonet/dashboard/shared/config/monit_ptn_node -l /home/protonet/dashboard/shared/log/monit.log -p /home/protonet/dashboard/shared/pids/monit.pid stop all
+sudo monit stop all
+# now check if all services are correctly shutdown if not do it manually via "sudo kill -9" (monit, rabbitmq, js_dispatcher_server, hostapd, dnsmasq, node.js...)
+rm -rf /home/protonet/dashboard /home/protonet/deployer
+rm -rf /home/protonet/.babushka /home/protonet/.bash_history /home/protonet/.bash_logout /home/protonet/.cache /home/protonet/.config /home/protonet/.fontconfig /home/protonet/.gem
+rm -rf /home/protonet/.gemrc /home/protonet/.gitconfig /home/protonet/.monit.id /home/protonet/.monit.state /home/protonet/.rnd
+rm -rf /home/protonet/.sudo_as_admin_successful /home/protonet/.viminfo
+bash -c "`wget -O - http://releases.protonet.info/bootstrap/$CURRENT_VER..."
+sudo monit start all
+mysql -u root --password="" dashboard_production < "$backup_folder/dashboard_production.sql"
+rm -rf /home/protonet/dashboard/shared/system/avatars /home/protonet/dashboard/shared/config /home/protonet/dashboard/shared/externals /home/protonet/dashboard/shared/solr /home/protonet/dashboard/shared/user-files
+rm -rf /home/protonet/dashboard/shared/avatars
+cp -r "$backup_folder/avatars" /home/protonet/dashboard/shared/system/avatars
+rm -rf /home/protonet/dashboard/shared/config
+cp -r "$backup_folder/config" /home/protonet/dashboard/shared/config
+rm -rf /home/protonet/dashboard/shared/externals
+cp -r "$backup_folder/externals" /home/protonet/dashboard/shared/externals
+rm -rf /home/protonet/dashboard/shared/solr
+cp -r "$backup_folder/solr" /home/protonet/dashboard/shared/solr
+rm -rf /home/protonet/dashboard/shared/user-files
+cp -r "$backup_folder/user-files" /home/protonet/dashboard/shared/user-files

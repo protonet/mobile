@@ -12,7 +12,7 @@ module ApplicationHelper
   end
   
   def stylesheets
-    ['/css/reset', '/css/general', '/css/header', '/css/subpage.css', '/css/login', '/css/channels', '/css/meeps', '/css/form', '/css/text_extension', '/css/emoji.css', '/css/widget', '/css/pages/search', '/css/modal_window', '/css/context_menu', '/css/getting_started', '/css/files']
+    ['/css/lib/fcbkcomplete.css', '/css/reset', '/css/general', '/css/header', '/css/subpage.css', '/css/login', '/css/channels', '/css/meeps', '/css/form', '/css/text_extension', '/css/emoji.css', '/css/widget', '/css/pages/search', '/css/modal_window', '/css/context_menu', '/css/getting_started', '/css/files']
   end
   
   def custom_stylesheet
