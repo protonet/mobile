@@ -1,5 +1,5 @@
-require 'lib/rpc/base'
-require 'lib/rpc/client'
+require File.join(Rails.root, 'lib', 'rpc', 'base')
+require File.join(Rails.root, 'lib', 'rpc', 'client')
 
 class Rpc::Objects::Fs < Rpc::Base
   attr_invokable :list, :move, :copy, :delete, :info, :check_auth

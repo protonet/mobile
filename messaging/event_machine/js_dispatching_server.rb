@@ -9,6 +9,10 @@ RUN_FROM_DISPATCHER = true
 
 require File.dirname(__FILE__) + '/../../config/environment'
 
+# RPC handler
+require File.join(Rails.root, 'lib', 'rpc', 'base')
+require File.join(Rails.root, 'lib', 'rpc', 'handler')
+
 require File.dirname(__FILE__) + '/modules/node_connection.rb'
 require File.dirname(__FILE__) + '/modules/client_connection.rb'
 require File.dirname(__FILE__) + '/modules/http_connection.rb'
@@ -17,8 +21,6 @@ require File.dirname(__FILE__) + '/modules/websocket_ssl_connection.rb'
 require File.dirname(__FILE__) + '/client_tracker.rb'
 require File.dirname(__FILE__) + '/node_tracker.rb'
 
-# RPC handler
-require File.join(::Rails.root, 'lib', 'rpc', 'handler')
 
 solr_index_processing = proc do
   begin
