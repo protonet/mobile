@@ -9,18 +9,13 @@
 protonet.p("instruments", function($page) {
   protonet.timeline.initialize();
   
-  // Init widgets
-  if (protonet.config.show_user_widget) {
-    new protonet.widgets.User();
-  }
-  
   $page.css("min-height", $("aside.side-content").outerHeight().px());
   
   // there's a captive portal redirect request and the user is logged in
   if (protonet.config.captive_redirect_url) {
     $.post("/captive/store_redirect", { captive_redirect_url: protonet.config.captive_redirect_url });
     if (protonet.config.user_is_stranger) {
-      protonet.trigger('flash_message.sticky', 'Welcome. Please login or register to get access to the internet, thank you!');
+      protonet.trigger('flash_message.sticky', 'Welcome. Please login or register to get access to the internet. Thank you!');
     } else {
       var htmlEscapedUrl = protonet.utils.escapeHtml(protonet.config.captive_redirect_url),
           urlEncodedUrl  = encodeURIComponent(protonet.config.captive_redirect_url);

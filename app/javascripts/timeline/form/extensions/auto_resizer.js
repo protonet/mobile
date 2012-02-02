@@ -4,7 +4,7 @@
  * Designed for optimal performance
  */
 protonet.timeline.Form.extensions.AutoResizer = function(input, wrapper) {
-  if (!protonet.user.Browser.SUPPORTS_EVENT("input")) {
+  if (!protonet.browser.SUPPORTS_EVENT("input")) {
     return;
   }
   

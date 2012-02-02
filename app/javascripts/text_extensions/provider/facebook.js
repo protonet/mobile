@@ -1,4 +1,4 @@
-//= require "../../data/facebook.js"
+//= require "../../data/ext/facebook.js"
 
 /**
  * Facebook Provider

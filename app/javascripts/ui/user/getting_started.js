@@ -1,4 +1,4 @@
-protonet.user.initGettingStarted = (function() {
+protonet.ui.User.GettingStarted = (function() {
   var $container, viewer = protonet.config.user_id;
   
   function _done(name) {
@@ -70,12 +70,15 @@ protonet.user.initGettingStarted = (function() {
       });
   }
   
-  return function() {
-    $container = $("div.getting-started");
-    if (!$container.length) {
-      return;
+  return {
+    initialize: function() {
+      $container = $("div.getting-started");
+      if (!$container.length) {
+        return;
+      }
+      _observe();
+      _getTodoList();
     }
-    _observe();
-    _getTodoList();
   };
+
 })();

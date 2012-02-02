@@ -60,7 +60,7 @@ protonet.timeline.Form = {
         // When loading the page a "channel.change" event is initially fired
         // This causes problems when the user already focused the login form and started to type
         // in his password. Uygar from XING even almost accidentally submitted her password
-        if (!preventInitialFocus && !protonet.user.Browser.IS_TOUCH_DEVICE()) {
+        if (!preventInitialFocus && !protonet.browser.IS_TOUCH_DEVICE()) {
           this.input.focus();
         }
         
@@ -163,13 +163,13 @@ protonet.timeline.Form = {
       }.bind(this))
       
       .on("form.share_meep", function(id) {
-        protonet.timeline.Meep.get(id, function(data) {
+        protonet.data.Meep.get(id, function(data) {
           if (data.author !== protonet.config.user_name) {
             protonet.trigger("form.create_reply", data.author);
           } else {
             protonet.trigger("form.focus");
           }
-          protonet.trigger("text_extension_input.select", protonet.timeline.Meep.getUrl(id));
+          protonet.trigger("text_extension_input.select", protonet.data.Meep.getUrl(id));
         });
       });
     

@@ -25,7 +25,7 @@ protonet.open = (function() {
 
   var prototype = Element.prototype || {};
   
-  var isTouchDevice = protonet.user.Browser.IS_TOUCH_DEVICE();
+  var isTouchDevice = protonet.browser.IS_TOUCH_DEVICE();
   
   var matchesSelector = prototype.matchesSelector
     || prototype.webkitMatchesSelector

@@ -1,5 +1,3 @@
-//= require "get_channel_id_for_name.js"
-
 /**
  * Highlights channel replies in a string
  *
@@ -18,7 +16,7 @@ protonet.utils.highlightChannelReplies = (function() {
     return str.replace(REG_EXP, function(original, $1, $2) {
       var trailingChars = ($2.match(TRAILING_CHARS) || [""])[0],
           channelName   = trailingChars ? $2.replace(TRAILING_CHARS, "") : $2,
-          channelId     = protonet.utils.getChannelIdForName(channelName);
+          channelId     = protonet.data.Channel.getIdByName(channelName);
       
       if (!channelId) {
         return original;

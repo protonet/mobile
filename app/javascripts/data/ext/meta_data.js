@@ -1,5 +1,5 @@
 //= require "yql.js"
-//= require "../utils/convert_to_absolute_url.js"
+//= require "../../utils/convert_to_absolute_url.js"
 
 /**
  * Facebook created a standard for data sharing

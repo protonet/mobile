@@ -44,8 +44,7 @@
  */
 (function(protonet) {
   
-  var meepDataCache     = {},
-      defaultAvatarSize = { width: 36, height: 36 },
+  var defaultAvatarSize = { width: 36, height: 36 },
       POST_URL          = "/meeps";
   
   protonet.timeline.Meep = Class.create({
@@ -60,8 +59,6 @@
           this.data.user_id       = this.data.remote_user_id;
         }
       }
-
-      meepDataCache[this.data.id] = this.data;
     },
 
     _parseForm: function(form) {
@@ -121,7 +118,7 @@
     },
 
     getUrl: function() {
-      protonet.timeline.Meep.getUrl(this.data.id);
+      protonet.data.Meep.getUrl(this.data.id);
     },
 
     getAvatar: function(size) {
@@ -252,32 +249,4 @@
     }
   });
 
-  /**
-   * Static method for loading a meep
-   */
-  protonet.timeline.Meep.get = function(id, callback) {
-    id = +id;
-    if (meepDataCache[id]) {
-      return callback(meepDataCache[id]);
-    } else {
-      $.ajax({
-        dataType: "json",
-        url:      "/meeps/" + id,
-        success:  function(data) {
-          meepDataCache[id] = data;
-          callback(data);
-        },
-        error:    function() {
-          protonet.trigger("flash_message.error", protonet.t("LOADING_MEEP_ERROR"));
-        }
-      });
-    }
-  };
-  
-  /**
-   * Static method for getting the url to a meep
-   */
-  protonet.timeline.Meep.getUrl = function(id) {
-    return protonet.config.base_url + "/meep/" + id;
-  };
 })(protonet);

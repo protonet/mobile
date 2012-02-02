@@ -1,4 +1,4 @@
-//= require "../data/yql.js"
+//= require "../data/ext/yql.js"
 
 protonet.media.getSocialNetworkPhoto = (function() {
   var services = {

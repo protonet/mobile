@@ -4,7 +4,7 @@
 protonet.timeline.Form.extensions.Snapshots = function($input, $wrapper, $form) {
   var $link = $form.find("[data-extension=snapshot]");
   
-  if (!protonet.user.Browser.HAS_FLASH(9)) {
+  if (!protonet.browser.HAS_FLASH(9)) {
     $link.hide();
     return;
   }

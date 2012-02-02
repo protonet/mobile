@@ -18,7 +18,7 @@ $.behaviors({
   "a[data-user-id]:dragstart": function(element, event) {
     if (event.originalEvent.dataTransfer)  {
       var $element  = $(element),
-          user      = protonet.user.getUser(+$element.data("user-id"));
+          user      = protonet.data.User.get($element.data("user-id"));
       if (user) {
         event.originalEvent.dataTransfer.setData("Text", "@" + user.name + " ");
       }
@@ -129,7 +129,7 @@ $.behaviors({
   }
 });
 
-if (protonet.user.Browser.IS_TOUCH_DEVICE()) {
+if (protonet.browser.IS_TOUCH_DEVICE()) {
   
   $.behaviors({
     "[tabindex]:touchstart": function(element, event) {
@@ -153,7 +153,7 @@ if (protonet.user.Browser.IS_TOUCH_DEVICE()) {
   
 }
 
-if (!protonet.user.Browser.SUPPORTS_PLACEHOLDER()) {
+if (!protonet.browser.SUPPORTS_PLACEHOLDER()) {
   
   $.behaviors({
     "input[placeholder], textarea[placeholder]": function(input) {

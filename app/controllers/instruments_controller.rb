@@ -10,6 +10,7 @@ class InstrumentsController < ApplicationController
         Channel.prepare_for_frontend(channel, current_user) if channels_to_load.include?(channel.id.to_s) || channel.has_unread_meeps
       }.compact
     else
+      @users = (SystemPreferences.show_only_online_users ? [] : User.registered.all).map {|user| User.prepare_for_frontend(user) }
       @channels = current_user.channels.verified.real
       render :layout => "instruments"
     end

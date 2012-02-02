@@ -24,7 +24,6 @@
       token:                      "<%= current_user.communication_token %>",
       default_avatar:             "<%= configatron.default_avatar %>",
       admin_ids:                  <%= User.admins.map(&:id).to_json %>,
-      user_name:                  "<%= current_user.display_name %>",
       user_id:                    <%= current_user.id %>,
       user_is_stranger:           <%= current_user.stranger?.to_json %>,
       show_file_widget:           <%= SystemPreferences.show_file_widget.to_json %>,
@@ -39,7 +38,8 @@
       server:                     "<%= request.server_software %>",
       incoming_interface:         <%= raw incoming_interface.to_json %>,
       captive_redirect_url:       "<%= raw(params[:captive_redirect_url] || session[:captive_redirect_url]) %>",
-      debug_mode:                 <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>
+      debug_mode:                 <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>,
+      users:                      <%= @users.to_json %>,
     };
     
     <%= "var AIRBRAKE_API_KEY = '#{HoptoadNotifier.configuration.api_key}';" if Rails.env.production? %>

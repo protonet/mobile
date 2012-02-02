@@ -12,7 +12,9 @@
 //= require "protonet.js"
 //= require "events/emitter.js"
 //= require "storage/storage.js"
-//= require "user/user.js"
+//= require "data/user.js"
+//= require "data/channel.js"
+//= require "data/meep.js"
 //= require "dispatcher/dispatcher.js"
 //= require "i18n/i18n.js"
 //= require "utils/history.js"
@@ -29,12 +31,14 @@
 //= require "timeline/meep.js"
 //= require "effects/clouds.js"
 //= require "ui/pretty_date.js"
-//= require "pages/_superclass.js"
+//= require "pages/base.js"
 
 //---------------------------- INITIALIZE APPLICATION ----------------------------
 
 $(function() {
-  protonet.user.initialize();
+  protonet.ui.User.initialize();
+  
+  
   protonet.dispatcher.initialize();
   
   protonet.ui.FlashMessage.initialize();
@@ -55,7 +59,7 @@ $(function() {
     }, (0.5).seconds());
   }
   
-  if (protonet.user.Browser.IS_TOUCH_DEVICE()) {
+  if (protonet.browser.IS_TOUCH_DEVICE()) {
     $("body").addClass("touch-device");
   }
 });

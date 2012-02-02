@@ -68,10 +68,10 @@
     renderTab: function($super, container) {
       $super(container);
       
-      var user = protonet.user.getUser(this.partner) || {};
+      var isPartnerOnline = protonet.data.User.isOnline(this.partner);
       this.link.addClass("rendezvous");
       
-      if (user.isOnline) {
+      if (isPartnerOnline) {
         this.link.addClass("online");
       }
       

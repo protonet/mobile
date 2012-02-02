@@ -398,8 +398,9 @@ protonet.timeline.Channels = {
     
     $.ajax({
       dataType: "json",
-      url: "/channels/" + channelId,
-      success: function(data) {
+      url:      "/channels/" + channelId,
+      data:     { include_meeps: 1 },
+      success:  function(data) {
         // Strip all meeps that were receive while the channel was loaded
         // Those meeps will later be rendered by firing the "meep.receive" event
         data.meeps = $.map(data.meeps, function(meepData) {

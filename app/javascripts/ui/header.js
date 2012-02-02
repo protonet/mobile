@@ -11,7 +11,7 @@ protonet.ui.Header = {
     var initialControllerName = protonet.config.controller_name,
         initialActionName     = protonet.config.action_name;
     
-    if (!protonet.user.Browser.IS_TOUCH_DEVICE() && protonet.config.allow_modal_views && !$.browser.msie) {
+    if (!protonet.browser.IS_TOUCH_DEVICE() && protonet.config.allow_modal_views && !$.browser.msie) {
       var $searchInput = this.$header.find("[type=search]").keydown(function() {
         setTimeout(function() {
           var value = $searchInput.val();

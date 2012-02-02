@@ -71,6 +71,15 @@ class User < ActiveRecord::Base
     )
   end
   
+  def self.prepared_for_frontend(user)
+    {
+      :id             => user.id,
+      :name           => user.display_name,
+      :avatar         => user.avatar.url,
+      :subscriptions  => user.channels.map(&:id)
+    }
+  end
+  
   # devise 1.2.1 calls this
   def valid_password?(password)
     if SystemPreferences.remote_ldap_sign_on == true

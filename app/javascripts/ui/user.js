@@ -1,31 +1,22 @@
-//= require "../ui/context_menu.js"
+//= require "context_menu.js"
 //= require "../media/try_to_load_image.js"
 
-protonet.user = {
+protonet.ui.User = {
   initialize: function() {
-    this.usersData = {};
-    
-    protonet.user.Config.initialize();
-    protonet.user.initGettingStarted();
+    this.Widget.initialize();
+    this.GettingStarted.initialize();
     
     this._observe();
     this._createContextMenu();
   },
   
   _observe: function() {
-    /**
-     * Highlight meep when sent by current user
-     */
     protonet
       .on("meep.rendered", function(element, data, instance) {
         if (data.author == protonet.config.user_name && data.user_id == protonet.config.user_id && !instance.merged) {
           element.addClass("own");
         }
-      }.bind(this))
-      
-      .on("users.data_available", function(usersData) {
-        this.usersData = usersData;
-      }.bind(this))
+      })
       
       .on("user.changed_avatar", function(user) {
         var selector = [
@@ -95,14 +86,8 @@ protonet.user = {
         });
       }
     });
-  },
-  
-  getUser: function(userId) {
-    var user = this.usersData[userId];
-    return user;
   }
 };
 
-//= require "browser.js"
-//= require "config.js"
-//= require "getting_started.js"
+//= require "user/widget.js"
+//= require "user/getting_started.js"

@@ -17,13 +17,17 @@ class ChannelsController < ApplicationController
         if request.headers['X-Request-Type'] == 'tab'
           render :partial => "channel_details", :locals => { :channel => Channel.find(params[:id]) }
         else
-          # TODO: This can be used to get the content of any channel #security
           @selected_channel = Channel.find(params[:id])
           render :list
         end
       end
       format.json do
-        render :json => Channel.prepare_for_frontend(current_user.channels.find(params[:id]), current_user)
+        channel = current_user.channels.find(params[:id])
+        if params[:include_meeps] && current_user.subscribed?(channel)
+          render :json => Channel.prepare_for_frontend(channel, current_user)
+        else
+          render :json => Channel.info(channel, current_user)
+        end
       end
     end
   end

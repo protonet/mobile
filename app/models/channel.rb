@@ -94,8 +94,7 @@ class Channel < ActiveRecord::Base
     all(:select => :name).map {|c| c.name.downcase }
   end
   
-  def self.prepare_for_frontend(channel, current_user)
-    meeps = channel.meeps.includes(:user).recent.all(:limit => 25)
+  def self.info(channel, current_user)
     obj = {
       :id               => channel.id,
       :uuid             => channel.uuid,
@@ -106,12 +105,16 @@ class Channel < ActiveRecord::Base
       :name             => channel.name,
       :display_name     => channel.rendezvous_name(current_user) || channel.display_name,
       :last_read_meep   => (channel.last_read_meep rescue nil),
-      :listen_id        => (channel.listen_id rescue nil),
-      :meeps            => Meep.prepare_for_frontend(meeps, { :channel_id => channel.id })
+      :listen_id        => (channel.listen_id rescue nil)
     }
     
     # delete falsy values to save some bytes
     obj.delete_if { |key,value| !value }
+  end
+  
+  def self.prepare_for_frontend(channel, current_user)
+    meeps = channel.meeps.includes(:user).recent.all(:limit => 25)
+    self.info(channel, current_user).merge(:meeps => Meep.prepare_for_frontend(meeps, :channel_id => channel.id))
   end
   
   # TODO:

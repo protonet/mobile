@@ -1,4 +1,4 @@
-protonet.user.Browser = {
+protonet.browser = {
   SUPPORTS_HTML5_WEBSOCKET: function() {
     return !!window.WebSocket;
   },

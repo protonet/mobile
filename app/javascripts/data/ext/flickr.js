@@ -1,5 +1,5 @@
 //= require "yql.js"
-//= require "../utils/strip_tags.js"
+//= require "../../utils/strip_tags.js"
 
 protonet.data.Flickr = {};
 protonet.data.Flickr.getPhoto = (function() {
