@@ -54,6 +54,7 @@ cd dashboard
 git checkout master
 git reset --hard
 git clean -f
+git config remote.origin.url=git@github.com:protonet/dashboard.git
 git pull
 git submodule init
 git submodule update
