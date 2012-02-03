@@ -154,7 +154,7 @@
       }
       
       var isWindowFocused             = protonet.utils.isWindowFocused(),
-          isAllowedToDoNotifications  = protonet.user.Config.get("reply_notification");
+          isAllowedToDoNotifications  = protonet.data.User.getPreference("reply_notification");
       
       if (!isWindowFocused && isAllowedToDoNotifications) {
         new protonet.ui.Notification({

@@ -32,15 +32,15 @@
  */
 (function(protonet) {
   
-  var dataCache       = {},
-      viewerId        = protonet.config.user_id,
-      viewerName      = protonet.config.user_name,
-      defaultAvatar   = protonet.config.default_avatar,
-      adminIds        = protonet.config.admin_ids,
-      userArr         = protonet.config.users,
-      nameToIdMapping = {},
-      idToNameMapping = {},
-      preferences     = {
+  var dataCache         = {},
+      viewerId          = protonet.config.user_id,
+      viewerName        = protonet.config.user_name,
+      defaultAvatar     = protonet.config.default_avatar,
+      adminIds          = protonet.config.admin_ids,
+      userArr           = protonet.config.users,
+      nameToIdMapping   = {},
+      idToNameMapping   = {},
+      preferencesConfig = {
         sound: {
           type: "boolean",
           labels: {
@@ -62,7 +62,7 @@
       
   // Webkit Notifications for replies
   if (protonet.ui.Notification.supported()) {
-    preferences.reply_notification = {
+    preferencesConfig.reply_notification = {
       type: "notification",
       labels: {
         "true":  "reply notifications <span class=\"on\">on</span>",
@@ -78,7 +78,7 @@
   
   function cache(user) {
     $.extend(user, {
-      isAdmin:    adminsIds.indexOf(user.id) !== -1,
+      isAdmin:    adminIds.indexOf(user.id) !== -1,
       isViewer:   user.id == viewerId,
       isStranger: user.name.startsWith("stranger_"),
       isOnline:   false
@@ -161,7 +161,11 @@
     get: function(id, callback) {
       return dataCache[id];
     },
-
+    
+    getAll: function() {
+      return dataCache;
+    },
+    
     getName: function(id) {
       return idToNameMapping[id];
     },
@@ -175,7 +179,7 @@
     },
     
     getUrl: function(id) {
-      return protonet.config.base_url + "/users/" + user.id;
+      return protonet.config.base_url + "/users/" + id;
     },
     
     getAdmins: function() {
@@ -184,7 +188,7 @@
     
     getPreference: function(key) {
       var value       = protonet.storage.get(key),
-          preference  = preferences[key];
+          preference  = preferencesConfig[key];
 
       if (preference && preference.type === "notification") {
         if (!protonet.ui.Notification.hasPermission()) {
@@ -203,8 +207,8 @@
       protonet.storage.set(key, value);
     },
     
-    getPreferences: function() {
-      return preferences;
+    getPreferencesConfig: function() {
+      return preferencesConfig;
     },
     
     isViewer: function(id) {

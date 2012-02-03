@@ -1,4 +1,4 @@
-//= require "../../resizer.js"
+//= require "../resizer.js"
 //= require "../../media/proxy.js"
 
 protonet.ui.User.Widget = {
@@ -17,6 +17,7 @@ protonet.ui.User.Widget = {
     
     this._observe();
     this.update();
+    this.initialized = true;
   },
   
   _observe: function() {
@@ -106,7 +107,7 @@ protonet.ui.User.Widget = {
     this.elements[user.id] = $element;
   },
   
-  get$AllElements: function() {
+  getAll$Elements: function() {
     return this.$list.children();
   },
   
@@ -130,7 +131,7 @@ protonet.ui.User.Widget = {
       return;
     }
     
-    this.getAll$Element().hide();
+    this.getAll$Elements().hide();
     
     $.each(channelSubscriptions, function(i, userId) {
       var $element = this.get$Element(userId);

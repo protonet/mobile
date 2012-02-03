@@ -32,6 +32,7 @@ $.extend(protonet, (function() {
     $.each(eventNames.split(WHITE_SPACE), function(i, eventName) {
       _after(eventName, handler);
     });
+    return this;
   }
   
   function _off(eventName, handler) {

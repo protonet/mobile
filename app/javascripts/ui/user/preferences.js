@@ -1,10 +1,12 @@
+//= require "../notification.js"
+
 protonet.ui.User.Preferences = {
   initialize: function() {
     this._render();
   },
   
   _render: function() {
-    var preferences = protonet.data.User.getPreferences(),
+    var preferences = protonet.data.User.getPreferencesConfig(),
         $container  = $("#my-widget .settings");
         $list       = $("<ul>");
     $.each(preferences, function(key, config) {

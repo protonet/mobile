@@ -1,6 +1,7 @@
 // protonet namespaces
 var protonet = protonet || {};
 
+protonet.browser          = protonet.browser          || {};
 protonet.config           = protonet.config           || {};
 protonet.utils            = protonet.utils            || {};
 protonet.data             = protonet.data             || { ext: {} };

@@ -1,5 +1,4 @@
 //= require "../timeline/timeline.js"
-//= require "../widgets/user.js"
 //= require "../platforms/fluid.js"
 //= require "../platforms/prism.js"
 //= require "../ui/click_to_flash_teaser.js"

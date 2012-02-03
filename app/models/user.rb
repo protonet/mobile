@@ -71,7 +71,7 @@ class User < ActiveRecord::Base
     )
   end
   
-  def self.prepared_for_frontend(user)
+  def self.prepare_for_frontend(user)
     {
       :id             => user.id,
       :name           => user.display_name,

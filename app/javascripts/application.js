@@ -10,6 +10,7 @@
 // ---- PROTONET
 //= require "extensions.js"
 //= require "protonet.js"
+//= require "browser.js"
 //= require "events/emitter.js"
 //= require "storage/storage.js"
 //= require "data/user.js"
@@ -22,6 +23,7 @@
 //= require "behaviors/ajax.js"
 //= require "utils/template.js"
 //= require "utils/inline_hint.js"
+//= require "ui/user.js"
 //= require "ui/flash_message.js"
 //= require "ui/header.js"
 //= require "ui/modal_window.js"

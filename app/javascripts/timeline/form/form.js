@@ -230,7 +230,7 @@ protonet.timeline.Form = {
         payload: { 
           user_id:      protonet.config.user_id,
           channel_id:   protonet.timeline.Channels.selected,
-          channel_uuid: protonet.data.Channel.getUuidById(protonet.timeline.Channels.selected)
+          channel_uuid: protonet.data.Channel.getUuid(protonet.timeline.Channels.selected)
         }
       });
     }

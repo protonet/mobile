@@ -460,7 +460,7 @@
      */
     _notifications: function(meepData) {
       var isWindowFocused       = protonet.utils.isWindowFocused(),
-          isAllowedToPlaySound  = protonet.user.Config.get("sound");
+          isAllowedToPlaySound  = protonet.data.User.getPreference("sound");
       
       if (meepData.user_id == protonet.config.user_id) {
         return;
@@ -484,7 +484,7 @@
      */
     _replyNotifications: function(meepData, instance) {
       var isWindowFocused             = protonet.utils.isWindowFocused(),
-          isAllowedToDoNotifications  = protonet.user.Config.get("reply_notification"),
+          isAllowedToDoNotifications  = protonet.data.User.getPreference("reply_notification"),
           isReplyToViewer             = instance.userReplies.indexOf(protonet.config.user_id + "") !== -1;
 
       if (isReplyToViewer && isAllowedToDoNotifications && !isWindowFocused) {
