@@ -139,7 +139,6 @@ protonet.ui.User.Widget = {
     }
     
     this.getAll$Elements().hide();
-    
     $.each(channelSubscriptions, function(i, userId) {
       var $element = this.get$Element(userId);
       if (isGlobalChannel) {

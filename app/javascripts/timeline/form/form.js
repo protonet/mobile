@@ -39,6 +39,11 @@ protonet.timeline.Form = {
     var preventInitialFocus = protonet.config.user_is_stranger;
     
     protonet
+      .on("user.changed_avatar", function(user) {
+        if (user.id == protonet.config.user_id) {
+          this.form.find("[name='meep[avatar]']").val(user.avatar);
+        }
+      }.bind(this))
       
       .on("channel.hide", function() {
         protonet.trigger("form.disable");

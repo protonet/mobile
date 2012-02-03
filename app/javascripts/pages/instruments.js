@@ -1,3 +1,5 @@
+//= require "../timeline/form/form.js"
+//= require "../timeline/channels.js"
 //= require "../platforms/fluid.js"
 //= require "../platforms/prism.js"
 //= require "../ui/click_to_flash_teaser.js"

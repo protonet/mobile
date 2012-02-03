@@ -32,7 +32,8 @@
  */
 (function(protonet) {
   
-  var dataCache         = {},
+  var undef,
+      dataCache         = {},
       viewerId          = protonet.config.user_id,
       viewerName        = protonet.config.user_name,
       defaultAvatar     = protonet.config.default_avatar,
@@ -81,21 +82,26 @@
     
   function cache(user) {
     var oldUser = dataCache[user.id],
-        oldAvatar;
+        oldAvatar,
+        oldIsOnline;
     
     // Make sure to preserve old avatar, since old meeps could contain false information
     if (oldUser && oldUser.avatar !== defaultAvatar) {
       oldAvatar = oldUser.avatar;
     }
     
+    // Make sure to preserve old avatar, since old meeps could contain false information
+    if (oldUser) {
+      oldIsOnline = oldUser.isOnline;
+    }
+    
     $.extend(user, {
       isAdmin:    adminIds.indexOf(user.id) !== -1,
       isViewer:   user.id == viewerId,
       isStranger: user.name.startsWith("stranger_"),
-      isOnline:   false
+      isOnline:   oldIsOnline !== undef ? oldIsOnline : false,
+      avatar:     oldAvatar || user.avatar || defaultAvatar
     });
-    
-    user.avatar = oldAvatar || user.avatar || defaultAvatar;
     
     dataCache[user.id] = user;
     

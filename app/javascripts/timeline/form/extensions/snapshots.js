@@ -17,6 +17,14 @@ protonet.timeline.Form.extensions.Snapshots = function($input, $wrapper, $form) 
     }
   }
   
+  protonet.on("channel.change", function(channelId) {
+    if (protonet.data.Channel.isGlobal(channelId)) {
+      $link.hide();
+    } else {
+      $link.show();
+    }
+  });
+  
   var modalWindow;
   
   $link.click(function() {

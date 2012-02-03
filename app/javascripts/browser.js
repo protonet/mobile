@@ -57,6 +57,10 @@ protonet.browser = {
     return this.SUPPORTS_EVENT("touchmove");
   },
   
+  IS_IOS: function() {
+    return navigator.userAgent.match(/(iphone|ipod|ipad)/);
+  },
+  
   /**
    * Whether the browser supports HTML5 placeholder attributes
    * <input placeholder="Enter Text">

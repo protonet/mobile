@@ -5,7 +5,21 @@
  */
 protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
   var $body             = $("body"),
+      $link             = $("#attach-file-extension"),
       $dropArea;
+  
+  if (protonet.browser.IS_IOS()) {
+    $link.hide();
+    return;
+  }
+  
+  protonet.on("channel.change", function(channelId) {
+    if (protonet.data.Channel.isGlobal(channelId)) {
+      $link.hide();
+    } else {
+      $link.show();
+    }
+  });
   
   function hasFiles(dataTransfer) {
     if (!dataTransfer || typeof(dataTransfer.files) === "undefined") {
@@ -20,7 +34,7 @@ protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
   }
   
   var fileQueue = protonet.ui.FileQueue.initialize({
-    browse_button: "attach-file-extension",
+    browse_button: $link.attr("id"),
     drop_element:  $form.attr("id")
   });
   
