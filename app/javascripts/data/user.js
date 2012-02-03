@@ -1,14 +1,34 @@
+//= require "../ui/notification.js"
+
 /**
  * User Model
  *
  * A full user object must contain:
- *    - id
- *    - name
- *    - avatar
- *    - isAdmin
- *    - isOnline
- *    - isStranger
- *    - isViewer
+ *    id, name, avatar, isAdmin, isOnline, isStranger, isViewer
+ *
+ * @example
+ *    // Retrieve user with id 1
+ *    protonet.data.User.get(1)
+ *    // => { id: 1, name: "tiff", avatar: "/foo.jpg", isOnline: true, isStranger: false, isViewer: true }
+ *    
+ *    // Retrieve user id of user with name "tiff"
+ *    protonet.data.User.getIdByName("tiff")
+ *    // => 1
+ *
+ *    // Get user ids of all administrators
+ *    protonet.data.User.getAdmins();
+ *    // => [1, 15]
+ *
+ *    // Check if a certain user is online
+ *    protonet.data.User.isOnline(32);
+ *    // => true
+ *
+ *    // Store a setting at the current user
+ *    protonet.data.User.setPreference("sound", true);
+ *
+ *    // Retrieve a setting
+ *    protonet.data.User.getPreference("sound");
+ *    // => true
  */
 (function(protonet) {
   
@@ -19,7 +39,38 @@
       adminIds        = protonet.config.admin_ids,
       userArr         = protonet.config.users,
       nameToIdMapping = {},
-      idToNameMapping = {};
+      idToNameMapping = {},
+      preferences     = {
+        sound: {
+          type: "boolean",
+          labels: {
+            "true":   "sound <span class=\"on\">on</span>",
+            "false":  "sound <span class=\"off\">off</span>"
+          },
+          defaultValue: true
+        },
+
+        smilies: {
+          type: "boolean",
+          labels: {
+            "true":  "smilies <span class=\"on\">on</span>",
+            "false": "smilies <span class=\"off\">off</span>"
+          },
+          defaultValue: true
+        }
+      };
+      
+  // Webkit Notifications for replies
+  if (protonet.ui.Notification.supported()) {
+    preferences.reply_notification = {
+      type: "notification",
+      labels: {
+        "true":  "reply notifications <span class=\"on\">on</span>",
+        "false": "reply notifications <span class=\"off\">off</span>"
+      },
+      defaultValue: protonet.ui.Notification.hasPermission()
+    };
+  }
   
   // Store current user first.
   nameToIdMapping[viewerName.toLowerCase()] = viewerId;
@@ -45,6 +96,8 @@
     cache(user);
   });
   
+  
+  // Subscribe to a bunch of socket events that contain user information
   protonet.on("meep.receive meep.sent", function(meep) {
     nameToIdMapping[meep.author.toLowerCase()] = meep.user_id;
     idToNameMapping[meep.user_id] = meep.author;
@@ -127,6 +180,31 @@
     
     getAdmins: function() {
       return adminIds;
+    },
+    
+    getPreference: function(key) {
+      var value       = protonet.storage.get(key),
+          preference  = preferences[key];
+
+      if (preference && preference.type === "notification") {
+        if (!protonet.ui.Notification.hasPermission()) {
+          return false;
+        }
+      }
+
+      if (typeof(value) !== "undefined" && value !== null) {
+        return JSON.parse(value);
+      } else {
+        return preference && preference.defaultValue;
+      }
+    },
+    
+    setPreference: function(key, value) {
+      protonet.storage.set(key, value);
+    },
+    
+    getPreferences: function() {
+      return preferences;
     },
     
     isViewer: function(id) {

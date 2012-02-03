@@ -2,7 +2,6 @@
 //= require "../utils/ensure_scroll_position.js"
 //= require "../utils/is_window_focused.js"
 //= require "../media/play_sound.js"
-//= require "../utils/get_channel_name.js"
 //= require "../ui/notification.js"
 
 /**
@@ -89,7 +88,7 @@
           }
           
           // Prevent creating a channel reply when the channel is not a "real" channel
-          if (!protonet.utils.getChannelName(+meepData.channel_id)) {
+          if (!protonet.data.Channel.getName(meepData.channel_id)) {
             return;
           }
           

@@ -1,5 +1,4 @@
 //= require "../events/on_element_removed.js"
-//= require "../utils/get_channel_name.js"
 
 protonet.ui.MeepScroller = (function() {
   var $document = $(document);
@@ -31,7 +30,7 @@ protonet.ui.MeepScroller = (function() {
         protonet.data.Meep.get(id, function(data) {
           this.loadingEnd();
           // Make sure that the meep doesn't conflict with channels
-          this.channelName = protonet.utils.getChannelName(data.channel_id || data.posted_in) || protonet.t("UNKNOWN_CHANNEL");
+          this.channelName = protonet.data.Channel.getName(data.channel_id || data.posted_in) || protonet.t("UNKNOWN_CHANNEL");
           delete data.channel_id;
           delete data.posted_in;
           

@@ -1,5 +1,5 @@
 //= require "../utils/prettify_file_size.js"
-//= require "../utils/uploader.js"
+//= require "../media/uploader.js"
 
 protonet.ui.FileQueue = (function() {
   var collapsed     = true,
@@ -19,7 +19,7 @@ protonet.ui.FileQueue = (function() {
       $list       = $container.find("ol");
       $status     = $container.find(".status");
       
-      this.uploader = new protonet.utils.Uploader(config);
+      this.uploader = new protonet.media.Uploader(config);
       
       this._observe();
       

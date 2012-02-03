@@ -5,6 +5,7 @@ protonet.ui.User = {
   initialize: function() {
     this.Widget.initialize();
     this.GettingStarted.initialize();
+    this.Preferences.initialize();
     
     this._observe();
     this._createContextMenu();
@@ -91,3 +92,4 @@ protonet.ui.User = {
 
 //= require "user/widget.js"
 //= require "user/getting_started.js"
+//= require "user/preferences.js"

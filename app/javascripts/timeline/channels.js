@@ -2,7 +2,6 @@
 //= require "../utils/browser_title.js"
 //= require "../utils/is_window_focused.js"
 //= require "../utils/url_behaviors.js"
-//= require "../utils/get_channel_name.js"
 //= require "channel.js"
 //= require "rendezvous.js"
 //= require "remote_channel.js"
@@ -188,7 +187,7 @@ protonet.timeline.Channels = {
       .on("channel.subscribe", function(id) {
         protonet.trigger("channel.hide").trigger("timeline.loading_start");
         
-        var identifier = protonet.utils.getChannelName(id) || "#" + id;
+        var identifier = protonet.data.Channel.getName(id) || "#" + id;
         
         var success = function() {
           var message = protonet.t("CHANNEL_SUBSCRIPTION_SUCCESS", { identifier: identifier });

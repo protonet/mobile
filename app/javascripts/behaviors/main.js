@@ -1,4 +1,3 @@
-//= require "../utils/get_channel_name.js"
 //= require "../lib/jquery.fcbkcomplete.js"
 
 $.behaviors({
@@ -11,7 +10,7 @@ $.behaviors({
     if (event.originalEvent.dataTransfer) {
       var $element  = $(element),
           channelId = $element.data("channel-id");
-      event.originalEvent.dataTransfer.setData("Text", "@" + protonet.utils.getChannelName(channelId) + " ");
+      event.originalEvent.dataTransfer.setData("Text", "@" + protonet.data.Channel.getName(channelId) + " ");
     }
   },
   

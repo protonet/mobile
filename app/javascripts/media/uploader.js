@@ -6,7 +6,7 @@
 /**
  * Wrapper for the plupload lib
  */
-protonet.utils.Uploader = (function() {
+protonet.media.Uploader = (function() {
   var defaultConfig = {
     max_file_size:  ($.browser.mozilla && !window.FormData) ? "250mb" : "10000mb",
     runtimes:       "html5,flash,html4",

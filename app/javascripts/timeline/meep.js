@@ -11,7 +11,6 @@
 //= require "../utils/highlight_channel_replies.js"
 //= require "../utils/highlight_user_replies.js"
 //= require "../utils/parse_query_string.js"
-//= require "../utils/get_channel_name.js"
 //= require "../media/proxy.js"
 
 /**
@@ -144,14 +143,14 @@
       if (this.data.reply_from) {
         replyFromChannelTemplate = new protonet.utils.Template("reply-from-channel-template", {
           channel_id:   this.data.reply_from,
-          channel_name: protonet.utils.getChannelName(this.data.reply_from)
+          channel_name: protonet.data.Channel.getName(this.data.reply_from)
         }).toString();
       }
 
       if (this.data.posted_in) {
         postedInChannelTemplate = new protonet.utils.Template("posted-in-channel-template", {
           channel_id:   this.data.posted_in,
-          channel_name: protonet.utils.getChannelName(this.data.posted_in) || protonet.t("UNKNOWN_CHANNEL")
+          channel_name: protonet.data.Channel.getName(this.data.posted_in) || protonet.t("UNKNOWN_CHANNEL")
         }).toString();
       }
       templateData = $.extend({}, this.data, {
