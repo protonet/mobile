@@ -26,7 +26,9 @@ protonet.ui.User.Widget = {
       
       .on("users.update_admin_status", this.updateAdminStatus.bind(this))
       
-      .after("channel.change user.subscribed_channel user.unsubscribed_channel channels.update_subscriptions", this.filter.bind(this))
+      .on("user.subscribed_channel user.unsubscribed_channel channels.update_subscriptions", this.filter.bind(this))
+      
+      .after("channel.change", this.filter.bind(this))
       
       .on("user.added", function(data) {
         if (!protonet.config.show_only_online_users) {
@@ -83,7 +85,9 @@ protonet.ui.User.Widget = {
     }
     
     var user = protonet.data.User.get(id);
-    this.create$Element(user, hide);
+    if (user) {
+      this.create$Element(user, hide);
+    }
   },
   
   create$Element: function(user, hide) {

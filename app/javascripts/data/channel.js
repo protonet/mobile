@@ -35,7 +35,7 @@
       if (protonet.config.show_only_online_users) {
         subscriptions[channelId] = users;
       } else {
-        subscriptions[channelId] = $.merge(subscriptions[channelId] || [], subscriptions).unique();
+        subscriptions[channelId] = $.merge(subscriptions[channelId] || [], users).unique();
       }
     });
   }
