@@ -367,7 +367,7 @@
         type: "get",
         data: $.extend(parameters, { channel_id: this.data.id }),
         beforeSend: function() {
-          protonet.trigger("timeline.loading_start");
+          protonet.trigger("channels.loading_start");
         },
         success: function(response) {
           if (!response || !response.length) {
@@ -377,7 +377,7 @@
           (callback || $.noop)(response);
         },
         complete: function() {
-          protonet.trigger("timeline.loading_end");
+          protonet.trigger("channels.loading_end");
         }
       });
     },

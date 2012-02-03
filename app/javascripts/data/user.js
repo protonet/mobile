@@ -73,10 +73,21 @@
   }
   
   // Store current user first.
-  nameToIdMapping[viewerName.toLowerCase()] = viewerId;
-  idToNameMapping[viewerId] = viewerName;
-  
+  cache({
+    name:   viewerName,
+    id:     viewerId,
+    avatar: defaultAvatar
+  });
+    
   function cache(user) {
+    var oldUser = dataCache[user.id],
+        oldAvatar;
+    
+    // Make sure to preserve old avatar, since old meeps could contain false information
+    if (oldUser && oldUser.avatar !== defaultAvatar) {
+      oldAvatar = oldUser.avatar;
+    }
+    
     $.extend(user, {
       isAdmin:    adminIds.indexOf(user.id) !== -1,
       isViewer:   user.id == viewerId,
@@ -84,7 +95,7 @@
       isOnline:   false
     });
     
-    user.avatar = user.avatar || defaultAvatar;
+    user.avatar = oldAvatar || user.avatar || defaultAvatar;
     
     dataCache[user.id] = user;
     
@@ -94,6 +105,14 @@
     protonet.trigger("user.data_available", user);
   }
   
+  function cacheUserFromMeep(meep) {
+    cache({
+      id: meep.user_id,
+      name: meep.author,
+      avatar: meep.avatar
+    });
+  }
+  
   $.each(userArr, function(i, user) {
     cache(user);
   });
@@ -101,8 +120,7 @@
   
   // Subscribe to a bunch of socket events that contain user information
   protonet.on("meep.receive meep.sent", function(meep) {
-    nameToIdMapping[meep.author.toLowerCase()] = meep.user_id;
-    idToNameMapping[meep.user_id] = meep.author;
+    cacheUserFromMeep(meep);
   });
   
   protonet.on("user.added", cache);
@@ -116,8 +134,7 @@
   
   protonet.on("channel.initialized", function(channel) {
     $.each(channel.meeps, function(i, meep) {
-      nameToIdMapping[meep.author.toLowerCase()] = meep.user_id;
-      idToNameMapping[meep.user_id] = meep.author;
+      cacheUserFromMeep(meep);
     });
   });
   
@@ -242,4 +259,3 @@
   };
   
 })(protonet);
-

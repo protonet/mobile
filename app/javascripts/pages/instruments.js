@@ -1,4 +1,3 @@
-//= require "../timeline/timeline.js"
 //= require "../platforms/fluid.js"
 //= require "../platforms/prism.js"
 //= require "../ui/click_to_flash_teaser.js"
@@ -6,7 +5,8 @@
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
 protonet.p("instruments", function($page) {
-  protonet.timeline.initialize();
+  protonet.timeline.Form.initialize();
+  protonet.timeline.Channels.initialize();
   
   $page.css("min-height", $("aside.side-content").outerHeight().px());
   

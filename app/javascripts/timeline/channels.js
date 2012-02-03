@@ -36,6 +36,27 @@ protonet.timeline.Channels = {
     }.bind(this));
     
     this._initNoChannelsHint();
+    this._initLoadingIndicator();
+    
+    this.load();
+  },
+  
+  load: function() {
+    protonet.trigger("channels.loading_start");
+    
+    protonet.data.Channel.getAllByIds(this.getActive(), {
+      success:  function(data) {
+        this.render(data);
+        protonet.trigger("channels.loading_end");
+      }.bind(this),
+      error: function(xhr) {
+        var isAborted = xhr.status === 0;
+        if (!isAborted) {
+          protonet.trigger("flash_message.error", protonet.t("LOADING_MEEPS_ERROR"));
+        }
+        protonet.trigger("channels.loading_end");
+      }
+    });
   },
   
   render: function(data) {
@@ -61,6 +82,18 @@ protonet.timeline.Channels = {
     var activeRendezvousChannels = Object.keys(protonet.storage.get("active_rendezvous") || {});
     
     return activeChannels.concat(activeRendezvousChannels);
+  },
+  
+  _initLoadingIndicator: function() {
+    var $loadingIndicator = $("#timeline-loading");
+    
+    protonet
+      .on("channels.loading_start", function() {
+        $loadingIndicator.show();
+      })
+      .on("channels.loading_end", function() {
+        $loadingIndicator.hide();
+      });
   },
   
   _initNoChannelsHint: function() {
@@ -180,7 +213,7 @@ protonet.timeline.Channels = {
        * Subscribe a new channel by id
        */
       .on("channel.subscribe", function(id) {
-        protonet.trigger("channel.hide").trigger("timeline.loading_start");
+        protonet.trigger("channel.hide").trigger("channels.loading_start");
         
         var identifier = protonet.data.Channel.getName(id) || "#" + id;
         
@@ -191,7 +224,7 @@ protonet.timeline.Channels = {
         
         var error = function() {
           var message = protonet.t("CHANNEL_SUBSCRIPTION_ERROR", { identifier: identifier });
-          protonet.trigger("flash_message.error", message).trigger("timeline.loading_end");
+          protonet.trigger("flash_message.error", message).trigger("channels.loading_end");
         };
         
         $.ajax({
@@ -278,13 +311,13 @@ protonet.timeline.Channels = {
         var rendezvousKey = [partner, protonet.config.user_id].sort(function(a, b) { return a>b; }).join(":"),
             rendezvous    = this.rendezvous[rendezvousKey];
         if (rendezvous) {
-          protonet.trigger("timeline.loading_end").trigger("channel.change", rendezvous.data.id);
+          protonet.trigger("channels.loading_end").trigger("channel.change", rendezvous.data.id);
         } else {
-          protonet.trigger("channel.hide").trigger("timeline.loading_start");
+          protonet.trigger("channel.hide").trigger("channels.loading_start");
           $.ajax("/users/" + partner + "/" + "start_rendezvous", {
             type: "post",
             error: function() {
-              protonet.trigger("flash_message.error", protonet.t("RENDEZVOUS_ERROR")).trigger("timeline.loading_end");
+              protonet.trigger("flash_message.error", protonet.t("RENDEZVOUS_ERROR")).trigger("channels.loading_end");
             }
           });
         }
@@ -372,7 +405,7 @@ protonet.timeline.Channels = {
       return;
     }
     if (!this.selected) {
-      protonet.trigger("timeline.loading_start");
+      protonet.trigger("channels.loading_start");
     }
     
     var meepsReceivedWhileLoading = this.channelsBeingLoaded[channelId] = {},
@@ -404,7 +437,7 @@ protonet.timeline.Channels = {
         this.data.push(data);
         this._updateSubscribedChannels();
         
-        protonet.trigger("timeline.loading_end");
+        protonet.trigger("channels.loading_end");
         if (!this.selected) {
           protonet.trigger("channel.change", channelId);
         }

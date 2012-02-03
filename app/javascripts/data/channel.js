@@ -26,6 +26,10 @@
   
   function cache(data) {
     dataCache[data.id] = data;
+    nameToIdMapping[data.name.toLowerCase()]   = data.id;
+    idToNameMapping[data.id]                   = data.name;
+    idToUuidMapping[data.id]                   = data.uuid;
+    uuidToIdMapping[data.uuid]                 = data.id;
     protonet.trigger("channel.data_available", data);
   }
   
@@ -42,10 +46,6 @@
   
   protonet.on("channel.added", function(channel) {
     cache(channel);
-    nameToIdMapping[channel.name.toLowerCase()]   = channel.id;
-    idToNameMapping[channel.id]                   = channel.name;
-    idToUuidMapping[channel.id]                   = channel.uuid;
-    uuidToIdMapping[channel.uuid]                 = channel.id;
   });
   
   protonet.on("user.subscribed_channel", function(data) {
