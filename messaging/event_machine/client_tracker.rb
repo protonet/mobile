@@ -63,6 +63,7 @@ class ClientTracker
       generated_user_id = "#{node_id}_#{id}"
       user_data = online_userz[id]
       user_data["id"] = generated_user_id
+      user_data["avatar"] = user_data["avatar"].sub("/avatars/#{id}/", "/avatars/#{generated_user_id}/")
       @remote_users[generated_user_id] = user_data
       generated_user_id
     end

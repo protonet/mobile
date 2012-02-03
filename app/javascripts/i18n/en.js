@@ -48,5 +48,7 @@ protonet.i18n = {
   AVATAR_UPLOAD_ERROR: "Your photo couldn't be upload. Please try again or contact the administrator.",
   WLAN_UPDATED: "<h3>Your WLAN has been updated and restarted</h3>You probably have lost your connection. Please reconnect and reload this page.",
   SOFTWARE_UPDATE_SUCCESSFUL: "<h3>Congrats, the software update was successful</h3>All services are going down for reboot now. Please wait a few more seconds. You will then be redirected to the home page.",
-  UPLOAD_SUCCESSFUL: "All files have been successfully uploaded."
+  UPLOAD_SUCCESSFUL: "All files have been successfully uploaded.",
+  USERS_IN_REMOTE_CHANNEL: 'Online users <a data-hover-hint="top" title="Only online users are displayed in global channels">(?)</a>',
+  USERS_IN_NORMAL_CHANNEL: "Users"
 };

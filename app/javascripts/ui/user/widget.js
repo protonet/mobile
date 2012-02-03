@@ -12,6 +12,7 @@ protonet.ui.User.Widget = {
     this.$list             = this.$widget.find("ul");
     this.$resizer          = this.$widget.find(".resize");
     this.$onlineUsersCount = this.$widget.find("output.count");
+    this.$title            = this.$widget.find("output.title");
     
     new protonet.ui.Resizer(this.$list, this.$resizer, { storageKey: "user_widget_height" });
     
@@ -26,9 +27,7 @@ protonet.ui.User.Widget = {
       
       .on("users.update_admin_status", this.updateAdminStatus.bind(this))
       
-      .on("user.subscribed_channel user.unsubscribed_channel channels.update_subscriptions", this.filter.bind(this))
-      
-      .after("channel.change", this.filter.bind(this))
+      .on("user.subscribed_channel user.unsubscribed_channel channels.update_subscriptions channel.change", this.filter.bind(this))
       
       .on("user.added", function(data) {
         if (!protonet.config.show_only_online_users) {
@@ -64,7 +63,10 @@ protonet.ui.User.Widget = {
       
       if (!$image.length && avatar) {
         $("<img>", $.extend({
-          src: protonet.media.Proxy.getImageUrl(avatar, imageSize)
+          src: protonet.media.Proxy.getImageUrl(avatar, imageSize),
+          error: function() {
+            this.src = protonet.config.default_avatar;
+          }
         }, imageSize)).appendTo($link);
       }
     });
@@ -129,10 +131,17 @@ protonet.ui.User.Widget = {
     this.$onlineUsersCount.text("(" + online + "/" + total + ")");
   },
   
-  filter: function() {
-    var channelId             = protonet.timeline.Channels.selected,
-        channelSubscriptions  = protonet.data.Channel.getSubscriptions(channelId),
+  filter: function(channelId) {
+    channelId                 = Number(channelId) || protonet.timeline.Channels.selected;
+    
+    var channelSubscriptions  = protonet.data.Channel.getSubscriptions(channelId),
         isGlobalChannel       = protonet.data.Channel.isGlobal(channelId);
+    
+    if (isGlobalChannel) {
+      this.$title.html(protonet.t("USERS_IN_REMOTE_CHANNEL"));
+    } else {
+      this.$title.html(protonet.t("USERS_IN_NORMAL_CHANNEL"));
+    }
     
     if (!channelSubscriptions) {
       return;

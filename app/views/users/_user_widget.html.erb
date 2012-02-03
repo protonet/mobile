@@ -1,10 +1,7 @@
 <div id="user-widget" class="widget">
   <h3 class="gradient">
-    <% if SystemPreferences.show_only_online_users -%>
-      Online Users
-    <% else -%>
-      Users <output class="count"></output>
-    <% end -%>
+    <output class="title">Users</output>
+    <output class="count"></output>
     <span class="loading-hint">loading ...</span>
   </h3>
   <ul></ul>
