@@ -90,6 +90,8 @@
     
     nameToIdMapping[user.name.toLowerCase()] = user.id;
     idToNameMapping[user.id] = user.name;
+    
+    protonet.trigger("user.data_available", user);
   }
   
   $.each(userArr, function(i, user) {
@@ -137,11 +139,9 @@
     });
   });
   
-  protonet.on("user.came_online", function(data) {
-    var user = dataCache[data.id];
-    if (user) {
-      user.isOnline = true;
-    }
+  protonet.on("user.came_online", function(user) {
+    cache(user);
+    user.isOnline = true;
   });
   
   protonet.on("user.goes_offline", function(data) {
@@ -223,6 +223,21 @@
     getAvatar: function(id) {
       var user = dataCache[id];
       return user ? user.avatar : defaultAvatar;
+    },
+    
+    // Returns an admin who's currently online
+    // ... or if nobody's available the first one
+    getAvailableAdmin: function(id) {
+      var i               = 0,
+          length          = adminIds.length,
+          availableAdmin  = adminIds[0];
+      for (; i<length; i++) {
+        if (dataCache[adminIds[0]].isOnline) {
+          availableAdmin = adminIds[0];
+          break;
+        }
+      }
+      return availableAdmin;
     }
   };
   

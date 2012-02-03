@@ -17,7 +17,6 @@ protonet.ui.User.Widget = {
     
     this._observe();
     this.update();
-    this.initialized = true;
   },
   
   _observe: function() {
@@ -33,6 +32,10 @@ protonet.ui.User.Widget = {
         if (!protonet.config.show_only_online_users) {
           this.createUser(data.id, true);
         }
+      }.bind(this))
+      
+      .after("users.update_status", function() {
+        this.highlightingEnabled = true;
       }.bind(this))
       
       .on("user.typing", function(data) {
@@ -183,7 +186,7 @@ protonet.ui.User.Widget = {
         hasBeenOnlineBefore = $element.hasClass("online");
     
     // Highlight effect for users that just came online
-    if (isOnline && !hasBeenOnlineBefore) {
+    if (isOnline && !hasBeenOnlineBefore && this.highlightingEnabled) {
       $element
         .addClass("new-online")
         .css("backgroundColor", "#ffff99")

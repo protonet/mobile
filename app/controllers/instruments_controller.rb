@@ -3,17 +3,9 @@ class InstrumentsController < ApplicationController
   before_filter :only_registered
   
   def index
-    if request.xhr?
-      channels_to_load = params[:channels].split(',') rescue []
-      channels = current_user.channels.verified
-      render :json => channels.map { |channel|
-        Channel.prepare_for_frontend(channel, current_user) if channels_to_load.include?(channel.id.to_s) || channel.has_unread_meeps
-      }.compact
-    else
-      @users = (SystemPreferences.show_only_online_users ? [] : User.registered.all).map {|user| User.prepare_for_frontend(user) }
-      @channels = current_user.channels.verified.real
-      render :layout => "instruments"
-    end
+    @users = (SystemPreferences.show_only_online_users ? [] : User.registered.all).map {|user| User.prepare_for_frontend(user) }
+    @channels = current_user.channels.verified.real
+    render :layout => "instruments"
   end
   
   private

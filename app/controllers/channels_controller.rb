@@ -8,7 +8,18 @@ class ChannelsController < ApplicationController
   end
   
   def list
-    @selected_channel = Channel.find_by_id(params[:id])
+    respond_to do |format|
+      format.html do
+        @selected_channel = Channel.find_by_id(params[:id])
+      end
+      format.json do
+        channels_to_load = params[:channels].split(',') rescue []
+        channels = current_user.channels.verified
+        render :json => channels.map { |channel|
+          Channel.prepare_for_frontend(channel, current_user, params[:include_meeps]) if channels_to_load.include?(channel.id.to_s) || channel.has_unread_meeps
+        }.compact
+      end
+    end
   end
   
   def show
@@ -23,11 +34,8 @@ class ChannelsController < ApplicationController
       end
       format.json do
         channel = current_user.channels.find(params[:id])
-        if params[:include_meeps] && current_user.subscribed?(channel)
-          render :json => Channel.prepare_for_frontend(channel, current_user)
-        else
-          render :json => Channel.info(channel, current_user)
-        end
+        include_meeps = params[:include_meeps] && current_user.subscribed?(channel)
+        render :json => Channel.prepare_for_frontend(channel, current_user, include_meeps)
       end
     end
   end

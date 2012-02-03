@@ -24,17 +24,9 @@ $.extend(protonet.timeline, {
   load: function() {
     protonet.trigger("timeline.loading_start");
     
-    $.ajax({
-      url: "/",
-      data: {
-        // Dummy parameter to avoid weird caching/history issues in Firefox
-        ajax:     1,
-        channels: protonet.timeline.Channels.getActive().join(",")
-      },
+    protonet.data.Channel.getAllByIds(protonet.timeline.Channels.getActive(), {
       success:  function(data) {
         protonet.timeline.Channels.render(data);
-      },
-      complete: function() {
         protonet.trigger("timeline.loading_end");
       },
       error: function(xhr) {
@@ -42,6 +34,7 @@ $.extend(protonet.timeline, {
         if (!isAborted) {
           protonet.trigger("flash_message.error", protonet.t("LOADING_MEEPS_ERROR"));
         }
+        protonet.trigger("timeline.loading_end");
       }
     });
   },

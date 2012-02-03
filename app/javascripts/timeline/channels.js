@@ -9,13 +9,10 @@
 
 /**
  * @events
- *    channels.data_available - Called when data is available and the class itself is initialized and ready
  *    channels.initialized    - Called when all channels are initialized and the data is available
  *    channel.change          - Invoked when user wants to switch to another channel (eg. by clicking on a channel link)
  */
 protonet.timeline.Channels = {
-  availableChannels: protonet.config.channel_name_to_id_mapping || {},
-  
   initialize: function() {
     this.container    = $("#timeline");
     this.tabContainer = $("#channels ul");
@@ -47,8 +44,6 @@ protonet.timeline.Channels = {
     
     this._updateSubscribedChannels();
     
-    protonet.trigger("channels.data_available", this.data, this.availableChannels, this.subscribedChannels);
-    
     this._observe();
     this._render();
   },
@@ -70,7 +65,7 @@ protonet.timeline.Channels = {
   
   _initNoChannelsHint: function() {
     var $hint;
-    protonet.after("channels.data_available channel.unload", function() {
+    protonet.after("channels.initialized channel.unload", function() {
       if (this.data.length) {
         return;
       }
@@ -104,7 +99,7 @@ protonet.timeline.Channels = {
         if (isSubscribed) {
           protonet.trigger("modal_window.hide").trigger("channel.change", id);
         } else if (protonet.config.allow_modal_views) {
-          protonet.open("/channels/" + id);
+          protonet.open(protonet.data.Channel.getUrl(id));
         }
         
         event.preventDefault();
@@ -395,11 +390,9 @@ protonet.timeline.Channels = {
       meepsReceivedWhileLoading[triggerMeepData.id] = triggerMeepData;
     }
     
-    $.ajax({
-      dataType: "json",
-      url:      "/channels/" + channelId,
-      data:     { include_meeps: 1 },
-      success:  function(data) {
+    protonet.data.Channel.get(channelId, {
+      includeMeeps: true,
+      success:      function(data) {
         // Strip all meeps that were receive while the channel was loaded
         // Those meeps will later be rendered by firing the "meep.receive" event
         data.meeps = $.map(data.meeps, function(meepData) {
@@ -422,7 +415,11 @@ protonet.timeline.Channels = {
         });
         
         delete this.channelsBeingLoaded[channelId];
-      }.bind(this)
+      }.bind(this),
+      
+      error: function() {
+        protonet.trigger("flash_message.error", protonet.t("LOADING_CHANNEL_ERROR"));
+      }
     });
   },
   

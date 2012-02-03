@@ -27,17 +27,19 @@ protonet.ui.MeepScroller = (function() {
         this.select(meepToSelect);
       } else {
         this.loading();
-        protonet.data.Meep.get(id, function(data) {
-          this.loadingEnd();
-          // Make sure that the meep doesn't conflict with channels
-          this.channelName = protonet.data.Channel.getName(data.channel_id || data.posted_in) || protonet.t("UNKNOWN_CHANNEL");
-          delete data.channel_id;
-          delete data.posted_in;
-          
-          this.select(
-            new protonet.timeline.Meep(data).render(this.$meepList)
-          );
-        }.bind(this));
+        protonet.data.Meep.get(id, {
+          success: function(data) {
+            this.loadingEnd();
+            // Make sure that the meep doesn't conflict with channels
+            this.channelName = protonet.data.Channel.getName(data.channel_id || data.posted_in) || protonet.t("UNKNOWN_CHANNEL");
+            delete data.channel_id;
+            delete data.posted_in;
+            
+            this.select(
+              new protonet.timeline.Meep(data).render(this.$meepList)
+            );
+          }.bind(this)
+        });
       }
     },
 

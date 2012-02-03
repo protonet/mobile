@@ -38,32 +38,10 @@ $.behaviors({
     $element.attr("src", $element.attr("data-src")).removeAttr("data-src");
   },
   
-  "[data-contact-admin]:click": (function() {
-    var onlineUserIds = [],
-        adminUserIds  = protonet.config.admin_ids || [];
-    
-    // TODO: someday we should add user.came_online and user.goes_offline here
-    protonet
-      .on("users.update_status", function(data) {
-        onlineUserIds = Object.keys(data.online_users);
-      })
-      
-      .on("users.update_admin_status", function(data) {
-        adminUserIds = data.admin_ids;
-      });
-    
-    return function(element, event) {
-      var i = 0, onlineAdminUserId = adminUserIds[0];
-      for (; i<adminUserIds.length; i++) {
-        if (onlineUserIds.indexOf(adminUserIds[i]) !== -1) {
-          onlineAdminUserId = adminUserIds[i];
-          break;
-        }
-      }
-      protonet.trigger("rendezvous.start", onlineAdminUserId);
-      event.preventDefault();
-    };
-  })(),
+  "[data-contact-admin]:click": function(element, event) {
+    protonet.trigger("rendezvous.start", protonet.data.User.getAvailableAdmin());
+    event.preventDefault();
+  },
   
   "[data-hover-hint]:mouseover": (function() {
     var $bubble;

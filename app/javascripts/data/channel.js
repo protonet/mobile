@@ -24,6 +24,11 @@
     });
   });
   
+  function cache(data) {
+    dataCache[data.id] = data;
+    protonet.trigger("channel.data_available", data);
+  }
+  
   function cacheSubscriptions(data) {
     $.each(data, function(uuid, users) {
       var channelId = uuidToIdMapping[uuid];
@@ -35,8 +40,8 @@
     });
   }
   
-  protonet.on("channel.added channel.initialized", function(channel) {
-    dataCache[channel.id]                         = channel;
+  protonet.on("channel.added", function(channel) {
+    cache(channel);
     nameToIdMapping[channel.name.toLowerCase()]   = channel.id;
     idToNameMapping[channel.id]                   = channel.name;
     idToUuidMapping[channel.id]                   = channel.uuid;
@@ -81,27 +86,47 @@
   });
   
   protonet.data.Channel = {
-    get: function(id, callback, options) {
-      options = $.extend({}, { bypassCache: false, includeMeeps: false }, options);
+    get: function(id, options) {
+      options = $.extend({ includeMeeps: false, bypassCache: false, success: $.noop, error: $.noop }, options);
       
-      if (dataCache[id] && !options.bypassCache) {
-        callback(dataCache[id]);
+      var cached = dataCache[id];
+      if (cached && !options.bypassCache && (!options.includeMeeps || cached.meeps)) {
+        options.success(dataCache[id]);
       } else {
         $.ajax({
           dataType: "json",
           url:      "/channels/" + id,
-          data:     { include_meeps: options.includeMeeps },
+          data:     { include_meeps: options.includeMeeps, ajax: 1 },
           success:  function(data) {
-            dataCache[id] = data;
-            callback(data);
+            cache(data);
+            options.success(data);
           },
-          error:    function() {
-            protonet.trigger("flash_message.error", protonet.t("LOADING_CHANNEL_ERROR"));
+          error:    function(xhr) {
+            options.error(xhr);
           }
         });
       }
     },
-
+    
+    getAllByIds: function(ids, options) {
+      options = $.extend({ includeMeeps: false, success: $.noop, error: $.noop }, options);
+      
+      $.ajax({
+        dataType: "json",
+        url:  "/channels/list",
+        data: { include_meeps: options.includeMeeps, ajax: 1, channels: ids.join(",") },
+        success:  function(data) {
+          $.each(data, function(i, channel) {
+            cache(channel);
+          });
+          options.success(data);
+        },
+        error:    function(xhr) {
+          options.error(xhr);
+        }
+      });
+    },
+    
     getUuid: function(id, callback) {
       return idToUuidMapping[id];
     },

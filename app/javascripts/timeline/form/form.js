@@ -162,13 +162,18 @@ protonet.timeline.Form = {
       }.bind(this))
       
       .on("form.share_meep", function(id) {
-        protonet.data.Meep.get(id, function(data) {
-          if (data.author !== protonet.config.user_name) {
-            protonet.trigger("form.create_reply", data.author);
-          } else {
-            protonet.trigger("form.focus");
+        protonet.data.Meep.get(id, {
+          success: function(data) {
+            if (data.author !== protonet.config.user_name) {
+              protonet.trigger("form.create_reply", data.author);
+            } else {
+              protonet.trigger("form.focus");
+            }
+            protonet.trigger("text_extension_input.select", protonet.data.Meep.getUrl(id));
+          },
+          error: function() {
+            protonet.trigger("flash_message.error", protonet.t("LOADING_MEEP_ERROR"));
           }
-          protonet.trigger("text_extension_input.select", protonet.data.Meep.getUrl(id));
         });
       });
     

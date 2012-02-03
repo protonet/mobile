@@ -1,11 +1,14 @@
 (function(protonet) {
   var dataCache = {};
   
-  protonet.on("channels.data_available", function(data) {
-    $.each(data, function(i, channel) {
-      $.each(channel.meeps, function(i, meep) {
-        dataCache[meep.id] = meep;
-      });
+  function cache(data) {
+    dataCache[data.id] = data;
+    protonet.trigger("meep.data_available", data);
+  }
+  
+  protonet.on("channel.data_available", function(channel) {
+    $.each(channel.meeps || [], function(i, meep) {
+      cache(meep);
     });
   });
   
@@ -14,19 +17,22 @@
   });
   
   protonet.data.Meep = {
-    get: function(id, callback) {
+    get: function(id, options) {
+      options = $.extend({ includeMeeps: false, bypassCache: false, success: $.noop, error: $.noop }, options);
+      
       if (dataCache[id]) {
-        return callback(dataCache[id]);
+        options.success(dataCache[id]);
       } else {
         $.ajax({
           dataType: "json",
           url:      "/meeps/" + id,
+          data:     { ajax: 1 },
           success:  function(data) {
             dataCache[id] = data;
-            callback(data);
+            options.success(data);
           },
-          error:    function() {
-            protonet.trigger("flash_message.error", protonet.t("LOADING_MEEP_ERROR"));
+          error:    function(xhr) {
+            options.error(xhr);
           }
         });
       }
