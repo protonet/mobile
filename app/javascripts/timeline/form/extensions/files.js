@@ -8,6 +8,10 @@ protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
       $link             = $("#attach-file-extension"),
       $dropArea;
   
+  if (!$link.length) {
+    return;
+  }
+  
   if (protonet.browser.IS_IOS()) {
     $link.hide();
     return;

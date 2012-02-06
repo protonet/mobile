@@ -113,7 +113,7 @@
       
       $.ajax({
         dataType: "json",
-        url:  "/channels/list",
+        url:  "/channels/list_subscribed",
         data: { include_meeps: options.includeMeeps, ajax: 1, channels: ids.join(",") },
         success:  function(data) {
           $.each(data, function(i, channel) {

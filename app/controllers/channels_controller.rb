@@ -1,25 +1,27 @@
 class ChannelsController < ApplicationController
   
-  filter_resource_access :collection => [:index, :list_global, :show_global, :recommended_global_teaser, :list]
+  filter_resource_access :collection => [:index, :list_global, :show_global, :recommended_global_teaser, :list, :list_subscribed]
   
   before_filter :couple_node, :only => [:show_global, :list_global]
   
   def index
   end
   
-  def list
+  def list_subscribed
+    channels_to_load = params[:channels].split(',') rescue []
+    channels = current_user.channels.verified
+    
     respond_to do |format|
-      format.html do
-        @selected_channel = Channel.find_by_id(params[:id])
-      end
       format.json do
-        channels_to_load = params[:channels].split(',') rescue []
-        channels = current_user.channels.verified
         render :json => channels.map { |channel|
           Channel.prepare_for_frontend(channel, current_user, params[:include_meeps]) if channels_to_load.include?(channel.id.to_s) || channel.has_unread_meeps
         }.compact
       end
     end
+  end
+  
+  def list
+    @selected_channel = Channel.find_by_id(params[:id])
   end
   
   def show

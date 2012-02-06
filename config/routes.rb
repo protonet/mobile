@@ -11,6 +11,7 @@ Dashboard::Application.routes.draw do
   match 'channels/:id/guest/:token' => 'channels#guest_access', :as => :channel_guest_access
   match 'channels/list' => 'channels#list', :as => :list_channels
   match 'channels/list_global' => 'channels#list_global', :as => :list_global_channels
+  match 'channels/list_subscribed' => 'channels#list_subscribed', :as => :list_subscribed_channels
   match 'channels/show_global' => 'channels#show_global', :as => :show_global_channel
   match 'channels/recommended_global_teaser' => 'channels#recommended_global_teaser'
   

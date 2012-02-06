@@ -163,6 +163,11 @@
   });
   
   protonet.on("user.came_online", function(user) {
+    // TODO: sometimes user.came_online is triggered without a valid user name
+    if (!user.name) {
+      return
+    }
+    
     cache(user);
     user.isOnline = true;
   });
