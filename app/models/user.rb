@@ -35,6 +35,12 @@ class User < ActiveRecord::Base
   
   validates_uniqueness_of :email, :if => lambda {|u| !u.stranger?}
   
+  
+  def self.find_for_database_authentication(conditions={})
+    where("login = ?", conditions[:login]).limit(1).first ||
+    where("email = ?", conditions[:login]).limit(1).first
+  end
+  
   def self.find_by_id_or_login(id_or_login)
     find_by_id(id_or_login) || find_by_login(id_or_login)
   end
