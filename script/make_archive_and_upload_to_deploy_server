@@ -31,13 +31,12 @@ done
 
 #  prepare the basics
 
+# check wether current master is up to date
 git ls-remote origin -h refs/heads/master | grep `git rev-parse HEAD`
 if [ $? != 0 ]; then
   echo "Your master is not up to date, you cannot create a release package."
   exit 1
 fi
-
-check wether current master is uptodate
 
 #  generate a new version
 export last_version=`curl http://releases.protonet.info/beta/version`
@@ -45,7 +44,6 @@ export last_version=`curl http://releases.protonet.info/beta/version`
 if [ "$release_type" != "OVERWRITE LAST" ]; then
    let "last_version += 1"
 fi
-
 ############################################################
 #  get the dashboard
 cd /tmp
@@ -56,11 +54,12 @@ cd dashboard
 git checkout master
 git reset --hard
 git clean -f
+git config remote.origin.url=git@github.com:protonet/dashboard.git
 git pull
 git submodule init
 git submodule update
 bundle package
-rm -rf .git
+export DASHBOARD_REVISION=`git log --pretty=format:"%H" -n 1`
 
 #  write version information
 if [ "$release_type" != "OVERWRITE LAST" ]; then
@@ -85,40 +84,43 @@ fi
 
 # now create an archive
 cd /tmp
-tar -pczf $APP_ARCHIVE dashboard/
+tar -pczf $APP_ARCHIVE --exclude .git dashboard/
 
 ############################################################
 # get protonet@babushka
 cd /tmp
 rm -rf babushka-base
 git clone git@github.com:protonet/babushka.git babushka-base
-rm -rf babushka-base/.git
+cd babushka-base
+export BABUSHKA_BASE_REVISION=`git log --pretty=format:"%H" -n 1`
 
 #  now create another archive
 cd /tmp
-tar -pczf $BABUSHKA_BASE_ARCHIVE babushka-base/
+tar -pczf $BABUSHKA_BASE_ARCHIVE --exclude .git babushka-base/
 
 ############################################################
 # get protonet@babushka-deps
 cd /tmp
 rm -rf babushka
 git clone git@github.com:protonet/babushka-deps.git babushka
-rm -rf babushka/.git
+cd babushka
+export BABUSHKA_REVISION=`git log --pretty=format:"%H" -n 1`
 
 #  now create another archive
 cd /tmp
-tar -pczf $BABUSHKA_ARCHIVE babushka/
+tar -pczf $BABUSHKA_ARCHIVE --exclude .git babushka/
 
 ############################################################
 #  get the dudemeister@babushka-deps
 cd /tmp
 rm -rf babushka-deps
 git clone git@github.com:dudemeister/babushka-deps.git babushka-deps
-rm -rf babushka-deps/.git
+cd babushka-deps
+export BABUSHKA_DEPS_REVISION=`git log --pretty=format:"%H" -n 1`
 
 #  now create the dudemeister@babushka-deps archive
 cd /tmp
-tar -pczf $BABUSHKA_DEPS_ARCHIVE babushka-deps/
+tar -pczf $BABUSHKA_DEPS_ARCHIVE --exclude .git babushka-deps/
 
 ############################################################
 #  get the deployer
@@ -127,13 +129,12 @@ rm -rf deployer
 git clone git@github.com:protonet/deploy.git deployer
 cd deployer
 git reset --hard c0ed1673b35f1305cc4b71e17c6cbabcac8dea60
-cd /tmp
-rm -rf deployer/.git
-rm -rf deployer/Gemfile.lock
+export DEPLOYER_REVISION=`git log --pretty=format:"%H" -n 1`
+rm Gemfile.lock
 
 #  now create the deployer archive
 cd /tmp
-tar -pczf $DEPLOYER_ARCHIVE deployer/
+tar -pczf $DEPLOYER_ARCHIVE --exclude .git deployer/
 
 ############################################################
 # create directory for the new release and upload it
@@ -149,7 +150,31 @@ if [ "$release_type" = "STABLE" ]; then
    ssh protonet-live "rm -f $UPLOAD_PATH/stable; ln -s $UPLOAD_PATH/releases/$last_version $UPLOAD_PATH/stable"
 fi
 
+# and create tags so we know what we used
+cd /tmp/dashboard
+git tag -a R_$last_version $DASHBOARD_REVISION -m "RELEASE $RELEASE_VERSION BY `whoami` ON `date`"
+git push --tags
+cd /tmp/babushka-base
+git tag -a R_$last_version $BABUSHKA_BASE_REVISION -m "RELEASE $RELEASE_VERSION BY `whoami` ON `date`"
+git push --tags
+cd /tmp/babushka
+git tag -a R_$last_version $BABUSHKA_REVISION -m "RELEASE $RELEASE_VERSION BY `whoami` ON `date`"
+git push --tags
+cd /tmp/babushka-deps
+git tag -a R_$last_version $BABUSHKA_DEPS_REVISION -m "RELEASE $RELEASE_VERSION BY `whoami` ON `date`"
+git push --tags
+cd /tmp/deployer
+git tag -a R_$last_version $DEPLOYER_REVISION -m "RELEASE $RELEASE_VERSION BY `whoami` ON `date`"
+git push --tags
+
 # cleanup
+rm -rf /tmp/dashboard
+rm -rf /tmp/babushka-base
+rm -rf /tmp/babushka
+rm -rf /tmp/babushka-deps
+rm -rf /tmp/deployer
+
+# and cleanup archives too
 rm /tmp/$APP_ARCHIVE
 rm /tmp/$BABUSHKA_BASE_ARCHIVE
 rm /tmp/$BABUSHKA_ARCHIVE

@@ -48,7 +48,7 @@ Given /^I am logged in as "([^\"]*)"(?: with password "([^\"]*)")?$/ do|username
   end
 
   within('#my-widget') do
-    page.has_content?(username).should == true
+    page.has_content?(username.gsub("@protonet.com", "")).should == true
   end
 end
 

@@ -72,6 +72,11 @@ Feature: Using the protonet dashboard
     And I click on "cool-channel" in the timeline
     Given I wait 3 seconds
     Then I should not see "Cool-channel" in the channel selector
+  
+  @javascript
+    Scenario: Logging in with your email
+    Given a user with the login "dudemeister"
+    And I am logged in as "dudemeister@protonet.com"
 
   @wip
   @javascript
