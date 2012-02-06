@@ -50,6 +50,9 @@ module Node2Node
   
   def update_remote_online_state(remote_user_id, socket_id, json)
     json["id"]          = remote_user_id
+    if json["avatar"]
+      json["avatar"]      = json["avatar"].sub(/\/system\/avatars\/.*\/original/, "/system/avatars/#{remote_user_id}/original")
+    end
     json["socket_id"]   = socket_id
     publish 'system', 'users', json
   end
@@ -58,15 +61,25 @@ module Node2Node
     local_user_id = json["user_id"].sub(/[0-9]*_/, '') # match + security cleanup
     avatar_filename = cleanup_avatar_filename(json["avatar_filename"])
     file_url = "http://localhost:#{configatron.web_app_port}/system/avatars/#{local_user_id}/original/" + avatar_filename
+    log "avatar at #{file_url}"
     file_url = URI.escape(file_url, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
+    file_path = "#{Rails.root}/public/system/avatars/#{local_user_id}/original/" + avatar_filename
 
     image = begin
-      ActiveSupport::Base64.encode64(
-        HTTParty.get("http://localhost:#{configatron.nodejs.port}/image_proxy?url=#{file_url}&width=240&height=240&type=.jpg", :timeout => 2).body
-      )
+      proxy_url     = "http://localhost:#{configatron.nodejs.port}/image_proxy?url=#{file_url}&width=240&height=240&type=.jpg"
+      image_request = HTTParty.get(proxy_url, :timeout => 2)
+      image_data = if image_request.code.to_s.match(/2../)
+        log("sending a proxyied avatar")
+        image_request.body
+      else
+        log("sending a non proxyied avatar since #{proxy_url} failed with #{image_request.code}")
+        File.read(file_path)
+      end
+      ActiveSupport::Base64.encode64(image_data)
     rescue
       nil
     end
+
     # todo move to single operation/trigger
     send_json(:operation => 'rpc.get_avatar_answer', :trigger => 'rpc.get_avatar_answer', :user_id => local_user_id, :avatar_filename => avatar_filename, :image => image) if image
   end
