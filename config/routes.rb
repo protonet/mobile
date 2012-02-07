@@ -11,7 +11,7 @@ Dashboard::Application.routes.draw do
   match 'channels/:id/guest/:token' => 'channels#guest_access', :as => :channel_guest_access
   match 'channels/list' => 'channels#list', :as => :list_channels
   match 'channels/list_global' => 'channels#list_global', :as => :list_global_channels
-  match 'channels/list_subscribed' => 'channels#list_subscribed', :as => :list_subscribed_channels
+  match 'channels/info' => 'channels#info', :as => :show_channel_info
   match 'channels/show_global' => 'channels#show_global', :as => :show_global_channel
   match 'channels/recommended_global_teaser' => 'channels#recommended_global_teaser'
   
@@ -71,6 +71,8 @@ Dashboard::Application.routes.draw do
   match 'users/delete_stranger_older_than_two_days' => 'users#delete_stranger_older_than_two_days', :as => :delete_stranger_older_than_two_days, :via => [:post]
   match 'users/remove_newbie_flag' => 'users#remove_newbie_flag', :as => :remove_newbie_flag, :via => [:post]
   match 'users/newbie_todo_list' => 'users#newbie_todo_list', :as => :newbie_todo_list, :via => [:get]
+  match 'users/channels' => 'users#channels', :as => :user_channels
+  match 'users/info' => 'users#info', :as => :show_user_info
   
   resources :users
   

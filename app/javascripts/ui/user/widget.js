@@ -23,7 +23,7 @@ protonet.ui.User.Widget = {
   _observe: function() {
     protonet
       
-      .on("users.update_status socket.disconnected", this.update.bind(this))
+      .on("users.update_status socket.disconnected", this.update.bind(this, true))
       
       .on("users.update_admin_status", this.updateAdminStatus.bind(this))
       
@@ -63,9 +63,9 @@ protonet.ui.User.Widget = {
       
       if (!$image.length && avatar) {
         $("<img>", $.extend({
-          src: protonet.media.Proxy.getImageUrl(avatar, imageSize),
+          src:   protonet.media.Proxy.getImageUrl(avatar, imageSize),
           error: function() {
-            this.src = protonet.config.default_avatar;
+            $(this).attr("src", protonet.config.default_avatar).unbind("error");
           }
         }, imageSize)).appendTo($link);
       }
@@ -86,34 +86,31 @@ protonet.ui.User.Widget = {
       return;
     }
     
-    var user = protonet.data.User.get(id);
-    if (user) {
-      this.create$Element(user, hide);
-    }
+    this.create$Element(id, hide);
   },
   
-  create$Element: function(user, hide) {
-    var adminFlag = user.isAdmin ? (" " + new protonet.utils.Template("admin-flag-template")) : "";
-    
-    var $element = $("<li>",{
-      "class": [user.isViewer ? "myself" : "", user.isStranger ? "stranger" : ""].join(" ")
-    }).append(
-      $("<a>", {
-        href:            protonet.data.User.getUrl(user.id),
-        title:           user.name,
-        "data-user-id":  user.id,
-        tabindex:        -1,
-        html:            user.name + adminFlag
-      })
-    );
-    
-    if (hide) {
-      $element.hide();
-    }
-    
-    $element.appendTo(this.$list);
-    
-    this.elements[user.id] = $element;
+  create$Element: function(userId, hide) {
+    protonet.data.User.get(userId, function(user) {
+      var adminFlag = user.isAdmin ? (" " + new protonet.utils.Template("admin-flag-template")) : "";
+
+      var $element = $("<li>",{
+        "class": [user.isViewer ? "myself" : "", user.isStranger ? "stranger" : ""].join(" ")
+      }).append(
+        $("<a>", {
+          href:            protonet.data.User.getUrl(user.id),
+          title:           user.name,
+          "data-user-id":  user.id,
+          tabindex:        -1,
+          html:            user.name + adminFlag
+        })
+      );
+
+      if (hide) {
+        $element.hide();
+      }
+
+      this.elements[userId] = $element.appendTo(this.$list);
+    }.bind(this));
   },
   
   getAll$Elements: function() {
@@ -172,12 +169,16 @@ protonet.ui.User.Widget = {
     this.$list.find(".stranger:not(.online)").remove();
   },
   
-  update: function() {
-    var users = protonet.data.User.getAll();
+  update: function(cleanUp) {
+    var users = protonet.data.User.getCache();
+    $.each(users, function(i, user) {
+      this._updateUser(user.id);
+    }.bind(this));
     
-    $.each(users, this._updateUser.bind(this));
+    if (cleanUp === true) {
+      this.cleanup();
+    }
     
-    this.cleanup();
     this.sort();
     this.filter();
   },

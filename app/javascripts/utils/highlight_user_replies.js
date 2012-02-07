@@ -18,7 +18,7 @@ protonet.utils.highlightUserReplies = (function() {
     return str.replace(REG_EXP, function(original, $1, $2) {
       var trailingChars = ($2.match(TRAILING_CHARS) || [""])[0],
           userName      = trailingChars ? $2.replace(TRAILING_CHARS, "") : $2,
-          userId        = protonet.data.User.getId(userName),
+          userId        = protonet.data.User.getIdByName(userName),
           isViewer      = protonet.data.User.isViewer(userId);
       
       if (!userId) {

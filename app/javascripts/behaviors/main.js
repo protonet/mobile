@@ -9,17 +9,19 @@ $.behaviors({
   "a[data-channel-id]:dragstart": function(element, event) {
     if (event.originalEvent.dataTransfer) {
       var $element  = $(element),
-          channelId = $element.data("channel-id");
-      event.originalEvent.dataTransfer.setData("Text", "@" + protonet.data.Channel.getName(channelId) + " ");
+          channelName = protonet.data.Channel.getName($element.data("channel-id"));
+      if (channelName) {
+        event.originalEvent.dataTransfer.setData("Text", "@" + channelName + " ");
+      }
     }
   },
   
   "a[data-user-id]:dragstart": function(element, event) {
     if (event.originalEvent.dataTransfer)  {
       var $element  = $(element),
-          user      = protonet.data.User.get($element.data("user-id"));
-      if (user) {
-        event.originalEvent.dataTransfer.setData("Text", "@" + user.name + " ");
+          userName  = protonet.data.User.getName($element.data("user-id"));
+      if (userName) {
+        event.originalEvent.dataTransfer.setData("Text", "@" + userName + " ");
       }
     }
   },

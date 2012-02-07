@@ -44,7 +44,7 @@ protonet.timeline.Channels = {
   load: function() {
     protonet.trigger("channels.loading_start");
     
-    protonet.data.Channel.getAllByIds(this.getActive(), {
+    protonet.data.Channel.getAllSubscribed(this.getActive(), {
       success:  function(data) {
         this.render(data);
         protonet.trigger("channels.loading_end");

@@ -1,3 +1,6 @@
+/**
+ * Channel Model
+ */
 (function() {
   
   var dataCache       = {},
@@ -44,6 +47,13 @@
     });
   }
   
+  function prepareParameters(options) {
+    if (typeof(options) === "function") {
+      options = { success: options };
+    }
+    return $.extend({ includeMeeps: false, bypassCache: false, success: $.noop, error: $.noop }, options);
+  }
+  
   protonet.on("channel.added", function(channel) {
     cache(channel);
   });
@@ -87,16 +97,16 @@
   
   protonet.data.Channel = {
     get: function(id, options) {
-      options = $.extend({ includeMeeps: false, bypassCache: false, success: $.noop, error: $.noop }, options);
+      options = prepareParameters(options);
       
       var cached = dataCache[id];
       if (cached && !options.bypassCache && (!options.includeMeeps || cached.meeps)) {
-        options.success(dataCache[id]);
+        options.success(cached);
       } else {
         $.ajax({
           dataType: "json",
           url:      "/channels/" + id,
-          data:     { include_meeps: options.includeMeeps, ajax: 1 },
+          data:     { include_meeps: options.includeMeeps, _: 1 },
           success:  function(data) {
             cache(data);
             options.success(data);
@@ -108,13 +118,53 @@
       }
     },
     
-    getAllByIds: function(ids, options) {
-      options = $.extend({ includeMeeps: false, success: $.noop, error: $.noop }, options);
+    getAll: function(ids, options) {
+      options = prepareParameters(options);
+      
+      var uncachedIds = [],
+          results     = [];
+      
+      $.each(ids, function(i, id) {
+        var cached = dataCache[id];
+        if (cached && !options.bypassCache && (!options.includeMeeps || cached.meeps)) {
+          results.push(cached);
+        } else {
+          uncachedIds.push(id);
+        }
+      });
+      
+      if (!uncachedIds.length) {
+        options.success(result);
+      } else {
+        $.ajax({
+          dataType: "json",
+          url:  "/channels/info",
+          data: { include_meeps: options.includeMeeps, ids: uncachedIds.join(","), _: 1 },
+          success:  function(data) {
+            $.each(data, function(i, channel) {
+              cache(channel);
+            });
+            results = results.concat(data);
+            options.success(results);
+          },
+          error:    function(xhr) {
+            options.error(xhr);
+          }
+        });
+      }
+    },
+    
+    getCache: function() {
+      return dataCache;
+    },
+    
+    getAllSubscribed: function(ids, options) {
+      options = prepareParameters(options);
       
       $.ajax({
         dataType: "json",
-        url:  "/channels/list_subscribed",
-        data: { include_meeps: options.includeMeeps, ajax: 1, channels: ids.join(",") },
+        url:  "/users/channels",
+        data: { channels: ids.join(","), _: 1 },
         success:  function(data) {
           $.each(data, function(i, channel) {
             cache(channel);

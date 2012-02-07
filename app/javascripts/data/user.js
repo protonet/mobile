@@ -8,7 +8,7 @@
  *
  * @example
  *    // Retrieve user with id 1
- *    protonet.data.User.get(1)
+ *    protonet.data.User.get(1, function(user) { alert("Hello, " +  user.name); });
  *    // => { id: 1, name: "tiff", avatar: "/foo.jpg", isOnline: true, isStranger: false, isViewer: true }
  *    
  *    // Retrieve user id of user with name "tiff"
@@ -79,7 +79,14 @@
     id:     viewerId,
     avatar: defaultAvatar
   });
-    
+  
+  function prepareParameters(options) {
+    if (typeof(options) === "function") {
+      options = { success: options };
+    }
+    return $.extend({ bypassCache: false, success: $.noop, error: $.noop }, options);
+  }
+  
   function cache(user) {
     var oldUser = dataCache[user.id],
         oldAvatar,
@@ -163,9 +170,9 @@
   });
   
   protonet.on("user.came_online", function(user) {
-    // TODO: sometimes user.came_online is triggered without a valid user name
+    // TODO: sometimes user.came_online is triggered with an invalid user name
     if (!user.name) {
-      return
+      return;
     }
     
     cache(user);
@@ -186,11 +193,72 @@
   });
   
   protonet.data.User = {
-    get: function(id, callback) {
-      return dataCache[id];
+    get: function(id, options) {
+      options = prepareParameters(options);
+      
+      var cached = dataCache[id];
+      if (cached && !options.bypassCache) {
+        options.success(cached);
+      } else {
+        var isRemote = String(id).indexOf("_") !== -1;
+        // TODO: We cannot load data for remote users
+        if (isRemote) {
+          options.error({});
+          return;
+        }
+        
+        $.ajax({
+          dataType: "json",
+          url:      "/users/" + id,
+          data:     { include_meeps: options.includeMeeps, _: 1 },
+          success:  function(data) {
+            cache(data);
+            options.success(data);
+          },
+          error:    function(xhr) {
+            options.error(xhr);
+          }
+        });
+      }
     },
     
-    getAll: function() {
+    getAll: function(ids, options) {
+      options = prepareParameters(options);
+      
+      var uncachedIds = [],
+          results     = [];
+      
+      $.each(ids, function(i, id) {
+        var cached = dataCache[id];
+        if (cached && !options.bypassCache) {
+          results.push(cached);
+        } else {
+          uncachedIds.push(id);
+        }
+      });
+      
+      if (!uncachedIds.length) {
+        options.success(result);
+      } else {
+        $.ajax({
+          dataType: "json",
+          url:  "/users/info",
+          data: { ids: uncachedIds.join(","), _: 1 },
+          success:  function(data) {
+            $.each(data, function(i, user) {
+              cache(user);
+            });
+            results = results.concat(data);
+            options.success(results);
+          },
+          error:    function(xhr) {
+            options.error(xhr);
+          }
+        });
+      }
+    },
+    
+    getCache: function() {
       return dataCache;
     },
     
@@ -198,20 +266,26 @@
       return idToNameMapping[id];
     },
     
-    getIdByName: function(name) {
-      return nameToIdMapping[name.toLowerCase()];
-    },
-    
-    getCurrent: function() {
-      return dataCache[viewerId];
-    },
-    
     getUrl: function(id) {
       return protonet.config.base_url + "/users/" + id;
     },
     
-    getAdmins: function() {
-      return adminIds;
+    getAvatar: function(id) {
+      var user = dataCache[id];
+      return user ? user.avatar : defaultAvatar;
+    },
+    
+    getIdByName: function(name) {
+      return nameToIdMapping[name.toLowerCase()];
+    },
+    
+    isViewer: function(id) {
+      return id == viewerId;
+    },
+    
+    isOnline: function(id) {
+      var user = dataCache[id];
+      return user ? user.isOnline : false;
     },
     
     getPreference: function(key) {
@@ -231,26 +305,12 @@
       }
     },
     
-    setPreference: function(key, value) {
-      protonet.storage.set(key, value);
+    getCurrent: function() {
+      return dataCache[viewerId];
     },
     
-    getPreferencesConfig: function() {
-      return preferencesConfig;
-    },
-    
-    isViewer: function(id) {
-      return id == viewerId;
-    },
-    
-    isOnline: function(id) {
-      var user = dataCache[id];
-      return user ? user.isOnline : false;
-    },
-    
-    getAvatar: function(id) {
-      var user = dataCache[id];
-      return user ? user.avatar : defaultAvatar;
+    getAdmins: function() {
+      return adminIds;
     },
     
     // Returns an admin who's currently online
@@ -266,6 +326,14 @@
         }
       }
       return availableAdmin;
+    },
+    
+    setPreference: function(key, value) {
+      protonet.storage.set(key, value);
+    },
+    
+    getPreferencesConfig: function() {
+      return preferencesConfig;
     }
   };
   

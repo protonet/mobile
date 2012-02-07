@@ -1,11 +1,10 @@
 authorization do
   role :guest do
-    has_permission_on :users, :to => [:rendezvous, :update_last_read_meeps]
+    has_permission_on :users, :to => [:rendezvous, :update_last_read_meeps, :channels]
     has_permission_on :channels do
       to [:show]
       if_attribute :users => contains {user}
     end
-    has_permission_on :channels, :to => [:list_subscribed]
   end
   
   role :invitee do
@@ -14,7 +13,7 @@ authorization do
       to [:show]
       if_attribute :users => contains {user}
     end
-    has_permission_on :channels, :to => [:list_subscribed]
+    has_permission_on :channels, :to => [:info]
     has_permission_on :files, :to => [:read]
     has_permission_on :users do 
       to [:update, :show, :change_password, :my]
@@ -64,7 +63,7 @@ privileges do
   # default privilege hierarchies to facilitate RESTful Rails apps
   privilege :manage, :includes => [:create, :read, :update, :delete, :destroy, :show,
     :change_password, :update_user_admin_flag, :generate_new_password, :search, :send_javascript, :send_system_message]
-  privilege :read, :includes => [:index, :show, :my, :search, :list, :list_global, :show_global, :recommended_global_teaser, :meeps_with_text_extension, :list_subscribed]
+  privilege :read, :includes => [:index, :show, :my, :search, :list, :list_global, :show_global, :recommended_global_teaser, :meeps_with_text_extension, :channels, :info]
   privilege :newbie, :includes => [:remove_newbie_flag, :newbie_todo_list]
   privilege :rendezvous, :includes => [:start_rendezvous]
   privilege :create, :includes => :new

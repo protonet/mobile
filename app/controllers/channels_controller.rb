@@ -1,43 +1,32 @@
 class ChannelsController < ApplicationController
   
-  filter_resource_access :collection => [:index, :list_global, :show_global, :recommended_global_teaser, :list, :list_subscribed]
+  filter_resource_access :collection => [:index, :list_global, :show_global, :recommended_global_teaser, :list, :info]
   
   before_filter :couple_node, :only => [:show_global, :list_global]
   
   def index
   end
   
-  def list_subscribed
-    channels_to_load = params[:channels].split(',') rescue []
-    channels = current_user.channels.verified
+  def show
+    if request.headers['X-Request-Type'] == 'tab'
+      render :partial => "channel_details", :locals => { :channel => Channel.find(params[:id]) }
+    else
+      @selected_channel = Channel.find(params[:id])
+      render :list
+    end
+  end
+  
+  def info
+    channels = Channel.all
+    channels_to_load = params[:ids].split(',') rescue channels.each {|c| c.id.to_s }
     
     respond_to do |format|
       format.json do
         render :json => channels.map { |channel|
-          Channel.prepare_for_frontend(channel, current_user, params[:include_meeps]) if channels_to_load.include?(channel.id.to_s) || channel.has_unread_meeps
+          next unless channels_to_load.include?(channel.id.to_s)
+          include_meeps = params[:include_meeps] && current_user.subscribed(channel)
+          Channel.prepare_for_frontend(channel, current_user, include_meeps)
         }.compact
-      end
-    end
-  end
-  
-  def list
-    @selected_channel = Channel.find_by_id(params[:id])
-  end
-  
-  def show
-    respond_to do |format|
-      format.html do
-        if request.headers['X-Request-Type'] == 'tab'
-          render :partial => "channel_details", :locals => { :channel => Channel.find(params[:id]) }
-        else
-          @selected_channel = Channel.find(params[:id])
-          render :list
-        end
-      end
-      format.json do
-        channel = current_user.channels.find(params[:id])
-        include_meeps = params[:include_meeps] && current_user.subscribed?(channel)
-        render :json => Channel.prepare_for_frontend(channel, current_user, include_meeps)
       end
     end
   end
@@ -49,6 +38,10 @@ class ChannelsController < ApplicationController
       @selected_channel = Channel.find(@remote_channel_id)
       render :list_global
     end
+  end
+  
+  def list
+    @selected_channel = Channel.find_by_id(params[:id])
   end
   
   def list_global

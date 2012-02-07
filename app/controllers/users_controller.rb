@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   include Rabbit
   
-  filter_resource_access :collection => [:index, :my]
+  filter_resource_access :collection => [:index, :my, :channels, :info]
   
   before_filter :redirect_to_my_profile,  :only => :show
   before_filter :prepare_target_users,    :only => [:send_system_message, :send_javascript]
@@ -11,11 +11,33 @@ class UsersController < ApplicationController
   end
   
   def show
-    render_profile User.find(params[:id])
+    user = User.find(params[:id])
+    respond_to do |format|
+      format.html do
+        render_profile_for user
+      end
+      format.json do
+        render :json => User.prepare_for_frontend(user)
+      end
+    end
   end
   
+  def info
+    users = User.registered
+    users_to_load = params[:ids].split(',') rescue users.each {|u| u.id.to_s }
+    
+    respond_to do |format|
+      format.json do
+        render :json => users.map { |channel|
+          next unless users_to_load.include?(user.id.to_s)
+          User.prepare_for_frontend(user)
+        }.compact
+      end
+    end
+  
+  end
   def my
-    render_profile current_user
+    render_profile_for current_user
   end
   
   def new
@@ -33,7 +55,20 @@ class UsersController < ApplicationController
     end
     xhr_redirect_to :action => 'edit', :id => user.id
   end
-
+  
+  def channels
+    channels = current_user.channels.verified
+    channels_to_load = params[:channels].split(',') rescue []
+    
+    respond_to do |format|
+      format.json do
+        render :json => channels.map { |channel|
+          Channel.prepare_for_frontend(channel, current_user, true) if channels_to_load.include?(channel.id.to_s) || channel.has_unread_meeps
+        }.compact
+      end
+    end
+  end
+  
   def delete_stranger_older_than_two_days
     if current_user.admin? && User.delete_strangers_older_than_two_days!
       flash[:notice] = "Successfully deleted all old strangers!"
@@ -178,7 +213,7 @@ class UsersController < ApplicationController
   end
   
   private
-    def render_profile(user)
+    def render_profile_for(user)
       @user = user
       if params[:no_redirect] || !@user.external_profile_url
         render :show
