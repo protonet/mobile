@@ -6,26 +6,9 @@
   var dataCache       = {},
       nameToIdMapping = {},
       idToNameMapping = {},
-      uuidToIdMapping = protonet.config.channel_uuid_to_id_mapping,
+      uuidToIdMapping = {},
       idToUuidMapping = {},
       subscriptions   = {};
-  
-  $.each(uuidToIdMapping, function(uuid, id) {
-    idToUuidMapping[id] = uuid;
-  });
-  
-  $.each(protonet.config.channel_name_to_id_mapping, function(name, id) {
-    nameToIdMapping[name.toLowerCase()] = id;
-    idToNameMapping[id] = name;
-  });
-  
-  $.each(protonet.config.users, function(i, user) {
-    var userId = user.id;
-    $.each(user.subscriptions, function(i, channelId) {
-      subscriptions[channelId] = subscriptions[channelId] || [];
-      subscriptions[channelId].push(userId);
-    });
-  });
   
   function cache(data) {
     dataCache[data.id] = data;
@@ -35,7 +18,7 @@
     uuidToIdMapping[data.uuid]                 = data.id;
     protonet.trigger("channel.data_available", data);
   }
-  
+
   function cacheSubscriptions(data) {
     $.each(data, function(uuid, users) {
       var channelId = uuidToIdMapping[uuid];
@@ -46,13 +29,25 @@
       }
     });
   }
-  
+
   function prepareParameters(options) {
     if (typeof(options) === "function") {
       options = { success: options };
     }
     return $.extend({ includeMeeps: false, bypassCache: false, success: $.noop, error: $.noop }, options);
   }
+  
+  $.each(protonet.config.channels, function(i, channel) {
+    cache(channel);
+  });
+  
+  $.each(protonet.config.users, function(i, user) {
+    var userId = user.id;
+    $.each(user.subscriptions, function(i, channelId) {
+      subscriptions[channelId] = subscriptions[channelId] || [];
+      subscriptions[channelId].push(userId);
+    });
+  });
   
   protonet.on("channel.added", function(channel) {
     cache(channel);
@@ -183,7 +178,7 @@
     },
     
     getSubscriptions: function(id) {
-      return subscriptions[id];
+      return subscriptions[id] || [];
     },
     
     isGlobal: function(id) {

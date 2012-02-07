@@ -41,18 +41,6 @@ class Channel < ActiveRecord::Base
     channel_ids.empty? ? [home] : find(channel_ids)
   end
   
-  def self.uuid_to_id_mapping
-    mapping = {}
-    real.all.each {|c| mapping[c.uuid] = c.id }
-    mapping
-  end
-  
-  def self.name_to_id_mapping
-    mapping = {}
-    real.all.each { |c| mapping[c.name] = c.id }
-    mapping
-  end
-  
   def self.home
     begin
       find(1)

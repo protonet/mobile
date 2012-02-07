@@ -219,9 +219,9 @@ class User < ActiveRecord::Base
   # channels a user potentially is allowed to see
   def allowed_channels
     # admin: return all real channels + verified (don't show the admin rendezvous channel he didn't subscribe to)
-    return channels.real | channels.verified    if admin?
+    return Channel.real   | channels.verified  if admin?
     # user: return all public channels + verified
-    return channels.public | channels.verified  if !stranger? && !invitee?
+    return Channel.public | channels.verified  if !stranger? && !invitee?
     # invitee & stranger: return all verified channels
     return channels.verified
   end
@@ -296,12 +296,6 @@ class User < ActiveRecord::Base
   
   def stranger?
     !temporary_identifier.blank?
-  end
-  
-  def channel_uuid_to_id_mapping
-    mapping = {}
-    channels.each {|c| mapping[c.uuid] = c.id }
-    mapping
   end
   
   def assign_roles_and_channels

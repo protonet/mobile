@@ -217,21 +217,6 @@
   background: #eee;
 }
 
-#my-widget .settings:hover:after {
-  border-top: 4px solid #333;
-}
-
-#my-widget .settings:after {
-  content: "";
-  position: absolute;
-  right: 5px;
-  top: 7px;
-  width: 0;
-  height: 0;
-  border: 4px solid transparent;
-  border-top: 4px solid #666;
-}
-
 #my-widget .settings ul {
   display: none;
   position: absolute;

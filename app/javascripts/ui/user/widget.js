@@ -148,10 +148,6 @@ protonet.ui.User.Widget = {
       this.$title.html(protonet.t("USERS_IN_NORMAL_CHANNEL"));
     }
     
-    if (!channelSubscriptions) {
-      return;
-    }
-    
     this.getAll$Elements().hide();
     $.each(channelSubscriptions, function(i, userId) {
       var $element = this.get$Element(userId);

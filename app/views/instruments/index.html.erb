@@ -11,7 +11,7 @@
         <menu>
           <li data-extension="smiley" title="Insert emoticon" data-hover-hint="right">Insert emoticon</li>
           <li data-extension="snapshot" title="Attach snapshot" data-hover-hint="right">Attach snapshot</li>
-          <%- if SystemPreferences.show_file_widget && permitted_to?(:read, :files) -%>
+          <%- if permitted_to?(:read, :files) -%>
             <li data-extension="file" title="Attach file(s)" id="attach-file-extension" data-hover-hint="right">Attach file(s)</li>
           <%- end -%>
         </menu>
@@ -26,7 +26,7 @@
 
   <nav id="channels">
     <ul>
-      <%- @channels.each do |channel| -%>
+      <%- @subscribed_channels.each do |channel| -%>
         <%= render :partial => 'channels/tab', :locals => { :channel => channel } %>
       <%- end -%>
     </ul>

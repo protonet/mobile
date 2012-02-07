@@ -64,20 +64,18 @@
     user_id:                    <%= current_user.id %>,
     user_name:                  <%= raw current_user.display_name.to_json %>,
     user_is_stranger:           <%= current_user.stranger?.to_json %>,
-    show_file_widget:           <%= SystemPreferences.show_file_widget.to_json %>,
     show_user_widget:           <%= SystemPreferences.show_user_widget.to_json %>,
     show_search_widget:         <%= SystemPreferences.show_search_widget.to_json %>,
     show_clouds:                <%= SystemPreferences.show_clouds.to_json %>,
     show_only_online_users:     <%= SystemPreferences.show_only_online_users.to_json %>,
     allow_modal_views:          <%= SystemPreferences.allow_modal_views.to_json %>,
     authenticity_token:         "<%= form_authenticity_token %>",
-    channel_name_to_id_mapping: <%= raw Channel.name_to_id_mapping.to_json %>,
-    channel_uuid_to_id_mapping: <%= raw Channel.uuid_to_id_mapping.merge(current_user.channel_uuid_to_id_mapping).to_json %>,
     server:                     "<%= request.server_software %>",
     incoming_interface:         <%= raw incoming_interface.to_json %>,
     captive_redirect_url:       "<%= raw(params[:captive_redirect_url] || session[:captive_redirect_url]) %>",
     debug_mode:                 <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>,
-    users:                      <%= raw @users.to_json %>
+    channels:                   <%= raw @channels.map {|c| Channel.prepare_for_frontend(c, current_user, false) }.to_json %>,
+    users:                      <%= raw @users.map    {|u| User.prepare_for_frontend(u) }.to_json %>
   };
   
   <%= "var AIRBRAKE_API_KEY = '#{HoptoadNotifier.configuration.api_key}';" if Rails.env.production? %>

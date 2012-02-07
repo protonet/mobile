@@ -25,18 +25,13 @@
     <a class="hint" data-hover-hint="top" title="Whether users should see who is currently online">(?)</a>
   </div>
   <div class="form-field">
-    <%= hidden_field_tag 'preferences[show_file_widget]', false, {:id => nil}  %>
-    <%= label_tag 'preferences[show_file_widget]', 'Enable file management' %> <%= check_box_tag 'preferences[show_file_widget]', true, SystemPreferences.show_file_widget %>
-    <a class="hint" data-hover-hint="top" title="Whether users should be able to upload and share files">(?)</a>
-  </div>
-  <div class="form-field">
     <%= hidden_field_tag 'preferences[show_only_online_users]', false, {:id => nil}  %>
     <%= label_tag 'preferences[show_only_online_users]', 'Show only online users' %> <%= check_box_tag 'preferences[show_only_online_users]', true, SystemPreferences.show_only_online_users %>
     <a class="hint" data-hover-hint="top" title="Whether offline users should be hidden in the user widget. Recommended if your node has a lot of users (> 1000)">(?)</a>
   </div>
   <div class="form-field">
     <%= hidden_field_tag 'preferences[allow_modal_views]', false, {:id => nil}  %>
-    <%= label_tag 'preferences[allow_modal_views]', 'Allow modal views?' %> <%= check_box_tag 'preferences[allow_modal_views]', true, SystemPreferences.allow_modal_views %>
+    <%= label_tag 'preferences[allow_modal_views]', 'Enable modal views' %> <%= check_box_tag 'preferences[allow_modal_views]', true, SystemPreferences.allow_modal_views %>
     <a class="hint" data-hover-hint="top" title="Whether sub pages should be displayed in a modal dialog">(?)</a>
   </div>
   <%= button "Save" %>
