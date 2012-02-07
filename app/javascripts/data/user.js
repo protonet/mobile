@@ -31,7 +31,6 @@
  *    // => true
  */
 (function(protonet) {
-  
   var undef,
       dataCache         = {},
       viewerId          = protonet.config.user_id,
@@ -196,30 +195,20 @@
     get: function(id, options) {
       options = prepareParameters(options);
       
-      var cached = dataCache[id];
-      if (cached && !options.bypassCache) {
-        options.success(cached);
-      } else {
-        var isRemote = String(id).indexOf("_") !== -1;
-        // TODO: We cannot load data for remote users
-        if (isRemote) {
-          options.error({});
-          return;
-        }
-        
-        $.ajax({
-          dataType: "json",
-          url:      "/users/" + id,
-          data:     { include_meeps: options.includeMeeps, _: 1 },
-          success:  function(data) {
-            cache(data);
-            options.success(data);
-          },
-          error:    function(xhr) {
-            options.error(xhr);
-          }
-        });
+      // TODO: We cannot load data for remote users from the server
+      var isRemote = String(id).indexOf("_") !== -1;
+      if (isRemote) {
+        var user = dataCache[id];
+        user ? options.success(user) : options.error({});
+        return;
       }
+      
+      var originalSuccess = options.success;
+      options.success = function(data) {
+        originalSuccess(data[0]);
+      };
+      
+      this.getAll([id], options);
     },
     
     getAll: function(ids, options) {
@@ -238,7 +227,7 @@
       });
       
       if (!uncachedIds.length) {
-        options.success(result);
+        options.success(results);
       } else {
         $.ajax({
           dataType: "json",

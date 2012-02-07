@@ -10,7 +10,7 @@
       idToUuidMapping = {},
       subscriptions   = {};
   
-  $.each(protonet.config.channel_uuid_to_id_mapping, function(uuid, id) {
+  $.each(uuidToIdMapping, function(uuid, id) {
     idToUuidMapping[id] = uuid;
   });
   
@@ -99,23 +99,12 @@
     get: function(id, options) {
       options = prepareParameters(options);
       
-      var cached = dataCache[id];
-      if (cached && !options.bypassCache && (!options.includeMeeps || cached.meeps)) {
-        options.success(cached);
-      } else {
-        $.ajax({
-          dataType: "json",
-          url:      "/channels/" + id,
-          data:     { include_meeps: options.includeMeeps, _: 1 },
-          success:  function(data) {
-            cache(data);
-            options.success(data);
-          },
-          error:    function(xhr) {
-            options.error(xhr);
-          }
-        });
-      }
+      var originalSuccess = options.success;
+      options.success = function(data) {
+        originalSuccess(data[0]);
+      };
+      
+      this.getAll([id], options);
     },
     
     getAll: function(ids, options) {

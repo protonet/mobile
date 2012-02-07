@@ -17,7 +17,11 @@ protonet.ui.User.Widget = {
     new protonet.ui.Resizer(this.$list, this.$resizer, { storageKey: "user_widget_height" });
     
     this._observe();
-    this.update();
+    
+    var users = protonet.data.User.getCache();
+    $.each(users, function(i, user) {
+      this.create$Element(user.id);
+    }.bind(this));
   },
   
   _observe: function() {
@@ -31,7 +35,7 @@ protonet.ui.User.Widget = {
       
       .on("user.added", function(data) {
         if (!protonet.config.show_only_online_users) {
-          this.createUser(data.id, true);
+          this.create$Element(data.id, true);
         }
       }.bind(this))
       
@@ -48,7 +52,7 @@ protonet.ui.User.Widget = {
       }.bind(this))
       
       .on("user.came_online user.goes_offline", function(data) {
-        this.updateUser(data.id);
+        this.update$Element(data.id);
       }.bind(this));
       
     
@@ -81,15 +85,11 @@ protonet.ui.User.Widget = {
     }.bind(this));
   },
   
-  createUser: function(id, hide) {
-    if (this.elements[id]) {
+  create$Element: function(userId, hide) {
+    if (this.elements[userId]) {
       return;
     }
     
-    this.create$Element(id, hide);
-  },
-  
-  create$Element: function(userId, hide) {
     protonet.data.User.get(userId, function(user) {
       var adminFlag = user.isAdmin ? (" " + new protonet.utils.Template("admin-flag-template")) : "";
 
@@ -113,12 +113,12 @@ protonet.ui.User.Widget = {
     }.bind(this));
   },
   
-  getAll$Elements: function() {
-    return this.$list.children();
-  },
-  
   get$Element: function(userId) {
     return this.elements[userId] || $();
+  },
+  
+  getAll$Elements: function() {
+    return this.$list.children();
   },
   
   count: function() {
@@ -172,7 +172,7 @@ protonet.ui.User.Widget = {
   update: function(cleanUp) {
     var users = protonet.data.User.getCache();
     $.each(users, function(i, user) {
-      this._updateUser(user.id);
+      this._update$Element(user.id);
     }.bind(this));
     
     if (cleanUp === true) {
@@ -183,16 +183,16 @@ protonet.ui.User.Widget = {
     this.filter();
   },
   
-  updateUser: function(userId) {
-    this._updateUser(userId);
+  update$Element: function(userId) {
+    this._update$Element(userId);
     
     this.cleanup();
     this.sort();
     this.filter();
   },
   
-  _updateUser: function(userId) {
-    this.createUser(userId);
+  _update$Element: function(userId) {
+    this.create$Element(userId);
     
     var $element            = this.get$Element(userId),
         isOnline            = protonet.data.User.isOnline(userId),

@@ -12,14 +12,7 @@ class UsersController < ApplicationController
   
   def show
     user = User.find(params[:id])
-    respond_to do |format|
-      format.html do
-        render_profile_for user
-      end
-      format.json do
-        render :json => User.prepare_for_frontend(user)
-      end
-    end
+    render_profile_for user
   end
   
   def info
