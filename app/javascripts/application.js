@@ -24,6 +24,7 @@
 //= require "utils/template.js"
 //= require "utils/inline_hint.js"
 //= require "ui/user.js"
+//= require "ui/context_menu.js"
 //= require "ui/flash_message.js"
 //= require "ui/header.js"
 //= require "ui/modal_window.js"

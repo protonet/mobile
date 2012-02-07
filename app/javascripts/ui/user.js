@@ -1,4 +1,3 @@
-//= require "context_menu.js"
 //= require "../media/try_to_load_image.js"
 
 protonet.ui.User = {

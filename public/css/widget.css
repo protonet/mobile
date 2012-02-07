@@ -44,7 +44,8 @@
 }
 
 .widget li a:hover,
-.widget li a:focus {
+.widget li a:focus,
+.widget li .context-menu-opened {
   background-color: rgba(0, 0, 0, 0.06) !important;
 }
 

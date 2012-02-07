@@ -27,7 +27,7 @@ protonet.ui.User.Widget = {
   _observe: function() {
     protonet
       
-      .on("users.update_status socket.disconnected", this.update.bind(this, true))
+      .on("users.update_status socket.disconnected", this.update.bind(this))
       
       .on("users.update_admin_status", this.updateAdminStatus.bind(this))
       
@@ -121,6 +121,14 @@ protonet.ui.User.Widget = {
     return this.$list.children();
   },
   
+  remove$Element: function(userId) {
+    var $element = this.elements[userId];
+    if ($element) {
+      $element.remove();
+      delete this.elements[userId];
+    }
+  },
+  
   count: function() {
     var total   = this.$list.find("li:visible").length,
         online  = this.$list.find("li.online:visible").length;
@@ -166,19 +174,21 @@ protonet.ui.User.Widget = {
   },
   
   cleanup: function() {
-    this.$list.find(".stranger:not(.online)").remove();
+    var users = protonet.data.User.getCache();
+    $.each(users, function(i, user) {
+      if ((user.isStranger || protonet.config.show_only_online_users) && !user.isOnline) {
+        this.remove$Element(user.id);
+      }
+    }.bind(this));
   },
   
-  update: function(cleanUp) {
+  update: function() {
     var users = protonet.data.User.getCache();
     $.each(users, function(i, user) {
       this._update$Element(user.id);
     }.bind(this));
     
-    if (cleanUp === true) {
-      this.cleanup();
-    }
-    
+    this.cleanup();
     this.sort();
     this.filter();
   },
@@ -211,7 +221,7 @@ protonet.ui.User.Widget = {
     } else {
       $element.removeClass("online").removeClass("typing");
       if (protonet.config.show_only_online_users) {
-        $element.remove();
+        this.remove$Element(userId);
       }
     }
   },
