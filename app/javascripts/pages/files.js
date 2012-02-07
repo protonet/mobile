@@ -386,9 +386,8 @@ protonet.p("files", function($page, $window, $document) {
         result.uploaded = protonet.utils.prettifyDate(data.uploaded);
       }
       
-      
       result.uploaderId = data.uploader_id || -1;
-      result.uploaderName = data.uploader_name || "system user";
+      result.uploaderName = protonet.data.User.getName(result.uploaderId) || ("user with id #" + data.uploader_id);
       
       return result;
     },

@@ -141,6 +141,7 @@ protonet.ui.ModalWindow = (function() {
   }
   
   function _load(url) {
+    content("");
     elements.dialog.addClass("loading");
     _abortCurrentRequest();
     

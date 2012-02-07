@@ -41,12 +41,16 @@ protonet.ui.Header = {
       }.bind(this))
       
       .on("modal_window.hidden", function() {
-        this.$header.css("padding-right", "");
+        this.$header.find("nav").css("margin-left", "");
         this.select(initialControllerName, initialActionName);
       }.bind(this))
       
       .on("modal_window.shown", function() {
-        this.$header.css("padding-right", protonet.utils.getScrollbarWidth().px()).toggleClass("redraw");
+        this.$header.find("nav").css("margin-left", (-protonet.utils.getScrollbarWidth()).px());
+        this.$header.find("ul ul").css("display", "none");
+        setTimeout(function() {
+          this.$header.find("ul ul").css("display", "");
+        }.bind(this), 0);
       }.bind(this));
   },
   
