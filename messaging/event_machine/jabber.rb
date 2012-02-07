@@ -5,6 +5,7 @@ require File.dirname(__FILE__) + '/../../config/environment'
 require 'xmpp4r'
 require 'xmpp4r-simple'
 require 'xmpp4r/muc/helper/simplemucclient'
+require 'rabbit'
 
 reconnection_attemps = 0
 
@@ -45,34 +46,33 @@ frontend.join("frontend@conference.im.xing.com/robot")
 
 EM.run do
 
-  amq = MQ.new
-  channel_queue             = amq.queue("consumer-jabber-bridge", :auto_delete => true)
-  channel_queue2            = amq.queue("consumer-jabber-bridge2", :auto_delete => true)
-  channel_content_discovery = amq.queue("consumer-jabber-bridge3", :auto_delete => true)
-  events_queue              = amq.queue("consumer-jabber-bridge4", :auto_delete => true)
-  frontend_queue            = amq.queue("consumer-jabber-bridge5", :auto_delete => true)
+  channel_queue             = amqp.queue("consumer-jabber-bridge", :auto_delete => true)
+  channel_queue2            = amqp.queue("consumer-jabber-bridge2", :auto_delete => true)
+  channel_content_discovery = amqp.queue("consumer-jabber-bridge3", :auto_delete => true)
+  events_queue              = amqp.queue("consumer-jabber-bridge4", :auto_delete => true)
+  frontend_queue            = amqp.queue("consumer-jabber-bridge5", :auto_delete => true)
 
-  channel_queue.bind(amq.topic("channels"), :key => "channels.#{Channel.find(4).uuid}").subscribe do |msg|
+  channel_queue.bind(amqp.topic("channels"), :key => "channels.#{Channel.find(4).uuid}").subscribe do |msg|
     message = JSON(msg)
     askrails.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"] && message["author"].match(/\{x\}/)
   end
 
-  channel_queue2.bind(amq.topic("channels"), :key => "channels.#{Channel.find(16).uuid}").subscribe do |msg|
+  channel_queue2.bind(amqp.topic("channels"), :key => "channels.#{Channel.find(16).uuid}").subscribe do |msg|
     message = JSON(msg)
     cp.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"] && message["author"].match(/\{x\}/)
   end
 
-  channel_content_discovery.bind(amq.topic("channels"), :key => "channels.#{21}").subscribe do |msg|
+  channel_content_discovery.bind(amqp.topic("channels"), :key => "channels.#{21}").subscribe do |msg|
     message = JSON(msg)
     content_discovery.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"] && message["author"].match(/\{x\}/)
   end
 
-  events_queue.bind(amq.topic("channels"), :key => "channels.#{Channel.find(22).uuid}").subscribe do |msg|
+  events_queue.bind(amqp.topic("channels"), :key => "channels.#{Channel.find(22).uuid}").subscribe do |msg|
     message = JSON(msg)
     events.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"] && message["author"].match(/\{x\}/)
   end
 
-  frontend_queue.bind(amq.topic("channels"), :key => "channels.#{Channel.find(20).uuid}").subscribe do |msg|
+  frontend_queue.bind(amqp.topic("channels"), :key => "channels.#{Channel.find(20).uuid}").subscribe do |msg|
     message = JSON(msg)
     frontend.say("#{message["author"]}{p}: #{message["message"]}") unless message["author"] && message["author"].match(/\{x\}/)
   end

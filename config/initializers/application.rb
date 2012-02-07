@@ -30,9 +30,10 @@ ActiveSupport::JSON.backend = 'JSONGem'
 
 # amqp settings
 require 'rabbit'
+require 'amqp'
 
-require 'mq'
-AMQP.settings[:vhost] = configatron.amqp.vhost.nil? ? '/' : configatron.amqp.vhost
+# overwritten for certain envs
+configatron.amqp.vhost = '/'
 
 unless (defined?(RUN_FROM_DISPATCHER) && RUN_FROM_DISPATCHER) || (defined?(PhusionPassenger) && Rails.env == 'production')
   # this starts the eventmachine reactor in a new thread
@@ -67,7 +68,6 @@ configatron.default_avatar = '/img/user_picture_r4.png'
 configatron.system_avatar = '/img/system_picture_r2.png'
 
 require 'net/ldap'
-
 require 'protonet_email_service'
 
 port_file_path = "#{Rails.root}/tmp/app_port_#{Rails.env}"

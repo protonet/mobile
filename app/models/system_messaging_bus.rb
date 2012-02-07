@@ -1,30 +1,27 @@
 class SystemMessagingBus
 
   class << self
-  
+    include Rabbit
+
     def queue(name)
-      @mq ||= MQ.new
-      @mq.queue(name)
+      amqp.queue(name)
     end
 
-    def topic(name) 
-      @mq ||= MQ.new
-      @mq.topic(name)
+    def topic(name)
+      amqp.topic(name)
     end
     
     def fanout(name)
-      @mq ||= MQ.new
-      @mq.fanout(name)
+      amqp.fanout(name)
     end
 
     def active?
-      @mq ||= MQ.new
       rabbit_mq_running = false
-      @mq.queue('testqueue').delete
-      @mq.queue('testqueue').subscribe{ |msg|
+      amqp.queue('testqueue').delete
+      amqp.queue('testqueue').subscribe do |msg|
         rabbit_mq_running = true
-      }
-      @mq.queue('testqueue').publish('ping')
+      end
+      amqp.queue('testqueue').publish('ping')
       sleep 1.5
       return rabbit_mq_running
     end

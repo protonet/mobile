@@ -213,7 +213,7 @@ module ConnectionShared
       
       send_json json if @socket_id && json["socket_id"] != @socket_id
     end
-  rescue MQ::Error => e
+  rescue AMQP::Error => e
     log("bind_socket_to_system_queue error: #{e.inspect}")
   end
 
@@ -235,7 +235,7 @@ module ConnectionShared
       send_json json if (!sender_socket_id || sender_socket_id.to_i != @socket_id)
     end
     @tracker.add_channel_subscription(@user.id, uuid)
-  rescue MQ::Error => e
+  rescue AMQP::Error => e
     log("bind_channel error: #{e.inspect} for #{channel.inspect}")
   end
   
@@ -260,7 +260,7 @@ module ConnectionShared
       end
       send_json json
     end
-  rescue MQ::Error => e
+  rescue AMQP::Error => e
     log("bind_channel_subscriptions error: " + e.inspect)
   end
 
@@ -269,7 +269,7 @@ module ConnectionShared
     @channel_file_queues[uuid] = bind 'files', 'channel', uuid do |json|
       send_json json
     end
-  rescue MQ::Error => e
+  rescue AMQP::Error => e
     log("bind_files_for_channel error: " + e.inspect)
   end
   
@@ -282,7 +282,7 @@ module ConnectionShared
     bind 'users', @user.id do |json|
       send_json json
     end
-  rescue MQ::Error => e
+  rescue AMQP::Error => e
     log("bind_user error: " + e.inspect)
   end
   
