@@ -16,7 +16,7 @@ class SystemCaptivePortal
 
     def list
       if config_check
-        client_list = `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access list`.strip
+        client_list = (`/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access list` || "").strip
         client_list.split("\n")
       else
         []
