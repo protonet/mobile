@@ -21,7 +21,7 @@ class UsersController < ApplicationController
     
     respond_to do |format|
       format.json do
-        render :json => users.map { |channel|
+        render :json => users.map { |user|
           next unless users_to_load.include?(user.id.to_s)
           User.prepare_for_frontend(user)
         }.compact

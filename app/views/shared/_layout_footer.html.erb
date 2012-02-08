@@ -45,6 +45,13 @@
   </section>
 </style>
 
+<%-
+  users = SystemPreferences.show_only_online_users ? [] : User.registered.all
+  channels = current_user.allowed_channels
+  
+  users.map!     {|u| User.prepare_for_frontend(u) }
+  channels.map!  {|c| Channel.prepare_for_frontend(c, current_user, false) }
+-%>
 <script>
   var protonet = protonet || {};
   protonet.config = {
@@ -64,7 +71,6 @@
     user_id:                    <%= current_user.id %>,
     user_name:                  <%= raw current_user.display_name.to_json %>,
     user_is_stranger:           <%= current_user.stranger?.to_json %>,
-    show_user_widget:           <%= SystemPreferences.show_user_widget.to_json %>,
     show_search_widget:         <%= SystemPreferences.show_search_widget.to_json %>,
     show_clouds:                <%= SystemPreferences.show_clouds.to_json %>,
     show_only_online_users:     <%= SystemPreferences.show_only_online_users.to_json %>,
@@ -74,8 +80,8 @@
     incoming_interface:         <%= raw incoming_interface.to_json %>,
     captive_redirect_url:       "<%= raw(params[:captive_redirect_url] || session[:captive_redirect_url]) %>",
     debug_mode:                 <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>,
-    channels:                   <%= raw @channels.map {|c| Channel.prepare_for_frontend(c, current_user, false) }.to_json %>,
-    users:                      <%= raw @users.map    {|u| User.prepare_for_frontend(u) }.to_json %>
+    channels:                   <%= raw channels.to_json %>,
+    users:                      <%= raw users.to_json %>
   };
   
   <%= "var AIRBRAKE_API_KEY = '#{HoptoadNotifier.configuration.api_key}';" if Rails.env.production? %>

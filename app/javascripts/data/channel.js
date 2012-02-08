@@ -118,7 +118,7 @@
       });
       
       if (!uncachedIds.length) {
-        options.success(result);
+        options.success(results);
       } else {
         $.ajax({
           dataType: "json",
@@ -171,6 +171,10 @@
 
     getIdByUuid: function(uuid) {
       return uuidToIdMapping[uuid];
+    },
+    
+    getUrl: function(id) {
+      return protonet.config.base_url + "/channels/" + id;
     },
 
     getIdByName: function(name, callback) {

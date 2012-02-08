@@ -9,7 +9,7 @@ authorization do
   end
   
   role :invitee do
-    has_permission_on :users, :to => [:show, :rendezvous, :update_last_read_meeps, :newbie]
+    has_permission_on :users, :to => [:show, :rendezvous, :update_last_read_meeps, :newbie, :channels]
     has_permission_on :channels do
       to [:show]
       if_attribute :users => contains {user}

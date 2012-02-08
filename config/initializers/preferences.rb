@@ -49,7 +49,6 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:browser_title] = "protonet - it's yours"
   SystemPreferences.defaults[:show_clouds] = true
   SystemPreferences.defaults[:show_search_widget] = true
-  SystemPreferences.defaults[:show_user_widget] = true
   SystemPreferences.defaults[:show_only_online_users] = false
   SystemPreferences.defaults[:default_registered_user_group] = "user"
   SystemPreferences.defaults[:default_stranger_user_group] = "guest"

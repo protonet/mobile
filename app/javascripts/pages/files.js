@@ -304,15 +304,27 @@ protonet.p("files", function($page, $window, $document) {
         return;
       }
       
-      files = sort.byName(files);
-      
-      $.each(files, function(i, info) {
-        var $item = this.item(info);
-        $item && $item.appendTo($tbody);
-      }.bind(this));
+      var that = this;
+      this.prepareFileData(files, function(files) {
+        files = sort.byName(files);
+        
+        $.each(files, function(i, file) {
+          var $item = that.item(file);
+          $item && $item.appendTo($tbody);
+        });
+      });
     },
     
-    info: function(fileData, data) {
+    item: function(file) {
+      var template = file.type + "-item-template",
+          $row = new protonet.utils.Template(template, file).to$();
+      
+      $row.data("file", file);
+      
+      return $row;
+    },
+    
+    info: function(file, data) {
       data = data || {};
       
       $fileList.hide();
@@ -327,69 +339,90 @@ protonet.p("files", function($page, $window, $document) {
         return;
       }
       
-      if (fileData.type === "missing") {
+      if (file.type === "missing") {
          ui.insertHint("This file doesn't seem to exist anymore");
          return;
       }
       
       this.removeHint();
       
-      fileData = this.prepareFileData(fileData);
-      
-      var $element = new protonet.utils.Template("file-details-template", fileData).to$();
-      $element.data("file", fileData);
-      
-      marker.set($element);
-      
-      $fileDetails.html($element);
-      
-      io.scan(fileData.path, function(isMalicious) {
-        var html;
-        if (isMalicious === true) {
-          html = "<span class='negative'>Caution, this file might be malware or a virus!</span>";
-        } else if (isMalicious === false) {
-          html = "<span class='positive'>no</span>";
-        } else {
-          html = "<span class='negative'>no virus scan available</span>";
-        }
+      this.prepareFileData(file, function(files) {
+        var file      = files[0],
+            $element  = new protonet.utils.Template("file-details-template", file).to$();
         
-        $fileDetails.find("output.virus-check").html(html);
+        $element.data("file", file);
+
+        marker.set($element);
+
+        $fileDetails.html($element);
+
+        io.scan(file.path, function(isMalicious) {
+          var html;
+          if (isMalicious === true) {
+            html = "<span class='negative'>Caution, this file might be malware or a virus!</span>";
+          } else if (isMalicious === false) {
+            html = "<span class='positive'>no</span>";
+          } else {
+            html = "<span class='negative'>no virus scan available</span>";
+          }
+
+          $fileDetails.find("output.virus-check").html(html);
+        });
       });
     },
     
-    item: function(info) {
-      var template = info.type + "-item-template",
-          fileData = this.prepareFileData(info),
-          $row = new protonet.utils.Template(template, fileData).to$();
+    prepareFileData: function(data, callback) {
+      var model, ids;
       
-      $row.data("file", fileData);
+      data = $.makeArray(data);
       
-      return $row;
-    },
-    
-    prepareFileData: function(data) {
-      var result = {
-        path:         utils.getAbsolutePath(data.name),
-        downloadPath: utils.getDownloadPath(data.name),
-        httpPath:     utils.getHttpPath(data.name),
-        name:         (data.display_name || data.name).truncate(70),
-        rawName:      data.name,
-        size:         protonet.utils.prettifyFileSize(data.size),
-        rawSize:      data.size,
-        modified:     protonet.utils.prettifyDate(data.modified),
-        rawModified:  data.modified,
-        mime:         data.mime
-      };
+      data = $.map(data, function(record) {
+        var result = {
+          path:         utils.getAbsolutePath(record.name),
+          downloadPath: utils.getDownloadPath(record.name),
+          httpPath:     utils.getHttpPath(record.name),
+          name:         record.name.truncate(70),
+          rawName:      record.name,
+          size:         protonet.utils.prettifyFileSize(record.size),
+          rawSize:      record.size,
+          modified:     protonet.utils.prettifyDate(record.modified),
+          rawModified:  record.modified,
+          mime:         record.mime,
+          type:         record.type
+        };
+
+        if (record.uploaded) {
+          result.rawUploaded = record.uploaded;
+          result.uploaded = protonet.utils.prettifyDate(record.uploaded);
+        }
+
+        result.uploaderId = record.uploader_id || -1;
+        result.uploaderName = protonet.data.User.getName(result.uploaderId) || ("user with id #" + record.uploader_id);
+
+        return result;
+      });
       
-      if (data.uploaded) {
-        result.rawUploaded = data.uploaded;
-        result.uploaded = protonet.utils.prettifyDate(data.uploaded);
+      if (currentPath === "/users/") {
+        model = protonet.data.User;
+      } else if (currentPath === "/channels/") {
+        model = protonet.data.Channel;
+      } else {
+        callback(data);
+        return;
       }
       
-      result.uploaderId = data.uploader_id || -1;
-      result.uploaderName = protonet.data.User.getName(result.uploaderId) || ("user with id #" + data.uploader_id);
+      ids = $.map(data, function(record) {
+        return record.type === "folder" ? record.rawName : null;
+      });
       
-      return result;
+      model.getAll(ids, function() {
+        $.each(data, function(i, record) {
+          if (record.type !== "folder") { return; }
+          record.rawName = model.getName(record.rawName) || record.rawName;
+          record.name = record.rawName.truncate(70);
+        });
+        callback(data);
+      });
     },
     
     insertHint: function(text) {

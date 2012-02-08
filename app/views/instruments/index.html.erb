@@ -36,17 +36,13 @@
   <div class="progress" id="timeline-loading"></div>
 </section>
 
-<%- if current_user.newbie? || !current_user.stranger? || SystemPreferences.show_user_widget %>
-  <aside class="side-content">
-    <%- if current_user.newbie? %>
-      <%= render(:partial => 'users/getting_started_admin') if current_user.first_admin? %>
-      <%= render(:partial => 'users/getting_started_user') unless current_user.first_admin? %>
-    <%- end %>
-    <%- unless current_user.stranger? %>
-      <%= render :partial => 'users/my_widget' %>
-    <%- end %>
-    <%- if SystemPreferences.show_user_widget -%>
-      <%= render :partial => 'users/user_widget' %>
-    <%- end -%>
-  </aside>
-<%- end %>
+<aside class="side-content">
+  <%- if current_user.newbie? %>
+    <%= render(:partial => 'users/getting_started_admin') if current_user.first_admin? %>
+    <%= render(:partial => 'users/getting_started_user') unless current_user.first_admin? %>
+  <%- end %>
+  <%- unless current_user.stranger? %>
+    <%= render :partial => 'users/my_widget' %>
+  <%- end %>
+  <%= render :partial => 'users/user_widget' %>
+</aside>

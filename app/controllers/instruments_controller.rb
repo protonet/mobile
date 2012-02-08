@@ -3,8 +3,6 @@ class InstrumentsController < ApplicationController
   before_filter :only_registered
   
   def index
-    @users = (SystemPreferences.show_only_online_users ? [] : User.registered.all).map {|user| User.prepare_for_frontend(user) }
-    @channels = current_user.allowed_channels
     @subscribed_channels = current_user.channels.verified.real
     render :layout => "instruments"
   end

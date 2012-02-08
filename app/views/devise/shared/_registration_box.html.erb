@@ -48,7 +48,7 @@
     <label>
       <%= f.password_field :password, :value => nil, :placeholder => "password", :id => "login_password" %>
     </label>
-    <label>
+    <label for="user_remember_me">
       <%= f.check_box :remember_me %> <span class="hint">Keep logged in?</span>
     </label>
     <button type="submit" name="commit">login</button>

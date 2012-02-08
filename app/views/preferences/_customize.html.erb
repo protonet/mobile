@@ -20,11 +20,6 @@
     <a class="hint" data-hover-hint="top" title="Whether users can search for messages">(?)</a>
   </div>
   <div class="form-field">
-    <%= hidden_field_tag 'preferences[show_user_widget]', false, {:id => nil}  %>
-    <%= label_tag 'preferences[show_user_widget]', 'Show user widget?' %> <%= check_box_tag 'preferences[show_user_widget]', true, SystemPreferences.show_user_widget %>
-    <a class="hint" data-hover-hint="top" title="Whether users should see who is currently online">(?)</a>
-  </div>
-  <div class="form-field">
     <%= hidden_field_tag 'preferences[show_only_online_users]', false, {:id => nil}  %>
     <%= label_tag 'preferences[show_only_online_users]', 'Show only online users' %> <%= check_box_tag 'preferences[show_only_online_users]', true, SystemPreferences.show_only_online_users %>
     <a class="hint" data-hover-hint="top" title="Whether offline users should be hidden in the user widget. Recommended if your node has a lot of users (> 1000)">(?)</a>
