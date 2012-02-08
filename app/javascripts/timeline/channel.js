@@ -409,6 +409,9 @@
      * in the browser's viewport
      */
     _initEndlessScroller: function() {
+      if (this.channelList.children().length < 25) {
+        return;
+      }
       var lastMeepInList = this.channelList.children(":last").addClass("separator");
 
       lastMeepInList.one("inview", function(event, visible) {

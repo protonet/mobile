@@ -11,13 +11,6 @@ process.argv.forEach(function(val){
   }
 });
 
-// var Hoptoad = require('./modules/node-hoptoad/hoptoad-notifier').Hoptoad;
-// Hoptoad.key = 'e0e395c06aa4a6756b5d585fee266999';
-
-// process.addListener('uncaughtException', function(error) {
-//   Hoptoad.notify(error);
-// });
-
 /*----------------------------------- SOCKET TASKS -----------------------------------*/
 var amqp = require('./modules/node-amqp/amqp');
 connection = amqp.createConnection({ host: "localhost", vhost: "/" });
@@ -39,15 +32,6 @@ connection.addListener("ready", function() {
     };
 
     switch(message.task) {
-      // example, remove for production
-      case "eval":
-        // just enable for testing
-        // publish(eval(message.javascript), "eval");
-        break;
-      case "screenshot":
-        // just enable for testing
-        // require("./tasks/screenshot").make_and_publish(message.url, publish);
-        break;
       case "http_proxy":
         console.log(message);
         require("./tasks/http_proxy").get(message.url, publish);
@@ -112,9 +96,7 @@ http.createServer(function(request, response) {
     case "image_proxy":
       require("./tasks/image_proxy").proxy(params, headers, response);
       break;
-    case "snapshooter":
-      require("./tasks/snapshot").save(request, response);
-      break;
+    case "fs/snapshot":
     case "fs/upload":
     case "fs/download":
     case "fs/display":

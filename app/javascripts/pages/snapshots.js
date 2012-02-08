@@ -2,6 +2,10 @@
 
 protonet.p("snapshots", function($page) {
   var photoUrl,
+      uploadUrl     = protonet.config.node_base_url
+        + "/fs/snapshot?token=" + encodeURIComponent(protonet.config.token)
+        + "&user_id="           + encodeURIComponent(protonet.config.user_id)
+        + "&user_name="         + encodeURIComponent(protonet.config.user_name);
       $container    = $page.find("output"),
       $urlInput     = $page.find("input"),
       $label        = $page.find("label"),
@@ -17,7 +21,7 @@ protonet.p("snapshots", function($page) {
   
   $snapButton.bind("click", function() {
     $snapButton.addClass("loading").prop("disabled", true);
-    webcam.snap(protonet.config.node_base_url + "/snapshooter", function(url) {
+    webcam.snap(uploadUrl, function(url) {
       $snapButton.removeClass("loading").prop("disabled", false);
       photoUrl = protonet.config.base_url + url;
       $label.css("display", "block");

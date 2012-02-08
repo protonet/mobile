@@ -267,9 +267,9 @@ a.close-link {
   font-size: 14px;
   color: #fff;
   text-align: center;
+  line-height: 23px;
   width: 24px;
   height: 24px;
-  line-height: 23px; /* for firefox */
   background: #000;
   border: 3px solid #fff;
   border-radius: 30px;
