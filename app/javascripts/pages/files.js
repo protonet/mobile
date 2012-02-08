@@ -452,8 +452,17 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     updateAddressBar: function() {
-      var pathParts   = currentPath.split("/"),
-          get$Element = function(name, path) {
+      var pathParts     = currentPath.split("/"),
+          isFolderPath  = currentPath.endsWith("/"),
+          get$Element   = function(name, path) {
+            if (path.match(/\/users\/\d+\//)) {
+              name = protonet.data.User.getName(name) || name;
+            }
+            
+            if (path.match(/\/channels\/\d+\//)) {
+              name = protonet.data.Channel.getName(name) || name;
+            }
+            
             if (path.endsWith("/")) {
               return $("<a>", {
                 "data-folder-path": path,
@@ -479,7 +488,7 @@ protonet.p("files", function($page, $window, $document) {
         path += part;
         
         // Don't add a slash at the end of file paths
-        if (pathParts[i + 1]) {
+        if (pathParts[i + 1] || isFolderPath) {
           path += "/";
         }
         $elements = $elements.add(get$Element(part, path));

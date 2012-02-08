@@ -17,6 +17,10 @@ protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
     return;
   }
   
+  if ($link.is(".disabled")) {
+    return;
+  }
+  
   protonet.on("channel.change", function(channelId) {
     if (protonet.data.Channel.isGlobal(channelId)) {
       $link.hide();

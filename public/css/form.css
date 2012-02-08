@@ -82,6 +82,11 @@ form.disabled #textarea-wrapper:after {
   background: transparent url(/img/spr_form_icons.png) no-repeat 0 0;
 }
 
+#textarea-wrapper [data-extension].disabled {
+  cursor: not-allowed;
+  opacity: 0.3 !important;
+}
+
 #textarea-wrapper menu [data-extension]:hover {
   opacity: 1;
 }

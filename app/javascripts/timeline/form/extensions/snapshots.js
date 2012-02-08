@@ -9,6 +9,10 @@ protonet.timeline.Form.extensions.Snapshots = function($input, $wrapper, $form) 
     return;
   }
   
+  if ($link.is(".disabled")) {
+    return;
+  }
+  
   function getCurrentTextExtension() {
     try {
       return JSON.parse($form.find("#text-extension-input").val());

@@ -54,23 +54,17 @@ protonet.ui.User = {
           window.open(url, "profile" + new Date().getTime());
         }
         closeContextMenu();
-      }.bind(this),
-      "send @reply": function(link, closeContextMenu) {
-        var user = this.usersData[link.data("user-id")] || (function() {
-          var meep = link.parents("li").data("meep");
-          return meep && { name: meep.author };
-        })();
-        if (user) {
-          protonet.trigger("form.create_reply", user.name);
-        }
+      },
+      "send @reply": function($link, closeContextMenu) {
+        protonet.trigger("form.create_reply", protonet.data.User.getName($link.data("user-id")));
         closeContextMenu();
-      }.bind(this),
-      "start private chat": function(link, closeContextMenu) {
+      },
+      "start private chat": function($link, closeContextMenu) {
         protonet
-          .trigger("rendezvous.start", +link.data("user-id"))
+          .trigger("rendezvous.start", +$link.data("user-id"))
           .trigger("modal_window.hide");
         closeContextMenu();
-      }.bind(this)
+      }
     };
     
     var contextMenu = new protonet.ui.ContextMenu("a[data-user-id]", contextOptions, "context-menu-users");

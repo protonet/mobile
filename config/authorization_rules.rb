@@ -10,6 +10,7 @@ authorization do
   
   role :invitee do
     has_permission_on :users, :to => [:show, :rendezvous, :update_last_read_meeps, :newbie, :channels]
+    has_permission_on :snapshots, :to => :index
     has_permission_on :channels do
       to [:show]
       if_attribute :users => contains {user}
@@ -24,6 +25,7 @@ authorization do
   
   role :user do
     has_permission_on :files, :to => [:read]
+    has_permission_on :snapshots, :to => :index
     has_permission_on :listens, :to => [:create]
     has_permission_on :listens do
       to [:read, :delete, :update]
@@ -49,6 +51,7 @@ authorization do
   
   role :admin do
     has_permission_on :files, :to => [:read]
+    has_permission_on :snapshots, :to => :index
     has_permission_on :channels, :to => [:manage, :manage_globals]
     has_permission_on :listens, :to => [:manage, :accept, :manage_globals, :create_for_user]
     has_permission_on :invitations, :to => :manage

@@ -140,12 +140,15 @@
     _render: function(template, container) {
       var replyFromChannelTemplate, postedInChannelTemplate, templateData,
           data = { meep: this.data, instance: this };
-
+      
       if (this.data.reply_from) {
-        replyFromChannelTemplate = new protonet.utils.Template("reply-from-channel-template", {
-          channel_id:   this.data.reply_from,
-          channel_name: protonet.data.Channel.getName(this.data.reply_from)
-        }).toString();
+        var channelName = protonet.data.Channel.getName(this.data.reply_from);
+        if (channelName) {
+          replyFromChannelTemplate = new protonet.utils.Template("reply-from-channel-template", {
+            channel_id:   this.data.reply_from,
+            channel_name: channelName
+          }).toString();
+        }
       }
 
       if (this.data.posted_in) {

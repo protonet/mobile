@@ -10,10 +10,18 @@
       <div id="textarea-wrapper-inner">
         <menu>
           <li data-extension="smiley" title="Insert emoticon" data-hover-hint="right">Insert emoticon</li>
-          <li data-extension="snapshot" title="Attach snapshot" data-hover-hint="right">Attach snapshot</li>
-          <%- if permitted_to?(:read, :files) -%>
-            <li data-extension="file" title="Attach file(s)" id="attach-file-extension" data-hover-hint="right">Attach file(s)</li>
-          <%- end -%>
+          <%- if permitted_to?(:index, :snapshots) %>
+            <li data-extension="snapshot" title="Attach snapshot" data-hover-hint="right">Attach snapshot</li>
+          <%- else -%>
+            <li data-extension="snapshot" title="Attach snapshot (you need to be logged in)" data-hover-hint="right" class="disabled">Attach snapshot</li>
+          <%- end %>
+          
+          <%- if permitted_to?(:read, :files) %>
+            <li data-extension="file" title="Attach files" id="attach-file-extension" data-hover-hint="right">Attach files</li>
+          <%- else -%>
+            <li data-extension="file" title="Attach files (you need to be logged in)" id="attach-file-extension" data-hover-hint="right" class="disabled">Attach files</li>
+          <%- end %>
+          
         </menu>
         <%= f.text_area(:message, :id => 'message', :placeholder => message_hint) %>
         <input type="submit" id="submit-message" value="" title="Send message [ENTER]">
