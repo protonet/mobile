@@ -10,6 +10,7 @@ protonet.p("files", function($page, $window, $document) {
       $fileList         = $page.find(".file-list"),
       $tableWrapper     = $page.find(".table-wrapper"),
       $tbody            = $page.find("tbody"),
+      viewerPath        = "/users/" + protonet.config.user_id + "/",
       currentPath       = $.trim($addressBar.text()) || "/",
       isModalWindow     = $(".modal-window").length > 0,
       $scrollContainer  = isModalWindow ? $(".modal-window > output") : $("body, html"),
@@ -23,24 +24,25 @@ protonet.p("files", function($page, $window, $document) {
   
   // --------------------------------- UTILS --------------------------------- \\
   var utils = {
-    getAbsolutePath: function(path) {
-      if (path.startsWith("/")) {
-        return path;
+    getAbsolutePath: function(record) {
+      if (!record) {
+        return currentPath;
       }
-      
       var folderPath = currentPath.replace(/[^\/]+$/, "");
-      
-      return folderPath + path;
+      return folderPath + record.name + (record.type === "folder" ? "/" : "");
     },
     
-    getHttpPath: function(name) {
-      var path = this.getAbsolutePath(name);
+    getHttpPath: function(record) {
+      if (currentPath === "/") {
+        return "/files";
+      }
+      var path = this.getAbsolutePath(record);
       return "/files/?path=" + encodeURIComponent(path);
     },
     
-    getDownloadPath: function(name) {
+    getDownloadPath: function(record) {
       return protonet.config.node_base_url +
-        "/fs/download/?paths=" + encodeURIComponent(this.getAbsolutePath(name)) +
+        "/fs/download/?paths=" + encodeURIComponent(this.getAbsolutePath(record)) +
         "&user_id="            + encodeURIComponent(protonet.config.user_id) + 
         "&token="              + encodeURIComponent(protonet.config.token);
     }
@@ -323,6 +325,10 @@ protonet.p("files", function($page, $window, $document) {
       
       $row.data("file", file);
       
+      if (file.path === viewerPath) {
+        $row.addClass("myself");
+      }
+      
       return $row;
     },
     
@@ -380,9 +386,9 @@ protonet.p("files", function($page, $window, $document) {
       
       data = $.map(data, function(record) {
         var result = {
-          path:         utils.getAbsolutePath(record.name),
-          downloadPath: utils.getDownloadPath(record.name),
-          httpPath:     utils.getHttpPath(record.name),
+          path:         utils.getAbsolutePath(record),
+          downloadPath: utils.getDownloadPath(record),
+          httpPath:     utils.getHttpPath(record),
           name:         record.name.truncate(70),
           rawName:      record.name,
           size:         protonet.utils.prettifyFileSize(record.size),
@@ -545,7 +551,7 @@ protonet.p("files", function($page, $window, $document) {
       
       $addressBar.html($elements);
       
-      if (currentPath.startsWith("/users/" + protonet.config.user_id + "/")) {
+      if (currentPath.startsWith(viewerPath)) {
         protonet.ui.Header.select("files", "my");
       } else {
         protonet.ui.Header.select("files", "index");
@@ -561,7 +567,7 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     push: function() {
-      var url = currentPath === "/" ? "/files" : utils.getHttpPath(currentPath);
+      var url = utils.getHttpPath();
       protonet.utils.History.push(url);
     },
     
