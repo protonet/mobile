@@ -16,3 +16,6 @@
 [submodule "node/modules/jsdom"]
 	path = node/modules/jsdom
 	url = git://github.com/tmpvar/jsdom.git
+[submodule "node/modules/iconv-lite"]
+	path = node/modules/iconv-lite
+	url = git://github.com/ashtuchkin/iconv-lite.git
