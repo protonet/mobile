@@ -2,7 +2,7 @@ var http = require('http'),
   https = require('https'),
   u = require('url'),
   zlib = require('zlib'),
-  iconv = require('./iconv-lite');
+  iconv = require('iconv-lite');
 
 /**
  * prepare options the input parameters for get()
@@ -85,8 +85,7 @@ function _get(options, callback, reqId){
     client = https
   }
   
-  // TODO: Content-Type abbrechen bei nicht text/html
-  // TODO: invalid html  
+  // TODO: abort request if Content-Type is not text/html
   
   var request = client.get(params.httpOptions);
   
@@ -94,7 +93,7 @@ function _get(options, callback, reqId){
         
     switch (response.statusCode) {
       case 200: // success
-        
+                
         var charset = /charset=(.+)/.exec(response.headers["content-type"]),
           unzip = zlib.createUnzip(),
           buf = '';
