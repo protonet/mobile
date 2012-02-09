@@ -16,3 +16,6 @@
 [submodule "node/modules/iconv-lite"]
 	path = node/modules/iconv-lite
 	url = git://github.com/ashtuchkin/iconv-lite.git
+[submodule "node/modules/html5"]
+	path = node/modules/html5
+	url = git://github.com/aredridel/html5.git
