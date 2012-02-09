@@ -184,13 +184,13 @@ function _get(options, callback, reqId){
         var err = new Error('HTTP Error: ' + Number(response.statusCode));
         err.code = response.statusCode;
         err.headers = response.headers;
-        callback(err);
+        callback(err, null);
       break;
     }
   });
   
   request.on('error', function(e){
-    console.log("Got error: " + e.message);
+    callback(e, null);
   });
   
 }
