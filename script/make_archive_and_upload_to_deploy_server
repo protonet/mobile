@@ -206,3 +206,7 @@ rm /tmp/$BABUSHKA_BASE_ARCHIVE
 rm /tmp/$BABUSHKA_ARCHIVE
 rm /tmp/$DEPLOYER_ARCHIVE
 rm /tmp/$BABUSHKA_DEPS_ARCHIVE
+
+# and back and fetch the new tag
+cd $PROJECT_DIR
+git fetch --tags
