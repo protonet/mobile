@@ -38,6 +38,7 @@ protonet.data.MetaData = {
     data.title = response.title && response.title[0].content;
     
     var metaTags = response.meta || [];
+    var linkTags = response.link || [];
     
     // handle meta elements
     $.each(metaTags, function(i, metaTag) {
@@ -47,6 +48,7 @@ protonet.data.MetaData = {
         data[name] = content;
       }
     }.bind(this));
+    
     
     // handle opengraph meta tags
     $.each(metaTags, function(i, metaTag) {
@@ -63,15 +65,16 @@ protonet.data.MetaData = {
     });
     
     // handle link elements
-    $.each(response.link, function(i, linkTag) {
+    $.each(linkTags, function(i, linkTag) {
       if (linkTag && typeof(linkTag.href) == "string" && linkTag.href.length && $.inArray(linkTag.rel, this.LINK_REL) != -1) {
         var src = $.trim(linkTag.href),
           name = linkTag.rel.toLowerCase();
         if (data[name]) { return true};
-        
+
         data[name] = protonet.utils.convertToAbsoluteUrl(src, url);
       }
     }.bind(this));
+
     
     onSuccess(data);
   }
