@@ -1,5 +1,5 @@
-var HTML5 = require("./../modules/html5"),
-  jsdom = require("./../modules/jsdom");
+var HTML5 = require("html5"),
+  jsdom = require("jsdom");
 
 function stripScriptTags(body){
   // remove all Script tags;
