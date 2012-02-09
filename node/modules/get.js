@@ -85,15 +85,21 @@ function _get(options, callback, reqId){
     client = https
   }
   
-  // TODO: abort request if Content-Type is not text/html
+  // TODO: Add Timeout or max body length
   
   var request = client.get(params.httpOptions);
   
   request.on('response', function(response){
         
-    switch (response.statusCode) {
+    switch (response.statusCode) { 
       case 200: // success
-                
+      
+        var contentType = /text\/html/.exec(response.headers["content-type"]);
+        if (!contentType) {
+          callback("Pages content-type does not look like a Webpage", null);
+          return;
+        };
+        
         var charset = /charset=(.+)/.exec(response.headers["content-type"]),
           unzip = zlib.createUnzip(),
           buf = '';
