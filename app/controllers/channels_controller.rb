@@ -25,7 +25,7 @@ class ChannelsController < ApplicationController
         render :json => channels.map { |channel|
           next unless channels_to_load.include?(channel.id.to_s)
           include_meeps = params[:include_meeps] && current_user.subscribed?(channel)
-          Channel.prepare_for_frontend(channel, current_user, include_meeps)
+          Channel.prepare_for_frontend(channel, include_meeps)
         }.compact
       end
     end

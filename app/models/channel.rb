@@ -82,7 +82,8 @@ class Channel < ActiveRecord::Base
     all(:select => :name).map {|c| c.name.downcase }
   end
   
-  def self.prepare_for_frontend(channel, current_user, include_meeps)
+  def self.prepare_for_frontend(channel, include_meeps=false)
+    display_name = 
     obj = {
       :id               => channel.id,
       :uuid             => channel.uuid,
@@ -91,7 +92,7 @@ class Channel < ActiveRecord::Base
       :rendezvous       => channel.rendezvous,
       :system           => channel.system?,
       :name             => channel.name,
-      :display_name     => channel.rendezvous_name(current_user) || channel.display_name,
+      :display_name     => channel.display_name,
       :last_read_meep   => (channel.last_read_meep rescue nil),
       :listen_id        => (channel.listen_id rescue nil)
     }
@@ -203,13 +204,7 @@ class Channel < ActiveRecord::Base
   def rendezvous_participants
     rendezvous ? rendezvous.split(':').map { |id| User.find(id) } : []
   end
-  
-  def rendezvous_name(current_user)
-    return nil unless rendezvous?
-    user_id = rendezvous.split(':').find { |id| id.to_i != current_user.id }
-    User.find(user_id).display_name rescue 'stranger'
-  end
-  
+    
   def random_users(amount=5)
     users.registered.all(:order => 'rand()', :limit => amount)
   end
@@ -220,11 +215,6 @@ class Channel < ActiveRecord::Base
     end
     
     def send_channel_notification
-      publish "system", "channels", {
-        :trigger      => 'channel.added',
-        :name         => self.name,
-        :id           => self.id,
-        :uuid         => self.uuid
-      }
+      publish "system", "channels", Channel.prepare_for_frontend(self).merge(:trigger => 'channel.added')
     end
 end

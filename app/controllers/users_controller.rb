@@ -56,7 +56,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.json do
         render :json => channels.map { |channel|
-          Channel.prepare_for_frontend(channel, current_user, true) if channels_to_load.include?(channel.id.to_s) || channel.has_unread_meeps
+          Channel.prepare_for_frontend(channel, true) if channels_to_load.include?(channel.id.to_s) || channel.has_unread_meeps
         }.compact
       end
     end

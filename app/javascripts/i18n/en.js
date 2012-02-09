@@ -50,5 +50,6 @@ protonet.i18n = {
   SOFTWARE_UPDATE_SUCCESSFUL: "<h3>Congrats, the software update was successful</h3>All services are going down for reboot now. Please wait a few more seconds. You will then be redirected to the home page.",
   UPLOAD_SUCCESSFUL: "All files have been successfully uploaded.",
   USERS_IN_REMOTE_CHANNEL: 'Online users <a data-hover-hint="top" title="Only online users are displayed in global channels">(?)</a>',
-  USERS_IN_NORMAL_CHANNEL: "Users"
+  USERS_IN_NORMAL_CHANNEL: "Users",
+  SHARED_BETWEEN_YOU_AND_USER: "shared between <strong>you</strong> and <strong>#{user_name}</strong>"
 };

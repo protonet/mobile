@@ -138,6 +138,9 @@ protonet.ui.User.Widget = {
   
   filter: function(channelId) {
     channelId                 = Number(channelId) || protonet.timeline.Channels.selected;
+    if (!channelId) {
+      return;
+    }
     
     var channelSubscriptions  = protonet.data.Channel.getSubscriptions(channelId),
         isGlobalChannel       = protonet.data.Channel.isGlobal(channelId);

@@ -68,12 +68,7 @@
     renderTab: function($super, container) {
       $super(container);
       
-      var isPartnerOnline = protonet.data.User.isOnline(this.partner);
       this.link.addClass("rendezvous");
-      
-      if (isPartnerOnline) {
-        this.link.addClass("online");
-      }
       
       this.hideLink = $("<span>", {
         "class":  "hide-link",
@@ -88,6 +83,14 @@
       if (!isActive(this.data.id) && !hasUnreadMeeps) {
         this.tab.hide();
       }
+      
+      protonet.data.User.get(this.partner, function(user) {
+        this.link.text(user.name);
+        
+        if (user.isOnline) {
+          this.link.addClass("online");
+        }
+      }.bind(this));
       
       return this;
     },

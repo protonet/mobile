@@ -13,6 +13,8 @@ protonet.p("files", function($page, $window, $document) {
       currentPath       = $.trim($addressBar.text()) || "/",
       isModalWindow     = $(".modal-window").length > 0,
       $scrollContainer  = isModalWindow ? $(".modal-window > output") : $("body, html"),
+      REG_EXP_CHANNELS  = /\/channels\/\d+\//,
+      REG_EXP_USERS     = /\/users\/\d+\//,
       KEY_UP            = 38,
       KEY_TAB           = 9,
       KEY_DOWN          = 40,
@@ -286,7 +288,7 @@ protonet.p("files", function($page, $window, $document) {
       $fileDetails.hide();
       $tbody.empty();
       
-      this.updateAddressBar();
+      addressBar.update();
       this.removeHint();
       
       if (data.status == "error") {
@@ -332,7 +334,7 @@ protonet.p("files", function($page, $window, $document) {
       
       $scrollContainer.scrollTop(0);
       
-      this.updateAddressBar();
+      addressBar.update();
       
       if (data.status == "error") {
         this.showError(data);
@@ -397,7 +399,7 @@ protonet.p("files", function($page, $window, $document) {
         }
 
         result.uploaderId = record.uploader_id || -1;
-        result.uploaderName = protonet.data.User.getName(result.uploaderId) || ("user with id #" + record.uploader_id);
+        result.uploaderName = protonet.data.User.getName(result.uploaderId) || ("user (#" + record.uploader_id + ")");
 
         return result;
       });
@@ -416,10 +418,22 @@ protonet.p("files", function($page, $window, $document) {
       });
       
       model.getAll(ids, function() {
-        $.each(data, function(i, record) {
-          if (record.type !== "folder") { return; }
-          record.rawName = model.getName(record.rawName) || record.rawName;
-          record.name = record.rawName.truncate(70);
+        $.each(data, function(i, file) {
+          if (file.type !== "folder") { return; }
+          
+          var record = model.getCache()[file.rawName] || {};
+          if (record.rendezvousPartner) {
+            var userName = (protonet.data.User.getName(record.rendezvousPartner) || "user (# " + record.rendezvousPartner + ")")
+            userName = userName.truncate(20);
+            file.name = protonet.t("SHARED_BETWEEN_YOU_AND_USER", {
+              user_name: userName
+            });
+            file.rawName = record.name;
+            file.rendezvousFolder = true;
+          } else {
+            file.rawName = record.name || file.rawName;
+            file.name = file.rawName.truncate(70);
+          }
         });
         callback(data);
       });
@@ -451,32 +465,67 @@ protonet.p("files", function($page, $window, $document) {
       this.resizeFileArea();
     },
     
-    updateAddressBar: function() {
-      var pathParts     = currentPath.split("/"),
-          isFolderPath  = currentPath.endsWith("/"),
-          get$Element   = function(name, path) {
-            if (path.match(/\/users\/\d+\//)) {
-              name = protonet.data.User.getName(name) || name;
-            }
-            
-            if (path.match(/\/channels\/\d+\//)) {
-              name = protonet.data.Channel.getName(name) || name;
-            }
-            
-            if (path.endsWith("/")) {
-              return $("<a>", {
-                "data-folder-path": path,
-                text: name
+    showError: function(data) {
+      var error = data.error,
+          errorMessage;
+      switch (error) {
+        case "Rpc::AccessDeniedError":
+          errorMessage = "You don't have access to this file or folder";
+          break;
+        default:
+          errorMessage = "Unknown error. Please try again.";
+      }
+
+      protonet.trigger("flash_message.error", errorMessage);
+    }
+  };
+  
+  
+  // --------------------------------- HISTORY --------------------------------- \\
+  var addressBar = {
+    create$Element: function(name, path) {
+      var isFolder = path.endsWith("/"), $element, model;
+      
+      if (isFolder) {
+        $element = $("<a>", {
+          "data-folder-path": path,
+          text: name
+        });
+        
+        if (path.match(REG_EXP_USERS)) {
+          model = protonet.data.User;
+        } else if (path.match(REG_EXP_CHANNELS)) {
+          model = protonet.data.Channel;
+        }
+        
+        if (model) {
+          model.get(name, function(record) {
+            var displayName;
+            if (record.rendezvousPartner) {
+              displayName = protonet.t("SHARED_BETWEEN_YOU_AND_USER", {
+                user_name: (protonet.data.User.getName(record.rendezvousPartner) || "user (# " + record.rendezvousPartner + ")")
               });
             } else {
-              return $("<a>", {
-                "data-file-path": path,
-                text: name
-              });
+              displayName = record.name;
             }
-          },
-          $elements   = get$Element("protonet", "/"),
-          path        = "/";
+            $element.html(displayName);
+          });
+        }
+      } else {
+        $element = $("<a>", {
+          "data-file-path": path,
+          text: name
+        });
+      }
+      
+      return $element;
+    },
+    
+    update: function() {
+      var pathParts     = currentPath.split("/"),
+          isFolderPath  = currentPath.endsWith("/"),
+          $elements     = this.create$Element("protonet", "/"),
+          path          = "/";
       
       history.push();
       
@@ -491,8 +540,8 @@ protonet.p("files", function($page, $window, $document) {
         if (pathParts[i + 1] || isFolderPath) {
           path += "/";
         }
-        $elements = $elements.add(get$Element(part, path));
-      });
+        $elements = $elements.add(this.create$Element(part, path));
+      }.bind(this));
       
       $addressBar.html($elements);
       
@@ -501,20 +550,6 @@ protonet.p("files", function($page, $window, $document) {
       } else {
         protonet.ui.Header.select("files", "index");
       }
-    },
-    
-    showError: function(data) {
-      var error = data.error,
-          errorMessage;
-      switch (error) {
-        case "Rpc::AccessDeniedError":
-          errorMessage = "You don't have access to this file or folder";
-          break;
-        default:
-          errorMessage = "Unknown error. Please try again.";
-      }
-
-      protonet.trigger("flash_message.error", errorMessage);
     }
   };
   
@@ -631,20 +666,26 @@ protonet.p("files", function($page, $window, $document) {
   var sort = {
     byName: function(fileList) {
       var current,
-          folders = [],
-          files   = [],
-          i       = 0,
-          length  = fileList.length;
+          folders           = [],
+          rendezvousFolders = []
+          files             = [],
+          i                 = 0,
+          length            = fileList.length;
       
       for (; i<length; i++) {
         current = fileList[i];
-        current.type === "folder" ? folders.push(current) : files.push(current);
+        if (current.type === "folder") {
+          current.rendezvousFolder ? rendezvousFolders.push(current) : folders.push(current);
+        } else {
+          files.push(current);
+        }
       }
       
       this._byName(folders);
+      this._byName(rendezvousFolders);
       this._byName(files);
       
-      return folders.concat(files);
+      return folders.concat(rendezvousFolders).concat(files);
     },
     
     _byName: function(arr) {

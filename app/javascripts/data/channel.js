@@ -16,6 +16,12 @@
     idToNameMapping[data.id]                   = data.name;
     idToUuidMapping[data.id]                   = data.uuid;
     uuidToIdMapping[data.uuid]                 = data.id;
+    
+    if (data.rendezvous) {
+      var rendezvousArr = data.rendezvous.split(":");
+      data.rendezvousPartner = +(rendezvousArr[0] == protonet.config.user_id ? rendezvousArr[1] : rendezvousArr[0]);
+    }
+    
     protonet.trigger("channel.data_available", data);
   }
 

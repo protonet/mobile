@@ -50,7 +50,7 @@
   channels = current_user.allowed_channels
   
   users.map!     {|u| User.prepare_for_frontend(u) }
-  channels.map!  {|c| Channel.prepare_for_frontend(c, current_user, false) }
+  channels.map!  {|c| Channel.prepare_for_frontend(c) }
 -%>
 <script>
   var protonet = protonet || {};
