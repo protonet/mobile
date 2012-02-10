@@ -13,6 +13,7 @@ var sys                 = require("sys"),
     formidable          = require('../modules/node-formidable'),
     lookup_mime         = require('../modules/node-mime').lookup,
 
+    RAILS_SESSION_KEY   = "_rails_dashboard_session",
     FILES_DIR           = "./tmp/development/shared/files/",
     USERS_DIR           = FILES_DIR + "/users/",
     CHANNELS_DIR        = FILES_DIR + "/channels/",
@@ -24,6 +25,19 @@ var sys                 = require("sys"),
     next_seq            = 0,
     queue,
     exchange;
+
+function parseCookie(cookieStr) {
+  var cookieObj = {};
+  cookieStr.split(";").forEach(function(cookie) {
+    var parts = cookie.split("=");
+    cookieObj[parts[0].trim()] = unescape(parts[1] || "").trim();
+  });
+  return cookieObj;
+}
+
+function getSessionId(request) {
+  return parseCookie(request.headers.cookie)[RAILS_SESSION_KEY];
+}
 
 exports.bind = function(amqpConnection) {
   queue    = amqpConnection.queue("node-fs-http");
@@ -43,8 +57,6 @@ exports.bind = function(amqpConnection) {
     
     switch (message.action) {
       case 'upload':
-        console.log("--------------------------------");
-        console.log(message.params.user_id);
         var userDirectory = USERS_DIR + message.params.user_id + '/';
 
         try { fs.mkdirSync(userDirectory); } catch (e) {}
@@ -135,7 +147,7 @@ exports.bind = function(amqpConnection) {
         }
         break;
       case "view":
-        
+        break;
     }
   });
 };
@@ -153,7 +165,7 @@ exports.upload = function(request, response) {
     response.end();
     return;
   }
-
+  
   form
     .on('field', function(field, value) {
       fields[field] = value;
@@ -165,9 +177,11 @@ exports.upload = function(request, response) {
       next_seq += 1;
       responses[next_seq] = response;
       
+      fields.session_id = getSessionId(request);
+      
       exchange.publish("rpc.requests", {
         object: 'auth',
-        method: 'check_token',
+        method: 'check_session',
         params: fields,
         action: 'upload',
         files:  files,
@@ -186,11 +200,12 @@ exports.snapshot = function(request, response) {
   next_seq += 1;
   responses[next_seq] = response;
   
-  var data    = "",
-      params  = url.parse(request.url, true);
-      path    = "/tmp/snapshot_" + new Date().getTime() + ".jpg",
-      name    = "snapshot/Snapshot by " + params.query.user_name + " " + new Date() + ".jpg",
-      tmpFile = fs.createWriteStream(path);
+  var data      = "",
+      parsedUrl = url.parse(request.url, true),
+      params    = parsedUrl.query,
+      path      = "/tmp/snapshot_" + new Date().getTime() + ".jpg",
+      name      = "snapshot/Snapshot by " + parsedUrl.user_name + " " + new Date() + ".jpg",
+      tmpFile   = fs.createWriteStream(path);
   
   request.on("data", function(chunk) {
     tmpFile.write(chunk);
@@ -199,10 +214,12 @@ exports.snapshot = function(request, response) {
   request.on("end", function() {
     tmpFile.end();
     
+    params.session_id = getSessionId(request);
+    
     exchange.publish("rpc.requests", {
       object: 'auth',
-      method: 'check_token',
-      params: params.query,
+      method: 'check_session',
+      params: params,
       action: 'upload',
       files:  [{ name: name, path: path }],
       seq:    next_seq
