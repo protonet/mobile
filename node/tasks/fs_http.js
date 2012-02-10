@@ -4,6 +4,10 @@ var sys                 = require("sys"),
     path                = require('path'),
     url                 = require('url'),
     spawn               = require('child_process').spawn,
+    
+    // Files that can be accessed directly
+    viewableFiles       = ["text/plain", "image/*", "video/*", "audio/*", "application/pdf", "application/x-shockwave-flash"],
+    viewableFilesViaXHR = ["text/*", "application/xml", "application/json"],
 
     amqp                = require('../modules/node-amqp/amqp'),
     formidable          = require('../modules/node-formidable'),
@@ -39,6 +43,8 @@ exports.bind = function(amqpConnection) {
     
     switch (message.action) {
       case 'upload':
+        console.log("--------------------------------");
+        console.log(message.params.user_id);
         var userDirectory = USERS_DIR + message.params.user_id + '/';
 
         try { fs.mkdirSync(userDirectory); } catch (e) {}
@@ -128,6 +134,8 @@ exports.bind = function(amqpConnection) {
           response.end("error: " + ex);
         }
         break;
+      case "view":
+        
     }
   });
 };

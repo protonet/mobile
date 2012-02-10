@@ -76,7 +76,6 @@
     show_only_online_users:     <%= SystemPreferences.show_only_online_users.to_json %>,
     allow_modal_views:          <%= SystemPreferences.allow_modal_views.to_json %>,
     authenticity_token:         "<%= form_authenticity_token %>",
-    server:                     "<%= request.server_software %>",
     incoming_interface:         <%= raw incoming_interface.to_json %>,
     captive_redirect_url:       "<%= raw(params[:captive_redirect_url] || session[:captive_redirect_url]) %>",
     debug_mode:                 <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>,

@@ -72,7 +72,10 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
       if (win.XDomainRequest) {
         this.ajax = new win.XDomainRequest();
         this.ajax.onprogress = function() {
-          abortOldRequest();
+          if (this.ajax.readyState >= 3) {
+            abortOldRequest();
+          }
+          
           if (connected === undef) {
             connected = true;
             protonet.trigger("socket.connected", connected);
@@ -95,7 +98,9 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
       } else {
         this.ajax = new win.XMLHttpRequest();
         this.ajax.onreadystatechange = function() {
-          abortOldRequest();
+          if (this.ajax.readyState >= 3) {
+            abortOldRequest();
+          }
           
           if (this.ajax.readyState >= 3 && connected === undef) {
             connected = (this.ajax.status === 200);
