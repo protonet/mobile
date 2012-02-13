@@ -93,8 +93,7 @@ function _get(options, callback, reqId){
         
     switch (response.statusCode) { 
       case 200: // success
-      
-        var contentType = /text\/html/.exec(response.headers["content-type"]);
+        var contentType = /text\/html|application\/xhtml\+xml/.exec(response.headers["content-type"]);
         if (!contentType) {
           callback("Pages content-type does not look like a Webpage", null);
           return;
