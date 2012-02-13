@@ -49,7 +49,7 @@ module System
           end
         else
           flash[:error] = "Please contact the frontdesk / the administrator for internet access."
-          redirect_to :root
+          redirect_to "/?captive_authorization_denied=1"
         end
 
       else
