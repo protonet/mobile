@@ -14,9 +14,9 @@ var sys                 = require("sys"),
     lookup_mime         = require('../modules/node-mime').lookup,
 
     RAILS_SESSION_KEY   = "_rails_dashboard_session",
-    FILES_DIR           = "./tmp/development/shared/files/",
-    USERS_DIR           = FILES_DIR + "/users/",
-    CHANNELS_DIR        = FILES_DIR + "/channels/",
+    FILES_DIR           = "./tmp/development/shared/files",
+    USERS_DIR           = FILES_DIR + "/users",
+    CHANNELS_DIR        = FILES_DIR + "/channels",
     
     virusScanCache      = {},
     virusScanResponder  = {},
@@ -57,12 +57,11 @@ exports.bind = function(amqpConnection) {
     
     switch (message.action) {
       case 'upload':
-        var userDirectory = USERS_DIR + message.params.user_id + '/';
-
+        var userDirectory = USERS_DIR + "/" + message.params.user_id;
         try { fs.mkdirSync(userDirectory); } catch (e) {}
         
         var userFiles = message.files.map(function(file) {
-          var newFilePath = userDirectory + file.name;
+          var newFilePath = userDirectory + "/" + file.name;
           
           delete virusScanCache[newFilePath];
           
@@ -73,12 +72,12 @@ exports.bind = function(amqpConnection) {
         });
         
         if (message.params.channel_id) {
-          var channelDirectory = CHANNELS_DIR + message.params.channel_id + '/';
+          var channelDirectory = CHANNELS_DIR + "/" + message.params.channel_id;
           
           try { fs.mkdirSync(channelDirectory); } catch (e) {}
           
           userFiles.forEach(function(file) {
-            var channelFilePath = channelDirectory + file.name,
+            var channelFilePath = channelDirectory + "/" + file.name,
                 symlink         = path.relative(path.dirname(channelFilePath), file.path);
             delete virusScanCache[channelFilePath];
             try { fs.symlink(symlink, channelFilePath); } catch(e) {}
@@ -200,11 +199,10 @@ exports.snapshot = function(request, response) {
   next_seq += 1;
   responses[next_seq] = response;
   
-  var data      = "",
-      parsedUrl = url.parse(request.url, true),
+  var parsedUrl = url.parse(request.url, true),
       params    = parsedUrl.query,
       path      = "/tmp/snapshot_" + new Date().getTime() + ".jpg",
-      name      = "snapshot/Snapshot by " + parsedUrl.user_name + " " + new Date() + ".jpg",
+      name      = "Snapshot by " + params.user_name + " " + new Date().getTime() + ".jpg",
       tmpFile   = fs.createWriteStream(path);
   
   request.on("data", function(chunk) {

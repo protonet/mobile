@@ -4,6 +4,7 @@ protonet.p("snapshots", function($page) {
   var photoUrl,
       uploadUrl     = protonet.config.node_base_url
         + "/fs/snapshot?token=" + encodeURIComponent(protonet.config.token)
+        + "&user_name="         + encodeURIComponent(protonet.config.user_name)
         + "&user_id="           + encodeURIComponent(protonet.config.user_id);
       $container    = $page.find("output"),
       $urlInput     = $page.find("input"),

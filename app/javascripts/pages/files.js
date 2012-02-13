@@ -405,7 +405,7 @@ protonet.p("files", function($page, $window, $document) {
         }
 
         result.uploaderId = record.uploader_id || -1;
-        result.uploaderName = protonet.data.User.getName(result.uploaderId) || ("user (#" + record.uploader_id + ")");
+        result.uploaderName = protonet.data.User.getName(result.uploaderId) || ("user #" + record.uploader_id);
 
         return result;
       });
@@ -429,7 +429,7 @@ protonet.p("files", function($page, $window, $document) {
           
           var record = model.getCache()[file.rawName] || {};
           if (record.rendezvousPartner) {
-            var userName = (protonet.data.User.getName(record.rendezvousPartner) || "user (# " + record.rendezvousPartner + ")")
+            var userName = (protonet.data.User.getName(record.rendezvousPartner) || "user # " + record.rendezvousPartner)
             userName = userName.truncate(20);
             file.name = protonet.t("SHARED_BETWEEN_YOU_AND_USER", {
               user_name: userName
