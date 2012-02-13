@@ -40,7 +40,6 @@
       server:                     "<%= request.server_software %>",
       incoming_interface:         <%= raw incoming_interface.to_json %>,
       captive_redirect_url:       "<%= raw(params[:captive_redirect_url] || session[:captive_redirect_url]) %>",
-      captive_authorization_url:  <%= raw(SystemPreferences.captive_authorization_url.nil? ? "undefined" : "\"#{SystemPreferences.captive_authorization_url}\"") %>,
       debug_mode:                 <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>
     };
     

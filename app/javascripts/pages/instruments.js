@@ -38,16 +38,5 @@ $(function() {
         'Get internet access</a>'
       );
     }
-  }
-
-  // there has been an error with the users internet access rights
-  if (protonet.config.captive_authorization_url && location.search.match(/captive_authorization_denied/)) {
-      new protonet.ui.Overlay(
-        "<h4>Hi " + protonet.config.user_name + ",</h4>" +
-        "<br>you're access rights could not be verified, please visit this page: " +
-        '<a class="button close" data-avoid-ajax="1" href="' + protonet.config.captive_authorization_url.match(/http:\/\/.*\//)[0] + '" target="_blank">' +
-        'Check access rights</a>'
-      );
-  }
-  
+  }  
 });

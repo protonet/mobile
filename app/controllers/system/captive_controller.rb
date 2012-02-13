@@ -36,9 +36,9 @@ module System
     end
   
     def login
-      if SystemPreferences.captive_authorization_url
-
-        if Net::HTTP.get_response(URI.parse(SystemPreferences.captive_authorization_url + "&nickname=#{current_user.login}")).code == "200"
+      if !SystemPreferences.captive_authorization_url.nil?
+        auth_url = SystemPreferences.captive_authorization_url + "&nickname=#{CGI.escape(current_user.login)}&email=#{CGI.escape(current_user.email)}"
+        if Net::HTTP.get_response(URI.parse(auth_url)).code == "200"
           SystemBackend.grant_internet_access(request.remote_ip, (@current_user.try(:login) || "n_a"))
           sleep 10
           if params[:captive_redirect_url]
@@ -49,7 +49,7 @@ module System
           end
         else
           flash[:error] = "Please contact the frontdesk / the administrator for internet access."
-          redirect_to "/?captive_authorization_denied=1"
+          redirect_to auth_url.gsub("check_in?token=CVFEZFZM6A7KaJ&", "?")
         end
 
       else
