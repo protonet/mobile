@@ -12,10 +12,15 @@
 # end
 #
 
-set(:output, "#{configatron.shared_file_path}/log/cron.log") unless configatron.shared_file_path.nil?
+# set(:output, "#{configatron.shared_file_path}/log/cron.log") unless configatron.shared_file_path.nil?
+set(:output, "~/dashboard/shared/log/cron.log")
 
 every 4.days do
   runner "User.delete_strangers_older_than_two_days!"
+end
+
+every 1.day, :at => '1:00 am' do 
+  runner "if SystemPreferences.captive == true; SystemCaptivePortal.stop; sleep 10; SystemCaptivePortal.start; end"
 end
 
 # Learn more: http://github.com/javan/whenever
