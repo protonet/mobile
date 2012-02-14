@@ -219,3 +219,35 @@ HowTo mount your local code to a protonet node (Works in OSX Leopard and OSX Sno
 6. Now you just need to restart your rails app
 
         touch ~/dashboard/current/tmp/restart.txt
+
+HowTo mount local code to a protonet-node using nfs (Lion)
+================================================
+
+1. In Lion edit or create /etc/exports and the path like this:
+  
+        <absolute path to your code> -ro <ip of your protonet-node>
+        
+   Note: -ro = read only
+
+2. if your node misses mount.nfs install nfs-common
+
+        sudo apt-get install nfs-common
+
+3. Mount the remote code
+    
+        sudo mount.nfs <ip of your lion>:<absolute path to your code> /home/protonet/dashboard/current/app/
+
+
+4. In order to make sure that your changes in the rails code are immediately visible set config.cache_classes to false in your *production.rb*
+
+        
+5. Now you just need to restart your rails app on the node
+
+        touch ~/dashboard/current/tmp/restart.txt
+
+6. To unmount the Code
+
+        sudo umount /home/protonet/dashboard/current/app/
+      
+    
+  
