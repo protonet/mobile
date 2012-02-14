@@ -1,0 +1,15 @@
+{
+  "name": "node-protonet",
+  "version": "0.1.0",
+  "author": {
+    "name": "protonet",
+    "email": "team@protonet.info",
+    "github": "protonet",
+    "url": "http://protonet.info/"
+  },
+  "dependencies": {
+    "jsdom": ">= 0.2.10",
+    "html5": ">= 0.3.5",
+    "iconv-lite": ">= 0.1.1"
+  }
+}

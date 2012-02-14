@@ -152,19 +152,45 @@ fi
 
 # and create tags so we know what we used
 cd /tmp/dashboard
-git tag -a R_$last_version $DASHBOARD_REVISION -m "RELEASE $RELEASE_VERSION BY `whoami` ON `date`"
-git push --tags
+git remote rm origin
+git remote add origin git@github.com:protonet/dashboard.git
+if [ "$release_type" = "OVERWRITE LAST" ]; then
+  git tag -d R_$last_version
+  git push origin :refs/tags/R_$last_version
+fi
+git tag -a R_$last_version $DASHBOARD_REVISION -m "RELEASE $last_version BY `whoami` ON `date`"
+git push origin master --tags
+
 cd /tmp/babushka-base
-git tag -a R_$last_version $BABUSHKA_BASE_REVISION -m "RELEASE $RELEASE_VERSION BY `whoami` ON `date`"
+if [ "$release_type" = "OVERWRITE LAST" ]; then
+  git tag -d R_$last_version
+  git push origin :refs/tags/R_$last_version
+fi
+git tag -a R_$last_version $BABUSHKA_BASE_REVISION -m "RELEASE $last_version BY `whoami` ON `date`"
 git push --tags
+
 cd /tmp/babushka
-git tag -a R_$last_version $BABUSHKA_REVISION -m "RELEASE $RELEASE_VERSION BY `whoami` ON `date`"
+if [ "$release_type" = "OVERWRITE LAST" ]; then
+  git tag -d R_$last_version
+  git push origin :refs/tags/R_$last_version
+fi
+git tag -a R_$last_version $BABUSHKA_REVISION -m "RELEASE $last_version BY `whoami` ON `date`"
 git push --tags
+
 cd /tmp/babushka-deps
-git tag -a R_$last_version $BABUSHKA_DEPS_REVISION -m "RELEASE $RELEASE_VERSION BY `whoami` ON `date`"
+if [ "$release_type" = "OVERWRITE LAST" ]; then
+  git tag -d R_$last_version
+  git push origin :refs/tags/R_$last_version
+fi
+git tag -a R_$last_version $BABUSHKA_DEPS_REVISION -m "RELEASE $last_version BY `whoami` ON `date`"
 git push --tags
+
 cd /tmp/deployer
-git tag -a R_$last_version $DEPLOYER_REVISION -m "RELEASE $RELEASE_VERSION BY `whoami` ON `date`"
+if [ "$release_type" = "OVERWRITE LAST" ]; then
+  git tag -d R_$last_version
+  git push origin :refs/tags/R_$last_version
+fi
+git tag -a R_$last_version $DEPLOYER_REVISION -m "RELEASE $last_version BY `whoami` ON `date`"
 git push --tags
 
 # cleanup
@@ -180,3 +206,7 @@ rm /tmp/$BABUSHKA_BASE_ARCHIVE
 rm /tmp/$BABUSHKA_ARCHIVE
 rm /tmp/$DEPLOYER_ARCHIVE
 rm /tmp/$BABUSHKA_DEPS_ARCHIVE
+
+# and back and fetch the new tag
+cd $PROJECT_DIR
+git fetch --tags

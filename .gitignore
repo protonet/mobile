@@ -26,6 +26,7 @@ public/images/externals/*
 public/system
 mkmf.log
 node/screenshots/*
+node/node_modules/*
 node.pid.lock
 solr/data
 RELEASE

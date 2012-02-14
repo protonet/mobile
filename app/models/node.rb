@@ -19,6 +19,7 @@ class Node < ActiveRecord::Base
     end
     
     def couple(node_data)
+      return if node_data[:uuid] == local.uuid
       unless node = find_by_uuid(node_data[:uuid])
         node = from_url(node_data[:url])
         node.save

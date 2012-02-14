@@ -5,7 +5,7 @@ APP_PATH = File.expand_path('../../config/application',  __FILE__)
 require File.expand_path('../../config/boot',  __FILE__)
 
 # THIS IS NEW:
-if defined?(Rails::Server)
+if ARGV.include?("s") || ARGV.include?("server")
   require "rails/commands/server"
   module Rails
     class Server

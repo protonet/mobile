@@ -39,8 +39,6 @@
 #single-login {
   width: 1000px;
   margin: 0 auto;
-  position: relative;
-  top: 100px;
 }
 
 #single-login .errorExplanation {

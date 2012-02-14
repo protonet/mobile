@@ -105,7 +105,9 @@ http.createServer(function(request, response) {
       var method = require("./tasks/fs_http")[task.split("/")[1]];
       method(request, response);
       break;
-
+    case "scrape":
+      require("./tasks/scrape").scrape(params, response);
+      break;
     default:
       response.writeHead(200, {'Content-Type': 'text/plain'});
       response.end('WTF?\n');

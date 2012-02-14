@@ -37,32 +37,26 @@ module System
   
     def login
       if SystemPreferences.captive_authorization_url
-
-        if Net::HTTP.get_response(URI.parse(SystemPreferences.captive_authorization_url + "&nickname=#{current_user.login}")).code == "200"
+        mac_address = SystemBackend.get_mac_for_ip(request.remote_ip)
+        delimiter = SystemPreferences.captive_authorization_url.include?('?') ? "&" : "?"
+        auth_url = "#{SystemPreferences.captive_authorization_url}#{delimiter}nickname=#{CGI.escape(current_user.login)}&email=#{CGI.escape(current_user.email)}&mac_address=#{mac_address}"
+        response = Net::HTTP.get_response(URI.parse(auth_url))
+        
+        case response.code.to_i
+        when 200
           SystemBackend.grant_internet_access(request.remote_ip, (@current_user.try(:login) || "n_a"))
           sleep 10
-          if params[:captive_redirect_url]
-            redirect_to params[:captive_redirect_url]
-          else
-            session[:captive_redirect_url] = nil
-            redirect_to(session[:captive_redirect_url] || "http://www.google.de")
-          end
+          redirect_to_desired_url
+        when 301..302
+          redirect_to response.header['location']
         else
-          flash[:error] = "Please contact the frontdesk / the administrator for internet access."
-          redirect_to :root
+          flash[:error] = "Something went wrong please contact the support"
+          redirect_to root_path
         end
-
       else
-
         SystemBackend.grant_internet_access(request.remote_ip, (@current_user.try(:login) || "n_a"))
         sleep 10
-        if params[:captive_redirect_url]
-          redirect_to params[:captive_redirect_url]
-        else
-          session[:captive_redirect_url] = nil
-          redirect_to(session[:captive_redirect_url] || "http://www.google.de")
-        end
-
+        redirect_to_desired_url
       end
     end
     
@@ -71,6 +65,10 @@ module System
     end
 
     private
+    def redirect_to_desired_url
+      redirect_to(params[:captive_redirect_url] || session[:captive_redirect_url] || "http://www.google.com")
+    end
+    
     def only_admin
       return true if current_user.admin?
       flash[:error] = "Not authorized, only admins are allowed to do this."

@@ -37,6 +37,11 @@ case $1 in
       $IPT -t nat -A PREROUTING -i $INTIF -p udp -m udp --destination $REDIRECTION_TARGET --dport 53   -j ACCEPT $IPT_COMMENT
       $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 5000 -j ACCEPT $IPT_COMMENT
       $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 5001 -j ACCEPT $IPT_COMMENT
+      
+      # tallymate whitelisting
+      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination 176.9.51.6 --dport 80   -j ACCEPT $IPT_COMMENT
+      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination 176.9.51.6 --dport 443  -j ACCEPT $IPT_COMMENT
+      
 
       echo "   send all public traffic to the unknown_user chain"
       $IPT -t nat -A PREROUTING -i $INTIF -j unknown_user $IPT_COMMENT
