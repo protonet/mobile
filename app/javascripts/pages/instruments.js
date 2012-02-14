@@ -33,7 +33,7 @@ $(function() {
       new protonet.ui.Overlay(
         "<h4>Hi " + protonet.config.user_name + ",</h4>" +
         "<br>Welcome to protonet. Click the following button to enable internet access and to open " +
-        "<strong>" + htmlEscapedUrl.truncate(30) + "</strong>.<br>" +
+        "<strong>" + htmlEscapedUrl.truncate(40) + "</strong>.<br>" +
         '<a class="button close" data-avoid-ajax="1" href="/captive/login?captive_redirect_url=' + urlEncodedUrl + '" target="_blank">' +
         'Get internet access</a>'
       );

@@ -194,7 +194,7 @@ Run slapd:
 
     sudo /usr/libexec/slapd
 
-HowTo mount your local code to a protonet node (OSX)
+HowTo mount your local code to a protonet node (Works in OSX Leopard and OSX Snow Leopard, does not work in OSX Lion)
 ==================================
 
 1. In OSX go to "System Preferences" -> "Accounts" and create a new user with user name "protonet-node" and enter a password
