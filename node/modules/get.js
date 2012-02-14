@@ -78,7 +78,9 @@ function _get(options, callback, reqId){
   var client,
   params = prepareOptions(options, reqId);
   options = params.options;
-  reqId = params.reqId;
+  reqId = params.reqId,
+  maxContentLength = 500000;
+  
   if (params.protocol === "http:") {
     client = http;
   }else{
@@ -100,8 +102,8 @@ function _get(options, callback, reqId){
         };
         
         var contentLength = response.headers['content-length'];
-        if (contentLength && contentLength > 500000) {
-          callback("Pages content-length is too big.", null);
+        if (contentLength && contentLength > maxContentLength) {
+          callback("Content is too big.", null);
           request.abort();
           return;
         };
@@ -125,6 +127,11 @@ function _get(options, callback, reqId){
             }else{
               buf += chunk;
             }
+            if (buf.length > maxContentLength) {
+              callback("Content is too big.", null);
+              request.abort();
+              return;
+            };
           });
 
           unzip.on("end", function() {
@@ -145,8 +152,13 @@ function _get(options, callback, reqId){
               response.setEncoding("binary")
               buf += iconv.fromEncoding(chunk, charset)
             }else{
-              buf += chunk;            
+              buf += chunk;      
             }
+            if (buf.length > maxContentLength) {
+              callback("Content is too big.", null);
+              request.abort();
+              return;
+            };
           });
           response.on("end", function(){
             callback(null, {

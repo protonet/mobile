@@ -3,7 +3,8 @@ var HTML5 = require("html5"),
 
 function stripScriptTags(body){
   // remove all Script tags;
-  return body.replace(/<script[^>]*>([\S\s]*?)<\/script>/ig, "");
+  var content = body.replace(/<script[^>]*>([\S\s]*?)<\/script>/ig, "");
+  return content.replace(/<!DOCTYPE .+>/i, "");
 }
 
 exports.scrape = function(params, response) {
@@ -15,6 +16,8 @@ exports.scrape = function(params, response) {
   require("./../modules/get.js")._get(uri, function(error, res){    
     
     response.writeHead(200, { "Content-Type": "application/json;" });
+    
+    console.log(error);
     
     if (!res) {
       response.end(JSON.stringify({error: error}));
@@ -62,6 +65,8 @@ exports.scrape = function(params, response) {
     }catch(e){
       data.error = e;
     }
+    
+    console.log(data);
     
     
     if (callback) {
