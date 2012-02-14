@@ -78,6 +78,9 @@ http.createServer(function(request, response) {
     case "snapshooter":
       require("./tasks/snapshot").save(request, response);
       break;
+    case "scrape":
+      require("./tasks/scrape").scrape(params, response);
+      break;
     default:
       response.writeHead(200, {'Content-Type': 'text/plain'});
       response.end('WTF?\n');
