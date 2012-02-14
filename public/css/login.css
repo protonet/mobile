@@ -40,8 +40,6 @@
 #single-login {
   width: 890px;
   margin: 0 auto;
-  position: relative;
-  top: 100px;
 }
 
 #single-login .errorExplanation {
