@@ -37,7 +37,7 @@ exports.scrape = function(params, response) {
         error: error,
         results: null
       },
-      results = {};
+      results = {}; 
     
     try {
       var matches = window.document.querySelectorAll(selector);
@@ -50,7 +50,7 @@ exports.scrape = function(params, response) {
           obj[attribute.name] = attribute.value;
         }
         if (elem.innerHTML != "") {
-          obj["content"] = elem.innerHTML.trim();
+          obj.content = elem.innerHTML.trim();
         };
         if (results[tagName]) {
           results[tagName].push(obj);
