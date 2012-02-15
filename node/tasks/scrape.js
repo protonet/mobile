@@ -3,7 +3,8 @@ var HTML5 = require("html5"),
 
 function stripScriptTags(body){
   // remove all Script tags;
-  return body.replace(/<script[^>]*>([\S\s]*?)<\/script>/ig, "");
+  var content = body.replace(/<script[^>]*>([\S\s]*?)<\/script>/ig, "");
+  return content.replace(/<!DOCTYPE[^>]*>/i, "");
 }
 
 exports.scrape = function(params, response) {
@@ -15,7 +16,7 @@ exports.scrape = function(params, response) {
   require("./../modules/get.js")._get(uri, function(error, res){    
     
     response.writeHead(200, { "Content-Type": "application/json;" });
-    
+        
     if (!res) {
       response.end(JSON.stringify({error: error}));
       return;
@@ -37,7 +38,7 @@ exports.scrape = function(params, response) {
         error: error,
         results: null
       },
-      results = {};
+      results = {}; 
     
     try {
       var matches = window.document.querySelectorAll(selector);
@@ -50,7 +51,7 @@ exports.scrape = function(params, response) {
           obj[attribute.name] = attribute.value;
         }
         if (elem.innerHTML != "") {
-          obj["content"] = elem.innerHTML.trim();
+          obj.content = elem.innerHTML.trim();
         };
         if (results[tagName]) {
           results[tagName].push(obj);
@@ -61,8 +62,7 @@ exports.scrape = function(params, response) {
       data.results = results;
     }catch(e){
       data.error = e;
-    }
-    
+    }    
     
     if (callback) {
       response.end(callback + "(" + JSON.stringify(data) + ")");

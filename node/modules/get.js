@@ -41,7 +41,7 @@ function prepareOptions(options, reqId){
   
   if (!options.headers['user-agent']) {
     // TODO: use better User-Agent
-    options.headers['user-agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7'
+    options.headers['user-agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7 Protonet/1.0'
   }
   
   httpOptions.headers = options.headers;
@@ -78,24 +78,32 @@ function _get(options, callback, reqId){
   var client,
   params = prepareOptions(options, reqId);
   options = params.options;
-  reqId = params.reqId;
+  reqId = params.reqId,
+  maxContentLength = 500000;
+  
   if (params.protocol === "http:") {
     client = http;
   }else{
     client = https
   }
-  
-  // TODO: Add Timeout or max body length
-  
+    
   var request = client.get(params.httpOptions);
   
   request.on('response', function(response){
         
     switch (response.statusCode) { 
       case 200: // success
+      
         var contentType = /text\/html|application\/xhtml\+xml/.exec(response.headers["content-type"]);
         if (!contentType) {
           callback("Pages content-type does not look like a Webpage", null);
+          request.abort();
+          return;
+        };
+        
+        var contentLength = response.headers['content-length'];
+        if (contentLength && contentLength > maxContentLength) {
+          callback("Content is too big.", null);
           request.abort();
           return;
         };
@@ -119,6 +127,11 @@ function _get(options, callback, reqId){
             }else{
               buf += chunk;
             }
+            if (buf.length > maxContentLength) {
+              callback("Content is too big.", null);
+              request.abort();
+              return;
+            };
           });
 
           unzip.on("end", function() {
@@ -139,8 +152,13 @@ function _get(options, callback, reqId){
               response.setEncoding("binary")
               buf += iconv.fromEncoding(chunk, charset)
             }else{
-              buf += chunk;            
+              buf += chunk;      
             }
+            if (buf.length > maxContentLength) {
+              callback("Content is too big.", null);
+              request.abort();
+              return;
+            };
           });
           response.on("end", function(){
             callback(null, {

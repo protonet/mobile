@@ -50,6 +50,7 @@ GENERAL
     mkdir -p public/externals/snapshots
     git submodule init
     git submodule update
+    
 
 if you don't have bundler install it first:
 
@@ -94,6 +95,11 @@ Install node.js (0.6.5):
     ./configure
     make
     sudo make install
+
+Install node-modules with npm
+  
+    cd node/
+    npm install
 
 START THE SYSTEM
 ----------------
