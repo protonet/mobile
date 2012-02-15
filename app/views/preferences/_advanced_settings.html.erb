@@ -37,24 +37,13 @@
 
 <br />
 
-<%= form_tag "/captive/grant", { :remote => true, 'data-type' => 'html' } do -%>
+<%= form_tag "/captive/whitelist", { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'advanced_settings' %>
   <div class="form-field">
-    <%= label_tag 'ip_address', 'Grant access for IP:' %>
-    <%= text_field_tag 'ip_address' %>
+    <%= label_tag 'whitelist', 'Whitelisted IPs:' %>
+    <%= text_area_tag 'whitelist', SystemPreferences.whitelist.join("\n") %>
   </div>
-  <%= button "Grant" %>
-<%- end -%>
-
-<br />
-
-<%= form_tag "/captive/revoke", { :remote => true, 'data-type' => 'html' } do -%>
-  <%= hidden_field_tag 'section', 'advanced_settings' %>
-  <div class="form-field">
-    <%= label_tag 'ip_address', 'Revoke access for IP:' %>
-    <%= text_field_tag 'ip_address' %>
-  </div>
-  <%= button "Revoke" %>
+  <%= button "Save" %>
 <%- end -%>
 
 <br />
