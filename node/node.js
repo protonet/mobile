@@ -12,7 +12,7 @@ process.argv.forEach(function(val){
 });
 
 /*----------------------------------- SOCKET TASKS -----------------------------------*/
-var amqp = require('./modules/node-amqp/amqp');
+var amqp = require('amqp');
 connection = amqp.createConnection({ host: "localhost", vhost: "/" });
 connection.addListener("error", function(){
   console.log("error trying to reach the rabbit, please start your rabbitmq-server");

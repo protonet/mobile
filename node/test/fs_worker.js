@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var worker = require('./../tasks/fs_worker'),
-    Step   = require('./../modules/step');
+    Step   = require('step');
 
 Step(
   function() { worker.list({parent: ''}, this); },

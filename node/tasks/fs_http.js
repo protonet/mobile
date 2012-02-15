@@ -9,9 +9,9 @@ var sys                 = require("sys"),
     viewableFiles       = ["text/plain", "image/*", "video/*", "audio/*", "application/pdf", "application/x-shockwave-flash"],
     viewableFilesViaXHR = ["text/*", "application/xml", "application/json"],
 
-    amqp                = require('../modules/node-amqp/amqp'),
-    formidable          = require('../modules/node-formidable'),
-    lookup_mime         = require('../modules/node-mime').lookup,
+    amqp                = require('amqp'),
+    formidable          = require('formidable'),
+    lookup_mime         = require('mime').lookup,
 
     RAILS_SESSION_KEY   = "_rails_dashboard_session",
     FILES_DIR           = "./tmp/development/shared/files",
