@@ -47,6 +47,7 @@
 
 .modal-window > output > img:first-child,
 .modal-window > output > iframe:first-child {
+  max-width: 100%;
   display: block;
   margin: 10px auto;
 }

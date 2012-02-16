@@ -20,8 +20,6 @@ protonet.ui.ModalWindow = (function() {
         "image":    "image",
         "pdf":      "iframe",
         "flash":    "iframe",
-        "html":     "xhr",
-        "text":     "xhr",
         "unknown":  "xhr"
       },
       // Needed to preload stylesheets before rendering the corresponding HTML
