@@ -77,7 +77,7 @@ $(function() {
     }
     
     new protonet.ui.Overlay(protonet.t("SOFTWARE_UPDATE_SUCCESSFUL"));
-    setTimeout(function() { location.href = "/"; }, (15).seconds());
+    setTimeout(function() { location.href = "/"; }, (20).seconds());
     
     event.stopPropagation();
   });
