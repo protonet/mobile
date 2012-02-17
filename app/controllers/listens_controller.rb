@@ -70,9 +70,9 @@ class ListensController < ApplicationController
   
     def redirect_to_channel(channel)
       if channel.locally_hosted?
-        redirect_to :controller => 'channels', :action => 'show', :id => channel.id
+        xhr_redirect_to :controller => 'channels', :action => 'show', :id => channel.id
       else
-        redirect_to :controller => 'channels', :action => 'show_global', :uuid => channel.uuid
+        xhr_redirect_to :controller => 'channels', :action => 'show_global', :uuid => channel.uuid
       end
     end
 
