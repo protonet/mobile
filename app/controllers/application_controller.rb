@@ -48,12 +48,11 @@ class ApplicationController < ActionController::Base
   end
   
   # https://bugzilla.mozilla.org/show_bug.cgi?id=553888
-  def xhr_redirect_to(options)
-    if request.xhr?
-      redirect_to options.merge('_xhr_redirect' => 1)
-    else
-      redirect_to options
-    end
+  # http://code.google.com/p/chromium/issues/detail?id=107159
+  def redirect_to(options = {}, response_status = {})
+    response_status[:status] ||= 303
+    options.merge!('_xhr_redirect' => 1) if request.xhr?
+    super(options, response_status)
   end
   
   def detect_xhr_redirect
@@ -70,7 +69,7 @@ class ApplicationController < ActionController::Base
     response.headers['X-Error-Message']   = flash[:error]   unless flash[:error].blank?
     response.headers['X-Notice-Message']  = flash[:notice]  unless flash[:notice].blank?
     response.headers['X-Sticky-Message']  = flash[:sticky]  unless flash[:sticky].blank?
-    is_redirect = self.status == 302
+    is_redirect = (301..303).include?(self.status)
     flash.discard unless is_redirect
     true
   end

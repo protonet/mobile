@@ -19,7 +19,7 @@ class UsersController < ApplicationController
   end
   
   def new
-    xhr_redirect_to :controller => "registrations", :action => :new
+    redirect_to :controller => "registrations", :action => :new
   end
   
   def update
@@ -31,7 +31,7 @@ class UsersController < ApplicationController
     else
       flash[:error] = "Could not update user: #{user.errors.full_messages.to_sentence}"
     end
-    xhr_redirect_to :action => 'edit', :id => user.id
+    redirect_to :action => 'edit', :id => user.id
   end
 
   def delete_stranger_older_than_two_days
@@ -143,10 +143,10 @@ class UsersController < ApplicationController
   def search
     @user = User.find_by_id_or_login(params[:search_term])
     if @user
-      xhr_redirect_to :controller => :users, :action => :show, :id => @user.id
+      redirect_to :controller => :users, :action => :show, :id => @user.id
     else
       flash[:error] = "Couldn't find user with identifier '#{params[:search_term]}'"
-      xhr_redirect_to :controller => :users, :action => :index
+      redirect_to :controller => :users, :action => :index
     end
   end
   
@@ -188,7 +188,7 @@ class UsersController < ApplicationController
     end
     
     def redirect_to_my_profile
-      xhr_redirect_to(:controller => :users, :action => :my) if current_user.id == params[:id].to_i
+      redirect_to(:controller => :users, :action => :my) if current_user.id == params[:id].to_i
     end
   
     def publish_admin_users
@@ -204,7 +204,7 @@ class UsersController < ApplicationController
       if request.xhr?
         head(204)
       else
-        xhr_redirect_to :action => 'edit', :id => user.id
+        redirect_to :action => 'edit', :id => user.id
       end
     end
 end

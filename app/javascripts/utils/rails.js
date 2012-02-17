@@ -40,12 +40,7 @@
       } else {
         method = element.data('method');
         url = element.attr('href');
-        data = {};
-      }
-      
-      if (method && !method.match(/^(POST|GET)$/i)) {
-        data._method = method;
-        method = "POST";
+        data = null;
       }
       
       $.ajax({
