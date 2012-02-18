@@ -17,16 +17,18 @@ html {
 }
 
 body {
+  min-height: 100%;
+  border-top: 1px solid transparent;
+  margin-top: -1px;
   position: relative;
   overflow-y: scroll;
   background: #dae4ff; /* Same as rgba(72, 123, 255, 0.2); which creates a very buggy background effect in opera 10.64 */
   color: #000;
-  padding-top: 65px;
   min-width: 950px;
 }
 
 .inner-body {
-  margin: 0 auto;
+  margin: 65px auto 0;
   width: 940px;
 }
 

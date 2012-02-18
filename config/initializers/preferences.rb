@@ -46,7 +46,9 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:public_host] = "localhost:3000"
   SystemPreferences.defaults[:public_host_https]  = false
   SystemPreferences.defaults[:captive_portal_greeting] = "Das ist das Captive Portal, Hallo!"
-  SystemPreferences.defaults[:browser_title] = "protonet - it's yours"
+  
+  hostname = SystemBackend.hostname
+  SystemPreferences.defaults[:browser_title] = (hostname ? "#{hostname} - " : "") + "protonet. it's yours."
   SystemPreferences.defaults[:show_clouds] = true
   SystemPreferences.defaults[:show_search_widget] = true
   SystemPreferences.defaults[:show_user_widget] = true

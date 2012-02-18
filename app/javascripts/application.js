@@ -27,7 +27,6 @@
 //= require "utils/rails.js"
 //= require "text_extensions/text_extensions.js"
 //= require "timeline/meep.js"
-//= require "effects/clouds.js"
 
 //---------------------------- INITIALIZE APPLICATION ----------------------------
 
@@ -35,21 +34,6 @@ $(function() {
   protonet.user.initialize();
   protonet.ui.FlashMessage.initialize();
   protonet.ui.Header.initialize();
-  
-  // Clouds
-  if (protonet.config.show_clouds && !$.browser.msie) {
-    // Frickin' stunning cloud graphics (makes your squirrel run in circles!!)
-    setTimeout(function() {
-      new protonet.effects.Clouds($("#cloud-container"), {
-        minStartPosition: -10,
-        maxStartPosition: 90,
-        minSize:          10,
-        maxSize:          50,
-        amount:           25,
-        animated:         false
-      });
-    }, (0.5).seconds());
-  }
   
   if (protonet.user.Browser.IS_TOUCH_DEVICE()) {
     $("body").addClass("touch-device");

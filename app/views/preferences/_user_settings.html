@@ -1,38 +1,8 @@
-<h2>User management</h2>
-<p><strong>Please note:</strong> You can edit/delete individual users on their <%= link_to "profile page", users_path, :class => 'promotion-link' %>.</p>
+<h2>Notifications</h2>
 
-<h3>LDAP <a data-hover-hint="top" title="Handle your user authorization via remote LDAP" class="hint">(?)</a></h3>
-<%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
-  <%= hidden_field_tag 'section', 'user_settings' %>
-  <div class="form-field">
-    <label>Status:</label>
-    <span>
-      <label>
-        <input type="radio" name="preferences[remote_ldap_sign_on]" value="true" <%= 'checked' if SystemPreferences.remote_ldap_sign_on %>>
-        On
-      </label>
-      <label>
-        <input type="radio" name="preferences[remote_ldap_sign_on]" value="false" <%= 'checked' unless SystemPreferences.remote_ldap_sign_on %>> 
-        Off
-      </label>
-    </span>
-  </div>
-  <div class="form-field">
-    <%= label_tag 'preferences[remote_ldap_host]', 'LDAP Host:' %>
-    <%= text_field_tag 'preferences[remote_ldap_host]', SystemPreferences.remote_ldap_host %>
-  </div>
-  <div class="form-field">
-    <%= label_tag 'preferences[remote_ldap_base]', 'LDAP Base:' %>
-    <%= text_field_tag 'preferences[remote_ldap_base]', SystemPreferences.remote_ldap_base %>
-  </div>
-  <div class="form-field">
-    <%= label_tag 'preferences[remote_ldap_domain]', 'LDAP Domain:' %>
-    <%= text_field_tag 'preferences[remote_ldap_domain]', SystemPreferences.remote_ldap_domain %>
-  </div>
-  <%= button "Save" %>
-<%- end -%>
+<p>Send realtime notifications to users who are currently online.</p>
 
-<h3>Send system message to online user(s) <a data-hover-hint="top" title="Send a sticky system message to one or all online users" class="hint">(?)</a></h3>
+<h3>Send system message to online users <a data-hover-hint="top" title="Send a sticky system message to one or all online users" class="hint">(?)</a></h3>
 <%= form_tag "/users/send_system_message", { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'user_settings' %>
   <%= hidden_field_tag 'id', current_user.id %>
@@ -47,7 +17,7 @@
   <%= button "Send" %>
 <%- end %>
 
-<h3>Send javascript to online user(s) <a data-hover-hint="top" title="Execute script code on one or all online users - don't be evil" class="hint">(?)</a></h3>
+<h3>Send javascript to online users <a data-hover-hint="top" title="Execute script code on one or all online users - don't be evil" class="hint">(?)</a></h3>
 <%= form_tag "/users/send_javascript", { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'user_settings' %>
   <%= hidden_field_tag 'id', current_user.id %>
@@ -60,12 +30,4 @@
     <%= text_field_tag 'javascript' %>
   </div>
   <%= button "Send" %>
-<%- end %>
-
-<h3>Clean up strangers <i class="hint">(<%= User.strangers.count %>)</i></h3>
-<p>Every time a logged-out user visits your node, he's turned into a so called "stranger". Strangers are temporary users that should be deleted once in a while.</p>
-<%= form_tag delete_stranger_older_than_two_days_path, { :remote => true, 'data-type' => 'html', :class => 'single-button-form' } do %>
-  <%= hidden_field_tag 'id', current_user.id %>
-  <%= hidden_field_tag 'section', 'user_settings' %>
-  <%= button "Delete strangers older than 2 days" %>
 <%- end %>
