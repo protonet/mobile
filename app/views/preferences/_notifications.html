@@ -2,9 +2,9 @@
 
 <p>Send realtime notifications to users who are currently online.</p>
 
-<h3>Send system message to online users <a data-hover-hint="top" title="Send a sticky system message to one or all online users" class="hint">(?)</a></h3>
+<h3>System message <a data-hover-hint="top" title="Send a sticky system message to one or all online users" class="hint">(?)</a></h3>
 <%= form_tag "/users/send_system_message", { :remote => true, 'data-type' => 'html' } do -%>
-  <%= hidden_field_tag 'section', 'user_settings' %>
+  <%= hidden_field_tag 'section', 'notifications' %>
   <%= hidden_field_tag 'id', current_user.id %>
   <div class="form-field">
     <%= label_tag 'target', 'Target:' %>
@@ -12,14 +12,14 @@
   </div>
   <div class="form-field">
     <%= label_tag 'message', 'Message:' %>
-    <%= text_field_tag 'message' %>
+    <%= text_field_tag 'message', nil, :placeholder => 'eg. A new update is currently being installed.' %>
   </div>
   <%= button "Send" %>
 <%- end %>
 
-<h3>Send javascript to online users <a data-hover-hint="top" title="Execute script code on one or all online users - don't be evil" class="hint">(?)</a></h3>
+<h3>JavaScript <a data-hover-hint="top" title="Execute script code on one or all online users - don't be evil" class="hint">(?)</a></h3>
 <%= form_tag "/users/send_javascript", { :remote => true, 'data-type' => 'html' } do -%>
-  <%= hidden_field_tag 'section', 'user_settings' %>
+  <%= hidden_field_tag 'section', 'notifications' %>
   <%= hidden_field_tag 'id', current_user.id %>
   <div class="form-field">
     <%= label_tag 'target', 'Target:' %>
@@ -27,7 +27,7 @@
   </div>
   <div class="form-field">
     <%= label_tag 'javascript', 'Script code:' %>
-    <%= text_field_tag 'javascript' %>
+    <%= text_field_tag 'javascript', nil, :placeholder => 'eg. location.reload()' %>
   </div>
   <%= button "Send" %>
 <%- end %>

@@ -46,7 +46,7 @@
   <%= button "Save" %>
 <%- end -%>
 
-<h4>Users with internet access</h4>
+<h4>List of users with internet access:</h4>
 <%- users = SystemCaptivePortal.list %>
 <%- if users.empty? %>
   <p class="hint">No user has currently internet access granted</p>
@@ -55,11 +55,12 @@
 <%- end -%>
 
 <h3>Email Settings <a data-hover-hint="top" title="Allows you to use external SMTP services to send emails" class="hint">(?)</a></h3>
-<p>
-  Currently using: <%= ActionMailer::Base.delivery_method %><br />
+<dl>
+  <dt>Currently using:</dt><dd><%= ActionMailer::Base.delivery_method %></dd>
   <% Mailer %>
-  Current base path: <%= "#{SystemPreferences.public_host_https ? 'https' : 'http'}://#{ActionMailer::Base.default_url_options[:host]}" %>
-</p>
+  <dt>Current base path:</dt><dd><%= "#{SystemPreferences.public_host_https ? 'https' : 'http'}://#{ActionMailer::Base.default_url_options[:host]}" %></dd>
+</dl>
+<br>
 <%= form_tag system_preferences_update_path, {} do -%>
   <%= hidden_field_tag 'section', 'advanced_settings' %>
   <div class="form-field">
@@ -73,9 +74,9 @@
         <input type="radio" name="preferences[local_email_delivery]" value="false" <%= 'checked' if SystemPreferences.local_email_delivery != true %>> 
         Off
       </label>
+      <a title="Turning on local delivery and leaving the SMTP settings empty will make your node use sendmail." data-hover-hint="top" class="hint">(?)</a>
     </span>
   </div>
-  <p><strong>Info:</strong> Turning on local delivery and leaving the SMTP settings empty will make your node use sendmail.</p>
   <div class="form-field">
     <%= label_tag 'preferences[smtp_address]', 'SMTP Address:' %>
     <%= text_field_tag 'preferences[smtp_address]', SystemPreferences.smtp_address %>
@@ -97,7 +98,7 @@
 
 <h3>LDAP <a data-hover-hint="top" title="Handle your user authorization via remote LDAP" class="hint">(?)</a></h3>
 <%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
-  <%= hidden_field_tag 'section', 'user_settings' %>
+  <%= hidden_field_tag 'section', 'advanced_settings' %>
   <div class="form-field">
     <label>Status:</label>
     <span>
@@ -130,8 +131,16 @@
 <%- vpn_status = SystemVpn.status %>
 
 <%= form_tag preferences_vpn_update_path, { :remote => true, 'data-type' => 'html' }  do %>
-  <%= hidden_field_tag 'section', 'vpn_settings' %>
-  <div class="form-field short">
+  <%= hidden_field_tag 'section', 'advanced_settings' %>
+  <dl>
+    <dt>VPN type:</dt><dd>n2n</dd>
+    <dt>Supernode address:</dt><dd>directory.protonet.info</dd>
+    <dt>Node address:</dt><dd>10.0.0.1</dd>
+    <dt>Identifier/Community:</dt><dd><%= SystemPreferences.vpn[:identifier] %></dd>
+    <dt>Password/Encryption key:</dt><dd><%= SystemPreferences.vpn[:password] %></dd>
+  </dl>
+  <br>
+  <div class="form-field">
     <label>Status:</label>
     <span>
       <label><input type="radio" name="vpn_status" value="true" <%= "checked" if vpn_status %>> On</label>
@@ -140,12 +149,3 @@
   </div>
   <%= button "Save" %>
 <%- end %>
-
-<h3>Info</h3>
-<dl>
-  <dt>VPN type:</dt><dd>n2n</dd>
-  <dt>Supernode address:</dt><dd>directory.protonet.info</dd>
-  <dt>Node address:</dt><dd>10.0.0.1</dd>
-  <dt>Identifier/Community:</dt><dd><%= SystemPreferences.vpn[:identifier] %></dd>
-  <dt>Password/Encryption key:</dt><dd><%= SystemPreferences.vpn[:password] %></dd>
-</dl>

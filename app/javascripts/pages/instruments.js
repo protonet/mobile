@@ -12,9 +12,7 @@ $(function() {
   protonet.timeline.initialize();
   
   // Init widgets
-  if (protonet.config.show_user_widget) {
-    new protonet.widgets.User();
-  }
+  new protonet.widgets.User();
   
   if (protonet.config.show_file_widget) {
     new protonet.widgets.File();

@@ -29,7 +29,7 @@ class PreferencesController < ApplicationController
       #{:url => 'captive_settings', :name => 'Captive settings'},
       #{:url => 'webhook_settings', :name => 'Webhook settings'},
       {:section => 'privacy_settings',  :name => 'Privacy'},
-      {:section => 'user_settings',     :name => 'Notifications'},
+      {:section => 'notifications',     :name => 'Notifications'},
       {:section => 'software_updates',  :name => 'Updates'},
       {:section => 'advanced_settings', :name => 'Advanced'},
       {:section => 'information',       :name => 'Information'}

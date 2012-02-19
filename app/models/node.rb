@@ -31,7 +31,7 @@ class Node < ActiveRecord::Base
       begin
         find(1)
       rescue ActiveRecord::RecordNotFound
-        node = new(:name => "local", :description => "default description, change me!", :url => "http://127.0.0.1", :network_id => 1, :uuid => SystemPreferences.node_uuid)
+        node = new(:name => SystemBackend.hostname, :description => "default description, change me!", :url => "http://127.0.0.1", :network_id => 1, :uuid => SystemPreferences.node_uuid)
         node.id = 1
         node.save
         node.reload
