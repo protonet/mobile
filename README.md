@@ -67,6 +67,16 @@ if you don't have imagemagick or graphicsmagick, install it first:
 get your uuid stuff:
 
     brew install ossp-uuid (or apt-get install libossp-uuid-dev on ubuntu)
+    
+install mysql:
+
+on osx:
+
+    brew install mysql
+
+on linux use your package manager...
+
+setup mysql root user account and if on osx the startup according to brews instructions
 
 install the needed gems:
 
