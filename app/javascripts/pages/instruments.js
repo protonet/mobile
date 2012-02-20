@@ -13,10 +13,7 @@ $(function() {
   
   // Init widgets
   new protonet.widgets.User();
-  
-  if (protonet.config.show_file_widget) {
-    new protonet.widgets.File();
-  }
+  new protonet.widgets.File();
   
   $("section.main-content").css("min-height", $("aside.side-content").outerHeight().px());
   
