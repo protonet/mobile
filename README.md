@@ -81,6 +81,10 @@ setup mysql root user account and if on osx the startup according to brews instr
 install the needed gems:
 
     bundle install
+    
+if you get an error installing sunspot solar just downgrade your rubygems version to 1.6.1 for now:
+
+    rvm install rubygems 1.6.1
 
 do the db
 
