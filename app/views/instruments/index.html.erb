@@ -21,7 +21,6 @@
           <%- else -%>
             <li data-extension="file" title="Attach files (you need to be logged in)" id="attach-file-extension" data-hover-hint="right" class="disabled">Attach files</li>
           <%- end %>
-          
         </menu>
         <%= f.text_area(:message, :id => 'message', :placeholder => message_hint) %>
         <input type="submit" id="submit-message" value="" title="Send message [ENTER]">
