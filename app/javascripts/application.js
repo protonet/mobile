@@ -16,6 +16,7 @@
 //= require "data/user.js"
 //= require "data/channel.js"
 //= require "data/meep.js"
+//= require "data/file.js"
 //= require "dispatcher/dispatcher.js"
 //= require "i18n/i18n.js"
 //= require "utils/history.js"

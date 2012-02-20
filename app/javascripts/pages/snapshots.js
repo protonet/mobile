@@ -21,7 +21,8 @@ protonet.p("snapshots", function($page) {
   
   $snapButton.bind("click", function() {
     $snapButton.addClass("loading").prop("disabled", true);
-    webcam.snap(uploadUrl, function(url) {
+    webcam.snap(uploadUrl, function(response) {
+      alert(response);
       $snapButton.removeClass("loading").prop("disabled", false);
       photoUrl = protonet.config.base_url + url;
       $label.css("display", "block");

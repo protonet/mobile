@@ -2,6 +2,7 @@ var sys                 = require("sys"),
     fs                  = require("fs"),
     util                = require('util'),
     path                = require('path'),
+    mkdirp              = require('mkdirp'),
     url                 = require('url'),
     spawn               = require('child_process').spawn,
     
@@ -14,7 +15,7 @@ var sys                 = require("sys"),
     lookup_mime         = require('mime').lookup,
 
     RAILS_SESSION_KEY   = "_rails_dashboard_session",
-    FILES_DIR           = "./tmp/development/shared/files",
+    FILES_DIR           = "tmp/development/shared/files",
     USERS_DIR           = FILES_DIR + "/users",
     CHANNELS_DIR        = FILES_DIR + "/channels",
     
@@ -39,6 +40,17 @@ function getSessionId(request) {
   return parseCookie(request.headers.cookie)[RAILS_SESSION_KEY];
 }
 
+function mkdirpAndJoin(baseDirectory, file) {
+  if (file.relativePath) {
+    file.relativePath = file.relativePath.replace(/\.\.\//g, "");
+    var directory = path.join(baseDirectory, file.relativePath);
+    mkdirp.sync(directory);
+    return path.join(directory, file.name);
+  } else {
+    return path.join(baseDirectory, file.name);
+  }
+}
+
 exports.bind = function(amqpConnection) {
   queue    = amqpConnection.queue("node-fs-http");
   exchange = amqpConnection.exchange("rpc");
@@ -57,35 +69,38 @@ exports.bind = function(amqpConnection) {
     
     switch (message.action) {
       case 'upload':
-        var userDirectory = USERS_DIR + "/" + message.params.user_id;
+        var userDirectory = USERS_DIR + "/" + message.params.user_id, responseArr = [];
         try { fs.mkdirSync(userDirectory); } catch (e) {}
         
         var userFiles = message.files.map(function(file) {
-          var newFilePath = userDirectory + "/" + file.name;
+          var newFilePath = mkdirpAndJoin(userDirectory, file);
           
           delete virusScanCache[newFilePath];
           
           fs.rename(file.path, newFilePath);
           fs.chmod(newFilePath, 416); // 0640 (rw-r-----)
           file.path = newFilePath;
+          
+          responseArr.push(newFilePath.substr(FILES_DIR.length));
           return file;
         });
         
         if (message.params.channel_id) {
           var channelDirectory = CHANNELS_DIR + "/" + message.params.channel_id;
-          
           try { fs.mkdirSync(channelDirectory); } catch (e) {}
           
           userFiles.forEach(function(file) {
-            var channelFilePath = channelDirectory + "/" + file.name,
-                symlink         = path.relative(path.dirname(channelFilePath), file.path);
+            var newFilePath = mkdirpAndJoin(channelDirectory, file),
+                symlink     = path.relative(path.dirname(newFilePath), file.path);
+            
             delete virusScanCache[channelFilePath];
+            
             try { fs.symlink(symlink, channelFilePath); } catch(e) {}
           });
         }
         
         response.writeHead(200, { "Content-Type": "application/json" });
-        response.end(JSON.stringify(userFiles));
+        response.end(JSON.stringify(responseArr));
         break;
 
       case 'download':
@@ -219,7 +234,7 @@ exports.snapshot = function(request, response) {
       method: 'check_session',
       params: params,
       action: 'upload',
-      files:  [{ name: name, path: path }],
+      files:  [{ name: name, path: path, relativePath: "snapshots/" }],
       seq:    next_seq
     });
     sys.puts("Published RPC call");

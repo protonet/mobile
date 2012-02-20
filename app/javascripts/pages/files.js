@@ -14,8 +14,8 @@ protonet.p("files", function($page, $window, $document) {
       currentPath       = $.trim($addressBar.text()) || "/",
       isModalWindow     = $(".modal-window").length > 0,
       $scrollContainer  = isModalWindow ? $(".modal-window > output") : $("body, html"),
-      REG_EXP_CHANNELS  = /\/channels\/\d+\//,
-      REG_EXP_USERS     = /\/users\/\d+\//,
+      REG_EXP_CHANNELS  = /\/channels\/(\d+)\/$/,
+      REG_EXP_USERS     = /\/users\/(\d+)\/$/,
       KEY_UP            = 38,
       KEY_TAB           = 9,
       KEY_DOWN          = 40,
@@ -32,19 +32,14 @@ protonet.p("files", function($page, $window, $document) {
       return folderPath + record.name + (record.type === "folder" ? "/" : "");
     },
     
-    getHttpPath: function(record) {
-      if (currentPath === "/") {
-        return "/files";
-      }
+    getUrl: function(record) {
       var path = this.getAbsolutePath(record);
-      return "/files/?path=" + encodeURIComponent(path);
+      return protonet.data.File.getUrl(path);
     },
     
-    getDownloadPath: function(record) {
-      return protonet.config.node_base_url +
-        "/fs/download/?paths=" + encodeURIComponent(this.getAbsolutePath(record)) +
-        "&user_id="            + encodeURIComponent(protonet.config.user_id) + 
-        "&token="              + encodeURIComponent(protonet.config.token);
+    getDownloadUrl: function(record) {
+      var path = this.getAbsolutePath(record);
+      return protonet.data.File.getDownloadUrl(path);
     }
   };
   
@@ -387,8 +382,8 @@ protonet.p("files", function($page, $window, $document) {
       data = $.map(data, function(record) {
         var result = {
           path:         utils.getAbsolutePath(record),
-          downloadPath: utils.getDownloadPath(record),
-          httpPath:     utils.getHttpPath(record),
+          downloadPath: utils.getDownloadUrl(record),
+          httpPath:     utils.getUrl(record),
           name:         record.name.truncate(70),
           rawName:      record.name,
           size:         protonet.utils.prettifyFileSize(record.size),
@@ -429,7 +424,7 @@ protonet.p("files", function($page, $window, $document) {
           
           var record = model.getCache()[file.rawName] || {};
           if (record.rendezvousPartner) {
-            var userName = (protonet.data.User.getName(record.rendezvousPartner) || "user # " + record.rendezvousPartner)
+            var userName = (protonet.data.User.getName(record.rendezvousPartner) || "user # " + record.rendezvousPartner);
             userName = userName.truncate(20);
             file.name = protonet.t("SHARED_BETWEEN_YOU_AND_USER", {
               user_name: userName
@@ -490,7 +485,7 @@ protonet.p("files", function($page, $window, $document) {
   // --------------------------------- HISTORY --------------------------------- \\
   var addressBar = {
     create$Element: function(name, path) {
-      var isFolder = path.endsWith("/"), $element, model;
+      var isFolder = path.endsWith("/"), $element, model, match;
       
       if (isFolder) {
         $element = $("<a>", {
@@ -567,7 +562,7 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     push: function() {
-      var url = utils.getHttpPath();
+      var url = utils.getUrl();
       protonet.utils.History.push(url);
     },
     
@@ -673,7 +668,7 @@ protonet.p("files", function($page, $window, $document) {
     byName: function(fileList) {
       var current,
           folders           = [],
-          rendezvousFolders = []
+          rendezvousFolders = [],
           files             = [],
           i                 = 0,
           length            = fileList.length;
