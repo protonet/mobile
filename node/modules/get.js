@@ -28,10 +28,13 @@ function prepareOptions(options, reqId){
   var httpOptions = {
     host: uri.hostname,
     port: uri.port,
-    path: uri.path
+    path: uri.path,
+    agent: false
   };
   
-  if (!options.headers) {};
+  if (!options.connection) {
+    options.headers['connection'] = 'keep-alive';
+  };
   
   if (!options.nogzip && zlib) {  
     options.headers['accept-encoding'] = 'gzip,deflate';
@@ -74,7 +77,6 @@ function prepareRedirectUrl(url, location) {
 };
 
 function _get(options, callback, reqId){
-  
   var client,
   params = prepareOptions(options, reqId);
   options = params.options;
