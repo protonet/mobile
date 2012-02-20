@@ -338,7 +338,7 @@ Then /^I should see "([^\"]*)" in the channel subscriber list$/ do |username|
 end
 
 Then /^I close the lightbox$/ do
-  find(:css, ".close-link").click
+  find(:css, "header .logo a").click
 end
 
 Then /^the channel "([^\"]*)" should be remotely connected$/ do |arg1|
