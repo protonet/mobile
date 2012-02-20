@@ -52,6 +52,12 @@ Feature: Using the protonet dashboard
     Then the message field should contain "Hallo @bambule"
 
   @javascript
+  Scenario: Writing a meep containing a Link
+    And I go to the start page
+    And I fill in "message" with "www.google.com "
+    Then I should see "Google" within ".text-extension-results .title"
+
+  @javascript
   Scenario: Writing a meep containing the beginning of a username should take precedence
     And a channel exists with name: "duderino"
     Given a user with the login "dudemeister"

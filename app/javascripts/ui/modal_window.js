@@ -59,7 +59,6 @@ protonet.ui.ModalWindow = (function() {
     elements            = {};
     elements.container  = $("<div>",      { "class": "modal-window-shadow" });
     elements.dialog     = $("<section>",  { "class": "modal-window" })                .appendTo(elements.container);
-    elements.closeLink  = $("<a>",        { "class": "close-link", html: "&times;" }) .appendTo(elements.dialog);
     elements.content    = $("<output>")                                               .appendTo(elements.dialog);
   }
   
@@ -79,8 +78,6 @@ protonet.ui.ModalWindow = (function() {
     
     $window.bind("resize.modal_window", resize);
     
-    elements.closeLink.bind("click.modal_window", hide);
-    
     protonet.on("modal_window.hide", hide);
   }
   
@@ -88,7 +85,6 @@ protonet.ui.ModalWindow = (function() {
     $window
       .add($document)
       .add(elements.container)
-      .add(elements.closeLink)
       .unbind(".modal_window");
     
     protonet.off("modal_window.hide", hide);

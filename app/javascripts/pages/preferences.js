@@ -77,7 +77,7 @@ protonet.p("preferences", function($page) {
     // TODO:  handle server failures
     // right now a completed request is always handled like a success
     new protonet.ui.Overlay(protonet.t("SOFTWARE_UPDATE_SUCCESSFUL"));
-    setTimeout(function() { location.href = "/"; }, (15).seconds());
+    setTimeout(function() { location.href = "/"; }, (20).seconds());
     
     event.stopPropagation();
   });

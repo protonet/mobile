@@ -1,3 +1,5 @@
+// this has been built for the betahaus node (and will only work on that node since the scanner is configured in a special way)
+// start this via: nohup sudo node/scanner.js &
 var sys = require("sys");
 var net = require("net");
 var fs  = require("fs");

@@ -46,6 +46,11 @@
   margin-top: 0;
 }
 
+.subpage h4 {
+  margin-top: 25px;
+  margin-bottom: 5px;
+}
+
 .subpage h2,
 .subpage h3,
 .subpage p {
@@ -165,7 +170,6 @@
 .subpage dt {
   width: 180px;
   float: left;
-  color: #666;
 }
 
 .subpage dd {
@@ -321,7 +325,7 @@ a.loading {
 }
 
 .subpage .form-field + button {
-  margin-top: 0;
+  margin-top: 5px;
 }
 
 

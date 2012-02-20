@@ -26,22 +26,23 @@
     var method, url, data,
       dataType = element.data('type') || ($.ajaxSettings && $.ajaxSettings.dataType);
 
-  if (fire(element, 'ajax:before')) {
-    if (element.is('form')) {
-      method = element.attr('method');
-      url = element.attr('action');
-      data = element.serializeArray();
-      // memoized value from clicked submit button
-      var button = element.data('ujs:submit-button');
-      if (button) {
-        data.push(button);
-        element.data('ujs:submit-button', null);
+    if (fire(element, 'ajax:before')) {
+      if (element.is('form')) {
+        method = element.attr('method');
+        url = element.attr('action');
+        data = element.serializeArray();
+        // memoized value from clicked submit button
+        var button = element.data('ujs:submit-button');
+        if (button) {
+          data.push(button);
+          element.data('ujs:submit-button', null);
+        }
+      } else {
+        method = element.data('method');
+        url = element.attr('href');
+        data = null;
       }
-    } else {
-      method = element.data('method');
-      url = element.attr('href');
-      data = null;
-    }
+      
       $.ajax({
         url: url, type: method || 'GET', data: data, dataType: dataType,
         // stopping the "ajax:beforeSend" event will cancel the ajax request

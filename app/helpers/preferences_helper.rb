@@ -14,7 +14,7 @@ module PreferencesHelper
     elsif interface_name =~ /^(wlan).*/
       "Accessing protonet via WiFi <i>(interface: #{interface_name})</i>"
     elsif interface_name == 'published_to_web'
-      "Accessing protonet via https://#{SystemPreferences.publish_to_web_name}.protonet.info<br><i>as configured in #{link_to('Publish to web', preferences_path(:section => 'publish_to_web'))} and currently turned #{SystemPublishToWeb.status ? '<span class="on">on</span>' : '<span class="off">off</span>'}</i>"
+      "Accessing protonet via https://#{SystemPreferences.publish_to_web_name}.protonet.info<br><i>as configured in #{link_to('Web Publishing', preferences_path(:section => 'publish_to_web'))} and currently turned #{SystemPublishToWeb.status ? '<span class="on">on</span>' : '<span class="off">off</span>'}</i>"
     elsif interface_name =~ /^lo.*/
       "Accessing protonet locally <i>(interface: #{interface_name})</i>"
     else

@@ -29,13 +29,13 @@ Dashboard::Application.config.to_prepare do
     "mode" => "wlan0",
     "channel" => 1,
     "wlan0" => {
-      "name" => "protonet-private",
+      "name" => "#{Node.local.name} (protonet-private)",
       "password" => "Changeme!123",
       "sharing"  => true,
       "ip" => "10.42.0.1"
     },
     "wlan1" => {
-      "name" => "protonet-public",
+      "name" => "#{Node.local.name} (protonet-public)",
       "password" => "",
       "sharing"  => false,
       "ip" => "10.43.0.1"
@@ -45,15 +45,15 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:allow_registrations_for_strangers] = true
   SystemPreferences.defaults[:public_host] = "localhost:3000"
   SystemPreferences.defaults[:public_host_https]  = false
-  SystemPreferences.defaults[:captive_portal_greeting] = "Das ist das Captive Portal, Hallo!"
-  SystemPreferences.defaults[:browser_title] = "protonet - it's yours"
-  SystemPreferences.defaults[:show_clouds] = true
-  SystemPreferences.defaults[:show_search_widget] = true
+  SystemPreferences.defaults[:captive_portal_greeting] = "Please sign in to receive internet access"
+  
+  SystemPreferences.defaults[:browser_title] =  "#{Node.local.name} - protonet. it's yours."
   SystemPreferences.defaults[:show_only_online_users] = false
   SystemPreferences.defaults[:default_registered_user_group] = "user"
   SystemPreferences.defaults[:default_stranger_user_group] = "guest"
   SystemPreferences.defaults[:allow_modal_views] = true
   SystemPreferences.defaults[:custom_css_type] = "append"
+  SystemPreferences.defaults[:whitelist] = []
 
   # setup email settings from preferences
   local_email_delivery = (SystemPreferences.local_email_delivery == true) rescue false
@@ -76,12 +76,5 @@ Dashboard::Application.config.to_prepare do
     ActionMailer::Base.delivery_method = ProtonetEmailService
   end
   
-  # catching exceptions since this can be called even before the database has
-  # been created and would cause ActiveRecord to raise an sql table missing error
-  begin
-    ptw_name = "protonet-#{ActiveSupport::SecureRandom.hex(3)}"
-    SystemPreferences.publish_to_web_name ||= ptw_name
-  rescue
-    SystemPreferences.defaults[:publish_to_web_name] = ptw_name
-  end
+  SystemPreferences.defaults[:publish_to_web_name] = Node.local.name
 end

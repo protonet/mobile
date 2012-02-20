@@ -13,25 +13,18 @@ module System
       head :ok
     end
 
-    def grant
-      response_code = if SystemBackend.grant_internet_access(params[:ip_address], "n_a")
-        flash[:notice] = "You've granted internet access to \"#{params[:ip_address]}\"."
-        204
-      else
-        flash[:error] = "Could not grant internet access to \"#{params[:ip_address]}\"."
-        400
+    def whitelist
+      new_whitelist = params[:whitelist].scan(/(\d+.\d+.\d+.\d+)/).flatten
+      old_whitelist = SystemPreferences.whitelist
+      (new_whitelist | old_whitelist).uniq.each do |ip|
+        if new_whitelist.include?(ip)
+          SystemBackend.grant_internet_access(ip, "n_a") unless old_whitelist.include?(ip)
+        else
+          SystemBackend.revoke_internet_access(ip)
+        end
       end
-      respond_to_preference_update
-    end
-
-    def revoke
-      response_code = if SystemBackend.revoke_internet_access(params[:ip_address])
-        flash[:notice] = "You've revoked internet access from \"#{params[:ip_address]}\"."
-        204
-      else
-        flash[:error] = "Could not revoke internet access from \"#{params[:ip_address]}\"."
-        400
-      end
+      SystemPreferences[:whitelist] = new_whitelist
+      flash[:notice] = "Your whitelist have been successfully saved"
       respond_to_preference_update
     end
   

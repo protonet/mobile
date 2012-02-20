@@ -21,12 +21,12 @@ module Preferences
       end
       if error
         error_message = JSON.parse(error.message)["errors"].join(", ") rescue error.message
-        flash[:error] = "Publish to web error: " + error_message + "."
+        flash[:error] = "Web Publishing error: " + error_message + "."
       else
         if SystemPreferences.publish_to_web
           flash[:notice] = "You successfully published your node to the web"
         else
-          flash[:notice] = "You successfully turned off web pubslishing"
+          flash[:notice] = "You successfully turned off web publishing"
         end
       end
       respond_to_preference_update

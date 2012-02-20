@@ -1,7 +1,7 @@
-<h2>WLAN settings</h2>
+<h2>WLAN</h2>
 
 <%- if SystemWifi.supported? %>
-  <p>You can have one private and one public wireless access point (WPA 2). Here you can configure them.</p>
+  <p>You can have one private (for employees, friends etc.) and one public (for guests, customers etc.) wireless access point (WPA 2).</p>
   
   <p class="info-message">
     <strong>Please note:</strong>
@@ -9,13 +9,12 @@
     <%- if incoming_interface.starts_with? "wlan" %>
       <br>Also turning off both wireless networks will <strong>lock yourself out</strong>.
     <%- end %>
-    
   </p>
 
   <%= form_tag preferences_wifi_update_path, { :remote => true, 'data-type' => 'html', :class => 'wifi' }  do %>
-    <% {"public" => "wlan1", "private" => "wlan0"}.each do |type, interface| %>
+    <% ["wlan0", "wlan1"].each do |interface| %>
       <%= hidden_field_tag 'section', 'wifi_config' %>
-      <h3><%= type.capitalize %> <i class="hint">(Network interface: <%= interface %>)</i></h3>
+      <h3><%= SystemPreferences.wifi[interface][:name] %></h3>
       <div class="status-box" data-interface="<%= interface %>">
         <%= render :partial => 'preferences/wifi/interface_status', :locals => { :interface => interface } %>
       </div>

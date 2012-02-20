@@ -1,5 +1,5 @@
-<h2>Advanced settings</h2>
-<p><strong>Caution:</strong> These settings are meant for advanced users only, please be careful.</p>
+<h2>Advanced</h2>
+<p class="info-message"><strong>Caution:</strong> These settings are meant for advanced users only, please be careful.</p>
 <h3>Captive Portal <a data-hover-hint="top" title="Users need to authenticate before receiving internet access" class="hint">(?)</a></h3>
 <%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'advanced_settings' %>
@@ -37,38 +37,30 @@
 
 <br />
 
-<%= form_tag "/captive/grant", { :remote => true, 'data-type' => 'html' } do -%>
+<%= form_tag "/captive/whitelist", { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'advanced_settings' %>
   <div class="form-field">
-    <%= label_tag 'ip_address', 'Grant access for IP:' %>
-    <%= text_field_tag 'ip_address' %>
+    <%= label_tag 'whitelist', 'Whitelisted IPs:' %>
+    <%= text_area_tag 'whitelist', SystemPreferences.whitelist.join("\n") %>
   </div>
-  <%= button "Grant" %>
+  <%= button "Save" %>
 <%- end -%>
 
-<br />
-
-<%= form_tag "/captive/revoke", { :remote => true, 'data-type' => 'html' } do -%>
-  <%= hidden_field_tag 'section', 'advanced_settings' %>
-  <div class="form-field">
-    <%= label_tag 'ip_address', 'Revoke access for IP:' %>
-    <%= text_field_tag 'ip_address' %>
-  </div>
-  <%= button "Revoke" %>
+<h4>List of users with internet access:</h4>
+<%- users = SystemCaptivePortal.list %>
+<%- if users.empty? %>
+  <p class="hint">No user has currently internet access granted</p>
+<%- else -%>
+  <p><%= users.join(", ") %></p>
 <%- end -%>
-
-<br />
-
-List:<br />
-
-<%= raw SystemCaptivePortal.list.join("<br />") %>
 
 <h3>Email Settings <a data-hover-hint="top" title="Allows you to use external SMTP services to send emails" class="hint">(?)</a></h3>
-<p>
-  Currently using: <%= ActionMailer::Base.delivery_method %><br />
+<dl>
+  <dt>Currently using:</dt><dd><%= ActionMailer::Base.delivery_method %></dd>
   <% Mailer %>
-  Current base path: <%= "#{SystemPreferences.public_host_https ? 'https' : 'http'}://#{ActionMailer::Base.default_url_options[:host]}" %>
-</p>
+  <dt>Current base path:</dt><dd><%= "#{SystemPreferences.public_host_https ? 'https' : 'http'}://#{ActionMailer::Base.default_url_options[:host]}" %></dd>
+</dl>
+<br>
 <%= form_tag system_preferences_update_path, {} do -%>
   <%= hidden_field_tag 'section', 'advanced_settings' %>
   <div class="form-field">
@@ -82,9 +74,9 @@ List:<br />
         <input type="radio" name="preferences[local_email_delivery]" value="false" <%= 'checked' if SystemPreferences.local_email_delivery != true %>> 
         Off
       </label>
+      <a title="Turning on local delivery and leaving the SMTP settings empty will make your node use sendmail." data-hover-hint="top" class="hint">(?)</a>
     </span>
   </div>
-  <p><strong>Info:</strong> Turning on local delivery and leaving the SMTP settings empty will make your node use sendmail.</p>
   <div class="form-field">
     <%= label_tag 'preferences[smtp_address]', 'SMTP Address:' %>
     <%= text_field_tag 'preferences[smtp_address]', SystemPreferences.smtp_address %>
@@ -103,3 +95,57 @@ List:<br />
   </div>
   <%= button "Save" %>
 <%- end -%>
+
+<h3>LDAP <a data-hover-hint="top" title="Handle your user authorization via remote LDAP" class="hint">(?)</a></h3>
+<%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
+  <%= hidden_field_tag 'section', 'advanced_settings' %>
+  <div class="form-field">
+    <label>Status:</label>
+    <span>
+      <label>
+        <input type="radio" name="preferences[remote_ldap_sign_on]" value="true" <%= 'checked' if SystemPreferences.remote_ldap_sign_on %>>
+        On
+      </label>
+      <label>
+        <input type="radio" name="preferences[remote_ldap_sign_on]" value="false" <%= 'checked' unless SystemPreferences.remote_ldap_sign_on %>> 
+        Off
+      </label>
+    </span>
+  </div>
+  <div class="form-field">
+    <%= label_tag 'preferences[remote_ldap_host]', 'LDAP Host:' %>
+    <%= text_field_tag 'preferences[remote_ldap_host]', SystemPreferences.remote_ldap_host %>
+  </div>
+  <div class="form-field">
+    <%= label_tag 'preferences[remote_ldap_base]', 'LDAP Base:' %>
+    <%= text_field_tag 'preferences[remote_ldap_base]', SystemPreferences.remote_ldap_base %>
+  </div>
+  <div class="form-field">
+    <%= label_tag 'preferences[remote_ldap_domain]', 'LDAP Domain:' %>
+    <%= text_field_tag 'preferences[remote_ldap_domain]', SystemPreferences.remote_ldap_domain %>
+  </div>
+  <%= button "Save" %>
+<%- end -%>
+
+<h3>VPN</h3>
+<%- vpn_status = SystemVpn.status %>
+
+<%= form_tag preferences_vpn_update_path, { :remote => true, 'data-type' => 'html' }  do %>
+  <%= hidden_field_tag 'section', 'advanced_settings' %>
+  <dl>
+    <dt>VPN type:</dt><dd>n2n</dd>
+    <dt>Supernode address:</dt><dd>directory.protonet.info</dd>
+    <dt>Node address:</dt><dd>10.0.0.1</dd>
+    <dt>Identifier/Community:</dt><dd><%= SystemPreferences.vpn[:identifier] %></dd>
+    <dt>Password/Encryption key:</dt><dd><%= SystemPreferences.vpn[:password] %></dd>
+  </dl>
+  <br>
+  <div class="form-field">
+    <label>Status:</label>
+    <span>
+      <label><input type="radio" name="vpn_status" value="true" <%= "checked" if vpn_status %>> On</label>
+      <label><input type="radio" name="vpn_status" value="false" <%= "checked" unless vpn_status %>> Off</label>
+    </span>
+  </div>
+  <%= button "Save" %>
+<%- end %>
