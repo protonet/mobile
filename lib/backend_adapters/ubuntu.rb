@@ -114,29 +114,29 @@ module BackendAdapters
       "/usr/bin/sudo /sbin/iptables"
     end
     
-    def grant_internet_access(ip, username = nil)
+    def grant_internet_access(mac, username = nil)
       # Add computer addresses to file
-      grants_entry = "#{ip}\t#{get_mac_for_ip(ip)}\t#{Time.now().strftime("%d.%m.%y")}\t#{username}\n"
+      grants_entry = "#{mac}\t#{Time.now().strftime("%d.%m.%y")}\t#{username}\n"
       File.open(internet_access_grants_file, 'a') {|f| f.write(grants_entry) }
     
       # Add mac to granted clients
-      `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access grant #{get_mac_for_ip(ip)} #{ip} #{username}`
+      `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access grant #{mac} #{username}`
     end
 
-    def internet_access_granted?(ip)
-      `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access status #{get_mac_for_ip(ip)}`
+    def internet_access_granted?(mac)
+      `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access status #{mac}`
     end
     
-    def in_grants_file?(ip)
-      open(internet_access_grants_file).grep(/#{ip}/).size > 0
+    def in_grants_file?(mac)
+      open(internet_access_grants_file).grep(/#{mac}/).size > 0
     end
     
-    def revoke_internet_access(ip)
-      `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access revoke #{get_mac_for_ip(ip)}`
+    def revoke_internet_access(mac)
+      `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access revoke #{mac}`
       lines = File.readlines(internet_access_grants_file)
       File.open(internet_access_grants_file, 'w') do |f|
         lines.each do |line|
-          f.write(line) unless line.match(ip)
+          f.write(line) unless line.match(mac)
         end
       end
     end
