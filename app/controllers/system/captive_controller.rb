@@ -14,13 +14,13 @@ module System
     end
 
     def whitelist
-      new_whitelist = params[:whitelist].scan(/(\d+.\d+.\d+.\d+)/).flatten
+      new_whitelist = params[:whitelist].scan(/(..:..:..:..:..:..)/).flatten
       old_whitelist = SystemPreferences.whitelist
-      (new_whitelist | old_whitelist).uniq.each do |ip|
-        if new_whitelist.include?(ip)
-          SystemBackend.grant_internet_access(ip, "n_a") unless old_whitelist.include?(ip)
+      (new_whitelist | old_whitelist).uniq.each do |mac_address|
+        if new_whitelist.include?(mac_address)
+          SystemBackend.grant_internet_access(mac_address, "n_a") unless old_whitelist.include?(mac_address)
         else
-          SystemBackend.revoke_internet_access(ip)
+          SystemBackend.revoke_internet_access(mac_address)
         end
       end
       SystemPreferences[:whitelist] = new_whitelist
@@ -29,15 +29,15 @@ module System
     end
   
     def login
+      mac_address = SystemBackend.get_mac_for_ip(request.remote_ip)
       if SystemPreferences.captive_authorization_url
-        mac_address = SystemBackend.get_mac_for_ip(request.remote_ip)
         delimiter = SystemPreferences.captive_authorization_url.include?('?') ? "&" : "?"
         auth_url = "#{SystemPreferences.captive_authorization_url}#{delimiter}nickname=#{CGI.escape(current_user.login)}&email=#{CGI.escape(current_user.email)}&mac_address=#{mac_address}"
         response = Net::HTTP.get_response(URI.parse(auth_url))
         
         case response.code.to_i
         when 200
-          SystemBackend.grant_internet_access(request.remote_ip, (@current_user.try(:login) || "n_a"))
+          SystemBackend.grant_internet_access(mac_address, (@current_user.try(:login) || "n_a"))
           sleep 10
           redirect_to_desired_url
         when 301..302
@@ -47,7 +47,7 @@ module System
           redirect_to root_path
         end
       else
-        SystemBackend.grant_internet_access(request.remote_ip, (@current_user.try(:login) || "n_a"))
+        SystemBackend.grant_internet_access(mac_address, (@current_user.try(:login) || "n_a"))
         sleep 10
         redirect_to_desired_url
       end

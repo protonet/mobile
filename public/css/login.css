@@ -37,8 +37,8 @@
 }
 
 #single-login {
+  margin: 65px auto 0;
   width: 1000px;
-  margin: 0 auto;
 }
 
 #single-login .errorExplanation {

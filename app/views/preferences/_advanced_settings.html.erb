@@ -40,7 +40,7 @@
 <%= form_tag "/captive/whitelist", { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'advanced_settings' %>
   <div class="form-field">
-    <%= label_tag 'whitelist', 'Whitelisted IPs:' %>
+    <%= label_tag 'whitelist', 'Whitelisted MACs:' %>
     <%= text_area_tag 'whitelist', SystemPreferences.whitelist.join("\n") %>
   </div>
   <%= button "Save" %>

@@ -67,10 +67,24 @@ if you don't have imagemagick or graphicsmagick, install it first:
 get your uuid stuff:
 
     brew install ossp-uuid (or apt-get install libossp-uuid-dev on ubuntu)
+    
+install mysql:
+
+on osx:
+
+    brew install mysql
+
+on linux use your package manager...
+
+setup mysql root user account and if on osx the startup according to brews instructions
 
 install the needed gems:
 
     bundle install
+    
+if you get an error installing sunspot solar just downgrade your rubygems version to 1.6.1 for now:
+
+    rvm install rubygems 1.6.1
 
 do the db
 
@@ -172,10 +186,20 @@ If you want to run our whole testsuite you'll need to add a vhost:
     rabbitmqctl add_vhost /test
     rabbitmqctl set_permissions -p /test guest ".*" ".*" ".*"
 
-COMPILING THE SOCKET:
+COMPILING THE FLASH SOCKET:
 =====================
 
 TextMate -> Bundles -> ActionScript -> MTASC -> Build with MTASC
+
+SPEEDING UP YOUR TEXTMATE SEARCH
+==================================
+Add these patterns to your textmate project settings to exclude unrelevant files from being searched
+
+Folder Pattern:
+!.*/(\.[^/]*|CVS|log|stub_data|gems|vendor|tmp|node_modules|_darcs|_MTN|selenium\-on\-rails|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$
+
+File:
+!(/\.(?!htaccess)[^/]*|\.(tmproj|o|pyc)|/Icon\r|/svn-commit(\.[2-9])?\.tmp|\.log|\.sql|\.cfs|xing_resources_cache|\.cvs|\.sql)$
 
 (NOT NEEDED YET) LDAP (ON LEOPARD)
 ==================================

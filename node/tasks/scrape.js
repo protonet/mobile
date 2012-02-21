@@ -1,5 +1,4 @@
-var HTML5 = require("html5"),
-  jsdom = require("jsdom");
+var jsdom = require("jsdom");
 
 function stripScriptTags(body){
   // remove all Script tags;
@@ -8,6 +7,7 @@ function stripScriptTags(body){
 }
 
 exports.scrape = function(params, response) {
+  var start = Date.now();
   
   var uri =  decodeURIComponent(params["url"]),
     selector = params["selectors"],
@@ -31,7 +31,6 @@ exports.scrape = function(params, response) {
           QuerySelector: true,
           MutationEvents: false
         }
-        ,parser: HTML5
       }).createWindow();
     
     var data = {
@@ -39,7 +38,7 @@ exports.scrape = function(params, response) {
         results: null
       },
       results = {}; 
-    
+      
     try {
       var matches = window.document.querySelectorAll(selector);
       for(var j = 0; j < matches.length; j++){
@@ -63,13 +62,11 @@ exports.scrape = function(params, response) {
     }catch(e){
       data.error = e;
     }    
-    
     if (callback) {
       response.end(callback + "(" + JSON.stringify(data) + ")");
     }else{
       response.end(JSON.stringify(data));
     }
-    if (window) { window.close(); };
-       
+    if (window) { window.close(); };     
   });
 };

@@ -73,36 +73,6 @@
             and:                  this.isSelected
           });
         }.bind(this))
-        
-        /**
-         * Render meep in this channel if it contains a channel reply
-         */
-        .on("meep.sent", function(meepData, meepElement, instance) {
-          if (meepData.channel_id == this.data.id) {
-            return;
-          }
-
-          // Already a reply, avoid non-ending loop
-          if (meepData.reply_from) {
-            return;
-          }
-          
-          // Prevent creating a channel reply when the channel is not a "real" channel
-          if (!protonet.data.Channel.getName(meepData.channel_id)) {
-            return;
-          }
-          
-          if ($.inArray(this.data.id, instance.channelReplies) == -1) {
-            return;
-          }
-
-          var newMeepData = $.extend({}, meepData, {
-            reply_from: meepData.channel_id,
-            channel_id: this.data.id
-          });
-
-          this._renderMeep(newMeepData, this.channelList, true);
-        }.bind(this))
 
         .on("meep.receive meep.sent", function(meepData) {
           if (meepData.channel_id == this.data.id) {
@@ -117,7 +87,7 @@
          * Count unread meeps
          */
         .on("meep.rendered", function(meepElement, meepData, instance) {
-          // Meep counts as unread ...
+          // A meep counts as unread ...
           
           // ... when meep is posted in this channel
           if (meepData.channel_id !== this.data.id) {
