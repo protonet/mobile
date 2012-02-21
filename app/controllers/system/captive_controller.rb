@@ -32,7 +32,7 @@ module System
       mac_address = SystemBackend.get_mac_for_ip(request.remote_ip)
       if SystemPreferences.captive_authorization_url
         delimiter = SystemPreferences.captive_authorization_url.include?('?') ? "&" : "?"
-        auth_url = "#{SystemPreferences.captive_authorization_url}#{delimiter}nickname=#{CGI.escape(current_user.login)}&email=#{CGI.escape(current_user.email)}&mac_address=#{mac_address}"
+        auth_url = "#{SystemPreferences.captive_authorization_url}#{delimiter}nickname=#{CGI.escape(current_user.login)}&email=#{CGI.escape(current_user.email)}&mac_address=#{CGI.escape(mac_address)}"
         response = Net::HTTP.get_response(URI.parse(auth_url))
         
         case response.code.to_i
