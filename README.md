@@ -48,6 +48,7 @@ GENERAL
     mkdir -p public/externals/image_proxy
     mkdir -p public/externals/screenshots
     mkdir -p public/externals/snapshots
+    mkdir -p tmp/pids
     git submodule init
     git submodule update
     
@@ -114,16 +115,20 @@ Install node.js (0.6.5):
     make
     sudo make install
 
-Install node-modules with npm
+This will install node with prefix /usr/local by default. We are investigating installing node via brew as well, but at the moment this would install a much older version
   
+Within the project directory do
+
     cd node/
     npm install
+    
+To install the node modules
 
 START THE SYSTEM
 ----------------
 
 After installing all dependencies you can get the system running by doing these steps:
-start the messaging broker
+start the messaging broker. When doing the installation you allready did that since rake db:setup needs the mq to run
 
     rabbitmq-server
 
@@ -284,4 +289,3 @@ HowTo mount local code to a protonet-node using nfs (Lion)
         sudo umount /home/protonet/dashboard/current/app/
       
     
-  
