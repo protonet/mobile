@@ -310,7 +310,7 @@ Then /^I should see the modal window$/ do
 end
 
 Then /^I close the modal window$/ do
-  find(:css, ".modal-window .close-link", :visible => true).click
+  find(:css, "header .logo a").click
 end
 
 Then /^I should not see the modal window$/ do
