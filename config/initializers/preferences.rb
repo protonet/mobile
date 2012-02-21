@@ -29,13 +29,13 @@ Dashboard::Application.config.to_prepare do
     "mode" => "wlan0",
     "channel" => 1,
     "wlan0" => {
-      "name" => "#{Node.local.name} (protonet-private)",
+      "name" => "#{SystemBackend.hostname} (protonet-private)",
       "password" => "Changeme!123",
       "sharing"  => true,
       "ip" => "10.42.0.1"
     },
     "wlan1" => {
-      "name" => "#{Node.local.name} (protonet-public)",
+      "name" => "#{SystemBackend.hostname} (protonet-public)",
       "password" => "",
       "sharing"  => false,
       "ip" => "10.43.0.1"
@@ -47,7 +47,7 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:public_host_https]  = false
   SystemPreferences.defaults[:captive_portal_greeting] = "Please sign in to receive internet access"
   
-  SystemPreferences.defaults[:browser_title] =  "#{Node.local.name} - protonet. it's yours."
+  SystemPreferences.defaults[:browser_title] =  "#{SystemBackend.hostname} - protonet. it's yours."
   SystemPreferences.defaults[:show_only_online_users] = false
   SystemPreferences.defaults[:default_registered_user_group] = "user"
   SystemPreferences.defaults[:default_stranger_user_group] = "guest"
@@ -76,5 +76,5 @@ Dashboard::Application.config.to_prepare do
     ActionMailer::Base.delivery_method = ProtonetEmailService
   end
   
-  SystemPreferences.defaults[:publish_to_web_name] = Node.local.name
+  SystemPreferences.defaults[:publish_to_web_name] = SystemBackend.hostname
 end
