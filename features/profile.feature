@@ -40,5 +40,4 @@ Feature: Managing your profile
     Then I follow "edit" within ".users-page"
     Then I should see "Upload photo" within ".users-page"
     And I attach "profile_pic.png" to "avatar_file"
-    And I press "Upload photo"
     Then I should see the profile image "profile_pic.png" in my profile details
