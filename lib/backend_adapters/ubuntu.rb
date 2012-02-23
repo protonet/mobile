@@ -81,7 +81,7 @@ module BackendAdapters
     end
     
     def wpa_passphrase(ssid, passphrase)
-      `/usr/bin/wpa_passphrase #{ssid} #{passphrase}`.match(/\tpsk=(.*)$/)[1].strip
+      `/usr/bin/wpa_passphrase '#{ssid}' '#{passphrase}'`.match(/\tpsk=(.*)$/)[1].strip
     end
     
     # private
