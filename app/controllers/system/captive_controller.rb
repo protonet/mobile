@@ -60,6 +60,7 @@ module System
     private
     def redirect_to_desired_url
       redirect_to(params[:captive_redirect_url] || session[:captive_redirect_url] || "http://www.google.com")
+      session[:captive_redirect_url] = nil
     end
     
     def only_admin
