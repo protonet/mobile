@@ -6,6 +6,12 @@ class Node < ActiveRecord::Base
   has_many :channels
   has_many :meeps
   
+  NAME_REGEX =/\A[\w\-]*\z/
+  BAD_NAME_MSG  = "can only consist of letters, numbers, and hyphens."
+  
+  validates_length_of :name, :within => 3..63
+  validates_format_of :name, :with => NAME_REGEX, :message => BAD_NAME_MSG
+  
   after_create  :generate_uuid, :if => lambda {|n| n.uuid.blank? }
   
   class << self

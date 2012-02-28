@@ -1,0 +1,89 @@
+.logged-out .inner-body {
+  margin: 90px auto 0;
+}
+
+.welcome {
+  padding-left: 390px;
+  min-height: 250px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 40px;
+}
+
+.welcome img {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.welcome h1 {
+  margin: 42px 0 0 0;
+  font-size: 28px;
+  text-shadow: 0 1px 1px #fff;
+  font-weight: normal;
+  font-size: 38px;
+  line-height: 1.3;
+  font-family: protonet;
+}
+
+.welcome fieldset {
+  background: rgba(255, 255, 255, 0.4);
+  margin-top: 10px;
+  padding: 20px;
+  width: 280px;
+}
+
+.welcome legend {
+  padding: 0 5px;
+  color: #333;
+  font-weight: bold;
+}
+
+.welcome label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.welcome input[type=text],
+.welcome input[type=email],
+.welcome input[type=password] {
+  padding: 8px;
+  width: 262px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.welcome button {
+  margin: 0 5px 0 0;
+  font-size:s 14px;
+}
+
+.welcome h3 {
+  margin-bottom: 10px;
+}
+
+.welcome .hint {
+  font-size: 10px;
+}
+
+.welcome .info-message {
+  width: 300px;
+}
+
+.welcome .field_with_errors input {
+  border-color: #e75c79;
+}
+
+.welcome .field_with_errors + .hint {
+  color: #e75c79;
+}
+
+.welcome .copyright-link {
+  display: block;
+  font-size: 10px;
+  text-decoration: none;
+  color: #999;
+  text-align: center;
+  margin: 10px 0;
+  width: 320px;
+}

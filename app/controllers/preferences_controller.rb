@@ -20,6 +20,7 @@ class PreferencesController < ApplicationController
 
   def set_available_preferences
     @preferences = current_user.roles.include?(Role.find_by_title!('admin')) ? [
+      {:section => 'node',              :name => 'Node'},
       {:section => 'publish_to_web',    :name => 'Web Publishing'},
       {:section => 'customize',         :name => 'Customization'},
       # TODO: Merge this into miscellaneous
@@ -27,12 +28,10 @@ class PreferencesController < ApplicationController
       {:section => 'wifi_config',       :name => 'WLAN'},
       # Captive stuff. This is not finished yet
       #{:url => 'captive_settings', :name => 'Captive settings'},
-      #{:url => 'webhook_settings', :name => 'Webhook settings'},
       {:section => 'privacy_settings',  :name => 'Privacy'},
       {:section => 'notifications',     :name => 'Notifications'},
       {:section => 'software_updates',  :name => 'Updates'},
-      {:section => 'advanced_settings', :name => 'Advanced'},
-      {:section => 'information',       :name => 'Information'}
+      {:section => 'advanced_settings', :name => 'Advanced'}
     ] : []
     
     @methods = @preferences.collect {|preference| preference[:section]}

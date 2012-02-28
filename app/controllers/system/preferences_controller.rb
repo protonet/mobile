@@ -9,7 +9,7 @@ module System
         SystemPreferences[k] = v
       end
       
-      flash[:notice] = "Your preferences have been successfully saved"
+      flash[:notice] = "Your settings have been successfully saved"
       respond_to_preference_update
     end
   end

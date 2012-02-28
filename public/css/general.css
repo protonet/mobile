@@ -12,7 +12,16 @@
       greyer_light  #f2f2f2   rgb(242, 242, 242)
       white         #fff      rgb(255, 255, 255)
 =========================================================================== */
+@font-face {
+  font-family: protonet;
+  font-style: normal;
+  font-weight: normal;
+  src: url('fonts/univers_light_condensed.eot');
+  src: local("Univers Light Condensed"), url('fonts/univers_light_condensed.woff') format('woff'), url('fonts/univers_light_condensed.svg') format('svg');
+}
+
 html {
+  background: #aaa;
   height: 100%;
 }
 
@@ -22,7 +31,9 @@ body {
   margin-top: -1px;
   position: relative;
   overflow-y: scroll;
-  background: #dae4ff; /* Same as rgba(72, 123, 255, 0.2); which creates a very buggy background effect in opera 10.64 */
+  background: #aaa;
+  background: #aaa -moz-linear-gradient(top, #eee, #aaa);
+  background: #aaa -webkit-gradient(linear, left top, left bottom, from(#eee), to(#aaa));
   color: #000;
   min-width: 950px;
 }
@@ -430,6 +441,9 @@ h2 .action-link {
 }
 
 .ribbon {
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, .5), 0 0 20px rgba(0, 0, 0, .15) inset;
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, .5), 0 0 20px rgba(0, 0, 0, .15) inset;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .5), 0 0 20px rgba(0, 0, 0, .15) inset;
   color: #fff;
   background-color: #487bff;
 }
@@ -440,7 +454,6 @@ h2 .action-link {
   position: absolute;
   bottom: -10px;
   content: "";
-  z-index: -2;
   border-style: solid;
   border-color: #062984 transparent transparent transparent;
 }
@@ -454,6 +467,7 @@ h2 .action-link {
   left: 0;
   border-width: 10px 0 0 10px;
 }
+
 
 
 .admin-flag {

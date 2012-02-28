@@ -1,57 +1,61 @@
-<% if @user %>
-  <% (@user.password = @user.password_confirmation = nil) %>
-  <%= error_messages_for :user %>
-<% end %>
-<section id="login">
-<h1>Welcome guest</h1>
-
-<%- if allow_signup? %>
-  <%= form_for :user, :url => user_registration_path, :html => { :class => "sign-up" } do |f| %>
-    <%= hidden_field_tag :invitation_token, params[:invitation_token] if params[:invitation_token] %>
+<div class="welcome">
+  <img src="/img/protonet_node_front_view.png" height="249" width="360" alt="protonet node. your private cloud.">
+  <h1>Welcome to the <strong>protonet</strong> of <strong><%= Node.local.name %></strong></h1>
+  
+  <%- if params[:captive_redirect_url] || session[:captive_redirect_url] %>
+    <p class="info-message"><%= raw(SystemPreferences.defaults[:captive_portal_greeting]) %></p>
+  <%- end %>
+  
+  <%= form_for :user, :url => user_session_path, :html => { :class => "login", :style => @signup_error || params[:invitation_token] ? "display: none" : "" } do |f| -%>
     <fieldset>
-      <legend>Get started by <strong>signing up</strong> (it's free)</legend>
+      <%- if SystemPreferences.remote_ldap_sign_on %>
+        <h3>Login with your ldap credentials</h3>
+      <%- end %>
+      
       <label>
-        <%= f.text_field :login, :placeholder => "user name" %>
-        <span class="hint">min. 3 characters</span>
+        <%= f.text_field :login, :placeholder => "user name or email" %>
       </label>
       <label>
-        <%= f.text_field :email, :placeholder => "email" %>
-        <span class="hint">a valid email address</span>
+        <%= f.password_field :password, :value => nil, :placeholder => "password" %>
       </label>
-      <label>
-        <%= f.password_field :password, :placeholder => "password" %>
-        <span class="hint">min. 6 characters</span>
-      </label>
-      <label>
-        <%= f.password_field :password_confirmation, :placeholder => "password" %>
-        <span class="hint">repeat for confirmation</span>
+      <label for="user_remember_me">
+        <%= f.check_box :remember_me, :checked => true %> <span class="hint">Keep logged in?</span>
       </label>
       <div>
-        <%= button "sign up" %>
+        <%= button "Login", :id => "login" %>
+        <%- if allow_signup? %>
+          or <a href="/users/sign_in#register" class="promotion-link register-link">create an account</a>
+        <%- end %>
       </div>
     </fieldset>
   <%- end %>
-<%- end %>
-
-<%= form_for :user, :url =>  user_session_path, :html => { :class => "login #{'no-register' unless allow_signup?}" } do |f| -%>
-  <fieldset>
-    <%- if SystemPreferences.remote_ldap_sign_on == true %>
-      <legend><strong>Log in</strong> with your ldap credentials</legend>
-    <%- elsif node_privacy_settings["allow_registrations_for_strangers"] != true -%>
-      <legend>Please <strong>log in!</strong></legend>
-    <%- else %>
-      <legend>or <strong>logging in</strong></legend>
+  
+  <%- if allow_signup? %>
+    <%= form_for :user, :url => user_registration_path, :html => { :class => "register", :style => @signup_error || params[:invitation_token] ? "" : "display: none" } do |f| %>
+      <%= hidden_field_tag :invitation_token, params[:invitation_token] if params[:invitation_token] %>
+      <fieldset>
+        <h3>Create an account. It's free.</h3>
+        <label>
+          <%= f.text_field :login, :placeholder => "user name" %>
+          <span class="hint">min. 3 characters, allowed: A-Z, 0-9 and .-_</span>
+        </label>
+        <label>
+          <%= f.text_field :email, :placeholder => "email", :type => "email" %>
+          <span class="hint">a valid email address</span>
+        </label>
+        <label>
+          <%= f.password_field :password, :placeholder => "password" %>
+          <span class="hint">min. 6 characters</span>
+        </label>
+        <label>
+          <%= f.password_field :password_confirmation, :placeholder => "password" %>
+          <span class="hint">repeat for confirmation</span>
+        </label>
+        <div>
+          <%= button "Sign up", :id => "register" %> <a href="/users/sign_in#login" class="promotion-link login-link">already have an account?</a>
+        </div>
+      </fieldset>
     <%- end %>
-    <label>
-      <%= f.text_field :login, :placeholder => "user name or email", :id => "login_login" %>
-    </label>
-    <label>
-      <%= f.password_field :password, :value => nil, :placeholder => "password", :id => "login_password" %>
-    </label>
-    <label>
-      <%= f.check_box :remember_me %> <span class="hint">Keep logged in?</span>
-    </label>
-    <button type="submit" name="commit">login</button>
-  </fieldset>
-<%- end -%>
-</section>
+  <%- end %>
+  <a href="http://protonet.info" target="_blank" class="copyright-link" title="Click here to get informed about protonet">&copy; 2012 protonet. it's yours.</a>
+</div>

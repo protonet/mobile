@@ -4,8 +4,7 @@ module System
     before_filter :only_admin, :only => [:grant, :revoke]
   
     def index
-      flash[:sticky] = "please login or create an account to be able to use the internet!"
-      render :layout => "registrations"
+      render :layout => 'logged_out'
     end
     
     def store_redirect

@@ -5,15 +5,15 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:admin_key] = ActiveSupport::SecureRandom.base64(10)
   SystemPreferences.defaults[:privacy] = {
     "fallback" => {
-      "allow_dashboard_for_strangers" => true,
+      "allow_dashboard_for_strangers" => false,
       "allow_registrations_for_strangers" => true
     },
     "lo0" => {
-      "allow_dashboard_for_strangers" => true,
+      "allow_dashboard_for_strangers" => false,
       "allow_registrations_for_strangers" => true
     },
     "eth0" => {
-      "allow_dashboard_for_strangers" => true,
+      "allow_dashboard_for_strangers" => false,
       "allow_registrations_for_strangers" => true
     },
     "published_to_web" => {
@@ -21,7 +21,7 @@ Dashboard::Application.config.to_prepare do
       "allow_registrations_for_strangers" => false
     },
     "wlan0" => {
-      "allow_dashboard_for_strangers" => true,
+      "allow_dashboard_for_strangers" => false,
       "allow_registrations_for_strangers" => true
     }
   }
@@ -47,7 +47,7 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:public_host_https]  = false
   SystemPreferences.defaults[:captive_portal_greeting] = "Please sign in to receive internet access"
   
-  SystemPreferences.defaults[:browser_title] =  "#{SystemBackend.hostname} - protonet. it's yours."
+  SystemPreferences.defaults[:browser_title] = "#{SystemBackend.hostname} - protonet. it's yours."
   SystemPreferences.defaults[:show_only_online_users] = false
   SystemPreferences.defaults[:default_registered_user_group] = "user"
   SystemPreferences.defaults[:default_stranger_user_group] = "guest"

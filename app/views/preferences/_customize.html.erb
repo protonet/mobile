@@ -12,7 +12,7 @@
   <div class="form-field">
     <%= hidden_field_tag 'preferences[show_only_online_users]', false, {:id => nil}  %>
     <%= label_tag 'preferences[show_only_online_users]', 'Show only online users' %> <%= check_box_tag 'preferences[show_only_online_users]', true, SystemPreferences.show_only_online_users %>
-    <a class="hint" data-hover-hint="top" title="Whether offline users should be hidden in the user widget. Recommended if your node has a lot of users (> 1000)">(?)</a>
+    <a class="hint" data-hover-hint="top" title="Whether offline users should be hidden in the user box. Recommended if your node has a lot of users (> 1000)">(?)</a>
   </div>
   <div class="form-field">
     <%= hidden_field_tag 'preferences[allow_modal_views]', false, {:id => nil}  %>
@@ -26,12 +26,7 @@
 <%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'customize' %>
   <div class="form-field">
-    <%= label_tag 'preferences[custom_css]', 'Your CSS:' %>
     <%= text_area_tag 'preferences[custom_css]', SystemPreferences.custom_css %>
-  </div>
-  <div class="form-field">
-    <%= label_tag 'preferences[custom_css_type]', 'Type:' %>
-    <%= select_tag 'preferences[custom_css_type]', options_for_select([["append", "append"], ["overwrite", "overwrite"]], SystemPreferences.custom_css_type) %>
   </div>
   <%= button "Save" %>
 <%- end %>
@@ -40,7 +35,6 @@
 <%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'customize' %>
   <div class="form-field">
-    <%= label_tag 'preferences[custom_javascript]', 'Your JS:' %>
     <%= text_area_tag 'preferences[custom_javascript]', SystemPreferences.custom_javascript %>
   </div>
   <%= button "Save" %>

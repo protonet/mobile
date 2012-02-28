@@ -35,17 +35,17 @@
 }
 
 #channels li a {
-  -moz-border-radius-topleft: 8px;
-  -moz-border-radius-topright: 8px;
-  -webkit-border-top-left-radius: 8px;
-  -webkit-border-top-right-radius: 8px;
+  -moz-border-radius-topleft: 6px;
+  -moz-border-radius-topright: 6px;
+  -webkit-border-top-left-radius: 6px;
+  -webkit-border-top-right-radius: 6px;
   background: #eee;
   background: rgba(0, 0, 0, 0.1);
   background: -moz-linear-gradient(bottom, rgba(0, 0, 0, 0.1), transparent);
   background: -webkit-linear-gradient(bottom, rgba(0, 0, 0, 0.1), transparent);
   background: linear-gradient(bottom, rgba(0, 0, 0, 0.1), transparent);
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
   border: 1px solid #999;
   bottom: 0;
   color: #666;
@@ -158,10 +158,6 @@
 }
 
 #channels .system {
-  background: #e3ebff;
-  background: -moz-linear-gradient(bottom, rgba(72, 123, 255, 0.25), rgba(72, 123, 255, 0));
-  background: -webkit-linear-gradient(bottom, rgba(72, 123, 255, 0.25), rgba(72, 123, 255, 0));
-  background: linear-gradient(bottom, rgba(72, 123, 255, 0.25), rgba(72, 123, 255, 0));
   padding-left: 23px;
 }
 
@@ -169,13 +165,6 @@
   left: 4px;
   background: url(/img/spr_channel_status_r2.png) no-repeat;
   background-position: 0 -32px;
-}
-
-#channels .system:focus,
-#channels .system:active {
-  background: -moz-linear-gradient(bottom, rgba(72, 123, 255, 0), rgba(72, 123, 255, 0.25));
-  background: -webkit-linear-gradient(bottom, rgba(72, 123, 255, 0), rgba(72, 123, 255, 0.25));
-  background: linear-gradient(bottom, rgba(72, 123, 255, 0), rgba(72, 123, 255, 0.25));
 }
 
 #channels .active {

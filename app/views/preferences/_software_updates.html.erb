@@ -1,6 +1,7 @@
 <h2>Updates</h2>
-<p>Here you can update your node's software with just one click.</p>
+<p>It's recommended to update your node's software from time to time to avoid errors and to get latest enhancements.</p>
 
+<h3>Info</h3>
 <dl>
   <dt>Current version:</dt><dd><%= SystemRelease.current_version %>/<%= SystemRelease.current_type %></dd>
   <dt>Latest stable version:</dt><dd><%= SystemRelease.latest_version %></dd>
@@ -12,8 +13,9 @@
 <%= form_tag(preferences_release_update_path, { :remote => true, 'data-type' => 'html', :class => "software-update" }) do %>
   <%= hidden_field_tag 'section', 'software_updates' %>
   <div class="form-field">
-    <%= label_tag          :password, 'Your node password:' %>
+    <%= label_tag          :password, "Your node's SSH password:" %>
     <%= password_field_tag :password, nil %>
+    <a data-hover-hint="top" class="hint" title="The password can be found on the 'Getting Started' paper which you received with your node">(?)</a>
   </div>
   <div class="form-field">
     <%= label_tag   :release, 'Select version:' %>

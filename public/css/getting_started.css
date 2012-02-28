@@ -6,13 +6,13 @@
 }
 
 .getting-started h4 {
-  background: url(/img/headline_getting_started.png) no-repeat;
-  height: 19px;
-  text-indent: -9999px;
-  font-size: 18px;
+  text-transform: uppercase;
+  font-family: protonet;
+  font-size: 26px;
+  line-height: 1.2;
   color: #fff;
+  font-weight: normal;
   margin-bottom: 20px;
-  text-shadow: 0 1px 1px #000;
 }
 
 .getting-started-close-link {

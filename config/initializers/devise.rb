@@ -185,6 +185,6 @@ Devise.setup do |config|
   # end
 end
 Dashboard::Application.config.to_prepare do
-  Devise::SessionsController.layout "registrations"
-  Devise::RegistrationsController.layout "registrations"
+  Devise::SessionsController.layout "logged_out"
+  Devise::RegistrationsController.layout "logged_out"
 end
