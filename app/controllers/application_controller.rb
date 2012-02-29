@@ -13,7 +13,6 @@ class ApplicationController < ActionController::Base
   after_filter :compress,                       :if => Proc.new { |a| a.response.content_type == "application/json" }
   after_filter :set_controller_name_to_header,  :if => Proc.new { |a| a.request.xhr? }
   
-  # TODO check with @dudemeister
   layout Proc.new { |a| return a.request.xhr? ? 'ajax' : 'application' }
   
   # devise migration
