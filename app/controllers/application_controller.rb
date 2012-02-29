@@ -102,6 +102,7 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.html {
         session[:captive_redirect_url] = requested_uri
+        redirect_to "http://#{address_for_current_interface}/"
       }
       format.all {
         return head 503
