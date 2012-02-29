@@ -31,11 +31,15 @@ body {
   margin-top: -1px;
   position: relative;
   overflow-y: scroll;
+  background: #d1deff;
+  color: #000;
+  min-width: 950px;
+}
+
+.logged-out body {
   background: #aaa;
   background: #aaa -moz-linear-gradient(top, #eee, #aaa);
   background: #aaa -webkit-gradient(linear, left top, left bottom, from(#eee), to(#aaa));
-  color: #000;
-  min-width: 950px;
 }
 
 .inner-body {
