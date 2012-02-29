@@ -171,7 +171,7 @@ module BackendAdapters
         # (that's what that refresh parameter is for)
         # to_a makes sure it's an array
         ip_array = ifaces.collect do |iface|
-          match = `/usr/sbin/arp -a -i #{@config[iface]}`
+          match = `/usr/sbin/arp -a -n -i #{@config[iface]}`
           # Merb.logger.error('arp:' + match)
           match = match.match(/\((.*)\).*#{mac}/)
           match && match[1]
@@ -182,7 +182,7 @@ module BackendAdapters
       end
 
       def get_mac_for_ip(ip)
-        match = `/usr/sbin/arp -a #{ip}`
+        match = `/usr/sbin/arp -n -a #{ip}`
         match = match.match(REGEXPS[:mac])
         match && match[0].upcase
       end
