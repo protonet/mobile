@@ -24,7 +24,8 @@ class ApplicationController < ActionController::Base
   def render_404
     requested_uri = request.protocol + request.host_with_port + request.fullpath
     if SystemPreferences.captive && !SystemBackend.requested_host_local?(request.host)
-      redirect_to "http://#{address_for_current_interface}/?captive_redirect_url=" + URI.escape(requested_uri)
+      session[:captive_redirect_url] = requested_uri
+      redirect_to "http://#{address_for_current_interface}/"
     else
       render :file => "#{Rails.root}/public/404.html", :status => 404
     end
@@ -100,7 +101,7 @@ class ApplicationController < ActionController::Base
     return true if SystemBackend.requested_host_local?(request.host)
     respond_to do |format|
       format.html {
-        redirect_to "http://#{address_for_current_interface}/?captive_redirect_url=" + URI.escape(requested_uri)
+        session[:captive_redirect_url] = requested_uri
       }
       format.all {
         return head 503

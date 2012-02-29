@@ -2,8 +2,8 @@
   <img src="/img/protonet_node_front_view.png" height="249" width="360" alt="protonet node. your private cloud.">
   <h1>Welcome to the <strong>protonet</strong> of <strong><%= Node.local.name %></strong></h1>
   
-  <%- if params[:captive_redirect_url] || session[:captive_redirect_url] %>
-    <p class="info-message"><%= raw(SystemPreferences.defaults[:captive_portal_greeting]) %></p>
+  <%- if session[:captive_redirect_url] %>
+    <p class="info-message"><%= raw(SystemPreferences.captive_portal_greeting) %></p>
   <%- end %>
   
   <%= form_for :user, :url => user_session_path, :html => { :class => "login", :style => @signup_error || params[:invitation_token] ? "display: none" : "" } do |f| -%>

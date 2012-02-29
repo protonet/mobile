@@ -7,11 +7,6 @@ module System
       render :layout => 'logged_out'
     end
     
-    def store_redirect
-      session[:captive_redirect_url] = params[:captive_redirect_url]
-      head :ok
-    end
-
     def whitelist
       new_whitelist = params[:whitelist].scan(/(..:..:..:..:..:..)/).flatten
       old_whitelist = SystemPreferences.whitelist
@@ -58,8 +53,7 @@ module System
 
     private
     def redirect_to_desired_url
-      redirect_to(params[:captive_redirect_url] || session[:captive_redirect_url] || "http://www.google.com")
-      session[:captive_redirect_url] = nil
+      redirect_to(session.delete(:captive_redirect_url) || "http://www.google.com")
     end
     
     def only_admin

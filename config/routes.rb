@@ -3,7 +3,6 @@ Dashboard::Application.routes.draw do
   # Captive
   match 'captive' => 'system/captive#index'
   match 'captive/login' => 'system/captive#login'
-  match 'captive/store_redirect' => 'system/captive#store_redirect'
   match 'captive/whitelist' => 'system/captive#whitelist'
 
   # Channels
