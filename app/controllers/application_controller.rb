@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   helper_method :logged_in?, :allow_signup?, :node_privacy_settings, :incoming_interface
   
   # hack for reload problem in development
-  before_filter :set_backend_for_development, :current_user, :set_current_user_for_authorization, :guest_login, :captive_check
+  before_filter :set_backend_for_development, :current_user, :set_current_user_for_authorization, :captive_check, :guest_login
   before_filter :detect_xhr_redirect
   
   after_filter :set_flash_message_to_header,    :if => Proc.new { |a| a.request.xhr? }
