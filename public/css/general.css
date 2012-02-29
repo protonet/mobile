@@ -16,8 +16,8 @@
   font-family: protonet;
   font-style: normal;
   font-weight: normal;
-  src: url('fonts/univers_light_condensed.eot');
-  src: local("Univers Light Condensed"), url('fonts/univers_light_condensed.woff') format('woff'), url('fonts/univers_light_condensed.ttf') format('truetype'), url('fonts/univers_light_condensed.svg') format('svg');
+  src: url('/css/fonts/univers_light_condensed.eot');
+  src: local("Univers Light Condensed"), url('/css/fonts/univers_light_condensed.woff') format('woff'), url('/css/fonts/univers_light_condensed.ttf') format('truetype'), url('/css/fonts/univers_light_condensed.svg') format('svg');
 }
 
 html {
