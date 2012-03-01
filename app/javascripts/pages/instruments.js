@@ -14,14 +14,7 @@ protonet.p("instruments", function($page) {
   
   // there's a captive portal redirect request and the user is logged in
   if (protonet.config.captive_redirect_url) {
-<<<<<<< HEAD
-    $.post("/captive/store_redirect", { captive_redirect_url: protonet.config.captive_redirect_url });
-    if (protonet.config.user_is_stranger) {
-      protonet.trigger('flash_message.sticky', 'Welcome. Please login or register to get access to the internet. Thank you!');
-    } else {
-=======
     if (!protonet.config.user_is_stranger) {
->>>>>>> master
       var htmlEscapedUrl = protonet.utils.escapeHtml(protonet.config.captive_redirect_url),
           urlEncodedUrl  = encodeURIComponent(protonet.config.captive_redirect_url);
       new protonet.ui.Overlay(

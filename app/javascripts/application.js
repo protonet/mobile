@@ -55,7 +55,7 @@ $(function() {
     $("form .register-link").click();
   }
   
-  if (protonet.user.Browser.IS_TOUCH_DEVICE()) {
+  if (protonet.browser.IS_TOUCH_DEVICE()) {
     $("body").addClass("touch-device");
   }
 });
