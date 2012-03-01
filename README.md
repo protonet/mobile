@@ -48,37 +48,38 @@ GENERAL
     mkdir -p public/externals/image_proxy
     mkdir -p public/externals/screenshots
     mkdir -p public/externals/snapshots
+    mkdir -p tmp/pids
     git submodule init
     git submodule update
     
 
-if you don't have bundler install it first:
+Ff you don't have bundler install it first:
 
     (sudo) gem install bundler -v 1.0.11
 
-we'll be using homebrew (>= 0.8) to manage dependencies (this is what you should use on OS X anyways)
+We'll be using homebrew (>= 0.8) to manage dependencies (this is what you should use on OS X anyways)
 
     ruby -e "$(curl -fsSL https://gist.github.com/raw/323731/install_homebrew.rb)"
 
-if you don't have imagemagick or graphicsmagick, install it first:
+If you don't have imagemagick or graphicsmagick, install it first:
 
     brew install graphicsmagick
 
-get your uuid stuff:
+Get your uuid stuff:
 
     brew install ossp-uuid (or apt-get install libossp-uuid-dev on ubuntu)
     
-install mysql:
+Install MySQL:
 
-on osx:
+On osx:
 
     brew install mysql
 
-on linux use your package manager...
+On linux use your package manager...
 
-setup mysql root user account and if on osx the startup according to brews instructions
+Setup MySQL root user account and if on osx the startup according to brews instructions
 
-install the needed gems:
+Install the needed gems:
 
     bundle install
     
@@ -86,18 +87,22 @@ if you get an error installing sunspot solar just downgrade your rubygems versio
 
     rvm install rubygems 1.6.1
 
-do the db
+MESSAGING
+---------
+
+Install our messaging broker (We use rabbitmq):
+
+    brew install rabbitmq
+    
+Start it
+
+    sudo rabbitmq-server
+
+Setup the db
 
     rake db:setup
     
 This will create a user "admin" with password "admin" who has admin permissions.
-
-MESSAGING
----------
-
-Install our messaging broker:
-
-    brew install rabbitmq
 
 NODE.JS
 -------
@@ -110,16 +115,20 @@ Install node.js (0.6.5):
     make
     sudo make install
 
-Install node-modules with npm
+This will install node with prefix /usr/local by default. We are investigating installing node via brew as well, but at the moment this would install a much older version
   
+Within the project directory do
+
     cd node/
     npm install
+    
+To install the node modules
 
 START THE SYSTEM
 ----------------
 
 After installing all dependencies you can get the system running by doing these steps:
-start the messaging broker
+start the messaging broker. When doing the installation you allready did that since rake db:setup needs the mq to run
 
     rabbitmq-server
 
@@ -280,4 +289,3 @@ HowTo mount local code to a protonet-node using nfs (Lion)
         sudo umount /home/protonet/dashboard/current/app/
       
     
-  

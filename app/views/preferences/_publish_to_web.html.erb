@@ -2,7 +2,10 @@
 <div class="status-box publish-to-web">
   <%= @nofetch = true; render :partial => 'preferences/publish_to_web/status' %>
 </div>
+
 <p>Make your node available to the entire world not just your local network.</p>
+
+<h3>Settings</h3>
 <%- if incoming_interface == "published_to_web" %>
   <p class="info-message">
     <strong>Please note:</strong> You are currently connected via <i>Web Publishing</i>. If you now shutdown or rename it, you will lose connection.</strong>

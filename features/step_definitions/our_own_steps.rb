@@ -38,8 +38,8 @@ end
 Given /^I am logged in as "([^\"]*)"(?: with password "([^\"]*)")?$/ do|username, password|
   password ||= (@password || '123456')
   within("form.login") do
-    fill_in 'login_login', :with => username
-    fill_in 'login_password', :with => password
+    fill_in 'user[login]', :with => username
+    fill_in 'user[password]', :with => password
     click_button('login')
   end
 
@@ -53,12 +53,13 @@ Given /^I am logged in as "([^\"]*)"(?: with password "([^\"]*)")?$/ do|username
 end
 
 Given /^I register as "([^\"]*)"$/ do |username|
-  within("form.sign-up") do
+  find(:css, "a.register-link").click
+  within("form.register") do
     fill_in 'user_login',    :with => username
     fill_in 'user_email',    :with => "#{username}@foo.com"
     fill_in 'user_password', :with => '123456'
     fill_in 'user_password_confirmation', :with => '123456'
-    click_button('sign up')
+    click_button('register')
   end
   within('#my-widget') do
     page.has_content?(username).should == true
@@ -148,11 +149,11 @@ Then /^I click on "([^\"]*)" in the timeline$/ do |text|
 end
 
 Then /^I should see the login form$/ do
-  find(:css, 'form.login', :visible => true)
+  find(:css, 'form.login')
 end
 
 Then /^I should see the registration form$/ do
-  find(:css, 'form.sign-up', :visible => true)
+  find(:css, 'form.register')
 end
 
 Given /^I send the message "([^\"]*)"$/ do |text|
@@ -310,7 +311,7 @@ Then /^I should see the modal window$/ do
 end
 
 Then /^I close the modal window$/ do
-  find(:css, ".modal-window .close-link", :visible => true).click
+  find(:css, "header .logo a").click
 end
 
 Then /^I should not see the modal window$/ do
@@ -368,4 +369,8 @@ end
 
 Then /^somebody accepts the invitation with token "([^\"]*)"/ do |token|
   Invitation.find_by_token(token).update_attribute("accepted_at", "2011-01-15 10:00:00")
+end
+
+Then /^I should see page title as "(.*)"$/ do |title|
+  assert_equal title, page.find(:css, 'title').text
 end

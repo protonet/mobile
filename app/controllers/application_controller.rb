@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   helper_method :logged_in?, :allow_signup?, :node_privacy_settings, :incoming_interface
   
   # hack for reload problem in development
-  before_filter :set_backend_for_development, :current_user, :set_current_user_for_authorization, :guest_login, :captive_check
+  before_filter :set_backend_for_development, :current_user, :set_current_user_for_authorization, :captive_check, :guest_login, :store_captive_redirect_url
   before_filter :detect_xhr_redirect
   
   after_filter :set_flash_message_to_header,    :if => Proc.new { |a| a.request.xhr? }
@@ -13,7 +13,6 @@ class ApplicationController < ActionController::Base
   after_filter :compress,                       :if => Proc.new { |a| a.response.content_type == "application/json" }
   after_filter :set_controller_name_to_header,  :if => Proc.new { |a| a.request.xhr? }
   
-  # TODO check with @dudemeister
   layout Proc.new { |a| return a.request.xhr? ? 'ajax' : 'application' }
   
   # devise migration
@@ -24,9 +23,9 @@ class ApplicationController < ActionController::Base
   def render_404
     requested_uri = request.protocol + request.host_with_port + request.fullpath
     if SystemPreferences.captive && !SystemBackend.requested_host_local?(request.host)
-      redirect_to "http://#{address_for_current_interface}/?captive_redirect_url=" + URI.escape(requested_uri)
+      redirect_to "http://#{address_for_current_interface}/?captive_redirect_url=#{URI.escape(requested_uri)}"
     else
-      render :file => "#{Rails.root}/public/404.html", :status => 404
+      render :file => "#{Rails.root}/public/404.html", :status => 404, :layout => false
     end
   end
   
@@ -100,7 +99,7 @@ class ApplicationController < ActionController::Base
     return true if SystemBackend.requested_host_local?(request.host)
     respond_to do |format|
       format.html {
-        redirect_to "http://#{address_for_current_interface}/?captive_redirect_url=" + URI.escape(requested_uri)
+        redirect_to "http://#{address_for_current_interface}/?captive_redirect_url=#{URI.escape(requested_uri)}"
       }
       format.all {
         return head 503
@@ -184,6 +183,12 @@ class ApplicationController < ActionController::Base
         head(status)
       else
         redirect_to :controller => '/preferences', :action => :show, :section => params[:section]
+      end
+    end
+    
+    def store_captive_redirect_url
+      unless params[:captive_redirect_url].blank?
+        session[:captive_redirect_url] = params[:captive_redirect_url]
       end
     end
 end

@@ -27,6 +27,8 @@ class RegistrationsController < Devise::RegistrationsController
       end
     else
       clean_up_passwords(resource)
+      @signup_error = true
+      flash[:error] = "Please check the highlighted fields"
       render 'devise/registrations/new'
     end
   end

@@ -4,15 +4,9 @@ module System
     before_filter :only_admin, :only => [:grant, :revoke]
   
     def index
-      flash[:sticky] = "please login or create an account to be able to use the internet!"
-      render :layout => "registrations"
+      render :layout => 'logged_out'
     end
     
-    def store_redirect
-      session[:captive_redirect_url] = params[:captive_redirect_url]
-      head :ok
-    end
-
     def whitelist
       new_whitelist = params[:whitelist].scan(/(..:..:..:..:..:..)/).flatten
       old_whitelist = SystemPreferences.whitelist
@@ -32,7 +26,7 @@ module System
       mac_address = SystemBackend.get_mac_for_ip(request.remote_ip)
       if SystemPreferences.captive_authorization_url
         delimiter = SystemPreferences.captive_authorization_url.include?('?') ? "&" : "?"
-        auth_url = "#{SystemPreferences.captive_authorization_url}#{delimiter}nickname=#{CGI.escape(current_user.login)}&email=#{CGI.escape(current_user.email)}&mac_address=#{mac_address}"
+        auth_url = "#{SystemPreferences.captive_authorization_url}#{delimiter}nickname=#{CGI.escape(current_user.login)}&email=#{CGI.escape(current_user.email)}&mac_address=#{CGI.escape(mac_address)}"
         response = Net::HTTP.get_response(URI.parse(auth_url))
         
         case response.code.to_i
@@ -59,7 +53,7 @@ module System
 
     private
     def redirect_to_desired_url
-      redirect_to(params[:captive_redirect_url] || session[:captive_redirect_url] || "http://www.google.com")
+      redirect_to(session.delete(:captive_redirect_url) || "http://www.google.com")
     end
     
     def only_admin

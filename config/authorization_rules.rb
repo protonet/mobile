@@ -53,6 +53,7 @@ authorization do
     has_permission_on :files, :to => [:read]
     has_permission_on :snapshots, :to => :index
     has_permission_on :channels, :to => [:manage, :manage_globals]
+    has_permission_on :nodes, :to => [:manage]
     has_permission_on :listens, :to => [:manage, :accept, :manage_globals, :create_for_user]
     has_permission_on :invitations, :to => :manage
     has_permission_on :authorization_rules, :to => :read

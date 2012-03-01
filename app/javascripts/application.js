@@ -46,7 +46,16 @@ $(function() {
   protonet.ui.FlashMessage.initialize();
   protonet.ui.Header.initialize();
   
-  if (protonet.browser.IS_TOUCH_DEVICE()) {
+  $("form .register-link, form .login-link").bind("click", function() {
+    $("form.login, form.register").toggle();
+    return false;
+  });
+  
+  if (location.hash.indexOf("register") !== -1) {
+    $("form .register-link").click();
+  }
+  
+  if (protonet.user.Browser.IS_TOUCH_DEVICE()) {
     $("body").addClass("touch-device");
   }
 });

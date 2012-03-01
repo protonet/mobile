@@ -1,0 +1,27 @@
+<%- local_node = Node.local %>
+
+<h2>Node</h2>
+
+<h3>Settings</h3>
+<p class="info-message"><strong>Please note:</strong> Changing the node's name will also change the name of the WLAN and cause a restart.</p>
+<%= form_for local_node, :remote => true, 'data-type' => 'html' do |f| %>
+  <div class="form-field">
+    <%= f.label :name, "Name:" %>
+    <%= f.text_field :name, :placeholder => "Please enter a name" %>
+    <a data-hover-hint="top" title="The name can only consist of letters, numbers and hyphens (no whitespace allowed)" class="hint">(?)</a>
+  </div>
+  <%= button "Save" %>
+<%- end %>
+
+<h3>Info</h3>
+<dl>
+  <dt>License key:</dt><dd><%= SystemBackend.license_key %></dd>
+  <dt>UUID:</dt><dd><%= Network.local.uuid %> <a class="hint" data-hover-hint="top" title="This is your node's unique id">(?)</a></dd>
+</dl>
+
+<h3>Support</h3>
+<dl>
+  <dt>Support via E-Mail:</dt><dd><a href="mailto:team@protonet.info">team@protonet.info</a></dd>
+  <dt>Support via Twitter:</dt><dd><a href="http://twitter.com/protonet" target="_blank">twitter.com/protonet</a></dd>
+  <dt>Website:</dt><dd><a href="http://www.protonet.info" target="_blank">protonet.info</a></dd>
+</dl>

@@ -17,6 +17,10 @@
     </span>
   </div>
   <div class="form-field">
+    <%= label_tag 'preferences[captive_portal_greeting]', 'Captive greeting:' %>
+    <%= text_field_tag 'preferences[captive_portal_greeting]', SystemPreferences.captive_portal_greeting %>
+  </div>
+  <div class="form-field">
     <%= label_tag 'preferences[captive_authorization_url]', 'Captive authorization URL:' %>
     <%= text_field_tag 'preferences[captive_authorization_url]', SystemPreferences.captive_authorization_url %>
   </div>
