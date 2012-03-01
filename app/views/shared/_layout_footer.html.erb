@@ -46,7 +46,7 @@
 </style>
 
 <%-
-  users = SystemPreferences.show_only_online_users ? [] : User.registered.all
+  users = SystemPreferences.show_only_online_users ? [] : User.registered.includes(:roles, :listens).all
   channels = current_user.allowed_channels
   
   users.map!     {|u| User.prepare_for_frontend(u) }
