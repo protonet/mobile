@@ -51,5 +51,6 @@ protonet.i18n = {
   UPLOAD_SUCCESSFUL: "All files have been successfully uploaded.",
   USERS_IN_REMOTE_CHANNEL: 'Online users <a data-hover-hint="top" title="Only online users are displayed in global channels">(?)</a>',
   USERS_IN_NORMAL_CHANNEL: "Users",
-  SHARED_BETWEEN_YOU_AND_USER: "shared between <strong>you</strong> and <strong>#{user_name}</strong>"
+  SHARED_BETWEEN_YOU_AND_USER: "shared between <strong>you</strong> and <strong>#{user_name}</strong>",
+  NO_WEBCAM_SUPPORT: "Sorry, it seems like your browser doesn't support webcam access or you don't have an webcam."
 };

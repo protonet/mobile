@@ -1,10 +1,12 @@
+//= require "../../../media/webcam.js"
+
 /**
  * Webcam snapshots
  */
 protonet.timeline.Form.extensions.Snapshots = function($input, $wrapper, $form) {
   var $link = $form.find("[data-extension=snapshot]");
   
-  if (!protonet.browser.HAS_FLASH(9)) {
+  if (!new protonet.media.Webcam().supported()) {
     $link.hide();
     return;
   }

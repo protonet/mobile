@@ -141,7 +141,10 @@ protonet.ui.ModalWindow = (function() {
     elements.dialog.addClass("loading");
     _abortCurrentRequest();
     
-    currentRequest = $.ajax(url).done(function(response, statusText, xhr) {
+    currentRequest = $.ajax({
+      url:  url,
+      data: { ajax: 1 }
+    }).done(function(response, statusText, xhr) {
       _loadStylesheets(response, function(html) {
         content(html, true);
         elements.dialog.removeClass("loading");

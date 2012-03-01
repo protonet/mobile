@@ -22,17 +22,10 @@ protonet.open = (function() {
     "[data-remote]",
     "[data-method]"
   ].join(",");
-
-  var prototype = Element.prototype || {};
   
   var isTouchDevice = protonet.browser.IS_TOUCH_DEVICE();
   
-  var matchesSelector = prototype.matchesSelector
-    || prototype.webkitMatchesSelector
-    || prototype.mozMatchesSelector
-    || prototype.oMatchesSelector
-    || prototype.msMatchesSelector
-    || function(selector) { return $(this).is(selector); };
+  var matchesSelector = Element.prototype.matchesSelector || function(selector) { return $(this).is(selector); };
 
   var isBlackListed = function(link) {
     return matchesSelector.call(link, blackList);
@@ -198,6 +191,7 @@ $.behaviors({
     $.ajax({
       url:      $tabLink.prop("href"),
       headers:  { "X-Request-Type": "tab" },
+      data:     { ajax: 1 },
       beforeSend: function() {
         var hint = $("<p>", { "class": "hint", text: protonet.t("LOADING") });
         $tabContainer.html(hint);

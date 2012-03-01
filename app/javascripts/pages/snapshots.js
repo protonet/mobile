@@ -1,4 +1,4 @@
-//= require "../lib/webcam.js"
+//= require "../media/webcam.js" 
 
 protonet.p("snapshots", function($page) {
   var photoUrl,
@@ -13,16 +13,20 @@ protonet.p("snapshots", function($page) {
       $retryButton  = $page.find("button.retry"),
       $shareButton  = $page.find("button.share");
   
-  webcam.set_swf_url("/flash/webcam.swf");
-  webcam.set_shutter_sound(true, "/sounds/shutter.mp3");
-  webcam.set_quality(100);
+  function failure() {
+    protonet.trigger("flash_message.error", protonet.t("NO_WEBCAM_SUPPORT"));
+  }
   
-  $container.html(webcam.get_html($container.width(), $container.height()));
+  var webcam = new protonet.media.Webcam();
+  if (!webcam.supported()) {
+    
+    return;
+  }
+  webcam.insertInto($container);
   
   $snapButton.bind("click", function() {
     $snapButton.addClass("loading").prop("disabled", true);
     webcam.snap(uploadUrl, function(response) {
-      alert(response);
       $snapButton.removeClass("loading").prop("disabled", false);
       photoUrl = protonet.config.base_url + url;
       $label.css("display", "block");

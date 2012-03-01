@@ -8,12 +8,30 @@
 }
 
 .snapshots-page output {
-  background: #eee;
-  border: 3px solid;
-  border-color: #666 #ccc #ccc #666;
+  background: #000;
+  border: 3px solid #000;
   height: 380px;
   margin: 0 auto;
   max-width: 800px;
+  position: relative;
+}
+
+.snapshots-page output > div {
+  background: #666;
+  background: rgba(35, 35, 35, 0.5);
+  text-align: center;
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+}
+
+.snapshots-page .snap {
+  display: inline-block;
+  height: 32px;
+  width: 32px;
+  background: url(/img/icn_camera.png) center center no-repeat;
 }
 
 .snapshots-page label,
