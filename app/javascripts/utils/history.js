@@ -58,14 +58,14 @@ protonet.utils.History = (function() {
     }
   });
   
-  // Omit first popstate when history.state doesn't exist
-  $window.bind("popstate", function(event) {
-    if (!("state" in history)) {
-      history.state = event.originalEvent.state;
-      return;
-    }
-    var state = event.originalEvent.state || { url: location.href };
-    protonet.trigger("history.change", state.url, state);
+
+  $(function() {
+    setTimeout(function() {
+      $window.bind("popstate", function(event) {
+        var state = event.originalEvent.state || { url: location.href };
+        protonet.trigger("history.change", state.url, state);
+      });
+    }, 0);
   });
   
   return {
