@@ -28,6 +28,9 @@ module System
   
     def login
       mac_address = SystemBackend.get_mac_for_ip(request.remote_ip)
+      if SystemBackend.internet_access_granted?(mac_address)
+        return redirect_to_desired_url
+      end
       if SystemPreferences.captive_authorization_url
         delimiter = SystemPreferences.captive_authorization_url.include?('?') ? "&" : "?"
         auth_url = "#{SystemPreferences.captive_authorization_url}#{delimiter}nickname=#{CGI.escape(current_user.login)}&email=#{CGI.escape(current_user.email)}&mac_address=#{CGI.escape(mac_address)}"
