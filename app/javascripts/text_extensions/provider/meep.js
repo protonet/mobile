@@ -8,7 +8,7 @@ protonet.text_extensions.provider.Meep = {
   
   REG_EXP: (function() {
     var escapedBaseUrl = protonet.utils.escapeForRegExp(protonet.config.base_url);
-    return new RegExp(escapedBaseUrl + "(\\/#\\!)?\\/meep/(\\d+)", "i");
+    return new RegExp(escapedBaseUrl + "(\\/#\\!)?\\/meeps?/(\\d+)", "i");
   })(),
   
   loadData: function(url, onSuccess, onFailure) {

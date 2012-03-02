@@ -61,6 +61,7 @@ protonet.ui.ContextMenu.prototype = {
       this.create();
       
       var $target = this.$target = $(event.currentTarget);
+      $(".context-menu-opened").removeClass("context-menu-opened");
       $target.addClass("context-menu-opened");
       
       this.position($target);

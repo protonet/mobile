@@ -23,7 +23,8 @@ class Meep < ActiveRecord::Base
   
   before_create :set_avatar
   before_create :set_author
-  after_create :send_to_queue
+  after_create :send_create_to_queue
+  after_destroy :send_destroy_to_queue
   
   def self.prepare_for_frontend(meeps, additional_attributes = {})
     meeps.map do |m|
@@ -48,7 +49,7 @@ class Meep < ActiveRecord::Base
     !text_extension.blank?
   end
 
-  def send_to_queue
+  def send_create_to_queue
     self.text_extension = JSON.parse(text_extension) rescue nil
     data = self.attributes.merge({
       :socket_id      => socket_id,
@@ -62,6 +63,13 @@ class Meep < ActiveRecord::Base
       data[:local_user_id] = user_id
     end
     publish 'channels', channel.uuid, data
+  end
+  
+  def send_destroy_to_queue
+    publish 'channels', channel.uuid, {
+      :id       => id,
+      :trigger  => 'meep.destroy'
+    }
   end
 
   def from_minutes_before(mins, channel_id)

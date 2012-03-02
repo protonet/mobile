@@ -144,6 +144,10 @@ Then /^I should see "([^\"]*)" in the timeline$/ do |text|
   find(:css, "#timeline li", :text => text, :visible => true)
 end
 
+Then /^I should not see "([^\"]*)" in the timeline$/ do |text|
+  all(:css, '#timeline li', :text => text, :visible => true).empty?.should == true
+end
+
 Then /^I click on "([^\"]*)" in the timeline$/ do |text|
   find(:css, "#timeline li", :text => text, :visible => true).click
 end
@@ -373,4 +377,10 @@ end
 
 Then /^I should see page title as "(.*)"$/ do |title|
   assert_equal title, page.find(:css, 'title').text
+end
+
+Then /^I delete the message "([^\"]*)"/ do |text|
+  find(:css, ".meep", :text => text).click
+  find(:css, ".meep .meep-action-link").click
+  find(:css, ".context-menu-meep li", :text => "delete message").click
 end

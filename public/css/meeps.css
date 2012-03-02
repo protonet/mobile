@@ -1,9 +1,9 @@
 /* =MEEPS
 =========================================================================== */
 .meep {
-  -moz-border-radius: 8px;
-  -webkit-border-radius: 8px;
-  border-radius: 8px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
   background-color: #F6F6F6;
   border: 1px solid rgb(180, 180, 180);
   margin: 0 20px 10px 45px;
@@ -15,17 +15,15 @@
   content: "";
   background: rgb(72, 123, 255);
   background: rgba(72, 123, 255, 0.5);
-  background: -moz-linear-gradient(top, rgba(72, 123, 255, 0.3), rgba(72, 123, 255, 0.7));
-  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(72, 123, 255, 0.3)), to(rgba(72, 123, 255, 0.7)));
   position: absolute;
   z-index: 2;
   right: 0;
   top: 0;
   bottom: 0;
   width: 20px;
-  -moz-border-radius: 0 8px 8px 0;
-  -webkit-border-radius: 0 8px 8px 0;
-  border-radius: 0 7px 7px 0;
+  -moz-border-radius: 0 6px 6px 0;
+  -webkit-border-radius: 0 6px 6px 0;
+  border-radius: 0 5px 5px 0;
 }
 
 .own.meep {
@@ -121,15 +119,6 @@
   float: right;
 }
 
-.meep.separator:after {
-  right: 0;
-  left: 0;
-  content: "";
-  bottom: -7px;
-  border-bottom: 1px dotted #ccc;
-  position: absolute;
-}
-
 .meep.error .status {
   color: red;
 }
@@ -154,36 +143,22 @@ div.progress {
   margin-bottom: 6px;
 }
 
-.detail-view-link,
-.share-link {
-  background: url(/img/spr_meep_options.png) no-repeat;
+.meep-action-link {
+  background: url(/img/spr_meep_action_link.png) 1px 1px no-repeat;
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
   cursor: pointer;
   width: 20px;
-  height: 15px;
+  height: 28px;
   position: absolute;
   right: -10px;
   z-index: 3;
 }
 
-.detail-view-link {
-  background-position: 1px 1px;
-  top: -2px;
-}
-
-.detail-view-link:active {
+.meep-action-link.context-menu-opened,
+.meep-action-link:active {
   background-position: 1px -39px;
-}
-
-.share-link {
-  background-position: 1px -24px;
-  top: 13px;
-}
-
-.share-link:active {
-  background-position: 1px -64px;
 }
 
 .no-meeps-available {

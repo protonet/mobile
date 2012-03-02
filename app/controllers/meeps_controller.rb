@@ -1,6 +1,8 @@
 class MeepsController < ApplicationController
   include Rabbit
   
+  filter_access_to :all, :context => :meeps
+  
   def index
     channel = Channel.where(:id => params[:channel_id]).first
     
@@ -34,9 +36,6 @@ class MeepsController < ApplicationController
     end
     
     render :json => result
-  end
-
-  def new
   end
 
   def show
@@ -79,6 +78,11 @@ class MeepsController < ApplicationController
       format.js   { render :text => @meep.id }
       format.html { redirect_to :controller => :instruments, :channel_id => channel_id }
     end
+  end
+  
+  def destroy
+    Meep.find(params[:id]).destroy
+    head 204
   end
   
 end

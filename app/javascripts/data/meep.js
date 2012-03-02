@@ -39,7 +39,7 @@
     },
 
     getUrl: function(id) {
-      return protonet.config.base_url + "/meep/" + id;
+      return protonet.config.base_url + "/meeps/" + id;
     }
   };
   

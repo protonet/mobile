@@ -105,8 +105,7 @@
   cursor: default !important;
 }
 
-.meeps-page .meep .detail-view-link,
-.meeps-page .meep .share-link,
+.meeps-page .meep .meep-action-link,
 .meeps-page .meep:before {
   display: none !important;
 }
@@ -141,4 +140,8 @@
 
 .meeps-page .info p {
   margin: 0;
+}
+
+.meeps-page .reply-from-channel {
+  display: none;
 }

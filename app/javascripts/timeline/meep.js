@@ -110,7 +110,7 @@
 
     destroy: function() {
       delete this.data;
-      if (this.merged) {
+      if (this.element.find("article").length > 1) {
         this.article.remove();
       } else {
         this.element.remove();
@@ -118,7 +118,7 @@
     },
 
     getUrl: function() {
-      protonet.data.Meep.getUrl(this.data.id);
+      return protonet.data.Meep.getUrl(this.data.id);
     },
 
     getAvatar: function(size) {

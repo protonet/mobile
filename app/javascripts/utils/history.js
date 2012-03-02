@@ -65,7 +65,6 @@ protonet.utils.History = (function() {
     }
   });
   
-  // Omit first popstate when history.state doesn't exist
   $(function() {
     setTimeout(function() {
       $window.bind("popstate", function(event) {
