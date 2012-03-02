@@ -77,11 +77,18 @@ class Rpc::Objects::Fs < Rpc::Base
   # as well as checking that the user can access the paths.
   def check_auth params, user, &handler
     if !user
-      # Find the acclaimed user
-      return handler.call nil, false unless user = User.find_by_id(params['user_id'])
+      if params.include?('session_id')
+        # session_id given
+        verifier = ActiveSupport::MessageVerifier.new(SystemPreferences.session_secret, 'SHA1')
+        params['user_id'] = verifier.verify(params['session_id'])["warden.user.user.key"][1][0] rescue nil
+        return handler.call nil, false unless user = User.find_by_id(params['user_id'])
+      else
+        # Find the acclaimed user
+        return handler.call nil, false unless user = User.find_by_id(params['user_id'])
 
-      # Verify the communication token
-      return handler.call nil, false unless user.communication_token_valid?(params['token'])
+        # Verify the communication token
+        return handler.call nil, false unless user.communication_token_valid?(params['token'])
+      end
     end
 
     begin

@@ -22,12 +22,16 @@
       return !!this.provider;
     },
 
-    snap: function() {
-      
+    snap: function(url, callback) {
+      this.provider.snap(url, callback);
     },
 
     snapWithCountdown: function() {
 
+    },
+    
+    reset: function() {
+      this.provider.reset();
     },
     
     insertInto: function($container) {
@@ -72,8 +76,48 @@
       }
     },
     
-    snap: function(callback) {
+    snap: function(url, callback) {
+      this.$canvas[0].width = this.$video[0].clientWidth;
+      this.$canvas[0].height = this.$video[0].clientHeight;
       
+      var ctx = this.$canvas[0].getContext("2d");
+      ctx.drawImage(this.$video[0], 0, 0, this.$canvas[0].width, this.$canvas[0].height);
+      
+      this.$video[0].pause();
+      
+      var dataUri   = this.$canvas[0].toDataURL("image/jpeg"),
+          imageData = window.atob(dataUri.split(",")[1]),
+          ab        = new ArrayBuffer(imageData.length),
+          ia        = new Uint8Array(ab);
+      for (var i=0; i<imageData.length; i++) {
+          ia[i] = imageData.charCodeAt(i);
+      }
+      
+      // write the ArrayBuffer to a blob, and you're done
+      var bb = new WebKitBlobBuilder();
+      bb.append(ab);
+      var blob = bb.getBlob("image/jpeg");
+          
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', url, true);
+      xhr.withCredentials = true;  
+      // xhr.onload = function(e) { ... };
+        // Listen to the upload progress.
+        // xhr.upload.onprogress = function(e) { ... };
+      xhr.send(blob);
+      // console.dir(this.$canvas[0]);
+      // console.dir(ctx)
+      // $.ajax({
+      //   url:          url,
+      //   headers:      { "Content-Type": "image/jpeg" },
+      //   type:         "POST",
+      //   data:         imageData,
+      //   success:      callback
+      // });
+    },
+    
+    reset: function() {
+      this.video[0].play();
     },
     
     _success: function(stream) {
@@ -89,6 +133,7 @@
     initialize: function() {
       webcam.set_swf_url("/flash/webcam.swf");
       webcam.set_quality(100);
+      webcam.set_shutter_sound(false);
     },
 
     insertInto: function($container) {
@@ -96,8 +141,14 @@
       $container.append(this.$elements);
     },
     
-    snap: function(callback) {
-      
+    reset: function() {
+      webcam.reset();
+    },
+    
+    snap: function(url, callback) {
+      webcam.snap(url, function(responseText) {
+        callback(JSON.parse(responseText));
+      });
     }
   });
 })(protonet.media, webcam);

@@ -1,4 +1,4 @@
-require 'lib/rpc/base'
+require File.join(Rails.root, 'lib', 'rpc', 'base')
 
 class Rpc::Objects::Auth < Rpc::Base
   attr_invokable :check_session
@@ -10,7 +10,6 @@ class Rpc::Objects::Auth < Rpc::Base
       if params.include?('session_id')
         # session_id given
         verifier = ActiveSupport::MessageVerifier.new(SystemPreferences.session_secret, 'SHA1')
-        p verifier.verify(params['session_id'])
         params['user_id'] = verifier.verify(params['session_id'])["warden.user.user.key"][1][0] rescue nil
         return handler.call nil, false unless user = User.find_by_id(params['user_id'])
       else

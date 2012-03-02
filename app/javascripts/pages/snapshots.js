@@ -3,13 +3,14 @@
 protonet.p("snapshots", function($page) {
   var photoUrl,
       uploadUrl     = protonet.config.node_base_url
-        + "/fs/snapshot?token=" + encodeURIComponent(protonet.config.token)
-        + "&user_name="         + encodeURIComponent(protonet.config.user_name)
-        + "&user_id="           + encodeURIComponent(protonet.config.user_id);
+        + "/fs/snapshot"
+        + "?user_name=" + encodeURIComponent(protonet.config.user_name)
+        + "&user_id="   + encodeURIComponent(protonet.config.user_id),
       $container    = $page.find("output"),
       $urlInput     = $page.find("input"),
       $label        = $page.find("label"),
-      $snapButton   = $page.find("button.snap"),
+      $snapBar      = $container.find("div"),
+      $snapButton   = $page.find("a.snap"),
       $retryButton  = $page.find("button.retry"),
       $shareButton  = $page.find("button.share");
   
@@ -19,16 +20,15 @@ protonet.p("snapshots", function($page) {
   
   var webcam = new protonet.media.Webcam();
   if (!webcam.supported()) {
-    
+    failure();
     return;
   }
   webcam.insertInto($container);
   
   $snapButton.bind("click", function() {
-    $snapButton.addClass("loading").prop("disabled", true);
+    $snapBar.hide();
     webcam.snap(uploadUrl, function(response) {
-      $snapButton.removeClass("loading").prop("disabled", false);
-      photoUrl = protonet.config.base_url + url;
+      photoUrl = protonet.data.File.getDownloadUrl(response[0]);
       $label.css("display", "block");
       $urlInput.val(photoUrl).select();
       $page.find("button").toggle();
@@ -38,6 +38,7 @@ protonet.p("snapshots", function($page) {
   
   $retryButton.bind("click", function() {
     webcam.reset();
+    $snapBar.show();
     $label.hide();
     $page.find("button").toggle();
   });

@@ -37,7 +37,7 @@ function parseCookie(cookieStr) {
 }
 
 function getSessionId(request) {
-  return parseCookie(request.headers.cookie)[RAILS_SESSION_KEY];
+  return parseCookie(request.headers.cookie || "")[RAILS_SESSION_KEY];
 }
 
 function mkdirpAndJoin(baseDirectory, file) {
@@ -49,6 +49,14 @@ function mkdirpAndJoin(baseDirectory, file) {
   } else {
     return path.join(baseDirectory, file.name);
   }
+}
+
+function setAccessControlHeaders(response, request) {
+  response.setHeader('Access-Control-Allow-Origin', request.headers.origin);
+  response.setHeader('Access-Control-Allow-Methods', '*');
+  response.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-CSRF-Token');
+  response.setHeader('Access-Control-Allow-Credentials', 'true');
+  // response.setHeader('Access-Control-Max-Age', '1728000');
 }
 
 exports.bind = function(amqpConnection) {
@@ -167,13 +175,13 @@ exports.bind = function(amqpConnection) {
 };
 
 exports.upload = function(request, response) {
+  // TODO: Security!
+  setAccessControlHeaders(response, request);
+
   var form      = new formidable.IncomingForm(),
       files     = [],
       fields    = {};
-
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, POST');
-
+      
   if (request.method == 'OPTIONS') {
     response.writeHead(200);
     response.end();
@@ -208,8 +216,8 @@ exports.upload = function(request, response) {
 };
 
 exports.snapshot = function(request, response) {
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Allow-Methods', 'POST');
+  // TODO: Security!
+  setAccessControlHeaders(response, request);
   
   next_seq += 1;
   responses[next_seq] = response;
@@ -243,18 +251,19 @@ exports.snapshot = function(request, response) {
 };
 
 exports.download = function(request, response) {
-  response.setHeader('Access-Control-Allow-Origin', '*');
-  response.setHeader('Access-Control-Allow-Methods', 'GET');
+  // TODO: Security!
+  setAccessControlHeaders(response, request);
 
   next_seq += 1;
   responses[next_seq] = response;
   
-  var params = url.parse(request.url, true);
-
+  var params = url.parse(request.url, true).query;
+  params.session_id = getSessionId(request);
+  
   exchange.publish("rpc.requests", {
     object: 'fs',
     method: 'check_auth',
-    params: params.query,
+    params: params,
     action: 'download',
     seq: next_seq
   });
@@ -262,7 +271,7 @@ exports.download = function(request, response) {
 };
 
 exports.scan = function(request, response) {
-  response.setHeader('Access-Control-Allow-Origin', '*');
+  setAccessControlHeaders(response, request);
   
   function respond(isMalicious) {
     response.writeHead(200);

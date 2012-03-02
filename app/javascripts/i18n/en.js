@@ -53,6 +53,7 @@ protonet.i18n = {
   USERS_IN_NORMAL_CHANNEL: "Users",
   SHARED_BETWEEN_YOU_AND_USER: "shared between <strong>you</strong> and <strong>#{user_name}</strong>",
   NO_WEBCAM_SUPPORT: "Sorry, it seems like your browser doesn't support webcam access or you don't have an webcam.",
-  MEEP_COULDNT_BE_DELETED: "Error. The message couldn't be deleted.",
-  MEEP_DELETED: "The message has been successfully deleted"
+  MEEP_DELETION_ERROR: "Error. The message couldn't be deleted.",
+  MEEP_DELETION_SUCCESS: "The message has been successfully deleted",
+  FILE_DOWNLOAD_ERROR: "Error. The file can't be downloaded."
 };

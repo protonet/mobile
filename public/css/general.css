@@ -39,7 +39,8 @@ body {
 .logged-out body {
   background: #aaa;
   background: #aaa -moz-linear-gradient(top, #eee, #aaa);
-  background: #aaa -webkit-gradient(linear, left top, left bottom, from(#eee), to(#aaa));
+  background: #aaa -webkit-linear-gradient(top, #eee, #aaa);
+  background: #aaa linear-gradient(top, #eee, #aaa);
 }
 
 .inner-body {
