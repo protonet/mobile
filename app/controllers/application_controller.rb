@@ -2,10 +2,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   
   helper :all # include all helpers, all the time
-  helper_method :logged_in?, :allow_signup?, :node_privacy_settings, :incoming_interface
+  helper_method :logged_in?, :allow_signup?, :node_privacy_settings, :incoming_interface, :address_for_current_interface
   
   # hack for reload problem in development
-  before_filter :set_backend_for_development, :current_user, :set_current_user_for_authorization, :captive_check, :guest_login, :store_captive_redirect_url
+  before_filter :set_backend_for_development, :current_user, :set_current_user_for_authorization, :captive_check, :guest_login
   before_filter :detect_xhr_redirect
   
   after_filter :set_flash_message_to_header,    :if => Proc.new { |a| a.request.xhr? }
@@ -23,7 +23,8 @@ class ApplicationController < ActionController::Base
   def render_404
     requested_uri = request.protocol + request.host_with_port + request.fullpath
     if SystemPreferences.captive && !SystemBackend.requested_host_local?(request.host)
-      redirect_to "http://#{address_for_current_interface}/?captive_redirect_url=#{URI.escape(requested_uri)}"
+      session[:captive_redirect_url] = requested_uri
+      render 'system/captive/browser_check', :status => 503, :layout => false
     else
       render :file => "#{Rails.root}/public/404.html", :status => 404, :layout => false
     end
@@ -92,6 +93,10 @@ class ApplicationController < ActionController::Base
   end
   
   def captive_check
+    unless params[:captive_redirect_url].blank?
+      session[:captive_redirect_url] = params[:captive_redirect_url]
+    end
+
     requested_uri = request.protocol + request.host_with_port + request.fullpath
 
     return true if SystemPreferences.captive != true
@@ -99,7 +104,7 @@ class ApplicationController < ActionController::Base
     return true if SystemBackend.requested_host_local?(request.host)
     respond_to do |format|
       format.html {
-        redirect_to "http://#{address_for_current_interface}/?captive_redirect_url=#{URI.escape(requested_uri)}"
+        render 'system/captive/browser_check', :status => 503, :layout => false
       }
       format.all {
         return head 503
@@ -183,12 +188,6 @@ class ApplicationController < ActionController::Base
         head(status)
       else
         redirect_to :controller => '/preferences', :action => :show, :section => params[:section]
-      end
-    end
-    
-    def store_captive_redirect_url
-      unless params[:captive_redirect_url].blank?
-        session[:captive_redirect_url] = params[:captive_redirect_url]
       end
     end
 end

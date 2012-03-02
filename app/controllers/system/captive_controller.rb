@@ -6,6 +6,10 @@ module System
     def index
       render :layout => 'logged_out'
     end
+
+    def browser_check
+      render :layout => false, :status => 503
+    end
     
     def whitelist
       new_whitelist = params[:whitelist].scan(/(..:..:..:..:..:..)/).flatten
