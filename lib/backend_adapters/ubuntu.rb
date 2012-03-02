@@ -124,7 +124,7 @@ module BackendAdapters
     end
 
     def internet_access_granted?(mac)
-      `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access status #{mac}`
+      system("/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access status #{mac}")
     end
     
     def in_grants_file?(mac)
