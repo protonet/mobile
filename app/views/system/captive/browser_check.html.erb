@@ -55,7 +55,7 @@
   </style>
   <script type="text/javascript">
     if(window.parent == window) {
-      document.location="http://<%= address_for_current_interface + (Rails.env.production? ? "" : ":#{configatron.web_app_port}") %>/";
+      document.location="http://<%= address_for_current_interface + (Rails.env.production? ? "" : ":#{configatron.web_app_port}") %>/?captive_redirect_url=" + encodeURIComponent(document.location.href);
     }
   </script>
 </head>

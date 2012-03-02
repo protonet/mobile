@@ -21,9 +21,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render_404
-    requested_uri = request.protocol + request.host_with_port + request.fullpath
     if SystemPreferences.captive && !SystemBackend.requested_host_local?(request.host)
-      session[:captive_redirect_url] = requested_uri
       render 'system/captive/browser_check', :status => 503, :layout => false
     else
       render :file => "#{Rails.root}/public/404.html", :status => 404, :layout => false
@@ -96,9 +94,6 @@ class ApplicationController < ActionController::Base
     unless params[:captive_redirect_url].blank?
       session[:captive_redirect_url] = params[:captive_redirect_url]
     end
-
-    requested_uri = request.protocol + request.host_with_port + request.fullpath
-
     return true if SystemPreferences.captive != true
     return true if incoming_interface == "publish_to_web"
     return true if SystemBackend.requested_host_local?(request.host)
