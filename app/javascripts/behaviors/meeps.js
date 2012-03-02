@@ -90,11 +90,9 @@ $.behaviors({
       $.ajax({
         url:     instance.getUrl(),
         type:    "delete",
-        data:    { authenticity_token: protonet.config.authenticity_token },
         success: function() {
           protonet.trigger("flash_message.notice", protonet.t("MEEP_DELETED"));
         },
-        
         error: function() {
           protonet.trigger("flash_message.error", protonet.t("MEEP_COULDNT_BE_DELETED"));
         }

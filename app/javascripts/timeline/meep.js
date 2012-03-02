@@ -113,12 +113,18 @@
     },
 
     destroy: function() {
-      delete this.data;
       if (this.element.find("article").length > 1) {
+        if (this.article.is("article:last-of-type")) {
+          // Move data of previous article to merged meep element
+          var data = this.article.prev().data();
+          this.element.data(data);
+          this.element.find(".text-extension-results").remove();
+        }
         this.article.remove();
       } else {
         this.element.remove();
       }
+      delete this.data;
     },
 
     getUrl: function() {
