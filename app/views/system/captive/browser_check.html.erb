@@ -23,14 +23,14 @@
     h1 { font-size: 100%; color: #f00; line-height: 1.5em; }
   </style>
   <script type="text/javascript">
-  	document.location="http://<%= address_for_current_interface + (":#{configatron.web_app_port}" unless Rails.env.production?) %>/";
+  	document.location="http://<%= address_for_current_interface + (Rails.env.production? ? "" : ":#{configatron.web_app_port}") %>/";
   </script>
 </head>
 
 <body>
   <div class="dialog">
     <h1>This page is a check to see wether this request is being sent from a browser.</h1>
-    <p>You will be redirected to <a href="http://<%= address_for_current_interface + (":#{configatron.web_app_port}" unless Rails.env.production?) %>/">here</a>.</p>
+    <p>You will be redirected to <a href="http://<%= address_for_current_interface + (Rails.env.production? ? "" : ":#{configatron.web_app_port}") %>/">here</a>.</p>
   </div>
 </body>
 </html>
