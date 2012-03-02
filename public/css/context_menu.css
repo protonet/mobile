@@ -4,12 +4,10 @@
   background-color: #fff;
   position: absolute;
   display: none;
-  border: 1px solid #487bff;
-  font-size: 10px;
   z-index: 21;
-  margin-top: 2px;
-  min-width: 100px;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  margin-top: 5px;
+  min-width: 120px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
 }
 
 .context-menu:before {
@@ -18,17 +16,17 @@
   left: 50%;
   position: absolute;
   top: 0;
-  margin: -8px 0 0 -7px;
+  margin: -9px 0 0 -9px;
   width: 0;
   height: 0;
-  border-left: 7px solid transparent;
-  border-right: 7px solid transparent;
-  border-bottom: 7px solid #487bff;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-bottom: 9px solid #487bff;
 }
 
 .context-menu li {
   cursor: pointer;
-  padding: 6px;
+  padding: 8px;
   color: #487bff;
   overflow: hidden;
   border-bottom: 1px solid #ccc;
@@ -80,6 +78,6 @@
   background-color: #ccc;
 }
 
-.context-menu-users {
-  margin-right: -25px;
+.context-menu-meep {
+  margin-top: -2px;
 }

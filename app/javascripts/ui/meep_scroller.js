@@ -30,10 +30,10 @@ protonet.ui.MeepScroller = (function() {
         this.loading();
         protonet.timeline.Meep.get(id, function(data) {
           this.loadingEnd();
-          // Make sure that the meep doesn't conflict with channels
-          this.channelName = protonet.utils.getChannelName(data.channel_id || data.posted_in) || protonet.t("UNKNOWN_CHANNEL");
+          
+          data.posted_in = data.posted_in || data.channel_id;
           delete data.channel_id;
-          delete data.posted_in;
+          this.channelName = protonet.utils.getChannelName(data.posted_in) || protonet.t("UNKNOWN_CHANNEL");
           
           this.select(
             new protonet.timeline.Meep(data).render(this.$meepList)
@@ -197,7 +197,8 @@ protonet.ui.MeepScroller = (function() {
           
           var $tempContainer = $("<ul>");
           $.each(data, function(i, meepData) {
-            delete meepData.channel_id;
+            data.posted_in = data.posted_in || data.channel_id;
+            delete data.channel_id;
             new protonet.timeline.Meep(meepData).render($tempContainer);
           });
           if (position === "after") {
@@ -224,7 +225,7 @@ protonet.ui.MeepScroller = (function() {
           newBorderMarginTop      = -(meepHeight + this.$border.outerHeight() - this.$border.height()) / 2,
           prevSiblings            = meep.element.prevAll(),
           newMarginTop            = -meepHeight / 2,
-          additionalOffset        = $.browser.mozilla ? 0.2 : 0; // Don't ask. Needed to satisfy firefox
+          additionalOffset        = $.browser.mozilla ? 0.4 : 0; // Don't ask. Needed to satisfy firefox
       
       prevSiblings.each(function(i, element) { newMarginTop -= $(element).outerHeight(true) - additionalOffset; });
       

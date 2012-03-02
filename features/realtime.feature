@@ -8,15 +8,19 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
     And I am using the first browser
       And go unauthenticated to the start page
       And I am logged in as "dudemeister"
+    #batman
     And I am using the second browser
       And go unauthenticated to the start page
       And I am logged in as "batman"
-    #batman
-    Given I am using the second browser
-      And I send the message "Hallo!"
+      And I send the message "Moinsen"
     #dudemeister
     And I am using the first browser
-      Then I should see "Hallo!" in the timeline
+      Then I should see "Moinsen" in the timeline
+    # batman
+    And I am using the second browser
+      And I delete the message "Moinsen"
+    And I am using the first browser
+      Then I should not see "Moinsen" in the timeline
   
   @javascript
   Scenario: Creating a user and seeing him in the userlist and the autocompletion

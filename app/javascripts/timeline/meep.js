@@ -114,7 +114,7 @@
 
     destroy: function() {
       delete this.data;
-      if (this.merged) {
+      if (this.element.find("article").length > 1) {
         this.article.remove();
       } else {
         this.element.remove();
@@ -122,7 +122,7 @@
     },
 
     getUrl: function() {
-      protonet.timeline.Meep.getUrl(this.data.id);
+      return protonet.timeline.Meep.getUrl(this.data.id);
     },
 
     getAvatar: function(size) {
@@ -279,6 +279,6 @@
    * Static method for getting the url to a meep
    */
   protonet.timeline.Meep.getUrl = function(id) {
-    return protonet.config.base_url + "/meep/" + id;
+    return protonet.config.base_url + "/meeps/" + id;
   };
 })(protonet);

@@ -50,6 +50,7 @@ protonet.ui.ContextMenu.prototype = {
     var root    = $("html"),
         $window = $(window),
         close   = function() {
+          this.$target.removeClass("context-menu-opened");
           this.list.hide().undelegate("li", "click.context_menu");
           $window.unbind("resize.context_menu");
           root.add(this.list).unbind("mousedown.context_menu");
@@ -59,23 +60,28 @@ protonet.ui.ContextMenu.prototype = {
     root.delegate(this.selector, "click", function(event) {
       this.create();
       
-      var target = $(event.currentTarget);
-      this.position(target);
+      var $target = this.$target = $(event.currentTarget);
+      
+      $(".context-menu-opened").removeClass("context-menu-opened");
+      $target.addClass("context-menu-opened");
+      
+      this.position($target);
       
       this.list
         .delegate("li", "click.context_menu", function(event) {
-          $(this).data("callback")(target, close, event);
+          $(this).data("callback")($target, close, event);
         })
         .bind("mousedown.context_menu", function(event) {
           event.stopPropagation();
         });
-      this.trigger("opening", [this, target]);
+      
+      this.trigger("opening", [this, $target]);
       this.list.fadeIn(500, function() {
-          this.trigger("open", [this, target]);
-        }.bind(this));
+        this.trigger("open", [this, $target]);
+      }.bind(this));
       
       $window.bind("resize.context_menu", function() {
-        this.position(target);
+        this.position($target);
       }.bind(this));
       
       root.bind("mousedown.context_menu", close);

@@ -46,5 +46,7 @@ protonet.i18n = {
   NO_RESULTS_FOUND: "No results found",
   AVATAR_UPLOAD_ERROR: "Your photo couldn't be upload. Please try again or contact the administrator.",
   WLAN_UPDATED: "<h3>Your WLAN has been updated and restarted</h3>You probably have lost your connection. Please reconnect and reload this page.",
-  SOFTWARE_UPDATE_SUCCESSFUL: "<h3>Congrats, the software update was successful</h3>All services are going down for reboot now. Please wait a few more seconds. You will then be redirected to the home page."
+  SOFTWARE_UPDATE_SUCCESSFUL: "<h3>Congrats, the software update was successful</h3>All services are going down for reboot now. Please wait a few more seconds. You will then be redirected to the home page.",
+  MEEP_COULDNT_BE_DELETED: "Error. The message couldn't be deleted.",
+  MEEP_DELETED: "The message has been successfully deleted"
 };

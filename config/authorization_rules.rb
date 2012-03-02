@@ -1,5 +1,10 @@
 authorization do
   role :guest do
+    has_permission_on :meeps, :to => [:read, :create, :sync]
+    has_permission_on :meeps do
+      to [:delete]
+      if_attribute :user => is {user}
+    end
     has_permission_on :users, :to => [:rendezvous, :update_last_read_meeps]
     has_permission_on :channels do
       to [:show]
@@ -8,6 +13,11 @@ authorization do
   end
   
   role :invitee do
+    has_permission_on :meeps, :to => [:read, :create, :sync]
+    has_permission_on :meeps do
+      to [:delete]
+      if_attribute :user => is {user}
+    end
     has_permission_on :users, :to => [:show, :rendezvous, :update_last_read_meeps, :newbie]
     has_permission_on :channels do
       to [:show]
@@ -20,6 +30,11 @@ authorization do
   end
   
   role :user do
+    has_permission_on :meeps, :to => [:read, :create, :sync]
+    has_permission_on :meeps do
+      to [:delete]
+      if_attribute :user => is {user}
+    end
     has_permission_on :listens, :to => [:create]
     has_permission_on :listens do
       to [:read, :delete, :update]
@@ -44,6 +59,7 @@ authorization do
   end
   
   role :admin do
+    has_permission_on :meeps, :to => [:manage, :read, :create, :delete, :sync]
     has_permission_on :channels, :to => [:manage, :manage_globals]
     has_permission_on :nodes, :to => [:manage]
     has_permission_on :listens, :to => [:manage, :accept, :manage_globals, :create_for_user]
@@ -60,9 +76,9 @@ privileges do
   # default privilege hierarchies to facilitate RESTful Rails apps
   privilege :manage, :includes => [:create, :read, :update, :delete, :destroy, :show,
     :change_password, :update_user_admin_flag, :generate_new_password, :search, :send_javascript, :send_system_message]
-  privilege :read, :includes => [:index, :show, :my, :search, :list, :list_global, :show_global, :recommended_global_teaser, :meeps_with_text_extension]
   privilege :newbie, :includes => [:remove_newbie_flag, :newbie_todo_list]
   privilege :rendezvous, :includes => [:start_rendezvous]
+  privilege :read, :includes => [:index, :before, :after, :show, :my, :search, :list, :list_global, :show_global, :recommended_global_teaser, :meeps_with_text_extension]
   privilege :create, :includes => :new
   privilege :update, :includes => :edit
   privilege :delete, :includes => :destroy

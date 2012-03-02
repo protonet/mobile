@@ -24,6 +24,7 @@ protonet.timeline.Channels = {
     
     // All channel instances as key=>value
     this.data                 = [];
+    this.meeps                = [];
     this.channels             = {};
     this.channelsBeingLoaded  = {};
     this.rendezvous           = {};
@@ -180,6 +181,21 @@ protonet.timeline.Channels = {
       
       .on("channel.unload", function(data) {
         this.unloadChannel(data.channel_id);
+      }.bind(this))
+      
+      // Track all meeps
+      .on("meep.rendered", function(meepElement, meepData, instance) {
+        this.meeps.push(instance);
+      }.bind(this))
+      
+      .on("meep.destroy", function(data) {
+        this.meeps = $.map(this.meeps, function(meep) {
+          if (meep.data.id === data.id) {
+            meep.destroy();
+            return null;
+          }
+          return meep;
+        });
       }.bind(this))
       
       /**

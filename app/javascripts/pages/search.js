@@ -151,7 +151,7 @@ protonet.pages.Search = {
   },
   
   _initEndlessScrolling: function(key) {
-    var lastMeepInList = this.$meepList.children(":last").addClass("separator");
+    var lastMeepInList = this.$meepList.children(":last");
     
     lastMeepInList.one("inview", function(event, visible) {
       if (!visible) {
