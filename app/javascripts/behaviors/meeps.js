@@ -93,7 +93,6 @@ $.behaviors({
         success: function() {
           protonet.trigger("flash_message.notice", protonet.t("MEEP_DELETION_SUCCESS"));
         },
-        
         error: function() {
           protonet.trigger("flash_message.error", protonet.t("MEEP_DELETION_ERROR"));
         }

@@ -6,6 +6,10 @@ module System
     def index
       render :layout => 'logged_out'
     end
+
+    def browser_check
+      render :layout => false, :status => 503
+    end
     
     def whitelist
       new_whitelist = params[:whitelist].scan(/(..:..:..:..:..:..)/).flatten
@@ -24,6 +28,9 @@ module System
   
     def login
       mac_address = SystemBackend.get_mac_for_ip(request.remote_ip)
+      if SystemBackend.internet_access_granted?(mac_address)
+        return redirect_to_desired_url
+      end
       if SystemPreferences.captive_authorization_url
         delimiter = SystemPreferences.captive_authorization_url.include?('?') ? "&" : "?"
         auth_url = "#{SystemPreferences.captive_authorization_url}#{delimiter}nickname=#{CGI.escape(current_user.login)}&email=#{CGI.escape(current_user.email)}&mac_address=#{CGI.escape(mac_address)}"
@@ -32,7 +39,7 @@ module System
         case response.code.to_i
         when 200
           SystemBackend.grant_internet_access(mac_address, (@current_user.try(:login) || "n_a"))
-          sleep 10
+          sleep 3
           redirect_to_desired_url
         when 301..302
           redirect_to response.header['location']
@@ -42,7 +49,7 @@ module System
         end
       else
         SystemBackend.grant_internet_access(mac_address, (@current_user.try(:login) || "n_a"))
-        sleep 10
+        sleep 3
         redirect_to_desired_url
       end
     end

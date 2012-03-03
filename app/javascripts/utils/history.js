@@ -68,7 +68,6 @@ protonet.utils.History = (function() {
   var popped     = ("state" in window.history),
       initialURL = location.href;
   $window.bind("popstate", function(event) {
-    console.log(111111111111);
     // Ignore inital popstate that some browsers fire on page load
     var initialPop = !popped && location.href === initialURL;
     popped = true

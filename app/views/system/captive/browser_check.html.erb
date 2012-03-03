@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>protonet captive-portal browser check</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta charset="UTF-8">
+  <meta property="og:image" content="/img/apple-touch-icon_r2.png">
+  <meta property="og:title" content="<%= SystemPreferences.browser_title %>">
+  <link rel="shortcut icon" href="/img/favicon_r2.png" type="image/png">
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon_r2.png">
+  <link rel="fluid-icon" href="/img/apple-touch-icon_r2.png" title="<%= SystemPreferences.browser_title %>">
+  <link rel="image_src" href="/img/apple-touch-icon_r2.png" type="image/png">
+  <style type="text/css">
+    html {
+      background: #aaa;
+      height: 100%;
+    }
+
+    @font-face {
+      font-family: protonet;
+      font-style: normal;
+      font-weight: normal;
+      src: url('/css/fonts/univers_light_condensed.eot');
+      src: local("Univers Light Condensed"), url('/css/fonts/univers_light_condensed.woff') format('woff'), url('/css/fonts/univers_light_condensed.ttf') format('truetype'), url('/css/fonts/univers_light_condensed.svg') format('svg');
+    }
+
+    body {
+      min-height: 100%;
+      border-top: 1px solid transparent;
+      margin-top: -1px;
+      position: relative;
+      overflow-y: scroll;
+      background: #e8e8e8;
+      color: #000;
+      text-align: center;
+      font-family: Verdana, sans-serif;
+    }
+
+    div.dialog {
+      width: 25em;
+      padding: 1em 4em;
+      margin: 4em auto 0 auto;
+      -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+      -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    }
+
+    h1 { 
+      text-shadow: 0 1px 1px white;
+      font-weight: normal;
+      font-size: 38px;
+      line-height: 1.3;
+      font-family: protonet;
+    }
+  </style>
+  <script type="text/javascript">
+    if(window.parent == window) {
+      document.location="http://<%= address_for_current_interface + (Rails.env.production? ? "" : ":#{configatron.web_app_port}") %>/?captive_redirect_url=" + encodeURIComponent(document.location.href);
+    }
+  </script>
+</head>
+
+<body>
+  <div class="dialog">
+    <img src="/img/protonet_node_front_view.png" height="249" width="360" alt="protonet node. your private cloud.">
+    <h1>Welcome to <%= Node.local.name %>.</h1>
+    <p>Internet access is restricted to registered users.</p><p>You should have been redirected to <a target="_blank" href="http://<%= address_for_current_interface + (Rails.env.production? ? "" : ":#{configatron.web_app_port}") %>/">here</a>, please click the link and login to gain access.</p><p>You might have to reload some pages.</p>
+  </div>
+</body>
+</html>
