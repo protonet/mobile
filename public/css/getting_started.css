@@ -7,7 +7,7 @@
 
 .getting-started h4 {
   text-transform: uppercase;
-  font-family: protonet;
+  font-family: protonet, Verdana, sans-serif;
   font-size: 26px;
   line-height: 1.2;
   color: #fff;
