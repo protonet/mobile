@@ -393,6 +393,10 @@ a.close-link:hover {
   font-weight: normal;
 }
 
+textarea + .hint[data-hover-hint] {
+  vertical-align: top;
+}
+
 
 h2 .action-link {
   float: right;

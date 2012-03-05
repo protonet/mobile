@@ -31,6 +31,10 @@ module BackendAdapters
       `/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -I`.match(/BSSID: (.*)/)[1].gsub(/0{1}:?/, '00').delete(':')
     end
     
+    def update_whitelist_sites(ips)
+      true
+    end
+    
     def get_interfaces
       ::IfconfigWrapper.new.parse
     end

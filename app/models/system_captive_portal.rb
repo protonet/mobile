@@ -4,7 +4,7 @@ class SystemCaptivePortal
     
     def start
       `#{service_command("start")}` if config_check
-      SystemPreferences.whitelist.each do |mac|
+      SystemPreferences.captive_whitelist_clients.each do |mac|
         SystemBackend.grant_internet_access(mac, "n_a")
       end
     end

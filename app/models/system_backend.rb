@@ -7,6 +7,7 @@ class SystemBackend
     :info,
     :license_key,
     :get_ips_of_currently_connected_clients,
+    :update_whitelist_sites,
     :grant_internet_access,
     :revoke_internet_access,
     :internet_access_granted?,

@@ -38,14 +38,11 @@ case $1 in
       $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 5000 -j ACCEPT $IPT_COMMENT
       $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $REDIRECTION_TARGET --dport 5001 -j ACCEPT $IPT_COMMENT
       
-      # tallymate.com whitelisting
-      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination 176.9.51.6 --dport 80   -j ACCEPT $IPT_COMMENT
-      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination 176.9.51.6 --dport 443  -j ACCEPT $IPT_COMMENT
-      
-      # protonet.info whitelisting
-      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination 78.47.145.220 --dport 80   -j ACCEPT $IPT_COMMENT
-      $IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination 78.47.145.220 --dport 443  -j ACCEPT $IPT_COMMENT
-      
+      # whitelist sites
+      echo "   allow traffic to all stored (and authorized) sites"
+      touch $SHARED/config/ifconfig.d/allowed_sites
+      chown protonet:protonet $SHARED/config/ifconfig.d/allowed_sites
+      awk '{ system("$IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $0 --dport 80 -j ACCEPT $IPT_COMMENT"); system("$IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination $0 --dport 443 -j ACCEPT $IPT_COMMENT"); }' $SHARED/config/ifconfig.d/allowed_sites
 
       echo "   send all public traffic to the unknown_user chain"
       $IPT -t nat -A PREROUTING -i $INTIF -j unknown_user $IPT_COMMENT
