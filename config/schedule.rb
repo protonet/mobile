@@ -12,8 +12,8 @@
 # end
 #
 
-# set(:output, "#{configatron.shared_file_path}/log/cron.log") unless configatron.shared_file_path.nil?
-set(:output, "~/dashboard/shared/log/cron.log")
+# see script/init/cron for logpath definition
+set(:output, @logpath)
 
 every 4.days do
   runner "User.delete_strangers_older_than_two_days!"

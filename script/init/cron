@@ -10,6 +10,7 @@ export SHARED=`pwd`
 cd $CURRENT_PATH
 case $1 in
    update)
+      bundle exec whenever --set logpath=$SHARED/log/cron.log
       bundle exec whenever --update-crontab dashboard
       ;;
     clear)
