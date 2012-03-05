@@ -48,6 +48,7 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:captive_portal_greeting] = "Please sign in to receive internet access"
   SystemPreferences.defaults[:captive_whitelist_clients] = []
   SystemPreferences.defaults[:captive_whitelist_sites] = ["78.47.145.220"] # protonet.info
+  SystemPreferences.defaults[:captive_redirect_only] = false
   
   SystemPreferences.defaults[:browser_title] = "#{SystemBackend.hostname} - protonet. it's yours."
   SystemPreferences.defaults[:show_only_online_users] = false

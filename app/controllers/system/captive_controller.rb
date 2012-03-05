@@ -33,6 +33,9 @@ module System
     end
   
     def login
+      if SystemPreferences.captive_redirect_only || current_user.stranger?
+        return redirect_to(new_user_session_path)
+      end
       mac_address = SystemBackend.get_mac_for_ip(request.remote_ip)
       if SystemBackend.internet_access_granted?(mac_address)
         return redirect_to_desired_url

@@ -21,6 +21,10 @@ module BackendAdapters
     def revoke_internet_access(ip)
       true
     end
+
+    def internet_access_granted?(mac)
+      true
+    end
     
     def get_hostname_for_ip(ip)
       match = `nslookup #{ip}`.split("\t").last.match(/name = (.*)\./) && match[1]

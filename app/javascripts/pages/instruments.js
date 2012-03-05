@@ -19,7 +19,7 @@ $(function() {
   
   // there's a captive portal redirect request and the user is logged in
   if (protonet.config.captive_redirect_url) {
-    if (!protonet.config.user_is_stranger) {
+    if (protonet.config.captive_redirect_only || !protonet.config.user_is_stranger) {
       var htmlEscapedUrl = protonet.utils.escapeHtml(protonet.config.captive_redirect_url),
           urlEncodedUrl  = encodeURIComponent(protonet.config.captive_redirect_url);
       new protonet.ui.Overlay(
