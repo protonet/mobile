@@ -6,7 +6,7 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:privacy] = {
     "fallback" => {
       "allow_dashboard_for_strangers" => false,
-      "allow_registrations_for_strangers" => true
+      "allow_registrations_for_strangers" => false
     },
     "lo0" => {
       "allow_dashboard_for_strangers" => false,
