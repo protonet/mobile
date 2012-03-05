@@ -78,7 +78,7 @@ case $1 in
       rm -f $SHARED/config/ifconfig.d/allowed_clients
       ;;
     status)
-      if [ -z "`$IPT -L -t nat -v | grep unknown_user`" ]; then
+      if [ -z "`$IPT -L -n -t nat -v | grep unknown_user`" ]; then
         echo "Couldn't find the unknown_user chain, probably down."
         exit 1
       else
