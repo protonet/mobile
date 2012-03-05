@@ -154,17 +154,19 @@ class ApplicationController < ActionController::Base
   
   def incoming_interface
     return "published_to_web" if request.env["HTTP_X_FORWARDED_FOR"]
-    mapping = Rails.cache.fetch("system.interfaces", {:expires_in => 15.minutes}) do
-      interface_mapping = {}
-      SystemBackend.get_interfaces.each do |interface|
-        network = (IP.new("#{interface.addresses("inet")}/16").network.to_s rescue nil)
-        interface_mapping[network] = interface.name if network
+    @incoming_interface ||= begin
+      mapping = Rails.cache.fetch("system.interfaces", {:expires_in => 15.minutes}) do
+        interface_mapping = {}
+        SystemBackend.get_interfaces.each do |interface|
+          network = (IP.new("#{interface.addresses("inet")}/16").network.to_s rescue nil)
+          interface_mapping[network] = interface.name if network
+        end
+        interface_mapping 
       end
-      interface_mapping 
+      interface = mapping[IP.new("#{request.remote_addr}/16").network.to_s] || "fallback"
+      Rails.logger.info("request coming in on #{interface} with remote addr #{request.remote_addr}")
+      interface
     end
-    interface = mapping[IP.new("#{request.remote_addr}/16").network.to_s] || "fallback"
-    Rails.logger.info("request coming in on #{interface} with remote addr #{request.remote_addr}")
-    interface
   end
   
   def address_for_current_interface
