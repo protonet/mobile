@@ -29,13 +29,13 @@ Dashboard::Application.config.to_prepare do
     "mode" => "wlan0",
     "channel" => 1,
     "wlan0" => {
-      "name" => "#{SystemBackend.hostname} (protonet-private)",
+      "name" => "#{truncate(SystemBackend.hostname, :length => 13)} (protonet-private)",
       "password" => "Changeme!123",
       "sharing"  => true,
       "ip" => "10.42.0.1"
     },
     "wlan1" => {
-      "name" => "#{SystemBackend.hostname} (protonet-public)",
+      "name" => "#{truncate(SystemBackend.hostname, :length => 13)} (protonet-public)",
       "password" => "",
       "sharing"  => false,
       "ip" => "10.43.0.1"
@@ -47,7 +47,8 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:public_host_https]  = false
   SystemPreferences.defaults[:captive_portal_greeting] = "Please sign in to receive internet access"
   SystemPreferences.defaults[:captive_whitelist_clients] = []
-  SystemPreferences.defaults[:captive_whitelist_sites] = ["78.47.145.220"] # protonet.info
+  SystemPreferences.defaults[:captive_whitelist_sites] = ["78.47.145.220"]
+  SystemBackend.update_whitelist_sites(SystemPreferences.defaults[:captive_whitelist_sites])
   SystemPreferences.defaults[:captive_redirect_only] = false
   
   SystemPreferences.defaults[:browser_title] = "#{SystemBackend.hostname} - protonet. it's yours."

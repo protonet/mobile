@@ -15,6 +15,7 @@ class NodesController < ApplicationController
   
   private
     def update_wlan_ssid(ssid)
+      ssid = truncate(ssid, :length => 13)
       wifi_preferences = SystemPreferences.wifi
       wifi_preferences["wlan0"]["name"] = "#{ssid} (protonet-private)"
       wifi_preferences["wlan1"]["name"] = "#{ssid} (protonet-public)"
