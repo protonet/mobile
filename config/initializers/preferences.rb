@@ -1,6 +1,12 @@
 # preference defaults are stored in the class variables of the systempreferences object
 # since rails reloads those models we'll need to reset these on every request
 Dashboard::Application.config.to_prepare do
+  truncated_hostname = SystemBackend.hostname
+  if truncated_hostname.size > 13
+    truncated_hostname = "#{truncated_hostname[0..9]}..."
+  end
+  
+  
   SystemPreferences.defaults[:wifi_mode] = :dual
   SystemPreferences.defaults[:admin_key] = ActiveSupport::SecureRandom.base64(10)
   SystemPreferences.defaults[:privacy] = {
@@ -29,13 +35,13 @@ Dashboard::Application.config.to_prepare do
     "mode" => "wlan0",
     "channel" => 1,
     "wlan0" => {
-      "name" => "#{truncate(SystemBackend.hostname, :length => 13)} (protonet-private)",
+      "name" => "#{truncated_hostname} (protonet-private)",
       "password" => "Changeme!123",
       "sharing"  => true,
       "ip" => "10.42.0.1"
     },
     "wlan1" => {
-      "name" => "#{truncate(SystemBackend.hostname, :length => 13)} (protonet-public)",
+      "name" => "#{truncated_hostname} (protonet-public)",
       "password" => "",
       "sharing"  => false,
       "ip" => "10.43.0.1"

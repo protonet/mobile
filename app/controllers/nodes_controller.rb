@@ -15,10 +15,13 @@ class NodesController < ApplicationController
   
   private
     def update_wlan_ssid(ssid)
-      ssid = truncate(ssid, :length => 13)
+      truncated_ssid = ssid
+      if truncated_ssid.size > 13
+        truncated_ssid = "#{truncated_ssid[0..9]}..."
+      end
       wifi_preferences = SystemPreferences.wifi
-      wifi_preferences["wlan0"]["name"] = "#{ssid} (protonet-private)"
-      wifi_preferences["wlan1"]["name"] = "#{ssid} (protonet-public)"
+      wifi_preferences["wlan0"]["name"] = "#{truncated_ssid} (protonet-private)"
+      wifi_preferences["wlan1"]["name"] = "#{truncated_ssid} (protonet-public)"
       SystemPreferences.wifi = wifi_preferences
       SystemWifi.reconfigure! if wifi_preferences["mode"]
     end
