@@ -6,8 +6,6 @@ class SystemPreferencesObserver < ActiveRecord::Observer
     when "public_host", "public_host_https"
       ActionMailer::Base.default_url_options[:host]     = SystemPreferences.public_host
       ActionMailer::Base.default_url_options[:protocol] = (SystemPreferences.public_host_https ? 'https' : 'http')
-    when "show_search_widget"
-      Sunspot::IndexQueue::Entry.implementation =  (system_preference.value ? :active_record : :nil)
     when "captive"
       system_preference.value == true ? SystemCaptivePortal.start : SystemCaptivePortal.stop
     when "captive_whitelist_sites"
