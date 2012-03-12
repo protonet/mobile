@@ -23,7 +23,6 @@ exports.proxy = function(params, headers, response) {
   }
   
   function sendImage(fileName) {
-    console.log("sending: " + fileName)
     // once done send all
     child.exec("file --mime -b " + fileName, function(error, stdout, stderr) {
       var header = {};
@@ -60,7 +59,7 @@ exports.proxy = function(params, headers, response) {
       var r = image_requests[fileName].pop();
       r.writeHead(404);
       r.end("NOT FOUND!");
-    };
+    }
     // and cleanup
     try {
       console.log('unlink');
@@ -69,28 +68,19 @@ exports.proxy = function(params, headers, response) {
   };
   
   function resizeImage(from, to, size, successCallback, failureCallback) {
-    try {
-      var fileSize = fs.lstatSync(from).size;
-    } catch(err) {
-      var fileSize = 0;
-    }
-    if(fileSize > 0) {
-      if(size.height && size.width) {
-        magick
-          .createCommand(from)
-          .resizeMagick(size.width, size.height, parsedUrl.pathname.indexOf(".gif") === -1)
-          .write(to, function() {
-            sys.puts("Done resizing.");
-            successCallback(to);
-          }, function() {
-            sys.puts("Failed resizing, maybe not an image?");
-            failureCallback(to);
-          });
-      } else {
-        successCallback(from);
-      }
+    if (size.height && size.width) {
+      magick
+        .createCommand(from)
+        .resizeMagick(size.width, size.height, parsedUrl.pathname.indexOf(".gif") === -1)
+        .write(to, function() {
+          sys.puts("Done resizing.");
+          successCallback(to);
+        }, function() {
+          console.log("Failed resizing, maybe not an image?");
+          failureCallback(to);
+        });
     } else {
-      failureCallback(to);
+      successCallback(from);
     }
   }
   
@@ -119,16 +109,14 @@ exports.proxy = function(params, headers, response) {
   path.exists(fileName, function(exists){
     console.log("exists? " + exists);
     if (exists) {
-      sys.puts("file exists " + fileName);
       sendImage(fileName);
     } else {
       sys.puts("file doesn't exists");
       path.exists(baseFileName, function(exists) {
         // if the base file exists
         if (exists) {
-          sys.puts("base file exists :) " + baseFileName);
-          //only apply size manipulation and then send
-          resizeImage(baseFileName, fileName, {'height': params['height'], 'width': params['width']}, sendImage, send404);
+          console.log("base file exists :) " + baseFileName);
+          resizeImage(baseFileName, fileName, { height: params.height, width: params.width }, sendImage, send404);
         } else {
           sys.puts("NO base file exists :(");
           // get the port
@@ -147,6 +135,7 @@ exports.proxy = function(params, headers, response) {
           
           request({ uri: url, headers: { Cookie: cookie }, responseBodyStream: fileStream }, function (error, response, body) {
             fileStream.end();
+            
             if (!error && response.statusCode == 200) {
               resizeImage(baseFileName, fileName, { height: params.height, width: params.width }, sendImage, send404);
             } else {

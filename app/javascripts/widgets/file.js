@@ -514,6 +514,9 @@ protonet.widgets.File = Class.create({
         messageText = [protonet.t("PUBLISH_FILES")];
     
     $.each(filePaths, function(i, filePath) {
+      if (images.length >= protonet.text_extensions.config.MAX_IMAGES) {
+        return;
+      }
       var fileName = filePath.slice(filePath.lastIndexOf("/") + 1),
           downloadUrl = this.getDownloadPath(filePath);
       if (imageRegExp.test(fileName)) {
