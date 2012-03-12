@@ -452,9 +452,9 @@ h2 .action-link {
 }
 
 .ribbon {
-  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, .5), 0 0 20px rgba(0, 0, 0, .15) inset;
-  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, .5), 0 0 20px rgba(0, 0, 0, .15) inset;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, .5), 0 0 20px rgba(0, 0, 0, .15) inset;
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, .5), 0 0 8px rgba(0, 0, 0, .2) inset;
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, .5), 0 0 8px rgba(0, 0, 0, .2) inset;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .5), 0 0 8px rgba(0, 0, 0, .2) inset;
   color: #fff;
   background-color: #487bff;
 }

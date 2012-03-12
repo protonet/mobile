@@ -155,6 +155,7 @@ div.progress {
   position: absolute;
   right: -10px;
   z-index: 3;
+  top: 5px;
 }
 
 .meep-action-link.context-menu-opened,
