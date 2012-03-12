@@ -11,12 +11,12 @@ var http      = require("http"),
 
 
 exports.proxy = function(params, headers, response) {
-  function resultingfileName(params, base) {
+  function resultingFileName(params, base) {
     var baseString = process.cwd() + "/public/externals/image_proxy/" + md5(params.url);
-    if(base) {
+    if (base) {
       return(baseString);
     }
-    if(params.width && params.height) {
+    if (params.width && params.height) {
       baseString += "_" + params.width + "_" + params.height;
     }
     return(baseString);
@@ -88,16 +88,16 @@ exports.proxy = function(params, headers, response) {
   var url           = params.url,
       parsedUrl     = parseUrl(url, true),
       cookie        = '',
-      fileName      = resultingfileName(params),
-      baseFileName  = resultingfileName(params, true);
+      fileName      = resultingFileName(params),
+      baseFileName  = resultingFileName(params, true);
   
   // handle concurrency
-  if (image_requests[fileName] && image_requests[fileName].length > 0){
+  if (image_requests[fileName] && image_requests[fileName].length > 0) {
     image_requests[fileName].push(response);
     return;
-  } else {
-    image_requests[fileName] = [response];
   }
+  
+  image_requests[fileName] = [response];
   
   // handle local requests
   if ((parsedUrl.host || "").replace(/:.*/, '') == headers.host.replace(/:.*/, '') || headers.host.replace(/:.*/, '') == "127.0.0.1") {
