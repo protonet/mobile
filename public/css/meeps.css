@@ -123,6 +123,7 @@
   color: red;
 }
 
+.text-extension-results pre,
 .meep pre {
   margin: 5px 0;
   max-height: 200px;
