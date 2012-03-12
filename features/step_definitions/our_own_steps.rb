@@ -381,6 +381,8 @@ end
 
 Then /^I delete the message "([^\"]*)"/ do |text|
   find(:css, ".meep", :text => text).click
+  sleep 1
   find(:css, ".meep .meep-action-link").click
+  sleep 1
   find(:css, ".context-menu-meep li", :text => "delete message").click
 end

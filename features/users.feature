@@ -29,7 +29,7 @@ Background:
     And I should not see "admin" within "dl[data-cucumber='roles']"
     And I should see "edit" within ".users-page"
     And I follow "edit"
-    Then I should see "Should this user become an admin?" within ".users-page"
+    Then I should see "Administration rights" within ".users-page"
     And I should see "Change password" within ".users-page"
     And I should see "Generate new password" within ".users-page"
     And I should see "Delete user" within ".users-page"
