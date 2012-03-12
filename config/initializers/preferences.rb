@@ -1,12 +1,18 @@
 # preference defaults are stored in the class variables of the systempreferences object
 # since rails reloads those models we'll need to reset these on every request
 Dashboard::Application.config.to_prepare do
+  truncated_hostname = SystemBackend.hostname
+  if truncated_hostname.size > 13
+    truncated_hostname = "#{truncated_hostname[0..9]}..."
+  end
+  
+  
   SystemPreferences.defaults[:wifi_mode] = :dual
   SystemPreferences.defaults[:admin_key] = ActiveSupport::SecureRandom.base64(10)
   SystemPreferences.defaults[:privacy] = {
     "fallback" => {
       "allow_dashboard_for_strangers" => false,
-      "allow_registrations_for_strangers" => true
+      "allow_registrations_for_strangers" => false
     },
     "lo0" => {
       "allow_dashboard_for_strangers" => false,
@@ -29,13 +35,13 @@ Dashboard::Application.config.to_prepare do
     "mode" => "wlan0",
     "channel" => 1,
     "wlan0" => {
-      "name" => "#{SystemBackend.hostname} (protonet-private)",
+      "name" => "#{truncated_hostname} (protonet-private)",
       "password" => "Changeme!123",
       "sharing"  => true,
       "ip" => "10.42.0.1"
     },
     "wlan1" => {
-      "name" => "#{SystemBackend.hostname} (protonet-public)",
+      "name" => "#{truncated_hostname} (protonet-public)",
       "password" => "",
       "sharing"  => false,
       "ip" => "10.43.0.1"
@@ -46,6 +52,10 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:public_host] = "localhost:3000"
   SystemPreferences.defaults[:public_host_https]  = false
   SystemPreferences.defaults[:captive_portal_greeting] = "Please sign in to receive internet access"
+  SystemPreferences.defaults[:captive_whitelist_clients] = []
+  SystemPreferences.defaults[:captive_whitelist_sites] = ["78.47.145.220"]
+  SystemBackend.update_whitelist_sites(SystemPreferences.defaults[:captive_whitelist_sites])
+  SystemPreferences.defaults[:captive_redirect_only] = false
   
   SystemPreferences.defaults[:browser_title] = "#{SystemBackend.hostname} - protonet. it's yours."
   SystemPreferences.defaults[:show_only_online_users] = false
@@ -53,7 +63,6 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:default_stranger_user_group] = "guest"
   SystemPreferences.defaults[:allow_modal_views] = true
   SystemPreferences.defaults[:custom_css_type] = "append"
-  SystemPreferences.defaults[:whitelist] = []
 
   # setup email settings from preferences
   local_email_delivery = (SystemPreferences.local_email_delivery == true) rescue false

@@ -24,11 +24,9 @@ require File.dirname(__FILE__) + '/node_tracker.rb'
 
 solr_index_processing = proc do
   begin
-    if SystemPreferences.show_search_widget
-      print "#{Time.now.strftime('%T')}: Processing Solr index queue... "
-      Sunspot::IndexQueue.new.process
-      puts "done."
-    end
+    print "#{Time.now.strftime('%T')}: Processing Solr index queue... "
+    Sunspot::IndexQueue.new.process
+    puts "done."
     EventMachine::add_timer(30, &solr_index_processing)
   rescue Exception => e
     puts "==== Solr indexing exception ===="

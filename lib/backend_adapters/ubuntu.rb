@@ -106,18 +106,28 @@ module BackendAdapters
       data
     end
     
-    def internet_access_grants_file
+    def captive_whitelist_clients_file
       "#{configatron.shared_file_path}/config/ifconfig.d/allowed_clients"
+    end
+    
+    def captive_whitelist_sites_file
+      "#{configatron.shared_file_path}/config/ifconfig.d/allowed_sites"
     end
     
     def iptables_command
       "/usr/bin/sudo /sbin/iptables"
     end
     
+    def update_whitelist_sites(ips)
+      File.open(captive_whitelist_sites_file, 'w') do |f|
+        f.write(ips.join("\n"))
+      end
+    end
+    
     def grant_internet_access(mac, username = nil)
       # Add computer addresses to file
       grants_entry = "#{mac}\t#{Time.now().strftime("%d.%m.%y")}\t#{username}\n"
-      File.open(internet_access_grants_file, 'a') {|f| f.write(grants_entry) }
+      File.open(captive_whitelist_clients_file, 'a') {|f| f.write(grants_entry) }
     
       # Add mac to granted clients
       `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access grant #{mac} #{username}`
@@ -128,13 +138,13 @@ module BackendAdapters
     end
     
     def in_grants_file?(mac)
-      open(internet_access_grants_file).grep(/#{mac}/).size > 0
+      open(captive_whitelist_clients_file).grep(/#{mac}/).size > 0
     end
     
     def revoke_internet_access(mac)
       `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access revoke #{mac}`
-      lines = File.readlines(internet_access_grants_file)
-      File.open(internet_access_grants_file, 'w') do |f|
+      lines = File.readlines(captive_whitelist_clients_file)
+      File.open(captive_whitelist_clients_file, 'w') do |f|
         lines.each do |line|
           f.write(line) unless line.match(mac)
         end

@@ -23,7 +23,7 @@
   font-weight: normal;
   font-size: 38px;
   line-height: 1.3;
-  font-family: protonet;
+  font-family: protonet, Verdana, sans-serif;
 }
 
 .welcome fieldset {

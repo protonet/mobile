@@ -39,13 +39,25 @@
   <%= button "Save" %>
 <%- end -%>
 
-<br />
+<br>
 
-<%= form_tag "/captive/whitelist", { :remote => true, 'data-type' => 'html' } do -%>
+<%= form_tag "/captive/whitelist_clients", { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'advanced_settings' %>
   <div class="form-field">
     <%= label_tag 'whitelist', 'Whitelisted MACs:' %>
-    <%= text_area_tag 'whitelist', SystemPreferences.whitelist.join("\n") %>
+    <%= text_area_tag 'whitelist', SystemPreferences.captive_whitelist_clients.join("\n") %>
+  </div>
+  <%= button "Save" %>
+<%- end -%>
+
+<br>
+
+<%= form_tag "/captive/whitelist_sites", { :remote => true, 'data-type' => 'html' } do -%>
+  <%= hidden_field_tag 'section', 'advanced_settings' %>
+  <div class="form-field">
+    <%= label_tag 'whitelist', 'Whitelisted Sites (IPs):' %>
+    <%= text_area_tag 'whitelist', SystemPreferences.captive_whitelist_sites.join("\n") %>
+    <a data-hover-hint="top" title="Changing this will require a restart of the captive portal" class="hint">(?)</a>
   </div>
   <%= button "Save" %>
 <%- end -%>

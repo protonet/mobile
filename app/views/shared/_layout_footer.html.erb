@@ -46,7 +46,7 @@
 </style>
 
 <%-
-  users = SystemPreferences.show_only_online_users ? [] : User.registered.includes(:roles, :listens).all
+  users = SystemPreferences.show_only_online_users ? [] : User.registered.all
   channels = current_user.allowed_channels
   
   users.map!     {|u| User.prepare_for_frontend(u) }
@@ -76,6 +76,7 @@
     authenticity_token:         "<%= form_authenticity_token %>",
     incoming_interface:         <%= raw incoming_interface.to_json %>,
     captive_redirect_url:       "<%= raw(params[:captive_redirect_url] || session[:captive_redirect_url]) %>",
+    captive_redirect_only:      <%= SystemPreferences.captive_redirect_only.to_json %>,
     debug_mode:                 <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>,
     channels:                   <%= raw channels.to_json %>,
     users:                      <%= raw users.to_json %>

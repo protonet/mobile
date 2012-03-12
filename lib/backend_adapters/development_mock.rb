@@ -21,6 +21,10 @@ module BackendAdapters
     def revoke_internet_access(ip)
       true
     end
+
+    def internet_access_granted?(mac)
+      true
+    end
     
     def get_hostname_for_ip(ip)
       match = `nslookup #{ip}`.split("\t").last.match(/name = (.*)\./) && match[1]
@@ -29,6 +33,10 @@ module BackendAdapters
     # the following method currently on osx, and probably not an all systems
     def ssid_of_base_station
       `/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -I`.match(/BSSID: (.*)/)[1].gsub(/0{1}:?/, '00').delete(':')
+    end
+    
+    def update_whitelist_sites(ips)
+      true
     end
     
     def get_interfaces

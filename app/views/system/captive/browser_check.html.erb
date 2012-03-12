@@ -1,15 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>protonet captive-portal browser check</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
   <meta charset="UTF-8">
-  <meta property="og:image" content="/img/apple-touch-icon_r2.png">
-  <meta property="og:title" content="<%= SystemPreferences.browser_title %>">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <title>protonet captive-portal browser check</title>
   <link rel="shortcut icon" href="/img/favicon_r2.png" type="image/png">
-  <link rel="apple-touch-icon" href="/img/apple-touch-icon_r2.png">
-  <link rel="fluid-icon" href="/img/apple-touch-icon_r2.png" title="<%= SystemPreferences.browser_title %>">
-  <link rel="image_src" href="/img/apple-touch-icon_r2.png" type="image/png">
   <style type="text/css">
     html {
       background: #aaa;
@@ -20,8 +15,11 @@
       font-family: protonet;
       font-style: normal;
       font-weight: normal;
-      src: url('/css/fonts/univers_light_condensed.eot');
-      src: local("Univers Light Condensed"), url('/css/fonts/univers_light_condensed.woff') format('woff'), url('/css/fonts/univers_light_condensed.ttf') format('truetype'), url('/css/fonts/univers_light_condensed.svg') format('svg');
+      src: url('/css/fonts/univers_light_condensed.eot'); /* IE 9 compat */
+      src: url('/css/fonts/univers_light_condensed.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+           url('/css/fonts/univers_light_condensed.woff') format('woff'), /* Modern Browsers */
+           url('/css/fonts/univers_light_condensed.ttf') format('truetype'), /* Safari, Android, iOS */
+           url('/css/fonts/univers_light_condensed.svg') format('svg'); /* Legacy iOS */
     }
 
     body {
@@ -50,7 +48,7 @@
       font-weight: normal;
       font-size: 38px;
       line-height: 1.3;
-      font-family: protonet;
+      font-family: protonet, Verdana, sans-serif;
     }
   </style>
   <script type="text/javascript">

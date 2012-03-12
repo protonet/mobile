@@ -65,12 +65,12 @@ protonet.utils.History = (function() {
     }
   });
   
-  var popped     = ("state" in window.history),
+  var popped     = false,
       initialURL = location.href;
   $window.bind("popstate", function(event) {
     // Ignore inital popstate that some browsers fire on page load
     var initialPop = !popped && location.href === initialURL;
-    popped = true
+    popped = true;
     if (initialPop) { return; }
     var state = event.originalEvent.state || { url: location.href };
     protonet.trigger("history.change", state.url, state);

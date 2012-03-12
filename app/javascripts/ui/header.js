@@ -51,6 +51,15 @@ protonet.ui.Header = {
         setTimeout(function() {
           this.$header.find("ul ul").css("display", "");
         }.bind(this), 0);
+      }.bind(this))
+      
+      .on("users.update_admin_status", function(data) {
+        var $adminLink = this.$header.find(".preferences-controller-link");
+        if (data.admin_ids.indexOf(protonet.config.user_id) === -1) {
+          $adminLink.hide();
+        } else {
+          $adminLink.show();
+        }
       }.bind(this));
   },
   

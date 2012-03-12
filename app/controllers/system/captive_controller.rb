@@ -1,7 +1,7 @@
 module System
   class CaptiveController < ApplicationController
 
-    before_filter :only_admin, :only => [:grant, :revoke]
+    before_filter :only_admin, :only => [:grant, :revoke, :whitelist_clients, :whitelist_sites]
   
     def index
       render :layout => 'logged_out'
@@ -11,9 +11,9 @@ module System
       render :layout => false, :status => 503
     end
     
-    def whitelist
+    def whitelist_clients
       new_whitelist = params[:whitelist].scan(/(..:..:..:..:..:..)/).flatten
-      old_whitelist = SystemPreferences.whitelist
+      old_whitelist = SystemPreferences.captive_whitelist_clients
       (new_whitelist | old_whitelist).uniq.each do |mac_address|
         if new_whitelist.include?(mac_address)
           SystemBackend.grant_internet_access(mac_address, "n_a") unless old_whitelist.include?(mac_address)
@@ -21,12 +21,21 @@ module System
           SystemBackend.revoke_internet_access(mac_address)
         end
       end
-      SystemPreferences[:whitelist] = new_whitelist
+      SystemPreferences.captive_whitelist_clients = new_whitelist
+      flash[:notice] = "Your whitelist have been successfully saved"
+      respond_to_preference_update
+    end
+    
+    def whitelist_sites
+      SystemPreferences.captive_whitelist_sites = params[:whitelist].scan(/([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})/).flatten
       flash[:notice] = "Your whitelist have been successfully saved"
       respond_to_preference_update
     end
   
     def login
+      if SystemPreferences.captive_redirect_only || current_user.stranger?
+        return redirect_to(new_user_session_path)
+      end
       mac_address = SystemBackend.get_mac_for_ip(request.remote_ip)
       if SystemBackend.internet_access_granted?(mac_address)
         return redirect_to_desired_url
@@ -39,7 +48,7 @@ module System
         case response.code.to_i
         when 200
           SystemBackend.grant_internet_access(mac_address, (@current_user.try(:login) || "n_a"))
-          sleep 3
+          sleep 6
           redirect_to_desired_url
         when 301..302
           redirect_to response.header['location']
@@ -49,7 +58,7 @@ module System
         end
       else
         SystemBackend.grant_internet_access(mac_address, (@current_user.try(:login) || "n_a"))
-        sleep 3
+        sleep 6
         redirect_to_desired_url
       end
     end

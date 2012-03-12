@@ -6,11 +6,9 @@
       </li>
       
       <%- unless current_user.stranger? %>
-        <%- if current_user.admin? %>
-          <li class="nav-link preferences-controller-link">
-            <%= link_to "Administration", preferences_path %>
-          </li>
-        <%- end %>
+        <li class="nav-link preferences-controller-link" style="<%= 'display: none;' unless current_user.admin? %>">
+          <%= link_to "Administration", preferences_path %>
+        </li>
         
         <%- if permitted_to?(:read, :channels) -%>
           <li class="nav-link channels-controller-link">
