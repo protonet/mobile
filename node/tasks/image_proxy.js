@@ -65,7 +65,7 @@ exports.proxy = function(params, headers, response) {
     try {
       console.log('unlink');
       fs.unlinkSync(baseFileName);
-    } catch(err) { console.log('unlink fail', err) };
+    } catch(err) { console.log('unlink fail', err); };
   };
   
   function resizeImage(from, to, size, successCallback, failureCallback) {
@@ -103,11 +103,9 @@ exports.proxy = function(params, headers, response) {
   
   // handle concurrency
   if (image_requests[fileName] && image_requests[fileName].length > 0){
-    console.log("concurrent")
     image_requests[fileName].push(response);
     return;
   } else {
-    console.log("new")
     image_requests[fileName] = [response];
   }
   
@@ -147,16 +145,15 @@ exports.proxy = function(params, headers, response) {
           // request the image
           var fileStream = fs.createWriteStream(baseFileName);
           
-          request({ uri: url, headers: { "Cookie": cookie }, responseBodyStream: fileStream }, function (error, response, body) {
+          request({ uri: url, headers: { Cookie: cookie }, responseBodyStream: fileStream }, function (error, response, body) {
+            fileStream.end();
             if (!error && response.statusCode == 200) {
-              fileStream.end();
               resizeImage(baseFileName, fileName, { height: params.height, width: params.width }, sendImage, send404);
             } else {
-              console.log(url + ' returned a ', response);
+              console.log("Error for", url, error);
               send404(fileName);
             }
           });
-
         }
       });
     }

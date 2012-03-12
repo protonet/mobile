@@ -3,14 +3,19 @@
 <h2>Node</h2>
 
 <h3>Settings</h3>
-<p class="info-message"><strong>Please note:</strong> Changing the node's name will also change the name of the WLAN and cause a restart.</p>
+<p class="info-message">
+  <strong>Please note:</strong> Changing the node's name will also change the name of the WLAN and cause a restart.
+  <%- if incoming_interface.starts_with? "wlan" %>
+    <br>You will have to manually reconnect your WLAN.
+  <%- end %>
+</p>
 <%= form_for local_node, :remote => true, 'data-type' => 'html' do |f| %>
   <div class="form-field">
     <%= f.label :name, "Name:" %>
-    <%= f.text_field :name, :placeholder => "Please enter a name" %>
+    <%= f.text_field :name, :placeholder => "Please enter a name", :maxlength => 32 %>
     <a data-hover-hint="top" title="The name can only consist of letters, numbers and hyphens (no whitespace allowed)." class="hint">(?)</a>
   </div>
-  <%= button "Save" %>
+  <%= button "Save" %>  <span class="loading-hint">Please wait. This will take a moment.</span>
 <%- end %>
 
 <h3>Info</h3>

@@ -79,7 +79,7 @@ protonet.text_extensions.Input.prototype = {
   },
   
   _parse: function() {
-    if (this.url) { return; }
+    if (this.url || this.data) { return; }
     
     var matchUrls = this.input.val().match(this.regExp);
     if (!matchUrls) { return; }
