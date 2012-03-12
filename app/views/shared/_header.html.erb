@@ -9,12 +9,9 @@
         <li class="nav-link instruments-controller-link">
           <%= link_to "Chat", root_path %>
         </li>
-      
-        <%- if current_user.admin? %>
-          <li class="nav-link preferences-controller-link">
-            <%= link_to "Administration", preferences_path %>
-          </li>
-        <%- end %>
+        <li class="nav-link preferences-controller-link" style="<%= 'display: none;' unless current_user.admin? %>">
+          <%= link_to "Administration", preferences_path %>
+        </li>
         <%- if permitted_to?(:read, :channels) -%>
         <li class="nav-link channels-controller-link">
           <%= link_to "Channels", channels_path %>

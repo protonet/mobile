@@ -48,6 +48,15 @@ protonet.ui.Header = {
       .on("modal_window.shown", function() {
         // Chrome needs some redrawing...
         this.$header.css("padding-right", protonet.utils.getScrollbarWidth().px()).toggleClass("redraw");
+      }.bind(this))
+      
+      .on("users.update_admin_status", function(data) {
+        var $adminLink = this.$header.find(".preferences-controller-link");
+        if (data.admin_ids.indexOf(protonet.config.user_id) === -1) {
+          $adminLink.hide();
+        } else {
+          $adminLink.show();
+        }
       }.bind(this));
   },
   

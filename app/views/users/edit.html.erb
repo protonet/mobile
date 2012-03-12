@@ -52,12 +52,12 @@
           <%= hidden_field_tag :id, @user.id %>
           <%= hidden_field_tag :user_id, @user.id %>
           <div class="form-field">
-            <%= label_tag :admin_password, 'Your admin password:' %>
-            <%= password_field_tag :admin_password %>
+            <%= label_tag :send_email, 'Send new password by email:' %>
+            <%= check_box_tag :send_email, true %>
           </div>
           <div class="form-field">
-            <%= label_tag :send_email, 'Send by email?' %>
-            <%= check_box_tag :send_email, true %>
+            <%= label_tag :admin_password, 'Your admin password:' %>
+            <%= password_field_tag :admin_password %>
           </div>
           <%= button "Generate new password" %>
         <% end %>
@@ -89,7 +89,7 @@
       <%= hidden_field_tag :user_id, @user.id %>
       <div class="form-field">
         <%= hidden_field_tag :admin, false, :id => "temp-#{Time.now.to_i}" %>
-        <%= label_tag :admin, 'Should this user become an admin?' %>
+        <%= label_tag :admin, 'Administration rights:' %>
         <%= check_box_tag :admin, true, @user.admin? %>
       </div>
       <div class="form-field">
