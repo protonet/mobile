@@ -163,7 +163,7 @@ function on_install_failure {
   echo "  ruby $to/bin/babushka.rb babushka"
   echo ""
   echo "There's a full log in ~/.babushka/logs/babushka. Would you mind"
-  echo "emailing it to ben@hoskings.net to help improve the installation"
+  echo "emailing it to team@protonet.info to help improve the installation"
   echo "process? Thanks a lot."
   false
 }
