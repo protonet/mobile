@@ -35,6 +35,7 @@
 //= require "timeline/meep.js"
 //= require "ui/pretty_date.js"
 //= require "pages/base.js"
+//= require "pages/search.js"
 
 //---------------------------- INITIALIZE APPLICATION ----------------------------
 

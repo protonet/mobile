@@ -18,12 +18,12 @@ Background:
     Given "dudemeister" is an admin
     Given I go to the preferences page
     And I follow "Node"
-    And I fill in "node_name" with "bikini-bottom-123"
+    And I fill in "node_name" with "boombox"
     And I press "Save"
     And I follow "WLAN"
-    Then I should see "bikini-bottom-123 (protonet-private)"
-    And I should see "bikini-bottom-123 (protonet-public)"
+    Then I should see "boombox (protonet-private)"
+    And I should see "boombox (protonet-public)"
     When I go unauthenticated to the start page
-    Then I should see "Welcome to the protonet of bikini-bottom-123"
-    Then I should see page title as "bikini-bottom-123 - protonet. it's yours."
+    Then I should see "Welcome to the protonet of boombox"
+    Then I should see page title as "boombox - protonet. it's yours."
   

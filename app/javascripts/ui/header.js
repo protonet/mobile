@@ -13,17 +13,17 @@ protonet.ui.Header = {
     
     if (!protonet.browser.IS_TOUCH_DEVICE() && protonet.config.allow_modal_views && !$.browser.msie) {
       var $searchInput = this.$header.find("[type=search]").keydown(function() {
+        var $page = new protonet.utils.Template("search-page-template").toString();
         setTimeout(function() {
           var value = $searchInput.val();
           if (value.length < 2) {
             return;
           }
-
-          var $page = new protonet.utils.Template("search-page-template").toString();
+          
           protonet.ui.ModalWindow.show().content($page, true);
           protonet.pages.Search.initialize();
-          $(".modal-window [type=search]").focus().val(value).parents("form").submit();
           $searchInput.val("");
+          $(".modal-window [type=search]").focus().val(value).parents("form").submit();
         }, 0);
       });
     }

@@ -59,13 +59,17 @@
 .text-extension-results .title,
 .text-extension-results .description,
 .text-extension-results .domain {
-  min-width: 200px;
-  display: block;
+  display: inline;
 }
 
-.text-extension-results .title,
 .text-extension-results .domain {
-  margin: 0 0 2px 0;
+  line-height: 2;
+}
+
+.text-extension-results .title:after,
+.text-extension-results .domain:after {
+  content: "\A";
+  white-space: pre;
 }
 
 .text-extension-results .title {
