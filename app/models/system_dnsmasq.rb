@@ -25,7 +25,7 @@ class SystemDnsmasq
     end
 
     def restart_active
-      SystemBackend.get_interfaces do |interface|
+      SystemBackend.get_interfaces.each do |interface|
         if status(interface.name)
           stop(interface.name, false)
           start(interface.name)
