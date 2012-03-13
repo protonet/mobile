@@ -215,7 +215,7 @@ protonet.ui.ModalWindow = (function() {
       resize();
       
       // Unfocus elements below the modal window
-      $(":focus:not(.modal-window *, body)").blur();
+      $(".inner-body *:focus").not("header *").blur();
       
       visible = true;
     }

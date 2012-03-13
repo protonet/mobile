@@ -27,6 +27,7 @@
 //= require "utils/rails.js"
 //= require "text_extensions/text_extensions.js"
 //= require "timeline/meep.js"
+//= require "pages/search.js"
 
 //---------------------------- INITIALIZE APPLICATION ----------------------------
 

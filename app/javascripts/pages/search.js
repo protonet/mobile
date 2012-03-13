@@ -171,7 +171,3 @@ protonet.pages.Search = {
     }.bind(this));
   }
 };
-
-$(function() {
-  protonet.pages.Search.initialize();
-});
