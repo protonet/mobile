@@ -1,7 +1,8 @@
 //= require "../media/webcam.js" 
 
-protonet.p("snapshots", function($page) {
+protonet.p("snapshots", function($page, $window) {
   var photoUrl,
+      isModalWindow = !!$(".modal-window").length,
       uploadUrl     = protonet.config.node_base_url
         + "/fs/snapshot"
         + "?user_name=" + encodeURIComponent(protonet.config.user_name)
@@ -18,6 +19,15 @@ protonet.p("snapshots", function($page) {
     protonet.trigger("flash_message.error", protonet.t("NO_WEBCAM_SUPPORT"));
   }
   
+  function resizePage() {
+    $container.css("height", $window.height() - $container.offset().top + "px");
+  }
+  
+  if (!isModalWindow) {
+    $window.on("resize", resizePage);
+    resizePage();
+  }
+  
   var webcam = new protonet.media.Webcam();
   if (!webcam.supported()) {
     failure();
@@ -27,7 +37,7 @@ protonet.p("snapshots", function($page) {
   
   $snapButton.bind("click", function() {
     $snapBar.hide();
-    webcam.snap(uploadUrl, function(response) {
+    webcam.snapWithCountdown(uploadUrl, function(response) {
       photoUrl = protonet.data.File.getDownloadUrl(response[0]);
       $label.css("display", "block");
       $urlInput.val(photoUrl).select();

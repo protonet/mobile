@@ -1,4 +1,5 @@
 //= require "../lib/webcam.js"
+//= require "play_sound.js"
 
 (function(media, webcam) {
   var SHUTTER_SOUND = "/sounds/shutter.mp3";
@@ -26,8 +27,23 @@
       this.provider.snap(url, callback);
     },
 
-    snapWithCountdown: function() {
-
+    snapWithCountdown: function(url, callback) {
+      var i          = 3,
+          $countdown = $("<div>", { "class": "countdown", text: i }).insertAfter(this.$container),
+          interval   = setInterval(function() {
+        i--;
+        if (i < 1) {
+          $countdown.remove();
+          clearInterval(interval);
+          var $flash = $("<div>", { "class": "flash" }).insertAfter(this.$container).hide();
+          $flash.fadeIn(300, function() {
+            this.snap(url, callback);
+            $flash.remove();
+          }.bind(this));
+        } else {
+          $countdown.text(i);
+        }
+      }.bind(this), 1000);
     },
     
     reset: function() {
@@ -35,6 +51,7 @@
     },
     
     insertInto: function($container) {
+      this.$container = $container;
       this.provider.insertInto($container);
     }
   });
@@ -48,17 +65,10 @@
       return !!navigator.getUserMedia;
     },
 
-    initialize: function() {
-      
-    },
+    initialize: function() {},
 
     insertInto: function($container, success, failure) {
-      this.$video = $("<video>", {
-        autoplay: "autoplay"
-      }).css({
-        height: $container.height(),
-        width:  $container.width()
-      });
+      this.$video = $("<video>", { autoplay: "autoplay" });
       
       this.$canvas = $("<canvas>").hide();
       this.$elements = this.$video.add(this.$canvas);
@@ -77,47 +87,40 @@
     },
     
     snap: function(url, callback) {
-      this.$canvas[0].width = this.$video[0].clientWidth;
-      this.$canvas[0].height = this.$video[0].clientHeight;
+      protonet.media.playSound(SHUTTER_SOUND);
       
-      var ctx = this.$canvas[0].getContext("2d");
-      ctx.drawImage(this.$video[0], 0, 0, this.$canvas[0].width, this.$canvas[0].height);
+      var canvas = this.$canvas[0], video = this.$video[0];
       
-      this.$video[0].pause();
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
       
-      var dataUri   = this.$canvas[0].toDataURL("image/jpeg"),
-          imageData = window.atob(dataUri.split(",")[1]),
+      canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      video.pause();
+      
+      var dataUri   = canvas.toDataURL("image/jpeg"),
+          imageData = atob(dataUri.split(",")[1]),
           ab        = new ArrayBuffer(imageData.length),
           ia        = new Uint8Array(ab);
       for (var i=0; i<imageData.length; i++) {
-          ia[i] = imageData.charCodeAt(i);
+        ia[i] = imageData.charCodeAt(i);
       }
       
-      // write the ArrayBuffer to a blob, and you're done
       var bb = new WebKitBlobBuilder();
       bb.append(ab);
       var blob = bb.getBlob("image/jpeg");
-          
+      
       var xhr = new XMLHttpRequest();
-      xhr.open('POST', url, true);
-      xhr.withCredentials = true;  
-      // xhr.onload = function(e) { ... };
-        // Listen to the upload progress.
-        // xhr.upload.onprogress = function(e) { ... };
+      xhr.open("POST", url, true);
+      xhr.withCredentials = true;
+      xhr.onload = function() {
+        callback(JSON.parse(xhr.responseText));
+      };
       xhr.send(blob);
-      // console.dir(this.$canvas[0]);
-      // console.dir(ctx)
-      // $.ajax({
-      //   url:          url,
-      //   headers:      { "Content-Type": "image/jpeg" },
-      //   type:         "POST",
-      //   data:         imageData,
-      //   success:      callback
-      // });
     },
     
     reset: function() {
-      this.video[0].play();
+      this.$video[0].play();
     },
     
     _success: function(stream) {
@@ -133,11 +136,12 @@
     initialize: function() {
       webcam.set_swf_url("/flash/webcam.swf");
       webcam.set_quality(100);
-      webcam.set_shutter_sound(false);
+      webcam.set_shutter_sound(SHUTTER_SOUND);
     },
 
     insertInto: function($container) {
-      this.$elements = $(webcam.get_html($container.width(), $container.height()));
+      var width = $container.width(), height = $container.height();
+      this.$elements = $(webcam.get_html(width, height));
       $container.append(this.$elements);
     },
     

@@ -8,43 +8,6 @@
   <link rel="fluid-icon" href="/img/apple-touch-icon_r2.png" title="<%= SystemPreferences.browser_title %>">
   <link rel="image_src" href="/img/apple-touch-icon_r2.png" type="image/png">
   <title><%= SystemPreferences.browser_title %></title>
-<<<<<<< HEAD
-=======
-  <script>
-    var protonet = protonet || {};
-    protonet.config = {
-      controller_name:            "<%= controller_name %>",
-      action_name:                "<%= action_name %>",
-      base_url:                   location.protocol + "//" + location.host,
-      node_base_url:              "<%= node_base_url %>",
-      xhr_streaming_url:          "<%= xhr_streaming_url %>",
-      dispatching_server:         "<%= server_name %>",
-      dispatching_server_port:    "<%= configatron.socket.port %>",
-      dispatching_websocket_port: "<%= configatron.websocket.port %>",
-      dispatching_websocket_ssl_port: "<%= configatron.websocket_ssl.port %>",
-      force_xhr_streaming:        <%= incoming_interface == "published_to_web" ? "true" : "false" %>,
-      token:                      "<%= current_user.communication_token %>",
-      default_avatar:             "<%= configatron.default_avatar %>",
-      admin_ids:                  <%= User.admins.map(&:id).to_json %>,
-      user_name:                  "<%= current_user.display_name %>",
-      user_id:                    <%= current_user.id %>,
-      user_is_stranger:           <%= current_user.stranger?.to_json %>,
-      show_only_online_users:     <%= SystemPreferences.show_only_online_users.to_json %>,
-      allow_modal_views:          <%= SystemPreferences.allow_modal_views.to_json %>,
-      session_id:                 "<%= cookies['_rails_dashboard_session'] %>",
-      authenticity_token:         "<%= form_authenticity_token %>",
-      channel_name_to_id_mapping: <%= raw Channel.name_to_id_mapping.to_json %>,
-      channel_uuid_to_id_mapping: <%= raw Channel.uuid_to_id_mapping.merge(current_user.channel_uuid_to_id_mapping).to_json %>,
-      server:                     "<%= request.server_software %>",
-      incoming_interface:         <%= raw incoming_interface.to_json %>,
-      captive_redirect_url:       "<%= session[:captive_redirect_url] %>",
-      captive_redirect_only:      <%= SystemPreferences.captive_redirect_only.to_json %>,
-      debug_mode:                 <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>
-    };
-    
-    <%= "var AIRBRAKE_API_KEY = '#{HoptoadNotifier.configuration.api_key}';" if Rails.env.production? %>
-  </script>
->>>>>>> master
   <%- if custom_stylesheet -%>
     <%- if SystemPreferences.custom_css_type == "append" -%>
       <%= stylesheet_link_tag(stylesheets, :cache => (configatron.avoid_caching != false), :concat => true) %>
