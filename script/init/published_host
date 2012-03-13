@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+command = ARGV[0]
+public_host = ARGV[1]
+etc_file_path = "/etc/hosts"
+
+def usage
+  puts "usage: published_host {update|remove} publish_to_web_address"
+end
+
+def host_string(public_host)
+  "127.0.0.1\t#{public_host} # publish_to_web"
+end
+
+case command
+when "update"
+  return usage unless public_host
+  hosts = File.read(etc_file_path)
+  if hosts.match(/# publish_to_web/)
+    hosts.gsub!(/.*# publish_to_web/, host_string(public_host))
+  else
+    hosts = hosts + "\n" + host_string(public_host)
+  end
+  File.open(etc_file_path, "w") {|file| file.puts hosts}
+when "remove"
+  hosts = File.read(etc_file_path)
+  hosts.gsub!(/.*# publish_to_web$/, "")
+  File.open(etc_file_path, "w") {|file| file.puts hosts}
+else
+  usage
+end

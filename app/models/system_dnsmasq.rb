@@ -23,6 +23,15 @@ class SystemDnsmasq
       return false unless Rails.env == 'production'
       system(service_command("status", interface))
     end
+
+    def restart_active
+      SystemBackend.get_interfaces do |interface|
+        if status(interface.name)
+          stop(interface.name, false)
+          start(interface.name)
+        end
+      end
+    end
     
     private
     def service_name(interface)
@@ -43,7 +52,17 @@ class SystemDnsmasq
 
     def configure(interface)
       ip = IP.new(SystemPreferences.wifi[interface]["ip"])
-      File.open(config_file(interface), 'w') {|f| f.write("interface=#{interface}\naddress=/protonet/#{ip}\naddress=/#{SystemBackend.hostname}/#{ip}\ndhcp-range=#{interface},#{ip.network(1)},#{ip.network(32000)},4h\ndhcp-option=6,#{ip}\nbind-interfaces\nexcept-interface=lo") }
+      setting = <<-EOS
+interface=#{interface}
+address=/protonet/#{ip}
+address=/#{SystemBackend.hostname}/#{ip}
+address=/#{SystemPreferences.public_host}/#{ip}
+dhcp-range=#{interface},#{ip.network(1)},#{ip.network(32000)},4h
+dhcp-option=6,#{ip}
+bind-interfaces
+except-interface=lo
+EOS
+      File.open(config_file(interface), 'w') {|f| f.write(setting) }
     end
     
     def config_file(interface)
