@@ -7,11 +7,25 @@ class Invitation < ActiveRecord::Base
   validates_format_of :email, :with => Devise.email_regexp
   validates_length_of :channel_ids, :minimum => 1, :message => "must be provided"
   validates_presence_of :token
+  validates_uniqueness_of :email, :on => :create
   
   before_validation :generate_token, :on => :create
-  after_create  :send_email
   
   scope :unaccepted, :conditions => { :accepted_at => nil }
+  
+  def send_email
+    Mailer.invitation(self).deliver
+  end
+  
+  def status
+    return :success if invitee
+    return :sent if sent_at
+    return :open
+  end
+  
+  def channels
+    Channel.where(:id => channel_ids)
+  end
   
   private
   
@@ -19,7 +33,4 @@ class Invitation < ActiveRecord::Base
     self.token ||= ActiveSupport::SecureRandom.base64(14).gsub(/[^a-zA-Z0-9]/, '')
   end
   
-  def send_email
-    Mailer.invitation(self).deliver
-  end
 end

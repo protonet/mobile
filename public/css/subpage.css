@@ -186,6 +186,7 @@
 .subpage select,
 .subpage input[type=text],
 .subpage input[type=password],
+.subpage input[type=url],
 .subpage input[type=email] {
   width: 300px;
   -ms-box-sizing: border-box;
@@ -197,6 +198,7 @@
 .subpage select,
 .subpage input[type=text],
 .subpage input[type=password],
+.subpage input[type=url],
 .subpage input[type=email] {
   height: 24px;
 }

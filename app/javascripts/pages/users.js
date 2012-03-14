@@ -4,7 +4,8 @@ $(function() {
       $loadingIndicator = $meepContainer.next(".progress"),
       $fileInput        = $subpage.find("[type=file]"),
       $avatarForm       = $fileInput.parents("form"),
-      $meepList         = $("<ul>", { "class": "meeps" });
+      $meepList         = $("<ul>", { "class": "meeps" }),
+      $searchUsers      = $("form#search_users");
   
   $meepContainer.one("inview", function() {
     function fallback() {
@@ -77,5 +78,6 @@ $(function() {
     mouseup: function() {
       $avatarForm.find("button").removeClass("active");
     }
-  });
+  }); 
+  
 });

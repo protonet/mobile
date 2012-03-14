@@ -65,7 +65,7 @@ Dashboard::Application.routes.draw do
   match 'users/:id/start_rendezvous' => 'users#start_rendezvous', :as => :start_rendezvous, :via => [:post]
   match 'users/:id/meeps_with_text_extension' => 'users#meeps_with_text_extension', :as => :meeps_with_text_extension, :via => [:get]
   match 'users/update_last_read_meeps' => 'users#update_last_read_meeps', :as => :update_last_read_meeps, :via => [:put]
-  match 'users/search' => 'users#search', :as => :search, :via => [:get]
+  match 'users/search' => 'users#search', :as => :search_users, :via => [:get]
   match 'users/my' => 'users#my', :as => :my_user, :via => [:get]
   match 'users/delete_stranger_older_than_two_days' => 'users#delete_stranger_older_than_two_days', :as => :delete_stranger_older_than_two_days, :via => [:post]
   match 'users/remove_newbie_flag' => 'users#remove_newbie_flag', :as => :remove_newbie_flag, :via => [:post]

@@ -98,7 +98,6 @@ form.disabled #textarea-wrapper:after {
   background-position: 4px -87px;
 }
 
-
 #textarea-wrapper [type=submit]:active {
   background: url(/img/return.png) center center no-repeat,
               -moz-linear-gradient(top, rgba(153, 153, 153, 1), rgba(153, 153, 153, 0.7));

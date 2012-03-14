@@ -1,31 +1,29 @@
-<output class="content">
-  <h2>Users</h2>
-  <p>This node has <strong><%= User.registered.size %></strong> registered users.</p>
-  
-  <h3>Administrators <%- if current_user.admin? %><a data-hover-hint="top" title="You can give any user admin rights (go to profile -> click 'edit')" class="hint">(?)</a><%- end %></h3>
+<%= render "shared/nav_users"%>
+<output class="content user-list" data-tab="users">
+  <h2>Administrators <%- if current_user.admin? %><a data-hover-hint="top" title="You can give any user admin rights (go to profile -> click 'edit')" class="hint">(?)</a><%- end %></h2>
   <%- if Role.find_by_title('admin').users.size %>
     <p>Contact one of these people if you've any feedback:</p>
-    <p>
-      <%- User.admins.each do |u| %>
-        <%= link_to(user_path(u)) { avatar(u, :width => 48, :height => 48, 'data-hover-hint' => 'top') } %>
-      <%- end %>
-    </p>
+    <ul>
+      <%= render User.admins %>
+    </ul>
   <%- else -%>
     <p>This node doesn't have any administrators. Anarchy!</p>
   <%- end -%>
   
-  <%- unless User.recent_active.empty? %>
-    <h3>Recently active users</h3>
-    <%- User.recent_active.each do |u| %>
-      <%= link_to(user_path(u)) { avatar(u, :width => 48, :height => 48, 'data-hover-hint' => 'top') } %>
-    <%- end %>
+  <%= form_tag(search_users_path, :remote => true, :method => :get, :id => "search_users", 'data-type' => 'html' ) do %>
+    <h2>Discover all registered users</h2>
+    
+    <div class="inputs">
+      <input type="search" placeholder="User name or id ..." name="search_term" id="users_search_term" value="<%=params[:search_term]%>"> 
+      <%= button 'Go' %>
+    </div>
+    
+    <output>
+      <ul>
+        <%= render :partial => "user", :collection => @users %>
+      </ul>
+      <%= will_paginate @users%>
+    </output>
+    
   <%- end %>
-  
-  <h3>Go to profile</h3>
-  <p>Enter the exact user name or user id into the input field to show the profile.</p>
-  <%= form_tag({ :action => 'search' }, { :remote => true, 'data-type' => 'html', :class => 'single-button-form', :method => 'get' }) do %>
-    <%= hidden_field_tag :id, current_user.id %>
-    <%= hidden_field_tag :user_id, current_user.id %>
-    <input type="search" placeholder="User name or id ..." name="search_term" id="users_search_term" class="inset-border"> <%= button 'Go' %>
-  <% end %>
 </output>

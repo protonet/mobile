@@ -44,7 +44,7 @@ case $1 in
       touch $SHARED/config/ifconfig.d/allowed_sites
       chown protonet:protonet $SHARED/config/ifconfig.d/allowed_sites
       
-      AWK_CMD="awk '{system(\"$IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination  \"\$0\" --dport 80 -j ACCEPT $IPT_COMMENT\");system(\"$IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination \"\$0\"  --dport 443 -j ACCEPT $IPT_COMMENT\"); }' $SHARED/config/ifconfig.d/allowed_sites" 
+      AWK_CMD="awk '{system(\"$IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination  \"\$0\"  --dport 80 -j ACCEPT $IPT_COMMENT\");system(\"$IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination \"\$0\"  --dport 443 -j ACCEPT $IPT_COMMENT\"); }' $SHARED/config/ifconfig.d/allowed_sites" 
       echo $AWK_CMD | bash
       
       echo "   send all public traffic to the unknown_user chain"

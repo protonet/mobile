@@ -6,10 +6,14 @@
   min-height: 300px;
 }
 
-.users-page .content > img {
-  position: absolute;
-  top: 20px;
-  left: -240px;
+.users-page .content img.user-avatar, 
+.users-edit-page .content img.users-avatar {
+  float:left;
+  margin: 0 20px 20px 0;
+}
+
+.users-edit-page .content h2 + h3{
+  margin: 40px 0 15px 140px;
 }
 
 .users-page .content > img.loading {
@@ -65,4 +69,82 @@
   padding: 0;
   cursor: pointer;
   z-index: 1;
+}
+
+
+.user-list ul{
+  overflow:hidden;
+}
+.user-list form{
+  position:relative;
+}
+
+.user-list form h2{
+  margin: 30px 0 40px;
+}
+
+.user-list form .inputs{
+  position:absolute;
+  top:-8px;
+  right:-10px;
+}
+
+.user-list form input[type=search]{
+  padding: 5px 5px 5px 28px;
+  width: 220px;
+  border: 1px solid #aaa;
+  font-size: 14px;
+  height: 34px;
+  -webkit-box-shadow: 0 0 3px #666 inset;
+  -moz-box-shadow: 0 0 3px #666 inset;
+  box-shadow: 0 0 3px #666 inset;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.user-list form button{
+  margin: 0 10px 0 20px;
+  
+}
+.user-list form.loading button{
+  margin-left:0;
+}
+
+.user-list ul{
+  margin: 20px 0;
+}
+
+.user-list li{
+  float:left;
+  position:relative;
+  width:90px;
+  height: 60px;
+  margin: 0 5px 15px 0;
+  padding-left: 60px;
+}
+
+.user-list li a{
+  text-decoration:none;
+  display:block;
+  height:48px;
+}
+
+.user-list li span{
+  margin: 10px;
+  width: 70px;
+  display:inline-block;
+  word-wrap: break-word;
+}
+
+.user-list li img{
+  border: 1px solid #ccc;
+  padding: 5px;
+  position:absolute;
+  left:0;
+  top:0;
+  height:48px;
+  width:48px;
+  -moz-box-shadow: 5px 5px 0px #eee;
+  -webkit-box-shadow: 5px 5px 0px #eee;
+  box-shadow: 5px 5px 0px #eee;
 }

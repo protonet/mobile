@@ -1,25 +1,37 @@
 class UsersController < ApplicationController
   include Rabbit
   
-  filter_resource_access :collection => [:index, :my]
+  filter_resource_access :collection => [:index, :my, :search]
   
   before_filter :redirect_to_my_profile,  :only => :show
   before_filter :prepare_target_users,    :only => [:send_system_message, :send_javascript]
   after_filter  :publish_admin_users,     :only => :update_user_admin_flag
   
   def index
+    @users = User.registered.paginate(:page => params[:page], :per_page => 50)
+    @nav = "users"
   end
   
   def show
+    @nav = "users"
     render_profile User.find(params[:id])
   end
   
   def my
+    @nav = "my_profile"
     render_profile current_user
   end
   
   def new
     redirect_to :controller => "registrations", :action => :new
+  end
+  
+  def edit
+    @nav = if current_user == @user
+        "my_profile" 
+      else
+        "users"
+      end
   end
   
   def update
@@ -141,13 +153,9 @@ class UsersController < ApplicationController
   end
   
   def search
-    @user = User.find_by_id_or_login(params[:search_term])
-    if @user
-      redirect_to :controller => :users, :action => :show, :id => @user.id
-    else
-      flash[:error] = "Couldn't find user with identifier '#{params[:search_term]}'"
-      redirect_to :controller => :users, :action => :index
-    end
+    @nav = "users"
+    @users = User.registered.where("login like '#{params[:search_term]}%'").paginate(:page => params[:page], :per_page => 50)
+    render :action => "index"
   end
   
   def remove_newbie_flag

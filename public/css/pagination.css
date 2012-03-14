@@ -1,0 +1,72 @@
+/* =GENERAL
+
+    COLORS:
+      blue          #487bff   rgb(72, 123, 255) - MAIN COLOR, USE FOR LINKS AND CHANNEL HIGHLIGHTING
+      orange        #ff7f31   rgb(255, 127, 49) - USE FOR HIGHLIGHTING USER STUFF (own meeps, user replies, buttons, ...)
+      red/rosa      #e75c79   rgb(231, 92, 121) - USE FOR NOTIFICATIONS (flash messages, badges, ...)
+      green         #00cc00   rgb(0, 204, 0)
+      black         #000      rgb(0, 0, 0)
+      grey_dark     #666      rgb(102, 102, 102)
+      grey          #999      rgb(153, 153, 153)
+      grey_light    #ccc      rgb(204, 204, 204)
+      greyer_light  #f2f2f2   rgb(242, 242, 242)
+      white         #fff      rgb(255, 255, 255)
+=========================================================================== */
+
+.pagination {
+  background: white;
+  cursor: default;
+  /* self-clearing method: */ 
+}
+.pagination a, .pagination span, .pagination em {
+  padding: 0.2em 0.5em;
+  display: block;
+  float: left;
+  margin-right: 1px; 
+}
+.pagination .disabled {
+  color: #999999;
+  border: 1px solid #dddddd; 
+}
+.pagination .current {
+  font-style: normal;
+  font-weight: bold;
+  background: #ff7f31;
+  color: white;
+  border: 1px solid #ff7f31; 
+}
+.pagination a {
+  text-decoration: none;
+  color: #487bff;
+  border: 1px solid #487bff; 
+}
+.pagination a:hover, .pagination a:focus {
+  color: #487bff;
+  border-color: #487bff; 
+}
+.pagination .page_info {
+  background: #487bff;
+  color: white;
+  padding: 0.4em 0.6em;
+  width: 22em;
+  margin-bottom: 0.3em;
+  text-align: center; 
+}
+.pagination .page_info b {
+  color: #000033;
+  background: #6aa6ed;
+  padding: 0.1em 0.25em; 
+}
+.pagination:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden; 
+}
+* html .pagination {
+  height: 1%; 
+}
+*:first-child + html .pagination {
+  overflow: hidden; 
+}

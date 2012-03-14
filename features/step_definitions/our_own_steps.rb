@@ -127,7 +127,7 @@ Given /^I select the channel "([^\"]*)" from the channel tabs$/ do |linktext|
 end
 
 Then /^I verify the user "([^"]*)" for the channel "([^"]*)"$/ do |user_name, channel|
-  Given "I select the channel \"#{channel}\" in the channel list"
+  step "I select the channel \"#{channel}\" in the channel list"
   user = User.find_by_login(user_name)
   find(:css, "li[data-cucumber='#{user.id}'] a[data-cucumber='verify']").click
 end
@@ -289,7 +289,10 @@ Then /^I switch to the channel "([^\"]*)"$/ do |channelname|
 end
 
 Then /^I visit the profile of "([^\"]*)"$/ do |username|
-  visit "/users/search?search_term=#{username}&id=1"
+  visit "/users/search?search_term=#{username}"
+  within(".user-list output") do
+    find(:css, "a span", :text => username).click
+  end
 end
 
 Then /^"([^\"]*)" should be an admin$/ do |username|
@@ -366,6 +369,16 @@ Then /^I invite "([^\"]*)" to channel "([^\"]*)" with token "([^\"]*)" as "([^\"
   Invitation.create(
     :token => token,
     :email => email,
+    :channel_ids => Channel.find_by_name(channel_name).id,
+    :user => User.find_by_login(user_name)
+  )
+end
+
+Then /^I invite "([^\"]*)" to channel "([^\"]*)" with sonstrained rights and token "([^\"]*)" as "([^\"]*)"/ do |email, channel_name, token, user_name|
+  Invitation.create(
+    :token => token,
+    :email => email,
+    :invitee_role => 1,
     :channel_ids => Channel.find_by_name(channel_name).id,
     :user => User.find_by_login(user_name)
   )

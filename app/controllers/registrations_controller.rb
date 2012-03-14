@@ -4,6 +4,7 @@ class RegistrationsController < Devise::RegistrationsController
   # GET /resource/sign_up
   def new
     build_resource({})
+    @invitation = Invitation.find_by_token(params[:invitation_token])
     render 'devise/registrations/new'
   end
   
