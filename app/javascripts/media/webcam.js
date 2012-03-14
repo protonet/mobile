@@ -20,7 +20,7 @@
     },
     
     supported: function() {
-      return !!this.provider;
+      return !!this.provider && !!window.WebKitBlobBuilder;
     },
 
     snap: function(url, callback) {
