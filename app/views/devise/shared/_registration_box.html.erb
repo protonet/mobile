@@ -42,7 +42,7 @@
           <%- end %>
         </h3>
         <label>
-          <%= f.text_field :login, :placeholder => "user name", :value => (@user && @user.login) || (@invitation && @invitation.name.parameterize) %>
+          <%= f.text_field :login, :placeholder => "user name", :value => (@user && @user.login) || (@invitation && @invitation.name && @invitation.name.parameterize) %>
           <span class="hint">min. 3 characters, allowed: A-Z, 0-9 and .-_</span>
         </label>
         <label>

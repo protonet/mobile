@@ -21,7 +21,7 @@ Feature: Invitations
     And I check "public"
     And I press "next Step"
     Then I should see "Invitation for friend@protonet.com"
-    And I should see "Status: open"
+    And I should see "Status: not sent yet"
     And I press "Send invitation"
     # Invitation mail
     And "friend@protonet.com" should receive an email with subject "dudemeister wants you to join his protonet"
