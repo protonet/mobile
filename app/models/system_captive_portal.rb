@@ -3,14 +3,18 @@ class SystemCaptivePortal
   class << self
     
     def start
-      `#{service_command("start")}` if config_check
+      return false unless config_check
+      `#{service_command("start")}`
       SystemPreferences.captive_whitelist_clients.each do |mac|
         SystemBackend.grant_internet_access(mac, "n_a")
       end
+      SystemNetworking.setup_interface_script("captive_portal", SystemPreferences.captive_internal_interface, service_arguments("start"), service_arguments("stop"))
     end
     
     def stop
-      `#{service_command("stop")}` if config_check
+      return false unless config_check
+      `#{service_command("stop")}`
+      SystemNetworking.remove_interface_script("captive_portal", SystemPreferences.captive_internal_interface)
     end
     
     def status
@@ -28,7 +32,11 @@ class SystemCaptivePortal
     
     private
     def service_command(argument)
-      "/usr/bin/sudo #{configatron.current_file_path}/script/init/captive_portal #{SystemPreferences.captive_external_interface} #{SystemPreferences.captive_internal_interface} #{SystemPreferences.captive_redirection_target} #{argument}"
+      "/usr/bin/sudo #{configatron.current_file_path}/script/init/captive_portal #{service_arguments(argument)} 2>&1 >> #{configatron.current_file_path}/log/captive_portal.log"
+    end
+
+    def service_arguments(argument)
+      "#{SystemPreferences.captive_external_interface} #{SystemPreferences.captive_internal_interface} #{SystemPreferences.captive_redirection_target} #{argument}"
     end
 
     def config_check

@@ -48,7 +48,7 @@ module System
         case response.code.to_i
         when 200
           SystemBackend.grant_internet_access(mac_address, (@current_user.try(:login) || "n_a"))
-          sleep 6
+          sleep 10
           redirect_to_desired_url
         when 301..302
           redirect_to response.header['location']
@@ -58,7 +58,7 @@ module System
         end
       else
         SystemBackend.grant_internet_access(mac_address, (@current_user.try(:login) || "n_a"))
-        sleep 6
+        sleep 10
         redirect_to_desired_url
       end
     end

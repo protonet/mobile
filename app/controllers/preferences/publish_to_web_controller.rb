@@ -24,8 +24,12 @@ module Preferences
         flash[:error] = "Web Publishing error: " + error_message + "."
       else
         if SystemPreferences.publish_to_web
+          # to handle local dns resolution for the publish to web domain
+          `/usr/bin/sudo #{configatron.current_file_path}/script/init/published_host update #{SystemPreferences.public_host}`
+          SystemDnsmasq.restart_active
           flash[:notice] = "You successfully published your node to the web"
         else
+          `/usr/bin/sudo #{configatron.current_file_path}/script/init/published_host remove`
           flash[:notice] = "You successfully turned off web publishing"
         end
       end

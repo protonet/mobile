@@ -43,17 +43,15 @@ case $1 in
       echo "   allow traffic to all stored (and authorized) sites"
       touch $SHARED/config/ifconfig.d/allowed_sites
       chown protonet:protonet $SHARED/config/ifconfig.d/allowed_sites
-       
       
       AWK_CMD="awk '{system(\"$IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination  \"\$0\" --dport 80 -j ACCEPT $IPT_COMMENT\");system(\"$IPT -t nat -A PREROUTING -i $INTIF -p tcp -m tcp --destination \"\$0\"  --dport 443 -j ACCEPT $IPT_COMMENT\"); }' $SHARED/config/ifconfig.d/allowed_sites" 
       echo $AWK_CMD | bash
-                    
+      
       echo "   send all public traffic to the unknown_user chain"
       $IPT -t nat -A PREROUTING -i $INTIF -j unknown_user $IPT_COMMENT
 
       echo "   and drop all forward pakets marked 99"
       $IPT -t filter -A FORWARD -i $INTIF -m mark --mark 99 -j DROP $IPT_COMMENT
-
 
       echo "   allow traffic from all stored (and authorized) mac addresses"
       touch $SHARED/config/ifconfig.d/allowed_clients
@@ -68,13 +66,18 @@ case $1 in
       # create file
       ;;
     stop)
-      PREROUTING_CMD="$IPT -L PREROUTING -n -t nat -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D PREROUTING \" \$1}' | sort -r | bash"
+      PREROUTING_CMD="$IPT -L PREROUTING -n -t nat -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D PREROUTING \" \$1}' | sort -r -V | bash"
+      echo "  execute: $PREROUTING_CMD"
       echo $PREROUTING_CMD | bash
-      GRANTS_CMD="$IPT -L unknown_user -n -t nat -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D unknown_user \" \$1}' | sort -r | bash"
+      GRANTS_CMD="$IPT -L unknown_user -n -t nat -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D unknown_user \" \$1}' | sort -r -V | bash"
+      echo "  execute: $GRANTS_CMD"
       echo $GRANTS_CMD | bash
-      FORWARD_CMD="$IPT -L FORWARD -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D FORWARD \" \$1}' | sort -r | bash"
+      FORWARD_CMD="$IPT -L FORWARD -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D FORWARD \" \$1}' | sort -r -V | bash"
+      echo "  execute: $FORWARD_CMD"
       echo $FORWARD_CMD | bash
+      echo "  delete the unknown_user chain"
       $IPT -X unknown_user -t nat
+      echo "  delete allowed_clients"
       # remove file
       rm -f $SHARED/config/ifconfig.d/allowed_clients
       ;;
