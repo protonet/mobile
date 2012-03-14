@@ -8,7 +8,7 @@
  *    protonet.utils.codify("{code}echo 'hello';{code}");
  */
 protonet.utils.codify = (function() {
-  var REG_EXP = /([\{\[]code[\}\]])([\s\S]+?)([\{\[]\/?code[\}\]])/gi;
+  var REG_EXP = /\s*([\{\[]code[\}\]])([\s\S]+?)([\{\[]\/?code[\}\]])\s*/gi;
   
   function trimEmptyLines(str) {
     return str.replace(/^\s*?\n+/g, "").replace(/\s+$/g, "");
