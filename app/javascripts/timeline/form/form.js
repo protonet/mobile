@@ -164,7 +164,7 @@ protonet.timeline.Form = {
       .on("form.share_meep", function(id) {
         protonet.data.Meep.get(id, {
           success: function(data) {
-            if (data.author !== protonet.config.user_name) {
+            if (data.author !== protonet.config.user_name && !protonet.data.Channel.isRendezvous(data.channel_id)) {
               protonet.trigger("form.create_reply", data.author);
             } else {
               protonet.trigger("form.focus");

@@ -194,6 +194,11 @@
     isGlobal: function(id) {
       var channel = dataCache[id];
       return channel ? channel.global : false;
+    },
+    
+    isRendezvous: function(id) {
+      var channel = dataCache[id];
+      return channel ? !!channel.rendezvous : false;
     }
   };
   
