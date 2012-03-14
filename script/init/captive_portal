@@ -66,13 +66,13 @@ case $1 in
       # create file
       ;;
     stop)
-      PREROUTING_CMD="$IPT -L PREROUTING -n -t nat -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D PREROUTING \" \$1}' | sort -r | bash"
+      PREROUTING_CMD="$IPT -L PREROUTING -n -t nat -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D PREROUTING \" \$1}' | sort -r -V | bash"
       echo "  execute: $PREROUTING_CMD"
       echo $PREROUTING_CMD | bash
-      GRANTS_CMD="$IPT -L unknown_user -n -t nat -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D unknown_user \" \$1}' | sort -r | bash"
+      GRANTS_CMD="$IPT -L unknown_user -n -t nat -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D unknown_user \" \$1}' | sort -r -V | bash"
       echo "  execute: $GRANTS_CMD"
       echo $GRANTS_CMD | bash
-      FORWARD_CMD="$IPT -L FORWARD -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D FORWARD \" \$1}' | sort -r | bash"
+      FORWARD_CMD="$IPT -L FORWARD -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D FORWARD \" \$1}' | sort -r -V | bash"
       echo "  execute: $FORWARD_CMD"
       echo $FORWARD_CMD | bash
       echo "  delete the unknown_user chain"
