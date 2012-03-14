@@ -28,7 +28,7 @@ class SystemCaptivePortal
     
     private
     def service_command(argument)
-      "/usr/bin/sudo #{configatron.current_file_path}/script/init/captive_portal #{SystemPreferences.captive_external_interface} #{SystemPreferences.captive_internal_interface} #{SystemPreferences.captive_redirection_target} #{argument}"
+      "/usr/bin/sudo #{configatron.current_file_path}/script/init/captive_portal #{SystemPreferences.captive_external_interface} #{SystemPreferences.captive_internal_interface} #{SystemPreferences.captive_redirection_target} #{argument} >> #{configatron.current_file_path}/log/captive_portal.log"
     end
 
     def config_check
