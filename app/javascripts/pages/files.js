@@ -451,13 +451,14 @@ protonet.p("files", function($page, $window, $document) {
     
     resizePage: function() {
       if (!isModalWindow) {
-        $content.css("min-height", ($window.height() - $content.offset().top - 40).px());
+        console.log($content.offset().top, $window.height());
+        $content.css("min-height", ($window.height() - $content.offset().top - 41).px());
       }
     },
     
     resizeFileArea: function() {
       var currentHeight = $tableWrapper.outerHeight(),
-          newHeight     = $page.outerHeight() - $tableWrapper.prop("offsetTop") - 21;
+          newHeight     = $page.outerHeight() - $tableWrapper.prop("offsetTop") - 20;
       $tableWrapper.css("min-height", newHeight.px());
     },
 

@@ -9,7 +9,7 @@ protonet.text_extensions.provider.Image = {
   /**
    * TODO: Some wiki pages end with a typical image suffix "File:auto.jpg" (even though they are html pages)
    */
-  REG_EXP: /.{13,}\.(jpe?g|gif|png)(\?.*)*/i,
+  REG_EXP: /.{13,}\.(jpe?g|gif|png|bmp)(\?.*)*/i,
   
   loadData: function(url, onSuccess, onFailure) {
     // Handle already proxied images

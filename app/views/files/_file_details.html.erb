@@ -1,10 +1,13 @@
 <h3><a href="#{httpPath}" title="#{name}" class="file">#{name}</a></h3>
 
-<dt>Size:</dt>        <dd><abbr title="#{rawSize} Bytes">#{size}</abbr></dd>
-<dt>Uploader:</dt>    <dd><a href="/users/#{uploaderId}">#{uploaderName}</a></dd>
-<dt>Uploaded:</dt>    <dd><abbr title="#{rawUploaded}">#{uploaded}</abbr></dd>
-<dt>Modified:</dt>    <dd><abbr title="#{rawModified}">#{modified}</abbr></dd>
-<dt>Type:</dt>        <dd>#{mime}</dd>
-<dt>Malicious:</dt>   <dd><output class="virus-check"><i>checking ...</i></output> <a data-hover-hint="top" class="hint" title="protonet automatically scans files for viruses and malware">(?)</dd>
+<div class="side-bar">
+  <dt>Size:</dt>        <dd><abbr title="#{rawSize} Bytes">#{size}</abbr></dd>
+  <dt>Uploader:</dt>    <dd><a href="/users/#{uploaderId}">#{uploaderName}</a></dd>
+  <dt>Uploaded:</dt>    <dd><abbr title="#{rawUploaded}">#{uploaded}</abbr></dd>
+  <dt>Modified:</dt>    <dd><abbr title="#{rawModified}">#{modified}</abbr></dd>
+  <dt>Type:</dt>        <dd>#{mime}</dd>
+  <dt>Malicious:</dt>   <dd><output class="virus-check"><i>checking ...</i></output> <a data-hover-hint="top" class="hint" title="protonet automatically scans files for viruses and malware">(?)</dd>
+  <a class="button" href="#{downloadPath}" download>Download</a>
+</div>
 
-<a class="button" href="#{downloadPath}" download>Download</a>
+<output><p class="hint">No preview available</p></output>

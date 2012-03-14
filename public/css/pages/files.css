@@ -45,7 +45,7 @@
 }
 
 .files-page tr:nth-child(even) {
-  background: #eee;
+  background: #f2f2f2;
 }
 
 .files-page tr.focus {
@@ -156,4 +156,29 @@
 .files-page .virus-check .negative {
   color: red;
   font-weight: bold;
+}
+
+.files-page .file-details dt {
+  width: 120px;
+}
+
+.files-page .file-details .side-bar {
+  float: left;
+  width: 250px;
+  padding-left: 2px;
+}
+
+.files-page .file-details .side-bar:after {
+  content: "";
+  border-right: 1px solid #CCC;
+  position: absolute;
+  left: 252px;
+  width: 1;
+  top: 48px;
+  bottom: 0;
+}
+
+.files-page .file-details .hint {
+  position: static;
+  text-align: left;
 }

@@ -1,7 +1,9 @@
+//= require "../proxy.js"
+
 protonet.media.embed.Image = {
-  supportedMimeTypes: ["image/jpeg", "image/png", "image/gif", "image/bitmap"],
+  supportedMimeTypes: ["image/jpeg", "image/png", "image/gif", "image/bmp"],
   
-  render: function() {
-    
+  render: function(src, size) {
+    var $element = $("<img>", { src: protonet.media.Proxy.getImageUrl(src) });
   }
 };
