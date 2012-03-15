@@ -4,7 +4,7 @@
   <%- if Role.find_by_title('admin').users.size %>
     <p>Contact one of these people if you've any feedback:</p>
     <ul>
-      <%= render User.admins %>
+      <%= render :partial => "user", :collection => User.admins %>
     </ul>
   <%- else -%>
     <p>This node doesn't have any administrators. Anarchy!</p>
