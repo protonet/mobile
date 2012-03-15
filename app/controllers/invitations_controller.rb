@@ -10,12 +10,12 @@ class InvitationsController < ApplicationController
   end
   
   def index
-    @invitations = Invitation.all
+    @invitations = Invitation.order("invitee_id asc")
   end
   
   def new
     @invitee_email = params[:invitee_email]
-    @invitation = current_user.invitations.new
+    @invitation = current_user.invitations.new(:invitee_role => !SystemPreferences.privacy["published_to_web"]["allow_registrations_for_strangers"])
     @channels = current_user.owned_channels.real | Channel.public.local
   end
   

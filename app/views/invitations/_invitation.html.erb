@@ -1,11 +1,12 @@
-<li>
-  <%- if invitation.invitee %>
+<li>  
+<%- if invitation.invitee %>
   <%= avatar(invitation.invitee, :width => 20, :height => 20) %>
-  <strong>(<%= invitation.invitee.login %>)</strong>
-  <%- end %>
   <%= invitation.email %>
-  
-  <%= link_to "delete", invitation_path(invitation), :class => "action", :method => :delete, :confirm => "Are you sure?" %>
-  
-  <%= link_to "show", invitation_path(invitation), :class => "action" %>
+  <strong>(<%= invitation.invitee.login %>)</strong>
+  <%= link_to "show invitation", invitation_path(invitation), :class => "action" %>
+  <%= link_to "show profile", user_path(invitation.invitee), :class => "action" %>
+<%- else %>
+  <%= invitation.email %>
+  <%= link_to "show invitation", invitation_path(invitation), :class => "action" %>
+<%- end %>
 </li>

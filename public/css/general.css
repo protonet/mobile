@@ -422,6 +422,10 @@ h2 .action-link {
   padding-right: 22px;
 }
 
+.action-link.add {
+  background: transparent url(/img/icn_plus.png) left center no-repeat;
+}
+
 
 .info-message {
   color: #333;
