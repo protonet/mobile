@@ -21,48 +21,6 @@ protonet.p("files", function($page, $window, $document) {
       KEY_DOWN          = 40,
       KEY_ENTER         = 13;
   
-  
-  // --------------------------------- UTILS --------------------------------- \\
-  var utils = {
-    getAbsolutePath: function(record) {
-      if (!record) {
-        return currentPath;
-      }
-      var folderPath = currentPath.replace(/[^\/]+$/, "");
-      return folderPath + record.name + (record.type === "folder" ? "/" : "");
-    },
-    
-    getUrl: function(record) {
-      var path = this.getAbsolutePath(record);
-      return protonet.data.File.getUrl(path);
-    },
-    
-    getDownloadUrl: function(record) {
-      var path = this.getAbsolutePath(record);
-      return protonet.data.File.getDownloadUrl(path);
-    }
-  };
-  
-  
-  // --------------------------------- OBSERVER --------------------------------- \\
-  var observer = {
-    list: function(data) {
-      currentPath = data.params.parent;
-      if (!currentPath.endsWith("/")) {
-        currentPath += "/";
-      }
-      
-      ui.list(data.result, data);
-    },
-    
-    info: function(data) {
-      var result = data.result[0];
-      currentPath = result.path;
-      ui.info(result, data);
-    }
-  };
-  
-  
   // --------------------------------- MARKER --------------------------------- \\
   var marker = {
     initialize: function() {
@@ -253,18 +211,16 @@ protonet.p("files", function($page, $window, $document) {
         event.preventDefault();
       });
       
-      $page.on("dblclick", "tr[data-folder-path]", function(event) {
-        api.cd($(this).data("folder-path"));
-        event.preventDefault();
-      });
-      
       $page.on("click", "a[data-folder-path]", function(event) {
-        api.cd($(this).data("folder-path"));
+        var path  = $(this).data("folder-path");
+        api.cd(path);
         event.preventDefault();
       });
       
-      $page.on("dblclick", "tr[data-file-path]", function(event) {
-        api.open($(this).data("file-path"));
+      $page.on("dblclick", "tr[data-folder-path], tr[data-file-path]", function(event) {
+        var $tr   = $(this).addClass("loading"),
+            path  = $tr.data("folder-path") || $tr.data("file-path");
+        api.open(path);;
         event.preventDefault();
       });
       
@@ -276,8 +232,8 @@ protonet.p("files", function($page, $window, $document) {
       });
     },
     
-    list: function(files, data) {
-      data = data || {};
+    list: function(files) {
+      var that = this;
       
       marker.clear();
       
@@ -287,11 +243,6 @@ protonet.p("files", function($page, $window, $document) {
       
       addressBar.update();
       this.removeHint();
-      
-      if (data.status == "error") {
-        this.showError(data);
-        return;
-      }
       
       if (!files) {
         this.insertHint("This folder doesn't seem to exist anymore");
@@ -303,7 +254,6 @@ protonet.p("files", function($page, $window, $document) {
         return;
       }
       
-      var that = this;
       this.prepareFileData(files, function(files) {
         files = sort.byName(files);
         
@@ -327,9 +277,7 @@ protonet.p("files", function($page, $window, $document) {
       return $row;
     },
     
-    info: function(file, data) {
-      data = data || {};
-      
+    info: function(file) {
       $fileList.hide();
       $fileDetails.show();
       
@@ -337,14 +285,9 @@ protonet.p("files", function($page, $window, $document) {
       
       addressBar.update();
       
-      if (data.status == "error") {
-        this.showError(data);
-        return;
-      }
-      
       if (file.type === "missing") {
-         ui.insertHint("This file doesn't seem to exist anymore");
-         return;
+        ui.insertHint("This file doesn't seem to exist anymore");
+        return;
       }
       
       this.removeHint();
@@ -359,50 +302,40 @@ protonet.p("files", function($page, $window, $document) {
 
         $fileDetails.html($element);
 
-        io.scan(file.path, function(isMalicious) {
+        protonet.data.File.scan(file.path, function(data) {
           var html;
-          if (isMalicious === true) {
+          if (data.malicious === true) {
             html = "<span class='negative'>Caution, this file might be malware or a virus!</span>";
-          } else if (isMalicious === false) {
+          } else if (data.malicious === false) {
             html = "<span class='positive'>no</span>";
           } else {
             html = "<span class='negative'>no virus scan available</span>";
           }
-
           $fileDetails.find("output.virus-check").html(html);
         });
       });
     },
     
-    prepareFileData: function(data, callback) {
+    prepareFileData: function(files, callback) {
       var model, ids;
       
-      data = $.makeArray(data);
+      files = $.makeArray(files);
       
-      data = $.map(data, function(record) {
-        var result = {
-          path:         utils.getAbsolutePath(record),
-          downloadPath: utils.getDownloadUrl(record),
-          httpPath:     utils.getUrl(record),
-          name:         record.name.truncate(70),
-          rawName:      record.name,
-          size:         protonet.utils.prettifyFileSize(record.size),
-          rawSize:      record.size,
-          modified:     protonet.utils.prettifyDate(record.modified),
-          rawModified:  record.modified,
-          mime:         record.mime,
-          type:         record.type
-        };
+      $.each(files, function(i, file) {
+        $.extend(file, {
+          url:            protonet.data.File.getUrl(file.path),
+          downloadUrl:    protonet.data.File.getDownloadUrl(file.path),
+          prettyName:     file.name.truncate(70),
+          prettySize:     file.size && protonet.utils.prettifyFileSize(file.size),
+          prettyModified: protonet.utils.prettifyDate(file.modified)
+        });
 
-        if (record.uploaded) {
-          result.rawUploaded = record.uploaded;
-          result.uploaded = protonet.utils.prettifyDate(record.uploaded);
+        if (file.uploaded) {
+          file.prettyUploaded = protonet.utils.prettifyDate(file.uploaded);
         }
 
-        result.uploaderId = record.uploader_id || -1;
-        result.uploaderName = protonet.data.User.getName(result.uploaderId) || ("user #" + record.uploader_id);
-
-        return result;
+        file.uploaderId   = file.uploader_id || -1;
+        file.uploaderName = protonet.data.User.getName(file.uploaderId) || ("user #" + file.uploaderId);
       });
       
       if (currentPath === "/users/") {
@@ -410,33 +343,33 @@ protonet.p("files", function($page, $window, $document) {
       } else if (currentPath === "/channels/") {
         model = protonet.data.Channel;
       } else {
-        callback(data);
+        callback(files);
         return;
       }
       
-      ids = $.map(data, function(record) {
-        return record.type === "folder" ? record.rawName : null;
+      ids = $.map(files, function(file) {
+        return file.type === "folder" ? file.name : null;
       });
       
       model.getAll(ids, function() {
-        $.each(data, function(i, file) {
+        $.each(files, function(i, file) {
           if (file.type !== "folder") { return; }
           
-          var record = model.getCache()[file.rawName] || {};
+          var record = model.getCache()[file.name] || {};
           if (record.rendezvousPartner) {
             var userName = (protonet.data.User.getName(record.rendezvousPartner) || "user # " + record.rendezvousPartner);
             userName = userName.truncate(20);
-            file.name = protonet.t("SHARED_BETWEEN_YOU_AND_USER", {
+            file.prettyName = protonet.t("SHARED_BETWEEN_YOU_AND_USER", {
               user_name: userName
             });
-            file.rawName = record.name;
+            file.name = record.name;
             file.rendezvousFolder = true;
           } else {
-            file.rawName = record.name || file.rawName;
-            file.name = file.rawName.truncate(70);
+            file.name = record.name || file.name;
+            file.prettyName = file.name.truncate(70);
           }
         });
-        callback(data);
+        callback(files);
       });
     },
     
@@ -451,7 +384,6 @@ protonet.p("files", function($page, $window, $document) {
     
     resizePage: function() {
       if (!isModalWindow) {
-        console.log($content.offset().top, $window.height());
         $content.css("min-height", ($window.height() - $content.offset().top - 41).px());
       }
     },
@@ -467,23 +399,24 @@ protonet.p("files", function($page, $window, $document) {
       this.resizeFileArea();
     },
     
-    showError: function(data) {
-      var error = data.error,
-          errorMessage;
+    showError: function(error) {
+      var errorMessage;
       switch (error) {
         case "Rpc::AccessDeniedError":
           errorMessage = "You don't have access to this file or folder";
           break;
+        case "TimeoutError":
+          errorMessage = "The request took too long to complete. Please try again.";
+          break;
         default:
           errorMessage = "Unknown error. Please try again.";
       }
-
       protonet.trigger("flash_message.error", errorMessage);
     }
   };
   
   
-  // --------------------------------- HISTORY --------------------------------- \\
+  // --------------------------------- ADDRESS BAR --------------------------------- \\
   var addressBar = {
     create$Element: function(name, path) {
       var isFolder = path.endsWith("/"), $element, model, match;
@@ -526,7 +459,7 @@ protonet.p("files", function($page, $window, $document) {
     update: function() {
       var pathParts     = currentPath.split("/"),
           isFolderPath  = currentPath.endsWith("/"),
-          $elements     = this.create$Element("protonet", "/"),
+          $elements     = this.create$Element("Files", "/"),
           path          = "/";
       
       history.push();
@@ -563,7 +496,7 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     push: function() {
-      var url = utils.getUrl();
+      var url = protonet.data.File.getUrl(currentPath);
       protonet.utils.History.push(url);
     },
     
@@ -608,7 +541,11 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     cd: function(path) {
-      io.send("fs.list", { parent: path });
+      currentPath = path;
+      protonet.data.File.list(path, {
+        success: ui.list.bind(ui),
+        error:   ui.showError.bind(ui)
+      });
     },
     
     open: function(path) {
@@ -619,46 +556,10 @@ protonet.p("files", function($page, $window, $document) {
         return api.cd(path);
       }
       
-      io.send("fs.info", { paths: [path] });
-    }
-  };
-  
-  
-  // --------------------------------- IO --------------------------------- \\
-  var io = {
-    initialize: function() {
-      this._observe();
-    },
-    
-    _observe: function() {
-      $.each(observer, function(methodName, method) {
-        protonet.on("fs." + methodName, method);
-      });
-      
-      protonet.one("modal_window.unload", function() {
-        $.each(observer, function(methodName, method) {
-          protonet.off("fs." + methodName, method);
-        });
-      });
-    },
-    
-    send: function(method, params) {
-      protonet.trigger("socket.send", {
-        operation: method,
-        params:    params
-      });
-    },
-    
-    scan: function(path, callback) {
-      var url = protonet.config.node_base_url + "/fs/scan?path=" + encodeURIComponent(path);
-      protonet.utils.crossDomainXHR(url, {
-        success: function(responseText) {
-          var json = JSON.parse(responseText);
-          callback(json.malicious);
-        },
-        error: function() {
-          callback(undefined);
-        }
+      currentPath = path;
+      protonet.data.File.get(path, {
+        success: ui.info.bind(ui),
+        error:   ui.showError.bind(ui)
       });
     }
   };
@@ -707,6 +608,5 @@ protonet.p("files", function($page, $window, $document) {
   ui.initialize();
   history.initialize();
   marker.initialize();
-  io.initialize();
   api.initialize();
 });

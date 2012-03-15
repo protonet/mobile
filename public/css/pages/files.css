@@ -52,6 +52,14 @@
   background: rgba(72, 123, 255, 0.3);
 }
 
+.files-page tr.focus.loading {
+  background: rgba(72, 123, 255, 0.15);
+}
+
+.files-page tr.focus.loading .file-name a {
+  background: url(/img/icn_loading_big.gif) no-repeat 0 center;
+}
+
 .files-page tr.focus,
 .files-page tr.focus a {
   color: #000;

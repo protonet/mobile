@@ -157,32 +157,40 @@ function remove(target, reply) {
 
 exports.list = function(params, reply) {
   var dir = path.join(ROOT_DIR, params.parent);
-  fs.readdir(dir, function(err, filelist) {
+  fs.readdir(dir, function(err, fileList) {
     var files = [];
-
-    for (var file in filelist) {
-      var fullpath = path.join(dir, filelist[file]);
-
+    
+    for (var i in fileList) {
+      var fileName    = fileList[i],
+          fullPath    = path.join(dir, fileName);
+      
       try {
-        var stats = fs.statSync(fullpath);
+        var stats = fs.statSync(fullPath);
       } catch(e) {
         continue;
       }
+      
       if (stats.isDirectory()) {
-        files.push({
-          name:     filelist[file],
+        file = {
+          name:     fileName,
           modified: stats.mtime,
           type:     "folder"
-        });
+        };
       } else {
-        files.push({
-          name:     filelist[file],
+        file = {
+          name:     fileName,
           size:     stats.size,
           modified: stats.mtime,
-          mime:     lookup_mime(filelist[file]),
+          mime:     lookup_mime(fileName),
           type:     "file"
-        });
+        };
       }
+      
+      file.path = path.join(params.parent, fileName);
+      if (file.type === "folder") {
+        file.path += "/";
+      }
+      files.push(file);
     }
     reply(err, files);
   });
