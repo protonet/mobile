@@ -18,7 +18,7 @@ var magickCommand = function(obj) {
   obj.cropResize = function(width, height) {
     return obj.crop(width, height).resize(width, height);
   };
-  obj.resizeMagick = function(width, height, shouldExtent) {
+  obj.resizeMagick = function(width, height, extent) {
     obj = obj
       .stripMetaData()
       .colorSpace('RGB')
@@ -27,17 +27,17 @@ var magickCommand = function(obj) {
       .resize(width, height)
       .background("none")
       .coalesce();
-    if (shouldExtent) {
-      obj.extent(width, height);
+    if (extent) {
+      obj.background("white").extent(width, height);
     }
     return obj;
   };
   obj.resize = function(width, height) {
-    var wh = width + "x" + height + "^";
+    var wh = "'" + (width || "") + "x" + (height || "") + "^>'";
     return obj.makeArgs(["-resize", wh], null);
   };
   obj.crop = function(width, height) {
-    var wh = width + "x" + height;
+    var wh = (width || "") + "x" + (height || "");
     return obj.makeArgs(["-crop", wh], null);
   };
   obj.extent = function(width, height) {

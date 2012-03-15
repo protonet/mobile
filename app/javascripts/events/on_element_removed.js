@@ -8,5 +8,5 @@ protonet.events.onElementRemoved = function($element, callback) {
       clearInterval(interval);
       callback.call($element[0]);
     }
-  }, 200);
+  }, 250);
 };

@@ -67,11 +67,11 @@ exports.proxy = function(params, headers, response) {
     } catch(err) { console.log('unlink fail', err); };
   };
   
-  function resizeImage(from, to, size, successCallback, failureCallback) {
-    if (size.height && size.width) {
+  function resizeImage(from, to, options, successCallback, failureCallback) {
+    if (options.height || options.width) {
       magick
         .createCommand(from)
-        .resizeMagick(size.width, size.height, parsedUrl.pathname.indexOf(".gif") === -1)
+        .resizeMagick(options.width, options.height, options.extent)
         .write(to, function() {
           sys.puts("Done resizing.");
           successCallback(to);
@@ -116,7 +116,7 @@ exports.proxy = function(params, headers, response) {
         // if the base file exists
         if (exists) {
           console.log("base file exists :) " + baseFileName);
-          resizeImage(baseFileName, fileName, { height: params.height, width: params.width }, sendImage, send404);
+          resizeImage(baseFileName, fileName, { height: params.height, width: params.width, extent: params.extent === "true" }, sendImage, send404);
         } else {
           sys.puts("NO base file exists :(");
           // get the port
@@ -137,7 +137,7 @@ exports.proxy = function(params, headers, response) {
             fileStream.end();
             
             if (!error && response.statusCode == 200) {
-              resizeImage(baseFileName, fileName, { height: params.height, width: params.width }, sendImage, send404);
+              resizeImage(baseFileName, fileName, { height: params.height, width: params.width, extent: params.extent === "true" }, sendImage, send404);
             } else {
               console.log("Error for", url, error);
               send404(fileName);
