@@ -1,0 +1,21 @@
+<aside>
+  <ul>
+    <li class="<%= 'selected' if @nav == "my_profile" %>">
+      <a href="<%= my_user_path %>">
+        <strong>My Profile</strong>
+      </a>
+    </li>
+    <li class="<%= 'selected' if @nav == "users" %>">
+      <a href="<%= users_path %>">
+        <strong>All Users (<%= User.registered.size%>)</strong>
+      </a>
+    </li>
+    <%- if permitted_to?(:manage, :invitations)  %>
+    <li class="<%= 'selected' if @nav == "invitations" %>">
+      <a href="<%= invitations_path %>">
+        <strong>Invitations</strong>
+      </a>
+    </li>
+    <%- end %>
+  </ul>
+</aside>

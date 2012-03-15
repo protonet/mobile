@@ -298,7 +298,11 @@ class User < ActiveRecord::Base
     if invitation_token
       if invitation = Invitation.unaccepted.find_by_token(invitation_token)
         self.channels_to_subscribe = Channel.find(invitation.channel_ids).to_a
-        self.roles = [Role.find_by_title('invitee')]
+        self.roles = if invitation.invitee_role
+            [Role.find_by_title('invitee')]
+          else
+            [Role.find_by_title(SystemPreferences.default_registered_user_group)]
+          end
       else
         errors.add_to_base("The invitation token is invalid.")
         return false

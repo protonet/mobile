@@ -1,4 +1,5 @@
-<output class="content">
+<%= render "shared/nav_users"%>
+<output class="content" data-tab="users">
   <%= render :partial => 'avatar' %>
   
   <h2>
@@ -9,9 +10,9 @@
     <%- end %>
     <%= link_to("edit", edit_user_path(@user), :class => 'action-link edit') if current_user.can_edit?(@user) %>
   </h2>
-  <p><strong><%= @user.display_name %></strong> is a member here for <strong title="<%= @user.created_at %>"><%= time_ago_in_words(@user.created_at) %></strong>, subscribed to <strong><%= @user.channels.real.verified.size %></strong> channels and posted <strong><%= Meep.find_all_by_user_id(@user.id).size %></strong> messages so far.</p>
-  
-  <h3>Actions</h3>
+  <p><strong><%= @user.display_name %></strong> is a member here for <strong title="<%= @user.created_at %>"><%= time_ago_in_words(@user.created_at) %></strong>
+    <br>
+    subscribed to <strong><%= @user.channels.real.verified.size %></strong> channels and posted <strong><%= Meep.find_all_by_user_id(@user.id).size %></strong> messages so far.</p>
   <p>
     <%= link_button("Start private chat", "/?rendezvous_with=#{@user.id}", { 'data-rendezvous-with' => @user.id }) %>
     <%= link_button("Send @reply", "/?reply_to=#{ERB::Util.u(@user.display_name)}", { 'data-reply-to' => @user.display_name }) %>
@@ -20,7 +21,7 @@
     <%- end %>
   </p>
   
-  <h3>Channels</h3>
+  <h3 class="first-of-type">Channels</h3>
   <p class="channel-list">
     <%- if @user.channels.real.verified.empty? %>
       <p class="hint">No channels subscribed.</p>

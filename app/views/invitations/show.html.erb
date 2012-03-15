@@ -1,0 +1,42 @@
+<%= render "shared/nav_users"%>
+<output class="content" data-tab="invitations">
+  <h2>Invitation for <%= @invitation.email%></h2>
+  <p>
+    Personalize the invitation an send it.
+  </p>
+  <p>
+    <strong>Status:</strong>
+    <%- case @invitation.status %>
+    <%- when :success %>  
+      accepted by <%= @invitation.invitee.login %>
+    <%- when :sent %>
+      sent on <%= l(@invitation.sent_at, :format => :short) %>
+    <%- when :open %>
+      not sent yet
+    <%- end %>
+  </p>
+  <%= form_for(@invitation, :html => { "data-type" => 'html' }) do |f| %>
+    <div id="wysihtml5-toolbar" style="display: none;">
+      <a class="icon" data-wysihtml5-command="bold" title="CTRL+B">bold</a>
+      <a class="icon" data-wysihtml5-command="italic" titletle="CTRL+I">italic</a>
+      <a class="icon" data-wysihtml5-command="undo" title="undo">undo</a>
+      <a class="icon" data-wysihtml5-command="redo" title="redo">redo</a>
+      <a class="icon" data-wysihtml5-command="ol">insertOrderedList</a>
+      <a class="icon" data-wysihtml5-action="change_view">switch to html view</a>
+      <a class="link" data-wysihtml5-command="insertHTML" data-wysihtml5-command-value="<%= accept_invitation_url(:invitation_token => @invitation.token, :host => SystemPreferences.public_host, :protocol => SystemPreferences.public_host_https ? 'https://' : 'http://')%>">insert inviationlink</a>
+    </div>
+    
+    <textarea cols="40" rows="20" name="invitations[name]" id="invitation_message">
+      <%= raw @invitation.message %>
+    </textarea>
+    <div class="buttons">
+      <%= button "Save" %>
+      <%- case @invitation.status %>
+      <%- when :open %>
+        <%= button "Send invitation", :name => "send" %>
+      <%- when :sent %>
+        <%= button "Resend invitation", :name => "send" %>
+      <%- end %>
+    </div>
+  <%- end %>
+</output>

@@ -34,13 +34,19 @@
     <%= form_for :user, :url => user_registration_path, :html => { :class => "register", :style => @signup_error || params[:invitation_token] ? "" : "display: none" } do |f| %>
       <%= hidden_field_tag :invitation_token, params[:invitation_token] if params[:invitation_token] %>
       <fieldset>
-        <h3>Create an account. It's free.</h3>
+        <h3>
+          <%- if @invitation %>
+            You have been invited by <%= @invitation.user.display_name %>. Just create an account. It's free
+          <%- else %>
+            Create an account. It's free.
+          <%- end %>
+        </h3>
         <label>
-          <%= f.text_field :login, :placeholder => "user name" %>
+          <%= f.text_field :login, :placeholder => "user name", :value => (@user && @user.login) || (@invitation && @invitation.name && @invitation.name.parameterize) %>
           <span class="hint">min. 3 characters, allowed: A-Z, 0-9 and .-_</span>
         </label>
         <label>
-          <%= f.text_field :email, :placeholder => "email", :type => "email" %>
+          <%= f.text_field :email, :placeholder => "email", :type => "email", :value => (@user && @user.email) || (@invitation && @invitation.email) %>
           <span class="hint">a valid email address</span>
         </label>
         <label>

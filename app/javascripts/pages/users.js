@@ -3,7 +3,8 @@ protonet.p("users", function($page) {
       $loadingIndicator = $meepContainer.next(".progress"),
       $fileInput        = $page.find("[type=file]"),
       $avatarForm       = $fileInput.parents("form"),
-      $meepList         = $("<ul>", { "class": "meeps" });
+      $meepList         = $("<ul>", { "class": "meeps" }),
+      $searchUsers      = $("form#search_users");
   
   $meepContainer.one("inview", function() {
     function fallback() {
@@ -76,5 +77,6 @@ protonet.p("users", function($page) {
     mouseup: function() {
       $avatarForm.find("button").removeClass("active");
     }
-  });
+  }); 
+  
 });

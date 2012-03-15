@@ -241,7 +241,7 @@ GEM
     whenever (0.7.0)
       activesupport (>= 2.3.4)
       chronic (~> 0.6.3)
-    will_paginate (3.0.pre2)
+    will_paginate (3.0.3)
     xpath (0.1.4)
       nokogiri (~> 1.3)
     yamler (0.1.0)
@@ -299,4 +299,4 @@ DEPENDENCIES
   sunspot_rails
   tmm1-amqp (= 0.6.4)
   whenever
-  will_paginate (= 3.0.pre2)
+  will_paginate (= 3.0.3)

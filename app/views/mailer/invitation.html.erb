@@ -1,19 +1,9 @@
 <style>
-  * {
-    font-family: Verdana, Arial;
-  }
+  body{ margin:0 auto; font-family: Verdana, sans-serif; font-size:12px; color: #000; background: #ddd; padding:10px; }
+  .mail{ margin:auto; width: 600px; padding: 10px; border: 1px solid #aaa; background:white; }
+  h1{ font-size:14px; }
+  h2{ font-size:12px; }
+  img.avatar{ float:left; margin-bottom:2px; margin-right:5px; }
 </style>
 
-<h2 style="color: #487bff;">Hey,</h2>
-
-<p><strong><%= @invitation.user.display_name %></strong> invited you to his protonet network.</p>
-
-<%- unless @invitation.message.blank? %>
-<p style="margin: 20px; color: #666; border-left: 4px solid #666; padding-left: 5px;"><%= @invitation.message %></p>
-<%- end %>
-
-<p>Please follow this link to sign up:<br>
-<%= accept_invitation_url(:invitation_token => @invitation.token) %></p>
-
-<p>Have fun using the protonet.</p>
-
+<%= raw @invitation.message %>

@@ -67,8 +67,13 @@ protonet.ui.Header = {
     this.$header.find(".nav-link, .sub-nav-link").removeClass("selected");
     if (controllerName) {
       var controllerLink = this.$header.find("." + controllerName + "-controller-link.nav-link").addClass("selected");
-      if (actionName) {
-        controllerLink.find("." + actionName + "-action-link").addClass("selected");
+      var nestedControllerLink = controllerLink.find("." + controllerName + "-controller-link");
+      if (nestedControllerLink.length > 0) {
+        nestedControllerLink.addClass("selected");
+      }else{
+        if (actionName) {
+          controllerLink.find("." + actionName + "-action-link").addClass("selected");
+        }
       }
     }
   }

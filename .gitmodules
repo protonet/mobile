@@ -13,3 +13,6 @@
 [submodule "app/javascripts/lib/plupload"]
 	path = app/javascripts/lib/plupload
 	url = git@github.com:protonet/plupload.git
+[submodule "app/javascripts/lib/wysihtml5"]
+	path = app/javascripts/lib/wysihtml5
+	url = git://github.com/xing/wysihtml5.git

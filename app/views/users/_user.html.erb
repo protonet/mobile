@@ -1,0 +1,6 @@
+<li>
+  <%= link_to user_path(user) do %>
+    <%= avatar(user, :width => 48, :height => 48, :alt => user.display_name) %>
+    <span><%= user.display_name %><%= user_flags(user) %></span>
+  <%- end %>
+</li>

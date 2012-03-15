@@ -1,5 +1,5 @@
 <div class="avatar-container">
-  <%= avatar(@user, :width => 240, :height => 240, :class => 'user-avatar', 'data-user-avatar' => @user.id) %>
+  <%= avatar(@user, :width => 140, :height => 140, :class => 'user-avatar', 'data-user-avatar' => @user.id) %>
   <%- if current_user.can_edit?(@user) %>
     <%= form_tag images_avatars_path, :multipart => true, :class => 'single-button-form' do %>
       <%= hidden_field_tag :user_id, @user.id %>

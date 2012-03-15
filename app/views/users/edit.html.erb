@@ -1,7 +1,8 @@
-<output class="content">
-  <%= render :partial => 'avatar' %>
-  
+<%= render "shared/nav_users"%>
+<output class="content" data-tab="users">
   <h2>Edit @<%= @user.display_name %> <a data-hover-hint="top" title="This page can only be seen by admins and the user himself" class="hint">(?)</a></h2>
+  
+  <%= render :partial => 'avatar' %>
   
   <%- unless @user.stranger? && @user.anonymous? %>
     <h3>Edit user details</h3>

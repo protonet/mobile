@@ -5,18 +5,10 @@ Background:
   And I go unauthenticated to the start page
   And I am logged in as "dudemeister"
   And I go to the users page
-
-  @javascript
-  Scenario: Seeing the system user's profile
-    Then I fill in "users_search_term" with "system" within ".users-page"
-    Then I press "Go" within ".users-page"
-    Then I should see "@System" within ".users-page h2"
-    Then I should not see "edit" within ".users-page"
-
+  
   @javascript
   Scenario: Seeing some other users profile
-    Then I fill in "users_search_term" with "someotherdude" within ".users-page"
-    Then I press "Go" within ".users-page"
+    Then I visit the profile of "someotherdude"
     Then I should see "@someotherdude" within ".users-page h2"
     Then I should not see "someotherdude@protonet.com"
     Then I should not see "edit" within ".users-page"
@@ -71,7 +63,7 @@ Background:
     And I should see "@newname" within ".users-page h2"
     
   @javascript @wip
-  Scenario: Admin: Deleting an user
+  Scenario: Admin Deleting an user
     Given I go to the users page
     And select an user
     And I have the rights

@@ -126,7 +126,8 @@ $.behaviors({
   ".subpage:ajax:complete": function(element, event, xhr) {
     var flashMessageSet,
         status = xhr.status,
-        html   = xhr.responseText;
+        html   = xhr.responseText,
+        contentType = xhr.getResponseHeader('Content-Type');
     
     $(event.target)
       .removeClass("loading")
@@ -148,7 +149,7 @@ $.behaviors({
     });
     
     if (status >= 200 && status < 300 || status === 304) {
-      if (!html) { return; }
+      if (!html || !contentType.match(/text|html/) ) { return; }
       $(element).replaceWith(html);
       var newUrl = xhr.getResponseHeader("X-Url");
       newUrl && protonet.utils.History.push(newUrl);

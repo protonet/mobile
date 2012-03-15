@@ -8,8 +8,6 @@ class Mailer < ActionMailer::Base
     mail(
       :from => "no-reply@local.protonet.info",
       :to => invitation.email,
-      :bcc => invitation.user.email,
-      :reply_to => invitation.user.email,
       :subject => "#{invitation.user.display_name} wants you to join his protonet"
     )
   end
