@@ -16,7 +16,7 @@ protonet.text_extensions.provider.GithubRepository = {
         title:          response.owner + "'s " + response.name,
         titleAppendix:  (response.watchers || 0) + " watchers", 
         description:    response.description,
-        image:          "http://github.com/images/error/octocat_happy.gif"
+        image:          protonet.config.base_url + "/img/github_octocat.png"
       });
     }, onFailure);
   }
