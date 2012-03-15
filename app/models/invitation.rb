@@ -13,8 +13,10 @@ class Invitation < ActiveRecord::Base
   
   scope :unaccepted, :conditions => { :accepted_at => nil }
   
-  def validate
-    errors.add :email, "is already taken." if User.find_by_email(email.downcase)
+  validate :check_email
+  
+  def check_email
+    errors.add :email, "is already taken." if User.find_by_email(email)
   end
   
   def send_email
