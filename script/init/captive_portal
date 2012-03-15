@@ -51,7 +51,7 @@ case $1 in
       $IPT -t nat -A PREROUTING -i $INTIF -j unknown_user $IPT_COMMENT
 
       echo "   and drop all forward pakets marked 99"
-      $IPT -t filter -A FORWARD -i $INTIF -m mark --mark 99 -j DROP $IPT_COMMENT
+      $IPT -t filter -I FORWARD 1 -i $INTIF -m mark --mark 99 -j DROP $IPT_COMMENT
 
       echo "   allow traffic from all stored (and authorized) mac addresses"
       touch $SHARED/config/ifconfig.d/allowed_clients
@@ -62,7 +62,8 @@ case $1 in
       $IPT -t nat -A unknown_user -j MARK --set-mark 99 $IPT_COMMENT
 
       echo "   redirect all traffic to $REDIRECTION_TARGET"
-      $IPT -t nat -A unknown_user -m mark --mark 99 -p tcp --dport 80 -j DNAT --to-destination $REDIRECTION_TARGET $IPT_COMMENT
+      $IPT -t nat -A unknown_user -m mark --mark 99 -p tcp --dport 80  -j DNAT --to-destination $REDIRECTION_TARGET $IPT_COMMENT
+      $IPT -t nat -A unknown_user -m mark --mark 99 -p tcp --dport 443 -j DNAT --to-destination $REDIRECTION_TARGET $IPT_COMMENT
       # create file
       ;;
     stop)
@@ -72,7 +73,7 @@ case $1 in
       GRANTS_CMD="$IPT -L unknown_user -n -t nat -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D unknown_user \" \$1}' | sort -r -V | bash"
       echo "  execute: $GRANTS_CMD"
       echo $GRANTS_CMD | bash
-      FORWARD_CMD="$IPT -L FORWARD -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -t nat -D FORWARD \" \$1}' | sort -r -V | bash"
+      FORWARD_CMD="$IPT -L FORWARD -v --line-numbers | grep protonet_captive | awk 'BEGIN { FS=\" \"; } {print \"$IPT -D FORWARD \" \$1}' | sort -r -V | bash"
       echo "  execute: $FORWARD_CMD"
       echo $FORWARD_CMD | bash
       echo "  delete the unknown_user chain"
