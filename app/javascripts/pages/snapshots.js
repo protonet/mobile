@@ -20,7 +20,7 @@ protonet.p("snapshots", function($page, $window) {
   }
   
   function resizePage() {
-    $container.css("height", $window.height() - $container.offset().top + "px");
+    $container.css("height", $window.height() - $container.offset().top - 1 + "px");
   }
   
   if (!isModalWindow) {

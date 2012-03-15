@@ -9,7 +9,7 @@ protonet.p("meeps", function($page, $window) {
     if (isModalWindow) {
       $content.css("height", "100%");
     } else {
-      $content.css("height", $window.height() - $content.offset().top + "px");
+      $content.css("height", $window.height() - $content.offset().top - 1 + "px");
     }
   }
   

@@ -20,7 +20,7 @@ protonet.pages.Search = {
 
     function resizeContainer() {
       if (!isModalWindow) {
-        this.$container.css("min-height", $(window).height() - this.$container.offset().top + "px");
+        this.$container.css("min-height", $(window).height() - this.$container.offset().top - 1 + "px");
       }
     }
 
