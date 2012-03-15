@@ -1,3 +1,5 @@
+//= require "escape_html.js"
+
 protonet.utils.autoLink = (function() {
   /**
    * This is basically a rebuild of
@@ -10,7 +12,7 @@ protonet.utils.autoLink = (function() {
    *    /(\b(((https?|ftp):\/\/)|(www\.))[-A-Z0-9+&@#\/%?=~_|!:,.;\[\]]*[-A-Z0-9+&@#\/%=~_|])/gim
    */
   var URL_REG_EXP           = /(https?:\/\/|www\.)[^\s<]{3,}/gi,
-      TRAILING_CHAR_REG_EXP = /([^\w\/-])$/i,
+      TRAILING_CHAR_REG_EXP = /([^\w\/-;])$/i,
       MAX_DISPLAY_LENGTH    = 55,
       BRACKETS              = {
         ")": "(",
