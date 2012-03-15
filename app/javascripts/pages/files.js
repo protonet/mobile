@@ -220,7 +220,7 @@ protonet.p("files", function($page, $window, $document) {
       $page.on("dblclick", "tr[data-folder-path], tr[data-file-path]", function(event) {
         var $tr   = $(this).addClass("loading"),
             path  = $tr.data("folder-path") || $tr.data("file-path");
-        api.open(path);;
+        api.open(path);
         event.preventDefault();
       });
       
@@ -266,11 +266,17 @@ protonet.p("files", function($page, $window, $document) {
     
     item: function(file) {
       var template = file.type + "-item-template",
-          $row = new protonet.utils.Template(template, file).to$();
+          isViewer = file.path === viewerPath,
+          $row;
+          
+      if (isViewer) {
+        file.prettyName = file.prettyName + " <i>(that's you!)</i>";
+      }
       
+      $row = new protonet.utils.Template(template, file).to$();
       $row.data("file", file);
       
-      if (file.path === viewerPath) {
+      if (isViewer) {
         $row.addClass("myself");
       }
       

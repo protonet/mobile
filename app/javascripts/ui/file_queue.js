@@ -101,8 +101,8 @@ protonet.ui.FileQueue = (function() {
     _observe: function() {
       protonet.on("channel.change", function(channelId) {
         this.uploader.settings.multipart_params = {
-          user_id:    protonet.config.user_id//,
-          // token:      protonet.config.token
+          user_id:    protonet.config.user_id,
+          token:      protonet.config.token
         };
       }.bind(this));
       

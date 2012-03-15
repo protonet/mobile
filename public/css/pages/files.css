@@ -69,6 +69,12 @@
   font-weight: bold;
 }
 
+.files-page tr .file-name i {
+  font-style: normal;
+  font-weight: normal;
+  color: #999;
+}
+
 .files-page th {
   text-shadow: 0 1px 1px #fff;
 }

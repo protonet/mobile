@@ -379,7 +379,7 @@
      * in the browser's viewport
      */
     _initEndlessScroller: function() {
-      if (this.channelList.children().length < 25) {
+      if (this.channelList.find("article").length < 25) {
         return;
       }
       var lastMeepInList = this.channelList.children(":last").addClass("separator");
