@@ -45,7 +45,7 @@
     <%- if @user == current_user %>
       <a data-hover-hint="top" title="Other users will only see messages posted by you in channels that they have also subscribed" class="hint">(?)</a>
     <%- else %>
-      <a data-hover-hint="top" title="You only see messages that where posted by @<%= @user.display_name %> in channels that you have also subscribed" class="hint">(?)</a>
+      <a data-hover-hint="top" title="You only see messages that were posted by @<%= @user.display_name %> in channels that you have also subscribed" class="hint">(?)</a>
     <%- end %>
   </h3>
   <output class="user-meeps" data-user-id="<%= @user.id %>"></output>
