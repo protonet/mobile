@@ -22,6 +22,7 @@
 //= require "utils/history.js"
 //= require "behaviors/main.js"
 //= require "behaviors/ajax.js"
+//= require "media/proxy.js"
 //= require "utils/template.js"
 //= require "utils/inline_hint.js"
 //= require "ui/user.js"

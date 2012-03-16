@@ -11,7 +11,6 @@
 //= require "../utils/highlight_channel_replies.js"
 //= require "../utils/highlight_user_replies.js"
 //= require "../utils/parse_query_string.js"
-//= require "../media/proxy.js"
 
 /**
  * @example

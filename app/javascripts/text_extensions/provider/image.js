@@ -1,6 +1,5 @@
 //= require "../../utils/parse_url.js"
 //= require "../../utils/escape_for_reg_exp.js"
-//= require "../../media/proxy.js"
 
 /**
  * Image Provider

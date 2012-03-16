@@ -1,5 +1,3 @@
-//= require "../../media/proxy.js"
-
 protonet.text_extensions.provider.Gist = {
   REG_EXP:  /gist\.github\.com\/(\d+)/,
   TXT_URL:  "https://raw.github.com/gist/{id}",

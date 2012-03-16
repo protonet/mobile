@@ -1,5 +1,4 @@
 //= require "../utils/to_max_size.js"
-//= require "../media/proxy.js"
 
 /**
  * Resizes an image when hovering

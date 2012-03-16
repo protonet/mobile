@@ -1,4 +1,3 @@
-//= require "../../media/proxy.js"
 //= require "../../effects/hover_resize.js"
 
 protonet.text_extensions.render.image = function(data, preventResizing) {

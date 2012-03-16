@@ -1,5 +1,4 @@
 //= require "../resizer.js"
-//= require "../../media/proxy.js"
 
 protonet.ui.User.Widget = {
   initialize: function() {
