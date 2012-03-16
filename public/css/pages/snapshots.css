@@ -41,7 +41,7 @@
 }
 
 .snapshots-page .countdown {
-  font-size: 120px;
+  font-size: 140px;
   line-height: 200px;
   top: 50%;
   left: 0;
@@ -51,6 +51,10 @@
   text-shadow: 5px 5px 5px #000;
   position: absolute;
   text-align: center;
+}
+
+.snapshots-page .countdown.status {
+  font-size: 20px;
 }
 
 .snapshots-page .flash {

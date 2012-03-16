@@ -33,11 +33,15 @@
           interval   = setInterval(function() {
         i--;
         if (i < 1) {
-          $countdown.remove();
+          $countdown.hide();
           clearInterval(interval);
           var $flash = $("<div>", { "class": "flash" }).insertAfter(this.$container).hide();
           $flash.fadeIn(300, function() {
-            this.snap(url, callback);
+            $countdown.show().addClass("status").text(protonet.t("UPLOADING_SNAPSHOT"));
+            this.snap(url, function() {
+              $countdown.remove();
+              callback.apply(this, arguments);
+            });
             $flash.remove();
           }.bind(this));
         } else {
@@ -136,7 +140,7 @@
     initialize: function() {
       webcam.set_swf_url("/flash/webcam.swf");
       webcam.set_quality(100);
-      webcam.set_shutter_sound(SHUTTER_SOUND);
+      webcam.set_shutter_sound(true, SHUTTER_SOUND);
     },
 
     insertInto: function($container) {

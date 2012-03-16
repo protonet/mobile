@@ -2,6 +2,7 @@
 //= require "../utils/prettify_date.js"
 //= require "../utils/parse_url.js"
 //= require "../utils/parse_query_string.js"
+//= require "../media/embed_file.js"
 
 protonet.p("files", function($page, $window, $document) {
   var $addressBar       = $page.find(".address-bar"),
@@ -307,7 +308,9 @@ protonet.p("files", function($page, $window, $document) {
         marker.set($element);
 
         $fileDetails.html($element);
-
+        protonet.media.embedFile($fileDetails.find("output.embed"), file);
+        
+        
         protonet.data.File.scan(file.path, function(data) {
           var html;
           if (data.malicious === true) {
@@ -559,7 +562,8 @@ protonet.p("files", function($page, $window, $document) {
       
       var isFolder = path.endsWith("/");
       if (isFolder) {
-        return api.cd(path);
+        api.cd(path);
+        return;
       }
       
       currentPath = path;

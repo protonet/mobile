@@ -55,5 +55,6 @@ protonet.i18n = {
   NO_WEBCAM_SUPPORT: "Sorry, it seems like your browser doesn't support webcam access or you don't have an webcam.",
   MEEP_DELETION_ERROR: "Error. The message couldn't be deleted.",
   MEEP_DELETION_SUCCESS: "The message has been successfully deleted",
-  FILE_DOWNLOAD_ERROR: "Error. The file can't be downloaded."
+  FILE_DOWNLOAD_ERROR: "Error. The file can't be downloaded.",
+  UPLOADING_SNAPSHOT: "uploading ..."
 };

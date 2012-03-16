@@ -16,7 +16,7 @@ exports.proxy = function(params, headers, response) {
     if (base) {
       return(baseString);
     }
-    if (params.width && params.height) {
+    if (params.width || params.height) {
       baseString += "_" + params.width + "_" + params.height;
     }
     return(baseString);
