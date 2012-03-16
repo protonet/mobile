@@ -56,5 +56,6 @@ protonet.i18n = {
   MEEP_DELETION_ERROR: "Error. The message couldn't be deleted.",
   MEEP_DELETION_SUCCESS: "The message has been successfully deleted",
   FILE_DOWNLOAD_ERROR: "Error. The file can't be downloaded.",
-  UPLOADING_SNAPSHOT: "uploading ..."
+  UPLOADING_SNAPSHOT: "uploading ...",
+  FILE_PREVIEW_ERROR: "No preview available"
 };

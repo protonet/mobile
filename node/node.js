@@ -6,7 +6,7 @@ var sys  = require("sys"),
 var htmlTaskPort = 8124;
 process.argv.forEach(function(val){
   var match;
-  if(match = val.match(/port=(\d+)/)) {
+  if (match = val.match(/port=(\d+)/)) {
     htmlTaskPort = parseInt(match[1], 10);
   }
 });

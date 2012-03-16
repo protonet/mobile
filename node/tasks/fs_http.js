@@ -52,11 +52,13 @@ function mkdirpAndJoin(baseDirectory, file) {
 }
 
 function setAccessControlHeaders(response, request) {
+  if (process.env.NODE_ENV !== "development") {
+    return;
+  }
   response.setHeader('Access-Control-Allow-Origin', request.headers.origin);
   response.setHeader('Access-Control-Allow-Methods', '*');
   response.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-CSRF-Token');
   response.setHeader('Access-Control-Allow-Credentials', 'true');
-  // response.setHeader('Access-Control-Max-Age', '1728000');
 }
 
 exports.bind = function(amqpConnection) {
@@ -121,7 +123,7 @@ exports.bind = function(amqpConnection) {
           var file = path.join(FILES_DIR, files[0]);
           if (files.length == 1 && !fs.statSync(file).isDirectory()) {
             header['Content-Type']        = lookup_mime(file);
-            header['Content-Length']      = fs.statSync(file).size
+            header['Content-Length']      = fs.statSync(file).size;
             header['Content-Disposition'] = 'attachment;filename="' + path.basename(file) + '"';
             response.writeHead(200, header);
 
@@ -148,7 +150,7 @@ exports.bind = function(amqpConnection) {
 
             zip.stdout.on('data', function(data) {
               response.write(data, 'binary');
-            })
+            });
             zip.on('exit', function(code) {
               if (code !== 0) {
                 console.log('zip process exited with code ' + code);
@@ -175,7 +177,6 @@ exports.bind = function(amqpConnection) {
 };
 
 exports.upload = function(request, response) {
-  // TODO: Security!
   setAccessControlHeaders(response, request);
 
   var form      = new formidable.IncomingForm(),
@@ -216,7 +217,6 @@ exports.upload = function(request, response) {
 };
 
 exports.snapshot = function(request, response) {
-  // TODO: Security!
   setAccessControlHeaders(response, request);
   
   next_seq += 1;
@@ -251,7 +251,6 @@ exports.snapshot = function(request, response) {
 };
 
 exports.download = function(request, response) {
-  // TODO: Security!
   setAccessControlHeaders(response, request);
 
   next_seq += 1;

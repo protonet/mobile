@@ -8,7 +8,7 @@ export HOME=$CURRENT_PATH/../..
 cd $CURRENT_PATH
 case $1 in
    start)
-      exec 2>&1 /usr/local/bin/node $CURRENT_PATH/node/node.js port=$NODE_PORT 1>$CURRENT_PATH/log/node.log &
+      exec 2>&1 NODE_ENV=production /usr/local/bin/node $CURRENT_PATH/node/node.js port=$NODE_PORT 1>$CURRENT_PATH/log/node.log &
       ;;
     stop)  
       kill `cat $CURRENT_PATH/tmp/pids/node_$NODE_PORT.pid` ;;
