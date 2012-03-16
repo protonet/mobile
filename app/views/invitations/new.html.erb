@@ -3,16 +3,14 @@
   <%= form_for(@invitation, :html => { "data-type" => 'html' }) do |f| %>
     <h2>Invite people to your protonet <a data-hover-hint="top" title="Only admins can invite people" class="hint">(?)</a></h2>
     
-    <div class="form-field">
-      <p class="info-message">
-        <strong>Please note:</strong>
-        This only works when protonet can be accessed from the internet.
-        <br>
-        <%- if !SystemPublishToWeb.status %>
+    <%- if !SystemPublishToWeb.status %>
+      <div class="form-field">
+        <p class="info-message">
+          <strong>Please note:</strong>
           Web Publishing is currently <b>not activated</b>. You can enable it <%= link_to "here", "/preferences/show?section=publish_to_web" %>.
-        <%- end %>
-         </p>
-    </div>
+        </p>
+      </div>
+    <%- end %>
     
     <div class="form-field">
       <%= f.label :name, "Name:" %>
@@ -25,8 +23,18 @@
     </div>
 
     <div class="form-field">
-      <label for="invitation_role">Constrained rights <a data-hover-hint="top" title="The user (e.g. customer) can only see channels you subscribe him to." class="hint">(?)</a></label>
-      <%= f.check_box :invitee_role %>
+      <label>Constrained rights:</label>
+      <span>
+        <label>
+          <%= f.radio_button(:invitee_role, true) %>
+          Yes
+        </label>
+        <label>
+          <%= f.radio_button(:invitee_role, false) %>
+          No
+        </label>
+        <a data-hover-hint="top" title="The user (e.g. customer) can only see channels you subscribe him to." class="hint">(?)</a>
+      </span>
     </div>
     
     <div class="form-field channels">

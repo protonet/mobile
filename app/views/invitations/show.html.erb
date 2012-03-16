@@ -1,11 +1,8 @@
 <%= render "shared/nav_users"%>
 <output class="content" data-tab="invitations">
   <h2>Invitation for <%= @invitation.email%></h2>
-  <p>
-    Personalize the invitation an send it.
-  </p>
-  <p>
-    <strong>Status:</strong>
+  <div class="status-box">
+    Status:
     <%- case @invitation.status %>
     <%- when :success %>  
       accepted by <%= @invitation.invitee.login %>
@@ -14,7 +11,7 @@
     <%- when :open %>
       not sent yet
     <%- end %>
-  </p>
+  </div>
   <%= form_for(@invitation, :html => { "data-type" => 'html' }) do |f| %>
     <div id="wysihtml5-toolbar" style="display: none;">
       <a class="icon" data-wysihtml5-command="bold" title="CTRL+B">bold</a>
@@ -30,7 +27,7 @@
       <%= raw @invitation.message %>
     </textarea>
     <div class="buttons">
-      <%= button "Save" %>
+      <%= button "Save" unless @invitation.status == :success %>
       <%- case @invitation.status %>
       <%- when :open %>
         <%= button "Send invitation", :name => "send" %>
@@ -39,4 +36,11 @@
       <%- end %>
     </div>
   <%- end %>
+  
+  <h3>Delete invitation</h3>
+  <%= form_tag({ :action => 'delete' }, { :remote => true, :class => 'single-button-form', 'data-type' => 'html' }) do %>
+    <%= hidden_field_tag :id, @invitation.id %>
+    <%= button "Delete", 'data-confirm' => 'Do you really want to delete this invitation?' %>
+  <% end %>
+  
 </output>

@@ -374,7 +374,7 @@ Then /^I invite "([^\"]*)" to channel "([^\"]*)" with token "([^\"]*)" as "([^\"
   )
 end
 
-Then /^I invite "([^\"]*)" to channel "([^\"]*)" with sonstrained rights and token "([^\"]*)" as "([^\"]*)"/ do |email, channel_name, token, user_name|
+Then /^I invite "([^\"]*)" to channel "([^\"]*)" with constrained rights and token "([^\"]*)" as "([^\"]*)"/ do |email, channel_name, token, user_name|
   Invitation.create(
     :token => token,
     :email => email,

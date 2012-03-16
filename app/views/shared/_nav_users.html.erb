@@ -5,11 +5,13 @@
         <strong>My Profile</strong>
       </a>
     </li>
+    <%- if permitted_to?(:read, :users)  %>
     <li class="<%= 'selected' if @nav == "users" %>">
       <a href="<%= users_path %>">
         <strong>All Users (<%= User.registered.size%>)</strong>
       </a>
     </li>
+    <%- end %>
     <%- if permitted_to?(:manage, :invitations)  %>
     <li class="<%= 'selected' if @nav == "invitations" %>">
       <a href="<%= invitations_path %>">

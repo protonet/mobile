@@ -5,6 +5,10 @@ class RegistrationsController < Devise::RegistrationsController
   def new
     build_resource({})
     @invitation = Invitation.find_by_token(params[:invitation_token])
+    if @invitation
+      resource.login = User.generate_login_from_name(@invitation.name)
+      resource.email = @invitation.email
+    end
     render 'devise/registrations/new'
   end
   
@@ -12,6 +16,7 @@ class RegistrationsController < Devise::RegistrationsController
   def create
     build_resource
     # handle invitations
+    @invitation = Invitation.find_by_token(params[:invitation_token])
     resource.invitation_token = params[:invitation_token]
     
     # TODO:

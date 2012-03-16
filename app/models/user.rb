@@ -19,7 +19,6 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many  :roles
   has_attached_file :avatar, :default_url => configatron.default_avatar
   
-  
   scope :registered, :conditions => "temporary_identifier IS NULL AND users.id != -1 AND users.node_id = 1"
   scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"
   
@@ -84,6 +83,17 @@ class User < ActiveRecord::Base
       :avatar         => user.avatar.url,
       :subscriptions  => user.channels.map(&:id)
     }
+  end
+  
+  def self.generate_login_from_name(value, step = 1)
+    return unless value
+    value = value.parameterize
+    conflict = User.find_by_login(value)
+    if conflict 
+      generate_login_from_name("#{value}-#{step+1}")
+    else
+      value
+    end
   end
   
   # devise 1.2.1 calls this

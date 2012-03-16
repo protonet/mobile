@@ -121,6 +121,15 @@ class UserTest < Test::Unit::TestCase
     end
   end
   
+  context "generate_login_from_name" do
+    before do
+      Factory.create(:user, {:login => "test-user"})
+    end 
+    it "should generate next available login" do
+      assert_equal "test-user-2", User.generate_login_from_name("Test User")
+    end
+  end
+  
 end
 
 # test: destroy listens if the user has been deleted

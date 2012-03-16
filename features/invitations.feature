@@ -13,19 +13,18 @@ Feature: Invitations
     Given I go unauthenticated to the start page
     And I am logged in as "dudemeister"
     And I go to the new invitation page
-    Then show me the page
-    Then I should see "Invite people"
+    Then I should see "Invite people to your protonet"
     When I fill in "invitation_name" with "friend"
-    When I fill in "invitation_email" with "friend@protonet.com"
+    When I fill in "invitation_email" with "friend-3@protonet.com"
     And I check "home"
     And I check "public"
     And I press "next Step"
-    Then I should see "Invitation for friend@protonet.com"
+    Then I should see "Invitation for friend-3@protonet.com"
     And I should see "Status: not sent yet"
     And I press "Send invitation"
     # Invitation mail
-    And "friend@protonet.com" should receive an email with subject "dudemeister wants you to join his protonet"
-    When "friend@protonet.com" opens the email with subject "dudemeister wants you to join his protonet"
+    And "friend-3@protonet.com" should receive an email with subject "dudemeister wants you to join his protonet"
+    When "friend-3@protonet.com" opens the email with subject "dudemeister wants you to join his protonet"
     Then they should see "<strong>dudemeister</strong> wants to collaborate with you and just set up an account for you." in the email body
     And they should see "Click this link to get started:" in the email body
     And they should see /\/join\/(.*){10}/ in the email body
@@ -50,7 +49,7 @@ Feature: Invitations
     
   @javascript
   Scenario: Invitee accepts invitation
-    Given I invite "friend2@protonet.com" to channel "Public" with sonstrained rights and token "1a234567" as "dudemeister"
+    Given I invite "friend2@protonet.com" to channel "Public" with constrained rights and token "1a234567" as "dudemeister"
     And I go unauthenticated to the start page
     When I accept the invitation with the token "1a234567"
     Then I should see "You have been invited by dudemeister. Just create an account. It's free"

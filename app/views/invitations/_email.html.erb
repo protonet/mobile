@@ -1,7 +1,7 @@
 <div class="mail">
   <%= public_image_tag("protonet.jpg", :width => 300, :height => 77) %>
   <h1>
-    You're invited to join protonet of <%= Node.local.name %>.
+    You have been invited to join the protonet of <%= Node.local.name %>.
   </h1>
   <hr>
   <p>
@@ -10,7 +10,7 @@
   <p>
     <%= avatar(@invitation.user, :width => 30, :height => 30, :class => "avatar", :public => true) %>
     <strong><%= @invitation.user.display_name %></strong> wants to collaborate with you and just set up an account for you.<br>
-    All you need to do is to choose a username an password. It only takes a few seconds.
+    All you need to do is to choose a password. It only takes a few seconds.
   </p>
 
   <p>Once you've signed in you are already subscribed to these channels:</p>

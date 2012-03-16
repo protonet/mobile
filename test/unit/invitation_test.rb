@@ -2,7 +2,7 @@ require 'test_helper'
 
 class InvitationTest < Test::Unit::TestCase
   before do
-    @invitation = Invitation.new
+    @invitation = Invitation.new(:email => "test@mail.de")
   end
   
   context "validation" do
