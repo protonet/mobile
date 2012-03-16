@@ -16,16 +16,11 @@ protonet.text_extensions.provider.Image = {
     
     var testImg       = new Image(),
         urlParts      = protonet.utils.parseUrl(url),
-        titleAppendix,
-        fileName      = urlParts.filename.replace(/[_-]/g, " ").replace(/\.(jpe?g|gif|png).*/, function(match, $1) {
-          titleAppendix = $1;
-          return "";
-        });
+        fileName      = urlParts.filename;
     
     onSuccess({
       url:            url,
       title:          fileName,
-      titleAppendix:  titleAppendix,
       image:          url
     });
   }

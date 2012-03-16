@@ -71,6 +71,15 @@
     },
 
     _convertMessage: function(message) {
+      var textExtension = this.data.text_extension,
+          trimmedMessage;
+      if (textExtension) {
+        trimmedMessage = $.trim(message);
+        if (trimmedMessage === textExtension.url || "http://" + trimmedMessage === textExtension.url) {
+          return "";
+        }
+      }
+      
       $.each([
         // Order of functions is essential!
         protonet.utils.escapeHtml,
