@@ -21,16 +21,18 @@
     <%- end %>
   </p>
   
-  <h3>Channels</h3>
-  <p class="channel-list">
-    <%- if @user.channels.real.verified.empty? %>
-      <p class="hint">No channels subscribed.</p>
-    <%- else %>
-      <%- @user.channels.real.verified.each do |channel| %>
-        @<a href="/channels/<%= channel.id %>" class="reply channel"><%= channel.display_name %></a>
+  <%- if permitted_to?(:read, :channels) %>
+    <h3>Channels</h3>
+    <p class="channel-list">
+      <%- if @user.channels.real.verified.empty? %>
+        <p class="hint">No channels subscribed.</p>
+      <%- else %>
+        <%- @user.channels.real.verified.each do |channel| %>
+          @<a href="/channels/<%= channel.id %>" class="reply channel"><%= channel.display_name %></a>
+        <%- end %>
       <%- end %>
-    <%- end %>
-  </p>
+    </p>
+  <%- end %>
   
   <%- if current_user.admin? %>
     <h3>Info <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
