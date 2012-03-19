@@ -129,6 +129,7 @@ exports.bind = function(amqpConnection) {
           if (files.length == 1 && !fs.statSync(file).isDirectory()) {
             header['Content-Type']        = lookup_mime(file);
             header['Content-Length']      = fs.statSync(file).size;
+            // PDFs can't be embedded when Content-Disposition is set
             if (header['Content-Type'] !== "application/pdf") {
               header['Content-Disposition'] = 'attachment;filename="' + path.basename(file) + '"';
             }

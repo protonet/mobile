@@ -6,7 +6,16 @@ protonet.media.provider.Image = {
         options  = { extent: false, width: size.width },
         src      = protonet.data.File.getDownloadUrl(file.path),
         $element = $("<img>", { src: protonet.media.Proxy.getImageUrl(src, options) });
-    deferred.resolve($element);
+    
+    $element.one({
+      load: function() {
+        deferred.resolve($element);
+      },
+      error: function() {
+        deferred.reject($element);
+      }
+    });
+    
     return deferred.promise();
   }
 };

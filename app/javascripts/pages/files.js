@@ -239,7 +239,7 @@ protonet.p("files", function($page, $window, $document) {
       marker.clear();
       
       $fileList.show();
-      $fileDetails.hide();
+      $fileDetails.html("").hide();
       $tbody.empty();
       
       addressBar.update();
@@ -309,7 +309,6 @@ protonet.p("files", function($page, $window, $document) {
 
         $fileDetails.html($element);
         protonet.media.embedFile($fileDetails.find("output.embed"), file);
-        
         
         protonet.data.File.scan(file.path, function(data) {
           var html;

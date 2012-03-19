@@ -175,7 +175,7 @@
 }
 
 .files-page .file-details dt {
-  width: 120px;
+  width: 110px;
 }
 
 .files-page .file-details .side-bar {
@@ -211,8 +211,8 @@
   position: absolute;
   width: auto;
   height: auto;
-  left: 258px;
-  top: 58px;
+  left: 268px;
+  top: 63px;
   right: 10px;
-  bottom: 10px;
+  bottom: 15px;
 }
