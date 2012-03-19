@@ -3,11 +3,16 @@ var sys  = require("sys"),
     util = require("util");
 
 /*----------------------------------- CONFIG  ----------------------------------------*/
-var htmlTaskPort = 8124;
+global.htmlTaskPort = 8124;
+global.env          = "development";
 process.argv.forEach(function(val){
   var match;
   if (match = val.match(/port=(\d+)/)) {
-    htmlTaskPort = parseInt(match[1], 10);
+    global.htmlTaskPort = +match[1];
+  }
+  
+  if (match = val.match(/env=(\w+)/)) {
+    global.env = match[1];
   }
 });
 
@@ -113,10 +118,10 @@ http.createServer(function(request, response) {
       response.end('WTF?\n');
   }
 
-}).listen(htmlTaskPort);
+}).listen(global.htmlTaskPort);
 
 /*----------------------------------- STARTUP STUFF -----------------------------------*/
-var tmp_file = 'tmp/pids/node_' + htmlTaskPort + '.pid';
+var tmp_file = 'tmp/pids/node_' + global.htmlTaskPort + '.pid';
 fs.writeFile(tmp_file, process.pid.toString(), function (err) {
   if (err) throw err;
   console.log('Pid-file saved!');

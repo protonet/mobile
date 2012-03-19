@@ -30,12 +30,12 @@ protonet.data.File = (function() {
     };
     
     responders[data.client_seq] = function(data) {
+      delete responders[data.client_seq];
       if (data.status === "success") {
         options.success(data.result);
       } else {
         options.error(data.error);
       }
-      delete responders[data.client_seq];
     };
     
     setTimeout(function() {
@@ -94,6 +94,17 @@ protonet.data.File = (function() {
     
     getDownloadUrl: function(path) {
       return NODE_BASE_URL + "/download/?paths=" + encodeURIComponent(path);
+    },
+    
+    getContent: function(path, options) {
+      options = prepareParameters(options);
+      $.ajax($.extend({
+        url:  this.getDownloadUrl(path),
+        data: {
+          token:    protonet.config.token,
+          user_id:  protonet.config.user_id
+        }
+      }, options));
     },
     
     scan: function(path, options) {

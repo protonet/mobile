@@ -52,7 +52,8 @@ function mkdirpAndJoin(baseDirectory, file) {
 }
 
 function setAccessControlHeaders(response, request) {
-  if (process.env.NODE_ENV !== "development") {
+  console.log(global, global.env);
+  if (global.env !== "development") {
     return;
   }
   response.setHeader('Access-Control-Allow-Origin', request.headers.origin);

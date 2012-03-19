@@ -104,7 +104,7 @@ SystemServices.add 'Sunspot/Solr', :sunspot_active,
 
 SystemServices.add 'Node.JS', :nodejs_active,
   :identifier    => 'node.js',
-  :start_command => "NODE_ENV=#{Rails.env} node node/node.js port=#{configatron.nodejs.port}",
+  :start_command => "node node/node.js port=#{configatron.nodejs.port} env=#{Rails.env}",
   :ping_command  => lambda { TCPSocket.new('localhost', configatron.nodejs.port) },
   :pid_file      => "tmp/pids/node_#{configatron.nodejs.port}.pid",
   :log_file      => 'log/node.log',
