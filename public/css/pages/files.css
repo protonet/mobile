@@ -152,6 +152,7 @@
 }
 
 .files-page .file-details {
+  overflow: hidden;
   padding: 10px;
 }
 
@@ -204,4 +205,14 @@
 /* ------------------------------------------------ EMBEDS ------------------------------------------------ */
 .embed {
   margin: 0 0 15px 258px;
+}
+
+.embed div.object {
+  position: absolute;
+  width: auto;
+  height: auto;
+  left: 258px;
+  top: 58px;
+  right: 10px;
+  bottom: 10px;
 }

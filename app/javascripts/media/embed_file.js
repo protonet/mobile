@@ -13,7 +13,7 @@ protonet.media.embedFile = function($container, file) {
     provider = providers[providerName];
     if (provider.supportedMimeTypes.indexOf(file.mime) !== -1) {
       provider
-        .render(file, { width: $container.width() })
+        .render(file, { width: $container.width(), height: $container.height() })
         .done(function($element) { $container.addClass(providerName).html($element); })
         .fail(fallback);
       return;

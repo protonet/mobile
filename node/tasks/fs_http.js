@@ -52,10 +52,14 @@ function mkdirpAndJoin(baseDirectory, file) {
 }
 
 function setAccessControlHeaders(response, request) {
-  console.log(global, global.env);
   if (global.env !== "development") {
     return;
   }
+  
+  if (!request.headers.origin) {
+    return;
+  }
+  
   response.setHeader('Access-Control-Allow-Origin', request.headers.origin);
   response.setHeader('Access-Control-Allow-Methods', '*');
   response.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-CSRF-Token');
@@ -125,7 +129,9 @@ exports.bind = function(amqpConnection) {
           if (files.length == 1 && !fs.statSync(file).isDirectory()) {
             header['Content-Type']        = lookup_mime(file);
             header['Content-Length']      = fs.statSync(file).size;
-            header['Content-Disposition'] = 'attachment;filename="' + path.basename(file) + '"';
+            if (header['Content-Type'] !== "application/pdf") {
+              header['Content-Disposition'] = 'attachment;filename="' + path.basename(file) + '"';
+            }
             response.writeHead(200, header);
 
             while (fs.lstatSync(file).isSymbolicLink()) {
