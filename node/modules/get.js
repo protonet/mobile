@@ -115,7 +115,7 @@ function _get(options, callback, reqId){
           buf = '';
         
         if (charset) {
-          charset = charset[1].toLowerCase().replace(/iso-8859-(.)/,"latin-1");
+          charset = charset[1].toLowerCase().replace(/iso-8859-([0-9]+)/,"latin-1");
         }else{
           charset = "utf-8";
         }
