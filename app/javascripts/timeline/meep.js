@@ -1,6 +1,5 @@
 //= require "../behaviors/meeps.js"
 //= require "../utils/auto_link.js"
-//= require "../utils/auto_link_file_paths.js"
 //= require "../utils/escape_html.js"
 //= require "../utils/highlight_keyword.js"
 //= require "../utils/smilify.js"
@@ -90,8 +89,7 @@
         protonet.utils.emojify,
         protonet.utils.highlightChannelReplies,
         protonet.utils.highlightUserReplies,
-        protonet.utils.autoLink,
-        protonet.utils.autoLinkFilePaths
+        protonet.utils.autoLink
       ], function(i, method) {
         message = method(message);
       });

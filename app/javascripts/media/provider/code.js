@@ -12,7 +12,9 @@ protonet.media.provider.Code = {
       success: function(text, status, xhr) {
         text = protonet.utils.escapeHtml(text);
         var contentType = xhr.getResponseHeader("Content-Type");
-        if (contentType !== "text/plain") {
+        if (contentType === "text/plain") {
+          text = protonet.utils.autoLink(text);
+        } else {
           text = prettyPrintOne(text);
         }
         $element.html(text);
