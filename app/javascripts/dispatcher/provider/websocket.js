@@ -9,9 +9,9 @@ protonet.dispatcher.provider.WebSocket = {
 
   connect: function() {
     if (location.protocol == 'https:' && !protonet.user.Browser.IS_SAFARI()) {
-      this.socket = new WebSocket(protonet.config.dispatching_websocket_url);
-    } else {
       this.socket = new WebSocket(protonet.config.dispatching_websocket_url_ssl);
+    } else {
+      this.socket = new WebSocket(protonet.config.dispatching_websocket_url);
     }
     
     this.socket.onmessage = function(event) { 
@@ -75,12 +75,17 @@ protonet.dispatcher.provider.WebSocket = {
   },
   
   receive: function(rawData) {
-    chunks = rawData.split(/\0/)
-    chunks.pop();
-    data = chunks.map(function(val, i){
-      return JSON.parse(val);
-    })
+    if(protonet.config.dispatching_websocket_delimiter != "") {
+      chunks = rawData.split(/\0/);
+      chunks.pop();
+      data = chunks.map(function(val, i){
+        return JSON.parse(val);
+      });
 
-    return data;
+      return data;
+    } else {
+      return JSON.parse(rawData);
+    }
+    
   }
 };
