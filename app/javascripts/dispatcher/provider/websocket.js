@@ -9,9 +9,9 @@ protonet.dispatcher.provider.WebSocket = {
 
   connect: function() {
     if (location.protocol == 'https:' && !protonet.user.Browser.IS_SAFARI()) {
-      this.socket = new WebSocket("wss://" + protonet.config.dispatching_server + ":" + protonet.config.dispatching_websocket_ssl_port + "/");
+      this.socket = new WebSocket(protonet.config.dispatching_websocket_url);
     } else {
-      this.socket = new WebSocket("ws://" + protonet.config.dispatching_server + ":" + protonet.config.dispatching_websocket_port + "/");
+      this.socket = new WebSocket(protonet.config.dispatching_websocket_url_ssl);
     }
     
     this.socket.onmessage = function(event) { 
@@ -71,7 +71,7 @@ protonet.dispatcher.provider.WebSocket = {
     if (!this.socket || !this.socket.send) {
       return;
     }
-    try { this.socket.send(JSON.stringify(data) + "\0"); } catch(e) {}
+    try { this.socket.send(JSON.stringify(data) + protonet.config.dispatching_websocket_delimiter); } catch(e) {}
   },
   
   receive: function(rawData) {
