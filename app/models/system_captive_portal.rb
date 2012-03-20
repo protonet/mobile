@@ -14,7 +14,10 @@ class SystemCaptivePortal
     def stop
       return false unless config_check
       `#{service_command("stop")}`
-      SystemNetworking.remove_interface_script("captive_portal", SystemPreferences.captive_internal_interface)
+      #  remove all captive portal instances
+      SystemBackend.get_interfaces.collect do |interface|
+        SystemNetworking.remove_interface_script("captive_portal", interface.name)
+      end
     end
     
     def status
