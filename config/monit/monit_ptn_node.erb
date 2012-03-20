@@ -63,8 +63,9 @@ check program raid with path "<%= current_path %>/script/monit_raid_check"
   if status == 0 then exec "/bin/bash -l -c 'cd <%= current_path %> && RAILS_ENV=production bundle exec rake report:raid_fail'"
   every 120 cycles
 
-# Check whether antivir scan should be performed hourly
+# Antivir scan should be performed hourly
 check program clamav with path "<%= current_path %>/script/monit_clamav"
+  if status == 1 then alert
   every 120 cycles
 
 # Watch netatalk/afpd
