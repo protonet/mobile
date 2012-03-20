@@ -57,10 +57,15 @@ check process solr with pidfile <%= shared_path %>/pids/sunspot-solr.pid
   stop program  = "<%= current_path %>/script/init/solr stop"
   if 3 restarts within 5 cycles then timeout
 
-# Watch for dropped RAID disks hourly
+# Watch for dropped RAID disks hourly
 # Return status is flipped (1 is good) so that the output can be used at some point
 check program raid with path "<%= current_path %>/script/monit_raid_check"
   if status == 0 then exec "/bin/bash -l -c 'cd <%= current_path %> && RAILS_ENV=production bundle exec rake report:raid_fail'"
+  every 120 cycles
+
+# Antivir scan should be performed hourly
+check program clamav with path "<%= current_path %>/script/monit_clamav"
+  if status == 1 then alert
   every 120 cycles
 
 # Watch netatalk/afpd

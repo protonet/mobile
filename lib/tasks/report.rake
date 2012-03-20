@@ -17,4 +17,26 @@ Please contact protonet support ASAP at team@protonet.info if you have not alrea
 
     end
   end
+  
+  task :virus_scan => :environment do
+    code = ENV['code'].to_i
+    freshclam_code = ENV['freshclam_code'].to_i
+    details = URI.unescape(ENV['details'])
+    
+    case code
+    when 0
+      msg = "********** Virus Scan: System is safe :sun: **********"
+      msg += "\n{text}#{details}{/text}"
+      msg += "\nHowever there was an error updating the virus databases (exit code ##{freshclam_code})." if freshclam_code > 0
+    when 1
+      msg = "********** Virus Scan: Malicious files found :exclamation: **********"
+      msg += "\n{text}#{details}{/text}"
+      msg += "\nIt's highly recommended to delete these files.\nContact protonet support at team@protonet.info if you need help."
+    else
+      msg = "********** Virus Scan: Error :exclamation: **********"
+      msg += "\nAn error occured while performing the system check (exit code ##{code}). Please contact protonet support at team@protonet.info."
+    end
+    SystemReporting.send_message msg
+    sleep 5
+  end
 end

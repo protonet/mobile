@@ -29,8 +29,8 @@ production:
   reconnect: true
   database: dashboard_production
   pool: 5
-  username: <%= ENV['PTN_PROD_DB_USER']   || 'root' %>
-  password: <%= ENV['PTN_PROD_DB_PASS']   || '' %>
+  username: root
+  password: 
   host: localhost
 
 cucumber:
