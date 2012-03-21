@@ -1,5 +1,4 @@
 //= require "../utils/prettify_file_size.js"
-//= require "../media/uploader.js"
 
 protonet.ui.FileQueue = (function() {
   var collapsed     = true,

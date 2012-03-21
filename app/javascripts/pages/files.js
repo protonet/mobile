@@ -5,7 +5,8 @@
 //= require "../media/embed_file.js"
 
 protonet.p("files", function($page, $window, $document) {
-  var $addressBar       = $page.find(".address-bar"),
+  var $body             = $("body"),
+      $addressBar       = $page.find(".address-bar"),
       $content          = $page.find(".content"),
       $fileDetails      = $page.find(".file-details"),
       $fileList         = $page.find(".file-list"),
@@ -251,7 +252,9 @@ protonet.p("files", function($page, $window, $document) {
       }
       
       if (!files.length) {
-        this.insertHint("This folder doesn't contain any files");
+        var hint = "This folder is empty.";
+        hint += " Drag & drop your files here to add them.";
+        this.insertHint(hint);
         return;
       }
       
@@ -383,7 +386,7 @@ protonet.p("files", function($page, $window, $document) {
     
     insertHint: function(text) {
       this.removeHint();
-      $("<p>", { "class": "hint", text: text }).appendTo($tableWrapper);
+      $("<p>", { "class": "hint", html: text }).appendTo($tableWrapper);
     },
 
     removeHint: function() {
@@ -611,10 +614,77 @@ protonet.p("files", function($page, $window, $document) {
     }
   };
   
+  
+  // --------------------------------- UPLOADER --------------------------------- \\
+  var uploader = {
+    initialize: function() {
+      this.uploader = new protonet.media.Uploader({
+        drop_element: $content[0]
+      });
+      
+      this._observe();
+    },
+    
+    _observe: function() {
+      if (!this.uploader.features.dragdrop) {
+        return;
+      }
+      
+      var dragoverTimeout, dragenterTimeout, $currentRow = $();
+      
+      $body.bind("dragenter", function(event) {
+        var $target = $(event.target),
+            $row    = $target.is("[data-folder-path]") ? $target : $target.parents("[data-folder-path]");
+        
+        if ($row.is($currentRow)) {
+          return;
+        }
+        
+        clearTimeout(dragenterTimeout);
+        $currentRow = $row;
+        marker.set($currentRow);
+        
+        if ($row.length) {
+          dragenterTimeout = setTimeout(function() {
+          
+          $row.addClass("blink");
+          dragenterTimeout = setTimeout(function() {
+          $row.removeClass("blink");
+          dragenterTimeout = setTimeout(function() {
+          $row.addClass("blink");
+          dragenterTimeout = setTimeout(function() {
+          $row.trigger("dblclick");
+          
+          }, 300);
+          }, 300);
+          }, 300);
+          }, 1200);
+        }
+      });
+      
+      $body.bind("dragover", function(event) {
+        // if (!hasFiles(event.originalEvent.dataTransfer)) {
+        //   return;
+        // }
+
+        clearTimeout(dragoverTimeout);
+        dragoverTimeout = setTimeout(function() {
+          $body.removeClass("dragenter");
+          clearTimeout(dragoverTimeout);
+        }, (1).seconds());
+
+        $body.addClass("dragenter");
+
+        event.preventDefault();
+      });
+    }
+  };
+  
   /**
    * Initialize
    */
   ui.initialize();
+  uploader.initialize();
   history.initialize();
   marker.initialize();
   api.initialize();

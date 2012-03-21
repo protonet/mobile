@@ -62,7 +62,7 @@ protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
       clearTimeout(bodyTimeout);
       bodyTimeout = setTimeout(function() {
         $body.add($form).removeClass("dragenter");
-      }, (1.5).seconds());
+      }, (1).seconds());
       
       $dropArea = $dropArea || $('<div>', {
         "class":  "drop-area",

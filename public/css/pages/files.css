@@ -52,6 +52,10 @@
   background: rgba(72, 123, 255, 0.3);
 }
 
+.files-page tr.blink {
+  background: rgba(72, 123, 255, 0.5);
+}
+
 .files-page tr.focus.loading {
   background: rgba(72, 123, 255, 0.15);
 }
@@ -200,6 +204,10 @@
 .files-page .file-details .hint {
   position: static;
   text-align: left;
+}
+
+.dragenter .table-wrapper {
+  outline: 6px dashed rgba(0, 204, 0, 0.5);
 }
 
 /* ------------------------------------------------ EMBEDS ------------------------------------------------ */
