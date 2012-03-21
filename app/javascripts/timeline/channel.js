@@ -146,7 +146,7 @@
       
       $window.bind("focus", function() {
         if (this.isSelected) {
-          this.unreadMeeps = 0;
+          this.unreadMeeps = this.unreadReplies = 0;
         }
       }.bind(this));
     },

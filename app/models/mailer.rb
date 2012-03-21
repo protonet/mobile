@@ -6,9 +6,9 @@ class Mailer < ActionMailer::Base
   def invitation(invitation)
     @invitation = invitation
     mail(
-      :from => "no-reply@local.protonet.info",
+      :from => "\"#{invitation.user.display_name}\" <mailer@protonet.info>",
       :to => invitation.email,
-      :subject => "#{invitation.user.display_name} wants you to join his protonet"
+      :subject => "#{invitation.user.display_name} has invited you to join the protonet of #{Node.local.name}"
     )
   end
   

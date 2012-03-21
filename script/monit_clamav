@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd /home/protonet/dashboard/current/
+bundle exec ./script/clamav_check 2>&1 >> ./log/clamav.log

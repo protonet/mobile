@@ -23,8 +23,8 @@ Feature: Invitations
     And I should see "Status: not sent yet"
     And I press "Send invitation"
     # Invitation mail
-    And "friend-3@protonet.com" should receive an email with subject "dudemeister wants you to join his protonet"
-    When "friend-3@protonet.com" opens the email with subject "dudemeister wants you to join his protonet"
+    And "friend-3@protonet.com" should receive an email with subject "dudemeister has invited you to join the protonet of localhost"
+    When "friend-3@protonet.com" opens the email with subject "dudemeister has invited you to join the protonet of localhost"
     Then they should see "<strong>dudemeister</strong> wants to collaborate with you and just set up an account for you." in the email body
     And they should see "Click this link to get started:" in the email body
     And they should see /\/join\/(.*){10}/ in the email body
@@ -64,6 +64,8 @@ Feature: Invitations
     And I should not see "Notpublic" within "#channels"
     And I should not see "Channels" within "nav"
     And I should not see "Users" within "nav"
+    And I visit the "Public" channel page
+    Then I should not see "Notpublic" within ".channels-show-page"
     
   @javascript
   Scenario: Invitee tries to accept an invitation that has already been accepted

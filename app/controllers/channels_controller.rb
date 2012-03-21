@@ -4,6 +4,8 @@ class ChannelsController < ApplicationController
   
   before_filter :couple_node, :only => [:show_global, :list_global]
   
+  before_filter :available_channels, :only => [:index, :list, :show]
+  
   def index
   end
   
@@ -95,5 +97,13 @@ class ChannelsController < ApplicationController
       Node.couple(params[:node]).attach_global_channel(params[:uuid]) rescue nil
       @remote_channel_id = Channel.find_by_uuid(params[:uuid])
       true
+    end
+    
+    def available_channels
+      @channels = if current_user.invitee?
+        current_user.channels.real
+      else
+        Channel.real.local
+      end
     end
 end

@@ -7,6 +7,7 @@
 //= require "../utils/heartify.js"
 //= require "../utils/codify.js"
 //= require "../utils/quotify.js"
+//= require "../utils/textify.js"
 //= require "../utils/highlight_channel_replies.js"
 //= require "../utils/highlight_user_replies.js"
 //= require "../utils/parse_query_string.js"
@@ -84,6 +85,7 @@
         protonet.utils.escapeHtml,
         protonet.utils.quotify,
         protonet.utils.codify,
+        protonet.utils.textify,
         protonet.utils.smilify,
         protonet.utils.heartify,
         protonet.utils.emojify,

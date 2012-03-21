@@ -8,7 +8,7 @@
     "url": "http://protonet.info/"
   },
   "dependencies": {
-    "jsdom": ">= 0.2.10",
+    "jsdom": ">= 0.2.13",
     "iconv-lite": ">= 0.1.1",
     "formidable": "1.0.8",
     "mime": "1.2.4",

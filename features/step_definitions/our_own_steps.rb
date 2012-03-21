@@ -388,6 +388,11 @@ Then /^somebody accepts the invitation with token "([^\"]*)"/ do |token|
   Invitation.find_by_token(token).update_attribute("accepted_at", "2011-01-15 10:00:00")
 end
 
+Then /^I visit the "([^\"]*)" channel page/ do |channel_name|
+  channel = Channel.find_by_name(channel_name.parameterize)
+  visit channel_path(channel)
+end
+
 Then /^I should see page title as "(.*)"$/ do |title|
   assert_equal title, page.find(:css, 'title').text
 end

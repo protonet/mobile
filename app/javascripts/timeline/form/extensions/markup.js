@@ -23,7 +23,7 @@ protonet.timeline.Form.extensions.Markup = function(input) {
   }
   
   new protonet.ui.InlineAutocompleter(input, [
-    "quote}", "/quote}", "code}", "/code}"
+    "quote}", "/quote}", "code}", "/code}", "text}", "/text}"
   ], {
     fromBeginning:  false,
     append:         "",
@@ -32,7 +32,7 @@ protonet.timeline.Form.extensions.Markup = function(input) {
   });
   
   new protonet.ui.InlineAutocompleter(input, [
-    "code]", "/code]", "quote]", "/quote]"
+    "code]", "/code]", "quote]", "/quote]", "text]", "/text]"
   ], {
     fromBeginning: false,
     append:         "",

@@ -50,7 +50,11 @@ class SystemDnsmasq
     end
 
     def configure(interface)
-      ip = IP.new(SystemPreferences.wifi[interface]["ip"])
+      ip = IP.new(begin
+        SystemPreferences.wifi[interface]["ip"]
+      rescue 
+        SystemBackend.get_interfaces[interface].addresses.first.to_s
+      end)
       setting = <<-EOS
 interface=#{interface}
 address=/protonet/#{ip}

@@ -239,7 +239,10 @@ class User < ActiveRecord::Base
   def add_to_role(role_name)
     role = Role.find_by_title!(role_name.to_s)
     self.roles << role unless roles.include?(role)
-    subscribe(Channel.system) if role_name == 'admin'
+    if role_name == 'admin'
+      subscribe(Channel.system)
+      subscribe(Channel.support) if Rails.env.production? rescue nil
+    end
   end
   
   def remove_from_role(role_name)
