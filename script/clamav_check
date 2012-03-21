@@ -26,14 +26,14 @@ if last_clamav_scan + SCAN_INTERVAL < Time.now.to_i
   end
   
   puts "refresh virus db"
-  `freshclam`
+  `/usr/bin/sudo /usr/bin/freshclam`
   # code 0 => success
   # code 52 => network connection problem (no internet connection?)
   # find all error codes here: http://linux.die.net/man/1/freshclam
   freshclam_code = $?.exitstatus
   
   puts "perform scan"
-  details = `clamscan -i -r #{FILES_DIR}`
+  details = `/usr/bin/sudo /usr/bin/clamscan -i -r #{FILES_DIR}`
   # code 0 => no virus found
   # code 1 => virus found
   # code 2 => error
