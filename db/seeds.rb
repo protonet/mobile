@@ -15,12 +15,6 @@ admin = User.create(:login => 'admin', :email => 'admin@protonet.local', :passwo
 admin.roles << Role.find_or_create_by_title('admin')
 Channel.system
 if Rails.env.production?
-  begin
-    support_channel_uuid = "b0138cc6-ffbb-11e0-92ce-0024215f2168"
-    Node.couple({:url => "https://team.protonet.info"}).attach_global_channel(support_channel_uuid)
-    admin.subscribe(Channel.find_by_uuid(support_channel_uuid))
-  rescue
-    puts "WARNING: couldn't connect protonet-support channel."
-  end
+  admin.subscribe(Channel.support) rescue puts("WARNING: couldn't connect protonet-support channel.")
 end
 SystemPreferences.vpn = {:identifier => Network.local.uuid, :password => ActiveSupport::SecureRandom.base64(10)}

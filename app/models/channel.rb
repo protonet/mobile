@@ -31,6 +31,16 @@ class Channel < ActiveRecord::Base
   scope :verified, :conditions => {:listens => {:verified => true}}
   scope :local, :conditions => {:node_id => 1}
   
+  def self.support
+    uuid = "b0138cc6-ffbb-11e0-92ce-0024215f2168"
+    channel = Channel.find_by_uuid(uuid)
+    unless channel
+      Node.couple(:url => "https://team.protonet.info").attach_global_channel(uuid)
+      channel = Channel.find_by_uuid(uuid)
+    end
+    channel
+  end
+  
   def self.recent_active
     channel_ids = Channel.connection.select_values("
       SELECT channel_id, count(meeps.id) as counter FROM meeps left outer join channels on channels.id = meeps.channel_id
@@ -71,7 +81,7 @@ class Channel < ActiveRecord::Base
     system_channel = find_by_system(true)
     unless system_channel
       description = "This is the node's system channel. The node itself will publish any system relevant notifications here."
-      message     = "Hi,\n\nThis is your node speaking. I will publish any system relevant messages here (eg. Hard disk failures).\n" +
+      message     = "Hi,\n\nThis is your node speaking. I will publish any system relevant messages here (eg. hard disk failures, virus scans).\n" +
                     "Only administrators of this node can see this channel.\n\nYours faithfully,\nprotonet node"
       system_channel = Channel.create(
         :name         => 'System',
