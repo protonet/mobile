@@ -5,6 +5,7 @@ protonet.dispatcher.provider.WebSocket = {
   
   initialize: function() {
     protonet.trigger("socket.initialized");
+    this.buffer = "";
   },
 
   connect: function() {
@@ -75,14 +76,37 @@ protonet.dispatcher.provider.WebSocket = {
   },
   
   receive: function(rawData) {
-    if(protonet.config.dispatching_websocket_delimiter != "") {
-      chunks = rawData.split(/\0/);
-      chunks.pop();
-      data = chunks.map(function(val, i){
-        return JSON.parse(val);
-      });
+    if(protonet.config.dispatching_websocket_delimiter == "\0") {
+      if(rawData.match(/\0/)) {
+        rawChunks = rawData.split(/\0/);
+        chunks = [(this.buffer || "") + rawChunks.shift()];
 
-      return data;
+        // no more chunks?
+        if(rawChunks.length == 0) {
+          return JSON.parse(chunks[0]);
+        }
+
+        // if last chunk is complete
+        if(rawChunks.slice(-1) == "\0") {
+          this.buffer = ""; // empty buffer
+        } else {
+          this.buffer = rawChunks.pop();
+        }
+        
+        // and pack them up
+        for (var i = 0; i < rawChunks.length; i++) {
+          if(rawChunks[i] != "") {
+            chunks.push(rawChunks[i]);
+          }
+        }
+        data = chunks.map(function(val, i){
+          return JSON.parse(val);
+        });
+
+        return data;
+      } else {
+        this.buffer += rawData;
+      }
     } else {
       return JSON.parse(rawData);
     }
