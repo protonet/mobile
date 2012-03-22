@@ -78,8 +78,8 @@ protonet.dispatcher.provider.WebSocket = {
   receive: function(rawData) {
     if(protonet.config.dispatching_websocket_delimiter == "\0") {
       if(rawData.match(/\0/)) {
-        rawChunks = rawData.split(/\0/);
-        chunks = [(this.buffer || "") + rawChunks.shift()];
+        var rawChunks = rawData.split(/\0/);
+        var chunks = [(this.buffer || "") + rawChunks.shift()];
 
         // no more chunks?
         if(rawChunks.length == 0) {
@@ -99,7 +99,7 @@ protonet.dispatcher.provider.WebSocket = {
             chunks.push(rawChunks[i]);
           }
         }
-        data = chunks.map(function(val, i){
+        var data = $(chunks).map(function(val, i){
           return JSON.parse(val);
         });
 
