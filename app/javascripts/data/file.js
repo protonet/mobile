@@ -92,8 +92,13 @@ protonet.data.File = (function() {
       return VIEW_BASE_URL + "?path=" + encodeURIComponent(path);
     },
     
-    getDownloadUrl: function(path) {
-      return NODE_BASE_URL + "/download/?paths=" + encodeURIComponent(path);
+    getDownloadUrl: function(path, options) {
+      options = prepareParameters(options);
+      var url = NODE_BASE_URL + "/download/?paths=" + encodeURIComponent(path);
+      if (options.embed) {
+        url += "&embed=true";
+      }
+      return url;
     },
     
     getContent: function(path, options) {

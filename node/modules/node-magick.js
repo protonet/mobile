@@ -25,7 +25,7 @@ var magickCommand = function(obj) {
       .resample(72)
       .gravity("center")
       .resize(width, height)
-      .background("none")
+      .background("white")
       .coalesce();
     if (extent) {
       obj.background("white").extent(width, height);

@@ -1,5 +1,5 @@
 protonet.media.provider.Image = {
-  supportedMimeTypes: ["image/jpeg", "image/png", "image/gif", "image/bmp"],
+  supportedMimeTypes: ["image/jpeg", "image/png", "image/gif", "image/bmp", "image/svg+xml", "image/tiff", "application/postscript"],
   
   render: function(file, size) {
     var deferred = $.Deferred(),

@@ -1,8 +1,9 @@
 //= require "../../effects/hover_resize.js"
+//= require "../../utils/to_max_size.js"
 
 protonet.text_extensions.render.image = function(data, preventResizing) {
   var imageSize = {
-    width:  Math.min(protonet.text_extensions.config.IMAGE_SIZE.width, data.imageWidth  || Infinity),
+    width:  Math.min(protonet.text_extensions.config.IMAGE_SIZE.width,  data.imageWidth  || Infinity),
     height: Math.min(protonet.text_extensions.config.IMAGE_SIZE.height, data.imageHeight || Infinity)
   };
   
@@ -34,11 +35,11 @@ protonet.text_extensions.render.image = function(data, preventResizing) {
   }, imageSize));
   
   if (!preventResizing && !data.preventHoverEffect) {
-    var hoverImageSize = protonet.text_extensions.config.HOVER_IMAGE_SIZE;
+    var options = protonet.text_extensions.config.HOVER_IMAGE_SIZE;
+    options.extent = false;
     new protonet.effects.HoverResize(image, {
-      newSize:    hoverImageSize,
-      newSrc:     data.image,
-      keepRatio:  true
+      newSrc:   protonet.media.Proxy.getImageUrl(data.image, options),
+      newSize:  options
     });
   }
   

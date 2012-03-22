@@ -14,7 +14,7 @@ protonet.media.provider.Flash = {
       wmode:              "window",
       scale:              "noscale",
       salign:             "tl",
-      src:                protonet.data.File.getDownloadUrl(file.path)
+      src:                protonet.data.File.getDownloadUrl(file.path, { embed: true })
     }).appendTo($element);
     
     deferred.resolve($element);

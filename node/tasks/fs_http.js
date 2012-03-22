@@ -7,8 +7,11 @@ var sys                 = require("sys"),
     spawn               = require('child_process').spawn,
     
     // Files that can be accessed directly
-    viewableFiles       = ["text/plain", "image/*", "video/*", "audio/*", "application/pdf", "application/x-shockwave-flash"],
-    viewableFilesViaXHR = ["text/*", "application/xml", "application/json"],
+    embeddableFiles     = [
+                            "text/plain", "image/jpeg", "image/png", "image/gif", "image/svg",
+                            "image/bmp", "image/tiff", "image/svg+xml", "application/postscript",
+                            "application/pdf", "application/x-shockwave-flash"
+                          ],
 
     amqp                = require('amqp'),
     formidable          = require('formidable'),
@@ -117,28 +120,34 @@ exports.bind = function(amqpConnection) {
         response.writeHead(200, { "Content-Type": "application/json" });
         response.end(JSON.stringify(responseArr));
         break;
-
+        
       case 'download':
         try {
-          var files = message.params.paths,
+          var files  = message.params.paths,
               header = {};
-
-          if (typeof(files) == 'string') { files = [files]; }
           
-          var file = path.join(FILES_DIR, files[0]);
-          if (files.length == 1 && !fs.statSync(file).isDirectory()) {
-            header['Content-Type']        = lookup_mime(file);
-            header['Content-Length']      = fs.statSync(file).size;
-            // PDFs can't be embedded when Content-Disposition is set
-            if (header['Content-Type'] !== "application/pdf") {
+          if (typeof(files) === 'string') { files = [files]; }
+          
+          var file        = path.join(FILES_DIR, files[0]),
+              isDirectory = fs.statSync(file).isDirectory();
+          
+          if (files.length == 1 && !isDirectory) {
+            var contentType       = lookup_mime(file),
+                shouldBeEmbedded  = message.params.embed == "true" && embeddableFiles.indexOf(contentType) !== -1;
+            
+            header['Content-Type']   = contentType;
+            header['Content-Length'] = fs.statSync(file).size;
+            
+            if (!shouldBeEmbedded) {
               header['Content-Disposition'] = 'attachment;filename="' + path.basename(file) + '"';
             }
+            
             response.writeHead(200, header);
-
+            
             while (fs.lstatSync(file).isSymbolicLink()) {
               file = path.join(path.dirname(file), fs.readlinkSync(file));
             }
-
+            
             fs.createReadStream(file)
               .addListener('data', function(data) {
                 response.write(data, 'binary');
@@ -150,8 +159,13 @@ exports.bind = function(amqpConnection) {
                 response.end('Error');
               });
           } else {
+            var fileName = "files.zip";
+            if (files.length === 1 && isDirectory) {
+              fileName = path.basename(file);
+            }
+            
             header['Content-Type'] = 'application/zip';
-            header['Content-Disposition'] = 'attachment;filename="files.zip"';
+            header['Content-Disposition'] = 'attachment;filename="' + fileName + '"';
             response.writeHead(200, header);
             
             var zip = spawn('zip', ['-r', '--names-stdin', '-'], { cwd: FILES_DIR });
