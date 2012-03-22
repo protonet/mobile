@@ -3,6 +3,7 @@
 //= require "../utils/parse_url.js"
 //= require "../utils/parse_query_string.js"
 //= require "../media/embed_file.js"
+//= require "../effects/blink.js"
 
 protonet.p("files", function($page, $window, $document) {
   var $body             = $("body"),
@@ -21,7 +22,8 @@ protonet.p("files", function($page, $window, $document) {
       KEY_UP            = 38,
       KEY_TAB           = 9,
       KEY_DOWN          = 40,
-      KEY_ENTER         = 13;
+      KEY_ENTER         = 13,
+      undef;
   
   // --------------------------------- MARKER --------------------------------- \\
   var marker = {
@@ -626,56 +628,62 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     _observe: function() {
-      if (!this.uploader.features.dragdrop) {
-        return;
-      }
+      if (!this.uploader.features.dragdrop) { return; }
       
-      var dragoverTimeout, dragenterTimeout, $currentRow = $();
+      var timeout, blinker, $currentFolder;
       
-      $body.bind("dragenter", function(event) {
-        var $target = $(event.target),
-            $row    = $target.is("[data-folder-path]") ? $target : $target.parents("[data-folder-path]");
-        
-        if ($row.is($currentRow)) {
-          return;
-        }
-        
-        clearTimeout(dragenterTimeout);
-        $currentRow = $row;
-        marker.set($currentRow);
-        
-        if ($row.length) {
-          dragenterTimeout = setTimeout(function() {
-          
-          $row.addClass("blink");
-          dragenterTimeout = setTimeout(function() {
-          $row.removeClass("blink");
-          dragenterTimeout = setTimeout(function() {
-          $row.addClass("blink");
-          dragenterTimeout = setTimeout(function() {
-          $row.trigger("dblclick");
-          
-          }, 300);
-          }, 300);
-          }, 300);
-          }, 1200);
-        }
-      });
-      
-      $body.bind("dragover", function(event) {
+      function dragover(event) {
         // if (!hasFiles(event.originalEvent.dataTransfer)) {
         //   return;
         // }
 
-        clearTimeout(dragoverTimeout);
-        dragoverTimeout = setTimeout(function() {
-          $body.removeClass("dragenter");
-          clearTimeout(dragoverTimeout);
-        }, (1).seconds());
+        clearTimeout(timeout);
+        timeout = setTimeout(function() {
+          dragleave();
+          dragout();
+        }, (0.5).seconds());
 
         $body.addClass("dragenter");
 
         event.preventDefault();
+      }
+      
+      function dragenter(event) {
+        var $target   = $(event.target),
+            $element  = $target.is("[data-folder-path]") ? $target : $target.parents("[data-folder-path]");
+        
+        if ($element.is($currentFolder)) {
+          return;
+        }
+        
+        dragleave();
+        $currentFolder = $element;
+        $currentFolder.addClass("dragover").siblings().removeClass("dragover");
+        
+        if (!$currentFolder.length) {
+          return;
+        }
+        
+        blinker = protonet.effects.blink($currentFolder, {
+          delay:    (0.5).seconds(),
+          callback: function() { $currentFolder.click().dblclick(); }
+        });
+      }
+      
+      function dragout() {
+        $body.removeClass("dragenter");
+        clearTimeout(timeout);
+      }
+      
+      function dragleave() {
+        blinker         && blinker.stop();
+        $currentFolder  && $currentFolder.removeClass("dragover");
+        $currentFolder = undef;
+      }
+      
+      $content.bind({
+        dragenter: dragenter,
+        dragover:  dragover
       });
     }
   };

@@ -9,6 +9,12 @@
   min-height: 200px;
 }
 
+.dragenter .files-page .table-wrapper {
+  margin: -1px -1px 0 -1px;
+  border: 2px dashed #00cc00;
+  outline: 5px solid #eee;
+}
+
 .files-page table {
   width: 100%;
 }
@@ -48,6 +54,7 @@
   background: #f2f2f2;
 }
 
+.files-page tr.dragover,
 .files-page tr.focus {
   background: rgba(72, 123, 255, 0.3);
 }
@@ -150,9 +157,14 @@
   display: none;
 }
 
+.files-page .address-bar a.dragover,
 .files-page .address-bar a:hover,
 .files-page .address-bar a:last-child {
   color: #000;
+}
+
+.files-page .address-bar a.blink {
+  color: #487bff;
 }
 
 .files-page .file-details {
@@ -204,10 +216,6 @@
 .files-page .file-details .hint {
   position: static;
   text-align: left;
-}
-
-.dragenter .table-wrapper {
-  outline: 6px dashed rgba(0, 204, 0, 0.5);
 }
 
 /* ------------------------------------------------ EMBEDS ------------------------------------------------ */

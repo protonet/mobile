@@ -53,7 +53,7 @@ GENERAL
     git submodule update
     
 
-Ff you don't have bundler install it first:
+If you don't have bundler install it first:
 
     (sudo) gem install bundler -v 1.0.11
 
@@ -68,7 +68,11 @@ If you don't have imagemagick or graphicsmagick, install it first:
 Get your uuid stuff:
 
     brew install ossp-uuid (or apt-get install libossp-uuid-dev on ubuntu)
-    
+
+If you want to see the file system virus scan in action install clamav
+
+    brew install clamav
+
 Install MySQL:
 
 On osx:
