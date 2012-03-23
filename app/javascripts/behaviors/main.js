@@ -16,8 +16,13 @@ $.behaviors({
     }
   },
   
+  "tr[data-file-path]:dragstart": function(element, event) {
+    event.originalEvent.effectAllowed = "move";
+    event.originalEvent.dataTransfer.setData('Text', "foo");
+  },
+  
   "a[data-user-id]:dragstart": function(element, event) {
-    if (event.originalEvent.dataTransfer)  {
+    if (event.originalEvent.dataTransfer) {
       var $element  = $(element),
           userName  = protonet.data.User.getName($element.data("user-id"));
       if (userName) {
@@ -26,6 +31,8 @@ $.behaviors({
     }
   },
   
+  // Needed in order to avoid the socket from disconnecting when a file gets downloaded
+  // (which triggers the beforeunload/unload handlers in some browsers)
   "a[download]:click": (function() {
     var $iframe;
     return function(element, event) {

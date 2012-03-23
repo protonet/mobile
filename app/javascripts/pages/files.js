@@ -179,8 +179,8 @@ protonet.p("files", function($page, $window, $document) {
       
       this.set($newItems);
       
-      event.preventDefault();
-      event.stopPropagation();
+      // event.preventDefault();
+      // event.stopPropagation();
     },
     
     scrollTo: function($element, up) {
