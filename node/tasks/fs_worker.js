@@ -2,7 +2,7 @@ var fs              = require('fs'),
     path            = require('path'),
     util            = require('util'),
     Step            = require('step'),
-    lookup_mime     = require('mime').lookup,
+    lookupMime     = require('mime').lookup,
 
     ROOT_DIR        = './tmp/development/shared/files',
     PERMISSIONS     = 416; // 0640 (rw-r-----)
@@ -181,7 +181,7 @@ exports.list = function(params, reply) {
           name:     fileName,
           size:     stats.size,
           modified: stats.mtime,
-          mime:     lookup_mime(fileName),
+          mime:     lookupMime(fileName),
           type:     "file"
         };
       }
@@ -269,7 +269,7 @@ exports.info = function(params, reply) {
       } else {
         info = {
           size: stat.size,
-          mime: lookup_mime(params.paths[i]),
+          mime: lookupMime(params.paths[i]),
           type: 'file'
         };
       }

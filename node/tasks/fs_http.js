@@ -15,7 +15,7 @@ var sys                 = require("sys"),
 
     amqp                = require('amqp'),
     formidable          = require('formidable'),
-    lookup_mime         = require('mime').lookup,
+    lookupMime         = require('mime').lookup,
 
     RAILS_SESSION_KEY   = "_rails_dashboard_session",
     FILES_DIR           = "tmp/development/shared/files",
@@ -132,7 +132,7 @@ exports.bind = function(amqpConnection) {
               isDirectory = fs.statSync(file).isDirectory();
           
           if (files.length == 1 && !isDirectory) {
-            var contentType       = lookup_mime(file),
+            var contentType       = lookupMime(file),
                 shouldBeEmbedded  = message.params.embed == "true" && embeddableFiles.indexOf(contentType) !== -1;
             
             header['Content-Type']   = contentType;

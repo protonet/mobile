@@ -9,18 +9,18 @@ var http            = require("http"),
     request         = require('./../modules/node-utils/request'),
     lookupMime      = require('mime').lookup,
     ONE_YEAR        = 365 * 24 * 60 * 60 * 1000,
-    SUFFIX_REG_EXP  = /.+\.(\w+)($|\?|#)/,
-    KEEP_FORMATS    = /^(jpe?g|gif|png)$/i,
+    SUFFIX_REG_EXP  = /.+(\.\w+)($|\?|#)/,
+    KEEP_FORMATS    = /^\.(jpe?g|gif|png)$/i,
     image_requests  = {};
 
 
 exports.proxy = function(params, headers, response) {
   function resultingFileName(params, base) {
     var baseString = process.cwd() + "/public/externals/image_proxy/" + md5(params.url),
-        suffix     = (params.url.match(SUFFIX_REG_EXP) || [, "jpg"])[1];
+        suffix     = (params.url.match(SUFFIX_REG_EXP) || [, ""])[1];
     
     if (base) {
-      return baseString + "." + suffix;
+      return baseString + suffix;
     }
     
     if (params.width || params.height) {
@@ -28,18 +28,22 @@ exports.proxy = function(params, headers, response) {
     }
     
     // convert tiff, bmp, ... to jpg
-    if (!suffix.match(KEEP_FORMATS)) {
-      suffix = "jpg";
+    if (suffix && !suffix.match(KEEP_FORMATS)) {
+      suffix = ".jpg";
     }
     
-    return baseString + "." + suffix;
+    return baseString + suffix;
   }
   
   function sendImage(fileName) {
     // once done send all
-    var mimeType  = lookupMime(fileName) || "image/jpeg",
+    var mimeType  = lookupMime(fileName),
         header    = {},
-        size      = fs.lstatSync(fileName).size;
+        size;
+    
+    try {
+      size = fs.lstatSync(fileName).size;
+    } catch(e) { send404(filename); }
     
     header["Content-Type"] = mimeType;
     header["Content-Length"] = size;
