@@ -306,7 +306,7 @@ class User < ActiveRecord::Base
         return false
       end
     else
-      self.channels_to_subscribe ||= [Channel.home]
+      self.channels_to_subscribe ||= Channel.find(SystemPreferences.default_channel_ids).to_a
       self.roles = [Role.find_by_title(stranger? ? SystemPreferences.default_stranger_user_group : SystemPreferences.default_registered_user_group)]
     end
   end

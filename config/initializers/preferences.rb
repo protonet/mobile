@@ -63,6 +63,7 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:default_stranger_user_group] = "guest"
   SystemPreferences.defaults[:allow_modal_views] = true
   SystemPreferences.defaults[:custom_css_type] = "append"
+  SystemPreferences.defaults[:default_channel_ids] = [1]
 
   # setup email settings from preferences
   local_email_delivery = (SystemPreferences.local_email_delivery == true) rescue false
