@@ -199,7 +199,7 @@ if (!Object.keys) {
 
 
 
-//---------------------------- WEBSOCKET -------------------------
+//---------------------------- WebSocket -------------------------
 window.WebSocket = window.MozWebSocket || window.WebSocket;
 
 // --------------------------- User Media -------------------------
@@ -217,5 +217,25 @@ if (!window.URL) {
   var prototype = Element.prototype;
   if (!prototype.matchesSelector) {
     prototype.matchesSelector = prototype.webkitMatchesSelector || prototype.mozMatchesSelector || prototype.oMatchesSelector || prototype.msMatchesSelector;
+  }
+})();
+
+
+//---------------------------- DataTransfer -------------------------
+(function() {
+  var DataTransfer = window.DataTransfer || window.Clipboard;
+  
+  if (DataTransfer) {
+    DataTransfer.prototype.containsFiles = function() {
+      if (typeof(this.files) === "undefined") {
+        return false;
+      }
+
+      var types = Array.prototype.slice.call(this.types || []);
+      return types.indexOf("public.file-url")   !== -1 || // Safari < 5
+        types.indexOf("application/x-moz-file") !== -1 || // Gecko < 1.9.2 (< Firefox 3.6)
+        types.indexOf("Files")                  !== -1 || // Standard
+        types.length                            === 0;    // It's empty, let's just assume it has files
+    };
   }
 })();

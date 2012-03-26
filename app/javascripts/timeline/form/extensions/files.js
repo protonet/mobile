@@ -29,18 +29,6 @@ protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
     }
   });
   
-  function hasFiles(dataTransfer) {
-    if (!dataTransfer || typeof(dataTransfer.files) === "undefined") {
-      return false;
-    }
-    
-    var types = plupload.toArray(dataTransfer.types || []);
-    return types.indexOf("public.file-url") !== -1 || // Safari < 5
-      types.indexOf("application/x-moz-file") !== -1 || // Gecko < 1.9.2 (< Firefox 3.6)
-      types.indexOf("Files") !== -1 || // Standard
-      types.length === 0;
-  }
-  
   var fileQueue = protonet.ui.FileQueue.initialize({
     browse_button: $link.attr("id"),
     drop_element:  $form.attr("id")
@@ -55,7 +43,7 @@ protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
         formTimeout;
     
     $body.bind("dragover", function(event) {
-      if (!hasFiles(event.originalEvent.dataTransfer)) {
+      if (!event.originalEvent.dataTransfer.containsFiles()) {
         return;
       }
       
@@ -75,7 +63,7 @@ protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
     });
     
     $form.bind("dragover", function(event) {
-      if (!hasFiles(event.originalEvent.dataTransfer)) {
+      if (!event.originalEvent.dataTransfer.containsFiles()) {
         return;
       }
     

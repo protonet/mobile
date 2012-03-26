@@ -19,6 +19,7 @@ protonet.p("files", function($page, $window, $document) {
       $scrollContainer  = isModalWindow ? $(".modal-window > output") : $("body, html"),
       REG_EXP_CHANNELS  = /\/channels\/(\d+)\/$/,
       REG_EXP_USERS     = /\/users\/(\d+)\/$/,
+      FILES_MIME_TYPE   = "text/uri-list",
       KEY_UP            = 38,
       KEY_TAB           = 9,
       KEY_DOWN          = 40,
@@ -630,11 +631,11 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     _observe: function() {
-      if (!this.uploader.features.dragdrop) { return; }
+      var timeout, blinker, $currentFolder;
+      
+      if (!this.uploader.features.dragdrop) { return; } 
       
       $tableWrapper.attr("draggable", "true");
-      
-      var timeout, blinker, $currentFolder;
       
       function dragstart(event) {
         var dataTransfer = event.originalEvent.dataTransfer;
@@ -646,14 +647,37 @@ protonet.p("files", function($page, $window, $document) {
           .append(marker.$items.clone())
           .insertAfter($tableWrapper);
         
+        var data = {
+          node:   protonet.config.node_uuid,
+          files:  $.map(function(element) { return $(element).data("file"); })
+        };
+        
         dataTransfer.dropEffect = "move";
-        dataTransfer.setData("application/x-protonet-files", "foo");
-        dataTransfer.setDragImage($dragImage[0], 20, 10);
+        dataTransfer.setData(FILES_MIME_TYPE, JSON.stringify(data));
+        dataTransfer.setDragImage($dragImage[0], 10, 10);
         
         setTimeout(function() { $dragImage.remove(); }, 0);
       }
       
+      function dragend(event) {
+      }
+      
       function dragover(event) {
+        var dataTransfer = event.originalEvent.dataTransfer;
+        
+        // unsupported browsers
+        if (!dataTransfer) {
+          return;
+        }
+        
+        if ((dataTransfer.types || []).indexOf(FILES_MIME_TYPE) !== -1) {
+          event.preventDefault();
+        }
+        
+        if (!dataTransfer.containsFiles()) {
+          return;
+        }
+        
         clearTimeout(timeout);
         timeout = setTimeout(function() {
           dragleave();
@@ -697,8 +721,27 @@ protonet.p("files", function($page, $window, $document) {
       $content.bind({
         dragenter: dragenter,
         dragover:  dragover,
-        dragstart: dragstart
+        dragstart: dragstart,
+        dragend:   dragend
       });
+    },
+    
+    _stringifyDataTransfer: function(files) {
+      var str = "# " + JSON.stringify({
+        node:   protonet.config.node_id,
+        files:  files
+      });
+      
+      $.each(files, function(i, file) {
+        str += "\n" + protonet.data.File.getUrl(file.path);
+      });
+      
+      return str;
+    },
+    
+    _parseDataTransfer: function(str) {
+      str = str.match(/#\s(.+)/) || [, "[]"]
+      return JSON.parse(str);
     }
   };
   
