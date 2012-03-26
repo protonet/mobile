@@ -20,7 +20,7 @@
       dispatching_server_port:       "<%= configatron.socket.port %>",
       dispatching_websocket_url:     "ws://<%= server_name %><%= is_apache? ? "/websocket" : ":#{configatron.websocket.port}" %>",
       dispatching_websocket_url_ssl: "wss://<%= server_name %><%= is_apache? ? "/websocket" : ":#{configatron.websocket_ssl.port}" %>",
-      dispatching_websocket_delimiter: "<%= raw(is_apache? ? "\0" : "") %>",
+      dispatching_websocket_delimiter: "<%= raw(is_apache? ? "\\0" : "") %>",
       token:                          "<%= current_user.communication_token %>",
       default_avatar:                 "<%= configatron.default_avatar %>",
       admin_ids:                      <%= User.admins.map(&:id).to_json %>,
