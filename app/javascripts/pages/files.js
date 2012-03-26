@@ -158,6 +158,7 @@ protonet.p("files", function($page, $window, $document) {
     _mousedown: function(event) {
       var $current        = $(event.currentTarget),
           $newItems       = $(),
+          $oldItems       = this.$items,
           alreadyFocused  = $current.hasClass("focus");
       
       if (event.ctrlKey || event.metaKey) {
@@ -166,21 +167,22 @@ protonet.p("files", function($page, $window, $document) {
         } else {
           $newItems = this.$items.add($current);
         }
-      } else if (event.shiftKey && this.$items.length) {
-        var $last = this.$items.last();
+      } else if (event.shiftKey && $oldItems.length) {
+        var $last = $oldItems.last();
         if ($last.index() < $current.index()) {
-          $newItems = this.$items.add($last.nextUntil($current.next()));
+          $newItems = $oldItems.add($last.nextUntil($current.next()));
         } else if ($last.index() > $current.index()) {
-          $newItems = this.$items.add($last.prevUntil($current.prev()));
+          $newItems = $oldItems.add($last.prevUntil($current.prev()));
         }
+      } else if (alreadyFocused) {
+        $newItems = $oldItems;
       } else {
         $newItems = $current;
       }
       
       this.set($newItems);
       
-      // event.preventDefault();
-      // event.stopPropagation();
+      event.stopPropagation();
     },
     
     scrollTo: function($element, up) {
@@ -630,19 +632,34 @@ protonet.p("files", function($page, $window, $document) {
     _observe: function() {
       if (!this.uploader.features.dragdrop) { return; }
       
+      $tableWrapper.attr("draggable", "true");
+      
       var timeout, blinker, $currentFolder;
       
+      function dragstart(event) {
+        var dataTransfer = event.originalEvent.dataTransfer;
+        
+        if (!dataTransfer)          { return; }
+        if (!marker.$items.length)  { return; }
+        
+        var $dragImage = $("<table>", { "class": "drag-image" })
+          .append(marker.$items.clone())
+          .insertAfter($tableWrapper);
+        
+        dataTransfer.dropEffect = "move";
+        dataTransfer.setData("application/x-protonet-files", "foo");
+        dataTransfer.setDragImage($dragImage[0], 20, 10);
+        
+        setTimeout(function() { $dragImage.remove(); }, 0);
+      }
+      
       function dragover(event) {
-        // if (!hasFiles(event.originalEvent.dataTransfer)) {
-        //   return;
-        // }
-
         clearTimeout(timeout);
         timeout = setTimeout(function() {
           dragleave();
           dragout();
         }, (0.5).seconds());
-
+        
         $body.addClass("dragenter");
 
         event.preventDefault();
@@ -652,17 +669,13 @@ protonet.p("files", function($page, $window, $document) {
         var $target   = $(event.target),
             $element  = $target.is("[data-folder-path]") ? $target : $target.parents("[data-folder-path]");
         
-        if ($element.is($currentFolder)) {
-          return;
-        }
+        if ($element.is($currentFolder)) { return; }
         
         dragleave();
         $currentFolder = $element;
         $currentFolder.addClass("dragover").siblings().removeClass("dragover");
         
-        if (!$currentFolder.length) {
-          return;
-        }
+        if (!$currentFolder.length) { return; }
         
         blinker = protonet.effects.blink($currentFolder, {
           delay:    (0.5).seconds(),
@@ -683,7 +696,8 @@ protonet.p("files", function($page, $window, $document) {
       
       $content.bind({
         dragenter: dragenter,
-        dragover:  dragover
+        dragover:  dragover,
+        dragstart: dragstart
       });
     }
   };

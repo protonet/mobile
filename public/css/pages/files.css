@@ -43,8 +43,8 @@
 }
 
 .files-page tr {
-  -webkit-user-select: none;
   -moz-user-select: none;
+  -webkit-user-select: none;
   user-select: none;
   height: 26px;
   border-bottom: 1px solid #fff;
@@ -216,6 +216,26 @@
 .files-page .file-details .hint {
   position: static;
   text-align: left;
+}
+
+/* ------------------------------------------------ DRAG IMAGE ------------------------------------------------ */
+.files-page .drag-image {
+  margin-top: 10px;
+  width: 300px;
+}
+
+.files-page .drag-image tr {
+  height: auto;
+  border: 0;
+}
+
+.files-page .drag-image td {
+  padding: 1px;
+}
+
+.files-page .drag-image .file-size,
+.files-page .drag-image .file-modified {
+  display: none;
 }
 
 /* ------------------------------------------------ EMBEDS ------------------------------------------------ */

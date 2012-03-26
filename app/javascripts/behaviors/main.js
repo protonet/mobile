@@ -16,11 +16,6 @@ $.behaviors({
     }
   },
   
-  "tr[data-file-path]:dragstart": function(element, event) {
-    event.originalEvent.effectAllowed = "move";
-    event.originalEvent.dataTransfer.setData('Text', "foo");
-  },
-  
   "a[data-user-id]:dragstart": function(element, event) {
     if (event.originalEvent.dataTransfer) {
       var $element  = $(element),
