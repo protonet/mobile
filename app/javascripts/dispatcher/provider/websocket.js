@@ -99,7 +99,7 @@ protonet.dispatcher.provider.WebSocket = {
             chunks.push(rawChunks[i]);
           }
         }
-        var data = $(chunks).map(function(val, i){
+        var data = $(chunks).map(function(i, val){
           return JSON.parse(val);
         });
 
