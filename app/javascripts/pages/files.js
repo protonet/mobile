@@ -631,11 +631,29 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     _observe: function() {
-      var timeout, blinker, $currentFolder;
+      var timeout, blinker, $currentFolder, fromPath, that = this;
       
       if (!this.uploader.features.dragdrop) { return; } 
       
       $tableWrapper.attr("draggable", "true");
+      
+      function stringifyDataTransfer(files) {
+        var str = "# " + JSON.stringify({
+          node:   protonet.config.node_id,
+          files:  files
+        });
+
+        $.each(files, function(i, file) {
+          str += "\n" + protonet.data.File.getUrl(file.path);
+        });
+
+        return str;
+      }
+      
+      function parseDataTransfer(str) {
+        str = str.match(/#\s(.+)/) || [, "[]"];
+        return JSON.parse(str);
+      }
       
       function dragstart(event) {
         var dataTransfer = event.originalEvent.dataTransfer;
@@ -647,13 +665,12 @@ protonet.p("files", function($page, $window, $document) {
           .append(marker.$items.clone())
           .insertAfter($tableWrapper);
         
-        var data = {
-          node:   protonet.config.node_uuid,
-          files:  $.map(function(element) { return $(element).data("file"); })
-        };
+        var files = $.map(marker.$items, function(element) { return $(element).data("file"); });
+        
+        fromPath = currentPath;
         
         dataTransfer.dropEffect = "move";
-        dataTransfer.setData(FILES_MIME_TYPE, JSON.stringify(data));
+        dataTransfer.setData(FILES_MIME_TYPE, stringifyDataTransfer(files));
         dataTransfer.setDragImage($dragImage[0], 10, 10);
         
         setTimeout(function() { $dragImage.remove(); }, 0);
@@ -665,28 +682,27 @@ protonet.p("files", function($page, $window, $document) {
       function dragover(event) {
         var dataTransfer = event.originalEvent.dataTransfer;
         
-        // unsupported browsers
+        // goodbye unsupported browsers
         if (!dataTransfer) {
           return;
         }
         
-        if ((dataTransfer.types || []).indexOf(FILES_MIME_TYPE) !== -1) {
+        var containsFilesFromDesktop  = dataTransfer.containsFiles(),
+            containsFilesFromProtonet = (dataTransfer.types || []).indexOf(FILES_MIME_TYPE) !== -1,
+            isDroppable               = containsFilesFromDesktop || fromPath !== currentPath || $currentFolder.length;
+        
+        if (containsFilesFromDesktop || containsFilesFromProtonet) {
           event.preventDefault();
         }
         
-        if (!dataTransfer.containsFiles()) {
-          return;
+        if (containsFilesFromDesktop) {
+          clearTimeout(timeout);
+          timeout = setTimeout(function() {
+            dragleave();
+            dragout();
+          }, (0.5).seconds());
+          $body.addClass("dragenter");
         }
-        
-        clearTimeout(timeout);
-        timeout = setTimeout(function() {
-          dragleave();
-          dragout();
-        }, (0.5).seconds());
-        
-        $body.addClass("dragenter");
-
-        event.preventDefault();
       }
       
       function dragenter(event) {
@@ -724,24 +740,6 @@ protonet.p("files", function($page, $window, $document) {
         dragstart: dragstart,
         dragend:   dragend
       });
-    },
-    
-    _stringifyDataTransfer: function(files) {
-      var str = "# " + JSON.stringify({
-        node:   protonet.config.node_id,
-        files:  files
-      });
-      
-      $.each(files, function(i, file) {
-        str += "\n" + protonet.data.File.getUrl(file.path);
-      });
-      
-      return str;
-    },
-    
-    _parseDataTransfer: function(str) {
-      str = str.match(/#\s(.+)/) || [, "[]"]
-      return JSON.parse(str);
     }
   };
   
