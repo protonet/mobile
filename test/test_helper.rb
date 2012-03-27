@@ -40,6 +40,7 @@ class ActiveSupport::TestCase
   # fixtures :all
 
   # Add more helper methods to be used by all tests here...
+  Channel.create(:name => "testchannel")
 end
 
 # class ActionController::TestCase
