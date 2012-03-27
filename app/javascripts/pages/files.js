@@ -19,6 +19,8 @@ protonet.p("files", function($page, $window, $document) {
       $scrollContainer  = isModalWindow ? $(".modal-window > output") : $("body, html"),
       REG_EXP_CHANNELS  = /\/channels\/(\d+)\/$/,
       REG_EXP_USERS     = /\/users\/(\d+)\/$/,
+      // Chrome doesn't support any custom mime types (eg. application/x-protonet-files)
+      // see http://code.google.com/p/chromium/issues/detail?id=31037
       FILES_MIME_TYPE   = "text/uri-list",
       KEY_UP            = 38,
       KEY_TAB           = 9,
@@ -631,7 +633,7 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     _observe: function() {
-      var timeout, blinker, $currentFolder, fromPath, that = this;
+      var timeout, blinker, $currentFolder, fromPath, toPath, dragItems = [], dragPaths = [];
       
       if (!this.uploader.features.dragdrop) { return; } 
       
@@ -665,18 +667,25 @@ protonet.p("files", function($page, $window, $document) {
           .append(marker.$items.clone())
           .insertAfter($tableWrapper);
         
-        var files = $.map(marker.$items, function(element) { return $(element).data("file"); });
+        $.each(marker.$items, function(i, element) {
+          var file = $(element).data("file");
+          dragItems.push(file);
+          dragPaths.push(file.path);
+        });
         
         fromPath = currentPath;
         
         dataTransfer.dropEffect = "move";
-        dataTransfer.setData(FILES_MIME_TYPE, stringifyDataTransfer(files));
+        dataTransfer.setData(FILES_MIME_TYPE, stringifyDataTransfer(dragItems));
         dataTransfer.setDragImage($dragImage[0], 10, 10);
         
+        // Timeout is necessary for webkit to capture a snapshot of the element
         setTimeout(function() { $dragImage.remove(); }, 0);
       }
       
       function dragend(event) {
+        blinker && blinker.stop();
+        dragleave();
       }
       
       function dragover(event) {
@@ -689,9 +698,9 @@ protonet.p("files", function($page, $window, $document) {
         
         var containsFilesFromDesktop  = dataTransfer.containsFiles(),
             containsFilesFromProtonet = (dataTransfer.types || []).indexOf(FILES_MIME_TYPE) !== -1,
-            isDroppable               = containsFilesFromDesktop || fromPath !== currentPath || $currentFolder.length;
+            isDroppable               = containsFilesFromDesktop || (containsFilesFromProtonet && (fromPath !== currentPath || $currentFolder.length));
         
-        if (containsFilesFromDesktop || containsFilesFromProtonet) {
+        if (isDroppable) {
           event.preventDefault();
         }
         
@@ -705,10 +714,14 @@ protonet.p("files", function($page, $window, $document) {
         }
       }
       
+      // Open a folder when an item is dragged over it
       function dragenter(event) {
-        var $target   = $(event.target),
-            $element  = $target.is("[data-folder-path]") ? $target : $target.parents("[data-folder-path]");
+        var $target         = $(event.target),
+            $element        = $target.is("[data-folder-path]") ? $target : $target.parents("[data-folder-path]"),
+            path            = $element.data("folder-path"),
+            isBeingDragged  = dragPaths.indexOf(path) !== -1;
         
+        if (isBeingDragged)              { return; }
         if ($element.is($currentFolder)) { return; }
         
         dragleave();

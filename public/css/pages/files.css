@@ -221,8 +221,9 @@
 /* ------------------------------------------------ DRAG IMAGE ------------------------------------------------ */
 .files-page .drag-image {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 100px;
+  right: 100px;
+  z-index: -1;
   width: 300px;
   opacity: 0.8;
 }
