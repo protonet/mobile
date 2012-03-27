@@ -267,9 +267,9 @@ class User < ActiveRecord::Base
   
   # create a user with a session id
   def self.stranger(identifier)
-    u = find_or_create_by_temporary_identifier(identifier)  do |u|
-      u.name = "stranger_#{identifier[0,10]}"
-      u.email = "#{u.name}@local.stranger"
+    u = find_or_create_by_temporary_identifier(identifier) do |u|
+      u.name = "guest_#{identifier.downcase.gsub(/[^\w]/, "")[0, 5]}"
+      u.email = "#{u.name}@local.guest"
     end
     u
   end

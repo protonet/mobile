@@ -1,5 +1,5 @@
 <section class="main-content">
-  <%- message_hint = current_user.stranger? ? 'welcome stranger! talk to us...' : "go ahead @#{current_user.display_name}, I'm all yours..." %>
+  <%- message_hint = current_user.stranger? ? 'welcome guest! talk to us...' : "go ahead @#{current_user.display_name}, I'm all yours..." %>
   <%= form_for :meep, :url => meeps_path, :html => { :id => "message-form" } do |f| -%>
     <%= f.hidden_field(:channel_id, :name => "meep[channel_id]", :autocomplete => "off") %>
     <%= f.hidden_field(:socket_id) %>

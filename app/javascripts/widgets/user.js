@@ -221,7 +221,7 @@ protonet.widgets.User = Class.create({
     
     var isViewer    = protonet.config.user_id == user.id,
         isAdmin     = this.adminIds.indexOf(+user.id) !== -1,
-        isStranger  = user.name.startsWith("stranger_"),
+        isStranger  = user.name.startsWith("guest_"),
         $element    = this.createElement(user, isViewer, isStranger, isAdmin);
     
     hide && $element.hide();
