@@ -15,6 +15,10 @@
   outline: 5px solid #eee;
 }
 
+.dragenter .files-page p.hint {
+  color: #000;
+} 
+
 .files-page table {
   width: 100%;
 }

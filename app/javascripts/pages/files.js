@@ -245,6 +245,7 @@ protonet.p("files", function($page, $window, $document) {
       var that = this;
       
       marker.clear();
+      uploader.enableDragAndDrop();
       
       $fileList.show();
       $fileDetails.html("").hide();
@@ -300,6 +301,7 @@ protonet.p("files", function($page, $window, $document) {
       
       $scrollContainer.scrollTop(0);
       
+      uploader.disableDragAndDrop();
       addressBar.update();
       
       if (file.type === "missing") {
@@ -632,12 +634,20 @@ protonet.p("files", function($page, $window, $document) {
       this._observe();
     },
     
+    enableDragAndDrop: function() {
+      if (this.uploader.features.dragdrop) {
+        $tableWrapper.attr("draggable", "true");
+      }
+    },
+    
+    disableDragAndDrop: function() {
+      $tableWrapper.removeAttr("draggable");
+    },
+    
     _observe: function() {
       var timeout, blinker, $currentFolder, fromPath, toPath, dragItems = [], dragPaths = [];
       
-      if (!this.uploader.features.dragdrop) { return; } 
-      
-      $tableWrapper.attr("draggable", "true");
+      if (!this.uploader.features.dragdrop) { return; }
       
       function stringifyDataTransfer(files) {
         var str = "# " + JSON.stringify({
@@ -660,8 +670,8 @@ protonet.p("files", function($page, $window, $document) {
       function dragstart(event) {
         var dataTransfer = event.originalEvent.dataTransfer;
         
-        if (!dataTransfer)          { return; }
-        if (!marker.$items.length)  { return; }
+        if (!dataTransfer)          { event.preventDefault(); }
+        if (!marker.$items.length)  { event.preventDefault(); }
         
         var $dragImage = $("<table>", { "class": "drag-image" })
           .append(marker.$items.clone())
@@ -684,24 +694,27 @@ protonet.p("files", function($page, $window, $document) {
       }
       
       function dragend(event) {
-        blinker && blinker.stop();
         dragleave();
       }
       
+      // Handle drag indicators
       function dragover(event) {
         var dataTransfer = event.originalEvent.dataTransfer;
         
         // goodbye unsupported browsers
-        if (!dataTransfer) {
-          return;
-        }
+        if (!dataTransfer)                    { return; }
+        if (!$tableWrapper.attr("draggable")) { return; }
         
-        var containsFilesFromDesktop  = dataTransfer.containsFiles(),
-            containsFilesFromProtonet = (dataTransfer.types || []).indexOf(FILES_MIME_TYPE) !== -1,
-            isDroppable               = containsFilesFromDesktop || (containsFilesFromProtonet && (fromPath !== currentPath || $currentFolder.length));
+        var dataTransferTypes         = $.makeArray(dataTransfer.types),
+            containsFilesFromDesktop  = dataTransfer.containsFiles(),
+            containsFilesFromProtonet = dataTransferTypes.indexOf(FILES_MIME_TYPE) !== -1,
+            isOverFileArea            = $.contains($content[0], event.target),
+            isDroppable               = isOverFileArea && (containsFilesFromDesktop || (containsFilesFromProtonet && (fromPath !== currentPath || $currentFolder.length)));
         
         if (isDroppable) {
-          event.preventDefault();
+          dataTransfer.effectAllowed = dataTransfer.dropEffect = 'all';
+        } else {
+          dataTransfer.effectAllowed = dataTransfer.dropEffect = 'none';
         }
         
         if (containsFilesFromDesktop) {
@@ -712,6 +725,8 @@ protonet.p("files", function($page, $window, $document) {
           }, (0.5).seconds());
           $body.addClass("dragenter");
         }
+        
+        event.preventDefault();
       }
       
       // Open a folder when an item is dragged over it
@@ -749,10 +764,13 @@ protonet.p("files", function($page, $window, $document) {
       
       $content.bind({
         dragenter: dragenter,
-        dragover:  dragover,
         dragstart: dragstart,
         dragend:   dragend
       });
+      
+      $body.bind("dragover", dragover);
+      
+      protonet.bind("modal_window.unload", function() { $body.unbind("dragover", dragover); });
     }
   };
   
