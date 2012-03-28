@@ -31,7 +31,7 @@ check process apache2 with pidfile /var/run/apache2.pid
   group base
   start program = "/usr/bin/sudo /etc/init.d/apache2 start"
   stop program  = "/usr/bin/sudo /etc/init.d/apache2 stop"
-  if totalmem > 500.0 MB for 5 cycles then restart
+  if totalmem > 800.0 MB for 5 cycles then restart
   if children > 250 then restart
   depends on rabbitmq
 
