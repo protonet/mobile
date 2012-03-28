@@ -163,7 +163,7 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
     send: function(data) {
       var url = this._buildUrl({ socket_id: this.socketId });
       
-      protonet.utils.crossDomainXHR(url, {
+      $.ajax(url, {
         type: "POST",
         data: JSON.stringify(data)
       });

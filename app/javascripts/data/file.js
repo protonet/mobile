@@ -48,19 +48,6 @@ protonet.data.File = (function() {
     protonet.trigger("socket.send", data);
   }
   
-  function httpRequest(url, options) {
-    // Cross domain request is necessary for development environment
-    // where node.js runs on a different port
-    protonet.utils.crossDomainXHR(url, {
-      success: function(responseText) {
-        options.success(JSON.parse(responseText));
-      },
-      error: function() {
-        options.error({});
-      }
-    });
-  }
-  
   return {
     list: function(path, options) {
       if (!path.endsWith("/")) {
@@ -103,8 +90,7 @@ protonet.data.File = (function() {
     
     getContent: function(path, options) {
       options = prepareParameters(options);
-      $.ajax($.extend({
-        url:  this.getDownloadUrl(path),
+      $.ajax(this.getDownloadUrl(path), $.extend({
         data: {
           token:    protonet.config.token,
           user_id:  protonet.config.user_id
@@ -114,7 +100,7 @@ protonet.data.File = (function() {
     
     scan: function(path, options) {
       options = prepareParameters(options);
-      httpRequest(NODE_BASE_URL + "/scan?path=" + encodeURIComponent(path), options);
+      $.ajax(NODE_BASE_URL + "/scan?path=" + encodeURIComponent(path), options);
     }
   };
 })();

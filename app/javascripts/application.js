@@ -6,6 +6,7 @@
 //= require "lib/jquery-class-create/class.js"
 //= require "lib/jquery-behaviors/behaviors.js"
 //= require "lib/jquery.inview/jquery.inview.js"
+//= require "lib/jquery-extensions/xdr.js"
 
 // ---- PROTONET
 //= require "extensions.js"
@@ -32,7 +33,6 @@
 //= require "ui/header.js"
 //= require "ui/modal_window.js"
 //= require "utils/rails.js"
-//= require "utils/cross_domain_xhr.js"
 //= require "text_extensions/text_extensions.js"
 //= require "timeline/meep.js"
 //= require "ui/pretty_date.js"
