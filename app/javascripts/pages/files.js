@@ -410,7 +410,7 @@ protonet.p("files", function($page, $window, $document) {
     
     resizeFileArea: function() {
       var currentHeight = $tableWrapper.outerHeight(),
-          newHeight     = $page.outerHeight() - $tableWrapper.prop("offsetTop") - 20;
+          newHeight     = $page.outerHeight() - $tableWrapper.prop("offsetTop") - 21;
       $tableWrapper.css("min-height", newHeight.px());
     },
 

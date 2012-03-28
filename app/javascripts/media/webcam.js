@@ -20,7 +20,7 @@
     },
     
     supported: function() {
-      return !!this.provider && !!window.WebKitBlobBuilder;
+      return !!this.provider;
     },
 
     snap: function(url, callback) {
@@ -66,7 +66,7 @@
   
   media.Webcam.provider.WebRTC = Class.create({
     supported: function() {
-      return !!navigator.getUserMedia;
+      return !!navigator.getUserMedia && !!window.WebKitBlobBuilder;
     },
 
     initialize: function() {},
