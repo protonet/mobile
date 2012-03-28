@@ -59,17 +59,21 @@ module ApplicationHelper
       request.env["SERVER_NAME"]
     end
   end
+
+  def is_apache?
+    request.server_software == 'apache'
+  end
   
   def node_base_url(public_domain = false)
     if public_domain
       "#{SystemPreferences.public_host_https ? 'https' : 'http'}://#{SystemPreferences.public_host}/node"
     else
-      request.server_software != 'apache' ? "#{request.protocol}#{server_name}:#{configatron.nodejs.port}" : "#{request.protocol}#{server_name}/node"
+      is_apache? ? "#{request.protocol}#{server_name}/node" : "#{request.protocol}#{server_name}:#{configatron.nodejs.port}"
     end
   end
   
   def xhr_streaming_url
-    request.server_software != 'apache' ? "#{request.protocol}#{server_name}:#{configatron.xhr_streaming.port}" : "#{request.protocol}#{server_name}/xhr"
+    is_apache? ? "#{request.protocol}#{server_name}/xhr" : "#{request.protocol}#{server_name}:#{configatron.xhr_streaming.port}"
   end
   
   def include_stylesheet_if_exists(stylesheet)

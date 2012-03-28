@@ -26,7 +26,7 @@ if last_clamav_scan + SCAN_INTERVAL < Time.now.to_i
   end
   
   puts "refresh virus db"
-  `/usr/bin/sudo /usr/bin/freshclam`
+  `/usr/bin/sudo /usr/bin/freshclam --log=/tmp/freshclam.log` # use custom log dir otherwise this will fail
   # code 0 => success
   # code 52 => network connection problem (no internet connection?)
   # find all error codes here: http://linux.die.net/man/1/freshclam

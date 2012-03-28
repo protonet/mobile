@@ -104,7 +104,7 @@
     $.extend(user, {
       isAdmin:    adminIds.indexOf(user.id) !== -1,
       isViewer:   user.id == viewerId,
-      isStranger: user.name.startsWith("stranger_"),
+      isStranger: user.name.match(/^guest_\w+$/),
       isOnline:   oldIsOnline !== undef ? oldIsOnline : false,
       avatar:     oldAvatar || user.avatar || defaultAvatar
     });

@@ -53,7 +53,7 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:public_host_https]  = false
   SystemPreferences.defaults[:captive_portal_greeting] = "Please sign in to receive internet access"
   SystemPreferences.defaults[:captive_whitelist_clients] = []
-  SystemPreferences.defaults[:captive_whitelist_sites] = ["78.47.145.220"]
+  SystemPreferences.defaults[:captive_whitelist_sites] = ["213.133.100.198"] # protonet.info
   SystemBackend.update_whitelist_sites(SystemPreferences.defaults[:captive_whitelist_sites])
   SystemPreferences.defaults[:captive_redirect_only] = false
   
@@ -63,6 +63,7 @@ Dashboard::Application.config.to_prepare do
   SystemPreferences.defaults[:default_stranger_user_group] = "guest"
   SystemPreferences.defaults[:allow_modal_views] = true
   SystemPreferences.defaults[:custom_css_type] = "append"
+  SystemPreferences.defaults[:default_channel_ids] = [1]
 
   # setup email settings from preferences
   local_email_delivery = (SystemPreferences.local_email_delivery == true) rescue false

@@ -339,37 +339,9 @@ protonet.timeline.Channels = {
         }
       }.bind(this));
     
-    $(window).bind("beforeunload", function() {
-      var lastReadMeeps = this._collectLastReadMeeps();
-      protonet.storage.set("last_read_meeps", lastReadMeeps);
-      
-      $.ajax({
-        async:  false,
-        url:    "/users/update_last_read_meeps",
-        type:   "PUT",
-        data:   {
-          id:      protonet.config.user_id,
-          mapping: lastReadMeeps
-        }
-      });
-    }.bind(this));
-      
-    setInterval(function() {
-      var totalUnreadMeeps = 0;
-      $.each(this.channels, function(id, channel) {
-        totalUnreadMeeps += channel.unreadMeeps || 0;
-      });
-      
-      if (totalUnreadMeeps) {
-        protonet.utils.BrowserTitle.setPrefix(totalUnreadMeeps);
-      } else {
-        protonet.utils.BrowserTitle.restore();
-      }
-    }.bind(this), 1000);
-    
-    setInterval(function() {
-      protonet.storage.set("last_read_meeps", this._collectLastReadMeeps());
-    }.bind(this), 10000);
+    $(window).bind("beforeunload", this._saveLastReadMeeps.bind(this, true));
+    setInterval(this._updateBrowserTitle.bind(this), (1).second());
+    setInterval(this._saveLastReadMeeps.bind(this, true), (20).seconds());
   },
   
   _render: function() {
@@ -493,6 +465,44 @@ protonet.timeline.Channels = {
     if (this.selected === channelId) {
       protonet.trigger("channels.change_to_first");
     }
+  },
+  
+  _updateBrowserTitle: function() {
+    var totalUnreadMeeps = 0;
+    $.each(this.channels, function(id, channel) {
+      totalUnreadMeeps += channel.unreadMeeps || 0;
+    });
+    
+    if (totalUnreadMeeps) {
+      protonet.utils.BrowserTitle.setPrefix(totalUnreadMeeps);
+    } else {
+      protonet.utils.BrowserTitle.restore();
+    }
+  },
+  
+  _saveLastReadMeeps: function(sync) {
+    if (protonet.config.user_is_stranger) {
+      return;
+    }
+    
+    var newLastReadMeeps = this._collectLastReadMeeps(),
+        oldLastReadMeeps = protonet.storage.get("last_read_meeps");
+    
+    if (JSON.stringify(oldLastReadMeeps) === JSON.stringify(newLastReadMeeps)) {
+      return;
+    }
+    
+    $.ajax({
+      async:  !sync,
+      url:    "/users/update_last_read_meeps",
+      type:   "PUT",
+      data:   {
+        id:      protonet.config.user_id,
+        mapping: newLastReadMeeps
+      }
+    });
+    
+    protonet.storage.set("last_read_meeps", newLastReadMeeps);
   },
   
   _collectLastReadMeeps: function() {

@@ -61,7 +61,27 @@ address=/protonet/#{ip}
 address=/#{SystemBackend.hostname}/#{ip}
 address=/#{SystemPreferences.public_host}/#{ip}
 dhcp-range=#{interface},#{ip.network(1)},#{ip.network(32000)},4h
+
+# Gateway
+dhcp-option=3,#{ip}
+
+# DNS
 dhcp-option=6,#{ip}
+
+# IP Forward (no)
+dhcp-option=19,0
+
+# Source Routing
+dhcp-option=20,0
+
+# 44-47 NetBIOS
+dhcp-option=44,0.0.0.0
+dhcp-option=45,0.0.0.0
+dhcp-option=46,8
+dhcp-option=47
+
+dhcp-authoritative
+
 bind-interfaces
 except-interface=lo
 EOS
