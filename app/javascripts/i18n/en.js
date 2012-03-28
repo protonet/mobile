@@ -18,7 +18,7 @@ protonet.i18n = {
   DIRECTORY_DELETE_ERROR: "Folder couldn't be deleted",
   DIRECTORY_DELETE_CONFIRM: "Are you sure? This will delete the folder including all contents. There's no undo.",
   PUBLISH_FILES: "Published the following file(s):",
-  DROP: "drop it like it's hot!",
+  DROP: "Drop your files here to upload them",
   DEFAULT_DIRECTORY: "New folder",
   DIRECTORY_EXISTS_ERROR: "Folder already exists. Please choose a different name.",
   UNKNOWN_ERROR: "An error occured. Please try again",

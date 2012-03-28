@@ -54,7 +54,7 @@ protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
       
       $dropArea = $dropArea || $('<div>', {
         "class":  "drop-area",
-        text:     "Drop it like it's hot!"
+        text:     protonet.t("DROP")
       }).appendTo($form);
       
       $body.addClass("dragenter");
