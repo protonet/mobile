@@ -20,7 +20,7 @@
       <a class="icon" data-wysihtml5-command="redo" title="redo">redo</a>
       <a class="icon" data-wysihtml5-command="ol">insertOrderedList</a>
       <a class="icon" data-wysihtml5-action="change_view">switch to html view</a>
-      <a class="link" data-wysihtml5-command="insertHTML" data-wysihtml5-command-value="<%= accept_invitation_url(:invitation_token => @invitation.token, :host => SystemPreferences.public_host, :protocol => SystemPreferences.public_host_https ? 'https://' : 'http://')%>">insert inviationlink</a>
+      <a class="link" data-wysihtml5-command="insertHTML" data-wysihtml5-command-value="<%= accept_invitation_url(:invitation_token => @invitation.token, :host => SystemPreferences.public_host, :protocol => SystemPreferences.public_host_https ? 'https://' : 'http://')%>">insert invitationlink</a>
     </div>
     
     <textarea cols="40" rows="20" name="invitations[name]" id="invitation_message">
