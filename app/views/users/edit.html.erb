@@ -33,6 +33,14 @@
         <%= hidden_field_tag :id, @user.id %>
         <%= f.hidden_field :id %>
         <div class="form-field">
+          <%= f.label :first_name, 'First name:' %>
+          <%= f.text_field :first_name %>
+        </div>
+        <div class="form-field">
+          <%= f.label :last_name, 'Last name:' %>
+          <%= f.text_field :last_name %>
+        </div>
+        <div class="form-field">
           <%= f.label :login, 'User name:' %>
           <%= f.text_field :login %>
         </div>

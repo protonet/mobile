@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120301160424) do
+ActiveRecord::Schema.define(:version => 20120328121202) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -37,9 +37,10 @@ ActiveRecord::Schema.define(:version => 20120301160424) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "invitee_id"
-    t.string   "name"
+    t.string   "first_name"
     t.boolean  "invitee_role", :default => false
     t.datetime "sent_at"
+    t.string   "last_name"
   end
 
   create_table "listens", :force => true do |t|
@@ -139,7 +140,7 @@ ActiveRecord::Schema.define(:version => 20120301160424) do
 
   create_table "users", :force => true do |t|
     t.string   "login",                          :limit => 40
-    t.string   "name",                           :limit => 100, :default => ""
+    t.string   "first_name",                     :limit => 100, :default => ""
     t.string   "email",                          :limit => 100
     t.string   "encrypted_password",             :limit => 128, :default => "",   :null => false
     t.string   "password_salt",                                 :default => "",   :null => false
@@ -161,6 +162,7 @@ ActiveRecord::Schema.define(:version => 20120301160424) do
     t.string   "type"
     t.string   "twitter_id"
     t.boolean  "newbie",                                        :default => true
+    t.string   "last_name",                                     :default => ""
   end
 
   add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true

@@ -52,17 +52,18 @@ Given /^I am logged in as "([^\"]*)"(?: with password "([^\"]*)")?$/ do|username
   end
 end
 
-Given /^I register as "([^\"]*)"$/ do |username|
+Given /^I register as "([^\"]*)" "([^\"]*)"$/ do |first_name, last_name|
   find(:css, "a.register-link").click
   within("form.register") do
-    fill_in 'user_login',    :with => username
-    fill_in 'user_email',    :with => "#{username}@foo.com"
+    fill_in 'user_first_name',    :with => first_name
+    fill_in 'user_last_name',    :with => last_name
+    fill_in 'user_email',    :with => "#{first_name}.#{last_name}@foo.com"
     fill_in 'user_password', :with => '123456'
     fill_in 'user_password_confirmation', :with => '123456'
     click_button('register')
   end
   within('#my-widget') do
-    page.has_content?(username).should == true
+    page.has_content?("#{first_name}.#{last_name}").should == true
   end
 end
 
@@ -365,19 +366,27 @@ Then /^I should see the invitation page$/ do
   find(:css, "h2", :text => "Invite people")
 end
 
-Then /^I invite "([^\"]*)" to channel "([^\"]*)" with token "([^\"]*)" as "([^\"]*)"/ do |email, channel_name, token, user_name|
+Then /^I invite "([^\"]*)" to channel "([^\"]*)" with token "([^\"]*)" as "([^\"]*)"/ do |name, channel_name, token, user_name|
+  first_name = name.split(" ").first
+  last_name = name.split(" ").last
   Invitation.create(
     :token => token,
-    :email => email,
+    :first_name => first_name,
+    :last_name => last_name,
+    :email => "#{first_name}@#{last_name}.com",
     :channel_ids => Channel.find_by_name(channel_name).id,
     :user => User.find_by_login(user_name)
   )
 end
 
-Then /^I invite "([^\"]*)" to channel "([^\"]*)" with constrained rights and token "([^\"]*)" as "([^\"]*)"/ do |email, channel_name, token, user_name|
-  Invitation.create(
+Then /^I invite "([^\"]*)" to channel "([^\"]*)" with constrained rights and token "([^\"]*)" as "([^\"]*)"/ do |name, channel_name, token, user_name|
+  first_name = name.split(" ").first
+  last_name = name.split(" ").last
+  invitation = Invitation.create(
     :token => token,
-    :email => email,
+    :first_name => first_name,
+    :last_name => last_name,
+    :email => "#{first_name}@#{last_name}.com",
     :invitee_role => 1,
     :channel_ids => Channel.find_by_name(channel_name).id,
     :user => User.find_by_login(user_name)

@@ -3,12 +3,13 @@ class RegistrationsController < Devise::RegistrationsController
 
   # GET /resource/sign_up
   def new
-    build_resource({})
     @invitation = Invitation.find_by_token(params[:invitation_token])
-    if @invitation
-      resource.login = User.generate_login_from_name(@invitation.name)
-      resource.email = @invitation.email
+    attributes = if @invitation
+      @invitation.attributes
+    else
+      {}
     end
+    build_resource(attributes)
     render 'devise/registrations/new'
   end
   

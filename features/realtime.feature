@@ -30,11 +30,11 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
       And I am logged in as "dudemeister"
     Given I am using the second browser
       And go unauthenticated to the start page
-      And I register as "justadded"
+      And I register as "just" "added"
     Given I am using the first browser
-      Then I should see /justadded/ within "#user-widget ul"
+      Then I should see /just.added/ within "#user-widget ul"
       And I fill in "message" with "Hallo @just"
-      Then the message field should contain "Hallo @justadded"
+      Then the message field should contain "Hallo @just.added"
   
   @javascript
   Scenario: Keeping the user list updated

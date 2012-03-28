@@ -22,6 +22,10 @@ class Invitation < ActiveRecord::Base
     Mailer.invitation(self).deliver
   end
   
+  def name
+    "#{first_name} #{last_name}"
+  end
+  
   def status
     return :success if invitee
     return :sent if sent_at
