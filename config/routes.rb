@@ -4,6 +4,8 @@ Dashboard::Application.routes.draw do
   match 'captive' => 'system/captive#index'
   match 'captive/login' => 'system/captive#login'
   match 'captive/browser_check' => 'system/captive#browser_check'
+  match 'captive/grant' => 'system/captive#grant'
+  match 'captive/revoke' => 'system/captive#revoke'
   match 'captive/whitelist_clients' => 'system/captive#whitelist_clients'
   match 'captive/whitelist_sites' => 'system/captive#whitelist_sites'
 

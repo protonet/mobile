@@ -11,6 +11,40 @@ module System
       render :layout => false, :status => 503
     end
     
+    def grant
+      mac = SystemBackend.get_mac_for_ip(params[:ip_address])
+      if mac
+        response_code = if SystemBackend.grant_internet_access(mac, "granted")
+          flash[:notice] = "You've granted internet access to \"#{params[:ip_address]}\"."
+          204
+        else
+          flash[:error] = "Could not grant internet access to \"#{params[:ip_address]}\"."
+          400
+        end
+      else
+        flash[:error] = "Could not find mac address for \"#{params[:ip_address]}\"."
+        404
+      end 
+      respond_to_preference_update
+    end
+    
+    def revoke
+      mac = SystemBackend.get_mac_for_ip(params[:ip_address])
+      if mac
+        response_code = if SystemBackend.revoke_internet_access(mac)
+          flash[:notice] = "You've revoked internet access from \"#{params[:ip_address]}\"."
+          204
+        else
+          flash[:error] = "Could not revoke internet access from \"#{params[:ip_address]}\"."
+          400
+        end
+      else
+        flash[:error] = "Could not find mac address for \"#{params[:ip_address]}\"."
+        404
+      end
+      respond_to_preference_update
+    end
+    
     def whitelist_clients
       new_whitelist = params[:whitelist].scan(/(..:..:..:..:..:..)/).flatten
       old_whitelist = SystemPreferences.captive_whitelist_clients
