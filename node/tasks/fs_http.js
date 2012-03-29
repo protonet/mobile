@@ -67,7 +67,7 @@ function setAccessControlHeaders(response, request) {
   response.setHeader('Access-Control-Allow-Methods', '*');
   response.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-CSRF-Token');
   response.setHeader('Access-Control-Allow-Credentials', 'true');
-  response.setHeader('Access-Control-Expose-Headers', 'Content-Type');
+  response.setHeader('Access-Control-Expose-Headers', '*');
 }
 
 exports.bind = function(amqpConnection) {
@@ -296,8 +296,7 @@ exports.scan = function(request, response) {
   setAccessControlHeaders(response, request);
   
   function respond(isMalicious) {
-    response.writeHead(200);
-    response.setHeader("Content-Type", "application/json");
+    response.writeHead(200, { "Content-Type": "application/json" });
     response.end(JSON.stringify({ malicious: isMalicious }));
   }
   
