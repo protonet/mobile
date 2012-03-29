@@ -6,17 +6,18 @@
   float: right;
 }
 
+.invitations-page h3.belongs-to-list{
+  margin: 0 0 0 180px;
+  width:288px;
+}
 
 .invitations-page .channels ul{
   padding:0;
-  margin-bottom: 4px;
+  margin: 0 0 4px 180px;
+  overflow-y:auto;
+  max-height:150px;
   width:300px;
-  overflow:hidden;
-}
-
-.invitations-page .channels li{
-  float:left;
-  margin: 0 3px 3px 0;
+  border: 1px #6D95FF solid;
 }
 
 .invitations-page #invitation_message{
