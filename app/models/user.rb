@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
   
   scope :registered, :conditions => "temporary_identifier IS NULL AND users.id != -1 AND users.node_id = 1"
   scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"
+  scope :order_by_login, :order => "login ASC"
   
   before_validation :download_remote_avatar, :if => :avatar_url_provided?
   before_validation :generate_login_from_name

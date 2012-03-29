@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   after_filter  :publish_admin_users,     :only => :update_user_admin_flag
   
   def index
-    @users = User.registered.paginate(:page => params[:page], :per_page => 50)
+    @users = User.registered.order_by_login.paginate(:page => params[:page], :per_page => 50)
     @nav = "users"
   end
   
@@ -154,7 +154,7 @@ class UsersController < ApplicationController
   
   def search
     @nav = "users"
-    @users = User.registered.where("login like '#{params[:search_term]}%'").paginate(:page => params[:page], :per_page => 50)
+    @users = User.registered.order_by_login.where("login like '#{params[:search_term]}%'").paginate(:page => params[:page], :per_page => 50)
     render :action => "index"
   end
   

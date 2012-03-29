@@ -94,9 +94,9 @@ class ChannelsController < ApplicationController
     
     def available_channels
       @channels = if current_user.invitee?
-        current_user.channels.real
+        current_user.channels.real.order_by_name
       else
-        Channel.real.local
+        Channel.real.local.order_by_name
       end
     end
 end
