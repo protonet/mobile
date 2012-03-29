@@ -55,7 +55,7 @@ class InvitationsController < ApplicationController
   def destroy
     @invitation = Invitation.find(params[:id])
     @invitation.destroy
-    redirect_to invitations_path
+    redirect_to :action => :index
   end
   
 end
