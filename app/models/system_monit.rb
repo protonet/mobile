@@ -14,6 +14,13 @@ class SystemMonit
       reload!
       monit_command("monitor #{service}")
     end
+
+    def add_custom(service, config)
+      raise AlreadyAddedError if exists?(service)
+      File.open(service_config_path(service), 'w') {|f| f.write(config) }
+      reload!
+      monit_command("monitor #{service}")
+    end
     
     def remove(service, do_reload = true)
       raise NoSuchServiceError unless exists?(service)
