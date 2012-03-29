@@ -628,7 +628,8 @@ protonet.p("files", function($page, $window, $document) {
   var uploader = {
     initialize: function() {
       this.uploader = new protonet.media.Uploader({
-        drop_element: $content[0]
+        drop_element:   "plupload-drop-element",
+        browse_button:  "plupload-browse-button"
       });
       
       this._observe();

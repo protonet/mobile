@@ -260,3 +260,48 @@
   right: 10px;
   bottom: 15px;
 }
+
+/* ------------------------------------------------ FILE ACTIONS ------------------------------------------------ */
+.file-actions {
+  float: right;
+  margin-top: -5px;
+}
+
+.file-actions li {
+  float: left;
+  margin-left: 6px;
+  background: #eee;
+}
+
+.file-actions a {
+  border: 1px solid #aaa;
+  width: 32px;
+  cursor: not-allowed;
+  height: 32px;
+  display: block;
+  background: url(/img/spr_file_actions_r1.png) no-repeat;
+  text-indent: -9999px;
+  opacity: 0.3;
+  overflow: hidden;
+}
+
+.file-actions .upload {
+  background-position: 7px center;
+}
+
+.file-actions .new-protodoc {
+  background-position: -31px center;
+}
+
+.file-actions .new-folder {
+  width: 40px;
+  background-position: -77px center;
+}
+
+.file-actions .share {
+  background-position: -129px center;
+}
+
+.file-actions .delete {
+  background-position: -175px center;
+}
