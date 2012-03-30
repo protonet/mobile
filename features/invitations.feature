@@ -14,7 +14,8 @@ Feature: Invitations
     And I am logged in as "dudemeister"
     And I go to the new invitation page
     Then I should see "Invite people to your protonet"
-    When I fill in "invitation_name" with "friend"
+    When I fill in "invitation_first_name" with "my"
+    When I fill in "invitation_last_name" with "friend"
     When I fill in "invitation_email" with "friend-3@protonet.com"
     And I check "home"
     And I check "public"
@@ -31,16 +32,14 @@ Feature: Invitations
 
   @javascript
   Scenario: User accepts invitation
-    Given I invite "friend@protonet.com" to channel "Public" with token "1234567890" as "dudemeister"
+    Given I invite "peter pan" to channel "Public" with token "1234567890" as "dudemeister"
     And I go unauthenticated to the start page
     When I accept the invitation with the token "1234567890"
     Then I should see "You have been invited by dudemeister. Just create an account. It's free"
-    When I fill in "user_login" with "friend"
-    When I fill in "user_email" with "friend@protonet.com"
     And I fill in "user_password" with "friendly"
     And I fill in "user_password_confirmation" with "friendly"
     And I press "Sign up"
-    Then I should see "friend" within "#my-widget"
+    Then I should see "peter.pan" within "#my-widget"
     And I should see "You have signed up successfully"
     And I should see "Public" within "#channels"
     And I should not see "Notpublic" within "#channels"
@@ -49,16 +48,14 @@ Feature: Invitations
     
   @javascript
   Scenario: Invitee accepts invitation
-    Given I invite "friend2@protonet.com" to channel "Public" with constrained rights and token "1a234567" as "dudemeister"
+    Given I invite "peter panius" to channel "Public" with constrained rights and token "1a234567" as "dudemeister"
     And I go unauthenticated to the start page
     When I accept the invitation with the token "1a234567"
     Then I should see "You have been invited by dudemeister. Just create an account. It's free"
-    When I fill in "user_login" with "friend2"
-    When I fill in "user_email" with "friend2@protonet.com"
     And I fill in "user_password" with "friendly"
     And I fill in "user_password_confirmation" with "friendly"
     And I press "Sign up"
-    Then I should see "friend" within "#my-widget"
+    Then I should see "peter.panius" within "#my-widget"
     And I should see "You have signed up successfully"
     And I should see "Public" within "#channels"
     And I should not see "Notpublic" within "#channels"
@@ -69,7 +66,7 @@ Feature: Invitations
     
   @javascript
   Scenario: Invitee tries to accept an invitation that has already been accepted
-    Given I invite "friend@protonet.com" to channel "Home" with token "1122334455" as "dudemeister"
+    Given I invite "john pan" to channel "Home" with token "1122334455" as "dudemeister"
     And somebody accepts the invitation with token "1122334455"
     And I go unauthenticated to the start page
     And I accept the invitation with the token "1122334455"

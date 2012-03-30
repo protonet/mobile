@@ -39,7 +39,7 @@ protonet.dispatcher = {
       delete this.provider.FlashSocket;
     }
     
-    if (queryParams.indexOf("forcexhr=1") !== -1) {
+    if (protonet.config.force_xhr_streaming || queryParams.indexOf("forcexhr=1") !== -1) {
       this.provider = [this.provider.HttpStreaming];
     }
     

@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   
   devise :database_authenticatable, :registerable, :encryptable, :rememberable, :token_authenticatable, :encryptor => :restful_authentication_sha1
 
-  attr_accessible :login, :email, :name, :password, :password_confirmation, :avatar_url,
+  attr_accessible :login, :email, :first_name, :last_name, :password, :password_confirmation, :avatar_url,
     :channels_to_subscribe, :external_profile_url, :node, :node_id
 
   attr_accessor :channels_to_subscribe, :invitation_token, :avatar_url
@@ -21,8 +21,10 @@ class User < ActiveRecord::Base
   
   scope :registered, :conditions => "temporary_identifier IS NULL AND users.id != -1 AND users.node_id = 1"
   scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"
+  scope :order_by_login, :order => "login ASC"
   
   before_validation :download_remote_avatar, :if => :avatar_url_provided?
+  before_validation :generate_login_from_name
   after_validation :assign_roles_and_channels, :on => :create
   
   after_create :send_create_notification, :unless => :anonymous?
@@ -83,17 +85,6 @@ class User < ActiveRecord::Base
       :avatar         => user.avatar.url,
       :subscriptions  => user.channels.map(&:id)
     }
-  end
-  
-  def self.generate_login_from_name(value, step = 1)
-    return unless value
-    value = value.parameterize
-    conflict = User.find_by_login(value)
-    if conflict 
-      generate_login_from_name("#{value}-#{step+1}")
-    else
-      value
-    end
   end
   
   # devise 1.2.1 calls this
@@ -170,7 +161,8 @@ class User < ActiveRecord::Base
   end
 
   def display_name
-    name.blank? ? login : name
+    login
+    #name.blank? ? login : name
   end
 
   def skip_password_validation?
@@ -286,13 +278,25 @@ class User < ActiveRecord::Base
     name.gsub(/[^0-9A-Za-z]/, '.')
   end
   
+  def generate_login_from_name(step = 1)
+    return if login
+    value = "#{first_name} #{last_name}".parameterize(".")
+    value << "#{step}" if step > 1
+    conflict = User.find_by_login(value)
+    self.login = if conflict 
+      generate_login_from_name(step+1)
+    else
+      value
+    end
+  end
+  
   # create a user with a session id
   def self.stranger(identifier)
-    u = find_or_create_by_temporary_identifier(identifier) do |u|
-      u.name = "guest_#{identifier.downcase.gsub(/[^\w]/, "")[0, 5]}"
-      u.email = "#{u.name}@local.guest"
+    find_or_create_by_temporary_identifier(identifier) do |u|
+      u.first_name = "guest"
+      u.last_name = identifier.downcase.gsub(/[^\w]/, '')[0, 5]
+      u.email = "#{u.first_name}.#{u.last_name}@local.guest"
     end
-    u
   end
   
   def self.all_strangers

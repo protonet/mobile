@@ -38,7 +38,8 @@
   <%- end %>
   
   <h3>Delete invitation</h3>
-  <%= form_tag({ :action => 'delete' }, { :remote => true, :class => 'single-button-form', 'data-type' => 'html' }) do %>
+  <%= form_tag(invitation_path(@invitation), {  :remote => true, :class => 'single-button-form', 'data-type' => 'html', :method => :post }) do %>
+    <%= hidden_field_tag :_method, "delete" %>
     <%= hidden_field_tag :id, @invitation.id %>
     <%= button "Delete", 'data-confirm' => 'Do you really want to delete this invitation?' %>
   <% end %>

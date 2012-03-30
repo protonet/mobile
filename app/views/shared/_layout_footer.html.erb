@@ -61,6 +61,7 @@
     node_base_url:                    "<%= node_base_url %>",
     node_uuid:                        "<%= Node.local.uuid %>",
     xhr_streaming_url:                "<%= xhr_streaming_url %>",
+    force_xhr_streaming:              <%= incoming_interface == "published_to_web" ? "true" : "false" %>,
     dispatching_server:               "<%= server_name %>",
     dispatching_server_port:          "<%= configatron.socket.port %>",
     dispatching_websocket_url:        "ws://<%= server_name %><%= is_apache? ? "/websocket" : ":#{configatron.websocket.port}" %>",

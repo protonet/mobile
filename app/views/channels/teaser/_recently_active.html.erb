@@ -1,5 +1,5 @@
 <ul class="channel-teaser">
-  <%- Channel.recent_active.each do |channel| %>
+  <%- Channel.order_by_name.recent_active.each do |channel| %>
     <li>
       <%= link_to channel do %>
       <span class="fix-firefox3">

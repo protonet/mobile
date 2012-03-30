@@ -14,8 +14,8 @@ class LocalUser < User
     v.validates_length_of         :login,    :within => 3..40
     v.validates_format_of         :login,    :with => NAME_REGEX, :message => BAD_NAME_MSG
     v.validates_format_of         :email,    :with => EMAIL_REGEX, :message => BAD_NAME_MSG, :allow_nil => false
-    v.validates_format_of         :name,     :with => NAME_REGEX,  :message => BAD_NAME_MSG, :allow_nil => true
-    v.validates_length_of         :name,     :maximum => 100
+    v.validates_length_of         :first_name, :within => 1..60
+    v.validates_length_of         :last_name,  :within => 1..60
   end
   
   with_options :unless => :skip_password_validation? do |v|

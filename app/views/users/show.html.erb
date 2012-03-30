@@ -27,7 +27,7 @@
       <%- if @user.channels.real.verified.empty? %>
         <span class="hint">No channels subscribed.</span>
       <%- else %>
-        <%- @user.channels.real.verified.each do |channel| %>
+        <%- @user.channels.real.verified.order_by_name.each do |channel| %>
           @<a href="/channels/<%= channel.id %>" class="reply channel"><%= channel.display_name %></a>
         <%- end %>
       <%- end %>

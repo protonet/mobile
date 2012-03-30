@@ -291,5 +291,16 @@ HowTo mount local code to a protonet-node using nfs (Lion)
 6. To unmount the Code
 
         sudo umount /home/protonet/dashboard/current/app/
-      
+        
+HowTo log in via curl to be able to do stuff authenticated
+================================================
+
+1. Send the login request 
+
+                  curl -c cookies.txt -d "user[login]=USER&user[password]=PASSWORD" http://HOSTNAME:PORT/users/sign_in
+
+2. Now you are able to do your stuff with curl using the cookie you just got:
+
+                  curl -b cookies.txt http://HOSTNAME:PORT/some/action
+
     

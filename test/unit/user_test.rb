@@ -25,7 +25,7 @@ class UserTest < Test::Unit::TestCase
     it "should remove all strangers created prior to 2 days ago" do
       User.destroy_all
       (2..4).each do |i|
-        user = User.stranger("session_id_#{i}")
+        user = User.stranger("#{i}_session_id")
         User.update_all("updated_at = '#{(Time.now - i.days).to_s(:db)}'", "id = #{user.id}")
       end
       assert_equal 3, User.all_strangers.size
@@ -48,7 +48,7 @@ class UserTest < Test::Unit::TestCase
     
     it "should set a name based on the given session id" do
       user = User.stranger('1234567890123')
-      assert_equal 'guest_12345', user.name
+      assert_equal 'guest.12345', user.login
     end
     
     it "should be recognizable as one" do
@@ -123,10 +123,11 @@ class UserTest < Test::Unit::TestCase
   
   context "generate_login_from_name" do
     before do
-      Factory.create(:user, {:login => "test-user"})
+      Factory.create(:user, {:login => "test.user"})
+      Factory.create(:user, {:login => "test.user2"})
     end 
     it "should generate next available login" do
-      assert_equal "test-user-2", User.generate_login_from_name("Test User")
+      assert_equal "test.user3", User.new(:first_name => "Test", :last_name => "User").generate_login_from_name
     end
   end
   
