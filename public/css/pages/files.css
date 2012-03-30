@@ -10,7 +10,7 @@
 }
 
 .dragenter .files-page .table-wrapper {
-  margin: -1px -1px 0 -1px;
+  margin: -1px -1px -1px -1px;
   border: 2px dashed #00cc00;
   outline: 5px solid #eee;
 }
@@ -68,7 +68,7 @@
 }
 
 .files-page tr.focus.loading {
-  background: rgba(72, 123, 255, 0.15);
+  background: rgba(72, 123, 255, 0.1);
 }
 
 .files-page tr.focus.loading .file-name a {
@@ -281,12 +281,12 @@
   display: block;
   background: url(/img/spr_file_actions_r1.png) no-repeat;
   text-indent: -9999px;
-  opacity: 0.3;
+  opacity: 0.25;
   overflow: hidden;
 }
 
 .file-actions a.enabled {
-  opacity: 0.8;
+  opacity: 0.75;
   cursor: pointer;
 }
 

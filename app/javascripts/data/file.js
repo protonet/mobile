@@ -46,6 +46,10 @@ protonet.data.File = (function() {
     }, TIMEOUT);
     
     protonet.trigger("socket.send", data);
+    
+    return {
+      abort: function() { delete responders[data.client_seq]; }
+    };
   }
   
   return {
@@ -54,7 +58,7 @@ protonet.data.File = (function() {
         path += "/";
       }
       options = prepareParameters(options);
-      socketRequest("fs.list", { parent: path }, options);
+      return socketRequest("fs.list", { parent: path }, options);
     },
     
     get: function(path, options) {
@@ -64,12 +68,12 @@ protonet.data.File = (function() {
         data = data[0];
         originalSuccess(data);
       };
-      this.getAll([path], options);
+      return this.getAll([path], options);
     },
     
     getAll: function(paths, options) {
       options = prepareParameters(options);
-      socketRequest("fs.info", { paths: paths }, options);
+      return socketRequest("fs.info", { paths: paths }, options);
     },
     
     getUrl: function(path) {

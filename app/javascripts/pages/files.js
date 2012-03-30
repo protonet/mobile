@@ -6,29 +6,36 @@
 //= require "../effects/blink.js"
 
 protonet.p("files", function($page, $window, $document) {
-  var $body             = $("body"),
-      $addressBar       = $page.find(".address-bar"),
-      $content          = $page.find(".content"),
-      $fileDetails      = $page.find(".file-details"),
-      $fileList         = $page.find(".file-list"),
-      $tableWrapper     = $page.find(".table-wrapper"),
-      $tbody            = $page.find("tbody"),
-      $fileActions      = $content.find(".file-actions"),
-      viewer            = protonet.config.user_id,
-      viewerPath        = "/users/" + protonet.config.user_id + "/",
-      currentPath       = $.trim($addressBar.text()) || "/",
-      isModalWindow     = $(".modal-window").length > 0,
-      $scrollContainer  = isModalWindow ? $(".modal-window > output") : $("body, html"),
-      REG_EXP_CHANNELS  = /\/channels\/(\d+)\/$/,
-      REG_EXP_USERS     = /\/users\/(\d+)\/$/,
+  var $body               = $("body"),
+      $addressBar         = $page.find(".address-bar"),
+      $content            = $page.find(".content"),
+      $fileDetails        = $page.find(".file-details"),
+      $fileList           = $page.find(".file-list"),
+      $tableWrapper       = $page.find(".table-wrapper"),
+      $tbody              = $page.find("tbody"),
+      $fileActions        = $content.find(".file-actions"),
+      viewer              = protonet.config.user_id,
+      viewerPath          = "/users/" + protonet.config.user_id + "/",
+      currentPath         = $.trim($addressBar.text()) || "/",
+      isModalWindow       = $(".modal-window").length > 0,
+      $scrollContainer    = isModalWindow ? $(".modal-window > output") : $("body, html"),
+      REG_EXP_CHANNELS    = /^\/channels\/(\d+)\/$/,
+      REG_EXP_USERS       = /^\/users\/(\d+)\/$/,
+      REG_EXP_SUB_FOLDER  = /^\/(channels|users)\/.+?\/.*$/,
       // Chrome doesn't support any custom mime types (eg. application/x-protonet-files)
       // see http://code.google.com/p/chromium/issues/detail?id=31037
-      FILES_MIME_TYPE   = "text/uri-list",
-      KEY_UP            = 38,
-      KEY_TAB           = 9,
-      KEY_DOWN          = 40,
-      KEY_ENTER         = 13,
+      FILES_MIME_TYPE     = "text/uri-list",
+      KEY_UP              = 38,
+      KEY_TAB             = 9,
+      KEY_DOWN            = 40,
+      KEY_ENTER           = 13,
       undef;
+  
+  function hasWriteAccessTo(path) {
+    var isAdmin     = protonet.data.User.isAdmin(viewer),
+        isSubFolder = path.match(REG_EXP_SUB_FOLDER);
+    return isAdmin || isSubFolder;
+  }
   
   // --------------------------------- MARKER --------------------------------- \\
   var marker = {
@@ -210,6 +217,7 @@ protonet.p("files", function($page, $window, $document) {
   };
   
   
+  // --------------------------------- NAVI --------------------------------- \\
   var navi = {
     initialize: function() {
       this.$actions = $fileActions.find("a");
@@ -218,15 +226,13 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     update: function() {
-      var isAdmin         = protonet.data.User.isAdmin(viewer),
-          isChannelFolder = currentPath.match(/\/(channels)\/.+?\/.*/),
-          isViewerFolder  = currentPath.startsWith(viewerPath);
+      var hasWriteAccess = hasWriteAccessTo(currentPath);
       
       uploader.disable();
       this.$actions.removeClass("enabled");
       
       if ($fileList.is(":visible")) {
-        if (isAdmin || isChannelFolder || isViewerFolder) {
+        if (hasWriteAccess) {
           uploader.enable();
           this.$actions.filter(".new-document, .new-folder, .upload").addClass("enabled");
         }
@@ -234,12 +240,13 @@ protonet.p("files", function($page, $window, $document) {
       
       if (marker.$items.length || $fileDetails.is(":visible")) {
         this.$actions.filter(".share").addClass("enabled");
-        if (isAdmin || isChannelFolder || isViewerFolder) {
+        if (hasWriteAccess) {
           this.$actions.filter(".delete").addClass("enabled");
         }
       }
     }
   };
+  
   
   // --------------------------------- UI --------------------------------- \\
   var ui = {
@@ -255,7 +262,7 @@ protonet.p("files", function($page, $window, $document) {
       
       $page.on("click", "a[data-folder-path]", function(event) {
         var path  = $(this).data("folder-path");
-        api.cd(path);
+        api.open(path);
         event.preventDefault();
       });
       
@@ -488,7 +495,7 @@ protonet.p("files", function($page, $window, $document) {
         if (model) {
           model.get(name, function(record) {
             var displayName;
-            if (record.rendezvousPartner) {
+            if (record && record.rendezvousPartner) {
               displayName = protonet.t("SHARED_BETWEEN_YOU_AND_USER", {
                 user_name: (protonet.data.User.getName(record.rendezvousPartner) || "user (# " + record.rendezvousPartner + ")")
               });
@@ -578,6 +585,7 @@ protonet.p("files", function($page, $window, $document) {
   // --------------------------------- API --------------------------------- \\
   var api = {
     initialize: function() {
+      this.current = {};
       if (protonet.dispatcher.connected) {
         this.open(currentPath);
       } else {
@@ -594,7 +602,7 @@ protonet.p("files", function($page, $window, $document) {
     
     cd: function(path) {
       currentPath = path;
-      protonet.data.File.list(path, {
+      return protonet.data.File.list(path, {
         success: ui.list.bind(ui),
         error:   ui.showError.bind(ui)
       });
@@ -603,17 +611,22 @@ protonet.p("files", function($page, $window, $document) {
     open: function(path) {
       path = path || "/";
       
+      this.currentRequest && this.currentRequest.abort();
+      
       var isFolder = path.endsWith("/");
       if (isFolder) {
-        api.cd(path);
-        return;
+        this.currentRequest = api.cd(path);
+      } else {
+        currentPath = path;
+        this.currentRequest = protonet.data.File.get(path, {
+          success: ui.info.bind(ui),
+          error:   ui.showError.bind(ui)
+        });
       }
+    },
+    
+    rm: function(path) {
       
-      currentPath = path;
-      protonet.data.File.get(path, {
-        success: ui.info.bind(ui),
-        error:   ui.showError.bind(ui)
-      });
     }
   };
   
@@ -686,7 +699,7 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     _observe: function() {
-      var timeout, blinker, $currentFolder, fromPath, toPath, dragItems = [], dragPaths = [];
+      var timeout, blinker, $currentFolder = $(), fromPath, toPath, dragItems = [], dragPaths = [];
       
       if (!this.uploader.features.dragdrop) { return; }
       
@@ -726,7 +739,7 @@ protonet.p("files", function($page, $window, $document) {
         
         fromPath = currentPath;
         
-        dataTransfer.dropEffect = "move";
+        dataTransfer.effectAllowed = "copy";
         dataTransfer.setData(FILES_MIME_TYPE, stringifyDataTransfer(dragItems));
         dataTransfer.setDragImage($dragImage[0], 10, 10);
         
@@ -749,13 +762,15 @@ protonet.p("files", function($page, $window, $document) {
         var dataTransferTypes         = $.makeArray(dataTransfer.types),
             containsFilesFromDesktop  = dataTransfer.containsFiles(),
             containsFilesFromProtonet = dataTransferTypes.indexOf(FILES_MIME_TYPE) !== -1,
-            isOverFileArea            = $.contains($content[0], event.target),
-            isDroppable               = isOverFileArea && (containsFilesFromDesktop || (containsFilesFromProtonet && (fromPath !== currentPath || $currentFolder.length)));
+            isOverFileArea            = $.contains($tableWrapper[0], event.target) || $tableWrapper[0] === event.target || $.contains($addressBar[0], event.target),
+            isDroppable               = isOverFileArea
+              && hasWriteAccessTo(currentPath)
+              && (containsFilesFromDesktop || (containsFilesFromProtonet && (fromPath !== currentPath || $currentFolder.length)));
         
         if (isDroppable) {
-          dataTransfer.effectAllowed = dataTransfer.dropEffect = 'all';
+          dataTransfer.dropEffect = 'copyMove';
         } else {
-          dataTransfer.effectAllowed = dataTransfer.dropEffect = 'none';
+          dataTransfer.dropEffect = 'none';
         }
         
         if (containsFilesFromDesktop) {
@@ -800,7 +815,7 @@ protonet.p("files", function($page, $window, $document) {
       function dragleave() {
         blinker         && blinker.stop();
         $currentFolder  && $currentFolder.removeClass("dragover");
-        $currentFolder = undef;
+        $currentFolder = $();
       }
       
       $content.bind({
