@@ -13,6 +13,8 @@ protonet.p("files", function($page, $window, $document) {
       $fileList         = $page.find(".file-list"),
       $tableWrapper     = $page.find(".table-wrapper"),
       $tbody            = $page.find("tbody"),
+      $fileActions      = $content.find(".file-actions"),
+      viewer            = protonet.config.user_id,
       viewerPath        = "/users/" + protonet.config.user_id + "/",
       currentPath       = $.trim($addressBar.text()) || "/",
       isModalWindow     = $(".modal-window").length > 0,
@@ -53,14 +55,14 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     clear: function() {
-      this.$items.removeClass("focus");
-      this.$items = $();
+      this.set($());
     },
     
     set: function($newItems) {
       this.$items.removeClass("focus");
       this.$items = $newItems;
       this.$items.addClass("focus");
+      navi.update();
     },
     
     _keydown: function(event) {
@@ -208,6 +210,35 @@ protonet.p("files", function($page, $window, $document) {
   };
   
   
+  var navi = {
+    initialize: function() {
+      this.$actions = $fileActions.find("a");
+      
+      // this._observe();
+    },
+    
+    update: function() {
+      var isAdmin         = protonet.data.User.isAdmin(viewer),
+          isChannelFolder = currentPath.match(/\/(channels)\/.+?\/.*/),
+          isViewerFolder  = currentPath.startsWith(viewerPath);
+      
+      this.$actions.removeClass("enabled");
+      
+      if ($fileList.is(":visible")) {
+        if (isAdmin || isChannelFolder || isViewerFolder) {
+          this.$actions.filter(".new-document, .new-folder, .upload").addClass("enabled");
+        }
+      }
+      
+      if (marker.$items.length || $fileDetails.is(":visible")) {
+        this.$actions.filter(".share").addClass("enabled");
+        if (isAdmin || isChannelFolder || isViewerFolder) {
+          this.$actions.filter(".delete").addClass("enabled");
+        }
+      }
+    }
+  };
+  
   // --------------------------------- UI --------------------------------- \\
   var ui = {
     initialize: function() {
@@ -244,13 +275,12 @@ protonet.p("files", function($page, $window, $document) {
     list: function(files) {
       var that = this;
       
-      marker.clear();
-      uploader.enableDragAndDrop();
-      
       $fileList.show();
       $fileDetails.html("").hide();
       $tbody.empty();
       
+      marker.clear();
+      uploader.enableDragAndDrop();
       addressBar.update();
       this.removeHint();
       
@@ -779,6 +809,7 @@ protonet.p("files", function($page, $window, $document) {
    * Initialize
    */
   ui.initialize();
+  navi.initialize();
   uploader.initialize();
   history.initialize();
   marker.initialize();

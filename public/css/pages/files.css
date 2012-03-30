@@ -285,11 +285,20 @@
   overflow: hidden;
 }
 
+.file-actions a.enabled {
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.file-actions a.enabled:hover {
+  opacity: 1;
+}
+
 .file-actions .upload {
   background-position: 7px center;
 }
 
-.file-actions .new-protodoc {
+.file-actions .new-document {
   background-position: -31px center;
 }
 

@@ -12,7 +12,6 @@
 //= require "extensions.js"
 //= require "protonet.js"
 //= require "browser.js"
-//= require "events/emitter.js"
 //= require "storage/storage.js"
 //= require "data/user.js"
 //= require "data/channel.js"

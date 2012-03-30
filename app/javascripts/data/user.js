@@ -277,6 +277,10 @@
       return user ? user.isOnline : false;
     },
     
+    isAdmin: function(id) {
+      return adminIds.indexOf(id) !== -1;
+    },
+    
     getPreference: function(key) {
       var value       = protonet.storage.get(key),
           preference  = preferencesConfig[key];

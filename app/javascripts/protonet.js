@@ -13,3 +13,6 @@ protonet.text_extensions  = protonet.text_extensions  || { utils: {} };
 protonet.timeline         = protonet.timeline         || {};
 protonet.i18n             = protonet.i18n             || {};
 protonet.ui               = protonet.ui               || {};
+
+//= require "events/emitter.js"
+$.extend(protonet, new protonet.events.Emitter());
