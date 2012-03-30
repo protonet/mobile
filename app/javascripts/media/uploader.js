@@ -31,7 +31,9 @@ protonet.media.Uploader = (function() {
   return function(config) {
     config = $.extend({}, defaultConfig, config);
     
-    var uploader  = new plupload.Uploader(config);
+    var uploader = new plupload.Uploader(config),
+        $flashContainer,
+        $fileInput;
     
     uploader.bind("QueueChanged", function(uploader) {
       uploader.start();
@@ -52,7 +54,20 @@ protonet.media.Uploader = (function() {
       originalBind.apply(uploader, $.makeArray(arguments));
     };
     
+    uploader.disable = function() {
+      $flashContainer.hide();
+      $fileInput.attr("disabled", "disabled");
+    };
+    
+    uploader.enable = function() {
+      $flashContainer.show();
+      $fileInput.removeAttr("disabled");
+    };
+    
     uploader.init();
+    
+    $flashContainer = $("#" + uploader.id + "_flash_container");
+    $fileInput      = $("#" + uploader.id + "_html5, form[target='" + uploader.id + "_iframe'] input[type=file]");
     
     return uploader;
   };

@@ -222,10 +222,12 @@ protonet.p("files", function($page, $window, $document) {
           isChannelFolder = currentPath.match(/\/(channels)\/.+?\/.*/),
           isViewerFolder  = currentPath.startsWith(viewerPath);
       
+      uploader.disable();
       this.$actions.removeClass("enabled");
       
       if ($fileList.is(":visible")) {
         if (isAdmin || isChannelFolder || isViewerFolder) {
+          uploader.enable();
           this.$actions.filter(".new-document, .new-folder, .upload").addClass("enabled");
         }
       }
@@ -280,7 +282,7 @@ protonet.p("files", function($page, $window, $document) {
       $tbody.empty();
       
       marker.clear();
-      uploader.enableDragAndDrop();
+      uploader.enableDrag();
       addressBar.update();
       this.removeHint();
       
@@ -331,7 +333,7 @@ protonet.p("files", function($page, $window, $document) {
       
       $scrollContainer.scrollTop(0);
       
-      uploader.disableDragAndDrop();
+      uploader.disableDrag();
       addressBar.update();
       
       if (file.type === "missing") {
@@ -658,21 +660,29 @@ protonet.p("files", function($page, $window, $document) {
   var uploader = {
     initialize: function() {
       this.uploader = new protonet.media.Uploader({
-        drop_element:   "plupload-drop-element",
-        browse_button:  "plupload-browse-button"
+        drop_element:  "plupload-drop-element",
+        browse_button: "plupload-browse-button"
       });
       
       this._observe();
     },
     
-    enableDragAndDrop: function() {
+    enableDrag: function() {
       if (this.uploader.features.dragdrop) {
         $tableWrapper.attr("draggable", "true");
       }
     },
     
-    disableDragAndDrop: function() {
+    disableDrag: function() {
       $tableWrapper.removeAttr("draggable");
+    },
+    
+    disable: function() {
+      this.uploader.disable();
+    },
+    
+    enable: function() {
+      this.uploader.enable();
     },
     
     _observe: function() {
@@ -799,9 +809,9 @@ protonet.p("files", function($page, $window, $document) {
         dragend:   dragend
       });
       
-      $body.bind("dragover", dragover);
+      $body.on("dragover", dragover);
       
-      protonet.bind("modal_window.unload", function() { $body.unbind("dragover", dragover); });
+      protonet.on("modal_window.unload", function() { $body.off("dragover", dragover); });
     }
   };
   
