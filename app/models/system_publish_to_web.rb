@@ -21,7 +21,7 @@ class SystemPublishToWeb
     
     def remote_status
       return false unless Rails.env == 'production'
-      open("https://directory.protonet.info", {"Host" => "#{SystemPreferences.publish_to_web_name}.protonet.info"}).status == ['200', 'OK']
+      open("http://directory.protonet.info", {"Host" => "#{SystemPreferences.publish_to_web_name}.protonet.info"}).status == ['200', 'OK']
     rescue
       false
     end
@@ -72,7 +72,7 @@ class SystemPublishToWeb
 check host publish_to_web with address directory.protonet.info
    if failed port 80 protocol http
    and request '/' with hostheader '#{SystemPreferences.publish_to_web_name}.protonet.info' 
-   for 2 cycles then restart
+   for 1 cycles then restart
    start program = "#{start_cmd}"
    stop program = "#{stop_cmd}"
 EOS

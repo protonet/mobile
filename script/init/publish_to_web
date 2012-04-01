@@ -29,16 +29,11 @@ case $1 in
      rm -rf $PIDFILE 
       ;;
     status)
-      if [ -f $PIDFILE ]; then
-        if ( kill -0 `cat $PIDFILE` 2> /dev/null ); then
-          echo "The proxying is running."
-          exit 0
-        else
-          echo "The proxying is not running."
-          exit 1
-        fi
+      if ( kill -0 `ps aux | grep -e "ssh localtunnel.*$PORT" | grep -v 'grep' | grep -v 'SCREEN' | awk '{ print $2 }'` 2> /dev/null ); then
+        echo "The proxying is running."
+        exit 0
       else
-        echo "No pidfile exist, service is probably not running."
+        echo "The proxying is not running."
         exit 1
       fi
       ;;
