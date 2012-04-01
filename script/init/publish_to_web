@@ -14,7 +14,7 @@ shift 1
 case $1 in
    start)
      if [ -f $PIDFILE ]; then
-       if ( kill -0 `cat $PIDFILE` 2> /dev/null ); then
+       if ( kill -0 `ps aux | grep -e "ssh localtunnel.*$PORT" | grep -v 'grep' | grep -v 'SCREEN' | awk '{ print $2 }'` 2> /dev/null ); then
          echo "The proxying is running."
          exit 0
        else
@@ -29,7 +29,7 @@ case $1 in
      rm -rf $PIDFILE 
       ;;
     status)
-      if ( kill -0 `ps aux | grep -e "ssh localtunnel.*$PORT" | grep -v 'grep' | grep -v 'SCREEN' | awk '{ print $2 }'` 2> /dev/null ); then
+      if ( kill -0 `ps aux | grep -e "ssh localtunnel.*" | grep -v 'grep' | grep -v 'SCREEN' | awk '{ print $2 }'` 2> /dev/null ); then
         echo "The proxying is running."
         exit 0
       else
