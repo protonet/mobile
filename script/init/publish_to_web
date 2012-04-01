@@ -25,7 +25,7 @@ case $1 in
      echo `ps aux | grep -e "ssh localtunnel.*$PORT" | grep -v 'grep' | grep -v 'SCREEN' | awk '{ print $2 }'` > $PIDFILE
       ;;  
     stop)  
-     kill `cat $PIDFILE`
+     kill -9 `ps aux | grep -e "ssh localtunnel.*$PORT" | grep -v 'grep' | grep -v 'SCREEN' | awk '{ print $2 }'`
      rm -rf $PIDFILE 
       ;;
     status)
