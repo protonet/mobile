@@ -21,7 +21,7 @@ class SystemPublishToWeb
     
     def remote_status
       return false unless Rails.env == 'production'
-      open("https://#{SystemPreferences.publish_to_web_name}.protonet.info").status == ['200', 'OK']
+      open("https://directory.protonet.info", {"Host" => "#{SystemPreferences.publish_to_web_name}.protonet.info"}).status == ['200', 'OK']
     rescue
       false
     end
