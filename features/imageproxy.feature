@@ -10,7 +10,7 @@ Feature: Using the protonet image proxy
     Then proxying "http://0.gravatar.com/avatar/8a1bd3731a98c23b515efa479143628a?s=70&d=http%3A%2F%2F0.gravatar.com%2Favatar%2Fad516503a11cd5ca435acc9bb6523536%3Fs%3D70&r=G" should work
     
   Scenario: Proxying a big image
-    Then proxying "http://www.swainplating.com/images/dsc_0083.jpg" should work
+    Then proxying "http://fc05.deviantart.net/fs36/f/2008/273/c/9/Matrix_blue_by_janosch500.png" should work
     
   Scenario: Proxying an animated gif
     Then proxying "http://media.ebaumsworld.com/picture/mzeBONE/BackToTheFutureII.gif" should work
