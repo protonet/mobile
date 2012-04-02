@@ -157,8 +157,14 @@
   color: #ff7f31;
 }
 
-#channels .system {
+#channels .system,
+#channels .private {
   padding-left: 23px;
+}
+#channels .private:before {
+  left: 4px;
+  background: url(/img/spr_channel_icons.png) no-repeat;
+  background-position: 0 -26px;
 }
 
 #channels .system:before {
@@ -177,6 +183,7 @@
 
 #channels .global:before,
 #channels .rendezvous:before,
+#channels .private:before,
 #channels .system:before {
   content: "";
   position: absolute;
