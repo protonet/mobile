@@ -98,13 +98,6 @@ protonet.ui.FileQueue = (function() {
     },
     
     _observe: function() {
-      protonet.on("channel.change", function(channelId) {
-        this.uploader.settings.multipart_params = {
-          user_id:    protonet.config.user_id,
-          token:      protonet.config.token
-        };
-      }.bind(this));
-      
       this.uploader.bind("UploadProgress", function(uploader, file) {
         this.progress(file);
       }.bind(this));

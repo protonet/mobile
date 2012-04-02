@@ -191,6 +191,10 @@
       return subscriptions[id] || [];
     },
     
+    isSubscribedByUser: function(channelId, userId) {
+      return this.getSubscriptions(channelId).indexOf(userId) !== -1;
+    },
+    
     isGlobal: function(id) {
       var channel = dataCache[id];
       return channel ? channel.global : false;

@@ -36,6 +36,10 @@ protonet.media.Uploader = (function() {
         $fileInput;
     
     uploader.bind("QueueChanged", function(uploader) {
+      uploader.settings.multipart_params = {
+        user_id:  protonet.config.user_id,
+        token:    protonet.config.token
+      };
       uploader.start();
     });
     

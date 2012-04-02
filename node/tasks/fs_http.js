@@ -223,8 +223,6 @@ exports.upload = function(request, response) {
       next_seq += 1;
       responses[next_seq] = response;
       
-      fields.session_id = getSessionId(request);
-      
       exchange.publish("rpc.requests", {
         object: 'auth',
         method: 'check_session',
@@ -258,8 +256,6 @@ exports.snapshot = function(request, response) {
   request.on("end", function() {
     tmpFile.end();
     
-    params.session_id = getSessionId(request);
-    
     exchange.publish("rpc.requests", {
       object: 'auth',
       method: 'check_session',
@@ -280,7 +276,9 @@ exports.download = function(request, response) {
   responses[next_seq] = response;
   
   var params = url.parse(request.url, true).query;
-  params.session_id = getSessionId(request);
+  if (!params.token) {
+    params.session_id = getSessionId(request);
+  }
   
   exchange.publish("rpc.requests", {
     object: 'fs',

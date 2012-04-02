@@ -15,7 +15,7 @@ protonet.p("files", function($page, $window, $document) {
       $tbody              = $page.find("tbody"),
       $fileActions        = $content.find(".file-actions"),
       viewer              = protonet.config.user_id,
-      viewerPath          = "/users/" + protonet.config.user_id + "/",
+      viewerPath          = "/users/" + viewer + "/",
       currentPath         = $.trim($addressBar.text()) || "/",
       isModalWindow       = $(".modal-window").length > 0,
       $scrollContainer    = isModalWindow ? $(".modal-window > output") : $("body, html"),
@@ -35,6 +35,15 @@ protonet.p("files", function($page, $window, $document) {
     var isAdmin     = protonet.data.User.isAdmin(viewer),
         isSubFolder = path.match(REG_EXP_SUB_FOLDER);
     return isAdmin || isSubFolder;
+  }
+  
+  function hasReadAccessTo(path) {
+    return protonet.data.User.isAdmin(viewer) // admin has access to everything
+      || path === "/"                         // root directory can be read by anyone
+      || path === "/users/"                   // users directory can be read by anyone
+      || path === "/channels/"                // channels directory can be read by anyone
+      || path.startsWith(viewerPath)          // is viewer's file space
+      || protonet.data.Channel.isSubscribedByUser(+(path.match(REG_EXP_CHANNELS) || [, NaN])[1], viewer); // is subscribed by user;
   }
   
   // --------------------------------- MARKER --------------------------------- \\
@@ -459,6 +468,8 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     showError: function(error) {
+      $tableWrapper.find("tr.loading").removeClass("loading");
+      
       var errorMessage;
       switch (error) {
         case "Rpc::AccessDeniedError":

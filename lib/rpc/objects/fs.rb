@@ -79,8 +79,8 @@ class Rpc::Objects::Fs < Rpc::Base
     if !user
       if params.include?('session_id')
         # session_id given
-        verifier = ActiveSupport::MessageVerifier.new(SystemPreferences.session_secret, 'SHA1')
-        params['user_id'] = verifier.verify(params['session_id'])["warden.user.user.key"][1][0] rescue nil
+        session = Marshal.load(Base64.decode64(CGI.unescape(params['session_id']).split('--').first))
+        params['user_id'] = session["warden.user.user.key"][1][0] rescue nil
         return handler.call nil, false unless user = User.find_by_id(params['user_id'])
       else
         # Find the acclaimed user
