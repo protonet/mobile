@@ -80,7 +80,7 @@
       <%= f.check_box :public %>
       public (users can subscribe without verification)
     </label>
-    <%- if request.domain == "protonet.info" || Rails.env != "production" %>
+    <%- if request.host =~ /team.protonet.info/ || Rails.env != "production" %>
       <label class="checkbox-row" for="channel_global">
         <%= f.check_box :global %>
         global (channel is visible from external nodes and clients)
