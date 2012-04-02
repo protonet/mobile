@@ -36,8 +36,10 @@ Feature: Using the protonet channel management
         Then I should not see "Privatechannel" in the channel selector
     #dudemeister verifies batman
           And I am using the first browser
-          And I go to the channels page
-          And I follow "Browse channels"
+          And I visit "/"
+          And I switch to the channel "Privatechannel"
+          Then I should see "1 pending verification"
+          And I follow "1 pending verification"
             Then I verify the user "batman" for the channel "privatechannel"
     #batman goes start page checks channel appears
               And I am using the second browser

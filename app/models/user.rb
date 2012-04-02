@@ -296,6 +296,20 @@ class User < ActiveRecord::Base
     mapping
   end
   
+  def pending_channel_verifications
+    chann = if admin?
+      Channel.local.real
+    else
+      owned_channels
+    end
+    chann.includes(:listens).
+    where(:listens => {:verified => false}).
+    inject({}) { |hash, channel|
+      hash[channel.id] = channel.listens.where(:verified => false).count
+      hash
+    }
+  end
+  
   def assign_roles_and_channels
     if invitation_token
       if invitation = Invitation.unaccepted.find_by_token(invitation_token)

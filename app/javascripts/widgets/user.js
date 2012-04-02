@@ -7,7 +7,7 @@ protonet.widgets.User = Class.create({
     this.container = $("#user-widget");
     this.list = this.container.find("ul");
     this.resizer = this.container.find(".resize");
-
+    this.verifications = this.container.find(".verifications");
     this.onlineUsersCount = this.container.find("output.count");
     this.usersData = {};
     this.channelSubscriptions = {};
@@ -118,7 +118,20 @@ protonet.widgets.User = Class.create({
         protonet.trigger("users.update_status", { online_users: {} });
       }.bind(this))
       
-      .on("channel.change", this.filterChannelUsers.bind(this));
+      .on("channel.change", this.filterChannelUsers.bind(this))
+      
+      .on("channel.change", function(channel_id){
+        if (protonet.config.pending_verifications[channel_id]) {
+          var verificationCount = protonet.config.pending_verifications[channel_id];
+          this.verifications.empty().append($("<a>", {
+            "href": "/channels/" + channel_id,
+            "text": verificationCount + " pending verification" + (verificationCount > 1 ? "s" : "")
+          }));
+          this.verifications.show();
+        }else{
+          this.verifications.hide();
+        }
+      }.bind(this));
     
     /**
      * Show user image onmouseover
