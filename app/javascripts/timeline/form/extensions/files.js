@@ -43,7 +43,7 @@ protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
         formTimeout;
     
     $body.bind("dragover", function(event) {
-      if (!event.originalEvent.dataTransfer.containsFiles()) {
+      if (!event.dataTransfer.containsFiles()) {
         return;
       }
       
@@ -63,7 +63,7 @@ protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
     });
     
     $form.bind("dragover", function(event) {
-      if (!event.originalEvent.dataTransfer.containsFiles()) {
+      if (!event.dataTransfer.containsFiles()) {
         return;
       }
     

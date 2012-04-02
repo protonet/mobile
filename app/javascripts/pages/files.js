@@ -6,45 +6,31 @@
 //= require "../effects/blink.js"
 
 protonet.p("files", function($page, $window, $document) {
-  var $body               = $("body"),
-      $addressBar         = $page.find(".address-bar"),
-      $content            = $page.find(".content"),
-      $fileDetails        = $page.find(".file-details"),
-      $fileList           = $page.find(".file-list"),
-      $tableWrapper       = $page.find(".table-wrapper"),
-      $tbody              = $page.find("tbody"),
-      $fileActions        = $content.find(".file-actions"),
-      viewer              = protonet.config.user_id,
-      viewerPath          = "/users/" + viewer + "/",
-      currentPath         = $.trim($addressBar.text()) || "/",
-      isModalWindow       = $(".modal-window").length > 0,
-      $scrollContainer    = isModalWindow ? $(".modal-window > output") : $("body, html"),
-      REG_EXP_CHANNELS    = /^\/channels\/(\d+)\/$/,
-      REG_EXP_USERS       = /^\/users\/(\d+)\/$/,
-      REG_EXP_SUB_FOLDER  = /^\/(channels|users)\/.+?\/.*$/,
+  var $body                       = $("body"),
+      $addressBar                 = $page.find(".address-bar"),
+      $content                    = $page.find(".content"),
+      $fileDetails                = $page.find(".file-details"),
+      $fileList                   = $page.find(".file-list"),
+      $tableWrapper               = $page.find(".table-wrapper"),
+      $tbody                      = $page.find("tbody"),
+      $fileActions                = $content.find(".file-actions"),
+      viewer                      = protonet.config.user_id,
+      viewerPath                  = "/users/" + viewer + "/",
+      currentPath                 = $.trim($addressBar.text()) || "/",
+      isModalWindow               = $(".modal-window").length > 0,
+      $scrollContainer            = isModalWindow ? $(".modal-window > output") : $("body, html"),
+      REG_EXP_CHANNELS            = /^\/channels\/(\d+)\/$/,
+      REG_EXP_USERS               = /^\/users\/(\d+)\/$/,
+      REG_EXP_CHANNELS_SUB_FOLDER = /^\/channels\/(\d+)\/.*$/,
       // Chrome doesn't support any custom mime types (eg. application/x-protonet-files)
       // see http://code.google.com/p/chromium/issues/detail?id=31037
-      FILES_MIME_TYPE     = "text/uri-list",
-      KEY_UP              = 38,
-      KEY_TAB             = 9,
-      KEY_DOWN            = 40,
-      KEY_ENTER           = 13,
+      FILES_MIME_TYPE             = "text/uri-list",
+      KEY_UP                      = 38,
+      KEY_TAB                     = 9,
+      KEY_DOWN                    = 40,
+      KEY_ENTER                   = 13,
       undef;
   
-  function hasWriteAccessTo(path) {
-    var isAdmin     = protonet.data.User.isAdmin(viewer),
-        isSubFolder = path.match(REG_EXP_SUB_FOLDER);
-    return isAdmin || isSubFolder;
-  }
-  
-  function hasReadAccessTo(path) {
-    return protonet.data.User.isAdmin(viewer) // admin has access to everything
-      || path === "/"                         // root directory can be read by anyone
-      || path === "/users/"                   // users directory can be read by anyone
-      || path === "/channels/"                // channels directory can be read by anyone
-      || path.startsWith(viewerPath)          // is viewer's file space
-      || protonet.data.Channel.isSubscribedByUser(+(path.match(REG_EXP_CHANNELS) || [, NaN])[1], viewer); // is subscribed by user;
-  }
   
   // --------------------------------- MARKER --------------------------------- \\
   var marker = {
@@ -235,7 +221,7 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     update: function() {
-      var hasWriteAccess = hasWriteAccessTo(currentPath);
+      var hasWriteAccess = protonet.data.User.hasWriteAccessToFile(viewer, currentPath);
       
       uploader.disable();
       this.$actions.removeClass("enabled");
@@ -489,7 +475,7 @@ protonet.p("files", function($page, $window, $document) {
   // --------------------------------- ADDRESS BAR --------------------------------- \\
   var addressBar = {
     create$Element: function(name, path) {
-      var isFolder = path.endsWith("/"), $element, model, match;
+      var isFolder = protonet.data.File.isFolder(path), $element, model, match;
       
       if (isFolder) {
         $element = $("<a>", {
@@ -528,7 +514,7 @@ protonet.p("files", function($page, $window, $document) {
     
     update: function() {
       var pathParts     = currentPath.split("/"),
-          isFolderPath  = currentPath.endsWith("/"),
+          isFolderPath  = protonet.data.File.isFolder(currentPath),
           $elements     = this.create$Element("Files", "/"),
           path          = "/";
       
@@ -624,7 +610,7 @@ protonet.p("files", function($page, $window, $document) {
       
       this.currentRequest && this.currentRequest.abort();
       
-      var isFolder = path.endsWith("/");
+      var isFolder = protonet.data.File.isFolder(path);
       if (isFolder) {
         this.currentRequest = api.cd(path);
       } else {
@@ -733,14 +719,13 @@ protonet.p("files", function($page, $window, $document) {
       }
       
       function dragstart(event) {
-        var dataTransfer = event.originalEvent.dataTransfer;
-        
-        if (!dataTransfer)          { event.preventDefault(); }
+        if (!event.dataTransfer)    { event.preventDefault(); }
         if (!marker.$items.length)  { event.preventDefault(); }
         
-        var $dragImage = $("<table>", { "class": "drag-image" })
-          .append(marker.$items.clone())
-          .insertAfter($tableWrapper);
+        var dataTransfer  = event.dataTransfer,
+            $dragImage    = $("<table>", { "class": "drag-image" })
+              .append(marker.$items.clone())
+              .insertAfter($tableWrapper);
         
         $.each(marker.$items, function(i, element) {
           var file = $(element).data("file");
@@ -764,19 +749,20 @@ protonet.p("files", function($page, $window, $document) {
       
       // Handle drag indicators
       function dragover(event) {
-        var dataTransfer = event.originalEvent.dataTransfer;
-        
         // goodbye unsupported browsers
-        if (!dataTransfer)                    { return; }
+        if (!event.dataTransfer)              { return; }
         if (!$tableWrapper.attr("draggable")) { return; }
         
-        var dataTransferTypes         = $.makeArray(dataTransfer.types),
-            containsFilesFromDesktop  = dataTransfer.containsFiles(),
-            containsFilesFromProtonet = dataTransferTypes.indexOf(FILES_MIME_TYPE) !== -1,
-            isOverFileArea            = $.contains($tableWrapper[0], event.target) || $tableWrapper[0] === event.target || $.contains($addressBar[0], event.target),
-            isDroppable               = isOverFileArea
-              && hasWriteAccessTo(currentPath)
-              && (containsFilesFromDesktop || (containsFilesFromProtonet && (fromPath !== currentPath || $currentFolder.length)));
+        var dataTransfer           = event.dataTransfer,
+            dataTransferTypes      = $.makeArray(dataTransfer.types),
+            dragsFilesFromDesktop  = dataTransfer.containsFiles(),
+            dragsFilesFromProtonet = dataTransferTypes.indexOf(FILES_MIME_TYPE) !== -1,
+            dragsOverFileArea      = $.contains($tableWrapper[0], event.target) || $tableWrapper[0] === event.target || $.contains($addressBar[0], event.target),
+            dragsOverFolder        = !!$currentFolder.length,
+            targetPath             = dragsOverFolder ? $currentFolder.data("folder-path") : currentPath,
+            hasWriteAccess         = protonet.data.User.hasWriteAccessToFile(viewer, targetPath),
+            isDroppable            = dragsOverFileArea && hasWriteAccess
+              && (dragsFilesFromDesktop || (dragsFilesFromProtonet && (fromPath !== currentPath || dragsOverFolder)));
         
         if (isDroppable) {
           dataTransfer.dropEffect = 'copyMove';
@@ -784,7 +770,7 @@ protonet.p("files", function($page, $window, $document) {
           dataTransfer.dropEffect = 'none';
         }
         
-        if (containsFilesFromDesktop) {
+        if (dragsFilesFromDesktop) {
           clearTimeout(timeout);
           timeout = setTimeout(function() {
             dragleave();

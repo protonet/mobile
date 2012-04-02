@@ -7,21 +7,21 @@ $.behaviors({
   },
   
   "a[data-channel-id]:dragstart": function(element, event) {
-    if (event.originalEvent.dataTransfer) {
+    if (event.dataTransfer) {
       var $element  = $(element),
           channelName = protonet.data.Channel.getName($element.data("channel-id"));
       if (channelName) {
-        event.originalEvent.dataTransfer.setData("Text", "@" + channelName + " ");
+        event.dataTransfer.setData("Text", "@" + channelName + " ");
       }
     }
   },
   
   "a[data-user-id]:dragstart": function(element, event) {
-    if (event.originalEvent.dataTransfer) {
+    if (event.dataTransfer) {
       var $element  = $(element),
           userName  = protonet.data.User.getName($element.data("user-id"));
       if (userName) {
-        event.originalEvent.dataTransfer.setData("Text", "@" + userName + " ");
+        event.dataTransfer.setData("Text", "@" + userName + " ");
       }
     }
   },

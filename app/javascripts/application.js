@@ -7,6 +7,7 @@
 //= require "lib/jquery-behaviors/behaviors.js"
 //= require "lib/jquery.inview/jquery.inview.js"
 //= require "lib/jquery-patches/src/xhr.js"
+//= require "lib/jquery-patches/src/event.js"
 
 // ---- PROTONET
 //= require "extensions.js"

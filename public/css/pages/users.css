@@ -133,14 +133,14 @@
   margin-left:0;
 }
 
-.user-list ul{
+.user-list ul {
   margin: 20px 0;
 }
 
-.user-list li{
-  float:left;
-  position:relative;
-  width:90px;
+.user-list li {
+  float: left;
+  position: relative;
+  width: 90px;
   height: 60px;
   margin: 0 5px 15px 0;
   padding-left: 60px;
@@ -170,4 +170,8 @@
   -moz-box-shadow: 5px 5px 0px #eee;
   -webkit-box-shadow: 5px 5px 0px #eee;
   box-shadow: 5px 5px 0px #eee;
+}
+
+.users-page .buttons {
+  margin-bottom: 70px;
 }

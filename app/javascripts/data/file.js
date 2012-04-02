@@ -83,6 +83,14 @@ protonet.data.File = (function() {
       return VIEW_BASE_URL + "?path=" + encodeURIComponent(path);
     },
     
+    isFolder: function(path) {
+      return path.endsWith("/");
+    },
+    
+    isFile: function(path) {
+      return !path.endsWith("/");
+    },
+    
     getDownloadUrl: function(path, options) {
       options = prepareParameters(options);
       var url = NODE_BASE_URL + "/download/?paths=" + encodeURIComponent(path);

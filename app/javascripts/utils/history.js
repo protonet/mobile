@@ -72,7 +72,7 @@ protonet.utils.History = (function() {
     var initialPop = !popped && location.href === initialURL;
     popped = true;
     if (initialPop) { return; }
-    var state = event.originalEvent.state || { url: location.href };
+    var state = event.state || { url: location.href };
     protonet.trigger("history.change", state.url, state);
   });
   

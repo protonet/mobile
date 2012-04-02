@@ -32,15 +32,16 @@
  */
 (function(protonet) {
   var undef,
-      dataCache         = {},
-      viewerId          = protonet.config.user_id,
-      viewerName        = protonet.config.user_name,
-      defaultAvatar     = protonet.config.default_avatar,
-      adminIds          = protonet.config.admin_ids,
-      userArr           = protonet.config.users,
-      nameToIdMapping   = {},
-      idToNameMapping   = {},
-      preferencesConfig = {
+      REG_EXP_CHANNEL_ID  = /^\/channels\/(\d+)\/.*$/,
+      dataCache           = {},
+      viewerId            = protonet.config.user_id,
+      viewerName          = protonet.config.user_name,
+      defaultAvatar       = protonet.config.default_avatar,
+      adminIds            = protonet.config.admin_ids,
+      userArr             = protonet.config.users,
+      nameToIdMapping     = {},
+      idToNameMapping     = {},
+      preferencesConfig   = {
         sound: {
           type: "boolean",
           labels: {
@@ -49,7 +50,6 @@
           },
           defaultValue: true
         },
-
         smilies: {
           type: "boolean",
           labels: {
@@ -281,6 +281,10 @@
       return adminIds.indexOf(id) !== -1;
     },
     
+    hasSubscribedToChannel: function(userId, channelId) {
+      return protonet.data.Channel.isSubscribedByUser(channelId, userId);
+    },
+    
     getPreference: function(key) {
       var value       = protonet.storage.get(key),
           preference  = preferencesConfig[key];
@@ -327,6 +331,29 @@
     
     getPreferencesConfig: function() {
       return preferencesConfig;
+    },
+    
+    // ----------- USER RIGHTS ---------- \\
+    hasWriteAccessToFile: function(userId, path) {
+      var userFilesPath = "/users/" + userId + "/",
+          // parse channel id from path
+          channelId     = +(path.match(REG_EXP_CHANNEL_ID) || [, NaN])[1];
+      
+      return this.isAdmin(userId)                                           // admin has access to everything
+        || path.startsWith(userFilesPath)                                   // is viewer's file space
+        || (channelId && this.hasSubscribedToChannel(userId, channelId));   // is subscribed by user;
+    },
+    
+    hasReadAccessToFile: function(userId, path) {
+      var userFilesPath = "/users/" + userId + "/",
+          // parse channel id from path
+          channelId     = +(path.match(REG_EXP_CHANNEL_ID) || [, NaN])[1];
+      
+      return this.isAdmin(userId)                                           // admin has access to everything
+        || path.count("/") < 3                                              // /, /users/, /channels/, /foo/, ...
+        || path.startsWith(userFilesPath)                                   // is viewer's file space
+        || (!path.startsWith("/users/") && !path.startsWith("/channels/"))  // any other root tree can be accessed (eg. /info/foo/bar.gif)
+        || (channelId && this.hasSubscribedToChannel(userId, channelId));   // is subscribed by user;
     }
   };
   

@@ -13,7 +13,7 @@
   <p><strong><%= @user.display_name %></strong> is a member here for <strong title="<%= @user.created_at %>"><%= time_ago_in_words(@user.created_at) %></strong>
     <br>
     subscribed to <strong><%= @user.channels.real.verified.size %></strong> channels and posted <strong><%= Meep.find_all_by_user_id(@user.id).size %></strong> messages so far.</p>
-  <p>
+  <p class="buttons">
     <%= link_button("Start private chat", "/?rendezvous_with=#{@user.id}", { 'data-rendezvous-with' => @user.id }) %>
     <%= link_button("Send @reply", "/?reply_to=#{ERB::Util.u(@user.display_name)}", { 'data-reply-to' => @user.display_name }) %>
     <%- if current_user.admin? && current_user.email != "admin@protonet.local" %>
