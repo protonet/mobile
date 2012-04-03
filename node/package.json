@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "jsdom": ">= 0.2.13",
-    "iconv-lite": ">= 0.1.1"
+    "fetch": ">= 0.2.7"
   }
 }
