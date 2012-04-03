@@ -32,6 +32,7 @@
 //= require "ui/flash_message.js"
 //= require "ui/header.js"
 //= require "ui/modal_window.js"
+//= require "ui/droppables.js"
 //= require "utils/rails.js"
 //= require "text_extensions/text_extensions.js"
 //= require "timeline/meep.js"

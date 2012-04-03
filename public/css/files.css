@@ -139,3 +139,48 @@ a.file, a.folder {
   bottom: 0;
   z-index: 1;
 }
+
+.dragover .main-content > *,
+.dragover .side-content > *,
+.dragover .side-content > .getting-started > *,
+.dragover .main-content .avatar {
+  opacity: 0.2;
+}
+
+.dragover .main-content > #message-form,
+.dragover .side-content > #user-widget,
+.dragover .side-content > .getting-started {
+  opacity: 1;
+}
+
+.dragover #user-widget:before,
+.dragover #message-form:before {
+  content: "";
+  background: url(/img/spr_hint_drag_drop_r1.png) no-repeat;
+  position: absolute;
+  z-index: 1;
+  width: 200px;
+}
+
+.dragover #user-widget:before {
+  left: -184px;
+  height: 94px;
+  top: 40px;
+}
+
+.dragover #message-form:before {
+  bottom: -105px;
+  left: 100px;
+  height: 110px;
+  background-position: 0 -94px;
+}
+
+.dragover #user-widget,
+.dragover #textarea-wrapper {
+  background: rgba(0, 204, 0, 0.1);
+}
+
+#message-form.dragover,
+#user-widget.dragover {
+  background: rgba(0, 204, 0, 0.15);
+}

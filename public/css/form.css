@@ -109,28 +109,3 @@ form.disabled #textarea-wrapper:after {
   background: url(/img/return.png) center center no-repeat,
               -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(153, 153, 153, 1)), to(rgba(153, 153, 153, 0.7)));
 }
-
-.drop-area {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  color: #fff;
-  font-size: 16px;
-  font-weight: bold;
-  line-height: 72px;
-  background-color: rgba(0, 204, 0, 0.5);
-  border: 6px dashed rgba(255, 255, 255, 0.7);
-  text-align: center;
-  vertical-align: middle;
-  display: none;
-}
-
-form.dragenter .drop-area {
-  background-color: rgba(0, 204, 0, 0.75);
-}
-
-body.dragenter .drop-area {
-  display: table-cell;
-}

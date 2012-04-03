@@ -700,6 +700,13 @@ protonet.p("files", function($page, $window, $document) {
       
       if (!this.uploader.features.dragdrop) { return; }
       
+      new protonet.ui.Droppables({
+        types:    "files",
+        targets:  ".table-wrapper, .address-bar a"
+      });
+      
+      return;
+      
       function stringifyDataTransfer(files) {
         var str = "# " + JSON.stringify({
           node:   protonet.config.node_id,

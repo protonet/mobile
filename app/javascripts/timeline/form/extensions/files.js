@@ -5,8 +5,7 @@
  */
 protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
   var $body             = $("body"),
-      $link             = $("#attach-file-extension"),
-      $dropArea;
+      $link             = $("#attach-file-extension");
   
   if (!$link.length) {
     return;
@@ -21,6 +20,7 @@ protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
     return;
   }
   
+  // It's currently impossible to upload files to a remote channel
   protonet.on("channel.change", function(channelId) {
     if (protonet.data.Channel.isGlobal(channelId)) {
       $link.hide();
@@ -34,45 +34,10 @@ protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
     drop_element:  $form.attr("id")
   });
   
-  fileQueue.uploader.bind("FilesAdded", function() {
-    $form.trigger("dragleave");
-  });
-  
   if (fileQueue.uploader.features.dragdrop) {
-    var bodyTimeout,
-        formTimeout;
-    
-    $body.bind("dragover", function(event) {
-      if (!event.dataTransfer.containsFiles()) {
-        return;
-      }
-      
-      clearTimeout(bodyTimeout);
-      bodyTimeout = setTimeout(function() {
-        $body.add($form).removeClass("dragenter");
-      }, (1).seconds());
-      
-      $dropArea = $dropArea || $('<div>', {
-        "class":  "drop-area",
-        text:     protonet.t("DROP")
-      }).appendTo($form);
-      
-      $body.addClass("dragenter");
-      
-      event.preventDefault();
-    });
-    
-    $form.bind("dragover", function(event) {
-      if (!event.dataTransfer.containsFiles()) {
-        return;
-      }
-    
-      clearTimeout(formTimeout);
-      formTimeout = setTimeout(function() {
-        $form.removeClass("dragenter");
-      }, (0.5).seconds());
-      
-      $form.addClass("dragenter");
+    new protonet.ui.Droppables({
+      types:    "files",
+      targets:  $form.add("#user-widget")
     });
   }
 };
