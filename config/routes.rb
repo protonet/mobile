@@ -54,7 +54,7 @@ Dashboard::Application.routes.draw do
   match '/preferences' => 'preferences#index', :as => :preferences
   match '/preferences/get_vpn.:format' => 'preferences#get_vpn', :as => :vpn_preferences
   match '/navigation' => 'navigation#index', :as => :navigation
-  
+
   # Users
   devise_for :users, :controllers => { :registrations => "registrations" }
   
@@ -89,6 +89,7 @@ Dashboard::Application.routes.draw do
     match 'wifi/on'   => 'wifi#on',               :as => :wifi_on
     match 'wifi/off'  => 'wifi#off',              :as => :wifi_off
     match 'releases/update' => 'releases#update', :as => :release_update
+    match 'releases/update_progress' => 'releases#release_update_progress', :as => :release_update_progress
   end
   
   # System

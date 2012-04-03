@@ -43,3 +43,23 @@
 .preferences-page input[name="target"] {
   width: 82px;
 }
+
+
+#show_release_update_progress {
+	display: none;
+}
+/* TODO this could be needed elsewhere. where to put it? */
+.console_output {
+	background-color: rgba(0,0,0,0.8);
+	color: green;
+	font-family: "Lucida Console";
+	height: 10px;
+	width: 100%;
+	padding: 30px;
+	position: fixed;
+	z-index: 1000;
+	top: -70px;
+	left: 0px;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+	overflow-y: scroll;
+}

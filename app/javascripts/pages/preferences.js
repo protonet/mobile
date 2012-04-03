@@ -81,4 +81,60 @@ $(function() {
     
     event.stopPropagation();
   });
+
+	
+  $page.delegate("form.software-update", "submit", function () {
+
+    var $showReleaseProgressButton = $("#show_release_update_progress");
+    var $releaseUpdateProgressConsole = $("#release_update_progress_console");
+    var originalHeight = $releaseUpdateProgressConsole.css("height");
+    var originalTop = $releaseUpdateProgressConsole.css("top");
+
+    // preparation uber sophisticated way to scroll down on console content growth
+    
+    var wayDown = 10000;
+
+    $showReleaseProgressButton.fadeIn();
+
+    $showReleaseProgressButton.click(function (e) {
+      e.preventDefault();
+      var getContentIsActive = true;
+      $releaseUpdateProgressConsole.fadeIn();
+      $releaseUpdateProgressConsole.animate(
+        {
+          top: 0,
+          height: 500
+        },
+        1000,
+        //console animation done
+        function () {
+          $releaseUpdateProgressConsole.click(function (e) {
+            e.stopPropagation();
+          });
+          $("html").one("click", function() {
+            getContentIsActive = false;
+            $releaseUpdateProgressConsole.animate({
+              top: originalTop,
+              height: originalHeight
+            },1000);
+          });
+        }
+      );
+
+      while (getContentIsActive === true) {
+        setTimeout(function () {
+          $releaseUpdateProgressConsole.scrollTop(wayDown);
+          $.ajax({
+            method: 'get',
+            url : $releaseUpdateProgressConsole.data("url"),
+            dataType : 'json',
+            success: function (text) {
+              $releaseUpdateProgressConsole.html(text.text);
+            }
+          });
+          wayDown = wayDown + 10000;
+        }, 500);
+      }
+    });
+  });
 });
