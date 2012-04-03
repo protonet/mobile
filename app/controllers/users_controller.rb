@@ -8,8 +8,16 @@ class UsersController < ApplicationController
   after_filter  :publish_admin_users,     :only => :update_user_admin_flag
   
   def index
-    @users = User.registered.order_by_login.paginate(:page => params[:page], :per_page => 50)
     @nav = "users"
+    @users = User.registered.includes(:roles).order_by_login.paginate(:page => params[:page], :per_page => 40)
+    respond_to do |format|
+      format.html {
+        render
+      }
+      format.js {
+        render :partial => "user", :collection => @users
+      }
+    end
   end
   
   def show
@@ -154,8 +162,15 @@ class UsersController < ApplicationController
   
   def search
     @nav = "users"
-    @users = User.registered.order_by_login.where("login like '#{params[:search_term]}%'").paginate(:page => params[:page], :per_page => 50)
-    render :action => "index"
+    @users = User.registered.includes(:roles).order_by_login.where("login like '#{params[:search_term]}%'").paginate(:page => params[:page], :per_page => 40)
+    respond_to do |format|
+      format.html {
+        render :action  => "index"
+      }
+      format.js {
+        render :partial => "user", :collection => @users
+      }
+    end
   end
   
   def remove_newbie_flag

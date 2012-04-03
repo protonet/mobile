@@ -129,10 +129,11 @@ $.behaviors({
   },
   
   ".subpage:ajax:beforeSend": function(element, event) {
-    $(event.target)
+    var $form = $(event.target);
+    $form
       .addClass("loading")
       .find("input, textarea, select, button")
-        .prop("disabled", true)
+        .prop("disabled", !$form.data("avoid-disabling"))
         .end()
       .find(".loading-hint")
         .fadeIn("fast");
