@@ -700,10 +700,41 @@ protonet.p("files", function($page, $window, $document) {
       
       if (!this.uploader.features.dragdrop) { return; }
       
-      new protonet.ui.Droppables({
-        types:    "files",
-        targets:  ".table-wrapper, .address-bar a"
-      });
+      // protonet.ui.Droppables.add({
+      //         allowedTypes: "files",
+      //         effect:       "copy",
+      //         selector:     ".table-wrapper",
+      //         condition:     function($element) {
+      //           hasWriteAccess(currentPath);
+      //         },
+      //         ondrop:        function() {
+      //           uploadTo(currentPath);
+      //         }
+      //       });
+      //       
+      //       protonet.ui.Droppables.add({
+      //         allowedTypes: FILES_MIME_TYPE,
+      //         effect:       "move",
+      //         selector:     ".table-wrapper",
+      //         condition:    function() {
+      //           hasWriteAccess(currentPath);
+      //         }
+      //       });
+      //       
+      //       protonet.ui.Droppables.add({
+      //         allowedTypes:  "files", // and protonet-files
+      //         selector:      "[data-folder-path]",
+      //         effect:        "none",
+      //         condition:    function() {
+      //           return !isBeingDragged();
+      //         },
+      //         ondragenter:   function() {
+      //           blink();
+      //         },
+      //         ondragleave:   function() {
+      //           stopBlinking();
+      //         }
+      //       });
       
       return;
       

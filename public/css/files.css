@@ -144,7 +144,7 @@ a.file, a.folder {
 .dragover .side-content > *,
 .dragover .side-content > .getting-started > *,
 .dragover .main-content .avatar {
-  opacity: 0.2;
+  opacity: 0.25;
 }
 
 .dragover .main-content > #message-form,
@@ -153,8 +153,8 @@ a.file, a.folder {
   opacity: 1;
 }
 
-.dragover #user-widget:before,
-.dragover #message-form:before {
+#user-widget.dragover-possible:before,
+#message-form.dragover-possible:before {
   content: "";
   background: url(/img/spr_hint_drag_drop_r1.png) no-repeat;
   position: absolute;
@@ -162,25 +162,25 @@ a.file, a.folder {
   width: 200px;
 }
 
-.dragover #user-widget:before {
-  left: -184px;
+#user-widget.dragover-possible:before {
+  left: -195px;
   height: 94px;
   top: 40px;
 }
 
-.dragover #message-form:before {
+#message-form.dragover-possible:before {
   bottom: -105px;
   left: 100px;
   height: 110px;
   background-position: 0 -94px;
 }
 
-.dragover #user-widget,
-.dragover #textarea-wrapper {
-  background: rgba(0, 204, 0, 0.1);
+#message-form.dragover-possible #textarea-wrapper,
+#user-widget.dragover-possible {
+  background: rgba(0, 204, 0, 0.075);
 }
 
-#message-form.dragover,
+#message-form.dragover #textarea-wrapper,
 #user-widget.dragover {
   background: rgba(0, 204, 0, 0.15);
 }

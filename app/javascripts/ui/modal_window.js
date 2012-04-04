@@ -11,6 +11,7 @@
 protonet.ui.ModalWindow = (function() {
   var undef,
       elements,
+      droppable,
       scrollbarWidth,
       currentRequest,
       urlBeforeOpened               = location.href,
@@ -60,8 +61,8 @@ protonet.ui.ModalWindow = (function() {
      */
     elements            = {};
     elements.container  = $("<div>",      { "class": "modal-window-shadow" });
-    elements.dialog     = $("<section>",  { "class": "modal-window" })                .appendTo(elements.container);
-    elements.content    = $("<output>")                                               .appendTo(elements.dialog);
+    elements.dialog     = $("<section>",  { "class": "modal-window" }).appendTo(elements.container);
+    elements.content    = $("<output>")                               .appendTo(elements.dialog);
   }
   
   function _observe() {
@@ -80,40 +81,20 @@ protonet.ui.ModalWindow = (function() {
     
     // Close modal window when user drags something on the shadow
     var blinker;
-    this.droppables = new protonet.ui.Droppables({
-      targets:       elements.container,
-      includeChilds: false,
-      types:         "files"
-    });
-    
-    return;
-    function dragout() {
-      elements.container.removeClass("dragover");
-      blinker && blinker.stop();
-      blinker = undef;
-    }
-    
-    elements.container.bind("dragover.modal_window", function(event) {
-      if (event.target === elements.container[0]) {
-        elements.container.addClass("dragover");
-        blinker = blinker || protonet.effects.blink(elements.container, {
+    protonet.ui.Droppables.add({
+      types:          "files",
+      elements:       elements.container,
+      includeChilds:  false,
+      ondragenter:    function() {
+        blinker = protonet.effects.blink(elements.container, {
           delay:    (0.5).seconds(),
-          callback: function() {
-            dragout();
-            hide();
-          }
+          callback: function() { hide(); }
         });
-      } else {
-        dragout();
+      },
+      ondragleave:    function() {
+        blinker.stop();
       }
     });
-    
-    elements.container.bind("dragleave", function(event) {
-      if (event.target === elements.container[0]) {
-       dragout();
-      }
-    });
-    
     
     $window
       .bind("scroll.modal_window", position)
@@ -128,7 +109,7 @@ protonet.ui.ModalWindow = (function() {
       .add(elements.container)
       .unbind(".modal_window");
     
-    this.droppables.destroy();
+    protonet.ui.Droppables.remove(droppable);
     protonet.off("modal_window.hide", hide);
   }
   

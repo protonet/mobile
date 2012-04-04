@@ -35,9 +35,9 @@ protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
   });
   
   if (fileQueue.uploader.features.dragdrop) {
-    new protonet.ui.Droppables({
+    protonet.ui.Droppables.add({
       types:    "files",
-      targets:  $form.add("#user-widget")
+      elements: "#user-widget, #message-form"
     });
   }
 };
