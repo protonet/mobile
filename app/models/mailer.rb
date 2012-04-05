@@ -5,8 +5,13 @@ class Mailer < ActionMailer::Base
   
   def invitation(invitation)
     @invitation = invitation
+    from = if invitation.user.email.present?
+      "\"#{invitation.user.display_name}\" <#{invitation.user.email}>"
+    else
+      "no-reply <mailer@protonet.info>"
+    end
     mail(
-      :from => "\"#{invitation.user.display_name}\" <mailer@protonet.info>",
+      :from => from,
       :to => invitation.email,
       :subject => "#{invitation.user.display_name} has invited you to join the protonet of #{Node.local.name}"
     )
