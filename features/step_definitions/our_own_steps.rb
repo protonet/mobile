@@ -92,8 +92,7 @@ Given /^I log out$/ do
 end
 
 Given /^I select the channel "([^\"]*)" in the channel list$/ do |linktext|
-  selector = "a[data-tab='channels'] strong"
-
+  selector = ".channels-list strong"
   wait_until(10) do
     page.has_css?(selector)
   end
@@ -102,7 +101,7 @@ Given /^I select the channel "([^\"]*)" in the channel list$/ do |linktext|
 end
 
 Given /^I select the global channel "([^\"]*)" in the channel overview$/ do |linktext|
-  selector = "output[data-recommended-global-channels] ul a h4"
+  selector = "ul.channel-teaser a h4"
 
   wait_until(10) do
     page.has_css?(selector)
@@ -116,11 +115,11 @@ Given /^I select the channel "([^\"]*)" in the channel overview$/ do |linktext|
 end
 
 Then /^I should see "([^\"]*)" in the channel list$/ do |channel_name|
-  find(:css, 'a[data-tab="channels"] strong', :text => "@#{channel_name}", :visible => true)
+  find(:css, '.channels-list', :text => "@#{channel_name}", :visible => true)
 end
 
 Then /^I should see "([^\"]*)" in the channel details pane$/ do |channel_name|
-  find(:css, 'output[data-tab="channels"] h2', :text => "@#{channel_name}", :visible => true)
+  find(:css, 'output[data-tab="channels"] h2', :text => "#{channel_name}", :visible => true)
 end
 
 Given /^I select the channel "([^\"]*)" from the channel tabs$/ do |linktext|
@@ -128,7 +127,6 @@ Given /^I select the channel "([^\"]*)" from the channel tabs$/ do |linktext|
 end
 
 Then /^I verify the user "([^"]*)" for the channel "([^"]*)"$/ do |user_name, channel|
-  step "I select the channel \"#{channel}\" in the channel list"
   user = User.find_by_login(user_name)
   find(:css, "li[data-cucumber='#{user.id}'] a[data-cucumber='verify']").click
 end
@@ -332,14 +330,6 @@ end
 
 Then /^I close the getting started box$/ do
   find(:css, ".getting-started-close-link", :visible => true).click
-end
-
-# channels-controller-link
-
-Given /^I click on "([^\"]*)" in the main navigation$/ do |link_name|
-  first, second = link_name.split(":")
-  find(:css, ".#{first}-controller-link").click
-  find(:css, ".#{first}-controller-link .sub-nav-link a", :text => second.humanize).click if second
 end
 
 Then /^I should see "([^\"]*)" in the channel subscriber list$/ do |username|

@@ -15,38 +15,11 @@
         <%- if permitted_to?(:read, :channels) -%>
         <li class="nav-link channels-controller-link">
           <%= link_to "Channels", channels_path %>
-          <ul>
-            <li class="sub-nav-link index-action-link">
-              <%= link_to "Overview", channels_path %>
-            </li>
-            <li class="sub-nav-link show-action-link list-action-link">
-              <%= link_to "Browse channels", list_channels_path %>
-            </li>
-            <li class="sub-nav-link show_global-action-link list_global-action-link">
-              <%= link_to "Discover global channels", list_global_channels_path %>
-            </li>
-            <li class="sub-nav-link new-action-link">
-              <%= link_to "Create new", new_channel_path %>
-            </li>
-          </ul>
         </li>
         <%- end -%>
         <%- if permitted_to?(:read, User.new) -%>
         <li class="nav-link users-controller-link invitations-controller-link">
-          <%= link_to "Users", users_path %>
-          <ul>
-            <li class="sub-nav-link my-action-link">
-              <%= link_to "My profile", my_user_path %>
-            </li>
-            <li class="sub-nav-link index-action-link">
-              <%= link_to "All Users", users_path %>
-            </li>
-            <%- if permitted_to?(:manage, :invitations) -%>
-            <li class="sub-nav-link invitations-controller-link">
-              <%= link_to "Invitations", invitations_path %>
-            </li>
-            <%- end %>
-          </ul>
+          <%= link_to "Users", my_profile_path %>
         </li>
         <%- end -%>
         <li class="search">

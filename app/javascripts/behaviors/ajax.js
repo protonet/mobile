@@ -213,7 +213,14 @@ $.behaviors({
         $tabLink.parent().addClass("selected");
         protonet.utils.History.push(url);
       },
-      success: function(html) {
+      success: function(html, statusText, xhr) {
+        var $output = $(html).find("output[data-tab]");
+        if ($output.length > 0) {
+          html = $output.html();
+          $tabContainer.attr("class", $output.attr("class"));
+          var classNames = $output.parents("section.subpage").attr("class");
+          $tabContainer.parents("section.subpage").attr("class", classNames);
+        }
         $tabContainer.html(html).hide().fadeIn("fast");
         $tabContainer.css("padding-top", (originalPaddingTop + $scrollContainer.scrollTop()).px());
         $tabContainer.trigger("tab:updated");

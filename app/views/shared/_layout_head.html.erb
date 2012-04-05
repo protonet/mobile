@@ -32,7 +32,7 @@
       allow_modal_views:              <%= SystemPreferences.allow_modal_views.to_json %>,
       session_id:                     "<%= cookies['_rails_dashboard_session'] %>",
       authenticity_token:             "<%= form_authenticity_token %>",
-      pending_verifications:         <%= raw current_user.pending_channel_verifications.to_json%>,
+      pending_verifications:          <%= raw current_user.pending_channel_verifications.to_json%>,
       channel_name_to_id_mapping:     <%= raw Channel.name_to_id_mapping.to_json %>,
       channel_uuid_to_id_mapping:     <%= raw Channel.uuid_to_id_mapping.merge(current_user.channel_uuid_to_id_mapping).to_json %>,
       server:                         "<%= request.server_software %>",

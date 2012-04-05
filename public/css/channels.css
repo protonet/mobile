@@ -163,8 +163,8 @@
 }
 #channels .private:before {
   left: 4px;
-  background: url(/img/spr_channel_icons.png) no-repeat;
-  background-position: 0 -26px;
+  background: url(/img/spr_channel_status_r2.png) no-repeat;
+  background-position: 0 -49px;
 }
 
 #channels .system:before {
