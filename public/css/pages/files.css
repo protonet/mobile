@@ -9,7 +9,7 @@
   min-height: 200px;
 }
 
-.dragover .files-page .table-wrapper {
+.files-page .table-wrapper.dragover-possible {
   margin: -1px -1px -1px -1px;
   border: 2px dashed rgba(0, 204, 0, 0.5);
   outline: 5px solid #eee;
@@ -21,7 +21,7 @@
   background: rgba(0, 204, 0, 0.1);
 }
 
-.dragover .files-page p.hint {
+.files-page .dragover-possible p.hint {
   color: #000;
 } 
 

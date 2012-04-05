@@ -1,7 +1,7 @@
 protonet.effects.blink = (function() {
   var defaultConfig = {
     "class":    "blink",
-    interval:   (0.25).seconds(),
+    interval:   (0.5).seconds(),
     delay:      (0).seconds(),
     times:      2,
     callback:   $.noop

@@ -22,9 +22,7 @@ protonet.p("files", function($page, $window, $document) {
       REG_EXP_CHANNELS            = /^\/channels\/(\d+)\/$/,
       REG_EXP_USERS               = /^\/users\/(\d+)\/$/,
       REG_EXP_CHANNELS_SUB_FOLDER = /^\/channels\/(\d+)\/.*$/,
-      // Chrome doesn't support any custom mime types (eg. application/x-protonet-files)
-      // see http://code.google.com/p/chromium/issues/detail?id=31037
-      FILES_MIME_TYPE             = "text/uri-list",
+      PROTONET_FILES_MIME_TYPE    = "protonet/file",
       KEY_UP                      = 38,
       KEY_TAB                     = 9,
       KEY_DOWN                    = 40,
@@ -700,6 +698,75 @@ protonet.p("files", function($page, $window, $document) {
       
       if (!this.uploader.features.dragdrop) { return; }
       
+      protonet.ui.Droppables.add({
+        types:          "files",
+        elements:       ".table-wrapper",
+        condition:  function() {
+          return protonet.data.User.hasWriteAccessToFile(viewer, currentPath);
+        }
+      });
+      
+      protonet.ui.Droppables.add({
+        types:      PROTONET_FILES_MIME_TYPE,
+        elements:   ".table-wrapper",
+        className:  "dragover-protonet-files",
+        indicator:  "dragover-possible-protonet-files",
+        condition:  function() {
+          return protonet.data.User.hasWriteAccessToFile(viewer, currentPath);
+        }
+      });
+      
+      function stringifyDataTransfer(files) {
+        return JSON.stringify({
+          node:   protonet.config.node_id,
+          files:  files
+        });
+      }
+      
+      function parseDataTransfer(str) {
+        str = str.match(/#\s(.+)/) || [, "[]"];
+        return JSON.parse(str);
+      }
+      
+      function getUriList(files) {
+        str = "";
+        $.each(files, function(i, file) {
+          str += "\n" + protonet.data.File.getUrl(file.path);
+        });
+        return str;
+      }
+      
+      function dragstart(event) {
+        if (!event.dataTransfer)    { event.preventDefault(); }
+        if (!marker.$items.length)  { event.preventDefault(); }
+        
+        var dataTransfer  = event.dataTransfer,
+            $dragImage    = $("<table>", { "class": "drag-image" })
+              .append(marker.$items.clone())
+              .insertAfter($tableWrapper);
+        
+        $.each(marker.$items, function(i, element) {
+          var file = $(element).data("file");
+          dragItems.push(file);
+          dragPaths.push(file.path);
+        });
+        
+        fromPath = currentPath;
+        
+        dataTransfer.effectAllowed = "copy";
+        dataTransfer.setData(PROTONET_FILES_MIME_TYPE, stringifyDataTransfer(dragItems));
+        dataTransfer.setData("text/uri-list", getUriList(dragItems));
+        dataTransfer.setDragImage($dragImage[0], 10, 10);
+        
+        // Timeout is necessary for webkit to capture a snapshot of the element
+        setTimeout(function() { $dragImage.remove(); }, 0);
+      }
+      
+      // TODO: Draggables
+      $content.bind({
+        dragstart: dragstart,
+        dragend:   dragend
+      });
       // protonet.ui.Droppables.add({
       //         allowedTypes: "files",
       //         effect:       "copy",
@@ -737,49 +804,6 @@ protonet.p("files", function($page, $window, $document) {
       //       });
       
       return;
-      
-      function stringifyDataTransfer(files) {
-        var str = "# " + JSON.stringify({
-          node:   protonet.config.node_id,
-          files:  files
-        });
-
-        $.each(files, function(i, file) {
-          str += "\n" + protonet.data.File.getUrl(file.path);
-        });
-
-        return str;
-      }
-      
-      function parseDataTransfer(str) {
-        str = str.match(/#\s(.+)/) || [, "[]"];
-        return JSON.parse(str);
-      }
-      
-      function dragstart(event) {
-        if (!event.dataTransfer)    { event.preventDefault(); }
-        if (!marker.$items.length)  { event.preventDefault(); }
-        
-        var dataTransfer  = event.dataTransfer,
-            $dragImage    = $("<table>", { "class": "drag-image" })
-              .append(marker.$items.clone())
-              .insertAfter($tableWrapper);
-        
-        $.each(marker.$items, function(i, element) {
-          var file = $(element).data("file");
-          dragItems.push(file);
-          dragPaths.push(file.path);
-        });
-        
-        fromPath = currentPath;
-        
-        dataTransfer.effectAllowed = "copy";
-        dataTransfer.setData(FILES_MIME_TYPE, stringifyDataTransfer(dragItems));
-        dataTransfer.setDragImage($dragImage[0], 10, 10);
-        
-        // Timeout is necessary for webkit to capture a snapshot of the element
-        setTimeout(function() { $dragImage.remove(); }, 0);
-      }
       
       function dragend(event) {
         dragleave();
@@ -838,6 +862,7 @@ protonet.p("files", function($page, $window, $document) {
         
         blinker = protonet.effects.blink($currentFolder, {
           delay:    (0.5).seconds(),
+          interval: (0.25).seconds(),
           callback: function() { $currentFolder.click().dblclick(); }
         });
       }

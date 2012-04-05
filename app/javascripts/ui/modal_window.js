@@ -87,7 +87,6 @@ protonet.ui.ModalWindow = (function() {
       includeChilds:  false,
       ondragenter:    function() {
         blinker = protonet.effects.blink(elements.container, {
-          delay:    (0.5).seconds(),
           callback: function() { hide(); }
         });
       },

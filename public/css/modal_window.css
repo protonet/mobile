@@ -10,11 +10,11 @@
 }
 
 .modal-window-shadow.dragover {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .modal-window-shadow.blink {
-  background-color: rgba(72, 123, 255, 0.2);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .modal-window {

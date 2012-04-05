@@ -13,6 +13,7 @@ protonet.ui.Droppables = (function() {
         indicator:     "dragover-possible",
         className:     "dragover",
         types:         "all",
+        condition:     function($element) { return true; },
         ondragenter:   $.noop,
         ondragleave:   $.noop
       };
@@ -86,7 +87,7 @@ protonet.ui.Droppables = (function() {
               wasBeingDraggedOn = $element.data("dragover"),
               isBeingDraggedOn  = event.target === element || (target.includeChilds && $.contains(element, event.target));
           
-          if (isBeingDraggedOn) {
+          if (isBeingDraggedOn && target.condition($element)) {
             if (activeTargets.indexOf(target) === -1) {
               activeTargets.push(target);
             }
@@ -101,14 +102,14 @@ protonet.ui.Droppables = (function() {
       
       if (potentialTargets.length) {
         $html.addClass("dragover");
+        event.preventDefault();
       }
       
       if (activeTargets.length) {
         dataTransfer.dropEffect = "copy";
-      } else {
+      } else if (potentialTargets.length) {
         dataTransfer.dropEffect = "none";
       }
-      event.preventDefault();
     });
     
     

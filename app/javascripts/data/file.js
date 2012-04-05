@@ -103,6 +103,7 @@ protonet.data.File = (function() {
     getContent: function(path, options) {
       options = prepareParameters(options);
       $.ajax(this.getDownloadUrl(path), $.extend({
+        dataType: "text",
         data: {
           token:    protonet.config.token,
           user_id:  protonet.config.user_id
