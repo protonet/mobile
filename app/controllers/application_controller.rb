@@ -97,9 +97,15 @@ class ApplicationController < ActionController::Base
     return true if SystemPreferences.captive != true
     return true if incoming_interface == "publish_to_web"
     return true if SystemBackend.requested_host_local?(request.host)
+    mac_address = SystemBackend.get_mac_for_ip(request.remote_ip)
     respond_to do |format|
       format.html {
-        render 'system/captive/browser_check', :status => 503, :layout => false
+        if SystemBackend.internet_access_granted?(mac_address)
+          sleep 1
+          return redirect_to(session.delete(:captive_redirect_url) || "http://www.google.com")
+        else
+          render 'system/captive/browser_check', :status => 503, :layout => false
+        end
       }
       format.all {
         return head 503
