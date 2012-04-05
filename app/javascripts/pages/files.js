@@ -699,8 +699,8 @@ protonet.p("files", function($page, $window, $document) {
       if (!this.uploader.features.dragdrop) { return; }
       
       protonet.ui.Droppables.add({
-        types:          "files",
-        elements:       ".table-wrapper",
+        types:      "files",
+        elements:   ".table-wrapper",
         condition:  function() {
           return protonet.data.User.hasWriteAccessToFile(viewer, currentPath);
         }
@@ -711,8 +711,26 @@ protonet.p("files", function($page, $window, $document) {
         elements:   ".table-wrapper",
         className:  "dragover-protonet-files",
         indicator:  "dragover-possible-protonet-files",
-        condition:  function() {
+        condition:  function($element) {
           return protonet.data.User.hasWriteAccessToFile(viewer, currentPath);
+        }
+      });
+      
+      protonet.ui.Droppables.add({
+        types:      PROTONET_FILES_MIME_TYPE,
+        elements:   ".files-page [data-folder-path]",
+        condition:  function($element) {
+          return dragPaths.indexOf($element.data("folder-path")) === -1;
+        },
+        ondragenter:  function($element) {
+          blinker = protonet.effects.blink($element, {
+            delay:    (0.5).seconds(),
+            interval: (0.25).seconds(),
+            callback: function() { $element.click().dblclick(); }
+          });
+        },
+        ondragleave:  function() {
+          blinker.stop();
         }
       });
       
@@ -728,7 +746,7 @@ protonet.p("files", function($page, $window, $document) {
         return JSON.parse(str);
       }
       
-      function getUriList(files) {
+      function createUriList(files) {
         str = "";
         $.each(files, function(i, file) {
           str += "\n" + protonet.data.File.getUrl(file.path);
@@ -755,7 +773,7 @@ protonet.p("files", function($page, $window, $document) {
         
         dataTransfer.effectAllowed = "copy";
         dataTransfer.setData(PROTONET_FILES_MIME_TYPE, stringifyDataTransfer(dragItems));
-        dataTransfer.setData("text/uri-list", getUriList(dragItems));
+        dataTransfer.setData("text/uri-list", createUriList(dragItems));
         dataTransfer.setDragImage($dragImage[0], 10, 10);
         
         // Timeout is necessary for webkit to capture a snapshot of the element
@@ -763,10 +781,7 @@ protonet.p("files", function($page, $window, $document) {
       }
       
       // TODO: Draggables
-      $content.bind({
-        dragstart: dragstart,
-        dragend:   dragend
-      });
+      $content.bind("dragstart", dragstart);
       // protonet.ui.Droppables.add({
       //         allowedTypes: "files",
       //         effect:       "copy",
