@@ -54,15 +54,6 @@ class UsersController < ApplicationController
     redirect_to :action => 'edit', :id => user.id
   end
 
-  def delete_stranger_older_than_two_days
-    if current_user.admin? && User.delete_strangers_older_than_two_days!
-      flash[:notice] = "Successfully deleted all old strangers!"
-    else
-      flash[:error]  = "Couldn't delete old strangers!"
-    end
-    respond_to_preference_update
-  end
-  
   def start_rendezvous
     Channel.setup_rendezvous_for(current_user.id, params[:id].to_i)
     render :nothing => true
