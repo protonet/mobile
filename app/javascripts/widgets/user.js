@@ -121,16 +121,12 @@ protonet.widgets.User = Class.create({
       .on("channel.change", this.filterChannelUsers.bind(this))
       
       .on("channel.change", function(channel_id){
-        if (protonet.config.pending_verifications[channel_id]) {
-          var verificationCount = protonet.config.pending_verifications[channel_id];
-          this.verifications.empty().append($("<a>", {
-            "href": "/channels/" + channel_id,
-            "text": verificationCount + " pending verification" + (verificationCount > 1 ? "s" : "")
-          }));
-          this.verifications.show();
-        }else{
-          this.verifications.hide();
-        }
+        this.verificationNotification(channel_id);
+      }.bind(this))
+      
+      .on("users.pending_verifications", function(data) {
+        protonet.config.pending_verifications[data.channel_id] = data.pending_verifications;
+        this.verificationNotification(protonet.timeline.Channels.selected); 
       }.bind(this));
     
     /**
@@ -417,5 +413,19 @@ protonet.widgets.User = Class.create({
     if (user.element) {
       user.element.removeClass("typing");
     }
+  },
+  
+  verificationNotification: function(channel_id){
+    if (protonet.config.pending_verifications[channel_id]) {
+      var verificationCount = protonet.config.pending_verifications[channel_id];
+      this.verifications.empty().append($("<a>", {
+        "href": "/channels/" + channel_id,
+        "text": verificationCount + " pending verification" + (verificationCount > 1 ? "s" : "")
+      }));
+      this.verifications.show();
+    }else{
+      this.verifications.hide();
+    }
   }
+  
 });
