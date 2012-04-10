@@ -82,7 +82,7 @@ module System
         case response.code.to_i
         when 200
           SystemBackend.grant_internet_access(mac_address, (@current_user.try(:login) || "n_a"))
-          `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access refresh #{request.remote_ip}`
+          refresh_connection_tracking
           sleep 1
           redirect_to_desired_url
         when 301..302
@@ -93,7 +93,7 @@ module System
         end
       else
         SystemBackend.grant_internet_access(mac_address, (@current_user.try(:login) || "n_a"))
-        `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access refresh #{request.remote_ip}`
+        refresh_connection_tracking
         sleep 1
         redirect_to_desired_url
       end
@@ -112,6 +112,10 @@ module System
       return true if current_user.admin?
       flash[:error] = "Not authorized, only admins are allowed to do this."
       head :unauthorized 
+    end
+
+    def refresh_connection_tracking
+      `/usr/bin/sudo #{configatron.current_file_path}/script/init/client_internet_access refresh #{request.remote_ip} #{address_for_current_interface}`
     end
 
   end

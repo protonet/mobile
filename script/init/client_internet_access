@@ -37,8 +37,9 @@ case $COMMAND in
       fi
       ;;
     refresh)
-      /usr/sbin/conntrack -L | grep $1 | grep ESTAB | grep 'dport=80'  | awk "{ system(\"conntrack -D --orig-src $1 --orig-dst \" substr(\$6,5) \" -p tcp --orig-port-src \" substr(\$7,7) \" --orig-port-dst 80\"); }"
-      /usr/sbin/conntrack -L | grep $1 | grep ESTAB | grep 'dport=443' | awk "{ system(\"conntrack -D --orig-src $1 --orig-dst \" substr(\$6,5) \" -p tcp --orig-port-src \" substr(\$7,7) \" --orig-port-dst 443\"); }"
+      # here $1 is the ip address client and $2 is the ip of the node thru the current interface, see captive_controller for details
+      /usr/sbin/conntrack -L | grep $1 | grep ESTAB | grep -v $2 | grep 'dport=80'  | awk "{ system(\"conntrack -D --orig-src $1 --orig-dst \" substr(\$6,5) \" -p tcp --orig-port-src \" substr(\$7,7) \" --orig-port-dst 80\"); }"
+      /usr/sbin/conntrack -L | grep $1 | grep ESTAB | grep -v $2 | grep 'dport=443' | awk "{ system(\"conntrack -D --orig-src $1 --orig-dst \" substr(\$6,5) \" -p tcp --orig-port-src \" substr(\$7,7) \" --orig-port-dst 443\"); }"
       ;;
     *)  
       echo "usage: client_internet_access {grant|revoke|status} mac_address (username)" ;;
