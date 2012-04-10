@@ -9,6 +9,6 @@
     <small><%= pluralize(channel.listens.size, "subscriber") %></small>
   <%- end %>
   <%- if @subscribed_channels.include?(channel) %>
-    <img class="subscribed" src="/img/icn_check_mark.png">
+    <img class="subscribed" src="/img/icn_tick.png">
   <%- end %>
 </li>
