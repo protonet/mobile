@@ -166,7 +166,7 @@ class ApplicationController < ActionController::Base
   def incoming_interface
     return "published_to_web" if request.env["HTTP_X_FORWARDED_FOR"]
     @incoming_interface ||= begin
-      mapping = Rails.cache.fetch("system.interfaces", {:expires_in => 15.minutes}) do
+      mapping = Rails.cache.fetch("system.interfaces", {:expires_in => 30.minutes}) do
         interface_mapping = {}
         SystemBackend.get_interfaces.each do |interface|
           network = (IP.new("#{interface.addresses("inet")}/16").network.to_s rescue nil)
@@ -181,9 +181,16 @@ class ApplicationController < ActionController::Base
   end
   
   def address_for_current_interface
-    SystemBackend.get_interfaces[incoming_interface].addresses.find {|ip| ip if ip.ipv4?}.to_s
-  rescue
-    "protonet"
+    @ip_for_interface ||= begin
+      mapping = Rails.cache.fetch("system.ips_for_interfaces", {:expires_in => 30.minutes}) do
+        interface_ip_mapping = {}
+        SystemBackend.get_interfaces.each do |interface|
+          interface_ip_mapping[interface.name] = interface.addresses.find {|ip| ip if ip.ipv4?}.to_s
+        end
+        interface_ip_mapping
+      end
+      mapping[incoming_interface]
+    end
   end
   
   def node_privacy_settings
