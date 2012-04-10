@@ -147,9 +147,9 @@ class UsersController < ApplicationController
       new_password  = User.pronouncable_password
       user.password = new_password
       if params[:send_email]
-        flash[:sticky] = "Generated new password for #{user.login}, email has been sent." if user.save && Mailer.password_reset(new_password, user).deliver
+        flash[:sticky] = "Generated and sent new password for #{user.login}: \"#{new_password}\"" if user.save && Mailer.password_reset(new_password, user).deliver
       else
-        flash[:sticky] = "Generated new password for #{user.login}: \"#{new_password}\" please remind him to change it." if user.save
+        flash[:sticky] = "Generated new password for #{user.login}: \"#{new_password}\"" if user.save
       end
     else
       flash[:error]  = "You are not authorized to do this, please check your password and admin rights."

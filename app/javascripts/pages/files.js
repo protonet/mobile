@@ -686,11 +686,11 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     disable: function() {
-      this.uploader.disable();
+      this.uploader.disableBrowse(true);
     },
     
     enable: function() {
-      this.uploader.enable();
+      this.uploader.disableBrowse(false);
     },
     
     _observe: function() {
