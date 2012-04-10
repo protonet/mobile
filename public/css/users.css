@@ -157,9 +157,14 @@
   float: right;
 }
 
+.invitations-create-page h3.belongs-to-list,
 .invitations-new-page h3.belongs-to-list{
   margin: 0 0 0 180px;
   width:288px;
+}
+.invitations-index-page ul.list{
+  height: 300px;
+  max-height: 300px;
 }
 
 .invitations-page .channels ul{

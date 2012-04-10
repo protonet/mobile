@@ -1,6 +1,6 @@
 <%= render "shared/nav_users"%>
 <output class="content" data-tab="users">
-  <%= form_for(@invitation, :html => { "data-type" => 'html' }) do |f| %>
+  <%= form_for(@invitation, :remote => true, :html => { "data-type" => 'html' }) do |f| %>
     <h2>Invite people to your protonet <a data-hover-hint="top" title="Only admins can invite people" class="hint">(?)</a></h2>
     
     <%- if !SystemPublishToWeb.status %>
@@ -44,7 +44,7 @@
     
     <div class="form-field channels">
 
-     <label for="invitation_channel"> Channels: <a data-hover-hint="top" title="Check channels which the user will be subscribed to." class="hint">(?)</a></label>
+     <label for="invitation_channel"> Channels: <a data-hover-hint="top" title="Select channels the user will be subscribed to." class="hint">(?)</a></label>
       <h3 class="belongs-to-list"><%= @channels.size %> Channels available </h3>
       <ul>
       <%- @channels.sort_by(&:name).each do |channel| %>
