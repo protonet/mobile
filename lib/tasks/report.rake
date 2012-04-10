@@ -9,7 +9,7 @@ Please contact protonet support ASAP at team@protonet.info.'
       Rails.cache.write 'last_raid_msg', Time.now
 
     elsif last_msg + 3.days < Time.now
-      SystemReporting.send_message 'A drive is still missing from the RAID array!
+      SystemReporting.send_message ':exclamation: A drive is still missing from the RAID array!
 In order to protect all of your data, this needs to be fixed.
 Please contact protonet support ASAP at team@protonet.info if you have not already.'
       sleep 5

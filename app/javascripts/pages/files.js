@@ -694,7 +694,7 @@ protonet.p("files", function($page, $window, $document) {
     },
     
     _observe: function() {
-      var timeout, blinker, $currentFolder = $(), fromPath, toPath, dragItems = [], dragPaths = [];
+      var timeout, blinker, fromPath, toPath, dragItems = [], dragPaths = [];
       
       if (!this.uploader.features.dragdrop) { return; }
       
@@ -717,9 +717,10 @@ protonet.p("files", function($page, $window, $document) {
       });
       
       protonet.ui.Droppables.add({
-        types:      PROTONET_FILES_MIME_TYPE,
+        types:      protonet.ui.Droppables.FILES.concat(PROTONET_FILES_MIME_TYPE),
         elements:   ".files-page [data-folder-path]",
         condition:  function($element) {
+          // don't highlight when the item being dragged is the folder (you cannot move a folder into itself)
           return dragPaths.indexOf($element.data("folder-path")) === -1;
         },
         ondragenter:  function($element) {
@@ -742,7 +743,6 @@ protonet.p("files", function($page, $window, $document) {
       }
       
       function parseDataTransfer(str) {
-        str = str.match(/#\s(.+)/) || [, "[]"];
         return JSON.parse(str);
       }
       
@@ -771,7 +771,7 @@ protonet.p("files", function($page, $window, $document) {
         
         fromPath = currentPath;
         
-        dataTransfer.effectAllowed = "copy";
+        dataTransfer.effectAllowed = "copyMove";
         dataTransfer.setData(PROTONET_FILES_MIME_TYPE, stringifyDataTransfer(dragItems));
         dataTransfer.setData("text/uri-list", createUriList(dragItems));
         dataTransfer.setDragImage($dragImage[0], 10, 10);
@@ -782,126 +782,6 @@ protonet.p("files", function($page, $window, $document) {
       
       // TODO: Draggables
       $content.bind("dragstart", dragstart);
-      // protonet.ui.Droppables.add({
-      //         allowedTypes: "files",
-      //         effect:       "copy",
-      //         selector:     ".table-wrapper",
-      //         condition:     function($element) {
-      //           hasWriteAccess(currentPath);
-      //         },
-      //         ondrop:        function() {
-      //           uploadTo(currentPath);
-      //         }
-      //       });
-      //       
-      //       protonet.ui.Droppables.add({
-      //         allowedTypes: FILES_MIME_TYPE,
-      //         effect:       "move",
-      //         selector:     ".table-wrapper",
-      //         condition:    function() {
-      //           hasWriteAccess(currentPath);
-      //         }
-      //       });
-      //       
-      //       protonet.ui.Droppables.add({
-      //         allowedTypes:  "files", // and protonet-files
-      //         selector:      "[data-folder-path]",
-      //         effect:        "none",
-      //         condition:    function() {
-      //           return !isBeingDragged();
-      //         },
-      //         ondragenter:   function() {
-      //           blink();
-      //         },
-      //         ondragleave:   function() {
-      //           stopBlinking();
-      //         }
-      //       });
-      
-      return;
-      
-      function dragend(event) {
-        dragleave();
-      }
-      
-      // Handle drag indicators
-      function dragover(event) {
-        // goodbye unsupported browsers
-        if (!event.dataTransfer)              { return; }
-        if (!$tableWrapper.attr("draggable")) { return; }
-        
-        var dataTransfer           = event.dataTransfer,
-            dataTransferTypes      = $.makeArray(dataTransfer.types),
-            dragsFilesFromDesktop  = dataTransfer.containsFiles(),
-            dragsFilesFromProtonet = dataTransferTypes.indexOf(FILES_MIME_TYPE) !== -1,
-            dragsOverFileArea      = $.contains($tableWrapper[0], event.target) || $tableWrapper[0] === event.target || $.contains($addressBar[0], event.target),
-            dragsOverFolder        = !!$currentFolder.length,
-            targetPath             = dragsOverFolder ? $currentFolder.data("folder-path") : currentPath,
-            hasWriteAccess         = protonet.data.User.hasWriteAccessToFile(viewer, targetPath),
-            isDroppable            = dragsOverFileArea && hasWriteAccess
-              && (dragsFilesFromDesktop || (dragsFilesFromProtonet && (fromPath !== currentPath || dragsOverFolder)));
-        
-        if (isDroppable) {
-          dataTransfer.dropEffect = 'copyMove';
-        } else {
-          dataTransfer.dropEffect = 'none';
-        }
-        
-        if (dragsFilesFromDesktop) {
-          clearTimeout(timeout);
-          timeout = setTimeout(function() {
-            dragleave();
-            dragout();
-          }, (0.5).seconds());
-          $body.addClass("dragenter");
-        }
-        
-        event.preventDefault();
-      }
-      
-      // Open a folder when an item is dragged over it
-      function dragenter(event) {
-        var $target         = $(event.target),
-            $element        = $target.is("[data-folder-path]") ? $target : $target.parents("[data-folder-path]"),
-            path            = $element.data("folder-path"),
-            isBeingDragged  = dragPaths.indexOf(path) !== -1;
-        
-        if (isBeingDragged)              { return; }
-        if ($element.is($currentFolder)) { return; }
-        
-        dragleave();
-        $currentFolder = $element;
-        $currentFolder.addClass("dragover").siblings().removeClass("dragover");
-        
-        if (!$currentFolder.length) { return; }
-        
-        blinker = protonet.effects.blink($currentFolder, {
-          delay:    (0.5).seconds(),
-          interval: (0.25).seconds(),
-          callback: function() { $currentFolder.click().dblclick(); }
-        });
-      }
-      
-      function dragout() {
-        $body.removeClass("dragenter");
-        clearTimeout(timeout);
-      }
-      
-      function dragleave() {
-        blinker         && blinker.stop();
-        $currentFolder  && $currentFolder.removeClass("dragover");
-        $currentFolder = $();
-      }
-      
-      $content.bind({
-        dragenter: dragenter,
-        dragstart: dragstart,
-        dragend:   dragend
-      });
-      
-      $body.on("dragover", dragover);
-      
-      protonet.on("modal_window.unload", function() { $body.off("dragover", dragover); });
     }
   };
   

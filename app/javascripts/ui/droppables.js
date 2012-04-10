@@ -163,6 +163,7 @@ protonet.ui.Droppables = (function() {
   }
   
   return {
+    FILES:  FILES,
     add:    add,
     remove: remove
   };
