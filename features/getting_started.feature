@@ -84,8 +84,7 @@ Feature: Getting Started
     # step 2: listen to channel
     Then I follow the getting started "create-channel" link
     Then I should see the modal window
-    Then I follow "Browse channels"
-    Then I select the channel "movies" in the channel list
+    Then I select the channel "Movies" in the channel list
     Then I should see "Subscribe" within ".channels-page"
     And press "Subscribe" within ".channels-page"
     And I close the modal window

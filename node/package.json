@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "jsdom": ">= 0.2.13",
-    "iconv-lite": ">= 0.1.1",
+    "fetch": ">= 0.2.7",
     "formidable": "1.0.8",
     "mime": "1.2.4",
     "step": "0.0.5",

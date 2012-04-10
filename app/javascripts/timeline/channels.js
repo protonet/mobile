@@ -6,6 +6,7 @@
 //= require "rendezvous.js"
 //= require "remote_channel.js"
 //= require "system_channel.js"
+//= require "private_channel.js"
 
 /**
  * @events
@@ -357,6 +358,7 @@ protonet.timeline.Channels = {
   },
   
   _instantiateChannel: function(channelData) {
+    console.log("INSTANTIATE CHANNEL", channelData);
     var instance;
     if (channelData.rendezvous) {
       instance = new protonet.timeline.Rendezvous(channelData);
@@ -365,6 +367,8 @@ protonet.timeline.Channels = {
       instance = new protonet.timeline.RemoteChannel(channelData);
     } else if (channelData.system) {
       instance = new protonet.timeline.SystemChannel(channelData);
+    } else if (channelData["private"]) {
+      instance = new protonet.timeline.PrivateChannel(channelData);
     } else {
       instance = new protonet.timeline.Channel(channelData);
     }

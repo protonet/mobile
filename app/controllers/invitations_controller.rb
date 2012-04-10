@@ -3,10 +3,14 @@ class InvitationsController < ApplicationController
   filter_resource_access
   include InvitationsHelper
   
-  
   before_filter :set_nav
+  after_filter :fake_controller_name,  :if => Proc.new { |a| a.request.xhr? }
   def set_nav
     @nav = "invitations"
+  end
+  
+  def fake_controller_name
+    response.headers['X-Controller-Name'] = "users"
   end
   
   def index

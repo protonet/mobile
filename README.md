@@ -263,7 +263,7 @@ HowTo mount your local code to a protonet node (Works in OSX Leopard and OSX Sno
 
         touch ~/dashboard/current/tmp/restart.txt
 
-HowTo mount local code to a protonet-node using nfs (Lion)
+HowTo mount local code to a protonet-node using nfs (Testet on Lion and Snowleopard)
 ================================================
 
 1. In Lion edit or create /etc/exports and the path like this:
@@ -271,6 +271,12 @@ HowTo mount local code to a protonet-node using nfs (Lion)
         <absolute path to your code> -ro <ip of your protonet-node>
         
    Note: -ro = read only
+
+   The launchd file for the nfsd (com.apple.nfsd) configures the system to reload changes on change of /etc/exports. This seems not to work properly. To force reloading of the exports use:
+   
+        sudo nfsd disable
+        
+        sudo nfsd enable
 
 2. if your node misses mount.nfs install nfs-common
 

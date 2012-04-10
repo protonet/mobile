@@ -142,6 +142,20 @@
 #user-widget li {
   position: relative;
 }
+#user-widget .verifications{
+  display:none;
+}
+#user-widget .verifications a{
+  display:block;
+  background: #F7F1A8;
+  line-height: 30px;
+  font-size: 10px;
+  text-align: center;
+  margin-top: -1px;
+  color:#000;
+  border:1px #8C8C8C solid;
+  text-decoration:none;
+}
 
 /*--------------------------------- MY WIDGET ---------------------------------*/
 #my-widget {

@@ -4,7 +4,8 @@ Feature: Using global channels
   Scenario: Connecting to a public channel on another node
     Given I go to the start page
     And I am logged in as "admin" with password "admin"
-    And I click on "channels:overview" in the main navigation
+    And I go to the channels page
+    And I follow "Global Channels"
     And I select the global channel "protonet-devs" in the channel overview
     Then I should see "protonet-devs" in the channel details pane
     And I press "Subscribe" within ".subscribe-channel-form"

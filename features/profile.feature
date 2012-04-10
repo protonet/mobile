@@ -9,7 +9,7 @@ Feature: Managing your profile
 
   @javascript
   Scenario: Changing my password
-    And I follow "My profile" within "header"
+    And I follow "dudemeister" within ".user-list"
     And I follow "edit" within ".users-page"
     Then I should see "Change password" within ".users-page"
     
@@ -33,7 +33,7 @@ Feature: Managing your profile
 
   @javascript
   Scenario: Seeing my own profile
-    Given I follow "My profile" within "header"
+    Given I follow "dudemeister" within ".user-list"
     Then I should see "@dudemeister" within ".users-page h2"
     # standard image
     Then I should see the profile image "user_picture_r4.png" in my profile details

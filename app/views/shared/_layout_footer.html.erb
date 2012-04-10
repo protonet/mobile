@@ -80,6 +80,7 @@
     captive_redirect_url:             "<%= raw(params[:captive_redirect_url] || session[:captive_redirect_url]) %>",
     captive_redirect_only:            <%= SystemPreferences.captive_redirect_only.to_json %>,
     debug_mode:                       <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>,
+    pending_verifications:            <%= raw current_user.pending_channel_verifications.to_json%>,
     channels:                         <%= raw channels.to_json %>,
     users:                            <%= raw users.to_json %>
   };

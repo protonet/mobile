@@ -114,10 +114,11 @@ $.behaviors({
   },
   
   ".subpage:ajax:beforeSend": function(element, event) {
-    $(event.target)
+    var $form = $(event.target);
+    $form
       .addClass("loading")
       .find("input, textarea, select, button")
-        .prop("disabled", true)
+        .prop("disabled", !$form.data("avoid-disabling"))
         .end()
       .find(".loading-hint")
         .fadeIn("fast");
@@ -201,7 +202,14 @@ $.behaviors({
         $tabLink.parent().addClass("selected");
         protonet.utils.History.push(url);
       },
-      success: function(html) {
+      success: function(html, statusText, xhr) {
+        var $output = $(html).find("output[data-tab]");
+        if ($output.length > 0) {
+          html = $output.html();
+          $tabContainer.attr("class", $output.attr("class"));
+          var classNames = $output.parents("section.subpage").attr("class");
+          $tabContainer.parents("section.subpage").attr("class", classNames);
+        }
         $tabContainer.html(html).hide().fadeIn("fast");
         $tabContainer.css("padding-top", (originalPaddingTop + $scrollContainer.scrollTop()).px());
         $tabContainer.trigger("tab:updated");

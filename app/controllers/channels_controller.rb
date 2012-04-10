@@ -1,21 +1,23 @@
 class ChannelsController < ApplicationController
   
-  filter_resource_access :collection => [:index, :list_global, :show_global, :recommended_global_teaser, :list, :info]
+  filter_resource_access :collection => [:global, :index, :show_global, :info]
   
-  before_filter :couple_node, :only => [:show_global, :list_global]
-  
-  before_filter :available_channels, :only => [:index, :list, :show]
+  before_filter :couple_node, :only => [:global, :show_global]
+  before_filter :available_channels
   
   def index
+    @subscribed_channels = Channel.real.joins(:listens).where(:listens => {:user_id => current_user.id}).order_by_name
+    @nav = "channels"
   end
   
   def show
-    if request.headers['X-Request-Type'] == 'tab'
-      render :partial => "channel_details", :locals => { :channel => Channel.find(params[:id]) }
-    else
-      @selected_channel = Channel.find(params[:id])
-      render :list
-    end
+    @nav = "channels"
+  end
+  
+  def global
+    @nav = "global"
+    @team_node = Node.team
+    @global_channels = @team_node.global_channels
   end
   
   def info
@@ -34,23 +36,13 @@ class ChannelsController < ApplicationController
   end
   
   def show_global
-    if request.headers['X-Request-Type'] == 'tab'
-      render :partial => "channel_details", :locals => { :channel => Channel.find(@remote_channel_id) }
-    else
-      @selected_channel = Channel.find(@remote_channel_id)
-      render :list_global
-    end
-  end
-  
-  def list
-    @selected_channel = Channel.find_by_id(params[:id])
-  end
-  
-  def list_global
-    @selected_channel = Channel.find_by_id(@remote_channel_id)
+    @nav = "global"
+    @channel = Channel.find(@remote_channel_id)
+    render :show
   end
   
   def new
+    @nav = "new"
   end
   
   def create
@@ -82,14 +74,10 @@ class ChannelsController < ApplicationController
     success = channel.destroy
     if success && channel.errors.empty?
       flash[:notice] = "Successfully deleted channel '#{channel_name}'"
-      redirect_to :action => 'list'
+      redirect_to :action => :index
     else
       flash[:error] = "Could not delete channel '#{channel_name}'"
     end
-  end
-  
-  def recommended_global_teaser
-    render :partial => 'channels/teaser/recommended_global', :locals => { :node => Node.team }
   end
   
   private

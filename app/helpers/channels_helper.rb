@@ -17,6 +17,7 @@ module ChannelsHelper
     classes = []
     classes << 'global' if channel.global?
     classes << 'system' if channel.system?
+    classes << 'private' if classes.empty? && !channel.public?
     classes.join(" ")
   end
 end

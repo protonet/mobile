@@ -730,7 +730,7 @@ protonet.p("files", function($page, $window, $document) {
             callback: function() { $element.click().dblclick(); }
           });
         },
-        ondragleave:  function() {
+        ondragleave:  function($element) {
           blinker.stop();
         }
       });

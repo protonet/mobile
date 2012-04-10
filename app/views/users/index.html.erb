@@ -10,7 +10,7 @@
     <p>This node doesn't have any administrators. Anarchy!</p>
   <%- end -%>
   
-  <%= form_tag(search_users_path, :remote => true, :method => :get, :id => "search_users", 'data-type' => 'html' ) do %>
+  <%= form_tag(search_users_path, :remote => true, :method => :get, :id => "search_users", 'data-type' => 'html', 'data-avoid-disabling' => 'true' ) do %>
     <h2>Discover all registered users</h2>
     
     <div class="inputs">
@@ -19,10 +19,9 @@
     </div>
     
     <output>
-      <ul>
+      <ul class="common-user-list">
         <%= render :partial => "user", :collection => @users %>
       </ul>
-      <%= will_paginate @users%>
     </output>
     
   <%- end %>

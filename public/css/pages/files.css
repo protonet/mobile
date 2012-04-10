@@ -13,12 +13,11 @@
   margin: -1px -1px -1px -1px;
   border: 2px dashed rgba(0, 204, 0, 0.5);
   outline: 5px solid #eee;
-  background: rgba(0, 204, 0, 0.05);
+  background: rgba(0, 204, 0, 0.04);
 }
 
 .files-page .table-wrapper.dragover {
   border: 2px dashed rgb(0, 204, 0);
-  background: rgba(0, 204, 0, 0.1);
 }
 
 .files-page .dragover-possible p.hint {

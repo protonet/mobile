@@ -81,24 +81,31 @@ protonet.ui.Droppables = (function() {
       
       // Find targets on which content is currently dragged: highlight them and fire a ondragenter()
       activeTargets = [];
+      
+      var queue = [];
       $.each(potentialTargets, function(i, target) {
         $(target.elements).each(function(i, element) {
           var $element          = $(element),
               wasBeingDraggedOn = $element.data("dragover"),
               isBeingDraggedOn  = event.target === element || (target.includeChilds && $.contains(element, event.target));
-          
           if (isBeingDraggedOn && target.condition($element)) {
             if (activeTargets.indexOf(target) === -1) {
               activeTargets.push(target);
             }
             if (!wasBeingDraggedOn) {
-              _dragenter(target, $element, dataTransfer);
+              queue.push(function() {
+                _dragenter(target, $element, dataTransfer);
+              });
             }
           } else if (wasBeingDraggedOn) {
-            _dragleave(target, $element);
+            queue.unshift(function() {
+              _dragleave(target, $element);
+            });
           }
         });
       });
+      
+      $.each(queue, function(i, func) { func(); });
       
       if (potentialTargets.length) {
         $html.addClass("dragover");

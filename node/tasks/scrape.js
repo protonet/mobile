@@ -1,4 +1,5 @@
-var jsdom = require("jsdom");
+var fetchUrl = require("fetch").fetchUrl,
+  jsdom = require("jsdom");
   
 function stripScriptTags(body){
   // remove all Script tags;
@@ -10,22 +11,26 @@ exports.scrape = function(params, response) {
   
   var uri =  decodeURIComponent(params["url"]),
     selector = params["selectors"],
-    callback = params["callback"];
+    callback = params["callback"],
+    data = { error: null, results: null },
+    results = {},
+    options = { 
+      "maxRedirects": 5,
+      "headers": {
+        "user-agent": 'Mozilla/5.0 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7 Protonet/1.0'
+      },
+      "maxResponseLength": 500000,
+      "timeout": 4000 
+    };
   
-  require("./../modules/get.js")._get(uri, function(error, res){    
-    
-    response.writeHead(200, { "Content-Type": "application/json;" });
-        
-    if (!res) {
+  fetchUrl(uri, options, function(error, meta, body){
+      
+    if (error) {
       response.end(JSON.stringify({error: error}));
       return;
     };
-    
-    var data = { error: error, results: null },
-      results = {};
-    
     jsdom.env({
-      html: stripScriptTags(res.body),
+      html: stripScriptTags(body.toString()),
       features: {
         "FetchExternalResources": false,
         "ProcessExternalResources": false,
@@ -65,6 +70,5 @@ exports.scrape = function(params, response) {
         
       }
     });
-        
   });
 };

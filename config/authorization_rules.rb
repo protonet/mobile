@@ -21,6 +21,7 @@ authorization do
     end
     has_permission_on :users, :to => [:show, :rendezvous, :update_last_read_meeps, :newbie, :channels]
     has_permission_on :snapshots, :to => :index
+    has_permission_on :channels, :to => [:index]
     has_permission_on :channels do
       to [:show]
       if_attribute :users => contains {user}
@@ -28,7 +29,7 @@ authorization do
     has_permission_on :channels, :to => [:info]
     has_permission_on :files, :to => [:read]
     has_permission_on :users do 
-      to [:update, :show, :change_password, :my]
+      to [:update, :show, :change_password, :my_profile]
       if_attribute :id => is {user.id}
     end
   end
@@ -68,9 +69,9 @@ authorization do
     has_permission_on :files, :to => [:read]
     has_permission_on :snapshots, :to => :index
     has_permission_on :meeps, :to => [:manage, :read, :create, :delete, :sync]
-    has_permission_on :channels, :to => [:manage, :manage_globals]
+    has_permission_on :channels, :to => [:manage]
     has_permission_on :nodes, :to => [:manage]
-    has_permission_on :listens, :to => [:manage, :accept, :manage_globals, :create_for_user]
+    has_permission_on :listens, :to => [:manage, :accept, :create_for_user]
     has_permission_on :invitations, :to => :manage
     has_permission_on :authorization_rules, :to => :read
     has_permission_on :users, :to => [:manage, :delete_stranger_older_than_two_days, :rendezvous, :update_last_read_meeps, :newbie, :update_roles]
@@ -86,7 +87,7 @@ privileges do
     :change_password, :update_user_admin_flag, :generate_new_password, :search, :send_javascript, :send_system_message]
   privilege :newbie, :includes => [:remove_newbie_flag, :newbie_todo_list]
   privilege :rendezvous, :includes => [:start_rendezvous]
-  privilege :read, :includes => [:index, :before, :after, :show, :my, :search, :list, :list_global, :show_global, :recommended_global_teaser, :meeps_with_text_extension, :channels, :info]
+  privilege :read, :includes => [:index, :before, :after, :show, :my_profile, :search, :global, :show_global, :meeps_with_text_extension, :channels, :info]
   privilege :create, :includes => :new
   privilege :update, :includes => :edit
   privilege :delete, :includes => :destroy

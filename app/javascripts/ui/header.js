@@ -63,18 +63,8 @@ protonet.ui.Header = {
       }.bind(this));
   },
   
-  select: function(controllerName, actionName) {
-    this.$header.find(".nav-link, .sub-nav-link").removeClass("selected");
-    if (controllerName) {
-      var controllerLink = this.$header.find("." + controllerName + "-controller-link.nav-link").addClass("selected");
-      var nestedControllerLink = controllerLink.find("." + controllerName + "-controller-link");
-      if (nestedControllerLink.length > 0) {
-        nestedControllerLink.addClass("selected");
-      }else{
-        if (actionName) {
-          controllerLink.find("." + actionName + "-action-link").addClass("selected");
-        }
-      }
-    }
+  select: function(controllerName) {
+    this.$header.find(".nav-link").removeClass("selected");
+    this.$header.find("." + controllerName + "-controller-link.nav-link").addClass("selected");
   }
 };

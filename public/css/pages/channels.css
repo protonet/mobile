@@ -126,6 +126,54 @@
   width: 180px;
 }
 
+.channels-page  h2{
+  margin-bottom:25px;
+}
+
+.channels-page ul.channels-list {
+  list-style:none;
+  overflow:hidden;
+  margin-bottom: 30px;
+} 
+.channels-page ul.channels-list li{
+  float: left;
+  position: relative;
+  width: 130px;
+  height: 60px;
+  margin: 0 5px 25px 0;
+  padding-left: 70px;
+}
+.channels-page ul.channels-list a{
+  text-decoration: none;
+  display: block;
+  height: 48px;
+}
+.channels-page ul.channels-list strong{
+  display: block;
+  word-wrap: break-word;
+}
+.channels-page ul.channels-list img.subscribed{
+  left: 40px;
+  bottom: 5px;
+  background-position: 0 -50px;
+  position:absolute;
+  height: 17px;
+  width: 17px;
+}
+.channels-page ul.channels-list a img{
+  border: 1px solid #CCC;
+  padding: 5px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 48px;
+  width: 48px;
+  -moz-box-shadow: 5px 5px 0px #eee;
+  -webkit-box-shadow: 5px 5px 0px #eee;
+  box-shadow: 5px 5px 0px #eee;
+  }
+}
+
 .add-channel-link {
   display: block;
   padding: 10px 10px 10px 30px;

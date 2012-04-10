@@ -12,6 +12,7 @@ protonet.ui.User.Widget = {
     this.$resizer          = this.$widget.find(".resize");
     this.$onlineUsersCount = this.$widget.find("output.count");
     this.$title            = this.$widget.find("output.title");
+    this.$verifications    = this.$widget.find(".verifications");
     
     new protonet.ui.Resizer(this.$list, this.$resizer, { storageKey: "user_widget_height" });
     
@@ -52,6 +53,19 @@ protonet.ui.User.Widget = {
       
       .on("user.came_online user.goes_offline", function(data) {
         this.update$Element(data.id);
+      }.bind(this))
+      
+      .on("channel.change", function(channel_id){
+        if (protonet.config.pending_verifications[channel_id]) {
+          var verificationCount = protonet.config.pending_verifications[channel_id];
+          this.$verifications.empty().append($("<a>", {
+            href: "/channels/" + channel_id,
+            text: verificationCount + " pending verification" + (verificationCount > 1 ? "s" : "")
+          }));
+          this.$verifications.show();
+        } else {
+          this.$verifications.hide();
+        }
       }.bind(this));
       
     

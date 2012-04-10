@@ -6,6 +6,23 @@ protonet.p("users", function($page) {
       $meepList         = $("<ul>", { "class": "meeps" }),
       $searchUsers      = $("form#search_users");
   
+  var fillUpUsers = function(page) {
+    var path = document.location.pathname + ".js" + document.location.search;
+    $.get(path, {"page": page}, function(data){
+      if (data == " ") {
+        return;
+      }
+      $($(".common-user-list")).append(data);
+      $(".common-user-list li:nth-last-child(20)").one("inview", function() {
+        fillUpUsers(page + 1);
+      });
+    }, 'html');
+  };
+
+  $(".common-user-list li:nth-last-child(20)").one("inview", function() {
+    fillUpUsers(2);
+  });
+
   $meepContainer.one("inview", function() {
     function fallback() {
       $meepContainer.html($("<p>", { "class": "hint", text: protonet.t("NO_MEEPS_FOR_USER_AVAILABLE") }));
