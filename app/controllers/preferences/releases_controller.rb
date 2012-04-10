@@ -32,7 +32,8 @@ module Preferences
     # gets called via javascript if the user wants to see the log output
     # the sed command filters out shell color codes
     def release_update_progress
-      text = `cat /tmp/ptn_release_update.log | sed 's/\\\033[^a-zA-Z]*.//g'`
+      #text = `cat /tmp/ptn_release_update.log | sed 's/\\\033[^a-zA-Z]*.//g'`
+      text = `cat /var/log/system.log`
       render :json => { :status => :ok, :success => true, :text => text }, :status => 200
     end
     

@@ -23,3 +23,9 @@
   </div>
   <%= button "Update" %> <span class="loading-hint">Please wait. This will take a few minutes.</span>
 <%- end %>
+
+<div id="release_update_progress_console" class="console_output" data-url="<%= url_for preferences_release_update_progress_path %>"></div>
+<a id="show_release_update_progress">Show update progress</a>
+
+<h3>Old log files</h3>
+<a id="show_last_release_update_log">Show last update log</a>
