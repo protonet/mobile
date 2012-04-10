@@ -12,7 +12,7 @@ module ApplicationHelper
   end
   
   def stylesheets
-    ['/css/lib/fcbkcomplete', '/css/reset', '/css/general', '/css/header', '/css/subpage', '/css/logged_out', '/css/channels', '/css/meeps', '/css/form', '/css/text_extension', '/css/emoji.css', '/css/widget', '/css/pages/search', '/css/modal_window', '/css/context_menu', '/css/getting_started', '/css/pagination']
+    ['/css/lib/fcbkcomplete', '/css/reset', '/css/general', '/css/header', '/css/subpage', '/css/logged_out', '/css/channels', '/css/meeps', '/css/form', '/css/text_extension', '/css/emoji.css', '/css/widget', '/css/pages/search', '/css/modal_window', '/css/context_menu', '/css/getting_started', '/css/pagination', '/css/users']
   end
   
   def custom_stylesheet
@@ -41,9 +41,7 @@ module ApplicationHelper
   # a full path in the src URL. Useful for templates that will be rendered into
   # emails etc.
   def public_image_tag(*args)
-    protocol = SystemPreferences.public_host_https ? 'https' : 'http'
-    host = SystemPreferences.public_host
-    raw(image_tag(*args).sub /src="(.*?)"/, "src=\"#{protocol}://#{host}" + '\1"')
+    raw(image_tag(*args).sub /src="(.*?)"/, "src=\"http://#{SystemPreferences.public_host}" + '\1"')
   end
   
   def image_proxy(url, opts)
@@ -66,7 +64,7 @@ module ApplicationHelper
   
   def node_base_url(public_domain = false)
     if public_domain
-      "#{SystemPreferences.public_host_https ? 'https' : 'http'}://#{SystemPreferences.public_host}/node"
+      "http://#{SystemPreferences.public_host}/node"
     else
       is_apache? ? "#{request.protocol}#{server_name}/node" : "#{request.protocol}#{server_name}:#{configatron.nodejs.port}"
     end

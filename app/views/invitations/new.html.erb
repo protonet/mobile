@@ -1,5 +1,5 @@
 <%= render "shared/nav_users"%>
-<output class="content" data-tab="invitations">
+<output class="content" data-tab="users">
   <%= form_for(@invitation, :html => { "data-type" => 'html' }) do |f| %>
     <h2>Invite people to your protonet <a data-hover-hint="top" title="Only admins can invite people" class="hint">(?)</a></h2>
     
@@ -43,12 +43,16 @@
     </div>
     
     <div class="form-field channels">
+
      <label for="invitation_channel"> Channels: <a data-hover-hint="top" title="Check channels which the user will be subscribed to." class="hint">(?)</a></label>
+      <h3 class="belongs-to-list"><%= @channels.size %> Channels available </h3>
       <ul>
-      <%- @channels.each do |channel| %>
+      <%- @channels.sort_by(&:name).each do |channel| %>
         <li class="channel-checkboxes">
-        <%= check_box_tag "invitation[channel_ids][]", channel.id, @channels.size == 1 || params[:channel_id].to_i == channel.id, :id => dom_id(channel, "invitation") %>
-        <%= label_tag dom_id(channel, "invitation"), channel.name, { :class => 'reply channel' } %> <%= raw("<span class='hint'>(from remote node)</span>") unless channel.locally_hosted? %>
+          <label class="checkbox-row">
+            <%= check_box_tag "invitation[channel_ids][]", channel.id, @channels.size == 1 || params[:channel_id].to_i == channel.id, :id => dom_id(channel, "invitation") %>
+            <%= channel.name %>
+          </label>
         </li>
       <%- end %>
       </ul>

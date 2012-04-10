@@ -30,6 +30,7 @@ class Channel < ActiveRecord::Base
   scope :real,  :conditions => {:rendezvous => nil}
   scope :verified, :conditions => {:listens => {:verified => true}}
   scope :local, :conditions => {:node_id => 1}
+  scope :order_by_name, :order => "name ASC"
   
   def self.support
     uuid = "b0138cc6-ffbb-11e0-92ce-0024215f2168"

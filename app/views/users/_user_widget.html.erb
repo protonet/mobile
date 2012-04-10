@@ -1,4 +1,4 @@
-<% users = SystemPreferences.show_only_online_users ? [] : User.registered.includes(:roles, :listens).all -%>
+<% users = SystemPreferences.show_only_online_users ? [] : User.registered.order_by_login.includes(:roles, :listens).all -%>
 <div id="user-widget" class="widget">
   <h3 class="gradient">
     <% if SystemPreferences.show_only_online_users -%>
@@ -15,5 +15,6 @@
       </li>
     <% end -%>
   </ul>
+  <div class="verifications"></div>
   <div class="resize"></div>
 </div>

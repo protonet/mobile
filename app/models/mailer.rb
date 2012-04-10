@@ -1,15 +1,25 @@
 class Mailer < ActionMailer::Base
   
+  include ActionView::Helpers::SanitizeHelper
+  
   default_url_options[:host]      = SystemPreferences.public_host
   default_url_options[:protocol]  = SystemPreferences.public_host_https ? 'https' : 'http'
   
   def invitation(invitation)
     @invitation = invitation
+    from = if invitation.user.email.present?
+      "\"#{invitation.user.display_name}\" <#{invitation.user.email}>"
+    else
+      "no-reply <mailer@protonet.info>"
+    end
     mail(
-      :from => "\"#{invitation.user.display_name}\" <mailer@protonet.info>",
+      :from => from,
       :to => invitation.email,
       :subject => "#{invitation.user.display_name} has invited you to join the protonet of #{Node.local.name}"
-    )
+    ) do |format|
+      format.text{ render :text => strip_tags(invitation.message) }
+      format.html
+    end
   end
   
   def password_reset(password, receiver)

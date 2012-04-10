@@ -1,28 +1,25 @@
 class ChannelsController < ApplicationController
   
-  filter_resource_access :collection => [:index, :list_global, :show_global, :recommended_global_teaser, :list]
+  filter_resource_access :collection => [:global, :index, :show_global, :list]
   
-  before_filter :couple_node, :only => [:show_global, :list_global]
-  
-  before_filter :available_channels, :only => [:index, :list, :show]
+  before_filter :couple_node, :only => [:global, :show_global]
+  before_filter :available_channels
   
   def index
+    @subscribed_channels = Channel.real.joins(:listens).where(:listens => {:user_id => current_user.id}).order_by_name
+    @nav = "channels"
   end
   
-  def list
-    @selected_channel = Channel.find_by_id(params[:id])
+  def global
+    @nav = "global"
+    @team_node = Node.team
+    @global_channels = @team_node.global_channels
   end
   
   def show
     respond_to do |format|
       format.html do
-        if request.headers['X-Request-Type'] == 'tab'
-          render :partial => "channel_details", :locals => { :channel => Channel.find(params[:id]) }
-        else
-          # TODO: This can be used to get the content of any channel #security
-          @selected_channel = Channel.find(params[:id])
-          render :list
-        end
+        @nav = "channels"
       end
       format.json do
         render :json => Channel.prepare_for_frontend(current_user.channels.find(params[:id]), current_user)
@@ -31,19 +28,13 @@ class ChannelsController < ApplicationController
   end
   
   def show_global
-    if request.headers['X-Request-Type'] == 'tab'
-      render :partial => "channel_details", :locals => { :channel => Channel.find(@remote_channel_id) }
-    else
-      @selected_channel = Channel.find(@remote_channel_id)
-      render :list_global
-    end
-  end
-  
-  def list_global
-    @selected_channel = Channel.find_by_id(@remote_channel_id)
+    @nav = "global"
+    @channel = Channel.find(@remote_channel_id)
+    render :show
   end
   
   def new
+    @nav = "new"
   end
   
   def create
@@ -81,10 +72,6 @@ class ChannelsController < ApplicationController
     end
   end
   
-  def recommended_global_teaser
-    render :partial => 'channels/teaser/recommended_global', :locals => { :node => Node.team }
-  end
-  
   private
     def couple_node
       Node.couple(params[:node]).attach_global_channel(params[:uuid]) rescue nil
@@ -94,9 +81,9 @@ class ChannelsController < ApplicationController
     
     def available_channels
       @channels = if current_user.invitee?
-        current_user.channels.real
+        current_user.channels.real.order_by_name
       else
-        Channel.real.local
+        Channel.real.local.order_by_name
       end
     end
 end

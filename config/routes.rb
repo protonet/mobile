@@ -4,27 +4,25 @@ Dashboard::Application.routes.draw do
   match 'captive' => 'system/captive#index'
   match 'captive/login' => 'system/captive#login'
   match 'captive/browser_check' => 'system/captive#browser_check'
+  match 'captive/grant' => 'system/captive#grant'
+  match 'captive/revoke' => 'system/captive#revoke'
   match 'captive/whitelist_clients' => 'system/captive#whitelist_clients'
   match 'captive/whitelist_sites' => 'system/captive#whitelist_sites'
 
   # Channels
-  match 'channels/:id/guest/:token' => 'channels#guest_access', :as => :channel_guest_access
-  match 'channels/list' => 'channels#list', :as => :list_channels
-  match 'channels/list_global' => 'channels#list_global', :as => :list_global_channels
-  match 'channels/show_global' => 'channels#show_global', :as => :show_global_channel
-  match 'channels/recommended_global_teaser' => 'channels#recommended_global_teaser'
+  #match 'channels/list' => 'channels#list', :as => :list_channels
+  #match 'channels/list_global' => 'channels#list_global', :as => :list_global_channels
+  #match 'channels/show_global' => 'channels#show_global', :as => :show_global_channel
+  #match 'channels/recommended_global_teaser' => 'channels#recommended_global_teaser'
   
   resources :channels do
-    resources :meeps
     collection do
-      get 'global'
+      match "/global" => "channels#global", :as => :global
+      match "/global/:uuid" => "channels#show_global", :as => :show_global
     end
-    
-    member do
-      get 'details'
-    end
+    resources :meeps
   end
-  match 'channels/:id/destroy' => 'channels#destroy', :as => :destroy_channel
+  # match 'channels/:id/destroy' => 'channels#destroy', :as => :destroy_channel
   
   # meeps
   match 'meep/:id' => 'meeps#show' # Needed for backwards compatibility
@@ -66,7 +64,7 @@ Dashboard::Application.routes.draw do
   match 'users/:id/meeps_with_text_extension' => 'users#meeps_with_text_extension', :as => :meeps_with_text_extension, :via => [:get]
   match 'users/update_last_read_meeps' => 'users#update_last_read_meeps', :as => :update_last_read_meeps, :via => [:put]
   match 'users/search' => 'users#search', :as => :search_users, :via => [:get]
-  match 'users/my' => 'users#my', :as => :my_user, :via => [:get]
+  match 'users/my_profile'  => 'users#my_profile', :as => :my_profile, :via => [:get]
   match 'users/delete_stranger_older_than_two_days' => 'users#delete_stranger_older_than_two_days', :as => :delete_stranger_older_than_two_days, :via => [:post]
   match 'users/remove_newbie_flag' => 'users#remove_newbie_flag', :as => :remove_newbie_flag, :via => [:post]
   match 'users/newbie_todo_list' => 'users#newbie_todo_list', :as => :newbie_todo_list, :via => [:get]

@@ -1,20 +1,20 @@
 <aside>
   <ul>
     <li class="<%= 'selected' if @nav == "my_profile" %>">
-      <a href="<%= my_user_path %>">
+      <a href="<%= my_profile_path %>" data-tab="users">
         <strong>My Profile</strong>
       </a>
     </li>
     <%- if permitted_to?(:read, :users)  %>
     <li class="<%= 'selected' if @nav == "users" %>">
-      <a href="<%= users_path %>">
+      <a href="<%= users_path %>" data-tab="users">
         <strong>All Users (<%= User.registered.size%>)</strong>
       </a>
     </li>
     <%- end %>
     <%- if permitted_to?(:manage, :invitations)  %>
     <li class="<%= 'selected' if @nav == "invitations" %>">
-      <a href="<%= invitations_path %>">
+      <a href="<%= invitations_path %>" data-tab="users">
         <strong>Invitations</strong>
       </a>
     </li>

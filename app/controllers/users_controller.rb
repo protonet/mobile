@@ -1,15 +1,23 @@
 class UsersController < ApplicationController
   include Rabbit
   
-  filter_resource_access :collection => [:index, :my, :search]
+  filter_resource_access :collection => [:index, :my_profile, :search]
   
   before_filter :redirect_to_my_profile,  :only => :show
   before_filter :prepare_target_users,    :only => [:send_system_message, :send_javascript]
   after_filter  :publish_admin_users,     :only => :update_user_admin_flag
   
   def index
-    @users = User.registered.paginate(:page => params[:page], :per_page => 50)
     @nav = "users"
+    @users = User.registered.includes(:roles).order_by_login.paginate(:page => params[:page], :per_page => 40)
+    respond_to do |format|
+      format.html {
+        render
+      }
+      format.js {
+        render :partial => "user", :collection => @users
+      }
+    end
   end
   
   def show
@@ -17,7 +25,7 @@ class UsersController < ApplicationController
     render_profile User.find(params[:id])
   end
   
-  def my
+  def my_profile
     @nav = "my_profile"
     render_profile current_user
   end
@@ -154,8 +162,15 @@ class UsersController < ApplicationController
   
   def search
     @nav = "users"
-    @users = User.registered.where("login like '#{params[:search_term]}%'").paginate(:page => params[:page], :per_page => 50)
-    render :action => "index"
+    @users = User.registered.includes(:roles).order_by_login.where("login like '#{params[:search_term]}%'").paginate(:page => params[:page], :per_page => 40)
+    respond_to do |format|
+      format.html {
+        render :action  => "index"
+      }
+      format.js {
+        render :partial => "user", :collection => @users
+      }
+    end
   end
   
   def remove_newbie_flag
@@ -196,7 +211,7 @@ class UsersController < ApplicationController
     end
     
     def redirect_to_my_profile
-      redirect_to(:controller => :users, :action => :my) if current_user.id == params[:id].to_i
+      redirect_to(:controller => :users, :action => :my_profile) if current_user.id == params[:id].to_i
     end
   
     def publish_admin_users

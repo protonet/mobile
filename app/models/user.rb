@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
   
   scope :registered, :conditions => "temporary_identifier IS NULL AND users.id != -1 AND users.node_id = 1"
   scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"
+  scope :order_by_login, :order => "login ASC"
   
   before_validation :download_remote_avatar, :if => :avatar_url_provided?
   before_validation :generate_login_from_name
@@ -293,6 +294,20 @@ class User < ActiveRecord::Base
     mapping = {}
     channels.each {|c| mapping[c.uuid] = c.id }
     mapping
+  end
+  
+  def pending_channel_verifications
+    chann = if admin?
+      Channel.local.real
+    else
+      owned_channels
+    end
+    chann.includes(:listens).
+    where(:listens => {:verified => false}).
+    inject({}) { |hash, channel|
+      hash[channel.id] = channel.listens.where(:verified => false).count
+      hash
+    }
   end
   
   def assign_roles_and_channels

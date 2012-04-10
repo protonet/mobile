@@ -51,11 +51,14 @@ function install() {
   echo "If you want it to be installed on a real protonet provided node select 2"
   echo "1. vm preps"
   echo "2. full node preps"
+  echo "3. admin server"
   read -p "Your selection: " t
   if [ $t == 1 ]; then
     babushka protonet:vm-preparations
   elif [ $t == 2 ]; then
     babushka protonet:node-preparations
+  elif [ $t == 3 ]; then
+    babushka protonet:admin-server
   else
     exit 1
   fi
