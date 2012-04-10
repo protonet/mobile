@@ -1,5 +1,5 @@
+//= require "../../utils/prettify_code.js"
 //= require "../../utils/escape_html.js"
-//= require "../../lib/google_code_prettify.js"
 
 protonet.text_extensions.render.code = function(data, hide) {
   var container = $("<div>", {
@@ -18,7 +18,7 @@ protonet.text_extensions.render.code = function(data, hide) {
   
   if (data.code) {
     var pre = $("<pre>", {
-      html: prettyPrintOne(protonet.utils.escapeHtml(data.code))
+      html: protonet.utils.prettifyCode(protonet.utils.escapeHtml(data.code))
     }).appendTo(container);
     
     hide && pre.hide();

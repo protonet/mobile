@@ -225,7 +225,9 @@ protonet.ui.User.Widget = {
       $element
         .addClass("new-online")
         .css("backgroundColor", "#ffff99")
-        .animate({ "backgroundColor": "#ffffff" }, { duration: 1000 });
+        .animate({ "backgroundColor": "#ffffff" }, 1000, function() {
+          $element.css("backgroundColor", "");
+        });
     }
     
     if (isOnline) {

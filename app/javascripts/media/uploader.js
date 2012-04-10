@@ -59,19 +59,19 @@ protonet.media.Uploader = (function() {
     };
     
     uploader.disable = function() {
-      $flashContainer.hide();
+      $container.hide();
       $fileInput.attr("disabled", "disabled");
     };
     
     uploader.enable = function() {
-      $flashContainer.show();
+      $container.show();
       $fileInput.removeAttr("disabled");
     };
     
     uploader.init();
     
-    $flashContainer = $("#" + uploader.id + "_flash_container");
-    $fileInput      = $("#" + uploader.id + "_html5, form[target='" + uploader.id + "_iframe'] input[type=file]");
+    $container    = $("#" + uploader.id + "_flash_container, #" + uploader.id + "_html5_container");
+    $fileInput    = $("#" + uploader.id + "_html5, form[target='" + uploader.id + "_iframe'] input[type=file]");
     
     return uploader;
   };

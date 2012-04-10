@@ -1,5 +1,5 @@
-//= require "../../lib/google_code_prettify.js"
 //= require "../../utils/escape_html.js"
+//= require "../../utils/prettify_code.js"
 
 protonet.media.provider.Code = {
   supportedMimeTypes: ["application/javascript", "application/json", "application/xml", "text/html", "text/css", "text/javascript", "text/plain"],
@@ -15,7 +15,7 @@ protonet.media.provider.Code = {
         if (contentType === "text/plain") {
           text = protonet.utils.autoLink(text);
         } else {
-          text = prettyPrintOne(text);
+          text = protonet.utils.prettifyCode(text);
         }
         $element.html(text);
         deferred.resolve($element);

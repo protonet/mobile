@@ -110,6 +110,7 @@
           }
           
           this.unreadMeeps++;
+          console.log(instance);
           var isReplyToViewer = instance.userReplies.indexOf(protonet.config.user_id + "") !== -1;
           if (isReplyToViewer) {
             this.unreadReplies++;

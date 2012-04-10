@@ -57,6 +57,7 @@
           this.data.user_id       = this.data.remote_user_id;
         }
       }
+      this.userReplies = this.channelReplies = [];
     },
 
     _parseForm: function(form) {
@@ -95,10 +96,10 @@
       ], function(i, method) {
         message = method(message);
       });
-
+      
       this.userReplies = protonet.utils.highlightUserReplies.result;
       this.channelReplies = protonet.utils.highlightChannelReplies.result;
-
+      
       return message;
     },
 
