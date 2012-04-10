@@ -1,10 +1,5 @@
 <aside>
   <ul>
-    <li class="<%= 'selected' if @nav == "my_profile" %>">
-      <a href="<%= my_profile_path %>" data-tab="users">
-        <strong>My Profile</strong>
-      </a>
-    </li>
     <%- if permitted_to?(:read, :users)  %>
     <li class="<%= 'selected' if @nav == "users" %>">
       <a href="<%= users_path %>" data-tab="users">
@@ -12,6 +7,11 @@
       </a>
     </li>
     <%- end %>
+    <li class="<%= 'selected' if @nav == "my_profile" %>">
+      <a href="<%= my_profile_path %>" data-tab="users">
+        <strong>My Profile</strong>
+      </a>
+    </li>
     <%- if permitted_to?(:manage, :invitations)  %>
     <li class="<%= 'selected' if @nav == "invitations" %>">
       <a href="<%= invitations_path %>" data-tab="users">

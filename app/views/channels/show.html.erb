@@ -3,7 +3,7 @@
   <h2>
     @<%= @channel.name %>
     <%- unless @channel.public? %>
-      <i>(private @channel)</i>
+      <i>(private)</i>
     <%- end %>
   </h2>
   <p><%= channel_description(@channel) %></p>
@@ -12,7 +12,7 @@
 
   <ul class="subscribers-list list">
     <%- if @channel.users.registered.size == 0 %>
-      <li class="hint">There are currently no users that subscribed to this @channel. Be the first!</li>
+      <li class="hint">There are currently no users that subscribed to this channel. Be the first!</li>
     <%- else %>
     
       <%- @channel.listens.registered.all(:include => :user, :order => 'verified ASC', :limit => configatron.max_list_size).each do |listen| %>
@@ -53,7 +53,7 @@
     }) do -%>
       <%= button "Subscribe" %>
       <%- unless @channel.public? %>
-        <span class="hint">This @channel is private: The owner needs to verify your subscription.</span>
+        <span class="hint">This channel is private: The owner needs to verify your subscription.</span>
       <%- end %>
     <%- end %>
   <%- end %>
@@ -62,7 +62,7 @@
 
     <h3>Subscribe users</h3>
     <p>
-      Enter the exact user name or user id into the input field to subscribe him to this @channel,<br>or enter an email address to invite users to your node.
+      Enter the exact user name or user id into the input field to subscribe him to this channel,<br>or enter an email address to invite users to your node.
     </p>
     <%= form_tag(listen_for_user_path, { :remote => true, 'data-type' => 'html', :class => 'single-button-form subscribe-user', :method => 'post' }) do %>
       <%= hidden_field_tag :id, current_user.id %>
@@ -73,45 +73,45 @@
 
     <%- if current_user.admin? && @channel.locally_hosted? %>
       <h3>Invite people <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
-      <p>Grow your network by <%= link_to("inviting people", new_invitation_path(:channel_id => @channel.id), :class => 'promotion-link') %> to this and other @channels.</p>
+      <p>Grow your network by <%= link_to("inviting people", new_invitation_path(:channel_id => @channel.id), :class => 'promotion-link') %> to this and other channels.</p>
     <%- end %>
 
-    <h3>@channel settings <a data-hover-hint="top" title="Only visible to admins and the @channel owner" class="hint">(?)</a></h3>
+    <h3>channel settings <a data-hover-hint="top" title="Only visible to admins and the channel owner" class="hint">(?)</a></h3>
 
     <%= form_for @channel, :html => { 'data-ajax-auto-submit' => '1' } do |f| -%>
       <%= f.hidden_field :id, { :value => @channel.id } %>
-      <label class="checkbox-row" for="@channel_public">
+      <label class="checkbox-row" for="channel_public">
         <input name="channel[public]" type="hidden" value="true" />
         <input type="checkbox" id="channel_public" name="channel[public]" value="false" <%= "checked" unless @channel.public %> />
         private (users can't subscribe without verification)
       </label>
       <%- if request.host =~ /team.protonet.info/ || Rails.env != "production" %>
-        <label class="checkbox-row" for="@channel_global">
+        <label class="checkbox-row" for="channel_global">
           <%= f.check_box :global %>
           global (channel is visible from external nodes and clients)
         </label>
       <%- end %>
     <%- end %>
 
-    <h3>Details <a data-hover-hint="top" title="Only visible to admins and the @channel owner" class="hint">(?)</a></h3>
+    <h3>Details <a data-hover-hint="top" title="Only visible to admins and the channel owner" class="hint">(?)</a></h3>
     <dl>
       <dt>Node: </dt><dd><%= @channel.node.name %><%= " (remote)" unless @channel.node.local? %></dd>
-      <dt>@channel UUID: </dt><dd><%= @channel.uuid %></dd>
+      <dt>channel UUID: </dt><dd><%= @channel.uuid %></dd>
       <dt>Created: </dt><dd title="<%= @channel.created_at %>"><%= time_ago_in_words(@channel.created_at) %> ago</dd>
       <dt>Messages: </dt><dd><%= @channel.meeps.size %></dd>
       <dt>Messages + attachment: </dt><dd><%= @channel.meeps.where('text_extension != ""').size %></dd>
     </dl>
 
     <%- if @channel.locally_hosted? %>
-      <h3>Delete @channel <a data-hover-hint="top" title="Only visible to admins and the @channel owner" class="hint">(?)</a></h3>
-      <p>Delete this @channel and all messages posted in it.</p>
+      <h3>Delete channel <a data-hover-hint="top" title="Only visible to admins and the channel owner" class="hint">(?)</a></h3>
+      <p>Delete this channel and all messages posted in it.</p>
       <%= form_tag("/channels/#{@channel.id}", {
         :remote     => true,
         :method     => :delete,
         'data-type' => 'html',
         'class'     => 'single-button-form'
       }) do -%>
-        <%= button "Delete", 'data-confirm' => 'Do you really want to delete this @channel? There\'s no undo.' %>
+        <%= button "Delete", 'data-confirm' => 'Do you really want to delete this channel? There\'s no undo.' %>
       <%- end %>
     <%- end %>
   <%- end %>
