@@ -14,7 +14,7 @@ class InvitationsController < ApplicationController
   end
   
   def index
-    @invitations = Invitation.order("invitee_id asc")
+    @invitations = Invitation.order("created_at DESC")
   end
   
   def new
