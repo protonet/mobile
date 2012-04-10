@@ -21,7 +21,9 @@ class Channel < ActiveRecord::Base
   after_create  :subscribe_owner,                   :if => lambda {|c| !c.home? && !c.skip_autosubscribe }
   after_create  :subscribe_rendezvous_participant,  :if => lambda {|c| c.rendezvous? }
   after_create  :send_channel_notification,         :if => lambda {|c| !c.rendezvous? }
-
+  
+  after_destroy :delete_folder
+  
   attr_accessor   :skip_autosubscribe
   attr_accessible :skip_autosubscribe, :name, :description, :owner, :owner_id, :node, :node_id, :display_name, :public, :global, :system
 
@@ -94,7 +96,6 @@ class Channel < ActiveRecord::Base
   end
   
   def self.prepare_for_frontend(channel, include_meeps=false)
-    display_name = 
     obj = {
       :id               => channel.id,
       :uuid             => channel.uuid,
@@ -206,6 +207,10 @@ class Channel < ActiveRecord::Base
   
   def create_folder
     FileUtils.mkdir_p(configatron.files_path + "/channels/#{id}")
+  end
+  
+  def delete_folder
+    FileUtils.rm_rf(configatron.files_path + "/channels/#{id}")
   end
   
   def generate_uuid
