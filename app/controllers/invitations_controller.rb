@@ -29,7 +29,7 @@ class InvitationsController < ApplicationController
     if @invitation.valid?
       @invitation.message = invitation_email(@invitation)
       if @invitation.save
-        redirect_to @invitation and return
+        redirect_to :action => :show, :id => @invitation.id and return
       end
     end 
     flash[:error] = @invitation.errors.full_messages.to_sentence
@@ -45,7 +45,7 @@ class InvitationsController < ApplicationController
         flash[:notice] = "The invitation was sent."
       end
     end
-    redirect_to @invitation
+    redirect_to :action => :show, :id => @invitation.id
   end
   
   def show

@@ -29,18 +29,8 @@ class Listen < ActiveRecord::Base
     end
   end
   
-  
-  #def set_verified!
-  #  self.verified = true
-  #  if save
-  #    send_subscribe_notification
-  #    publish "users", user_id, { :trigger => 'channel.load', :channel_id => channel_id }
-  #  end
-  #end
-  
-  
   def send_verifications_notification
-    publish "users", (User.admins | [channel.owner]).uniq.map(&:id), {
+    publish "users", (User.admins | [channel.owner]).uniq.compact.map(&:id), {
       :trigger  =>  "users.pending_verifications",
       :channel_id => channel.id,
       :pending_verifications => channel.listens.pending.count
