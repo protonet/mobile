@@ -4,8 +4,8 @@ require 'mysql'
 require 'uri'
 require 'yaml'
 
-# scan once a day
-SCAN_INTERVAL   = 1 * 24 * 60 * 60
+# scan every 4 days
+SCAN_INTERVAL   = 4 * 24 * 60 * 60
 RAILS_ROOT      = "/home/protonet/dashboard/current"
 DB_CONFIG_FILE  = "/home/protonet/dashboard/current/config/database.yml"
 FILES_DIR       = "/home/protonet/"
@@ -39,6 +39,13 @@ if last_clamav_scan + SCAN_INTERVAL < Time.now.to_i
   # code 2 => error
   # http://linux.die.net/man/1/clamscan
   code = $?.exitstatus
+  
+  # strip lines that are not intersting for the user
+  details = details.sub(/-----------.+\n/, "")
+  details = details.sub(/Scanned directories.+\n/, "")
+  details = details.sub(/Scanned files.+\n/, "")
+  details = details.sub(/Engine version.+\n/, "")
+  details = details.sub(/Data scanned.+\n/, "")
   
   puts "clamscan return code: #{code}"
   
