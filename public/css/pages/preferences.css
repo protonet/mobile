@@ -45,22 +45,34 @@
 }
 
 
-#show_release_update_progress {
+#show-release-update-progress,
+#send-to-protonet-support {
 	display: none;
 }
-/* TODO this could be needed elsewhere. where to put it? */
-.console_output {
-  box-sizing: border-box;
+#send-to-protonet-support {
+  display: none;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+/* TODO this should move over to css/lib/quakeStyleConsole.css */
+.quake-style-console {
 	background-color: rgba(0,0,0,0.8);
 	color: green;
 	font-family: "Lucida Console";
-	height: 0;
 	left: 0;
 	right: 0;
-	padding: 30px;
 	position: fixed;
 	z-index: 1000;
-	top: -80px;
-	box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+	top: 0;
+	bottom: 100%;
+}
+.quake-style-console-content {
 	overflow-y: scroll;
+	height: 100%;
+	padding: 0 30px 0 30px;
+}
+.console-box-shadow {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }

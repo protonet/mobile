@@ -22,10 +22,13 @@
     <%= select_tag  :release, options_for_select(SystemRelease.last_releases.reverse.map{|c| ["#{c[0]} / #{c[1]}", c[0]] if c[0].to_i >= SystemRelease.current_version}.compact, SystemRelease.last_releases.reverse.find {|release| release[1].strip! == "STABLE"}[0]) %>
   </div>
   <%= button "Update" %> <span class="loading-hint">Please wait. This will take a few minutes.</span>
+  <a id="show-release-update-progress">Show update progress</a>
 <%- end %>
 
-<div id="release_update_progress_console" class="console_output" data-url="<%= url_for preferences_release_update_progress_path %>"></div>
-<a id="show_release_update_progress">Show update progress</a>
-
 <h3>Old log files</h3>
-<a id="show_last_release_update_log">Show last update log</a>
+<a id="show-last-release-update-log">Show last update log</a>
+
+<div id="release-update-progress-console" class="quake-style-console" data-url="<%= url_for preferences_release_update_progress_path %>">
+    <div class="quake-style-console-content"></div>
+    <button id="send-to-protonet-support">Send to protonet support team</button>
+</div>
