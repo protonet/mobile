@@ -6,9 +6,6 @@
       </li>
       
       <%- unless current_user.stranger? %>
-        <li class="nav-link instruments-controller-link">
-          <%= link_to "Chat", root_path %>
-        </li>
         <li class="nav-link preferences-controller-link" style="<%= 'display: none;' unless current_user.admin? %>">
           <%= link_to "Administration", preferences_path %>
         </li>
