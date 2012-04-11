@@ -28,5 +28,26 @@ class Mailer < ActionMailer::Base
     from = "admin@#{SystemPreferences.public_host}"
     mail(:from => from, :to => receiver.email, :subject => "protonet password reset for #{SystemPreferences.public_host}")
   end
+  
+  def update_log(node_name, license_key, log_file)
+    from = "admin@#{SystemPreferences.public_host}"
+    to = "support@protonet.info"
+    content = <<-eos
+      
+      Dear support team,
+      
+      somone has a problem. Here is the update log.
+      
+      Node name: #{node_name} (#{SystemPreferences.public_host})")
+      
+      License key: #{license_key}
+      
+      #{log_file}
+      
+    eos
+    mail(:from => from, :to => to, :subject => "protonet update log for #{node_name} (#{SystemPreferences.public_host})") do |format|
+      format.text { render :text => content }
+    end
+  end
 
 end

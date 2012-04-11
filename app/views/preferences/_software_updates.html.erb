@@ -30,5 +30,6 @@
 
 <div id="release-update-progress-console" class="quake-style-console" data-url="<%= url_for preferences_release_update_progress_path %>">
     <div class="quake-style-console-content"></div>
-    <button id="send-to-protonet-support">Send to protonet support team</button>
+    <%= link_to "Send log to protonet support", preferences_send_log_to_support_team_path, :remote => true, :class => "button", :id => "send-to-protonet-support" %>
+    <div id="sent-feedback"></div>
 </div>

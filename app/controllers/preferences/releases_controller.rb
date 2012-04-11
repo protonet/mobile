@@ -32,9 +32,17 @@ module Preferences
     # gets called via javascript if the user wants to see the log output
     # the sed command filters out shell color codes
     def release_update_progress
-      #text = `cat /tmp/ptn_release_update.log | sed 's/\\\033[^a-zA-Z]*.//g'`
-      text = `cat /var/log/system.log`
+      text = `cat /tmp/ptn_release_update.log | sed 's/\\\033[^a-zA-Z]*.//g'`
       render :json => { :status => :ok, :success => true, :text => text }, :status => 200
+    end
+    
+    def send_log_to_support_team
+      # TODO: fetch real data to be delivered
+      node_name = "bla"
+      license_key = "lliiiicennsseeeeee"
+      log_file = `cat /Users/jo/Desktop/CSM-SuperTODO.txt`
+      Mailer.update_log(node_name, license_key, log_file).deliver
+      render :json => { :status => :ok, :success => true, :text => "Mail send" }, :status => 200
     end
     
   end

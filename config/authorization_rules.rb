@@ -67,7 +67,7 @@ authorization do
     has_permission_on :invitations, :to => :manage
     has_permission_on :authorization_rules, :to => :read
     has_permission_on :users, :to => [:manage, :delete_stranger_older_than_two_days, :rendezvous, :update_last_read_meeps, :newbie, :update_roles]
-    has_permission_on :preferences, :to => [:update, :interface_status, :release_update_progress]
+    has_permission_on :preferences, :to => [:update, :interface_status, :release_update_progress, :send_log_to_support_team]
     has_permission_on :system_preferences, :to => :update
     has_permission_on :publish_to_web, :to => [:update, :publish_status]
   end

@@ -94,7 +94,7 @@ $(function() {
   var $sendToProtonetSupport = $("#send-to-protonet-support");
   var getContentIsActive;
   // preparation uber sophisticated way to scroll down on console content growth
-  var scrollTop = 10000;
+  var scrollTop = 1000000;
   
   // function getUpdateProgressLog - gets content from an url defined in the data attribute of the console-div
   // when timeoutTime is > 0 its called recursively after timeoutTime ms timeout
@@ -104,23 +104,23 @@ $(function() {
     $.ajax({
       url : $releaseUpdateProgressConsole.data("url"),
       dataType : 'json',
-      success: function (text) {
-        $elementToUpdate.text(text.text);
+      success: function(response) {
+        $elementToUpdate.text(response.text);
         if (getContentIsActive === false) {
           return;
         }
         if (timeoutTime > 0) {
          setTimeout(function() {getUpdateProgressLog($elementToUpdate, timeoutTime)}, timeoutTime); 
         }
-        $releaseUpdateProgressConsoleContent.scrollTop(scrollTop + 10000);
+        $releaseUpdateProgressConsoleContent.scrollTop(scrollTop + 1000000);
       }
     });
   }
 
   // update progress log
-  $page.delegate("form.software-update", "submit", function () {
+  $page.delegate("form.software-update", "submit", function() {
     $showReleaseProgressButton.fadeIn();
-    $showReleaseProgressButton.click(function (e) {
+    $showReleaseProgressButton.unbind("click.showReleaseProgress").bind("click.showReleaseProgress", function(e) {
       e.preventDefault();
       $releaseUpdateProgressConsole.quakeStyleConsole({
         onopen: function() {
@@ -138,7 +138,7 @@ $(function() {
   });
   
   // show old log
-  $("#show-last-release-update-log").click(function(e) {
+  $("#show-last-release-update-log").unbind("click.showReleaseProgress").bind("click.showReleaseProgress", function(e) {
     e.preventDefault();
     var $this = $(this);
     $releaseUpdateProgressConsole.quakeStyleConsole({
@@ -155,6 +155,25 @@ $(function() {
       }
     });
     $releaseUpdateProgressConsole.data('quakeStyleConsole').open();
+  });
+
+  // trigger logfile sending
+  $("#send-to-protonet-support").click(function(e) {
+    e.preventDefault();
+    var $this = $(this);
+    var originalButtonText = $sendToProtonetSupport.text
+    $.ajax({
+      url : $this.attr("href"),
+      dataType : 'json',
+      success: function(response) {
+        var $feedback = $("<span id='sent-feedback'> | " + response.text + "</span>");
+        $sendToProtonetSupport.append($feedback);
+        setTimeout(function() {
+          $("#sent-feedback").fadeOut();
+          $feedback.remove();
+        }, 3000);
+      }
+    });
   });
   
 });

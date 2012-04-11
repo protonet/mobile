@@ -88,6 +88,7 @@ Dashboard::Application.routes.draw do
     match 'wifi/off'  => 'wifi#off',              :as => :wifi_off
     match 'releases/update' => 'releases#update', :as => :release_update
     match 'releases/update_progress' => 'releases#release_update_progress', :as => :release_update_progress
+    match 'releases/send_log_to_support_team' => 'releases#send_log_to_support_team', :as => :send_log_to_support_team
   end
   
   # System
