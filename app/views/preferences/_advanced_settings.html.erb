@@ -133,37 +133,6 @@
   <%= button "Save" %>
 <%- end -%>
 
-<h3>LDAP <a data-hover-hint="top" title="Handle your user authorization via remote LDAP" class="hint">(?)</a></h3>
-<%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
-  <%= hidden_field_tag 'section', 'advanced_settings' %>
-  <div class="form-field">
-    <label>Status:</label>
-    <span>
-      <label>
-        <input type="radio" name="preferences[remote_ldap_sign_on]" value="true" <%= 'checked' if SystemPreferences.remote_ldap_sign_on %>>
-        On
-      </label>
-      <label>
-        <input type="radio" name="preferences[remote_ldap_sign_on]" value="false" <%= 'checked' unless SystemPreferences.remote_ldap_sign_on %>> 
-        Off
-      </label>
-    </span>
-  </div>
-  <div class="form-field">
-    <%= label_tag 'preferences[remote_ldap_host]', 'LDAP Host:' %>
-    <%= text_field_tag 'preferences[remote_ldap_host]', SystemPreferences.remote_ldap_host %>
-  </div>
-  <div class="form-field">
-    <%= label_tag 'preferences[remote_ldap_base]', 'LDAP Base:' %>
-    <%= text_field_tag 'preferences[remote_ldap_base]', SystemPreferences.remote_ldap_base %>
-  </div>
-  <div class="form-field">
-    <%= label_tag 'preferences[remote_ldap_domain]', 'LDAP Domain:' %>
-    <%= text_field_tag 'preferences[remote_ldap_domain]', SystemPreferences.remote_ldap_domain %>
-  </div>
-  <%= button "Save" %>
-<%- end -%>
-
 <h3>VPN</h3>
 <%- vpn_status = SystemVpn.status %>
 
