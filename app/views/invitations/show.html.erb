@@ -23,7 +23,7 @@
       <a class="link" data-wysihtml5-command="insertHTML" data-wysihtml5-command-value="<%= accept_invitation_url(:invitation_token => @invitation.token, :host => SystemPreferences.public_host, :protocol => SystemPreferences.public_host_https ? 'https://' : 'http://')%>">insert invitationlink</a>
     </div>
     
-    <textarea cols="40" rows="20" name="invitations[name]" id="invitation_message">
+    <textarea cols="40" rows="20" name="invitation[message]" id="invitation_message">
       <%= raw @invitation.message %>
     </textarea>
     <div class="buttons">
