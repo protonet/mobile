@@ -123,12 +123,12 @@ $(function() {
     $showReleaseProgressButton.click(function (e) {
       e.preventDefault();
       $releaseUpdateProgressConsole.quakeStyleConsole({
-        onOpen: function() {
+        onopen: function() {
           getContentIsActive = true;
           getUpdateProgressLog($releaseUpdateProgressConsoleContent, 500);
           $showReleaseProgressButton.fadeOut();
         },
-        onClose: function() {
+        onclose: function() {
           getContentIsActive = false;
           $showReleaseProgressButton.fadeIn();
         }
@@ -140,15 +140,15 @@ $(function() {
   // show old log
   $("#show-last-release-update-log").click(function(e) {
     e.preventDefault();
-    $this = $(this);
+    var $this = $(this);
     $releaseUpdateProgressConsole.quakeStyleConsole({
-      onOpen: function() {
+      onopen: function() {
         $this.fadeOut();
         getContentIsActive = true;
         getUpdateProgressLog($releaseUpdateProgressConsoleContent, 0);
         $sendToProtonetSupport.fadeIn();
       },
-      onClose: function() {
+      onclose: function() {
         $this.fadeIn();
         getContentIsActive = false;
         $sendToProtonetSupport.fadeOut();

@@ -1,4 +1,4 @@
-// quake style console as jquery-plugin
+// quake style console as jQuery-plugin
 // TODO: put in own file. css too (currently in preferences.css)
 // @param function options.onOpen - callback called when opening
 // @param function options.onClose - callback called when pin ponies suck on rainbows
@@ -20,14 +20,14 @@
     base.$el.data("quakeStyleConsole", base); // leads to an ugly way to call public methods. better idea?
 
     $.quakeStyleConsole.defaults = {
-      onOpen: function() {},
-      onClose: function() {},
+      onopen: $.noop,
+      onclose: $.noop,
       paddingBottom: 50,
       spaceBottom: 300
     };
 
     base.init = function() {
-      base.settings = $.extend({},$.quakeStyleConsole.defaults, options);
+      base.settings = $.extend({}, $.quakeStyleConsole.defaults, options);
       originalPaddingBottom = base.$el.css("padding-bottom");
       originalBottom = base.$el.css("bottom");
     };
@@ -43,24 +43,25 @@
         //console animation done
         function() {
           base.$el.addClass("console-box-shadow");
-          base.$el.click(function(e) {
+          base.$el.bind("click.quakeStyleConsole", function(e) {
             e.stopPropagation();
           });
-          $("html").one("click", function() {
+          $("html").bind("click.quakeStyleConsole", function() {
             base.close();
           });
         }
       );
-      base.settings.onOpen();
+      base.settings.onopen();
     };
     
     base.close = function() {
+      base.$el.add("html").unbind(".quakeStyleConsole");
       base.$el.animate({
         bottom: originalBottom,
         paddingBottom: originalPaddingBottom
-      },1000);
+      }, 1000);
       base.$el.removeClass("console-box-shadow");
-      base.settings.onClose();
+      base.settings.onclose();
     };
 
     base.init();
@@ -68,7 +69,7 @@
 
   $.fn.quakeStyleConsole = function(options){
     return this.each(function() {
-      (new $.quakeStyleConsole(this, options));
+      new $.quakeStyleConsole(this, options);
       // do more stuff here?
     });
   };
