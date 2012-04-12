@@ -1,4 +1,4 @@
-<section class="main-content">
+<section class="main-content instruments-page">
   <%- message_hint = current_user.stranger? ? 'welcome guest! talk to us...' : "go ahead @#{current_user.display_name}, I'm all yours..." %>
   <%= form_for :meep, :url => meeps_path, :html => { :id => "message-form" } do |f| -%>
     <%= f.hidden_field(:channel_id, :name => "meep[channel_id]", :autocomplete => "off") %>
@@ -10,7 +10,17 @@
       <div id="textarea-wrapper-inner">
         <menu>
           <li data-extension="smiley" title="Insert emoticon" data-hover-hint="right">Insert emoticon</li>
-          <li data-extension="snapshot" title="Attach snapshot" data-hover-hint="right">Attach snapshot</li>
+          <%- if permitted_to?(:index, :snapshots) %>
+            <li data-extension="snapshot" title="Attach snapshot" data-hover-hint="right">Attach snapshot</li>
+          <%- else -%>
+            <li data-extension="snapshot" title="Attach snapshot (you need to be logged in)" data-hover-hint="right" class="disabled">Attach snapshot</li>
+          <%- end %>
+          
+          <%- if permitted_to?(:read, :files) %>
+            <li data-extension="file" title="Attach files" id="attach-file-extension" data-hover-hint="right">Attach files</li>
+          <%- else -%>
+            <li data-extension="file" title="Attach files (you need to be logged in)" id="attach-file-extension" data-hover-hint="right" class="disabled">Attach files</li>
+          <%- end %>
         </menu>
         <%= f.text_area(:message, :id => 'message', :placeholder => message_hint) %>
         <input type="submit" id="submit-message" value="" title="Send message [ENTER]">
@@ -23,7 +33,7 @@
 
   <nav id="channels">
     <ul>
-      <%- @channels.each do |channel| -%>
+      <%- @subscribed_channels.each do |channel| -%>
         <%= render :partial => 'channels/tab', :locals => { :channel => channel } %>
       <%- end -%>
     </ul>
@@ -42,5 +52,4 @@
     <%= render :partial => 'users/my_widget' %>
   <%- end %>
   <%= render :partial => 'users/user_widget' %>
-  <%= render :partial => 'system/files/file_widget' %>
 </aside>

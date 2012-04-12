@@ -1,4 +1,4 @@
-<!-- TODO: this needs to be done smarter" -->
+<%# TODO: this needs to be done smarter %>
 <script type="protonet/template" id="meep-template">
   <%= render :partial => 'meeps/meep' %>
 </script>
@@ -32,12 +32,61 @@
 <script type="protonet/template" id="admin-flag-template">
   <%= render :partial => 'users/admin_flag' %>
 </script>
+<script type="protonet/template" id="file-queue-template">
+  <%= render :partial => 'files/queue' %>
+</script>
+<script type="protonet/template" id="file-queue-item-template">
+  <%= render :partial => 'files/queue_item' %>
+</script>
 <style type="protonet/template" id="search-page-template">
   <section class="subpage search-page">
     <%= render :template => 'search/index' %>
     <script>protonet.pages.Search.initialize();</script>
   </section>
 </style>
+
+<%-
+  users = SystemPreferences.show_only_online_users ? [] : User.registered.all
+  channels = current_user.allowed_channels
+  
+  users.map!     {|u| User.prepare_for_frontend(u) }
+  channels.map!  {|c| Channel.prepare_for_frontend(c) }
+-%>
+<script>
+  var protonet = protonet || {};
+  protonet.config = {
+    controller_name:                  "<%= controller_name %>",
+    action_name:                      "<%= action_name %>",
+    base_url:                         location.protocol + "//" + location.host,
+    node_base_url:                    "<%= node_base_url %>",
+    node_uuid:                        "<%= Node.local.uuid %>",
+    xhr_streaming_url:                "<%= xhr_streaming_url %>",
+    force_xhr_streaming:              <%= incoming_interface == "published_to_web" ? "true" : "false" %>,
+    dispatching_server:               "<%= server_name %>",
+    dispatching_server_port:          "<%= configatron.socket.port %>",
+    dispatching_websocket_url:        "ws://<%= server_name %><%= is_apache? ? "/websocket" : ":#{configatron.websocket.port}" %>",
+    dispatching_websocket_url_ssl:    "wss://<%= server_name %><%= is_apache? ? "/websocket" : ":#{configatron.websocket_ssl.port}" %>",
+    dispatching_websocket_delimiter:  "<%= raw(is_apache? ? "\\0" : "") %>",
+    token:                            "<%= current_user.communication_token %>",
+    default_avatar:                   "<%= configatron.default_avatar %>",
+    admin_ids:                        <%= User.admins.map(&:id).to_json %>,
+    user_id:                          <%= current_user.id %>,
+    user_name:                        <%= raw current_user.display_name.to_json %>,
+    user_is_stranger:                 <%= current_user.stranger?.to_json %>,
+    show_only_online_users:           <%= SystemPreferences.show_only_online_users.to_json %>,
+    allow_modal_views:                <%= SystemPreferences.allow_modal_views.to_json %>,
+    authenticity_token:               "<%= form_authenticity_token %>",
+    incoming_interface:               <%= raw incoming_interface.to_json %>,
+    captive_redirect_url:             "<%= raw(params[:captive_redirect_url] || session[:captive_redirect_url]) %>",
+    captive_redirect_only:            <%= SystemPreferences.captive_redirect_only.to_json %>,
+    debug_mode:                       <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>,
+    pending_verifications:            <%= raw current_user.pending_channel_verifications.to_json%>,
+    channels:                         <%= raw channels.to_json %>,
+    users:                            <%= raw users.to_json %>
+  };
+  
+  <%= "var AIRBRAKE_API_KEY = '#{HoptoadNotifier.configuration.api_key}';" if Rails.env.production? %>
+</script>
 
 <%= sprockets_include_tag(:default) %>
 <%= sprockets_include_tag(controller_name.to_sym) rescue nil %>

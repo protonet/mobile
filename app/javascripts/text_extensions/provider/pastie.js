@@ -1,5 +1,3 @@
-//= require "../../media/proxy.js"
-
 protonet.text_extensions.provider.Pastie = {
   REG_EXP:  /.+?pastie\.org\/(?:pastes\/)?(\d+)/,
   TXT_URL:  "http://pastie.org/pastes/{id}/download",

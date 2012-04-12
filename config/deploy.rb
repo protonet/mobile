@@ -24,7 +24,7 @@ namespace :deploy do
     # create needed directories
     run "mkdir -p #{shared_path}/log"
     run "mkdir -p #{shared_path}/db"
-    run "mkdir -p #{shared_path}/user-files; chmod 770 #{shared_path}/user-files"
+    run "mkdir -p #{shared_path}/files; chmod 770 #{shared_path}/files"
     run "mkdir -p #{shared_path}/avatars; chmod 770 #{shared_path}/avatars"
     run "mkdir -p #{shared_path}/pids; chmod 770 #{shared_path}/pids"
     run "mkdir -p #{shared_path}/externals/screenshots"

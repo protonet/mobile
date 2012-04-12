@@ -19,7 +19,9 @@ module ConnectionShared
   end
 
   def receive_json(json)
-    if json.is_a?(Hash) && json["operation"] == "authenticate"
+    return unless json.is_a? Hash
+    
+    if json["operation"] == "authenticate"
       log("auth json: #{json["payload"].inspect}")
       if json_authenticate(json["payload"]) && !@subscribed
         @subscribed = true # don't resubscribe
@@ -31,7 +33,7 @@ module ConnectionShared
       else
         send_reload_request # invalid auth
       end
-    elsif (@user) && json.is_a?(Hash)
+    elsif @user
       case json["operation"]
         when /^user\.typing/
           update_user_typing_status(json)
@@ -50,7 +52,7 @@ module ConnectionShared
           channel_id && Meep.create(:user_id => @user.id,
                   :author => json['author'],
                   :message => json['message'],
-                  :text_extension => json['text_extension'].to_json,
+                  :text_extension => json['text_extension'] .to_json,
                   :node_id => @user.node.id,
                   :channel_id => channel_id,
                   :socket_id  => @socket_id,
@@ -71,12 +73,31 @@ module ConnectionShared
               log "==========>>>>>>>>  #{json.inspect} \n\n\n"
             end
           end
+          
+        else
+          # Experimental RPC interface
+          object, method = json['operation'].split('.')
+          
+          begin
+            @tracker.rpc.invoke object, method, json['params'], @user do |err, result|
+              send_json json.merge(:status => 'success', :result => result) unless err
+            end
+          # Handle any possible errors
+          rescue Rpc::RpcError => ex
+            puts "Error during RPC call: #{ex.class}", ex.message, ex.backtrace
+            # Send some info on the error that occured
+            send_rpc_error json.merge(:status => 'error', :error => ex.class.to_s)
+          end
       end
     else
       # play echoserver if request could not be understood
-      puts "Something is using an obsolete interface! #{json.inspect}"
+      puts "Something is using an obsolete interface! #{json.inspect}"
       send_json(json)
     end
+  end
+  
+  def send_rpc_error(json={})
+    send_json json.merge(:status => 'error')
   end
   
   def node_connection?
@@ -91,11 +112,7 @@ module ConnectionShared
     
       when 'web', 'api', 'node'
         return false if auth_data['user_id'] == 0
-        potential_user = begin 
-          User.find(auth_data['user_id'])
-        rescue ActiveRecord::RecordNotFound
-          nil
-        end
+        potential_user = User.find_by_id(auth_data['user_id'])
         @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data['token'])
         
         if @user
@@ -110,7 +127,7 @@ module ConnectionShared
   end
   
   def send_reload_request
-    send_json :x_target => 'document.location.reload'
+    send_json :eval => 'location.reload()'
   end
   
   def send_reconnect_request

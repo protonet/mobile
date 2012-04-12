@@ -1,5 +1,4 @@
 //= require "../../utils/url_behaviors.js"
-//= require "../../utils/get_channel_uuid.js"
 
 /**
  * @events
@@ -60,7 +59,7 @@ protonet.timeline.Form = {
         // When loading the page a "channel.change" event is initially fired
         // This causes problems when the user already focused the login form and started to type
         // in his password. Uygar from XING even almost accidentally submitted her password
-        if (!preventInitialFocus && !protonet.user.Browser.IS_TOUCH_DEVICE()) {
+        if (!preventInitialFocus && !protonet.browser.IS_TOUCH_DEVICE()) {
           this.input.focus();
         }
         
@@ -163,13 +162,18 @@ protonet.timeline.Form = {
       }.bind(this))
       
       .on("form.share_meep", function(id) {
-        protonet.timeline.Meep.get(id, function(data) {
-          if (data.author !== protonet.config.user_name) {
-            protonet.trigger("form.create_reply", data.author);
-          } else {
-            protonet.trigger("form.focus");
+        protonet.data.Meep.get(id, {
+          success: function(data) {
+            if (data.author !== protonet.config.user_name && !protonet.data.Channel.isRendezvous(data.channel_id)) {
+              protonet.trigger("form.create_reply", data.author);
+            } else {
+              protonet.trigger("form.focus");
+            }
+            protonet.trigger("text_extension_input.select", protonet.data.Meep.getUrl(id));
+          },
+          error: function() {
+            protonet.trigger("flash_message.error", protonet.t("LOADING_MEEP_ERROR"));
           }
-          protonet.trigger("text_extension_input.select", protonet.timeline.Meep.getUrl(id));
         });
       });
     
@@ -231,7 +235,7 @@ protonet.timeline.Form = {
         payload: { 
           user_id:      protonet.config.user_id,
           channel_id:   protonet.timeline.Channels.selected,
-          channel_uuid: protonet.utils.getChannelUuid(protonet.timeline.Channels.selected)
+          channel_uuid: protonet.data.Channel.getUuid(protonet.timeline.Channels.selected)
         }
       });
     }

@@ -1,6 +1,6 @@
 class ChannelsController < ApplicationController
   
-  filter_resource_access :collection => [:global, :index, :show_global, :list]
+  filter_resource_access :collection => [:global, :index, :show_global, :info]
   
   before_filter :couple_node, :only => [:global, :show_global]
   before_filter :available_channels
@@ -10,19 +10,27 @@ class ChannelsController < ApplicationController
     @nav = "channels"
   end
   
+  def show
+    @nav = "channels"
+  end
+  
   def global
     @nav = "global"
     @team_node = Node.team
     @global_channels = @team_node.global_channels
   end
   
-  def show
+  def info
+    channels = Channel.all
+    channels_to_load = params[:ids].split(',') rescue channels.each {|c| c.id.to_s }
+    
     respond_to do |format|
-      format.html do
-        @nav = "channels"
-      end
       format.json do
-        render :json => Channel.prepare_for_frontend(current_user.channels.find(params[:id]), current_user)
+        render :json => channels.map { |channel|
+          next unless channels_to_load.include?(channel.id.to_s)
+          include_meeps = params[:include_meeps] && current_user.subscribed?(channel)
+          Channel.prepare_for_frontend(channel, include_meeps)
+        }.compact
       end
     end
   end
@@ -66,7 +74,7 @@ class ChannelsController < ApplicationController
     success = channel.destroy
     if success && channel.errors.empty?
       flash[:notice] = "Successfully deleted channel '#{channel_name}'"
-      redirect_to :action => 'list'
+      redirect_to :action => :index
     else
       flash[:error] = "Could not delete channel '#{channel_name}'"
     end

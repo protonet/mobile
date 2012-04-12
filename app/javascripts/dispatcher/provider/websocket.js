@@ -1,6 +1,6 @@
 protonet.dispatcher.provider.WebSocket = {
   isSupported: function() {
-    return protonet.user.Browser.SUPPORTS_HTML5_WEBSOCKET();
+    return protonet.browser.SUPPORTS_HTML5_WEBSOCKET();
   },
   
   initialize: function() {
@@ -9,7 +9,7 @@ protonet.dispatcher.provider.WebSocket = {
   },
 
   connect: function() {
-    if (location.protocol == 'https:' && !protonet.user.Browser.IS_SAFARI()) {
+    if (location.protocol == 'https:' && !protonet.browser.IS_SAFARI()) {
       this.socket = new WebSocket(protonet.config.dispatching_websocket_url_ssl);
     } else {
       this.socket = new WebSocket(protonet.config.dispatching_websocket_url);
@@ -31,7 +31,7 @@ protonet.dispatcher.provider.WebSocket = {
       protonet.trigger("socket.connected", true);
     }.bind(this);
     
-    this.socket.onclose = function() { 
+    this.socket.onclose = function() {
       protonet.trigger("socket.connected", false);
     };
     

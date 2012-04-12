@@ -9,6 +9,12 @@
   },
   "dependencies": {
     "jsdom": ">= 0.2.13",
-    "fetch": ">= 0.2.7"
+    "fetch": ">= 0.2.7",
+    "formidable": "1.0.8",
+    "mime": "1.2.4",
+    "step": "0.0.5",
+    "amqp": "0.0.1",
+    "underscore": "1.1.6",
+    "mkdirp": "0.3.0"
   }
 }

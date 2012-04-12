@@ -1,8 +1,7 @@
-$(function() {
-  var $subpage          = $(".users-page"),
-      $meepContainer    = $subpage.find("output[data-user-id]"),
+protonet.p("users", function($page) {
+  var $meepContainer    = $page.find("output[data-user-id]"),
       $loadingIndicator = $meepContainer.next(".progress"),
-      $fileInput        = $subpage.find("[type=file]"),
+      $fileInput        = $page.find("[type=file]"),
       $avatarForm       = $fileInput.parents("form"),
       $meepList         = $("<ul>", { "class": "meeps" }),
       $searchUsers      = $("form#search_users");
@@ -54,7 +53,7 @@ $(function() {
   
   $avatarForm.bind("submit", function() {
     var $iframe = $("<iframe>", { width: 1, height: 1, name: "upload_iframe" }).hide().insertAfter($avatarForm),
-        $avatar = $subpage.find(".user-avatar");
+        $avatar = $page.find(".user-avatar");
     
     function reset() {
       setTimeout(function() { $iframe.remove(); }, 0);

@@ -1,11 +1,17 @@
+//= require "../../../media/webcam.js"
+
 /**
  * Webcam snapshots
  */
 protonet.timeline.Form.extensions.Snapshots = function($input, $wrapper, $form) {
-  $link = $form.find("[data-extension=snapshot]");
+  var $link = $form.find("[data-extension=snapshot]");
   
-  if (!protonet.user.Browser.HAS_FLASH(9)) {
+  if (!new protonet.media.Webcam().supported()) {
     $link.hide();
+    return;
+  }
+  
+  if ($link.is(".disabled")) {
     return;
   }
   
@@ -16,6 +22,14 @@ protonet.timeline.Form.extensions.Snapshots = function($input, $wrapper, $form) 
       return null;
     }
   }
+  
+  protonet.on("channel.change", function(channelId) {
+    if (protonet.data.Channel.isGlobal(channelId)) {
+      $link.hide();
+    } else {
+      $link.show();
+    }
+  });
   
   var modalWindow;
   

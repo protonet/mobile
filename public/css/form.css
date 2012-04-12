@@ -45,7 +45,7 @@ form.disabled #textarea-wrapper:after {
 }
 
 #textarea-wrapper textarea {
-  width: 516px;
+  width: 576px;
   padding: 3px;
   font-size: 14px;
   resize: none;
@@ -80,6 +80,11 @@ form.disabled #textarea-wrapper:after {
   height: 25px;
   overflow: hidden;
   background: transparent url(/img/spr_form_icons.png) no-repeat 0 0;
+}
+
+#textarea-wrapper [data-extension].disabled {
+  cursor: not-allowed;
+  opacity: 0.3 !important;
 }
 
 #textarea-wrapper menu [data-extension]:hover {

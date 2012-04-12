@@ -73,7 +73,7 @@ Array.prototype.unique = function () {
     }
   }
   return result;
-}
+};
 
 //---------------------------- STRING ----------------------------
 String.prototype.startsWith = function(str) {
@@ -199,5 +199,23 @@ if (!Object.keys) {
 
 
 
-//---------------------------- WEBSOCKET -------------------------
+//---------------------------- WebSocket -------------------------
 window.WebSocket = window.MozWebSocket || window.WebSocket;
+
+// --------------------------- User Media -------------------------
+if (!navigator.getUserMedia) {
+  navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+}
+
+// --------------------------- window.URL -------------------------
+if (!window.URL) {
+  window.URL = window.webkitURL || window.msURL || window.oURL;
+}
+
+// --------------------------- Element -------------------------
+(function() {
+  var prototype = Element.prototype;
+  if (!prototype.matchesSelector) {
+    prototype.matchesSelector = prototype.webkitMatchesSelector || prototype.mozMatchesSelector || prototype.oMatchesSelector || prototype.msMatchesSelector;
+  }
+})();

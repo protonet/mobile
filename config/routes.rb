@@ -10,11 +10,7 @@ Dashboard::Application.routes.draw do
   match 'captive/whitelist_sites' => 'system/captive#whitelist_sites'
 
   # Channels
-  #match 'channels/list' => 'channels#list', :as => :list_channels
-  #match 'channels/list_global' => 'channels#list_global', :as => :list_global_channels
-  #match 'channels/show_global' => 'channels#show_global', :as => :show_global_channel
-  #match 'channels/recommended_global_teaser' => 'channels#recommended_global_teaser'
-  
+  match 'channels/info' => 'channels#info', :as => :show_channel_info
   resources :channels do
     collection do
       match "/global" => "channels#global", :as => :global
@@ -22,7 +18,6 @@ Dashboard::Application.routes.draw do
     end
     resources :meeps
   end
-  # match 'channels/:id/destroy' => 'channels#destroy', :as => :destroy_channel
   
   # meeps
   match 'meep/:id' => 'meeps#show' # Needed for backwards compatibility
@@ -68,6 +63,8 @@ Dashboard::Application.routes.draw do
   match 'users/delete_stranger_older_than_two_days' => 'users#delete_stranger_older_than_two_days', :as => :delete_stranger_older_than_two_days, :via => [:post]
   match 'users/remove_newbie_flag' => 'users#remove_newbie_flag', :as => :remove_newbie_flag, :via => [:post]
   match 'users/newbie_todo_list' => 'users#newbie_todo_list', :as => :newbie_todo_list, :via => [:get]
+  match 'users/channels' => 'users#channels', :as => :user_channels
+  match 'users/info' => 'users#info', :as => :show_user_info
   
   resources :users
   
@@ -89,12 +86,11 @@ Dashboard::Application.routes.draw do
     match 'releases/update' => 'releases#update', :as => :release_update
   end
   
+  # Files
+  resources :files
+  
   # System
   namespace :system do
-    match 'files/create_directory' => 'files#create_directory', :as => :files_create_directory
-    match 'files/delete_directory' => 'files#delete_directory', :as => :files_delete_directory
-    match 'files/delete' => 'files#delete', :as => :files_delete
-    resources :files
     match 'preferences/update' => 'preferences#update', :as => :preferences_update
   end
   

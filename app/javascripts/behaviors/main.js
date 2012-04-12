@@ -1,4 +1,3 @@
-//= require "../utils/get_channel_name.js"
 //= require "../lib/jquery.fcbkcomplete.js"
 
 $.behaviors({
@@ -8,54 +7,45 @@ $.behaviors({
   },
   
   "a[data-channel-id]:dragstart": function(element, event) {
-    if (event.originalEvent.dataTransfer) {
+    if (event.dataTransfer) {
       var $element  = $(element),
-          channelId = $element.data("channel-id");
-      event.originalEvent.dataTransfer.setData("Text", "@" + protonet.utils.getChannelName(channelId) + " ");
+          channelName = protonet.data.Channel.getName($element.data("channel-id"));
+      if (channelName) {
+        event.dataTransfer.setData("Text", "@" + channelName + " ");
+      }
     }
   },
   
   "a[data-user-id]:dragstart": function(element, event) {
-    if (event.originalEvent.dataTransfer)  {
+    if (event.dataTransfer) {
       var $element  = $(element),
-          user      = protonet.user.getUser(+$element.data("user-id"));
-      if (user) {
-        event.originalEvent.dataTransfer.setData("Text", "@" + user.name + " ");
+          userName  = protonet.data.User.getName($element.data("user-id"));
+      if (userName) {
+        event.dataTransfer.setData("Text", "@" + userName + " ");
       }
     }
   },
+  
+  // Needed in order to avoid the socket from disconnecting when a file gets downloaded
+  // (which triggers the beforeunload/unload handlers in some browsers)
+  "a[download]:click": (function() {
+    var $iframe;
+    return function(element, event) {
+      $iframe = $iframe || $("<iframe style='width:0; height:0; border:0; display:none;'>");
+      $iframe.appendTo(document.body).attr("src", element.href);
+      event.preventDefault();
+    };
+  })(),
   
   "img[data-src]:inview": function(element) {
     var $element = $(element);
     $element.attr("src", $element.attr("data-src")).removeAttr("data-src");
   },
   
-  "[data-contact-admin]:click": (function() {
-    var onlineUserIds = [],
-        adminUserIds  = protonet.config.admin_ids || [];
-    
-    // TODO: someday we should add user.came_online and user.goes_offline here
-    protonet
-      .on("users.update_status", function(data) {
-        onlineUserIds = Object.keys(data.online_users);
-      })
-      
-      .on("users.update_admin_status", function(data) {
-        adminUserIds = data.admin_ids;
-      });
-    
-    return function(element, event) {
-      var i = 0, onlineAdminUserId = adminUserIds[0];
-      for (; i<adminUserIds.length; i++) {
-        if (onlineUserIds.indexOf(adminUserIds[i]) !== -1) {
-          onlineAdminUserId = adminUserIds[i];
-          break;
-        }
-      }
-      protonet.trigger("rendezvous.start", onlineAdminUserId);
-      event.preventDefault();
-    };
-  })(),
+  "[data-contact-admin]:click": function(element, event) {
+    protonet.trigger("rendezvous.start", protonet.data.User.getAvailableAdmin());
+    event.preventDefault();
+  },
   
   "[data-hover-hint]:mouseover": (function() {
     var $bubble;
@@ -120,7 +110,7 @@ $.behaviors({
   }
 });
 
-if (protonet.user.Browser.IS_TOUCH_DEVICE()) {
+if (protonet.browser.IS_TOUCH_DEVICE()) {
   
   $.behaviors({
     "[tabindex]:touchstart": function(element, event) {
@@ -144,7 +134,7 @@ if (protonet.user.Browser.IS_TOUCH_DEVICE()) {
   
 }
 
-if (!protonet.user.Browser.SUPPORTS_PLACEHOLDER()) {
+if (!protonet.browser.SUPPORTS_PLACEHOLDER()) {
   
   $.behaviors({
     "input[placeholder], textarea[placeholder]": function(input) {

@@ -1,7 +1,7 @@
 <%= render "shared/nav_users"%>
 <output class="content" data-tab="users">
-  <%= avatar(@user, :width => 120, :height => 120, :class => 'user-avatar') %>
-
+  <%= render :partial => 'avatar' %>
+  
   <h2>
     @<%= @user.display_name %>
     <%= user_flags(@user) %>
@@ -13,7 +13,7 @@
   <p><strong><%= @user.display_name %></strong> is a member here for <strong title="<%= @user.created_at %>"><%= time_ago_in_words(@user.created_at) %></strong>
     <br>
     subscribed to <strong><%= @user.channels.real.verified.size %></strong> channels and posted <strong><%= Meep.find_all_by_user_id(@user.id).size %></strong> messages so far.</p>
-  <p>
+  <p class="buttons">
     <%= link_button("Start private chat", "/?rendezvous_with=#{@user.id}", { 'data-rendezvous-with' => @user.id }) %>
     <%= link_button("Send @reply", "/?reply_to=#{ERB::Util.u(@user.display_name)}", { 'data-reply-to' => @user.display_name }) %>
     <%- if current_user.admin? && current_user.email != "admin@protonet.local" %>
@@ -25,7 +25,7 @@
     <h3>Channels</h3>
     <p class="channel-list">
       <%- if @user.channels.real.verified.empty? %>
-        <p class="hint">No channels subscribed.</p>
+        <span class="hint">No channels subscribed.</span>
       <%- else %>
         <%- @user.channels.real.verified.order_by_name.each do |channel| %>
           @<a href="/channels/<%= channel.id %>" class="reply channel"><%= channel.display_name %></a>

@@ -1,5 +1,5 @@
-//= require "../../data/twitpic.js"
-//= require "../../data/yql.js"
+//= require "../../data/ext/twitpic.js"
+//= require "../../data/ext/yql.js"
 
 /**
  * Twitpic Provider

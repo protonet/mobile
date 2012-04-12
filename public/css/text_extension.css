@@ -119,7 +119,7 @@
 --------------------------------------------------------------------------- */
 .text-extension-results .media iframe {
   border: 1px solid #999;
-  width: 549px;
+  width: 609px;
   height: 200px;
 }
 
@@ -129,7 +129,7 @@
 }
 
 #text-extension-preview .text-extension-results .media iframe {
-  width: 530px;
+  width: 590px;
 }
 
 .text-extension-results.Maps .media a:after {
@@ -143,12 +143,12 @@
 --------------------------------------------------------------------------- */
 .text-extension-results.flash object {
   height: 280px;
-  width: 551px;
+  width: 611px;
   margin-bottom: 5px;
 }
 
 #text-extension-preview .text-extension-results.flash object {
-  width: 530px;
+  width: 590px;
   height: 280px;
 }
 

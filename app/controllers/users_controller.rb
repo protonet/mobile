@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   include Rabbit
   
-  filter_resource_access :collection => [:index, :my_profile, :search]
+  filter_resource_access :collection => [:index, :my_profile, :channels, :info, :search]
   
   before_filter :redirect_to_my_profile,  :only => :show
   before_filter :prepare_target_users,    :only => [:send_system_message, :send_javascript]
@@ -22,12 +22,28 @@ class UsersController < ApplicationController
   
   def show
     @nav = "users"
-    render_profile User.find(params[:id])
+    user = User.find(params[:id])
+    render_profile_for user
+  end
+  
+  def info
+    users = User.registered
+    users_to_load = params[:ids].split(',') rescue users.each {|u| u.id.to_s }
+    
+    respond_to do |format|
+      format.json do
+        render :json => users.map { |user|
+          next unless users_to_load.include?(user.id.to_s)
+          User.prepare_for_frontend(user)
+        }.compact
+      end
+    end
+  
   end
   
   def my_profile
     @nav = "my_profile"
-    render_profile current_user
+    render_profile_for current_user
   end
   
   def new
@@ -53,7 +69,20 @@ class UsersController < ApplicationController
     end
     redirect_to :action => 'edit', :id => user.id
   end
-
+  
+  def channels
+    channels = current_user.channels.verified
+    channels_to_load = params[:channels].split(',') rescue []
+    
+    respond_to do |format|
+      format.json do
+        render :json => channels.map { |channel|
+          Channel.prepare_for_frontend(channel, true) if channels_to_load.include?(channel.id.to_s) || channel.has_unread_meeps
+        }.compact
+      end
+    end
+  end
+  
   def start_rendezvous
     Channel.setup_rendezvous_for(current_user.id, params[:id].to_i)
     render :nothing => true
@@ -109,9 +138,9 @@ class UsersController < ApplicationController
       new_password  = User.pronouncable_password
       user.password = new_password
       if params[:send_email]
-        flash[:sticky] = "Generated new password for #{user.login}, email has been sent." if user.save && Mailer.password_reset(new_password, user).deliver
+        flash[:sticky] = "Generated and sent new password for #{user.login}: \"#{new_password}\"" if user.save && Mailer.password_reset(new_password, user).deliver
       else
-        flash[:sticky] = "Generated new password for #{user.login}: \"#{new_password}\" please remind him to change it." if user.save
+        flash[:sticky] = "Generated new password for #{user.login}: \"#{new_password}\"" if user.save
       end
     else
       flash[:error]  = "You are not authorized to do this, please check your password and admin rights."
@@ -128,7 +157,7 @@ class UsersController < ApplicationController
       flash[:notice] = "You've successfully changed your password!"
       publish "users", @user.id, { :trigger => 'user.changed_password' }
     else
-      flash[:error]  = "There was an error changing you password: #{@user.errors.full_messages.to_sentence}."
+      flash[:error]  = "There was an error changing your password: #{@user.errors.full_messages.to_sentence}."
     end
     respond_to_user_update(@user)
   end
@@ -192,7 +221,7 @@ class UsersController < ApplicationController
   end
   
   private
-    def render_profile(user)
+    def render_profile_for(user)
       @user = user
       if params[:no_redirect] || !@user.external_profile_url
         render :show

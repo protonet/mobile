@@ -1,0 +1,186 @@
+.file[href$=".ai"] { background-position: 0 0; }
+.file[href$=".bin"] { background-position: 0 -82px; }
+.file[href$=".cab"] { background-position: 0 -164px; }
+.file[href$=".dat"] { background-position: 0 -246px; }
+.file[href$=".divx"] { background-position: 0 -410px; }
+.file[href$=".dll"] { background-position: 0 -492px; }
+.file[href$=".dmg"] { background-position: 0 -574px; }
+.file[href$=".doc"] { background-position: 0 -656px; }
+.file[href$=".eps"] { background-position: 0 -738px; }
+.file[href$=".exe"] { background-position: 0 -820px; }
+.file[href$=".fla"] { background-position: 0 -902px; }
+.file[href$=".flv"] { background-position: 0 -984px; }
+.file[href$=".gif"] { background-position: 0 -1066px; }
+.file[href$=".gz"] { background-position: 0 -1148px; }
+.file[href$=".html"] { background-position: 0 -1230px; }
+.file[href$=".iso"] { background-position: 0 -1312px; }
+.file[href$=".jar"] { background-position: 0 -1394px; }
+.file[href$=".jpg"] { background-position: 0 -1476px; }
+.file[href$=".m4a"] { background-position: 0 -1558px; }
+.file[href$=".m4v"] { background-position: 0 -1640px; }
+.file[href$=".mov"] { background-position: 0 -1722px; }
+.file[href$=".mp3"] { background-position: 0 -1804px; }
+.file[href$=".mp4"] { background-position: 0 -1886px; }
+.file[href$=".mpeg"] { background-position: 0 -1968px; }
+.file[href$=".msi"] { background-position: 0 -2050px; }
+.file[href$=".ogg"] { background-position: 0 -2132px; }
+.file[href$=".pdf"] { background-position: 0 -2214px; }
+.file[href$=".png"] { background-position: 0 -2296px; }
+.file[href$=".psd"] { background-position: 0 -2378px; }
+.file[href$=".rar"] { background-position: 0 -2460px; }
+.file[href$=".rtf"] { background-position: 0 -2542px; }
+.file[href$=".swf"] { background-position: 0 -2624px; }
+.file[href$=".tif"] { background-position: 0 -2706px; }
+.file[href$=".tmp"] { background-position: 0 -2788px; }
+.file[href$=".ttf"] { background-position: 0 -2870px; }
+.file[href$=".txt"] { background-position: 0 -2952px; }
+.file[href$=".vob"] { background-position: 0 -3034px; }
+.file[href$=".wav"] { background-position: 0 -3116px; }
+.file[href$=".wma"] { background-position: 0 -3198px; }
+.file[href$=".wmv"] { background-position: 0 -3280px; }
+.file[href$=".xls"] { background-position: 0 -3362px; }
+.file[href$=".zip"] { background-position: 0 -3444px; }
+
+.file, .folder {
+  background: url(/img/spr_file_extensions.png) no-repeat top left;
+  padding-left: 40px;
+  height: 32px;
+  line-height: 32px;
+  display: block;
+  text-decoration: none;
+}
+
+a.file, a.folder {
+  color: #000;
+}
+
+.file { background-position: 0 -328px; }
+.folder { background-position: 0 -3526px; }
+
+
+#file-queue {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-top: 1px solid #999;
+  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+#file-queue .status {
+  cursor: pointer;
+  line-height: 30px;
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #999;
+  font-weight: bold;
+  padding-left: 10px;
+  background-color: #ddd;
+  background-image: -o-linear-gradient(bottom, #ccc, #eee);
+  background-image: -moz-linear-gradient(bottom, #ccc, #eee);
+  background-image: -webkit-linear-gradient(bottom, #ccc, #eee);
+  background-image: -ms-linear-gradient(bottom, #ccc, #eee);
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #ccc),
+    color-stop(1, #eee)
+  );
+  background-image: linear-gradient(bottom, #ccc, #eee);
+}
+
+#file-queue ol {
+  height: 65px;
+  padding: 0 5px;
+}
+
+#file-queue li {
+  display: inline-block;
+  vertical-align: middle;
+  background-color: #ddd;
+  margin: 10px 5px;
+  padding: 7px;
+  position: relative;
+}
+
+#file-queue li.done {
+  outline: 1px solid #ccc;
+}
+
+#file-queue .file {
+  color: #000;
+  cursor: default;
+  font-size: 10px;
+  padding-left: 36px;
+  display: block;
+  text-decoration: none;
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+  width: 130px;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+
+#file-queue .file-size {
+  font-size: 10px;
+  color: #666;
+  display: block;
+}
+
+#file-queue .progress {
+  background: #FFFBE0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.dragover .main-content > *,
+.dragover .side-content > *,
+.dragover .side-content > .getting-started > *,
+.dragover .main-content .avatar {
+  opacity: 0.25;
+}
+
+.dragover .main-content > #message-form,
+.dragover .side-content > #user-widget,
+.dragover .side-content > .getting-started {
+  opacity: 1;
+}
+
+#user-widget.dragover-possible:before,
+#message-form.dragover-possible:before {
+  content: "";
+  background: url(/img/spr_hint_drag_drop_r1.png) no-repeat;
+  position: absolute;
+  z-index: 1;
+  width: 200px;
+}
+
+#user-widget.dragover-possible:before {
+  left: -195px;
+  height: 94px;
+  top: 40px;
+}
+
+#message-form.dragover-possible:before {
+  bottom: -105px;
+  left: 100px;
+  height: 110px;
+  background-position: 0 -94px;
+}
+
+#message-form.dragover-possible #textarea-wrapper,
+#user-widget.dragover-possible {
+  background: rgba(0, 204, 0, 0.075);
+}
+
+#message-form.dragover #textarea-wrapper,
+#user-widget.dragover {
+  background: rgba(0, 204, 0, 0.15);
+}

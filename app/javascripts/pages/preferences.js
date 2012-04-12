@@ -1,9 +1,7 @@
 //= require "../ui/overlay.js"
 //= require "../utils/is_server_reachable.js"
 
-$(function() {
-  var $page = $(".preferences-page");
-  
+protonet.p("preferences", function($page) {
   $page.delegate("a.reload-link", "click", function() {
     var $link         = $(this),
         $container    = $link.parents(".status-box"),
@@ -76,6 +74,8 @@ $(function() {
       return;
     }
     
+    // TODO:  handle server failures
+    // right now a completed request is always handled like a success
     new protonet.ui.Overlay(protonet.t("SOFTWARE_UPDATE_SUCCESSFUL"));
     setTimeout(function() { location.href = "/"; }, (20).seconds());
     

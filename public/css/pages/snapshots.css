@@ -1,19 +1,70 @@
 .snapshots-page {
   text-align: center;
-  padding: 20px;
+  background: #000 !important;
 }
 
 .snapshots-page h1 {
   text-align: left;
 }
 
+.snapshots-page video {
+  width: 100%;
+  height: 100%;
+}
+
 .snapshots-page output {
-  background: #eee;
-  border: 3px solid;
-  border-color: #666 #ccc #ccc #666;
-  height: 380px;
-  margin: 0 auto;
-  max-width: 800px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.snapshots-page output > div {
+  background: #666;
+  background: rgba(0, 0, 0, 0.75);
+  text-align: center;
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 12px 0;
+}
+
+.snapshots-page .snap {
+  border-radius: 40px;
+  box-shadow: 0 1px 1px #000;
+  display: inline-block;
+  height: 44px;
+  width: 44px;
+  text-indent: -9999px;
+  background: #fff url(/img/icn_camera.png) no-repeat center center;
+}
+
+.snapshots-page .countdown {
+  font-size: 140px;
+  line-height: 200px;
+  top: 50%;
+  left: 0;
+  right: 0;
+  margin-top: -100px;
+  color: #fff;
+  text-shadow: 5px 5px 5px #000;
+  position: absolute;
+  text-align: center;
+}
+
+.snapshots-page .countdown.status {
+  font-size: 20px;
+}
+
+.snapshots-page .flash {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  background: #fff;
 }
 
 .snapshots-page label,
@@ -36,4 +87,5 @@
 .snapshots-page .retry,
 .snapshots-page .share {
   display: none;
+  margin-bottom: 20px;
 }

@@ -2,21 +2,18 @@
 //= require "../utils/browser_title.js"
 //= require "../utils/is_window_focused.js"
 //= require "../utils/url_behaviors.js"
-//= require "../utils/get_channel_name.js"
 //= require "channel.js"
 //= require "rendezvous.js"
 //= require "remote_channel.js"
 //= require "system_channel.js"
+//= require "private_channel.js"
 
 /**
  * @events
- *    channels.data_available - Called when data is available and the class itself is initialized and ready
  *    channels.initialized    - Called when all channels are initialized and the data is available
  *    channel.change          - Invoked when user wants to switch to another channel (eg. by clicking on a channel link)
  */
 protonet.timeline.Channels = {
-  availableChannels: protonet.config.channel_name_to_id_mapping || {},
-  
   initialize: function() {
     this.container    = $("#timeline");
     this.tabContainer = $("#channels ul");
@@ -41,6 +38,27 @@ protonet.timeline.Channels = {
     }.bind(this));
     
     this._initNoChannelsHint();
+    this._initLoadingIndicator();
+    
+    this.load();
+  },
+  
+  load: function() {
+    protonet.trigger("channels.loading_start");
+    
+    protonet.data.Channel.getAllSubscribed(this.getActive(), {
+      success:  function(data) {
+        this.render(data);
+        protonet.trigger("channels.loading_end");
+      }.bind(this),
+      error: function(xhr) {
+        var isAborted = xhr.status === 0;
+        if (!isAborted) {
+          protonet.trigger("flash_message.error", protonet.t("LOADING_MEEPS_ERROR"));
+        }
+        protonet.trigger("channels.loading_end");
+      }
+    });
   },
   
   render: function(data) {
@@ -48,8 +66,6 @@ protonet.timeline.Channels = {
     this._prepareData(data);
     
     this._updateSubscribedChannels();
-    
-    protonet.trigger("channels.data_available", this.data, this.availableChannels, this.subscribedChannels);
     
     this._observe();
     this._render();
@@ -70,9 +86,21 @@ protonet.timeline.Channels = {
     return activeChannels.concat(activeRendezvousChannels);
   },
   
+  _initLoadingIndicator: function() {
+    var $loadingIndicator = $("#timeline-loading");
+    
+    protonet
+      .on("channels.loading_start", function() {
+        $loadingIndicator.show();
+      })
+      .on("channels.loading_end", function() {
+        $loadingIndicator.hide();
+      });
+  },
+  
   _initNoChannelsHint: function() {
     var $hint;
-    protonet.after("channels.data_available channel.unload", function() {
+    protonet.after("channels.initialized channel.unload", function() {
       if (this.data.length) {
         return;
       }
@@ -106,7 +134,7 @@ protonet.timeline.Channels = {
         if (isSubscribed) {
           protonet.trigger("modal_window.hide").trigger("channel.change", id);
         } else if (protonet.config.allow_modal_views) {
-          protonet.open("/channels/" + id);
+          protonet.open(protonet.data.Channel.getUrl(id));
         }
         
         event.preventDefault();
@@ -202,9 +230,9 @@ protonet.timeline.Channels = {
        * Subscribe a new channel by id
        */
       .on("channel.subscribe", function(id) {
-        protonet.trigger("channel.hide").trigger("timeline.loading_start");
+        protonet.trigger("channel.hide").trigger("channels.loading_start");
         
-        var identifier = protonet.utils.getChannelName(id) || "#" + id;
+        var identifier = protonet.data.Channel.getName(id) || "#" + id;
         
         var success = function() {
           var message = protonet.t("CHANNEL_SUBSCRIPTION_SUCCESS", { identifier: identifier });
@@ -213,7 +241,7 @@ protonet.timeline.Channels = {
         
         var error = function() {
           var message = protonet.t("CHANNEL_SUBSCRIPTION_ERROR", { identifier: identifier });
-          protonet.trigger("flash_message.error", message).trigger("timeline.loading_end");
+          protonet.trigger("flash_message.error", message).trigger("channels.loading_end");
         };
         
         $.ajax({
@@ -300,13 +328,13 @@ protonet.timeline.Channels = {
         var rendezvousKey = [partner, protonet.config.user_id].sort(function(a, b) { return a>b; }).join(":"),
             rendezvous    = this.rendezvous[rendezvousKey];
         if (rendezvous) {
-          protonet.trigger("timeline.loading_end").trigger("channel.change", rendezvous.data.id);
+          protonet.trigger("channels.loading_end").trigger("channel.change", rendezvous.data.id);
         } else {
-          protonet.trigger("channel.hide").trigger("timeline.loading_start");
+          protonet.trigger("channel.hide").trigger("channels.loading_start");
           $.ajax("/users/" + partner + "/" + "start_rendezvous", {
             type: "post",
             error: function() {
-              protonet.trigger("flash_message.error", protonet.t("RENDEZVOUS_ERROR")).trigger("timeline.loading_end");
+              protonet.trigger("flash_message.error", protonet.t("RENDEZVOUS_ERROR")).trigger("channels.loading_end");
             }
           });
         }
@@ -330,6 +358,7 @@ protonet.timeline.Channels = {
   },
   
   _instantiateChannel: function(channelData) {
+    console.log("INSTANTIATE CHANNEL", channelData);
     var instance;
     if (channelData.rendezvous) {
       instance = new protonet.timeline.Rendezvous(channelData);
@@ -338,6 +367,8 @@ protonet.timeline.Channels = {
       instance = new protonet.timeline.RemoteChannel(channelData);
     } else if (channelData.system) {
       instance = new protonet.timeline.SystemChannel(channelData);
+    } else if (channelData["private"]) {
+      instance = new protonet.timeline.PrivateChannel(channelData);
     } else {
       instance = new protonet.timeline.Channel(channelData);
     }
@@ -366,7 +397,7 @@ protonet.timeline.Channels = {
       return;
     }
     if (!this.selected) {
-      protonet.trigger("timeline.loading_start");
+      protonet.trigger("channels.loading_start");
     }
     
     var meepsReceivedWhileLoading = this.channelsBeingLoaded[channelId] = {},
@@ -384,10 +415,9 @@ protonet.timeline.Channels = {
       meepsReceivedWhileLoading[triggerMeepData.id] = triggerMeepData;
     }
     
-    $.ajax({
-      dataType: "json",
-      url: "/channels/" + channelId,
-      success: function(data) {
+    protonet.data.Channel.get(channelId, {
+      includeMeeps: true,
+      success:      function(data) {
         // Strip all meeps that were receive while the channel was loaded
         // Those meeps will later be rendered by firing the "meep.receive" event
         data.meeps = $.map(data.meeps, function(meepData) {
@@ -399,7 +429,7 @@ protonet.timeline.Channels = {
         this.data.push(data);
         this._updateSubscribedChannels();
         
-        protonet.trigger("timeline.loading_end");
+        protonet.trigger("channels.loading_end");
         if (!this.selected) {
           protonet.trigger("channel.change", channelId);
         }
@@ -410,7 +440,11 @@ protonet.timeline.Channels = {
         });
         
         delete this.channelsBeingLoaded[channelId];
-      }.bind(this)
+      }.bind(this),
+      
+      error: function() {
+        protonet.trigger("flash_message.error", protonet.t("LOADING_CHANNEL_ERROR"));
+      }
     });
   },
   

@@ -1,0 +1,13 @@
+<h3><a href="#{url}" title="#{name}" class="file">#{name}</a></h3>
+
+<div class="side-bar">
+  <dt>Size:</dt>        <dd><abbr title="#{size} Bytes">#{prettySize}</abbr></dd>
+  <dt>Uploader:</dt>    <dd><a href="/users/#{uploaderId}">#{uploaderName}</a></dd>
+  <dt>Uploaded:</dt>    <dd><abbr title="#{uploaded}">#{prettyUploaded}</abbr></dd>
+  <dt>Modified:</dt>    <dd><abbr title="#{modified}">#{prettyModified}</abbr></dd>
+  <dt>Type:</dt>        <dd>#{mime}</dd>
+  <dt>Malicious:</dt>   <dd><output class="virus-check"><i>scanning ...</i></output> <a data-hover-hint="top" class="hint" title="protonet automatically scans files for viruses and malware">(?)</dd>
+  <a class="button" href="#{downloadUrl}" download>Download</a>
+</div>
+
+<output class="embed"><p class="hint">Loading preview ...</p></output>

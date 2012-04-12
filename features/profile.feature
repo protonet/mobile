@@ -38,6 +38,6 @@ Feature: Managing your profile
     # standard image
     Then I should see the profile image "user_picture_r4.png" in my profile details
     Then I follow "edit" within ".users-page"
-    Then I should see "Upload photo" within ".users-page"
+    Then I should see "Change picture" within ".users-page"
     And I attach "profile_pic.png" to "avatar_file"
     Then I should see the profile image "profile_pic.png" in my profile details

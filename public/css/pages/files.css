@@ -1,0 +1,322 @@
+.files-page .table-wrapper {
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid #aaa;
+  outline: 6px solid #eee;
+  position: relative;
+  min-height: 200px;
+}
+
+.files-page .table-wrapper.dragover-possible {
+  margin: -1px -1px -1px -1px;
+  border: 2px dashed rgba(0, 204, 0, 0.5);
+  outline: 5px solid #eee;
+  background: rgba(0, 204, 0, 0.04);
+}
+
+.files-page .table-wrapper.dragover {
+  border: 2px dashed rgb(0, 204, 0);
+}
+
+.files-page .dragover-possible p.hint {
+  color: #000;
+} 
+
+.files-page table {
+  width: 100%;
+}
+
+.files-page .file-name {
+  width: 50%;
+  white-space: nowrap;
+}
+
+.files-page th.file-name {
+  padding-left: 48px;
+}
+
+.files-page .file-name,
+.files-page .file-modified {
+  text-align: left;
+}
+
+.files-page .file-size {
+  text-align: right;
+}
+
+.files-page td, .files-page th {
+  vertical-align: middle;
+  padding: 8px;
+}
+
+.files-page tr {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  height: 26px;
+  border-bottom: 1px solid #fff;
+}
+
+.files-page tr:nth-child(even) {
+  background: #f2f2f2;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.files-page tr.dragover,
+.files-page tr.focus {
+  background: rgba(72, 123, 255, 0.3);
+}
+
+.files-page tr.blink {
+  background: rgba(72, 123, 255, 0.5);
+}
+
+.files-page tr.focus.loading {
+  background: rgba(72, 123, 255, 0.1);
+}
+
+.files-page tr.focus.loading .file-name a {
+  background: url(/img/icn_loading_big.gif) no-repeat 0 center;
+}
+
+.files-page tr.focus,
+.files-page tr.focus a {
+  color: #000;
+}
+
+.files-page tr.myself .file-name {
+  font-weight: bold;
+}
+
+.files-page tr .file-name i {
+  font-style: normal;
+  font-weight: normal;
+  color: #999;
+}
+
+.files-page th {
+  text-shadow: 0 1px 1px #fff;
+}
+
+.files-page thead tr {
+  border: 0;
+  border-bottom: 1px solid #aaa;
+  background-color: #ddd;
+  background-image: -o-linear-gradient(bottom, #ddd, #fff);
+  background-image: -moz-linear-gradient(bottom, #ddd, #fff);
+  background-image: -webkit-linear-gradient(bottom, #ddd, #fff);
+  background-image: -ms-linear-gradient(bottom, #ddd, #fff);
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #ddd),
+    color-stop(1, #fff)
+  );
+  background-image: linear-gradient(bottom, #ddd, #fff);
+}
+
+.files-page .file,
+.files-page .folder {
+  outline: 0;
+  cursor: default;
+}
+
+.files-page h2 {
+  margin-bottom: 25px;
+}
+
+.files-page p.hint {
+  position: absolute;
+  top: 40%;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.files-page .address-bar {
+  color: #999;
+  line-height: 1.25;
+  margin-left: 8px;
+  font-weight: normal;
+}
+
+.files-page .address-bar a {
+  display: inline-block;
+  position: relative;
+  text-decoration: none;
+  color: #999;
+  margin-right: 6px;
+  padding-right: 16px;
+}
+
+.files-page .address-bar a:after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  border: 4px solid transparent;
+  border-left: 4px solid #ccc;
+  top: 9px;
+  width: 0;
+  height: 0;
+}
+
+.files-page .address-bar a:last-child:after {
+  display: none;
+}
+
+.files-page .address-bar a.dragover,
+.files-page .address-bar a:hover,
+.files-page .address-bar a:last-child {
+  color: #000;
+}
+
+.files-page .address-bar a.blink {
+  color: #487bff;
+}
+
+.files-page .file-details {
+  overflow: hidden;
+  padding: 10px;
+}
+
+.files-page .file-details,
+.files-page .file-list {
+  display: none;
+}
+
+.files-page .virus-check {
+  display: inline;
+}
+
+.files-page .virus-check .positive {
+  color: green;
+}
+
+.files-page .virus-check .negative {
+  color: red;
+  font-weight: bold;
+}
+
+.files-page .file-details dt {
+  width: 110px;
+}
+
+.files-page .file-details .side-bar {
+  float: left;
+  overflow: hidden;
+  width: 240px;
+  padding-left: 2px;
+  padding-bottom: 2px;
+  margin-right: 15px;
+}
+
+.files-page .file-details .side-bar:after {
+  content: "";
+  border-right: 1px solid #CCC;
+  position: absolute;
+  left: 252px;
+  width: 1;
+  top: 48px;
+  bottom: 0;
+}
+
+.files-page .file-details .hint {
+  position: static;
+  text-align: left;
+}
+
+/* ------------------------------------------------ DRAG IMAGE ------------------------------------------------ */
+.files-page .drag-image {
+  position: absolute;
+  top: 100px;
+  right: 100px;
+  z-index: -1;
+  width: 300px;
+  opacity: 0.8;
+}
+
+.files-page .drag-image tr {
+  height: auto;
+  border: 0;
+}
+
+.files-page .drag-image td {
+  padding: 1px;
+}
+
+.files-page .drag-image .file-size,
+.files-page .drag-image .file-modified {
+  display: none;
+}
+
+/* ------------------------------------------------ EMBEDS ------------------------------------------------ */
+.embed {
+  margin: 0 0 15px 258px;
+}
+
+.embed div.object {
+  position: absolute;
+  width: auto;
+  height: auto;
+  left: 268px;
+  top: 63px;
+  right: 10px;
+  bottom: 15px;
+}
+
+/* ------------------------------------------------ FILE ACTIONS ------------------------------------------------ */
+.file-actions {
+  float: right;
+  margin-top: -5px;
+}
+
+.file-actions li {
+  float: left;
+  margin-left: 6px;
+  background: #eee;
+}
+
+.file-actions a {
+  border: 1px solid #aaa;
+  width: 32px;
+  cursor: not-allowed;
+  height: 32px;
+  display: block;
+  background: url(/img/spr_file_actions_r1.png) no-repeat;
+  text-indent: -9999px;
+  opacity: 0.25;
+  overflow: hidden;
+}
+
+.file-actions a.enabled {
+  opacity: 0.75;
+  cursor: pointer;
+}
+
+.file-actions a.enabled:hover {
+  opacity: 1;
+}
+
+.file-actions .upload {
+  background-position: 7px center;
+}
+
+.file-actions .new-document {
+  background-position: -31px center;
+}
+
+.file-actions .new-folder {
+  width: 40px;
+  background-position: -77px center;
+}
+
+.file-actions .share {
+  background-position: -129px center;
+}
+
+.file-actions .delete {
+  background-position: -175px center;
+}

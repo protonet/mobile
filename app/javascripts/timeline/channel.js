@@ -2,7 +2,6 @@
 //= require "../utils/ensure_scroll_position.js"
 //= require "../utils/is_window_focused.js"
 //= require "../media/play_sound.js"
-//= require "../utils/get_channel_name.js"
 //= require "../ui/notification.js"
 
 /**
@@ -111,6 +110,7 @@
           }
           
           this.unreadMeeps++;
+          console.log(instance);
           var isReplyToViewer = instance.userReplies.indexOf(protonet.config.user_id + "") !== -1;
           if (isReplyToViewer) {
             this.unreadReplies++;
@@ -338,7 +338,7 @@
         type: "get",
         data: $.extend(parameters, { channel_id: this.data.id }),
         beforeSend: function() {
-          protonet.trigger("timeline.loading_start");
+          protonet.trigger("channels.loading_start");
         },
         success: function(response) {
           if (!response || !response.length) {
@@ -348,7 +348,7 @@
           (callback || $.noop)(response);
         },
         complete: function() {
-          protonet.trigger("timeline.loading_end");
+          protonet.trigger("channels.loading_end");
         }
       });
     },
@@ -380,6 +380,9 @@
      * in the browser's viewport
      */
     _initEndlessScroller: function() {
+      if (this.channelList.find("article").length < 25) {
+        return;
+      }
       var lastMeepInList = this.channelList.children(":last").addClass("separator");
 
       lastMeepInList.one("inview", function(event, visible) {
@@ -431,7 +434,7 @@
      */
     _notifications: function(meepData) {
       var isWindowFocused       = protonet.utils.isWindowFocused(),
-          isAllowedToPlaySound  = protonet.user.Config.get("sound");
+          isAllowedToPlaySound  = protonet.data.User.getPreference("sound");
       
       if (meepData.user_id == protonet.config.user_id) {
         return;
@@ -455,7 +458,7 @@
      */
     _replyNotifications: function(meepData, instance) {
       var isWindowFocused             = protonet.utils.isWindowFocused(),
-          isAllowedToDoNotifications  = protonet.user.Config.get("reply_notification"),
+          isAllowedToDoNotifications  = protonet.data.User.getPreference("reply_notification"),
           isReplyToViewer             = instance.userReplies.indexOf(protonet.config.user_id + "") !== -1;
 
       if (isReplyToViewer && isAllowedToDoNotifications && !isWindowFocused) {

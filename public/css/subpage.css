@@ -42,6 +42,10 @@
   border-bottom: 1px solid #ccc;
 }
 
+.subpage h3:first-child {
+  margin-top: 0;
+}
+
 .subpage h4 {
   margin-top: 25px;
   margin-bottom: 5px;

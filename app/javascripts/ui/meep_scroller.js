@@ -1,5 +1,4 @@
 //= require "../events/on_element_removed.js"
-//= require "../utils/get_channel_name.js"
 
 protonet.ui.MeepScroller = (function() {
   var $document = $(document);
@@ -28,17 +27,19 @@ protonet.ui.MeepScroller = (function() {
         this.select(meepToSelect);
       } else {
         this.loading();
-        protonet.timeline.Meep.get(id, function(data) {
-          this.loadingEnd();
-          
-          data.posted_in = data.posted_in || data.channel_id;
-          delete data.channel_id;
-          this.channelName = protonet.utils.getChannelName(data.posted_in) || protonet.t("UNKNOWN_CHANNEL");
-          
-          this.select(
-            new protonet.timeline.Meep(data).render(this.$meepList)
-          );
-        }.bind(this));
+        protonet.data.Meep.get(id, {
+          success: function(data) {
+            this.loadingEnd();
+            // Make sure that the meep doesn't conflict with channels
+            data.posted_in = data.posted_in || data.channel_id;
+            delete data.channel_id;
+            this.channelName = protonet.data.Channel.getName(data.posted_in) || protonet.t("UNKNOWN_CHANNEL");
+            
+            this.select(
+              new protonet.timeline.Meep(data).render(this.$meepList)
+            );
+          }.bind(this)
+        });
       }
     },
 
@@ -66,7 +67,7 @@ protonet.ui.MeepScroller = (function() {
         }
       });
 
-      if (protonet.user.Browser.SUPPORTS_EVENT("DOMMouseScroll")) {
+      if (protonet.browser.SUPPORTS_EVENT("DOMMouseScroll")) {
         // Firefox 4 only supports DOMMouseScroll on the $document object
         $document.bind("DOMMouseScroll.meep_scroller", function(event) {
           event = event.originalEvent;
@@ -75,7 +76,7 @@ protonet.ui.MeepScroller = (function() {
           }
           event.preventDefault();
         });
-      } else if (protonet.user.Browser.SUPPORTS_EVENT("mousewheel")) {
+      } else if (protonet.browser.SUPPORTS_EVENT("mousewheel")) {
         $document.bind("mousewheel.meep_scroller", function(event) {
           event = event.originalEvent;
           if (event.wheelDeltaY !== 0) {

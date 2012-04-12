@@ -64,7 +64,7 @@ protonet.ui.InlineAutocompleter = Class.create({
   
   _observe: function() {
     // There are certain compatibility issues with the android webkit browser
-    if (protonet.user.Browser.IS_ANDROID_WEBKIT()) {
+    if (protonet.browser.IS_ANDROID_WEBKIT()) {
       return;
     }
     this.input.keyup(this._keyup.bind(this)).keydown(this._keydown.bind(this));

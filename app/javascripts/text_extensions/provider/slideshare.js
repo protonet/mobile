@@ -1,4 +1,4 @@
-//= require "../../data/slideshare.js"
+//= require "../../data/ext/slideshare.js"
 
 /**
  * Slideshare Provider

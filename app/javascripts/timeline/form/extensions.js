@@ -5,3 +5,4 @@ protonet.timeline.Form.extensions = {};
 //= require "extensions/snapshots.js"
 //= require "extensions/auto_resizer.js"
 //= require "extensions/auto_completer.js"
+//= require "extensions/files.js"

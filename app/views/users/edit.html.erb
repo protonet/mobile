@@ -1,21 +1,8 @@
 <%= render "shared/nav_users"%>
 <output class="content" data-tab="users">
+  <h2>Edit @<%= @user.display_name %> <a data-hover-hint="top" title="This page can only be seen by admins and the user himself" class="hint">(?)</a></h2>
   
-  <%= form_tag images_avatars_path, :multipart => true, :class => 'single-button-form' do %>
-    <%= hidden_field_tag :user_id, @user.id %>
-    <%= avatar(@user, :width => 120, :height => 120, :class => 'user-avatar', 'data-user-avatar' => @user.id) %>
-    <h2>Edit @<%= @user.display_name %> <a data-hover-hint="top" title="This page can only be seen by admins and the user himself" class="hint">(?)</a></h2>
-    
-    <h3>Change avatar</h3>
-    <!--
-      TODO: Build this "take a photo" feature with Ali
-      <%= button "Take a photo" %>
-    -->
-    <span class="upload-button-container">
-      <%= file_field_tag :avatar_file, :accept => 'image/jpeg, image/gif, image/png, image/bmp' %>
-      <%= button "Upload photo" %>
-    </span>
-  <% end %>
+  <%= render :partial => 'avatar' %>
   
   <%- unless @user.stranger? && @user.anonymous? %>
     <h3>Edit user details</h3>

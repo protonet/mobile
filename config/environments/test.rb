@@ -29,8 +29,8 @@ Dashboard::Application.configure do
   # like if you have constraints or database-specific column types
   # config.active_record.schema_format = :sql
   
-  configatron.user_file_path = Rails.root.to_s + "/tmp/test/shared/user-files"
-  FileUtils.mkdir_p(configatron.user_file_path)
+  configatron.files_path = Rails.root.to_s + "/tmp/test/shared/files"
+  FileUtils.mkdir_p(configatron.files_path)
   
   configatron.images.avatars_path   = Rails.root.to_s + "/public/avatars"
   configatron.images.externals_path = Rails.root.to_s + "/public/externals"
