@@ -5,7 +5,7 @@
     <ul>
       <%- @preferences.each do |preference| %>
         <li class="<%= 'selected' if preference[:section] == @selected_section %>">
-          <a href="/preferences/show?section=<%= preference[:section] %>" data-tab="preferences">
+          <a href="/preferences/show?section=<%= preference[:section] %>">
             <strong><%= preference[:name] %></strong>
           </a>
         </li>

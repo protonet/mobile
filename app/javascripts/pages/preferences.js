@@ -72,7 +72,7 @@ $(function() {
     });
   })();
   
-  $page.delegate("form.software-update", "ajax:complete", function(event, xhr) {
+  $page.on("ajax:complete", "form.software-update", function(event, xhr) {
     if (xhr.getResponseHeader("X-Error-Message")) {
       return;
     }
@@ -118,7 +118,7 @@ $(function() {
   }
 
   // update progress log
-  $page.delegate("form.software-update", "submit", function() {
+  $page.on("submit", "form.software-update", function() {
     $showReleaseProgressButton.fadeIn();
     $showReleaseProgressButton.unbind("click.showReleaseProgress").bind("click.showReleaseProgress", function(e) {
       e.preventDefault();
@@ -138,7 +138,7 @@ $(function() {
   });
   
   // show old log
-  $("#show-last-release-update-log").unbind("click.showReleaseProgress").bind("click.showReleaseProgress", function(e) {
+  $("#show-last-release-update-log").unbind(".showReleaseProgress").bind("click.showReleaseProgress", function(e) {
     e.preventDefault();
     var $this = $(this);
     $releaseUpdateProgressConsole.quakeStyleConsole({
@@ -157,23 +157,7 @@ $(function() {
     $releaseUpdateProgressConsole.data('quakeStyleConsole').open();
   });
 
-  // trigger logfile sending
-  $("#send-to-protonet-support").click(function(e) {
-    e.preventDefault();
-    var $this = $(this);
-    var originalButtonText = $sendToProtonetSupport.text
-    $.ajax({
-      url : $this.attr("href"),
-      dataType : 'json',
-      success: function(response) {
-        var $feedback = $("<span id='sent-feedback'> | " + response.text + "</span>");
-        $sendToProtonetSupport.append($feedback);
-        setTimeout(function() {
-          $("#sent-feedback").fadeOut();
-          $feedback.remove();
-        }, 3000);
-      }
-    });
-  });
+  
+  
   
 });
