@@ -37,11 +37,8 @@ module Preferences
     end
     
     def send_log_to_support_team
-      # TODO: fetch real data to be delivered
-      node_name = "bla"
-      license_key = "lliiiicennsseeeeee"
-      log_file = `cat /Users/jo/Desktop/CSM-SuperTODO.txt`
-      Mailer.update_log(node_name, license_key, log_file).deliver
+      log_file = `cat /tmp/ptn_release_update.log | sed 's/\\\033[^a-zA-Z]*.//g'`
+      Mailer.update_log(Node.local.name, SystemBackend.license_key, log_file).deliver
       render :json => { :status => :ok, :success => true, :text => "Mail send" }, :status => 200
     end
     
