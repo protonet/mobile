@@ -8,11 +8,6 @@ export HOME=$CURRENT_PATH/../..
 cd $SHARED
 export SHARED=`pwd`
 
-# delete pid file if stale
-if [[ `cat $SHARED/pids/monit.pid` != `pgrep -u protonet monit` ]]; then
-  rm $SHARED/pids/monit.pid
-fi
-
 case $1 in
    start)
       /usr/sbin/monit -c $SHARED/config/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid
