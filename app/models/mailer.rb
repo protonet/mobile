@@ -29,8 +29,8 @@ class Mailer < ActionMailer::Base
     mail(:from => from, :to => receiver.email, :subject => "protonet password reset for #{SystemPreferences.public_host}")
   end
   
-  def update_log(node_name, license_key, log_file)
-    from = "admin@#{SystemPreferences.public_host}"
+  def update_log(node_name, license_key, log_file, current_user)
+    from = current_user.email
     to = "support@protonet.info"
     content = <<-eos
       
@@ -38,7 +38,10 @@ class Mailer < ActionMailer::Base
       
       somone has a problem. Here is the update log.
       
-      Node name: #{node_name} (#{SystemPreferences.public_host})")
+      Node name: #{node_name} (#{SystemPreferences.public_host})
+      
+      Admin name: #{current_user.display_name}
+      Admin email: #{current_user.email}
       
       License key: #{license_key}
       
