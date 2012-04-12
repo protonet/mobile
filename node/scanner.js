@@ -10,15 +10,15 @@ exec  = require('child_process').exec;
 fs.watchFile('/home/betahaus-scanner/scans', function (curr, prev) {
   console.log('changed file is: ' + sys.inspect(curr));
 
-  child = exec('mv /home/betahaus-scanner/scans/* /home/protonet/dashboard/shared/files/channel/9', 
+  child = exec('mv /home/betahaus-scanner/scans/* /home/protonet/dashboard/shared/user-files/9', 
     function (error, stdout, stderr) {
       sys.print('stdout: ' + stdout);
       sys.print('stderr: ' + stderr);
       if (error !== null) {
         console.log('exec error: ' + error);
       } else {
-        exec('chown protonet:protonet -R /home/protonet/dashboard/shared/files/channel/9');
-        exec('chmod g+r -R /home/protonet/dashboard/shared/files/channel/9');
+        exec('chown protonet:protonet -R /home/protonet/dashboard/shared/user-files/9');
+        exec('chmod g+r -R /home/protonet/dashboard/shared/user-files/9');
         setTimeout(function(){
           var localNode = http.createClient(80, 'localhost');
           var username = 'scanner';

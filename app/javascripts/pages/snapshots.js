@@ -1,45 +1,26 @@
-//= require "../media/webcam.js" 
+//= require "../lib/webcam.js"
 
-protonet.p("snapshots", function($page, $window) {
+$(function() {
   var photoUrl,
-      isModalWindow = !!$(".modal-window").length,
-      uploadUrl     = protonet.config.node_base_url
-        + "/fs/snapshot"
-        + "?user_name=" + encodeURIComponent(protonet.config.user_name)
-        + "&user_id="   + encodeURIComponent(protonet.config.user_id)
-        + "&token="     + encodeURIComponent(protonet.config.token),
+      $page         = $(".snapshots-page"),
       $container    = $page.find("output"),
       $urlInput     = $page.find("input"),
       $label        = $page.find("label"),
-      $snapBar      = $container.find("div"),
-      $snapButton   = $page.find("a.snap"),
+      $snapButton   = $page.find("button.snap"),
       $retryButton  = $page.find("button.retry"),
       $shareButton  = $page.find("button.share");
   
-  function failure() {
-    protonet.trigger("flash_message.error", protonet.t("NO_WEBCAM_SUPPORT"));
-  }
+  webcam.set_swf_url("/flash/webcam.swf");
+  webcam.set_shutter_sound(true, "/sounds/shutter.mp3");
+  webcam.set_quality(100);
   
-  function resizePage() {
-    $container.css("height", $window.height() - $container.offset().top - 1 + "px");
-  }
-  
-  if (!isModalWindow) {
-    $window.on("resize", resizePage);
-    resizePage();
-  }
-  
-  var webcam = new protonet.media.Webcam();
-  if (!webcam.supported()) {
-    failure();
-    return;
-  }
-  webcam.insertInto($container);
+  $container.html(webcam.get_html($container.width(), $container.height()));
   
   $snapButton.bind("click", function() {
-    $snapBar.hide();
-    webcam.snapWithCountdown(uploadUrl, function(response) {
-      photoUrl = protonet.data.File.getDownloadUrl(response[0]);
+    $snapButton.addClass("loading").prop("disabled", true);
+    webcam.snap(protonet.config.node_base_url + "/snapshooter", function(url) {
+      $snapButton.removeClass("loading").prop("disabled", false);
+      photoUrl = protonet.config.base_url + url;
       $label.css("display", "block");
       $urlInput.val(photoUrl).select();
       $page.find("button").toggle();
@@ -49,7 +30,6 @@ protonet.p("snapshots", function($page, $window) {
   
   $retryButton.bind("click", function() {
     webcam.reset();
-    $snapBar.show();
     $label.hide();
     $page.find("button").toggle();
   });

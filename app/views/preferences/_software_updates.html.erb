@@ -13,7 +13,7 @@
 <%= form_tag(preferences_release_update_path, { :remote => true, 'data-type' => 'html', :class => "software-update" }) do %>
   <%= hidden_field_tag 'section', 'software_updates' %>
   <div class="form-field">
-    <%= label_tag          :password, 'Your node SSH password:' %>
+    <%= label_tag          :password, "Your node's SSH password:" %>
     <%= password_field_tag :password, nil %>
     <a data-hover-hint="top" class="hint" title="The password can be found on the 'Getting Started' paper which you received with your node">(?)</a>
   </div>

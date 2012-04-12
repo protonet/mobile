@@ -38,7 +38,7 @@ protonet.utils.smilify = (function() {
   });
   
   function smilify(str, ignoreSetting) {
-    if (!ignoreSetting && !protonet.data.User.getPreference("smilies")) {
+    if (!ignoreSetting && !protonet.user.Config.get("smilies")) {
       return str;
     }
     

@@ -1,45 +1,38 @@
 # Module to make using AMQ prettier
-# Author: Daniel Lamando
+# Author: Daniel Danopia
 
 module Rabbit
   def amq;    @amq ||= MQ.new; end
   def queues; @queues ||= [];  end
-
-  def _log message
-    puts message if $DEBUG
-  end
-
+  
   def bind topic, *keys, &handler
-    keys.unshift(topic)
-    key = keys.join('.')
-
+    key = "#{topic}.#{keys.join('.')}"
+    
     queue = amq.queue "#{queue_id}.#{key}", :auto_delete => true
     queue.bind(amq.topic(topic), :key => key).subscribe do |packet|
-      _log "Received rabbitmq packet from #{key}"
+      log "Received rabbitmq packet from #{key}" if $DEBUG==1
       begin
         handler.call JSON.parse(packet)
       rescue JSON::ParserError
-        _log "JSON parsing error from rabbitmq packet"
+        log "JSON parsing error from rabbitmq packet" if $DEBUG==1
       end
     end
-
+    
     queues << queue
     queue
   end
 
-  def publish topic, keys, data
-    keys = [keys] unless keys.is_a? Array
-    keys.unshift(topic)
-    key = keys.join('.')
-    _log "Publishing rabbitmq packet to #{key}"
-    amq.topic(topic).publish data.to_json, :key => key
+  def publish topic, key, data
+    key = key.join('.') if key.is_a? Array
+    log "Publishing rabbitmq packet to #{topic}.#{key}" if $DEBUG==1
+    amq.topic(topic).publish data.to_json, :key => "#{topic}.#{key}"
   end
-
+  
   def unbind_queues
     queues.each {|q| q.unsubscribe }
   end
-
+  
   def queue_id
-    "ruby.#{self.class}-#{self.object_id}"
+    "#{self.class}-#{self.object_id}"
   end
 end

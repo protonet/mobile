@@ -1,4 +1,4 @@
-//= require "prettify_code.js"
+//= require "../lib/google_code_prettify.js"
 
 /**
  * Enables code highlighting as know from Textile and BBCode
@@ -17,7 +17,7 @@ protonet.utils.codify = (function() {
   return function(str) {
     return str.replace(REG_EXP, function(match, $1, $2) {
       $2 = trimEmptyLines($2);
-      return "<pre>" + protonet.utils.prettifyCode($2) + "</pre>";
+      return "<pre>" + prettyPrintOne($2) + "</pre>";
     });
   };
 })();

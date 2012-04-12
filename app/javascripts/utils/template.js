@@ -1,5 +1,4 @@
 //= require "escape_for_reg_exp.js"
-//= require "escape_html.js"
 
 /**
  * Simple Template engine
@@ -14,13 +13,10 @@
  *    </script>
  *
  */
-protonet.utils.Template = function(id, params, escapeHtml) {
+protonet.utils.Template = function(id, params) {
   this.html = this._getTemplate(id);
   
   $.each(params || {}, function(key, value) {
-    if (escapeHtml) {
-      value = protonet.utils.escapeHtml(value);
-    }
     this.html = this.html.split("#{" + key + "}").join(value);
   }.bind(this));
 };
@@ -30,17 +26,17 @@ protonet.utils.Template.prototype = {
   
   _getTemplate: function(id) {
     if (!this.cache[id]) {
-      this.cache[id] = $.trim(document.getElementById(id).innerHTML);
+      this.cache[id] = $("#" + id).html();
     }
     
     return this.cache[id];
   },
   
   toString: function() {
-    return this.html;
+    return $.trim(this.html);
   },
   
-  to$: function() {
+  toElement: function() {
     return $(this.html);
   }
 };

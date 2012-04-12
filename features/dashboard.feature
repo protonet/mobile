@@ -13,8 +13,6 @@ Feature: Using the protonet dashboard
 
   @javascript
   Scenario: Writing a meep containing a channel name
-    Given a user with the login "dudemeister"
-    And I am logged in as "dudemeister"
     Given a channel exists with name: "Cool-Channel"
     And I go to the start page
     And I send the message "Hallo @cool-channel!"
@@ -44,8 +42,6 @@ Feature: Using the protonet dashboard
 
   @javascript
   Scenario: Writing a meep containing the beginning of a channel name
-    Given a user with the login "dudemeister"
-    And I am logged in as "dudemeister"
     Given a channel exists with name: "bambule"
     And I go to the start page
     And I fill in "message" with "Hallo @bam"

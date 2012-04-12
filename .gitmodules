@@ -10,12 +10,6 @@
 [submodule "app/javascripts/lib/simple-javascript-airbrake-notifier"]
 	path = app/javascripts/lib/simple-javascript-airbrake-notifier
 	url = git@github.com:protonet/simple-javascript-airbrake-notifier.git
-[submodule "app/javascripts/lib/plupload"]
-	path = app/javascripts/lib/plupload
-	url = git@github.com:protonet/plupload.git
 [submodule "app/javascripts/lib/wysihtml5"]
 	path = app/javascripts/lib/wysihtml5
 	url = git://github.com/xing/wysihtml5.git
-[submodule "app/javascripts/lib/jquery-patches"]
-	path = app/javascripts/lib/jquery-patches
-	url = git@github.com:protonet/jquery-patches.git

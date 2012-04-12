@@ -16,7 +16,7 @@
   </div>
   <div class="form-field">
     <%= hidden_field_tag 'preferences[allow_modal_views]', false, {:id => nil}  %>
-    <%= label_tag 'preferences[allow_modal_views]', 'Enable modal views' %> <%= check_box_tag 'preferences[allow_modal_views]', true, SystemPreferences.allow_modal_views %>
+    <%= label_tag 'preferences[allow_modal_views]', 'Allow modal views?' %> <%= check_box_tag 'preferences[allow_modal_views]', true, SystemPreferences.allow_modal_views %>
     <a class="hint" data-hover-hint="top" title="Whether sub pages should be displayed in a modal dialog">(?)</a>
   </div>
   <%= button "Save" %>

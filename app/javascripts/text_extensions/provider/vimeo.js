@@ -1,4 +1,4 @@
-//= require "../../data/ext/vimeo.js"
+//= require "../../data/vimeo.js"
 //= require "../../utils/format_seconds.js"
 
 /**

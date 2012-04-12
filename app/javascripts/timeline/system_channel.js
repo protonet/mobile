@@ -7,7 +7,7 @@ protonet.timeline.SystemChannel = Class.create(protonet.timeline.Channel, {
   
   _replyNotifications: function(meepData) {
     var isWindowFocused             = protonet.utils.isWindowFocused(),
-        isAllowedToDoNotifications  = protonet.data.User.getPreference("reply_notification"),
+        isAllowedToDoNotifications  = protonet.user.Config.get("reply_notification"),
         isSystem                    = meepData.author === "System";
     
     if (!isWindowFocused && isAllowedToDoNotifications && isSystem) {

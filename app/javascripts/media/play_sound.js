@@ -21,7 +21,7 @@ protonet.media.playSound = (function() {
         return;
       }
       match = path.match(fileTypeRegExp);
-      if (match && protonet.browser.SUPPORTS_AUDIO_TYPE(match[1])) {
+      if (match && protonet.user.Browser.SUPPORTS_AUDIO_TYPE(match[1])) {
         (cache[path] = new Audio(path)).play();
         return;
       }

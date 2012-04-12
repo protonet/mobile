@@ -9,14 +9,6 @@
   z-index: 10;
 }
 
-.modal-window-shadow.dragover {
-  background-color: rgba(0, 0, 0, 0.3);
-}
-
-.modal-window-shadow.blink {
-  background-color: rgba(0, 0, 0, 0.2);
-}
-
 .modal-window {
   border-radius: 2px;
   background: #fff;

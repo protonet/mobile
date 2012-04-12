@@ -1,5 +1,6 @@
 //= require "../behaviors/meeps.js"
 //= require "../utils/auto_link.js"
+//= require "../utils/auto_link_file_paths.js"
 //= require "../utils/escape_html.js"
 //= require "../utils/highlight_keyword.js"
 //= require "../utils/smilify.js"
@@ -11,6 +12,9 @@
 //= require "../utils/highlight_channel_replies.js"
 //= require "../utils/highlight_user_replies.js"
 //= require "../utils/parse_query_string.js"
+//= require "../utils/get_channel_name.js"
+//= require "../media/proxy.js"
+//= require "../ui/pretty_date.js"
 
 /**
  * @example
@@ -42,7 +46,8 @@
  */
 (function(protonet) {
   
-  var defaultAvatarSize = { width: 36, height: 36 },
+  var meepDataCache     = {},
+      defaultAvatarSize = { width: 36, height: 36 },
       POST_URL          = "/meeps";
   
   protonet.timeline.Meep = Class.create({
@@ -57,7 +62,8 @@
           this.data.user_id       = this.data.remote_user_id;
         }
       }
-      this.userReplies = this.channelReplies = [];
+
+      meepDataCache[this.data.id] = this.data;
     },
 
     _parseForm: function(form) {
@@ -65,22 +71,12 @@
       var data = protonet.utils.parseQueryString(this.queryString).meep;
       return $.extend(data, {
         user_id:        protonet.config.user_id,
-        avatar:         protonet.data.User.getAvatar(protonet.config.user_id),
         created_at:     new Date().toString(),
         text_extension: data.text_extension && JSON.parse(data.text_extension)
       });
     },
 
     _convertMessage: function(message) {
-      var textExtension = this.data.text_extension,
-          trimmedMessage;
-      if (textExtension) {
-        trimmedMessage = $.trim(message);
-        if (trimmedMessage === textExtension.url || "http://" + trimmedMessage === textExtension.url) {
-          return "";
-        }
-      }
-      
       $.each([
         // Order of functions is essential!
         protonet.utils.escapeHtml,
@@ -92,14 +88,15 @@
         protonet.utils.emojify,
         protonet.utils.highlightChannelReplies,
         protonet.utils.highlightUserReplies,
-        protonet.utils.autoLink
+        protonet.utils.autoLink,
+        protonet.utils.autoLinkFilePaths
       ], function(i, method) {
         message = method(message);
       });
-      
+
       this.userReplies = protonet.utils.highlightUserReplies.result;
       this.channelReplies = protonet.utils.highlightChannelReplies.result;
-      
+
       return message;
     },
 
@@ -133,7 +130,7 @@
     },
 
     getUrl: function() {
-      return protonet.data.Meep.getUrl(this.data.id);
+      return protonet.timeline.Meep.getUrl(this.data.id);
     },
 
     getAvatar: function(size) {
@@ -155,21 +152,18 @@
     _render: function(template, container) {
       var replyFromChannelTemplate, postedInChannelTemplate, templateData,
           data = { meep: this.data, instance: this };
-      
+
       if (this.data.reply_from) {
-        var channelName = protonet.data.Channel.getName(this.data.reply_from);
-        if (channelName) {
-          replyFromChannelTemplate = new protonet.utils.Template("reply-from-channel-template", {
-            channel_id:   this.data.reply_from,
-            channel_name: channelName
-          }).toString();
-        }
+        replyFromChannelTemplate = new protonet.utils.Template("reply-from-channel-template", {
+          channel_id:   this.data.reply_from,
+          channel_name: protonet.utils.getChannelName(this.data.reply_from)
+        }).toString();
       }
 
       if (this.data.posted_in) {
         postedInChannelTemplate = new protonet.utils.Template("posted-in-channel-template", {
           channel_id:   this.data.posted_in,
-          channel_name: protonet.data.Channel.getName(this.data.posted_in) || protonet.t("UNKNOWN_CHANNEL")
+          channel_name: protonet.utils.getChannelName(this.data.posted_in) || protonet.t("UNKNOWN_CHANNEL")
         }).toString();
       }
       templateData = $.extend({}, this.data, {
@@ -180,7 +174,7 @@
       });
 
       this.element = new protonet.utils.Template(template, templateData)
-        .to$()
+        .toElement()
         .prependTo(container);
 
       this.article = this.element.is("article") ? this.element : this.element.find("article");
@@ -253,7 +247,7 @@
 
       if (!this.status) {
         this.status = new protonet.utils.Template("meep-status-template")
-          .to$()
+          .toElement()
           .appendTo(this.element.find(".author"));
       }
 
@@ -267,4 +261,32 @@
     }
   });
 
+  /**
+   * Static method for loading a meep
+   */
+  protonet.timeline.Meep.get = function(id, callback) {
+    id = +id;
+    if (meepDataCache[id]) {
+      return callback(meepDataCache[id]);
+    } else {
+      $.ajax({
+        dataType: "json",
+        url:      "/meeps/" + id,
+        success:  function(data) {
+          meepDataCache[id] = data;
+          callback(data);
+        },
+        error:    function() {
+          protonet.trigger("flash_message.error", protonet.t("LOADING_MEEP_ERROR"));
+        }
+      });
+    }
+  };
+  
+  /**
+   * Static method for getting the url to a meep
+   */
+  protonet.timeline.Meep.getUrl = function(id) {
+    return protonet.config.base_url + "/meeps/" + id;
+  };
 })(protonet);

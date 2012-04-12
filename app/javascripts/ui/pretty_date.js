@@ -1,4 +1,4 @@
-//= require "../utils/prettify_date.js"
+//= require "../utils/convert_to_pretty_date.js"
 
 (function() {
   var SELECTOR        = "time",
@@ -12,7 +12,7 @@
   }
   
   function update(element) {
-    var prettyDate = protonet.utils.prettifyDate(element.attr(ATTRIBUTE));
+    var prettyDate = protonet.utils.convertToPrettyDate(element.attr(ATTRIBUTE));
     element.html(prettyDate);
   }
   

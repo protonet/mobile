@@ -1,4 +1,4 @@
-//= require "../../data/ext/meta_data.js"
+//= require "../../data/meta_data.js"
 //= require "../../media/get_screenshot.js"
 //= require "../../utils/parse_url.js"
 //= require "../../utils/strip_tracking_params.js"

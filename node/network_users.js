@@ -1,7 +1,7 @@
-require('underscore');
+require('./modules/underscore');
 var util  = require('util'),
     exec  = require('child_process').exec,
-    Step  = require('step');
+    Step  = require('./modules/step');
 
 var arpRefresh = function(callback) {
   exec('arp -a', function (error, stdout, stderr) {
@@ -66,7 +66,7 @@ var dnsLeaseRefresh = function(callback) {
 };
 
 
-var amqp = require('amqp');
+var amqp = require('./modules/node-amqp/amqp');
 connection = amqp.createConnection({ host: "localhost", vhost: "/" });
 connection.addListener("error", function(){
   console.log("error trying to reach the rabbit, please start your rabbitmq-server");

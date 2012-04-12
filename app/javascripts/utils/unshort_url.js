@@ -23,7 +23,6 @@ protonet.utils.unshortUrl = (function() {
         "j.mp",
         "ow.ly",
         "snipurl.com",
-        "t.co",
         "tcrn.ch",
         "tinyurl.com",
         "tr.im"
@@ -39,9 +38,7 @@ protonet.utils.unshortUrl = (function() {
       data: {
         url: url
       },
-      cache: true,
       dataType: "jsonp",
-      timeout: TIMEOUT,
       success: function(response) {
         var longUrl = response["long-url"];
         longUrl ? callback(longUrl) : failure();

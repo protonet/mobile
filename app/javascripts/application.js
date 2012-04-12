@@ -6,47 +6,33 @@
 //= require "lib/jquery-class-create/class.js"
 //= require "lib/jquery-behaviors/behaviors.js"
 //= require "lib/jquery.inview/jquery.inview.js"
-//= require "lib/jquery-patches/src/xhr.js"
-//= require "lib/jquery-patches/src/event.js"
 
 // ---- PROTONET
 //= require "extensions.js"
 //= require "protonet.js"
-//= require "browser.js"
+//= require "events/emitter.js"
 //= require "storage/storage.js"
-//= require "data/user.js"
-//= require "data/channel.js"
-//= require "data/meep.js"
-//= require "data/file.js"
+//= require "user/user.js"
 //= require "dispatcher/dispatcher.js"
 //= require "i18n/i18n.js"
 //= require "utils/history.js"
 //= require "behaviors/main.js"
 //= require "behaviors/ajax.js"
-//= require "media/proxy.js"
-//= require "media/uploader.js"
 //= require "utils/template.js"
 //= require "utils/inline_hint.js"
-//= require "ui/user.js"
-//= require "ui/context_menu.js"
 //= require "ui/flash_message.js"
 //= require "ui/header.js"
 //= require "ui/modal_window.js"
-//= require "ui/droppables.js"
+//= require "utils/toggle_element.js"
 //= require "utils/rails.js"
 //= require "text_extensions/text_extensions.js"
 //= require "timeline/meep.js"
-//= require "ui/pretty_date.js"
-//= require "pages/base.js"
 //= require "pages/search.js"
 
 //---------------------------- INITIALIZE APPLICATION ----------------------------
 
 $(function() {
-  protonet.ui.User.initialize();
-  
-  protonet.dispatcher.initialize();
-  
+  protonet.user.initialize();
   protonet.ui.FlashMessage.initialize();
   protonet.ui.Header.initialize();
   
@@ -59,7 +45,7 @@ $(function() {
     $("form .register-link").click();
   }
   
-  if (protonet.browser.IS_TOUCH_DEVICE()) {
+  if (protonet.user.Browser.IS_TOUCH_DEVICE()) {
     $("body").addClass("touch-device");
   }
 });

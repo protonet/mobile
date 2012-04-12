@@ -1,4 +1,5 @@
 //= require "../utils/is_window_focused.js"
+//= require "../media/proxy.js"
 
 /**
  * Mozilla Prism turns any web page turns any web app into a desktop app

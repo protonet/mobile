@@ -48,17 +48,17 @@ protonet.media.Proxy = (function() {
    * Get image proxy url
    * Optional size parameter causes server side cropping
    */
-  function getImageUrl(url, options) {
+  function getImageUrl(url, size) {
     if (url.match(REG_EXP_EXTRACT)) {
       url = extractOriginalImageUrl(url);
     } else {
       url = protonet.utils.convertToAbsoluteUrl(url);
     }
     
-    options = $.extend({ extent: url.indexOf(".gif") === -1 }, options);
-    
     var imageUrl = IMAGE_URL.replace("{url}", encodeURIComponent(url));
-    imageUrl += "&width=" + (options.width || "") + "&height=" + (options.height || "") + "&extent=" + options.extent;
+    if (size) {
+      imageUrl += "&width=" + size.width + "&height=" + size.height;
+    }
     return imageUrl + "&type=.jpg"; // append fake file type for easy file detection later
   }
   

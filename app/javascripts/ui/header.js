@@ -11,7 +11,7 @@ protonet.ui.Header = {
     var initialControllerName = protonet.config.controller_name,
         initialActionName     = protonet.config.action_name;
     
-    if (!protonet.browser.IS_TOUCH_DEVICE() && protonet.config.allow_modal_views && !$.browser.msie) {
+    if (!protonet.user.Browser.IS_TOUCH_DEVICE() && protonet.config.allow_modal_views && !$.browser.msie) {
       var $searchInput = this.$header.find("[type=search]").keydown(function() {
         var $page = new protonet.utils.Template("search-page-template").toString();
         setTimeout(function() {
@@ -41,16 +41,13 @@ protonet.ui.Header = {
       }.bind(this))
       
       .on("modal_window.hidden", function() {
-        this.$header.find("nav").css("margin-left", "");
+        this.$header.css("padding-right", "");
         this.select(initialControllerName, initialActionName);
       }.bind(this))
       
       .on("modal_window.shown", function() {
-        this.$header.find("nav").css("margin-left", (-protonet.utils.getScrollbarWidth()).px());
-        this.$header.find("ul ul").css("display", "none");
-        setTimeout(function() {
-          this.$header.find("ul ul").css("display", "");
-        }.bind(this), 0);
+        // Chrome needs some redrawing...
+        this.$header.css("padding-right", protonet.utils.getScrollbarWidth().px()).toggleClass("redraw");
       }.bind(this))
       
       .on("users.update_admin_status", function(data) {

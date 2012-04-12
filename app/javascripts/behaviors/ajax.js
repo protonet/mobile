@@ -1,4 +1,5 @@
 //= require "../utils/is_same_origin.js"
+//= require "../utils/guess_file_type.js"
 
 /**
  * AJAX Page Loads and Form Submits
@@ -13,19 +14,26 @@ protonet.open = (function() {
     "[data-meep-share]",
     "[data-rendezvous-with]",
     "[data-reply-to]",
-    // Files that are meant to be downloaded instead of displayed
-    "[download]",
     // User profile links
     "[data-user-id]",
     "[data-tab]",
     // rails.js
     "[data-remote]",
-    "[data-method]"
+    "[data-method]",
+    // File widget
+    "#file-widget a"
   ].join(",");
+
+  var prototype = Element.prototype || {};
   
-  var isTouchDevice = protonet.browser.IS_TOUCH_DEVICE();
+  var isTouchDevice = protonet.user.Browser.IS_TOUCH_DEVICE();
   
-  var matchesSelector = Element.prototype.matchesSelector || function(selector) { return $(this).is(selector); };
+  var matchesSelector = prototype.matchesSelector
+    || prototype.webkitMatchesSelector
+    || prototype.mozMatchesSelector
+    || prototype.oMatchesSelector
+    || prototype.msMatchesSelector
+    || function(selector) { return $(this).is(selector); };
 
   var isBlackListed = function(link) {
     return matchesSelector.call(link, blackList);
@@ -54,11 +62,21 @@ protonet.open = (function() {
       return fallback(eventOrUrl);
     }
     
-    if (!protonet.utils.isSameOrigin(url)) {
+    if (!protonet.utils.isSameOrigin(url) && !url.startsWith(protonet.config.node_base_url)) {
       return fallback(eventOrUrl);
     }
     
     if (link.pathname === "/" || !link.pathname) {
+      return fallback(eventOrUrl);
+    }
+
+    // could be: audio, html, video, ... (see guess_file_type.js)
+    var fileType = protonet.utils.guessFileType(url).type;
+    if (fileType === "unknown" && url.indexOf("/system/files/show") !== -1) {
+      return fallback(eventOrUrl);
+    }
+
+    if (!protonet.ui.ModalWindow.supportsFileType(fileType)) {
       return fallback(eventOrUrl);
     }
     
@@ -84,9 +102,6 @@ protonet.utils.History.addFallback(protonet.open);
 
 $.behaviors({
   "a[href]:click": function(link, event) {
-    if (event.isDefaultPrevented()) {
-      return;
-    }
     protonet.open(event);
   },
   
@@ -172,9 +187,6 @@ $.behaviors({
    *    <output data-tab="channel-container"></output>
    */
   "a[data-tab]:click": function(tabLink, event) {
-    if (event.isDefaultPrevented()) {
-      return;
-    }
     var $tabLink            = $(tabLink),
         tabName             = $tabLink.data("tab"),
         url                 = $tabLink.prop("href"),
@@ -193,7 +205,6 @@ $.behaviors({
     $.ajax({
       url:      $tabLink.prop("href"),
       headers:  { "X-Request-Type": "tab" },
-      data:     { ajax: 1 },
       beforeSend: function() {
         var hint = $("<p>", { "class": "hint", text: protonet.t("LOADING") });
         $tabContainer.html(hint);

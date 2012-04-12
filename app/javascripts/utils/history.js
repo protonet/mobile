@@ -40,13 +40,6 @@ protonet.utils.History = (function() {
     return this;
   }
   
-  function removeHook(method) {
-    hooks = $.grep(hooks, function(hook) {
-      return hook !== method;
-    });
-    return this;
-  }
-  
   function addFallback(method) {
     fallbacks.push(method);
     return this;
@@ -72,7 +65,7 @@ protonet.utils.History = (function() {
     var initialPop = !popped && location.href === initialURL;
     popped = true;
     if (initialPop) { return; }
-    var state = event.state || { url: location.href };
+    var state = event.originalEvent.state || { url: location.href };
     protonet.trigger("history.change", state.url, state);
   });
   
@@ -80,7 +73,6 @@ protonet.utils.History = (function() {
     push:           push,
     replace:        replace,
     addFallback:    addFallback,
-    removeHook:     removeHook,
     addHook:        addHook
   };
 })();

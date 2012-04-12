@@ -1,4 +1,4 @@
-//= require "../../data/ext/github.js"
+//= require "../../data/github.js"
 
 /**
  * GitHub Commits Provider

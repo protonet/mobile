@@ -1,72 +1,56 @@
-var http            = require("http"),
-    parseUrl        = require("url").parse,
-    sys             = require("sys"),
-    magick          = require('./../modules/node-magick'),
-    path            = require('path'),
-    fs              = require("fs"),
-    md5             = require("./../modules/md5").create,
-    child           = require('child_process'),
-    request         = require('./../modules/node-utils/request'),
-    lookupMime      = require('mime').lookup,
-    ONE_YEAR        = 365 * 24 * 60 * 60 * 1000,
-    SUFFIX_REG_EXP  = /.+(\.\w+)($|\?|#)/,
-    KEEP_FORMATS    = /^\.(jpe?g|gif|png)$/i,
-    image_requests  = {};
+var http      = require("http"),
+    parseUrl  = require("url").parse,
+    sys       = require("sys"),
+    magick    = require('./../modules/node-magick'),
+    path      = require('path'),
+    fs        = require("fs"),
+    md5       = require("./../modules/md5").create,
+    child     = require('child_process'),
+    request   = require('./../modules/node-utils/request'),
+    image_requests = {};
 
 
 exports.proxy = function(params, headers, response) {
   function resultingFileName(params, base) {
-    var baseString = process.cwd() + "/public/externals/image_proxy/" + md5(params.url),
-        suffix     = (params.url.match(SUFFIX_REG_EXP) || [, ""])[1];
-    
+    var baseString = process.cwd() + "/public/externals/image_proxy/" + md5(params.url);
     if (base) {
-      return baseString + suffix;
+      return(baseString);
     }
-    
-    if (params.width || params.height) {
+    if (params.width && params.height) {
       baseString += "_" + params.width + "_" + params.height;
     }
-    
-    // convert tiff, bmp, ... to jpg
-    if (suffix && !suffix.match(KEEP_FORMATS)) {
-      suffix = ".jpg";
-    }
-    
-    return baseString + suffix;
+    return(baseString);
   }
   
   function sendImage(fileName) {
     // once done send all
-    var mimeType  = lookupMime(fileName),
-        header    = {},
-        size;
-    
-    try {
-      size = fs.lstatSync(fileName).size;
-    } catch(e) { send404(filename); }
-    
-    header["Content-Type"] = mimeType;
-    header["Content-Length"] = size;
-    
-    // Caching header
-    if (global.env === "production") {
-      header["Expires"]       = new Date(new Date().getTime() + ONE_YEAR).toGMTString();
+    child.exec("file --mime -b " + fileName, function(error, stdout, stderr) {
+      var header = {};
+      if (stdout && stdout.match(/(.*);/)) {
+        header = { "Content-Type": stdout.match(/(.*);/)[1], "Content-Length": fs.lstatSync(fileName).size };
+      } else {
+        header = { "Content-Length": fs.lstatSync(fileName).size };
+      }
+      
+      // Caching header
+      var ONE_YEAR = 365 * 24 * 60 * 60 * 1000;
+      header["Expires"] = new Date(new Date().getTime() + ONE_YEAR).toGMTString();
       header["Cache-Control"] = "public, max-age=" + ONE_YEAR;
-    }
-    
-    while (image_requests[fileName].length > 0) {
-      (function(r) {
-        r.writeHead(200, header);
+      
+      while (image_requests[fileName].length > 0) {
+        (function(r) {
+          r.writeHead(200, header);
 
-        fs.createReadStream(fileName)
-          .addListener('data', function(data){
-            r.write(data, 'binary');
-          })
-          .addListener('end', function(){
-            r.end();
-          });
-      })(image_requests[fileName].pop());
-    }
+          fs.createReadStream(fileName)
+            .addListener('data', function(data){
+              r.write(data, 'binary');
+            })
+            .addListener('end', function(){
+              r.end();
+            });
+        })(image_requests[fileName].pop());
+      }
+    });
   }
   
   function send404(fileName) {
@@ -76,25 +60,28 @@ exports.proxy = function(params, headers, response) {
       r.writeHead(404);
       r.end("NOT FOUND!");
     }
-    
     // and cleanup
     try {
       console.log('unlink');
       fs.unlinkSync(baseFileName);
-    } catch(err) { console.log('unlink fail', err); }
-  }
+    } catch(err) { console.log('unlink fail', err); };
+  };
   
-  function resizeImage(from, to, options, successCallback, failureCallback) {
-    magick
-      .createCommand(from)
-      .resizeMagick(options.width, options.height, options.extent)
-      .write(to, function() {
-        sys.puts("Done resizing.");
-        successCallback(to);
-      }, function() {
-        console.log("Failed resizing, maybe not an image?");
-        failureCallback(to);
-      });
+  function resizeImage(from, to, size, successCallback, failureCallback) {
+    if (size.height && size.width) {
+      magick
+        .createCommand(from)
+        .resizeMagick(size.width, size.height, parsedUrl.pathname.indexOf(".gif") === -1)
+        .write(to, function() {
+          sys.puts("Done resizing.");
+          successCallback(to);
+        }, function() {
+          console.log("Failed resizing, maybe not an image?");
+          failureCallback(to);
+        });
+    } else {
+      successCallback(from);
+    }
   }
   
   // params = {"url": "http://www.google.com/images/logos/ps_logo2.png", "width": 100, "height": 100};
@@ -129,7 +116,7 @@ exports.proxy = function(params, headers, response) {
         // if the base file exists
         if (exists) {
           console.log("base file exists :) " + baseFileName);
-          resizeImage(baseFileName, fileName, { height: params.height, width: params.width, extent: params.extent === "true" }, sendImage, send404);
+          resizeImage(baseFileName, fileName, { height: params.height, width: params.width }, sendImage, send404);
         } else {
           sys.puts("NO base file exists :(");
           // get the port
@@ -150,7 +137,7 @@ exports.proxy = function(params, headers, response) {
             fileStream.end();
             
             if (!error && response.statusCode == 200) {
-              resizeImage(baseFileName, fileName, { height: params.height, width: params.width, extent: params.extent === "true" }, sendImage, send404);
+              resizeImage(baseFileName, fileName, { height: params.height, width: params.width }, sendImage, send404);
             } else {
               console.log("Error for", url, error);
               send404(fileName);

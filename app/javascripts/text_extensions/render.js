@@ -60,7 +60,7 @@ protonet.text_extensions.render = (function() {
   return function(data) {
     data = protonet.text_extensions.utils.insertBaseUrl(data);
     
-    var results     = new protonet.utils.Template("text-extension-template").to$(),
+    var results     = new protonet.utils.Template("text-extension-template").toElement(),
         description = protonet.utils.escapeHtml(protonet.utils.stripTags(data.description || "")),
         title       = protonet.utils.escapeHtml(protonet.utils.stripTags(data.title || "")),
         provider    = data.type,

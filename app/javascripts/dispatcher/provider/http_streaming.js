@@ -1,4 +1,5 @@
 //= require "../../utils/sandbox.js"
+//= require "../../utils/is_same_origin.js"
 
 /**
  * Recommended to read
@@ -72,10 +73,7 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
       if (win.XDomainRequest) {
         this.ajax = new win.XDomainRequest();
         this.ajax.onprogress = function() {
-          if (this.ajax.readyState >= 3) {
-            abortOldRequest();
-          }
-          
+          abortOldRequest();
           if (connected === undef) {
             connected = true;
             protonet.trigger("socket.connected", connected);
@@ -98,9 +96,7 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
       } else {
         this.ajax = new win.XMLHttpRequest();
         this.ajax.onreadystatechange = function() {
-          if (this.ajax.readyState >= 3) {
-            abortOldRequest();
-          }
+          abortOldRequest();
           
           if (this.ajax.readyState >= 3 && connected === undef) {
             connected = (this.ajax.status === 200);
@@ -161,12 +157,20 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
     },
 
     send: function(data) {
-      var url = this._buildUrl({ socket_id: this.socketId });
+      var ajax;
+      // Use IE-proprietary XDomainRequest for same-origin requests
+      // XMLHttpRequest doesn't work with http streaming since IE refuses to fill the responseText
+      // property unless readyState == 4
+      if (window.XDomainRequest) {
+        ajax = new XDomainRequest();
+      } else {
+        ajax = new XMLHttpRequest();
+      }
       
-      $.ajax(url, {
-        type: "POST",
-        data: JSON.stringify(data)
-      });
+      var url = this._buildUrl({ socket_id: this.socketId });
+      ajax.open("POST", url, true);
+      if (ajax.setRequestHeader) ajax.setRequestHeader('Content-Type', 'text/plain');
+      ajax.send(JSON.stringify(data));
     },
 
     receive: function(rawData) {

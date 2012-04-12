@@ -1,16 +1,21 @@
-//= require "../timeline/form/form.js"
-//= require "../timeline/channels.js"
+//= require "../timeline/timeline.js"
+//= require "../widgets/file.js"
+//= require "../widgets/user.js"
 //= require "../platforms/fluid.js"
 //= require "../platforms/prism.js"
 //= require "../ui/click_to_flash_teaser.js"
 //= require "../ui/overlay.js"
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
-protonet.p("instruments", function($page) {
-  protonet.timeline.Form.initialize();
-  protonet.timeline.Channels.initialize();
+$(function() {
+  protonet.dispatcher.initialize();
+  protonet.timeline.initialize();
   
-  $page.css("min-height", $("aside.side-content").outerHeight().px());
+  // Init widgets
+  new protonet.widgets.User();
+  new protonet.widgets.File();
+  
+  $("section.main-content").css("min-height", $("aside.side-content").outerHeight().px());
   
   // there's a captive portal redirect request and the user is logged in
   if (protonet.config.captive_redirect_url) {
@@ -25,5 +30,5 @@ protonet.p("instruments", function($page) {
         'Get internet access</a>'
       );
     }
-  }
+  }  
 });

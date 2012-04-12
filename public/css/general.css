@@ -5,7 +5,6 @@
       orange        #ff7f31   rgb(255, 127, 49) - USE FOR HIGHLIGHTING USER STUFF (own meeps, user replies, buttons, ...)
       red/rosa      #e75c79   rgb(231, 92, 121) - USE FOR NOTIFICATIONS (flash messages, badges, ...)
       green         #00cc00   rgb(0, 204, 0)
-      yellow        #FFFBE0
       black         #000      rgb(0, 0, 0)
       grey_dark     #666      rgb(102, 102, 102)
       grey          #999      rgb(153, 153, 153)
@@ -37,19 +36,18 @@ body {
   overflow-y: scroll;
   background: #d1deff;
   color: #000;
-  min-width: 1000px;
+  min-width: 950px;
 }
 
 .logged-out body {
   background: #aaa;
   background: #aaa -moz-linear-gradient(top, #eee, #aaa);
-  background: #aaa -webkit-linear-gradient(top, #eee, #aaa);
-  background: #aaa linear-gradient(top, #eee, #aaa);
+  background: #aaa -webkit-gradient(linear, left top, left bottom, from(#eee), to(#aaa));
 }
 
 .inner-body {
   margin: 65px auto 0;
-  width: 1000px;
+  width: 940px;
 }
 
 .modal-window ::-webkit-scrollbar,
@@ -105,10 +103,6 @@ a:focus {
 
 img:-moz-broken{
   -moz-force-broken-image-icon: 1;
-}
-
-abbr {
-  border-bottom: 1px dotted #ccc;
 }
 
 mark {
@@ -194,7 +188,7 @@ input[type=search] {
 }
 
 .subpage,
-.instruments-page,
+.main-content,
 .side-content {
   -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
@@ -204,8 +198,8 @@ input[type=search] {
   vertical-align: top;
 }
 
-.instruments-page {
-  width: 710px;
+.main-content {
+  width: 650px;
   min-height: 700px;
   margin: 0 20px 0 0;
   position: relative;
@@ -279,9 +273,9 @@ a.close-link {
   font-size: 14px;
   color: #fff;
   text-align: center;
-  line-height: 23px;
   width: 24px;
   height: 24px;
+  line-height: 23px; /* for firefox */
   background: #000;
   border: 3px solid #fff;
   border-radius: 30px;

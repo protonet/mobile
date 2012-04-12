@@ -1,5 +1,4 @@
 //= require "../utils/get_scrollbar_width.js"
-//= require "../effects/blink.js"
 
 /**
  * Modal Window
@@ -9,9 +8,7 @@
  */
 
 protonet.ui.ModalWindow = (function() {
-  var undef,
-      elements,
-      droppable,
+  var elements,
       scrollbarWidth,
       currentRequest,
       urlBeforeOpened               = location.href,
@@ -19,6 +16,12 @@ protonet.ui.ModalWindow = (function() {
       offsetTop                     = 65,
       offsetBottom                  = 20,
       visible                       = false,
+      embedMapping                  = {
+        "image":    "image",
+        "pdf":      "iframe",
+        "flash":    "iframe",
+        "unknown":  "xhr"
+      },
       // Needed to preload stylesheets before rendering the corresponding HTML
       regExpStylesheets             = /<link.*\shref=(?:\"|')([^>"]+?\.css(?:\?.+?)?)(?:\"|')[^>]+>/gi,
       // Cached references
@@ -40,10 +43,6 @@ protonet.ui.ModalWindow = (function() {
     }
   });
   
-  function _fireUnload() {
-    protonet.trigger("modal_window.unload");
-  }
-  
   function _abortCurrentRequest() {
     try { currentRequest.abort(); } catch(e) {}
   }
@@ -61,8 +60,8 @@ protonet.ui.ModalWindow = (function() {
      */
     elements            = {};
     elements.container  = $("<div>",      { "class": "modal-window-shadow" });
-    elements.dialog     = $("<section>",  { "class": "modal-window" }).appendTo(elements.container);
-    elements.content    = $("<output>")                               .appendTo(elements.dialog);
+    elements.dialog     = $("<section>",  { "class": "modal-window" })                .appendTo(elements.container);
+    elements.content    = $("<output>")                                               .appendTo(elements.dialog);
   }
   
   function _observe() {
@@ -79,25 +78,7 @@ protonet.ui.ModalWindow = (function() {
       }
     });
     
-    // Close modal window when user drags something on the shadow
-    var blinker;
-    protonet.ui.Droppables.add({
-      types:          "files",
-      elements:       elements.container,
-      includeChilds:  false,
-      ondragenter:    function() {
-        blinker = protonet.effects.blink(elements.container, {
-          callback: function() { hide(); }
-        });
-      },
-      ondragleave:    function() {
-        blinker.stop();
-      }
-    });
-    
-    $window
-      .bind("scroll.modal_window", position)
-      .bind("resize.modal_window", resize);
+    $window.bind("resize.modal_window", resize);
     
     protonet.on("modal_window.hide", hide);
   }
@@ -108,7 +89,6 @@ protonet.ui.ModalWindow = (function() {
       .add(elements.container)
       .unbind(".modal_window");
     
-    protonet.ui.Droppables.remove(droppable);
     protonet.off("modal_window.hide", hide);
   }
   
@@ -158,20 +138,29 @@ protonet.ui.ModalWindow = (function() {
     }
   }
   
-  function _load(url) {
-    content("");
+  function _loadViaAjax(url) {
     elements.dialog.addClass("loading");
     _abortCurrentRequest();
     
     currentRequest = $.ajax({
-      url:  url,
-      data: { ajax: 1 }
+      url:     url
     }).done(function(response, statusText, xhr) {
-      _loadStylesheets(response, function(html) {
-        content(html, true);
+      var contentType = xhr.getResponseHeader("Content-Type");
+      if (contentType.startsWith("text/html")) {
+        _loadStylesheets(response, function(html) {
+          content(html, true);
+          elements.dialog.removeClass("loading");
+        });
+      } else if (contentType.startsWith("text/")) {
+        content($("<pre>", { text: response }), true);
         elements.dialog.removeClass("loading");
-        protonet.trigger("modal_window.loaded", response, xhr);
-      });
+      }
+      
+      var responseUrl = xhr.getResponseHeader("X-Url");
+      if (responseUrl !== url) {
+        protonet.utils.History.replace(responseUrl);
+      }
+      protonet.trigger("modal_window.loaded", response, xhr);
     }).fail(function(xhr) {
       var textResource;
       if (xhr.status === 403) {
@@ -191,14 +180,34 @@ protonet.ui.ModalWindow = (function() {
     });
   }
   
+  function _load(url) {
+    content("", true);
+    
+    var fileType = protonet.utils.guessFileType(url).type;
+    
+    switch(fileType) {
+      case "image":
+        content(
+          $("<img>", { src: url }), true
+        );
+        break;
+      case "iframe":
+        content(
+          $("<iframe>", { src: url }), true
+        );
+        break;
+      default:
+        _loadViaAjax(url);
+    }
+  }
+    
+  
   function show(url) {
     if (!elements) {
       _create();
     }
     
-    if (visible) {
-      _fireUnload();
-    } else {
+    if (!visible) {
       _observe();
       _hideScrollbar();
       elements.container.hide().appendTo($body).fadeIn("fast");
@@ -214,8 +223,6 @@ protonet.ui.ModalWindow = (function() {
     if (url) {
       _load(url);
       protonet.utils.History.push(url);
-    } else {
-      content("", true);
     }
     
     protonet.trigger("modal_window.shown");
@@ -228,7 +235,6 @@ protonet.ui.ModalWindow = (function() {
       return this;
     }
     
-    _fireUnload();
     elements.container.detach();
     content("");
     
@@ -268,6 +274,10 @@ protonet.ui.ModalWindow = (function() {
     return this;
   }
   
+  function supportsFileType(fileType) {
+    return !!embedMapping[fileType];
+  }
+  
   function isVisible() {
     return visible;
   }
@@ -277,6 +287,7 @@ protonet.ui.ModalWindow = (function() {
     show:             show,
     hide:             hide,
     content:          content,
+    supportsFileType: supportsFileType,
     isVisible:        isVisible
   };
 })();

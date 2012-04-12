@@ -2,7 +2,7 @@ class ListensController < ApplicationController
   include Rabbit
   
   before_filter :set_listen_id
-  filter_resource_access
+  filter_resource_access :collection => [:index, :create_for_user]
   
   def index
     redirect_to listen_to_channel_path(:channel_name => params[:channel_name]) if params[:channel_name]

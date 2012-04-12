@@ -17,13 +17,11 @@ class Channel < ActiveRecord::Base
   before_validation :normalize_name,      :on => :create
   
   after_create  :generate_uuid,                     :if => lambda {|c| c.uuid.blank? }
-  after_create  :create_folder
+  after_create  :create_folder,                     :if => lambda {|c| !c.home? }
   after_create  :subscribe_owner,                   :if => lambda {|c| !c.home? && !c.skip_autosubscribe }
   after_create  :subscribe_rendezvous_participant,  :if => lambda {|c| c.rendezvous? }
   after_create  :send_channel_notification,         :if => lambda {|c| !c.rendezvous? }
-  
-  after_destroy :delete_folder
-  
+
   attr_accessor   :skip_autosubscribe
   attr_accessible :skip_autosubscribe, :name, :description, :owner, :owner_id, :node, :node_id, :display_name, :public, :global, :system
 
@@ -52,6 +50,18 @@ class Channel < ActiveRecord::Base
     ")
     
     channel_ids.empty? ? [home] : find(channel_ids)
+  end
+  
+  def self.uuid_to_id_mapping
+    mapping = {}
+    real.all.each {|c| mapping[c.uuid] = c.id }
+    mapping
+  end
+  
+  def self.name_to_id_mapping
+    mapping = {}
+    real.all.each { |c| mapping[c.name] = c.id }
+    mapping
   end
   
   def self.home
@@ -95,26 +105,23 @@ class Channel < ActiveRecord::Base
     all(:select => :name).map {|c| c.name.downcase }
   end
   
-  def self.prepare_for_frontend(channel, include_meeps=false)
+  def self.prepare_for_frontend(channel, current_user)
+    meeps = channel.meeps.includes(:user).recent.all(:limit => 25)
     obj = {
       :id               => channel.id,
       :uuid             => channel.uuid,
       :node_id          => channel.node_id,
-      :private          => !channel.public?,
       :global           => channel.global?,
       :rendezvous       => channel.rendezvous,
       :system           => channel.system?,
       :name             => channel.name,
-      :display_name     => channel.display_name,
+      :display_name     => channel.rendezvous_name(current_user) || channel.display_name,
       :last_read_meep   => (channel.last_read_meep rescue nil),
-      :listen_id        => (channel.listen_id rescue nil)
+      :listen_id        => (channel.listen_id rescue nil),
+      :meeps            => Meep.prepare_for_frontend(meeps, { :channel_id => channel.id })
     }
     
-    if include_meeps
-      meeps = channel.meeps.includes(:user).recent.all(:limit => 25)
-      obj[:meeps] = Meep.prepare_for_frontend(meeps, :channel_id => channel.id)
-    end
-    
+    # delete falsy values to save some bytes
     obj.delete_if { |key,value| !value }
   end
   
@@ -206,11 +213,12 @@ class Channel < ActiveRecord::Base
   end
   
   def create_folder
-    FileUtils.mkdir_p(configatron.files_path + "/channels/#{id}")
-  end
-  
-  def delete_folder
-    FileUtils.rm_rf(configatron.files_path + "/channels/#{id}")
+    begin
+      path = SystemFileSystem.cleared_path("/#{id.to_s}")
+      FileUtils.mkdir(path)
+    rescue Errno::EEXIST
+      logger.warn("A path for the #{name} already exists at #{path}") and return true
+    end
   end
   
   def generate_uuid
@@ -221,7 +229,13 @@ class Channel < ActiveRecord::Base
   def rendezvous_participants
     rendezvous ? rendezvous.split(':').map { |id| User.find(id) } : []
   end
-    
+  
+  def rendezvous_name(current_user)
+    return nil unless rendezvous?
+    user_id = rendezvous.split(':').find { |id| id.to_i != current_user.id }
+    User.find(user_id).display_name rescue 'stranger'
+  end
+  
   def random_users(amount=5)
     users.registered.all(:order => 'rand()', :limit => amount)
   end
@@ -232,6 +246,11 @@ class Channel < ActiveRecord::Base
     end
     
     def send_channel_notification
-      publish "system", "channels", Channel.prepare_for_frontend(self).merge(:trigger => 'channel.added')
+      publish "system", "channels", {
+        :trigger      => 'channel.added',
+        :name         => self.name,
+        :id           => self.id,
+        :uuid         => self.uuid
+      }
     end
 end

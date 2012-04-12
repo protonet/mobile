@@ -3,7 +3,7 @@ var childProcess = require('child_process');
 var command = "";
 childProcess.exec("which gm", function(error, stdout, stderr) {
   if (!(error !== null)) {
-    console.log("graphicsmagick exists, configuring use.");
+    console.log("graphicsmagick exists, configuring use.")
     command = "gm";
   }
 });
@@ -18,31 +18,26 @@ var magickCommand = function(obj) {
   obj.cropResize = function(width, height) {
     return obj.crop(width, height).resize(width, height);
   };
-  obj.resizeMagick = function(width, height, extent) {
+  obj.resizeMagick = function(width, height, shouldExtent) {
     obj = obj
       .stripMetaData()
       .colorSpace('RGB')
       .resample(72)
       .gravity("center")
       .resize(width, height)
-      .background("white")
+      .background("none")
       .coalesce();
-    if (extent) {
-      obj.background("white").extent(width, height);
+    if (shouldExtent) {
+      obj.extent(width, height);
     }
     return obj;
   };
   obj.resize = function(width, height) {
-    var flags = ">";
-    if (width && height) {
-      // Only use width + height as minimum dimension when they are both set
-      flags += "^";
-    }
-    var wh = "'" + (width || "") + (height ? ("x" + height) : "") + flags + "'";
+    var wh = width + "x" + height + "^";
     return obj.makeArgs(["-resize", wh], null);
   };
   obj.crop = function(width, height) {
-    var wh = (width || "") + "x" + (height || "");
+    var wh = width + "x" + height;
     return obj.makeArgs(["-crop", wh], null);
   };
   obj.extent = function(width, height) {
@@ -74,7 +69,7 @@ var magickCommand = function(obj) {
   };
   obj.coalesce = function() {
     return obj.makeArgs(null, ["-coalesce"]);
-  };
+  }
   obj.makeArgs = function(inargs, outargs) {
     if (arguments.length == 1) {
       outargs = inargs;

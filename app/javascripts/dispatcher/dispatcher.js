@@ -1,18 +1,7 @@
 protonet.dispatcher = {
   initialize: function() {
-    if (!this.shouldConnect()) {
-      return;
-    }
-    
     this._observe();
     this.create();
-  },
-  
-  shouldConnect: function() {
-    // Only create socket connection when the user is not a stranger or the user see's the dashboard
-    // TODO: This needs to be done much smarter (cblum)
-    var isChatVisible = !!document.getElementById("message-form");
-    return !protonet.config.user_is_stranger || isChatVisible;
   },
   
   initializeCallback: function() {
@@ -22,15 +11,33 @@ protonet.dispatcher = {
   
   _observe: function() {
     protonet
-      .on("socket.initialized",   this.initializeCallback.bind(this))
-      .on("socket.connected",     this.connectCallback.bind(this))
-      .on("socket.send",          this.send.bind(this))
-      .on("socket.receive",       this.receive.bind(this))
-      .on("socket.ping_received", this.pingCallback.bind(this))
-    
+      .on("socket.initialized", function() {
+        this.initializeCallback();
+      }.bind(this))
+      
+      .on("socket.connected", function(status) {
+        this.connectCallback(status);
+      }.bind(this))
+      
+      .on("socket.send", function(data) {
+        this.send(data);
+      }.bind(this))
+      
+      .on("socket.receive", function(data) {
+        this.receive(data);
+      }.bind(this))
+      
+      .on("socket.ping_received", function() {
+        this.pingCallback();
+      }.bind(this))
+      
+      .on("socket.reconnect", function() {
+        this.reconnect();
+      }.bind(this));
+      
     $(window)
       .bind("offline unload", this.disconnect.bind(this))
-      .bind("online focus",   this.connect.bind(this));
+      .bind("online focus", this.connect.bind(this));
   },
   
   create: function() {
@@ -140,7 +147,7 @@ protonet.dispatcher = {
     protonet.trigger("socket.send", { operation: "ping" });
   },
   
-  pingCallback: function() {
+  pingCallback: function(message) {
     clearTimeout(this.offlineTimeout);
   },
 
@@ -153,9 +160,10 @@ protonet.dispatcher = {
     
     dataArr = $.makeArray(dataArr);
     $.each(dataArr, function(i, data) {
-      var trigger = data.trigger || data.operation;
-      if (trigger) {
-        protonet.trigger(trigger, data);
+      if (data.trigger) {
+        protonet.trigger(data.trigger, data);
+      } else if (data.x_target) {
+        eval(data.x_target + "(data)");
       } else if (data.eval) {
         eval(data.eval);
       }

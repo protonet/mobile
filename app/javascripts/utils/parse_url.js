@@ -12,7 +12,7 @@ protonet.utils.parseUrl = (function() {
       query:      anchor.search,
       path:       anchor.pathname.replace(PATH_REGEXP, "/$1"),
       hash:       anchor.hash.replace("#", ""),
-      filename:   decodeURIComponent((anchor.pathname.match(FILENAME_REGEXP) || [,""])[1])
+      filename:   (anchor.pathname.match(FILENAME_REGEXP) || [,""])[1]
     };
   };
 })();

@@ -1,28 +1,31 @@
 //= require "../ui/meep_scroller.js"
 
-protonet.p("meeps", function($page, $window) {
-  var $content      = $page.find(".content"),
+$(function() {
+  var $page         = $(".meeps-page"),
+      $container    = $page.find("output"),
       $headline     = $(".meeps-page h2"),
       isModalWindow = $(".modal-window").length > 0;
   
-  function resizePage() {
+  function resizeContainer() {
     if (isModalWindow) {
-      $content.css("height", "100%");
+      $container.css("height", "100%");
     } else {
-      $content.css("height", $window.height() - $content.offset().top - 1 + "px");
+      $container.css("height", $(window).height() - $container.offset().top + "px");
     }
   }
   
-  $window.on("resize", resizePage);
-  resizePage();
+  $(window).resize(resizeContainer);
+  resizeContainer();
   
-  if (isModalWindow) {
-    var $output = $(".modal-window > output").css("overflow", "visible");
-    $page.one("modal_window.unload", function() {
-      $window.off("resize", resizePage);
-      $output.css("overflow", "");
-    });
-  }
   
-  new protonet.ui.MeepScroller($content, $headline).show($content.data("meep-scroller-for"));
+  protonet.one("modal_window.rendered", function() {
+    $(".modal-window > output").css("overflow", "visible");
+    setTimeout(function() {
+      protonet.one("modal_window.rendered", function() {
+        $(".modal-window > output").css("overflow", "");
+      });
+    }, 0);
+  });
+  
+  new protonet.ui.MeepScroller($container, $headline).show($container.data("meep-scroller-for"));
 });
