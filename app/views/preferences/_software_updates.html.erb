@@ -22,4 +22,18 @@
     <%= select_tag  :release, options_for_select(SystemRelease.last_releases.reverse.map{|c| ["#{c[0]} / #{c[1]}", c[0]] if c[0].to_i >= SystemRelease.current_version}.compact, SystemRelease.last_releases.reverse.find {|release| release[1].strip! == "STABLE"}[0]) %>
   </div>
   <%= button "Update" %> <span class="loading-hint">Please wait. This will take a few minutes.</span>
+  <a id="show-release-update-progress">Show update progress</a>
 <%- end %>
+
+<h3>Old log files</h3>
+<a id="show-last-release-update-log">Show last update log</a> and send it to the protonet support team if needed.
+<div id="release-update-progress-console" class="quake-style-console" data-url="<%= url_for preferences_release_update_progress_path %>">
+    <div class="quake-style-console-content"></div>
+    <%= form_tag(preferences_send_log_to_support_team_path, {
+      :remote     => true,
+      'class'     => 'single-button-form'
+    }) do -%>
+      <%= button "Send log to protonet support", :id => "send-to-protonet-support" %>
+    <%- end %>
+    <div id="sent-feedback"></div>
+</div>
