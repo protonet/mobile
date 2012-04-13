@@ -69,6 +69,7 @@
   bottom: 100%;
 }
 .quake-style-console-content {
+  white-space: pre-wrap;
   overflow-y: auto;
   height: 100%;
   padding: 0 30px 0 30px;
