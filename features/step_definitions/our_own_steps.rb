@@ -257,7 +257,7 @@ When /^I accept the invitation with the token "([^\"]*)"$/ do |token|
 end
 
 Then /^I should see all settings$/ do
-  all(:css, "a[data-tab='preferences']").size.should == 8
+  all(:css, "section.preferences-page li").size.should == 8
 end
 
 Given /^I start a rendezvous chat with "([^\"]*)"$/ do |username|
