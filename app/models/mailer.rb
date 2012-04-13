@@ -26,7 +26,7 @@ class Mailer < ActionMailer::Base
   
   def update_log(node_name, license_key, log_file, current_user)
     from = current_user.email
-    to = "support@protonet.info"
+    to = "team@protonet.info"
     content = <<-eos
       
       Dear support team,
