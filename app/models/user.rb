@@ -299,12 +299,12 @@ class User < ActiveRecord::Base
   end
   
   def pending_channel_verifications
-    chann = if admin?
+    channs = if admin?
       Channel.local.real
     else
       owned_channels
     end
-    chann.includes(:listens).
+    channs.includes(:listens).
     where(:listens => {:verified => false}).
     inject({}) { |hash, channel|
       hash[channel.id] = channel.listens.where(:verified => false).count
@@ -326,7 +326,7 @@ class User < ActiveRecord::Base
         return false
       end
     else
-      self.channels_to_subscribe ||= Channel.find(SystemPreferences.default_channel_ids).to_a
+      self.channels_to_subscribe ||= Channel.public.where(:id => SystemPreferences.default_channel_ids).to_a
       self.roles = [Role.find_by_title(stranger? ? SystemPreferences.default_stranger_user_group : SystemPreferences.default_registered_user_group)]
     end
   end
