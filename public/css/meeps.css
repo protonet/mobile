@@ -135,7 +135,7 @@
   background-color: #fff;
   padding: 5px;
   border: 1px solid #ccc;
-  font-family: Courier New, Courier;
+  font-family: "Courier New", Courier, monospace;
 }
 
 div.progress {

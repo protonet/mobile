@@ -58,9 +58,9 @@
 
 /* TODO this should move over to css/lib/quakeStyleConsole.css */
 .quake-style-console {
-  background-color: rgba(0,0,0,0.8);
+  background-color: rgba(0, 0, 0, 0.8);
   color: green;
-  font-family: "Lucida Console";
+  font-family: "Courier New", Courier, monospace;
   left: 0;
   right: 0;
   position: fixed;
