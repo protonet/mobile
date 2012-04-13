@@ -3,7 +3,7 @@ require 'digest/sha1'
 class User < ActiveRecord::Base
   include Rabbit
   
-  devise :database_authenticatable, :registerable, :encryptable, :rememberable, :token_authenticatable, :encryptor => :restful_authentication_sha1
+  devise :recoverable, :database_authenticatable, :registerable, :encryptable, :rememberable, :token_authenticatable, :encryptor => :restful_authentication_sha1
 
   attr_accessible :login, :email, :first_name, :last_name, :password, :password_confirmation, :avatar_url,
     :channels_to_subscribe, :external_profile_url, :node, :node_id
@@ -35,7 +35,6 @@ class User < ActiveRecord::Base
   after_destroy :move_owned_channels_to_anonymous
   
   validates_uniqueness_of :email, :if => lambda {|u| !u.stranger?}
-  
   
   def self.find_for_database_authentication(conditions={})
     where("login = ?", conditions[:login]).limit(1).first ||
@@ -150,8 +149,11 @@ class User < ActiveRecord::Base
     #name.blank? ? login : name
   end
 
-  def skip_password_validation?
-    !new_record? || stranger?
+  # Checks whether a password is needed or not. For validations only.
+  # Passwords are always required if it's a new record, or if the password
+  # or confirmation are being set somewhere.
+  def password_required?
+    !stranger? && ( !persisted? || !password.nil? || !password_confirmation.nil? )
   end
   
   # skip validation if the user is a logged out (stranger) user

@@ -88,3 +88,9 @@
   margin: 10px 0;
   width: 320px;
 }
+.welcome p{
+  margin:10px 0 0;
+}
+.welcome p a{
+  color:#487BFF;
+}

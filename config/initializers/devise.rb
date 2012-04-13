@@ -187,4 +187,5 @@ end
 Dashboard::Application.config.to_prepare do
   Devise::SessionsController.layout "logged_out"
   Devise::RegistrationsController.layout "logged_out"
+  Devise::PasswordsController.layout "logged_out"
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120401111506) do
+ActiveRecord::Schema.define(:version => 20120411100652) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -163,6 +163,7 @@ ActiveRecord::Schema.define(:version => 20120401111506) do
     t.string   "twitter_id"
     t.boolean  "newbie",                                        :default => true
     t.string   "last_name",                                     :default => ""
+    t.string   "reset_password_token"
   end
 
   add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true

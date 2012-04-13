@@ -6,7 +6,12 @@
     <div class="inner-body">
       
       <%- if current_user.stranger? -%>
-        <%= render :partial => 'devise/shared/registration_box' %>
+        <div class="welcome">
+          <img src="/img/protonet_node_front_view.png" height="249" width="360" alt="protonet node. your private cloud.">
+          <h1>Welcome to the <strong>protonet</strong> of <strong><%= Node.local.name %></strong></h1>
+          <%= render :partial => 'devise/shared/registration_box' %>
+          <a href="http://protonet.info" target="_blank" class="copyright-link" title="Click here to get informed about protonet">&copy; 2012 protonet. it's yours.</a>
+        </div>
       <%- end -%>
       
       <%= render :partial => 'shared/header' %>

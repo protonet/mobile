@@ -9,6 +9,7 @@ class RegistrationsController < Devise::RegistrationsController
     else
       {}
     end
+    redirect_to "/" and return unless allow_signup?
     build_resource(attributes)
     render 'devise/registrations/new'
   end

@@ -16,16 +16,17 @@ Feature: Invitations
     Then I should see "Invite people to your protonet"
     When I fill in "invitation_first_name" with "my"
     When I fill in "invitation_last_name" with "friend"
-    When I fill in "invitation_email" with "friend-3@protonet.com"
+    When I fill in "invitation_email" with "friend-3@example.com"
     And I check "home"
     And I check "public"
     And I press "next Step"
-    Then I should see "Invitation for friend-3@protonet.com"
+    Then I should see "Invitation for friend-3@example.com"
     And I should see "Status: not sent yet"
     And I press "Send invitation"
+    Then I should see "The invitation was sent."
     # Invitation mail
-    And "friend-3@protonet.com" should receive an email with subject "dudemeister has invited you to join the protonet of localhost"
-    When "friend-3@protonet.com" opens the email with subject "dudemeister has invited you to join the protonet of localhost"
+    And "friend-3@example.com" should receive an email with subject "dudemeister has invited you to join the protonet of localhost"
+    When "friend-3@example.com" opens the email with subject "dudemeister has invited you to join the protonet of localhost"
     Then they should see "<strong>dudemeister</strong> wants to collaborate with you and just set up an account for you." in the email body
     And they should see "Click this link to get started:" in the email body
     And they should see /\/join\/(.*){10}/ in the email body

@@ -8,12 +8,6 @@ Dashboard::Application.routes.draw do
   match 'captive/revoke' => 'system/captive#revoke'
   match 'captive/whitelist_clients' => 'system/captive#whitelist_clients'
   match 'captive/whitelist_sites' => 'system/captive#whitelist_sites'
-
-  # Channels
-  #match 'channels/list' => 'channels#list', :as => :list_channels
-  #match 'channels/list_global' => 'channels#list_global', :as => :list_global_channels
-  #match 'channels/show_global' => 'channels#show_global', :as => :show_global_channel
-  #match 'channels/recommended_global_teaser' => 'channels#recommended_global_teaser'
   
   resources :channels do
     collection do
@@ -22,7 +16,6 @@ Dashboard::Application.routes.draw do
     end
     resources :meeps
   end
-  # match 'channels/:id/destroy' => 'channels#destroy', :as => :destroy_channel
   
   # meeps
   match 'meep/:id' => 'meeps#show' # Needed for backwards compatibility
@@ -54,7 +47,10 @@ Dashboard::Application.routes.draw do
   match '/navigation' => 'navigation#index', :as => :navigation
 
   # Users
-  devise_for :users, :controllers => { :registrations => "registrations" }
+  devise_for :users, :controllers => { 
+    :registrations => "registrations",
+    :passwords => "passwords"
+  }
   
   match '/auth/facebook/callback', :to => 'omniauth_callbacks#facebook'
   match '/auth/twitter/callback', :to => 'omniauth_callbacks#twitter'

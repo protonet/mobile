@@ -1,0 +1,19 @@
+<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
+  <fieldset>
+    <h3>
+      Change your password
+    </h3>
+    <%= f.hidden_field :reset_password_token %>
+    <label>
+      <%= f.password_field :password, :placeholder => "password" %>
+      <span class="hint">min. 6 characters</span>
+    </label>
+    <label>
+      <%= f.password_field :password_confirmation, :placeholder => "password" %>
+      <span class="hint">repeat for confirmation</span
+    </label>
+    <div>
+      <%= button "Change", :id => "password" %>
+    </div>
+  </fieldset>
+<% end %>

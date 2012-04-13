@@ -1,5 +1,5 @@
-class Mailer < ActionMailer::Base
-    
+class Mailer < ActionMailer::Base  
+  
   default_url_options[:host]      = SystemPreferences.public_host
   default_url_options[:protocol]  = SystemPreferences.public_host_https ? 'https' : 'http'
   
@@ -46,6 +46,17 @@ class Mailer < ActionMailer::Base
     mail(:from => from, :to => to, :subject => "protonet update log for #{node_name} (#{SystemPreferences.public_host})") do |format|
       format.text { render :text => content }
     end
+  end
+
+
+  def reset_password_instructions(user, host)
+    @host = host
+    @user = user
+    mail(
+      :from => "no-reply <mailer@protonet.info>",
+      :to => user.email,
+      :subject => "Reset your protonet password for #{SystemPreferences.public_host}"
+    )
   end
 
 end
