@@ -62,7 +62,7 @@ Background:
     Then I visit the profile of "newname"
     And I should see "@newname" within ".users-page h2"
     
-  @javascript
+  @javascript @wip
   Scenario: Admin Deleting an user
     Given I go to the users page
     And select an user
