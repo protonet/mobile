@@ -6,7 +6,7 @@
     <%= image_tag("/img/private.png", :alt => channel.display_name, :title => "This channel is private", :"data-hover-hint" => "top" ) %>  
     <%- end %>
     <strong>@<%= channel.display_name %></strong>
-    <small><%= pluralize(channel.listens.size, "subscriber") %></small>
+    <small><%= pluralize(channel.users.registered.size, "subscriber") %></small>
   <%- end %>
   <%- if @subscribed_channels.include?(channel) %>
     <img class="subscribed" src="/img/icn_tick.png">
