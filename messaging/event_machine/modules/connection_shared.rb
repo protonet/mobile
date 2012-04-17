@@ -74,7 +74,7 @@ module ConnectionShared
       end
     else
       # play echoserver if request could not be understood
-      puts "Something is using an obsolete interface! #{json.inspect}"
+      puts "Something is using an obsolete interface! #{json.inspect}"
       send_json(json)
     end
   end
