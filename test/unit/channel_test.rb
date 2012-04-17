@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
 class ChannelTest < ActiveSupport::TestCase
 
@@ -7,7 +7,7 @@ class ChannelTest < ActiveSupport::TestCase
   end
   
   test "normalize_name should normalize names" do
-    assert_equal "alis-s-bam-bam", Channel.new(:name => "Alis's Bam bäm").normalize_name
+    assert_equal "alis-s-bam-bam", Channel.new(:name => "Alis's Bam bam").normalize_name
   end
   
   test "the locally_hosted? method should return true on local channels" do

@@ -1,11 +1,11 @@
 Given /^an? ([^"]*) with the login "([^\"]*)"$/ do |role_name, login|
-  user = Factory(:user, :login => login, :email => "#{login}@protonet.com")
+  user = FactoryGirl.create(:user, :login => login, :email => "#{login}@protonet.com")
   user.add_to_role(role_name)
 end
 
 Given /^a channel named "([^\"]*)"$/ do |channel_name|
   #Channel.create(:owner => User.find(1), :name => channel_n)
-  channel = Factory(:channel, :name => channel_name)
+  channel = FactoryGirl.create(:channel, :name => channel_name)
 end
 
 Then /^I wait (\d+) seconds?$/ do |seconds|

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
 class NetworkTest < ActiveSupport::TestCase
   test "the local method returns your local network (defined by the id 0)" do
