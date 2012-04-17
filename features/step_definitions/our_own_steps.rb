@@ -364,7 +364,7 @@ Then /^I invite "([^\"]*)" to channel "([^\"]*)" with token "([^\"]*)" as "([^\"
     :first_name => first_name,
     :last_name => last_name,
     :email => "#{first_name}@#{last_name}.com",
-    :channel_ids => Channel.find_by_name(channel_name).id,
+    :channel_ids => [Channel.find_by_name(channel_name).id],
     :user => User.find_by_login(user_name)
   )
 end
@@ -378,7 +378,7 @@ Then /^I invite "([^\"]*)" to channel "([^\"]*)" with constrained rights and tok
     :last_name => last_name,
     :email => "#{first_name}@#{last_name}.com",
     :invitee_role => 1,
-    :channel_ids => Channel.find_by_name(channel_name).id,
+    :channel_ids => [Channel.find_by_name(channel_name).id],
     :user => User.find_by_login(user_name)
   )
 end

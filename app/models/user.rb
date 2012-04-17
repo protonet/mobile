@@ -321,7 +321,7 @@ class User < ActiveRecord::Base
   def assign_roles_and_channels
     if invitation_token
       if invitation = Invitation.unaccepted.find_by_token(invitation_token)
-        self.channels_to_subscribe = Channel.find(invitation.channel_ids).to_a
+        self.channels_to_subscribe = Channel.find(invitation.channel_ids)
         self.roles = if invitation.invitee_role
             [Role.find_by_title('invitee')]
           else
@@ -332,7 +332,7 @@ class User < ActiveRecord::Base
         return false
       end
     else
-      self.channels_to_subscribe ||= Channel.public.where(:id => SystemPreferences.default_channel_ids).to_a
+      self.channels_to_subscribe ||= Channel.public.where(:id => SystemPreferences.default_channel_ids)
       self.roles = [Role.find_by_title(stranger? ? SystemPreferences.default_stranger_user_group : SystemPreferences.default_registered_user_group)]
     end
   end
