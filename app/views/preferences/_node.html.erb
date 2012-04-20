@@ -13,14 +13,14 @@
   <div class="form-field">
     <%= f.label :name, "Name:" %>
     <%= f.text_field :name, :placeholder => "Please enter a name", :maxlength => 32 %>
-    <a data-hover-hint="top" title="The name can only consist of letters, numbers and hyphens (no whitespace allowed)." class="hint">(?)</a>
+    <a data-hover-hint="top" title="The name can only consist of letters, numbers and hyphens (no whitespace allowed)" class="hint">(?)</a>
   </div>
   <%= button "Save" %>  <span class="loading-hint">Please wait. This will take a moment.</span>
 <%- end %>
 
 <h3>Info</h3>
 <dl>
-  <dt>Assigned IP:</dt><dd><%= SystemBackend.get_own_ip("eth0") || SystemBackend.get_own_ip("eth1") %> <a data-hover-hint="top" title="Current assigned IP on ethernet connection" class="hint">(?)</a></dd>
+  <dt>Assigned IP:</dt><dd><%= SystemBackend.get_own_ip("eth0") || SystemBackend.get_own_ip("eth1") %> <a data-hover-hint="top" title="Current assigned ip on ethernet connection" class="hint">(?)</a></dd>
   <dt>License key:</dt><dd><%= SystemBackend.license_key %></dd>
   <dt>UUID:</dt><dd><%= Network.local.uuid %> <a class="hint" data-hover-hint="top" title="This is your node's unique id">(?)</a></dd>
 </dl>
