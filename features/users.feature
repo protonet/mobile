@@ -44,7 +44,8 @@ Background:
     And I follow "edit"
     And I fill in "admin_password" with "123456" within "form[data-cucumber='change-password']"
     And press "Generate new password" within "form[data-cucumber='change-password']"
-    And I store /"(.*)"/ from ".flash-message p" into "password"
+    And I wait 3 seconds
+    And I store /"(.+?)"/ from ".flash-message p" into "password"
     And I go unauthenticated to the start page
     And I am logged in as "someotherdude"
   
