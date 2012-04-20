@@ -13,6 +13,7 @@ module BackendAdapters
     # maybe move it up a bit
     REGEXPS = {
       :mac => /..:..:..:..:..:../
+      :ip  => /inet addr:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/
     }
     
     
@@ -153,6 +154,11 @@ module BackendAdapters
     
     def current_internet_interface
       `/sbin/route -n`.match(/.*UG.*/).to_s.split(" ").last rescue nil
+    end
+    
+    def get_own_ip(iface)
+      match = `/sbin/ifconfig #{iface}`.match(REGEXPS[:ip])
+      match && match[1]
     end
     
     def license_key

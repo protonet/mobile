@@ -17,6 +17,7 @@ class SystemBackend
     :get_active_interfaces,
     :get_interface_information,
     :get_hostname_for_ip,
+    :get_own_ip,
     :get_mac_for_ip,
     :hostname,
     :requested_host_local?,

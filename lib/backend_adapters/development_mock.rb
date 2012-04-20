@@ -59,6 +59,9 @@ module BackendAdapters
       true
     end
     
+    def get_own_ip(iface)
+      '192.168.101.107'
+    end
     
     def get_mac_for_ip(ip)
       '7c:c5:37:45:7f:85'
