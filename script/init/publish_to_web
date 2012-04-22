@@ -3,6 +3,10 @@
 export CURRENT_PATH=$(cd `dirname $0` && cd ../.. && pwd)
 export SHARED=$CURRENT_PATH/../../shared
 export HOME=$CURRENT_PATH/../..
+
+echo `date` >> $SHARED/log/publish_to_web.log
+exec > $SHARED/log/publish_to_web.log 2>&1
+
 . $HOME/../.bashrc
 . $HOME/../.profile
 cd $SHARED
