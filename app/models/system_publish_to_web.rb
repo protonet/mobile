@@ -71,7 +71,7 @@ class SystemPublishToWeb
       config    = <<-EOS
 check host publish_to_web with address directory.protonet.info
    if failed port 80 protocol http
-   and request '/' with hostheader '#{SystemPreferences.publish_to_web_name}.protonet.info'
+   and request '/' with hostheader '#{SystemPreferences.publish_to_web_name.downcase}.protonet.info'
    with timeout 25 seconds 
    for 1 cycles then restart
    start program = "#{start_cmd}"
