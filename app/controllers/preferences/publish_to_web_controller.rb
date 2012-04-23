@@ -8,7 +8,7 @@ module Preferences
         redirect_to(:controller => "/preferences", :action => "show", :section => "publish_to_web") and return
       end
       
-      SystemPreferences.publish_to_web_name = params[:preferences][:publish_to_web_name]
+      SystemPreferences.publish_to_web_name = params[:preferences][:publish_to_web_name].downcase
       SystemPreferences.publish_to_web = setting
       
       if SystemPreferences.publish_to_web

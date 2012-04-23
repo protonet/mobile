@@ -86,5 +86,5 @@ Dashboard::Application.config.to_prepare do
     ActionMailer::Base.delivery_method = ProtonetEmailService
   end
   
-  SystemPreferences.defaults[:publish_to_web_name] = SystemBackend.hostname
+  SystemPreferences.defaults[:publish_to_web_name] = SystemBackend.hostname.downcase
 end

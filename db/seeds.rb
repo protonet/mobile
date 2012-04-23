@@ -1,4 +1,4 @@
-SystemPreferences.node_name = SystemPreferences.publish_to_web_name
+SystemPreferences.node_name = SystemPreferences.publish_to_web_name.downcase
 SystemPreferences.node_description = "this is your own node"
 SystemPreferences.node_supernode = "localhost"
 SystemPreferences.node_key  = "encryptme"
