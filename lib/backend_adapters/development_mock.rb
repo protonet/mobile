@@ -5,6 +5,16 @@ module BackendAdapters
       "development mock"
     end
     
+    def uptime
+      match = `/usr/bin/uptime`.match(/up (.+?)\,/)
+      match = match ? match[1] : ''
+      if match.include?(":")
+        match = match.split(":")
+        match = "#{match[0]} hours #{match[1]} minutes"
+      end
+      match
+    end
+    
     def server_ips
       @server_ips ||= `ifconfig`.scan(/.*inet (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/).collect {|ip| ip[0]}
     end

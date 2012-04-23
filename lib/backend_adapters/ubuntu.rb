@@ -12,13 +12,23 @@ module BackendAdapters
     
     # maybe move it up a bit
     REGEXPS = {
-      :mac => /..:..:..:..:..:../
-      :ip  => /inet addr:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/
+      :mac    => /..:..:..:..:..:../
+      :ip     => /inet addr:(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/,
+      :uptime => /up (.+?)\,/
     }
-    
     
     def initialize(config={})
       @config = config.merge(DEFAULT_UBUNTU_CONFIG)
+    end
+    
+    def uptime
+      match = `/usr/bin/uptime`.match(REGEXPS[:uptime])
+      match = match ? match[1] : ''
+      if match.include?(":")
+        match = match.split(":")
+        match = "#{match[0]} hours #{match[1]} minutes"
+      end
+      match
     end
     
     def info
