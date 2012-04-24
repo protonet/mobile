@@ -248,7 +248,13 @@ class User < ActiveRecord::Base
   end
 
   def listen_to_channels
-    (channels_to_subscribe || []).each { |channel | subscribe(channel) }
+    (channels_to_subscribe || []).each { |channel|
+      Listen.create({
+        :channel => channel,
+        :user => self,
+        :verified => 1
+      })
+    }
   end
   
   def after_token_authentication

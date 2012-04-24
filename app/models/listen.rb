@@ -9,14 +9,14 @@ class Listen < ActiveRecord::Base
   scope :registered, where("users.temporary_identifier IS NULL AND users.id != -1 AND users.node_id = 1")
   
   # if a channel is public we set the verified status to public
-  after_create  :auto_set_verification,:set_last_read_meep
+  after_create  :auto_set_verification, :set_last_read_meep
   after_create  :send_subscribe_notification, :if => lambda {|listen| listen.verified?}
   after_destroy :send_verifications_notification, :if => lambda {|listen| !listen.verified? }
   after_destroy :send_unsubscribe_notification
   around_save :send_change_notification
   
   def send_change_notification
-    changed = new_record? && !verified? || verified_changed?
+    changed = (new_record? && !verified?) || verified_changed?
 
     yield
     
@@ -73,8 +73,13 @@ class Listen < ActiveRecord::Base
   end
   
   def auto_set_verification
+    return if self.verified?
     self.verified = true if channel.public? || channel.owned_by?(user) || channel.rendezvous_participant?(user) || user.admin?
     save
+  end
+  
+  def verify!
+    update_attribute(:verified, true)
   end
   
 end
