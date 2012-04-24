@@ -66,7 +66,7 @@ class ChannelsController < ApplicationController
     success = channel.destroy
     if success && channel.errors.empty?
       flash[:notice] = "Successfully deleted channel '#{channel_name}'"
-      redirect_to :action => 'list'
+      redirect_to :action => 'index'
     else
       flash[:error] = "Could not delete channel '#{channel_name}'"
     end
