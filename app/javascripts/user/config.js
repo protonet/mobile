@@ -132,8 +132,8 @@ if (protonet.ui.Notification.supported()) {
   protonet.user.Config.configs.reply_notification = {
     type: "notification",
     labels: {
-      "true":  "reply notifications <span class=\"on\">on</span>",
-      "false": "reply notifications <span class=\"off\">off</span>"
+      "true":  "desktop notifications <span class=\"on\">on</span>",
+      "false": "desktop notifications <span class=\"off\">off</span>"
     },
     defaultValue: false
   };
