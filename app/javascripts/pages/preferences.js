@@ -78,7 +78,9 @@ $(function() {
     }
     
     new protonet.ui.Overlay(protonet.t("SOFTWARE_UPDATE_SUCCESSFUL"));
+    
     setTimeout(function() { location.href = "/"; }, (20).seconds());
+    $releaseUpdateProgressConsole.data("quakeStyleConsole").close();
     
     event.stopPropagation();
   });
@@ -110,7 +112,7 @@ $(function() {
           return;
         }
         if (timeoutTime > 0) {
-         setTimeout(function() {getUpdateProgressLog($elementToUpdate, timeoutTime)}, timeoutTime); 
+         setTimeout(function() { getUpdateProgressLog($elementToUpdate, timeoutTime); }, timeoutTime); 
         }
         $releaseUpdateProgressConsoleContent.scrollTop(scrollTop + 1000000);
       }
@@ -133,7 +135,7 @@ $(function() {
           $showReleaseProgressButton.fadeIn();
         }
       });
-      $releaseUpdateProgressConsole.data('quakeStyleConsole').open();
+      $releaseUpdateProgressConsole.data("quakeStyleConsole").open();
     });
   });
   
