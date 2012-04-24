@@ -154,7 +154,7 @@ button.active {
   margin-left: 1px;
 }
 
-form.loading button,
+form button.loading,
 .button.loading,
 button.loading {
   background: #fff url(/img/icn_loading.gif) 12px center no-repeat;

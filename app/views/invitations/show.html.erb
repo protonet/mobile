@@ -12,7 +12,7 @@
       not sent yet
     <%- end %>
   </div>
-  <%= form_for(@invitation, :html => { "data-type" => 'html' }) do |f| %>
+  <%= form_for(@invitation, :remote => true, :html => { "data-type" => 'html' }) do |f| %>
     <div id="wysihtml5-toolbar" style="display: none;">
       <a class="icon" data-wysihtml5-command="bold" title="CTRL+B">bold</a>
       <a class="icon" data-wysihtml5-command="italic" titletle="CTRL+I">italic</a>

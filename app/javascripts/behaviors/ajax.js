@@ -128,11 +128,21 @@ $.behaviors({
     });
   },
   
+  ".subpage:ajax:before": function(element, event){
+    var $form = $(event.target),
+        submitButtonName = $form.data("ujs:submit-button");
+        
+    if (!$form.data("avoid-disabling") && submitButtonName) {
+      $form.find("[name="+submitButtonName.name+"]").addClass("loading");
+    }
+  },
+  
   ".subpage:ajax:beforeSend": function(element, event) {
     var $form = $(event.target);
+    
     $form
       .addClass("loading")
-      .find("input, textarea, select, button")
+      .find("input, textarea, select")
         .prop("disabled", !$form.data("avoid-disabling"))
         .end()
       .find(".loading-hint")
@@ -151,7 +161,10 @@ $.behaviors({
         .prop("disabled", false)
         .end()
       .find(".loading-hint")
-        .hide();
+        .hide()
+      .find(".loading")
+        .removeClass("loading");
+        
     $.each({
       "X-Error-Message":  "flash_message.error",
       "X-Notice-Message": "flash_message.notice",
