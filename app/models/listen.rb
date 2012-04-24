@@ -30,8 +30,11 @@ class Listen < ActiveRecord::Base
   end
   
   def send_verifications_notification
-    recipients = (User.admins | [channel.owner]).uniq - [User.system]
-    publish "users", recipients.to_a.compact.map(&:id), {
+    recipients = begin ((User.admins | [channel.owner]) - [User.system]).compact
+      rescue NoMethodError
+        [] 
+      end
+    publish "users", recipients.map(&:id), {
       :trigger  =>  "users.pending_verifications",
       :channel_id => channel.id,
       :pending_verifications => channel.listens.pending.count
