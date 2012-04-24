@@ -13,7 +13,7 @@ protonet.utils.textify = (function() {
   return function(str) {
     return str.replace(REG_EXP, function(match, $1, $2) {
       $2 = trimEmptyLines($2);
-      return "<pre>" + $2 + "</pre>";
+      return "<pre class=\"wrap\">" + $2 + "</pre>";
     });
   };
 })();

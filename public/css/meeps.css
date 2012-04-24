@@ -138,6 +138,10 @@
   font-family: "Courier New", Courier, monospace;
 }
 
+.meep pre.wrap {
+  white-space: pre-wrap;
+}
+
 div.progress {
   height: 48px;
   background: transparent url(/img/icn_loading_big.gif) center center no-repeat;
