@@ -64,17 +64,31 @@ function update_apt {
   echo ""
 }
 
+function install_rvm {
+  echo ""
+  echo "Installing rvm system-wide..."
+  if ! has 'rvm'; then
+    sudo apt-get install -qqy build-essential libreadline5 libreadline5-dev zlib1g zlib1g-dev curl
+    sudo bash < <( curl -L -s -k https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer )
+    sudo usermod -a -G rvm `whoami`
+    sudo usermod -a -G rvm root
+    echo "finished rvm"
+  else
+    echo "Already there... moving on."
+  fi
+  echo "Done installing rvm."
+  echo ""
+}
+
 function install_ruby {
   echo ""
   echo "Installing ruby..."
-  sudo apt-get install -qqy build-essential libreadline5 libreadline5-dev
   if ! has 'ruby'; then
-    if [ $(uname -m) == "x86_64" ]; then
-      wget -O /tmp/ree.deb http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_amd64_ubuntu10.04.deb
-    else
-      wget -O /tmp/ree.deb http://rubyenterpriseedition.googlecode.com/files/ruby-enterprise_1.8.7-2011.03_i386_ubuntu10.04.deb
-    fi
-    sudo dpkg -i /tmp/ree.deb
+    source /etc/profile.d/rvm.sh
+    sg rvm "rvm pkg install zlib"
+    sg rvm "rvm pkg install openssl"
+    sg rvm "rvm install 1.9.3"
+    sg rvm "rvm alias create default 1.9.3"
   else
     echo "Already there... moving on."
   fi
@@ -82,8 +96,16 @@ function install_ruby {
   echo ""
 }
 
+function install_babushka {
+  sudo mkdir -p /usr/local
+  sudo chgrp admin /usr/local
+  sudo chmod 775 /usr/local
+  bash -c "`curl https://babushka.me/up`"
+}
+
 function continue_installation {
-  sudo su -l protonet -c "`wget -O - http://releases.protonet.info/bootstrap-continue$RELEASE_VERSION_PATH`"
+ echo "continue installation"
+ sudo su -l protonet -c "`wget -O - http://releases.protonet.info/bootstrap-continue$RELEASE_VERSION_PATH`"
 }
 
 function logo {
@@ -110,14 +132,14 @@ function on_install_failure {
   false
 }
 
-
 if welcome; then
   echo "Excellent."
   echo ""
-  logo
   user_basics && 
   update_apt &&
+  install_rvm &&
   install_ruby &&
+  install_babushka &&
   continue_installation &&
   on_install_success || on_install_failure
 else

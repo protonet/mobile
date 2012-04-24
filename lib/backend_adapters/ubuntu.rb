@@ -149,7 +149,7 @@ module BackendAdapters
     end
     
     def in_grants_file?(mac)
-      open(captive_whitelist_clients_file).grep(/#{mac}/).size > 0
+      open(captive_whitelist_clients_file).scan(/#{mac}/).size > 0
     end
     
     def revoke_internet_access(mac)
