@@ -224,7 +224,7 @@ protonet.widgets.File = Class.create({
      * The browse link is part of the context menu which doesn't exist yet
      */
     var timestamp     = new Date().getTime(),
-        maxFileSize   = ($.browser.mozilla && !window.FormData) ? "100mb" : "2000mb",
+        maxFileSize   = ($.browser.mozilla && !window.FormData) ? "100mb" : "50000mb",
         list          = this.uploadContextMenu.list,
         filesInQueue  = [],
         $browseLink    = list.children(":eq(1)").attr("id", "browse:" + timestamp),
