@@ -5,6 +5,7 @@ quake style console as jQuery-plugin
 @param int spaceBottom - space below the console in opened state (optional, defaults to 300px)
 @param function options.onopen - callback called when opening
 @param function options.onclose - callback called when pin ponies suck on rainbows
+@param int options.animationTime - time of the open/close animation in ms
 
 based on an alternative approach for writing jquery plugins (http://css-tricks.com/snippets/jquery/jquery-plugin-template/)
 
@@ -15,6 +16,7 @@ $("#someID").quakeStyleConsole({
   spaceBottom: 300
   onopen: function() {},
   onclose: function() {}
+  animationTime: 500
 });
 ... and open it
 $("#someID").quakeStyleConsole.data('quakeStyleConsole').open();
@@ -62,7 +64,6 @@ the corresponding css styles
     base.el = el; // raw dom object
     
     var originalPaddingBottom;
-    var originalBottom;
 
     // Add a reverse reference to the DOM object
     base.$el.data("quakeStyleConsole", base); // leads to an ugly way to call public methods. better idea?
@@ -71,13 +72,15 @@ the corresponding css styles
       onopen: $.noop,
       onclose: $.noop,
       paddingBottom: 50,
-      spaceBottom: 300
+      spaceBottom: 300,
+      animationTime: 500,
+      referenceElement: window
     };
 
     base.init = function() {
       base.settings = $.extend({}, $.quakeStyleConsole.defaults, options);
       originalPaddingBottom = base.$el.css("padding-bottom");
-      originalBottom = base.$el.css("bottom");
+      base.$el.css("bottom", $(base.settings.referenceElement).height());
     };
 
     base.open = function() {
@@ -87,7 +90,7 @@ the corresponding css styles
           bottom: base.settings.spaceBottom,
           paddingBottom: base.settings.paddingBottom
         },
-        1000,
+        base.settings.animationTime,
         //console animation done
         function() {
           base.$el.addClass("console-box-shadow");
@@ -109,9 +112,9 @@ the corresponding css styles
     base.close = function() {
       base.$el.add("html").unbind(".quakeStyleConsole");
       base.$el.animate({
-        bottom: originalBottom,
+        bottom: $(base.settings.referenceElement).height(),
         paddingBottom: originalPaddingBottom
-      }, 1000);
+      }, base.settings.animationTime);
       base.$el.removeClass("console-box-shadow");
       base.settings.onclose();
     };
