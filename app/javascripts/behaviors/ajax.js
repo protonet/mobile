@@ -162,6 +162,7 @@ $.behaviors({
         .end()
       .find(".loading-hint")
         .hide()
+        .end()
       .find(".loading")
         .removeClass("loading");
         
