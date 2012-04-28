@@ -11,7 +11,7 @@ if ! has curl; then
 fi
 
 
-export HOST=protonet-live
+export HOST=admin.protonet.info
 export APP_ARCHIVE=dashboard.tar.gz
 export BABUSHKA_BASE_ARCHIVE=babushka_base.tar.gz
 export BABUSHKA_ARCHIVE=babushka.tar.gz
@@ -65,7 +65,7 @@ export DASHBOARD_REVISION=`git log --pretty=format:"%H" -n 1`
 if [ "$release_type" != "OVERWRITE LAST" ]; then
   echo $release_type > TYPE
 else
-  scp protonet-live:$UPLOAD_PATH/releases/$last_version/TYPE /tmp/dashboard/TYPE
+  scp $HOST:$UPLOAD_PATH/releases/$last_version/TYPE /tmp/dashboard/TYPE
 fi
 echo $last_version > RELEASE
 
@@ -138,16 +138,16 @@ tar -pczf $DEPLOYER_ARCHIVE --exclude .git deployer/
 
 ############################################################
 # create directory for the new release and upload it
-ssh protonet-live "mkdir -p $UPLOAD_PATH/releases/$last_version"
-scp $APP_ARCHIVE $BABUSHKA_BASE_ARCHIVE $BABUSHKA_ARCHIVE $DEPLOYER_ARCHIVE $BABUSHKA_DEPS_ARCHIVE protonet-live:$UPLOAD_PATH/releases/$last_version
-scp /tmp/dashboard/script/ptn_bootstrap* protonet-live:$UPLOAD_PATH/releases/$last_version
+ssh $HOST "mkdir -p $UPLOAD_PATH/releases/$last_version"
+scp $APP_ARCHIVE $BABUSHKA_BASE_ARCHIVE $BABUSHKA_ARCHIVE $DEPLOYER_ARCHIVE $BABUSHKA_DEPS_ARCHIVE $HOST:$UPLOAD_PATH/releases/$last_version
+scp /tmp/dashboard/script/ptn_bootstrap* $HOST:$UPLOAD_PATH/releases/$last_version
 if [ "$release_type" != "OVERWRITE LAST" ]; then
-   scp /tmp/dashboard/TYPE protonet-live:$UPLOAD_PATH/releases/$last_version
+   scp /tmp/dashboard/TYPE $HOST:$UPLOAD_PATH/releases/$last_version
 fi
 
 # if this is a stable release then link that thing to stable
 if [ "$release_type" = "STABLE" ]; then
-   ssh protonet-live "rm -f $UPLOAD_PATH/stable; ln -s $UPLOAD_PATH/releases/$last_version $UPLOAD_PATH/stable"
+   ssh $HOST "rm -f $UPLOAD_PATH/stable; ln -s $UPLOAD_PATH/releases/$last_version $UPLOAD_PATH/stable"
 fi
 
 # and create tags so we know what we used
