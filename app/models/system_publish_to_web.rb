@@ -21,14 +21,16 @@ class SystemPublishToWeb
     
     def remote_status
       return false unless Rails.env == 'production'
-      open("http://directory.protonet.info", {"Host" => "#{SystemPreferences.publish_to_web_name}.protonet.info"}).status == ['200', 'OK']
-    rescue
+      timeout(5) do
+        open("http://directory.protonet.info/", {"Host" => "#{SystemPreferences.publish_to_web_name}.protonet.info"}).status == ['200', 'OK']
+      end  
+    rescue Timeout::Error, StandardError
       false
     end
     
     def ssh_keys
       filename = "#{configatron.shared_file_path}/config/protonet.d/proxy_dsa"
-      if SystemPreferences.proxy_ssh_keys && (SystemPreferences.proxy_ssh_keys["private"] == File.read(filename))
+      if SystemPreferences.proxy_ssh_keys && (SystemPreferences.proxy_ssh_keys["private"] == File.read(filename).strip)
         SystemPreferences.proxy_ssh_keys
       else
         SystemPreferences.proxy_ssh_keys = create_keys
