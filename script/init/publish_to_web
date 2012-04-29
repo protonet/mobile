@@ -25,11 +25,11 @@ case $1 in
          rm -rf $PIDFILE
        fi
      fi
-     screen -d -m /usr/bin/ssh localtunnel@directory.protonet.info -o ServerAliveInterval=15 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22666 -R $PORT:127.0.0.1:80 -i $SHARED/config/protonet.d/proxy_dsa -t
+     screen -d -m /usr/bin/ssh localtunnel@directory.protonet.info -o ServerAliveInterval=5 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 22666 -R $PORT:127.0.0.1:80 -i $SHARED/config/protonet.d/proxy_dsa -t
      echo `ps aux | grep -e "ssh localtunnel.*$PORT" | grep -v 'grep' | grep -v 'SCREEN' | awk '{ print $2 }'` > $PIDFILE
       ;;  
     stop)  
-     kill -9 `ps aux | grep -e "ssh localtunnel.*$PORT" | grep -v 'grep' | grep -v 'SCREEN' | awk '{ print $2 }'`
+     kill -9 `ps aux | grep -e "SCREEN.*ssh localtunnel.*$PORT" | grep -v 'grep' | awk '{ print $2 }'`
      rm -rf $PIDFILE 
       ;;
     status)
