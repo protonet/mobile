@@ -111,6 +111,7 @@ class Channel < ActiveRecord::Base
       :id               => channel.id,
       :uuid             => channel.uuid,
       :node_id          => channel.node_id,
+      :private          => !channel.public?,
       :global           => channel.global?,
       :rendezvous       => channel.rendezvous,
       :system           => channel.system?,
