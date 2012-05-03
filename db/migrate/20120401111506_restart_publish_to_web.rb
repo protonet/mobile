@@ -3,7 +3,7 @@ class RestartPublishToWeb < ActiveRecord::Migration
     if !!SystemPreferences.publish_to_web
       begin
         SystemPublishToWeb.unpublish
-        sleep 3
+        sleep 10
         SystemPublishToWeb.publish
       rescue
         # nothing to do move along...
