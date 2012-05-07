@@ -111,10 +111,15 @@ class SystemWifi
     private
     
     def channel_settings(channel)
-      # TODO consider adding this to the ht_capab [MAX-AMSDU-3839][TX-STBC][RX-STBC1]
       # This might only work with AR9285 chipset
+      # [HT40-] = enable 40 mhz secondary channel below primary channel (channel bonding)
+      # [HT40+] = enable 40 mhz secondary channel above primary channel (channel bonding)
+      # [RX-STBC123] = 1, 2 or 3 spatial streams
+      # [SHORT-GI-20] = short guard intervals for 20 mhtz
+      # [SHORT-GI-40] = short guard intervals for 40 mhz
       channel_width_set = channel < 8 ? "+" : "-"
-      ht_capab = "[HT40#{channel_width_set}][SHORT-GI-40][DSSS_CCK-40][MAX-AMSDU-3839][TX-STBC][RX-STBC1]"
+      ht_capab = "[HT40#{channel_width_set}][SHORT-GI-20][SHORT-GI-40][DSSS_CCK-40][MAX-AMSDU-3839][TX-STBC][RX-STBC123]"
+      "channel=#{channel}\nht_capab=#{ht_capab}\n"
       "channel=#{channel}\nht_capab=#{ht_capab}\n"
     end
     
