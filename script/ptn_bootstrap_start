@@ -96,13 +96,6 @@ function install_ruby {
   echo ""
 }
 
-function install_babushka {
-  sudo mkdir -p /usr/local
-  sudo chgrp admin /usr/local
-  sudo chmod 775 /usr/local
-  bash -c "`curl https://babushka.me/up`"
-}
-
 function continue_installation {
  echo "continue installation"
  sudo su -l protonet -c "`wget -O - http://releases.protonet.info/bootstrap-continue$RELEASE_VERSION_PATH`"
@@ -139,7 +132,6 @@ if welcome; then
   update_apt &&
   install_rvm &&
   install_ruby &&
-  install_babushka &&
   continue_installation &&
   on_install_success || on_install_failure
 else
