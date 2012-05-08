@@ -40,7 +40,7 @@ group :development do
 end
 
 group :test, :cucumber do
-  gem "shoulda"
+  gem "shoulda", :require => false
   gem "faker"
   gem "mocha", "0.9.8"
   gem "factory_girl_rails"
