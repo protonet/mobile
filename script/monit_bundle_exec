@@ -4,7 +4,8 @@ export RAILS_ENV=$1
 export CURRENT_PATH=$2
 export HOME=$CURRENT_PATH/../..
 shift 2
-. $HOME/../.bashrc
-. $HOME/../.profile
+. $HOME/.bashrc
+. $HOME/.profile
+. /usr/local/rvm/scripts/rvm
 cd $CURRENT_PATH
 bundle exec $@

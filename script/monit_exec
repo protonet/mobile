@@ -3,7 +3,8 @@
 export CURRENT_PATH=$1
 export HOME=$CURRENT_PATH/../..
 shift 1
-. $HOME/../.bashrc
-. $HOME/../.profile
+. $HOME/.bashrc
+. $HOME/.profile
+. /usr/local/rvm/scripts/rvm
 cd $CURRENT_PATH
 exec "$@"
