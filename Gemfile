@@ -1,7 +1,7 @@
 source :gemcutter
 source 'http://gems.github.com/'
 
-gem 'bundler'
+gem 'bundler', "1.0.22"
 gem "rails", "3.0.5"
 gem "mysql"
 gem "devise", "1.2.1" # if you update this please check the monkeypatches in user.rb (methods and lines after declaration) and lib/devise_ext.rb
