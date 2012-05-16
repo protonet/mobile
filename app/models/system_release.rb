@@ -36,16 +36,16 @@ class SystemRelease
       return false unless File.exist?("/home/protonet/deployer") && SystemBackend.license_key
       release_version_var = "export RELEASE_VERSION=#{release_version};" unless release_version.blank?
       license_key = SystemBackend.license_key
-      babushka_update     = system(
+      babushka_update     = system( "bash", "-c",
         "#{release_version_var} export HISTIGNORE=\"*ptn_babushka_update*\"; #{configatron.current_file_path}/script/ptn_babushka_update #{license_key}"
       )
-      babushka_migrations = babushka_update && system(
+      babushka_migrations = babushka_update && system( "bash", "-c",
         "export HISTIGNORE=\"*ptn_babushka_migrations*\"; #{configatron.current_file_path}/script/ptn_babushka_migrations '#{password}'"
       )
-      deployer_update     = babushka_migrations && system(
+      deployer_update     = babushka_migrations && system( "bash", "-c",
         "#{release_version_var} export HISTIGNORE=\"*ptn_deployer_update*\"; #{configatron.current_file_path}/script/ptn_deployer_update '#{license_key}'"
       )
-      release_update      = deployer_update && system(
+      release_update      = deployer_update && system( "bash", "-c",
         "#{release_version_var} #{configatron.current_file_path}/script/ptn_release_update #{configatron.shared_file_path}"
       )
       {:babushka_update => babushka_update, :babushka_migrations => babushka_migrations, :release_update => release_update, :deployer_update => deployer_update}
