@@ -156,7 +156,7 @@ GEM
     mocha (0.9.8)
       rake
     multi_json (1.2.0)
-    mysql (2.8.1)
+    mysql2 (0.2.7)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-sftp (2.0.5)
@@ -277,7 +277,7 @@ DEPENDENCIES
   launchy
   memcache-client
   mocha (= 0.9.8)
-  mysql
+  mysql2 (= 0.2.7)
   newrelic_rpm
   paperclip (~> 2.3.8)
   pickle

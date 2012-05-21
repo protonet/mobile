@@ -3,7 +3,7 @@ source 'http://gems.github.com/'
 
 gem 'bundler', "1.2.0.pre"
 gem "rails", "3.0.5"
-gem "mysql"
+gem "mysql2", "0.2.7"
 gem "devise", "1.2.1" # if you update this please check the monkeypatches in user.rb (methods and lines after declaration) and lib/devise_ext.rb
 gem "memcache-client"
 gem "httparty", "0.7.4"
