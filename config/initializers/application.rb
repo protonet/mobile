@@ -52,7 +52,6 @@ end
 
 if defined?(PhusionPassenger)
   PhusionPassenger.on_event(:starting_worker_process) do |forked|
-    require "#{Rails.root}/lib/rack_ext.rb" # overwrite multipart parsing
     if forked
       # We're in smart spawning mode.
       Thread.new{ EM.run() }
