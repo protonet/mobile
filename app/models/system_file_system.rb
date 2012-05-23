@@ -12,9 +12,10 @@ class SystemFileSystem
         files[file_type].push(entry)
       end
     end
-    # sort alphabetically since not all systems return fs entries in the correct order
+    # sort alphabetically since not al l systems return fs entries in the correct order
+    # TODO: aj: also doesn't correctly sort umlaute a ä A becomes a A ä
     files.each do |type, array|
-      files[type] = array.sort_alphabetical
+      files[type] = array.sort! {|a,b| a.unpack('C*').pack('U*').downcase <=> b.unpack('C*').pack('U*').downcase}
     end
     files
   end

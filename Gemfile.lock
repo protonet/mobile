@@ -226,8 +226,6 @@ GEM
       shoulda-matchers (~> 1.0.0)
     shoulda-context (1.0.0)
     shoulda-matchers (1.0.0)
-    sort_alphabetical (0.1.3)
-      activesupport
     sprockets (1.0.2)
     sunspot_index_queue (1.1.3)
       sunspot (>= 1.1.0)
@@ -291,7 +289,6 @@ DEPENDENCIES
   ruby-net-ldap (= 0.0.4)
   selenium-webdriver
   shoulda
-  sort_alphabetical
   sprockets (= 1.0.2)
   sprockets-rails!
   sunspot!
