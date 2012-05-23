@@ -34,6 +34,9 @@ expect {
     send "exit\r"
     exp_continue
   }
+  -re ".*running migration number.*failed! aborting" {
+    do_exit "babushka migration failed"
+  }
   -re ".*file a bug report for that now*\? " {
     send "n\r"
     do_exit "babushka migration failed"
