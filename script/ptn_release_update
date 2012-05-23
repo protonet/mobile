@@ -1,15 +1,20 @@
 #!/bin/bash
-
+exec >> /tmp/ptn_release_update.log 2>&1
 echo "`date` starting ptn_release_update"
+
+unset RUBYOPT;unset GEM_HOME; unset GEM_PATH; unset BUNDLE_GEMFILE
+. /usr/local/rvm/scripts/rvm
+
+export GEM_PATH=`rvm gemdir`:`rvm gemdir`@global
+export GEM_HOME=`rvm gemdir`
 
 export SHARED_PATH=$1
 export HOME=$SHARED_PATH/../..
 
 . $HOME/.bashrc
 . $HOME/.profile
-. /usr/local/rvm/scripts/rvm
 
 cd $HOME/deployer
-export BUNDLE_GEMFILE=''
+
 bundle install --without=test --gemfile=Gemfile
-bundle exec bin/dep -r protonet -e production -m deploy -c $SHARED_PATH/config/protonet.d/deploy_config 2>&1 >> /tmp/ptn_release_update.log
+bundle exec bin/dep -r protonet -e production -m deploy -c $SHARED_PATH/config/protonet.d/deploy_config
