@@ -70,13 +70,9 @@ function install_rvm {
   if ! has 'rvm'; then
     sudo /usr/bin/apt-get install -qqy build-essential openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison subversion
     
-    # Could not download 'https://github.com/wayneeseguin/rvm/tarball/stable'.
-    #  Make sure your certificates are up to date as described above.
-    #  To continue in insecure mode run 'echo insecure >> ~/.curlrc'.
-    echo insecure >> ~/.curlrc
-    
     sudo bash -s stable < <( curl -L -s -k get.rvm.io )
     sudo usermod -a -G rvm `whoami`
+    sudo usermod -a -G rvm protonet
     sudo usermod -a -G rvm root
     echo "finished rvm"
   else
