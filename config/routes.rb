@@ -113,7 +113,7 @@ Dashboard::Application.routes.draw do
       end
       resources :rendezvous
       resources :meeps
-      match 'users/find_by_login/:login' => 'users#find_by_login'
+      match 'users/find_by_login/:login' => 'users#find_by_login', :constraints => {:login => /[^\/]+/} 
       resources :users do
         match "auth_token" => "users#auth_token"
       end
