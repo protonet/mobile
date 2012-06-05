@@ -38,20 +38,21 @@ function user_basics {
   echo "Setting up user..."
   id -u protonet >/dev/null 2>&1
 
+  #Make sure that we have a protonet user
   if [ $? != 0 ]; then 
-    #Make sure that we have a protonet user
     sudo useradd protonet -m -s /bin/bash
-    #Make sure there is a protonet group
-    sudo groupadd -f admin
-    # add the current user to the admin group
-    sudo usermod -a -G admin `whoami`
-    # And add the protonet user to that group
-    sudo usermod -a -G admin protonet
-    sudo usermod -a -G sudo protonet
     echo "Setup password for protonet user:"
-    sudo passwd protonet
     # setup password for protonet
+    sudo passwd protonet
   fi
+
+  #Make sure there is a protonet group
+  sudo groupadd -f admin
+  # add the current user to the admin group
+  sudo usermod -a -G admin `whoami`
+  # And add the protonet user to that group
+  sudo usermod -a -G admin protonet
+  sudo usermod -a -G sudo protonet
   echo "Done setting up user."
   echo ""
 }
