@@ -11,7 +11,7 @@ function has {
 }
 
 function get_babushka {
-  sudo bash -c "`wget -O - $SERVER/bootstrap-babushka$RELEASE_VERSION_PATH`"
+  sudo bash -c "source /usr/local/rvm/scripts/rvm; `wget -O - $SERVER/bootstrap-babushka$RELEASE_VERSION_PATH`"
 }
 
 function check_license_key() {
