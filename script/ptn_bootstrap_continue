@@ -36,6 +36,7 @@ function get_babushka_deps() {
   cd /tmp
   tar -xzf $FILE
   rm -rf /home/protonet/.babushka/sources/dudemeister
+  mkdir -p /home/protonet/.babushka/sources/
   mv -f /tmp/babushka-deps /home/protonet/.babushka/sources/dudemeister
   rm -rf $FILE
 }
