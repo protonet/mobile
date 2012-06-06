@@ -8,18 +8,24 @@ export HOME=$CURRENT_PATH/../..
 cd $SHARED
 export SHARED=`pwd`
 
+if [ -x /usr/sbin/monit ] ; then
+  MONIT=/usr/sbin/monit
+else
+  MONIT=/usr/bin/monit
+fi
+
 case $1 in
    start)
-      /usr/sbin/monit -c $SHARED/config/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid
+      $MONIT -c $SHARED/config/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid
       ;;
     stop)  
-      /usr/sbin/monit -c $SHARED/config/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid quit
+      $MONIT -c $SHARED/config/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid quit
       ;;
     restart)
-      /usr/sbin/monit -c $SHARED/config/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid restart all
+      $MONIT -c $SHARED/config/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid restart all
       ;;
     reload)
-      /usr/sbin/monit -c $SHARED/config/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid reload
+      $MONIT -c $SHARED/config/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid reload
       ;;
     *)  
       echo "usage: app_monit {start|stop|restart|reload}" ;;
