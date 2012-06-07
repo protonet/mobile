@@ -29,6 +29,10 @@ Dashboard::Application.config.to_prepare do
     "wlan0" => {
       "allow_dashboard_for_strangers" => false,
       "allow_registrations_for_strangers" => true
+    },
+    "wlan1" => {
+      "allow_dashboard_for_strangers" => false,
+      "allow_registrations_for_strangers" => true
     }
   }
   SystemPreferences.defaults[:wifi] = {
