@@ -118,9 +118,7 @@ class SystemWifi
       # [RX-STBC123] = 1, 2 or 3 spatial streams
       # [SHORT-GI-20] = short guard intervals for 20 mhtz
       # [SHORT-GI-40] = short guard intervals for 40 mhz
-      channel_width_set = channel < 8 ? "+" : "-"
-      ht_capab = "[HT40#{channel_width_set}][SHORT-GI-20][SHORT-GI-40][DSSS_CCK-40][MAX-AMSDU-3839][TX-STBC][RX-STBC123]"
-      "channel=#{channel}\nht_capab=#{ht_capab}\n"
+      ht_capab = "[HT20][HT40-][HT40+][SHORT-GI-20][SHORT-GI-40][DSSS_CCK-40][MAX-AMSDU-3839][TX-STBC][RX-STBC123]"
       "channel=#{channel}\nht_capab=#{ht_capab}\n"
     end
     
