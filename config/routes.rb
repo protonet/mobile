@@ -8,6 +8,9 @@ Dashboard::Application.routes.draw do
   match 'captive/revoke' => 'system/captive#revoke'
   match 'captive/whitelist_clients' => 'system/captive#whitelist_clients'
   match 'captive/whitelist_sites' => 'system/captive#whitelist_sites'
+
+  # Channels
+  match 'channels/info' => 'channels#info', :as => :show_channel_info
   
   resources :channels do
     collection do
@@ -24,6 +27,9 @@ Dashboard::Application.routes.draw do
   match 'meeps/after' => 'meeps#after', :as => :meeps_after
   
   resources :meeps
+  
+  # files
+  match 'files/play' => 'files#play', :as => :play_files
   
   match 'listens/create' => 'listens#create', :as => :listen_to_channel
   match 'listens/create_for_user' => 'listens#create_for_user', :as => :listen_for_user
@@ -64,6 +70,8 @@ Dashboard::Application.routes.draw do
   match 'users/delete_stranger_older_than_two_days' => 'users#delete_stranger_older_than_two_days', :as => :delete_stranger_older_than_two_days, :via => [:post]
   match 'users/remove_newbie_flag' => 'users#remove_newbie_flag', :as => :remove_newbie_flag, :via => [:post]
   match 'users/newbie_todo_list' => 'users#newbie_todo_list', :as => :newbie_todo_list, :via => [:get]
+  match 'users/channels' => 'users#channels', :as => :user_channels
+  match 'users/info' => 'users#info', :as => :show_user_info
   
   resources :users
   
@@ -87,12 +95,11 @@ Dashboard::Application.routes.draw do
     match 'releases/send_log_to_support_team' => 'releases#send_log_to_support_team', :as => :send_log_to_support_team
   end
   
+  # Files
+  resources :files
+  
   # System
   namespace :system do
-    match 'files/create_directory' => 'files#create_directory', :as => :files_create_directory
-    match 'files/delete_directory' => 'files#delete_directory', :as => :files_delete_directory
-    match 'files/delete' => 'files#delete', :as => :files_delete
-    resources :files
     match 'preferences/update' => 'preferences#update', :as => :preferences_update
   end
   

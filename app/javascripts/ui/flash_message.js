@@ -57,7 +57,7 @@ protonet.ui.FlashMessage = {
       if (protonet.utils.isWindowFocused() || type !== "error") {
         this.timeout = setTimeout(this.hide.bind(this), this.TIMEOUT);
       } else {
-        $(window).one("focus", function() {
+        $window.one("focus", function() {
           this.timeout = setTimeout(this.hide.bind(this), this.TIMEOUT);
         }.bind(this));
       }

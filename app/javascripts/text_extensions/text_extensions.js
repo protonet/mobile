@@ -20,8 +20,26 @@
         return;
       }
       
-      protonet.text_extensions.render(meepData.text_extension).insertBefore($meepElement.find(".author"));
-    });
+      _render($meepElement, meepData);
+    })
+    .on("text_extension.rerender", _reRender);
+  
+  function _render($meepElement, meepData) {
+    var textExtension = protonet.text_extensions.utils.insertBaseUrl(meepData.text_extension),
+        text          = $.trim(meepData.message),
+        $article      = $meepElement.find("article:last"),
+        $author       = $meepElement.find(".author");
+    
+    protonet.text_extensions.render(textExtension).insertBefore($author);
+    if (text === textExtension.url || ("http://" + text) === textExtension.url) {
+      $article.addClass("empty").empty();
+    }
+  }
+  
+  function _reRender($meepElement, meepData) {
+    $meepElement.find(".text-extension-results").remove();
+    _render($meepElement, meepData);
+  }
   
   function _renderQueue(channelId) {
     queue = $.map(queue, function(meep) {
@@ -29,7 +47,7 @@
         return meep;
       }
       
-      protonet.text_extensions.render(meep.data.text_extension).insertBefore(meep.$element.find(".author"));
+      _render(meep.$element, meep.data);
       return null; // null tells $.map to remove it from the newly created array
     });
   }

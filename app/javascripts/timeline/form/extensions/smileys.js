@@ -1,6 +1,5 @@
 //= require "../../../ui/inline_autocompleter.js"
 //= require "../../../utils/emojify.js"
-//= require "../../../ui/context_menu.js"
 
 /**
  * Auto completion for smileys and dropdown in UI

@@ -135,7 +135,7 @@ class NodeConnection < FlashConnection
         Meep.create(:user_id => -1,
           :author => json['author'],
           :message => json['message'],
-          :text_extension => json['text_extension'] && json['text_extension'].to_json,
+          :text_extension => json['text_extension'],
           :node_id => @node.id,
           :channel_id => channel.id,
           :remote_user_id => user_id,

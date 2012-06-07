@@ -16,7 +16,7 @@ Feature: Getting Started
     # step 1: change password
     Then I follow the getting started "change password" link
     Then I should see the modal window
-    Then I should see "@admin" within ".users-page h2"
+    Then I should see "admin" within ".users-page h2"
     And I fill in "current_password" with "admin" within "form[data-cucumber='change-password']"
     And I fill in "password" with "12345" within "form[data-cucumber='change-password']"
     And I fill in "password_confirmation" with "12345" within "form[data-cucumber='change-password']"
@@ -36,10 +36,10 @@ Feature: Getting Started
     Then I follow the getting started "create channel" link
     Then I should see the modal window
     Then I should see "Create new" within ".channels-page h2"
-    And I fill in "channel_name" with "music" within ".channels-page"
+    And I fill in "channel_name" with "Music" within ".channels-page"
     And I press "Create"
     Then I should see "Successfully created" within ".flash-message"
-    And I should see "@music" within ".channels-page h2"
+    And I should see "Music" within ".channels-page h2"
     Then I close the modal window
     And I should not see the modal window
     Then I should see "Music" in the channel selector
@@ -84,6 +84,7 @@ Feature: Getting Started
     # step 2: listen to channel
     Then I follow the getting started "create-channel" link
     Then I should see the modal window
+    Then show me the page
     Then I select the channel "Movies" in the channel list
     Then I should see "Subscribe" within ".channels-page"
     And press "Subscribe" within ".channels-page"

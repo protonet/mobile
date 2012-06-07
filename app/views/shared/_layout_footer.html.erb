@@ -1,4 +1,4 @@
-<!-- TODO: this needs to be done smarter" -->
+<%# TODO: this needs to be done smarter %>
 <script type="protonet/template" id="meep-template">
   <%= render :partial => 'meeps/meep' %>
 </script>
@@ -32,6 +32,15 @@
 <script type="protonet/template" id="admin-flag-template">
   <%= render :partial => 'users/admin_flag' %>
 </script>
+<script type="protonet/template" id="confirm-template">
+  <%= render :partial => 'shared/confirm' %>
+</script>
+<script type="protonet/template" id="file-queue-template">
+  <%= render :partial => 'files/queue' %>
+</script>
+<script type="protonet/template" id="file-queue-item-template">
+  <%= render :partial => 'files/queue_item' %>
+</script>
 <style type="protonet/template" id="search-page-template">
   <section class="subpage search-page">
     <%= render :template => 'search/index' %>
@@ -39,6 +48,6 @@
   </section>
 </style>
 
-<%= sprockets_include_tag(:default) %>
+<%= render :partial => 'shared/default_javascript' %>
 <%= sprockets_include_tag(controller_name.to_sym) rescue nil %>
 <%= raw("<script>#{SystemPreferences.custom_javascript}</script>") if SystemPreferences.custom_javascript %>

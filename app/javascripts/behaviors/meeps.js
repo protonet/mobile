@@ -40,7 +40,7 @@ $.behaviors({
     $subMeepParagaphs.each(function(i, subMeepParagaph) {
       var $subMeepParagaph  = $(subMeepParagaph),
           meepId            = $subMeepParagaph.data("meep").id,
-          $actionLinks      = new protonet.utils.Template("meep-actions-template", { id: meepId }).toElement();
+          $actionLinks      = new protonet.utils.Template("meep-actions-template").to$();
       $actionLinks.bind("beforeactivate.meep_focus mousedown.meep_focus", false).appendTo($subMeepParagaph);
     });
     
@@ -91,10 +91,10 @@ $.behaviors({
         url:     instance.getUrl(),
         type:    "delete",
         success: function() {
-          protonet.trigger("flash_message.notice", protonet.t("MEEP_DELETED"));
+          protonet.trigger("flash_message.notice", protonet.t("MEEP_DELETION_SUCCESS"));
         },
         error: function() {
-          protonet.trigger("flash_message.error", protonet.t("MEEP_COULDNT_BE_DELETED"));
+          protonet.trigger("flash_message.error", protonet.t("MEEP_DELETION_ERROR"));
         }
       });
       close();

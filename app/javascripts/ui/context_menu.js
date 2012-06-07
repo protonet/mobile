@@ -48,7 +48,6 @@ protonet.ui.ContextMenu.prototype = {
   
   observe: function() {
     var root    = $("html"),
-        $window = $(window),
         close   = function() {
           this.$target.removeClass("context-menu-opened");
           this.list.hide().undelegate("li", "click.context_menu");
@@ -61,7 +60,6 @@ protonet.ui.ContextMenu.prototype = {
       this.create();
       
       var $target = this.$target = $(event.currentTarget);
-      
       $(".context-menu-opened").removeClass("context-menu-opened");
       $target.addClass("context-menu-opened");
       

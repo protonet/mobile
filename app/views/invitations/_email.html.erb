@@ -15,7 +15,7 @@
   <p>Once you've signed in you are already subscribed to these channels:</p>
   <ul>
     <%- @invitation.channels.each do |channel| %>
-      <li><%= channel.name %></li>
+      <li><%= channel.display_name %></li>
     <%- end %>
   </ul>
   <p>Upload an avatar and start collaborating.</p>

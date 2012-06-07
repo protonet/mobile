@@ -68,12 +68,7 @@
     renderTab: function($super, container) {
       $super(container);
       
-      var user = protonet.user.getUser(this.partner) || {};
       this.link.addClass("rendezvous");
-      
-      if (user.isOnline) {
-        this.link.addClass("online");
-      }
       
       this.hideLink = $("<span>", {
         "class":  "hide-link",
@@ -88,6 +83,14 @@
       if (!isActive(this.data.id) && !hasUnreadMeeps) {
         this.tab.hide();
       }
+      
+      protonet.data.User.get(this.partner, function(user) {
+        this.link.text(user.name);
+        
+        if (user.isOnline) {
+          this.link.addClass("online");
+        }
+      }.bind(this));
       
       return this;
     },
@@ -112,14 +115,10 @@
           }
         }.bind(this))
         
-        .on("user.came_online", function(userData) {
-          if (userData.id === this.partner) {
+        .on("user.came_online user.goes_offline users.update_status", function() {
+          if (protonet.data.User.isOnline(this.partner)) {
             this.link.addClass("online");
-          }
-        }.bind(this))
-        
-        .on("user.goes_offline", function(userData) {
-          if (userData.id === this.partner) {
+          } else {
             this.link.removeClass("online").removeClass("typing");
           }
         }.bind(this))
@@ -134,15 +133,6 @@
           if (data.user_id === this.partner) {
             this.link.removeClass("typing");
           }
-        }.bind(this))
-        
-        .on("users.update_status", function(data) {
-          var onlineUsers = data.online_users;
-          if (onlineUsers[this.partner]) {
-            this.link.addClass("online");
-          } else {
-            this.link.removeClass("online").removeClass("typing");
-          }
         }.bind(this));
       
       $super();
@@ -154,7 +144,7 @@
       }
       
       var isWindowFocused             = protonet.utils.isWindowFocused(),
-          isAllowedToDoNotifications  = protonet.user.Config.get("reply_notification");
+          isAllowedToDoNotifications  = protonet.data.User.getPreference("reply_notification");
       
       if (!isWindowFocused && isAllowedToDoNotifications) {
         new protonet.ui.Notification({

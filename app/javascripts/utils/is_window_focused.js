@@ -7,10 +7,10 @@ protonet.utils.isWindowFocused = (function() {
    */
   var focused = $.isFunction(document.hasFocus) ? document.hasFocus() : true;
   
-  $(window).blur(function() {
+  $window.blur(function() {
     focused = false;
   });
-  $(window).focus(function() {
+  $window.focus(function() {
     focused = true;
   });
   

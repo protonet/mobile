@@ -19,7 +19,7 @@ protonet.text_extensions.render.flash = (function() {
         closeLink;
     
     anchor.mousedown(false).bind("click", function(event) {
-      if (!protonet.user.Browser.HAS_FLASH(8)) {
+      if (!protonet.browser.HAS_FLASH(8)) {
         return;
       }
       

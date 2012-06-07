@@ -1,4 +1,4 @@
-//= require "../../data/youtube.js"
+//= require "../../data/ext/youtube.js"
 //= require "../../utils/format_seconds.js"
 
 /**

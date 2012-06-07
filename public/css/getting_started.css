@@ -1,93 +1,78 @@
 .getting-started {
-  background: #487bff;
-  margin: 0 -30px 20px -30px;
-  padding: 20px 10px 22px;
-  position: relative;
+  font-family: Schoolbell, "Comic Sans MS";
+  background: -moz-linear-gradient(#FE6, #F5DA41, #F6EF97);
+  background: -webkit-linear-gradient(#FE6, #F5DA41, #F6EF97);
+  background: linear-gradient(#FE6, #F5DA41, #F6EF97);
+  margin-top: 20px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5), inset 0 0 1px rgba(255, 255, 255, .8), inset 0 6px 6px rgba(0, 0, 0, .1);
+  padding: 15px 15px 15px 18px;
+  -webkit-transform: rotate(1deg) translate3d(0, 0, 0);
+  -moz-transform: rotate(1deg) translate3d(0, 0, 0);
+  transform: rotate(1deg) translate3d(0, 0, 0);
+  margin-left: -3px;
+  text-shadow: 0 1px 1px #fff;
+  margin-bottom: 24px;
+  overflow: hidden;
 }
 
 .getting-started h4 {
-  text-transform: uppercase;
-  font-family: protonet, Verdana, sans-serif;
-  font-size: 26px;
-  line-height: 1.2;
-  color: #fff;
-  font-weight: normal;
+  position: relative;
+  font-size: 20px;
+  padding-left: 38px;
+  line-height: 1.1;
   margin-bottom: 20px;
 }
 
-.getting-started-close-link {
-  color: #fff;
-  font-size: 18px;
-  font-weight: bold;
-  width: 18px;
-  height: 18px;
+.getting-started h4 img {
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  outline: 3px solid rgba(255, 255, 255, 0.8);
   position: absolute;
-  text-align: center;
-  line-height: 18px;
-  -moz-border-radius: 40px;
-  -webkit-border-radius: 40px;
-  border-radius: 40px;
+  left: -3px;
+  top: 50%;
+  margin-top: -14px;
+  -webkit-transform: rotate(-3deg) translate3d(0, 0, 0);
+  -moz-transform: rotate(-3deg) translate3d(0, 0, 0);
+  transform: rotate(-3deg) translate3d(0, 0, 0);
+}
+
+.getting-started-close-link {
+  font-size: 22px;
+  font-weight: bold;
+  position: absolute;
   text-decoration: none;
-  right: 6px;
-  top: 6px;
+  right: 8px;
+  top: 7px;
 }
 
 .getting-started-close-link:hover {
   color: #000;
 }
 
-.getting-started ol {
-  counter-reset: li;
-}
-
 .getting-started li {
   margin-top: 14px;
+  font-size: 15px;
+  line-height: 1.4;
   position: relative;
-  padding-left: 30px;
-  color: #fff;
+}
+
+.getting-started li.done {
+  color: #000;
+  text-decoration: line-through;
 }
 
 .getting-started li a {
   text-decoration: none;
-  color: #fff;
-}
-
-.getting-started li:before {
-  font-family: Arial, sans-serif;
-  position: absolute;
-  left: 0;
-  top: -2px;
-  content: counter(li);
-  counter-increment: li;
-  font-size: 16px;
-  background: #3962cc;
-  color: #fff;
-  font-weight: bold;
-  line-height: 21px;
-  width: 21px;
-  height: 21px;
-  text-align: center;
-  -moz-border-radius: 40px;
-  -webkit-border-radius: 40px;
-  border-radius: 40px;
-}
-
-.getting-started li.done:before {
-  content: "";
-  background: #fff url(/img/icn_check_mark.png) no-repeat center center !important;
-}
-
-.getting-started li:hover:before {
-  background: #0e1833;
-}
-
-.getting-started strong {
-  display: block;
-  font-size: 13px;
+  color: #333;
 }
 
 .getting-started p {
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.5;
-  color: #eee;
+  color: #555;
+}
+
+.getting-started .logout-link {
+  color: #333;
+  float: right;
+  text-decoration: none;
 }

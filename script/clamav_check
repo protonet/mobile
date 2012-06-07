@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 
-require 'mysql'
+require 'mysql2'
 require 'uri'
 require 'yaml'
 
-# scan every 4 days
-SCAN_INTERVAL   = 4 * 24 * 60 * 60
+# scan every 7 days
+SCAN_INTERVAL   = 7 * 24 * 60 * 60
 RAILS_ROOT      = "/home/protonet/dashboard/current"
 DB_CONFIG_FILE  = "/home/protonet/dashboard/current/config/database.yml"
 FILES_DIR       = "/home/protonet/"

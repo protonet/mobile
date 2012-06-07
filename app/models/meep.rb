@@ -23,14 +23,23 @@ class Meep < ActiveRecord::Base
   
   before_create :set_avatar
   before_create :set_author
+  before_create :parse_text_extension
   after_create :send_create_to_queue
   after_destroy :send_destroy_to_queue
   
-  def self.prepare_for_frontend(meeps, additional_attributes = {})
+  def self.prepare_many_for_frontend(meeps, additional_attributes = {})
     meeps.map do |m|
-      m.text_extension = JSON.parse(m.text_extension) rescue nil
-      m.attributes.merge(additional_attributes)
+      self.prepare_for_frontend(m)
     end
+  end
+  
+  def self.prepare_for_frontend(meep, additional_attributes = {})
+    begin
+      meep.text_extension = meep.text_extension.is_a?(Hash) ? meep.text_extension : JSON.parse(meep.text_extension)
+    rescue
+      nil
+    end
+    meep.attributes.merge(additional_attributes)
   end
   
   def self.valid_attributes
@@ -127,6 +136,12 @@ class Meep < ActiveRecord::Base
   def set_author
     if self.author.blank? 
       self.author = user.display_name
+    end
+  end
+  
+  def parse_text_extension
+    if self.text_extension.is_a?(Hash)
+      self.text_extension = self.text_extension.to_json
     end
   end
   

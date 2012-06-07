@@ -35,6 +35,7 @@ gem "ruby-ifconfig", :git => 'git://github.com/dudemeister/ruby-ifconfig.git'
 gem 'jquery-rails'
 gem 'protolink', :git => "git://github.com/protonet/protolink.git"
 gem 'whenever', :require => false
+gem 'xattr', :git => "git://github.com/protonet/xattr.git"
 
 group :development do
   gem 'foreman'

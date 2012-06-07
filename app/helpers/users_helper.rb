@@ -2,6 +2,11 @@ module UsersHelper
   def user_flags(user)
     render(:partial => 'users/admin_flag') if user.admin?
   end
+  
+  def user_files_path(user)
+    files_path(:path => "/users/#{user.id}/")
+  end
+  
   #
   # Use this to wrap view elements that the user can't access.
   # !! Note: this is an *interface*, not *security* feature !!

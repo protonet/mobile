@@ -1,7 +1,5 @@
 //= require "../behaviors/meeps.js"
 //= require "../utils/auto_link.js"
-//= require "../utils/auto_link_file_paths.js"
-//= require "../utils/escape_html.js"
 //= require "../utils/highlight_keyword.js"
 //= require "../utils/smilify.js"
 //= require "../utils/emojify.js"
@@ -12,9 +10,7 @@
 //= require "../utils/highlight_channel_replies.js"
 //= require "../utils/highlight_user_replies.js"
 //= require "../utils/parse_query_string.js"
-//= require "../utils/get_channel_name.js"
-//= require "../media/proxy.js"
-//= require "../ui/pretty_date.js"
+//= require "../utils/deep_equal.js"
 
 /**
  * @example
@@ -30,7 +26,7 @@
  *
  *    // merge with last meep and post
  *    var meep = $("#meeps li:first");
- *    new protonet.timeline.Meep({ message: "foo", author: "christopher.blum"}).mergeWith(meep).post(callback);
+ *    new protonet.timeline.Meep({ message: "foo", author: "christopher.blum" }).mergeWith(meep).post(callback);
  *
  *    // render meep and highlight the word "foo" in the meep message as well as in the text extension
  *    // please note that the highlighting of keywords only works after the rendering
@@ -46,9 +42,28 @@
  */
 (function(protonet) {
   
-  var meepDataCache     = {},
-      defaultAvatarSize = { width: 36, height: 36 },
+  var defaultAvatarSize = { width: 36, height: 36 },
+      responders        = {},
+      responderId       = Math.round(Math.random() * 999),
       POST_URL          = "/meeps";
+  
+  function postMeep(data, callback) {
+    var seq = ++responderId;
+    responders[seq] = callback;
+    protonet.trigger("socket.send", {
+      operation:  "meep.create",
+      seq:        seq,
+      payload:    data
+    });
+  }
+  
+  protonet.bind("meep.created", function(data) {
+    var responder = responders[data.seq];
+    if (responder) {
+      responder(data.status, data.result, data.error);
+      delete responders[responderId];
+    }
+  });
   
   protonet.timeline.Meep = Class.create({
     initialize: function(dataOrForm) {
@@ -62,15 +77,15 @@
           this.data.user_id       = this.data.remote_user_id;
         }
       }
-
-      meepDataCache[this.data.id] = this.data;
+      this.userReplies = this.channelReplies = [];
     },
 
     _parseForm: function(form) {
-      this.queryString = form.serialize();
-      var data = protonet.utils.parseQueryString(this.queryString).meep;
+      var data = protonet.utils.parseQueryString(form.serialize()).meep;
       return $.extend(data, {
+        channel_id:     +data.channel_id,
         user_id:        protonet.config.user_id,
+        avatar:         protonet.data.User.getAvatar(protonet.config.user_id),
         created_at:     new Date().toString(),
         text_extension: data.text_extension && JSON.parse(data.text_extension)
       });
@@ -88,15 +103,14 @@
         protonet.utils.emojify,
         protonet.utils.highlightChannelReplies,
         protonet.utils.highlightUserReplies,
-        protonet.utils.autoLink,
-        protonet.utils.autoLinkFilePaths
+        protonet.utils.autoLink
       ], function(i, method) {
         message = method(message);
       });
-
+      
       this.userReplies = protonet.utils.highlightUserReplies.result;
       this.channelReplies = protonet.utils.highlightChannelReplies.result;
-
+      
       return message;
     },
 
@@ -130,7 +144,7 @@
     },
 
     getUrl: function() {
-      return protonet.timeline.Meep.getUrl(this.data.id);
+      return protonet.data.Meep.getUrl(this.data.id);
     },
 
     getAvatar: function(size) {
@@ -152,18 +166,21 @@
     _render: function(template, container) {
       var replyFromChannelTemplate, postedInChannelTemplate, templateData,
           data = { meep: this.data, instance: this };
-
+      
       if (this.data.reply_from) {
-        replyFromChannelTemplate = new protonet.utils.Template("reply-from-channel-template", {
-          channel_id:   this.data.reply_from,
-          channel_name: protonet.utils.getChannelName(this.data.reply_from)
-        }).toString();
+        var channelName = protonet.data.Channel.getName(this.data.reply_from);
+        if (channelName) {
+          replyFromChannelTemplate = new protonet.utils.Template("reply-from-channel-template", {
+            channel_id:   this.data.reply_from,
+            channel_name: channelName
+          }).toString();
+        }
       }
 
       if (this.data.posted_in) {
         postedInChannelTemplate = new protonet.utils.Template("posted-in-channel-template", {
           channel_id:   this.data.posted_in,
-          channel_name: protonet.utils.getChannelName(this.data.posted_in) || protonet.t("UNKNOWN_CHANNEL")
+          channel_name: protonet.data.Channel.getName(this.data.posted_in) || protonet.t("UNKNOWN_CHANNEL")
         }).toString();
       }
       templateData = $.extend({}, this.data, {
@@ -174,11 +191,15 @@
       });
 
       this.element = new protonet.utils.Template(template, templateData)
-        .toElement()
+        .to$()
         .prependTo(container);
 
       this.article = this.element.is("article") ? this.element : this.element.find("article");
       this.article.add(this.element).data(data);
+
+      if (!this.data.message) {
+        this.article.addClass("empty");
+      }
 
       protonet.trigger("meep.rendered", this.element, this.data, this);
     },
@@ -188,55 +209,52 @@
      */
     post: function(onSuccess, onFailure) {
       this.setStatus(protonet.t("MEEP_SENDING"));
-
-      this.queryString = this.queryString || $.param({
-        meep: $.extend({}, this.data, {
-          text_extension: this.data.text_extension && JSON.stringify(this.data.text_extension)
-        })
-      });
-
-      var ajaxOptions = {
-        url:        POST_URL,
-        type:       "POST",
-        data:       this.queryString,
-        success:    function(response, text, xhr) {
-          /**
-           * "I'm a little more country than that ..."
-           * When the server is offline jquery still assumes
-           * that the request succeeded
-           * Such requests can be detected by manually checking
-           * the http status
-           */
-          if (!xhr.status) {
-            ajaxOptions.error();
-            return;
-          }
-
+      
+      if (!protonet.dispatcher.connected) {
+        this.showError(protonet.t("MEEP_ERROR_LONG"));
+        return;
+      }
+      
+      postMeep(this.data, function(status, newData, error) {
+        if (status === "success") {
           this.setStatus(protonet.t("MEEP_SENT"), 1000);
-
-          this.data.id = +response;
-
+          
+          if (newData.text_extension && !protonet.utils.deepEqual(newData.text_extension, this.data.text_extension)) {
+            protonet.trigger("text_extension.rerender", this.element, newData);
+          }
+          
+          $.extend(this.data, newData);
+          
           (onSuccess || $.noop)();
+          
           protonet.trigger("meep.sent", this.data, this.element, this);
-        }.bind(this),
-        error:      function() {
-          protonet.trigger("flash_message.error", protonet.t("MEEP_ERROR_LONG"));
-
-          var element = this.merged ? this.article : this.element;
-          element.addClass("error").delay(5000).fadeOut();
-
-          this.setStatus(protonet.t("MEEP_ERROR"), 5000);
-
-          this.error = true;
-
+        } else {
+          var errorMessage;
+          if (error === "ENOENT") {
+            errorMessage = protonet.t("MEEP_FILE_ERROR");
+          } else {
+            errorMessage = protonet.t("MEEP_ERROR_LONG");
+          }
+          this.showError(errorMessage);
+          
           (onFailure || $.noop)();
-          protonet.trigger("meep.error", this.element, this.data, this);
-        }.bind(this)
-      };
-
-      $.ajax(ajaxOptions);
-
+        }
+      }.bind(this));
+      
       return this;
+    },
+    
+    showError: function(message) {
+      var element = this.merged ? this.article : this.element;
+      element.addClass("error").delay(5000).fadeOut();
+
+      this.setStatus(protonet.t("MEEP_ERROR"), 5000);
+
+      this.error = true;
+
+      protonet
+        .trigger("flash_message.error", message)
+        .trigger("meep.error", this.element, this.data, this);
     },
 
     setStatus: function(html, fadeOutAfter) {
@@ -247,7 +265,7 @@
 
       if (!this.status) {
         this.status = new protonet.utils.Template("meep-status-template")
-          .toElement()
+          .to$()
           .appendTo(this.element.find(".author"));
       }
 
@@ -261,32 +279,4 @@
     }
   });
 
-  /**
-   * Static method for loading a meep
-   */
-  protonet.timeline.Meep.get = function(id, callback) {
-    id = +id;
-    if (meepDataCache[id]) {
-      return callback(meepDataCache[id]);
-    } else {
-      $.ajax({
-        dataType: "json",
-        url:      "/meeps/" + id,
-        success:  function(data) {
-          meepDataCache[id] = data;
-          callback(data);
-        },
-        error:    function() {
-          protonet.trigger("flash_message.error", protonet.t("LOADING_MEEP_ERROR"));
-        }
-      });
-    }
-  };
-  
-  /**
-   * Static method for getting the url to a meep
-   */
-  protonet.timeline.Meep.getUrl = function(id) {
-    return protonet.config.base_url + "/meeps/" + id;
-  };
 })(protonet);

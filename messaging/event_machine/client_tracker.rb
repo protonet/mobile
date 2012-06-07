@@ -1,7 +1,9 @@
+require File.join(Rails.root, 'lib', 'rpc', 'handler')
+
 class ClientTracker
   include Rabbit
   attr_accessor :online_users, :channel_users, :remote_users, :remote_channel_users,
-                :global_online_users, :global_channel_users, :open_sockets
+                :global_online_users, :global_channel_users, :open_sockets, :rpc
   
   def initialize
     @online_users  = {}
@@ -11,6 +13,8 @@ class ClientTracker
     @remote_channel_users = {}
     
     @open_sockets  = []
+    
+    @rpc = Rpc::Handler.new
   end
   
   def add_conn conn
@@ -22,13 +26,13 @@ class ClientTracker
   end
   
   def add_user user, conn
-    @online_users[user.id] ||= {}
-    @online_users[user.id]['id']            ||= user.id
-    @online_users[user.id]['name']          ||= user.display_name
-    @online_users[user.id]['avatar']        ||= user.avatar.url
-    @online_users[user.id]['node_uuid']     ||= Node.local.uuid
-    @online_users[user.id]['connections']   ||= []
-    @online_users[user.id]['connections'] << [conn.socket_id, conn.type]
+    @online_users[user.id]                ||= {}
+    @online_users[user.id]['id']          ||= user.id
+    @online_users[user.id]['name']        ||= user.display_name
+    @online_users[user.id]['avatar']      ||= user.avatar.url
+    @online_users[user.id]['node_uuid']   ||= Node.local.uuid
+    @online_users[user.id]['connections'] ||= []
+    @online_users[user.id]['connections'] <<  [conn.socket_id, conn.type]
   end
   
   def remove_user user, conn
@@ -59,6 +63,7 @@ class ClientTracker
       generated_user_id = "#{node_id}_#{id}"
       user_data = online_userz[id]
       user_data["id"] = generated_user_id
+      user_data["avatar"] = user_data["avatar"].sub("/avatars/#{id}/", "/avatars/#{generated_user_id}/")
       @remote_users[generated_user_id] = user_data
       generated_user_id
     end

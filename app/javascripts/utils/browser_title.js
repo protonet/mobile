@@ -8,7 +8,7 @@ protonet.utils.BrowserTitle = (function() {
       prefix                      = "",
       VISIBLE_CHARACTERS_IN_TITLE = 200;
       
-  $(window).focus(_focus);
+  $window.focus(_focus);
   
   function animate(message) {
     if (isAnimating) {

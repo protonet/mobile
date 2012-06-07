@@ -18,8 +18,6 @@
 }
 
 .modal-window .subpage {
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
   box-shadow: none;
   background: transparent;
   height: 100%;
@@ -40,6 +38,10 @@
   font-size: 14px;
   padding: 0 0 5px 0;
   border-bottom: 1px solid #ccc;
+}
+
+.subpage h3:first-child {
+  margin-top: 0;
 }
 
 .subpage h4 {
@@ -200,7 +202,7 @@
 .subpage input[type=password],
 .subpage input[type=url],
 .subpage input[type=email] {
-  height: 24px;
+  height: 26px;
 }
 
 
@@ -260,6 +262,10 @@ h3.belongs-to-list {
   padding-left: 30px;
   padding-right: 5px;
   position: relative;
+}
+
+.list li.hint {
+  padding-left: 6px;
 }
 
 .list li:hover,

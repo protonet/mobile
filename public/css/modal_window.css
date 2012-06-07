@@ -9,6 +9,14 @@
   z-index: 10;
 }
 
+.modal-window-shadow.dragover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.modal-window-shadow.blink {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 .modal-window {
   border-radius: 2px;
   background: #fff;
@@ -16,8 +24,6 @@
   width: 88%;
   border: 2px solid #999\9;
   margin: 0 auto;
-  -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
@@ -39,10 +45,17 @@
   background: #fff url(/img/icn_loading_big.gif) center center no-repeat;
 }
 
-.modal-window > output > img:first-child {
+.modal-window > output > img:first-child,
+.modal-window > output > .img:first-child {
   max-width: 100%;
   display: block;
   margin: 10px auto;
+  
+}
+
+.modal-window > output > .img:first-child {
+  text-align: center;
+  width: 100%;
 }
 
 .modal-window > output > iframe:first-child {

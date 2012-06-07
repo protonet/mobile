@@ -2,14 +2,14 @@
   <%= link_to channel do %>
     <%- if channel.public %>
     <span>
-    	<%= image_tag("/img/channel.png", :alt => channel.display_name, :class => (@subscribed_channels.include?(channel) ? "subscribed" : "")) %>
+      <%= image_tag("/img/channel.png", :alt => channel.display_name, :class => (@subscribed_channels.include?(channel) ? "subscribed" : "")) %>
     </span>
     <%- else %>
     <span>
-    	<%= image_tag("/img/private.png", :alt => channel.display_name, :title => "This channel is private", :"data-hover-hint" => "top", :class => (@subscribed_channels.include?(channel) ? "subscribed" : "")) %>
+      <%= image_tag("/img/private.png", :alt => channel.display_name, :title => "This channel is private", :"data-hover-hint" => "top", :class => (@subscribed_channels.include?(channel) ? "subscribed" : "")) %>
     </span>
     <%- end %>
-    <strong>@<%= channel.display_name %></strong>
+    <strong><%= channel.display_name %></strong>
     <small><%= pluralize(channel.users.registered.size, "subscriber") %></small>
-  <%- end %> 
+  <%- end %>
 </li>

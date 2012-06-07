@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html class="popup">
+  <head>
+    <meta charset="utf-8">
+    <title>protonet - Audio Player</title>
+    <%= stylesheet_link_tag(audio_player_stylesheets, :cache => (configatron.avoid_caching != false)) %>
+  </head>
+  <body>
+    <%= render :partial => 'shared/flash_messages' %>
+    <section class="files-play-page"></section>
+    <%= render :partial => 'shared/default_javascript' %>
+    <script>protonet.config.popup = true;</script>
+    <%= sprockets_include_tag(controller_name.to_sym) %>
+  </body>
+</html>

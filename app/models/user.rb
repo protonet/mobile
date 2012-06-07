@@ -30,11 +30,14 @@ class User < ActiveRecord::Base
   after_create :send_create_notification, :unless => :anonymous?
   after_create :listen_to_channels, :unless => :anonymous?
   after_create :mark_invitation_as_accepted, :if => :invitation_token
+  after_create :create_folder, :if => lambda {|u| !u.stranger? && !u.system? }
   
   after_destroy :move_meeps_to_anonymous
   after_destroy :move_owned_channels_to_anonymous
+  after_destroy :delete_folder
   
   validates_uniqueness_of :email, :if => lambda {|u| !u.stranger?}
+  validates_uniqueness_of :login, :if => lambda {|u| !u.stranger?}
   
   def self.find_for_database_authentication(conditions={})
     where("login = ?", conditions[:login]).limit(1).first ||
@@ -73,6 +76,15 @@ class User < ActiveRecord::Base
         GROUP BY user_id ORDER BY counter DESC, meeps.id DESC LIMIT 20
       ")
     )
+  end
+  
+  def self.prepare_for_frontend(user)
+    {
+      :id             => user.id,
+      :name           => user.display_name,
+      :avatar         => user.avatar.url,
+      :subscriptions  => user.channels.map(&:id)
+    }
   end
   
   # devise 1.2.1 calls this
@@ -135,6 +147,10 @@ class User < ActiveRecord::Base
   def anonymous?
     id == -1
   end
+  
+  def system?
+    id == -1
+  end
 
   def login=(value)
     write_attribute :login, (value ? value.downcase : nil)
@@ -184,11 +200,7 @@ class User < ActiveRecord::Base
   def send_create_notification
     return if stranger?
     
-    publish 'system', ['users', 'new'],
-      :trigger   => 'user.added',
-      :id        => id,
-      :name      => display_name,
-      :avatar    => avatar.url
+    publish 'system', ['users', 'new'], User.prepare_for_frontend(self).merge(:trigger => 'user.added')
   end
 
   def subscribe(channel)
@@ -203,6 +215,16 @@ class User < ActiveRecord::Base
 
   def subscribed?(channel)
     channels.include?(channel)
+  end
+  
+  # channels a user potentially is allowed to see
+  def allowed_channels
+    # admin: return all real channels + verified (don't show the admin rendezvous channel he didn't subscribe to)
+    return Channel.real   | channels.verified  if !stranger? && !invitee?
+    # user: return all public channels + verified
+    #return Channel.public | channels.verified  if !stranger? && !invitee?
+    # invitee & stranger: return all verified channels
+    return channels.verified
   end
 
   def password_required_with_logged_out_user?
@@ -298,12 +320,6 @@ class User < ActiveRecord::Base
     !temporary_identifier.blank?
   end
   
-  def channel_uuid_to_id_mapping
-    mapping = {}
-    channels.each {|c| mapping[c.uuid] = c.id }
-    mapping
-  end
-  
   def pending_channel_verifications
     channs = if admin?
       Channel.local.real
@@ -337,5 +353,12 @@ class User < ActiveRecord::Base
     end
   end
   
+  def create_folder
+    FileUtils.mkdir_p("#{configatron.files_path}/users/#{id}", :mode => 0770)
+  end
+  
+  def delete_folder
+    FileUtils.rm_rf("#{configatron.files_path}/users/#{id}")
+  end
 end
 

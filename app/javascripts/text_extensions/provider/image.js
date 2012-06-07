@@ -1,6 +1,6 @@
 //= require "../../utils/parse_url.js"
+//= require "../../utils/parse_query_string.js"
 //= require "../../utils/escape_for_reg_exp.js"
-//= require "../../media/proxy.js"
 
 /**
  * Image Provider
@@ -9,25 +9,36 @@ protonet.text_extensions.provider.Image = {
   /**
    * TODO: Some wiki pages end with a typical image suffix "File:auto.jpg" (even though they are html pages)
    */
-  REG_EXP: /.{13,}\.(jpe?g|gif|png)(\?.*)*/i,
+  REG_EXP: /.{13,}\.(jpe?g|gif|png|bmp|tiff?|svg|eps|ps|ai)(\?.*)*/i,
   
-  loadData: function(url, onSuccess, onFailure) {
-    // Handle already proxied images
-    url = protonet.media.Proxy.extractOriginalImageUrl(url);
+  supportsMultiple: true,
+  
+  LIMIT: 10,
+  
+  loadData: function(urls, onSuccess, onFailure) {
+    urls = $.makeArray(urls).slice(0, this.LIMIT);
     
-    var testImg       = new Image(),
-        urlParts      = protonet.utils.parseUrl(url),
-        titleAppendix,
-        fileName      = urlParts.filename.replace(/[_-]/g, " ").replace(/\.(jpe?g|gif|png).*/, function(match, $1) {
-          titleAppendix = $1;
-          return "";
-        });
+    // Handle already proxied images
+    urls = $.map(urls, function(url) {
+      return protonet.media.Proxy.extractOriginalImageUrl(url);
+    });
+    
+    var fileNames = $.map(urls, function(url) {
+      var isFile = url.startsWith(protonet.data.File.getDownloadUrl(""));
+      if (isFile) {
+        var queryParams = protonet.utils.parseQueryString(url);
+        return protonet.data.File.getName(queryParams.paths || queryParams.path);
+      } else {
+        return protonet.utils.parseUrl(url).filename.replace(/_/, " ");
+      }
+    });
     
     onSuccess({
-      url:            url,
-      title:          fileName,
-      titleAppendix:  titleAppendix,
-      image:          url
+      url:        urls[0],
+      title:      fileNames.join(", "),
+      imageTitle: fileNames.length > 1 ? fileNames : fileNames[0],
+      imageHref:  urls.length > 1 ? urls : urls[0],
+      image:      urls.length > 1 ? urls : urls[0]
     });
   }
 };

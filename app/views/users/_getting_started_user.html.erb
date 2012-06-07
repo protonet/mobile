@@ -1,10 +1,13 @@
-<div class="getting-started ribbon">
-  <h4>Welcome. Get started!</h4>
+<div class="getting-started widget">
+  <h4>
+    <%= avatar(current_user, :width => 26, :height => 26, :title => "That's you!") %>
+    Welcome, <%= current_user.display_name %>
+  </h4>
   <a class="getting-started-close-link" title="Don't show this again">&times;</a>
   <ol>
     <li class="upload-avatar">
       <%= link_to edit_user_path(:id => current_user.id) do %>
-        <strong>Upload a profile picture</strong>
+        <strong>1. Upload a profile picture</strong>
         <p>Let others know who you are.</p>
       <%- end %>
     </li>
@@ -12,12 +15,12 @@
       <li class="create-channel">
         <%- if Channel.real.size > 1 %>
           <%= link_to channels_path do %>
-            <strong>Subscribe to channels</strong>
-            <p>Channels are like groups/topics. You can create new ones or subscribe to existing ones.</p>
+            <strong>2. Subscribe to channels</strong>
+            <p>Channels are like groups. You can create new ones or subscribe to existing ones.</p>
           <%- end %>
         <%- else %>
           <%= link_to new_channel_path do %>
-            <strong>Create a channel</strong>
+            <strong>2. Create a channel</strong>
             <p>Channels are like groups/topics. You can create new ones or subscribe to existing ones.</p>
           <%- end %>
         <%- end %>
@@ -25,9 +28,10 @@
     <%- end %>
     <li class="write-meep">
       <a>
-        <strong>Write something</strong>
+        <strong><%= current_user.invitee? ? "2" : "3" %>. Write something</strong>
         <p>Start a conversation.</p>
       </a>
     </li>
   </ol>
+  <%= link_to "logout >", destroy_user_session_path, 'data-avoid-ajax' => 1, 'class' => 'logout-link' %>
 </div>

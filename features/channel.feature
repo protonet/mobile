@@ -8,7 +8,7 @@ Feature: Using the protonet channel management
     And I go to the channels page
       Then I should see "Home" in the channel list
       And I select the channel "Home" in the channel list
-      And I should see "@home" in the channel details pane
+      And I should see "Home" in the channel details pane
 
   @javascript
   Scenario: Trying to subscribe to a private channel
@@ -36,8 +36,8 @@ Feature: Using the protonet channel management
           And I am using the first browser
           And I visit "/"
           And I switch to the channel "Privatechannel"
-          Then I should see "1 pending verification"
-          And I follow "1 pending verification"
+          Then I should see "1 user(s) needs to be verified"
+          And I follow "1 user(s) needs to be verified"
             Then I verify the user "batman" for the channel "Privatechannel"
     #batman goes start page checks channel appears
               And I am using the second browser

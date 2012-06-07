@@ -1,13 +1,15 @@
 protonet.dispatcher.provider.FlashSocket = {
   isSupported: function() {
-    return protonet.user.Browser.HAS_FLASH(8);
+    return protonet.browser.HAS_FLASH(8);
   },
   
   initialize: function() {
     // We have to insert the flash outside the body in firefox, otherwise the flash gets reloaded as soon as you
     // change the css overflow property of the body element
     // see https://bugzilla.mozilla.org/show_bug.cgi?id=90268
-    var container   = $("<div>", { id: "socket-container" }).appendTo($.browser.mozilla ? "html" : "body"),
+    // (fixed in firefox 13)
+    var isBuggy     = $.browser.mozilla && !!window.globalStorage,
+        container   = $("<div>", { id: "socket-container" }).appendTo(isBuggy ? "html" : "body"),
         attributes  = { id: "flash-socket" },
         params      = { allowscriptaccess: "sameDomain", wmode: "opaque" };
     

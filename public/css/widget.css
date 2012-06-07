@@ -1,61 +1,60 @@
 .widget {
+  background: #ecf1fe;
+  background: rgba(255, 255, 255, 0.6);
   position: relative;
-  overflow: hidden;
+  z-index: 1;
   margin-bottom: 20px;
-}
-
-.widget:last-child {
-  margin-bottom: 0;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
 }
 
 .widget h3 {
-  color: #fff;
-  font-weight: normal;
-  padding: 0 7px;
-  font-size: 13px;
-  line-height: 27px;
+  padding: 15px 15px 10px 15px;
+  color: #000;
+  font-size: 14px;
 }
 
 .widget h3 a {
   text-decoration: none;
-  color: #fff;
+  color: #000;
 }
 
-.widget output {
+.widget .title,
+.widget .title a {
+  color: #000;
+  display: inline-block;
+}
+
+.widget .count {
   display: inline;
-  color: rgb(255, 255, 255);
-  color: rgba(255, 255, 255, 0.8);
+  font-weight: normal;
+  color: #999;
 }
 
-.widget li > * {
+.widget .widget-list a {
   display: block;
-  color: #333;
+  color: #000;
   overflow: hidden;
-  padding-left: 26px;
-  line-height: 26px;
-  margin: 0 0 1px;
+  padding-left: 38px;
+  line-height: 30px;
   white-space: nowrap;
   text-decoration: none;
 }
 
-.widget li a:hover,
-.widget li a.context-menu-opened,
-.widget li a:focus {
-  background-color: rgba(0, 0, 0, 0.06) !important;
+.widget .widget-list a:hover,
+.widget .widget-list a:focus,
+.widget .widget-list .context-menu-opened {
+  background-color: rgba(0, 0, 0, 0.05) !important;
 }
 
-.widget li.error > * {
-  color: red;
-  opacity: 0.5;
-}
-
-.widget ul {
-  border: 1px #6D95FF solid;
+.widget .widget-list {
+  padding-top: 1px;
+  margin-bottom: 15px;
+  margin-right: 1px;
   overflow-y: auto;
   overflow-x: hidden;
-  height: 170px;
   min-height: 50px;
-  padding: 4px 0 3px;
+  height: 140px;
+  max-height: 400px;
 }
 
 .widget .resize {
@@ -64,25 +63,14 @@
   user-select: none;
   display: block;
   font-size: 7px;
-  line-height: 10px;
-  height: 10px;
+  line-height: 20px;
+  height: 20px;
   text-align: center;
-  background: #f1f1f1;
   cursor: row-resize;
 }
 
 .widget .resize:after {
-  content: ":::::::::::::::::";
-}
-
-.widget.loading:after {
-  position: absolute;
-  top: 28px;
-  left: 0;
-  bottom: 11px;
-  width: 1000px;
-  content: " ";
-  background-color: rgba(255, 255, 255, 0.3);
+  content: "::::::::::::::::::::::::::::::";
 }
 
 .widget .loading-hint {
@@ -90,31 +78,35 @@
 }
 
 .widget.loading .loading-hint {
+  font-weight: normal;
   display: inline;
-  color: rgba(255, 255, 255, 0.3);
-}
-
-/*--------------------------------- NETWORK WIDGET ---------------------------------*/
-#network-widget #network-monitor {
-  width: 216px;
-  height: 170px;
-}
-
-#network-widget h3 a {
-  float: right;
-  color: rgba(255, 255, 255, 0.8);
+  color: #ccc;
+  color: rgba(0, 0, 0, 0.3);
 }
 
 /*--------------------------------- USER WIDGET ---------------------------------*/
+
+#user-widget {
+  margin-top: 147px;
+}
+
+#my-widget + #user-widget {
+  margin-top: 42px;
+}
+
+.getting-started + #user-widget {
+  margin-top: 0;
+}
+
 #user-widget li a {
   color: #999;
   background-image: url(/img/spr_user_status.png);
   background-repeat: no-repeat;
-  background-position: 4px -16px;
+  background-position: 13px -14px;
 }
 
 #user-widget li.online a {
-  background-position: 4px 4px;
+  background-position: 13px 6px;
   color: #000;
 }
 
@@ -127,7 +119,7 @@
 }
 
 #user-widget li.typing a {
-  background-position: 5px -42px;
+  background-position: 14px -40px;
 }
 
 #user-widget li.myself a {
@@ -137,8 +129,8 @@
 #user-widget li img {
   display: none;
   position: absolute;
-  right: 3px;
-  margin-top: 3px;
+  right: 5px;
+  margin-top: 5px;
 }
 
 #user-widget li a:hover img,
@@ -149,190 +141,32 @@
 #user-widget li {
   position: relative;
 }
-#user-widget .verifications{
-  display:none;
+
+#user-widget .verifications {
+  display: none;
 }
-#user-widget .verifications a{
-  display:block;
+
+#user-widget .verifications a {
+  display: block;
   background: #F7F1A8;
   line-height: 30px;
-  font-size: 10px;
+  font-size: 11px;
   text-align: center;
-  margin-top: -1px;
-  color:#000;
-  border:1px #8C8C8C solid;
-  text-decoration:none;
-}
-
-
-/*--------------------------------- FILE WIDGET ---------------------------------*/
-
-#file-widget .nav-bar {
-  display: none;
-  color: #999;
-  font-size: 10px;
-  position: relative;
-  border: 1px #6D95FF solid;
-  border-bottom: 1px solid #ccc;
-  margin-bottom: -1px;
-  padding: 0 17px;
-}
-
-#file-widget .address-bar {
-  display: block;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-#file-widget .address-bar > * {
-  display: inline-block;
-  padding: 4px 1px;
   color: #333;
-  text-decoration: none;
-}
-
-#file-widget .address-bar > *:first-child {
-  padding-left: 4px;
-}
-
-#file-widget .address-bar > *:last-child {
-  padding-right: 4px;
-}
-
-#file-widget .address-bar a:hover {
-  color: #487bff;
-}
-
-#file-widget [rel=forward],
-#file-widget [rel=backward] {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
-  position: absolute;
-  top: 0;
-  display: inline-block;
-  cursor: default;
-  color: #999;
-  text-decoration: none;
-  padding: 4px 1px;
-}
-
-#file-widget [rel=backward] {
-  left: 0;
-}
-
-#file-widget [rel=forward] {
-  right: 0;
-}
-
-#file-widget [rel=backward]:before {
-  padding-left: 5px;
-  content: "\25C0";
-}
-
-#file-widget [rel=forward]:before {
-  padding-right: 5px;
-  content: "\25B6";
-}
-
-#file-widget .enabled[rel=forward],
-#file-widget .enabled[rel=backward] {
-  cursor: pointer;
-  color: #000;
-}
-
-#file-widget .enabled[rel=forward]:hover,
-#file-widget .enabled[rel=backward]:hover {
-  color: #487bff;
-}
-
-#file-widget li {
-  background-image: url(../img/spr_file_icons.png);
-  background-repeat: no-repeat;
-  background-position: 7px -20px;
-}
-
-#file-widget li.directory {
-  background-position: 7px 7px;
-}
-
-#file-widget li.disabled {
-  opacity: 0.5;
-}
-
-#file-widget li.disabled a {
-  cursor: default;
-}
-
-#file-widget li.directory input {
-  border: 1px solid #ccc;
-  display: block;
-  background: transparent;
-  line-height: inherit;
-  height: 23px;
-  width: 100%;
-  padding-left: 25px;
-}
-
-#file-widget .options {
-  position: relative;
-  margin-bottom: 1px;
-}
-
-#file-widget .add-objects {
-  display: block;
-  color: #fff;
-  text-decoration: none;
-  text-align: center;
-  line-height: 30px;
-  background: #999;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-#file-widget .add-objects:focus,
-#file-widget .add-objects:hover {
-  background: #666;
-}
-
-/* When browser supports drag/drop we show a an drop area */
-#file-widget.dragdrop .add-objects {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 16px;
-}
-
-#file-widget #drop-area {
-  display: none;
-  background: #aaa url(/img/bg_scanlines.png);
-  line-height: 30px;
-  font-size: 10px;
-  text-align: center;
-  color: #fff;
-  margin-top: -1px;
-}
-
-#file-widget.dragdrop #drop-area {
-  display: block;
-}
-
-#file-widget.dragdrop.dragenter #drop-area {
-  background: rgb(255, 127, 49) url(../img/bg_scanlines.png);
-  background: url(../img/bg_scanlines.png),
-              -moz-linear-gradient(top, rgba(255, 127, 49, 1), rgba(255, 127, 49, 0.7));
-  background: url(../img/bg_scanlines.png),
-              -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 127, 49, 1)), to(rgba(255, 127, 49, 0.7)));
 }
 
 /*--------------------------------- MY WIDGET ---------------------------------*/
 #my-widget {
-  padding: 2px 0 5px;
-  border-bottom: 1px solid #ccc;
-  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  margin-top: 20px;
+  height: 85px;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 15px 15px 15px 80px;
+  border-bottom: 1px solid #8C8C8C;
   position: relative;
-  padding-left: 45px;
-  height: 36px;
 }
 
 #my-widget h4 {
@@ -344,18 +178,19 @@
 }
 
 #my-widget a {
-  color: #666;
+  color: #000;
   text-decoration: none;
-}
-
-#my-widget a:hover {
-  color: #333;
 }
 
 #my-widget .avatar {
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 15px;
+  top: 15px;
+  border: 1px solid #999;
+}
+
+#my-widget .avatar img {
+  float: left;
 }
 
 #my-widget nav > ul {
@@ -395,22 +230,7 @@
 }
 
 #my-widget .settings:hover {
-  background: #eee;
-}
-
-#my-widget .settings:hover:after {
-  border-top: 4px solid #333;
-}
-
-#my-widget .settings:after {
-  content: "";
-  position: absolute;
-  right: 5px;
-  top: 7px;
-  width: 0;
-  height: 0;
-  border: 4px solid transparent;
-  border-top: 4px solid #666;
+  background: rgba(0, 0, 0, 0.1);
 }
 
 #my-widget .settings ul {
@@ -419,7 +239,7 @@
   left: 0;
   z-index: 1;
   background: #fff;
-  min-width: 140px;
+  min-width: 150px;
   border: 1px solid #ccc;
 }
 
@@ -444,4 +264,95 @@
 
 #my-widget .settings .off {
   color: #e75c79;
+}
+
+/*--------------------------------- FILES WIDGET ---------------------------------*/
+#file-widget .widget-list {
+  height: auto;
+}
+
+#file-widget li {
+  padding: 4px 8px 4px 12px;
+  cursor: pointer;
+}
+
+#file-widget li a:hover {
+  background-color: transparent !important;
+}
+
+#file-widget li:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+#file-widget li a {
+  overflow: hidden;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+}
+
+#file-widget li .file-modified {
+  font-size: 10px;
+  color: #999;
+}
+
+.widget-list-container {
+  position: relative;
+}
+
+#file-widget-drop-area {
+  cursor: pointer;
+  opacity: 0.2;
+  filter: Alpha(Opacity=20);
+  position: absolute;
+  bottom: 0;
+  right: 16px;
+  left: 15px;
+  top: 0;
+  background: #ddd;
+  color: #000;
+}
+
+.supports-drag-and-drop #file-widget-drop-area {
+  border: 3px dashed #666;
+}
+
+.loading #file-widget-drop-area {
+  display: none;
+}
+
+#file-widget-drop-area span {
+  position: absolute;
+  text-decoration: none;
+  color: #000;
+  top: 50%;
+  line-height: 24px;
+  margin-top: -12px;
+  text-align: center;
+  text-decoration: underline;
+  left: 5px;
+  right: 5px;
+}
+
+.supports-drag-and-drop #file-widget-drop-area span {
+  text-decoration: none;
+}
+
+.dragover-possible #file-widget-drop-area,
+.supports-drag-and-drop #file-widget-drop-area:hover {
+  border: 3px dashed #333;
+  background: #ccc;
+}
+
+#file-widget.dragover-possible {
+  background: #ebfaeb;
+}
+
+#file-widget.dragover {
+  background: #d9f8d9;
+}
+
+#file-widget .show-all {
+  display: none;
+  color: #999;
+  margin: -5px 0 5px 15px;
 }

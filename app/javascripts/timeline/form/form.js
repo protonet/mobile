@@ -1,6 +1,3 @@
-//= require "../../utils/url_behaviors.js"
-//= require "../../utils/get_channel_uuid.js"
-
 /**
  * @events
  *    form.submitted          - Indicates that the input has been submitted
@@ -14,7 +11,6 @@ protonet.timeline.Form = {
     this.input              = $("#message");
     this.channelIdInput     = $("#meep_channel_id");
     this.socketIdInput      = $("#meep_socket_id");
-    this.$window            = $(window);
     this.typing             = false;
     
     this._initExtensions();
@@ -60,7 +56,7 @@ protonet.timeline.Form = {
         // When loading the page a "channel.change" event is initially fired
         // This causes problems when the user already focused the login form and started to type
         // in his password. Uygar from XING even almost accidentally submitted her password
-        if (!preventInitialFocus && !protonet.user.Browser.IS_TOUCH_DEVICE()) {
+        if (!preventInitialFocus && !protonet.browser.IS_TOUCH_DEVICE()) {
           this.input.focus();
         }
         
@@ -86,19 +82,6 @@ protonet.timeline.Form = {
         }
       }.bind(this))
       
-      /**
-       * Submit form with custom message or textExtension
-       */
-      .on("form.custom_submit", function(message, textExtension) {
-        if (message) {
-          this.input.focus().val(message);
-        }
-        if (textExtension) {
-          this.textExtension.setInput(JSON.stringify(textExtension));
-        }
-        this.form.submit();
-      }.bind(this))
-      
       .on("form.fill", function(message, mark) {
         var value = this.input.focus().val();
         // add a white space before message if neccessary
@@ -111,6 +94,14 @@ protonet.timeline.Form = {
         // Invoke text extension checker
         this.input.trigger("paste");
       }.bind(this))
+      
+      .on("form.attach_files", function(paths) {
+        paths = $.makeArray(paths);
+        paths = $.map(paths, function(path) {
+          return protonet.data.File.getUrl(path);
+        });
+        protonet.trigger("text_extension_input.select", paths).trigger("form.focus");
+      })
       
       /**
        * Focus the input
@@ -127,6 +118,7 @@ protonet.timeline.Form = {
             inputElement  = this.input[0],
             // TODO: This doesn't work as expected in IE8 + 9!
             // selectionEnd is always 0
+            // WHERE IS YOUR GOD NOW?!
             selectionEnd  = inputElement.selectionEnd,
             beforeCaret   = value.substr(0, selectionEnd),
             afterCaret    = value.substr(selectionEnd);
@@ -163,13 +155,18 @@ protonet.timeline.Form = {
       }.bind(this))
       
       .on("form.share_meep", function(id) {
-        protonet.timeline.Meep.get(id, function(data) {
-          if (data.author !== protonet.config.user_name) {
-            protonet.trigger("form.create_reply", data.author);
-          } else {
-            protonet.trigger("form.focus");
+        protonet.data.Meep.get(id, {
+          success: function(data) {
+            if (data.author !== protonet.config.user_name && !protonet.data.Channel.isRendezvous(data.channel_id)) {
+              protonet.trigger("form.create_reply", data.author);
+            } else {
+              protonet.trigger("form.focus");
+            }
+            protonet.trigger("text_extension_input.select", protonet.data.Meep.getUrl(id));
+          },
+          error: function() {
+            protonet.trigger("flash_message.error", protonet.t("LOADING_MEEP_ERROR"));
           }
-          protonet.trigger("text_extension_input.select", protonet.timeline.Meep.getUrl(id));
         });
       });
     
@@ -231,7 +228,7 @@ protonet.timeline.Form = {
         payload: { 
           user_id:      protonet.config.user_id,
           channel_id:   protonet.timeline.Channels.selected,
-          channel_uuid: protonet.utils.getChannelUuid(protonet.timeline.Channels.selected)
+          channel_uuid: protonet.data.Channel.getUuid(protonet.timeline.Channels.selected)
         }
       });
     }
@@ -253,10 +250,12 @@ protonet.timeline.Form = {
   
   _prefill: function() {
     protonet.utils.urlBehaviors({
-      "form.fill":                    /(?:\?|&)message=([^&#$]+)(.*)/,
-      "text_extension_input.select":  /(?:\?|&)url=([^&#$]+)(.*)/,
-      "form.share_meep":              /(?:\?|&)share=([^&#$]+)(.*)/,
-      "form.create_reply":            /(?:\?|&)reply_to=([^&#$]+)(.*)/
+      file:     "form.attach_files",
+      files:    "form.attach_files",
+      message:  "form.fill",
+      url:      "text_extension_input.select",
+      share:    "form.share_meep",
+      reply_to: "form.create_reply"
     });
   }
 };

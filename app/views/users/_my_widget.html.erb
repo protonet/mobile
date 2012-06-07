@@ -1,7 +1,5 @@
-<div id="my-widget">
-  <a href="/users/<%= current_user.id %>" class="avatar">
-    <%= avatar(current_user, :width => 36, :height => 36, :title => "That's you!") %>
-  </a>
+<div id="my-widget" class="widget" <%= raw('style="display:none"') if current_user.newbie? %>>
+  <a href="/users/<%= current_user.id %>" class="avatar"><%= avatar(current_user, :width => 53, :height => 53, :title => "That's you!") %></a>
   <h4>
     <%= link_to user_path(current_user) do %>
       <%= current_user.display_name %>
@@ -10,8 +8,9 @@
   </h4>
   <nav>
     <ul>
-      <li><%= link_to "logout", destroy_user_session_path, 'data-avoid-ajax' => 1 %></li>
       <li class="settings"><a>settings</a></li>
+      <li><%= link_to "files", user_files_path(current_user) %></li>
+      <li><%= link_to "logout", destroy_user_session_path, 'data-avoid-ajax' => 1 %></li>
     </ul>
   </nav>
 </div>

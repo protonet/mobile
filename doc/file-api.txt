@@ -1,0 +1,52 @@
+HTTP: (Only upload is implemented)
+  /fs/upload: POST (currently as /upload)
+    - files
+    - parent: 'users/1'
+  /fs/download
+    - paths: array of paths
+      - make zip file if multiple and/or folder
+    - share_key: optional
+  /fs/display
+    - path: single path
+  /fs/thumbnail
+    - path: single path
+    - size: single integer for size×size, [width, height] otherwise?
+    - share_key: optional
+
+Socket RPC methods: (Implemented)
+  fs.list(parent: 'users/5/folder') - type, added[, size, mime]
+    .list(parent: 'channels')       - list only current user's channels
+
+    .move(from: ['channels/2/asdf.txt',
+                 'channels/2/jkl.txt'],
+          to:    'channels/2')
+
+      Will copy instead when moving from a user to a channel.
+
+    .copy(from: ['users/2/asdf.txt',
+                 'users/2/jkl.txt'],
+          to:    'channels/3') - copy files
+
+      user    -> channel: Make a symlink
+      channel -> channel: Copy the symlink
+      channel -> user:    Copy the actual file
+      user    -> user:    Copy the actual file
+
+    .delete(paths: ['channels/1/file',
+                    'channels/1/folder'])
+
+    .info(paths: ['users/2/file']) - type, uploaded, added[, uploader][, size, mime]
+
+    .mkdir(path: 'users/2/movies')
+    .mkdir(parent: 'users/2',
+           name:   'movies')
+
+
+Socket triggers: (Not yet implemented)
+  fs.created
+    .moved
+    .copied
+    .deleted
+    .accessed
+
+Admins can work with any path

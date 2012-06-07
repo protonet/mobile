@@ -2,7 +2,7 @@ class ListensController < ApplicationController
   include Rabbit
   
   before_filter :set_listen_id
-  filter_resource_access :collection => [:index, :create_for_user]
+  filter_resource_access
   
   def index
     redirect_to listen_to_channel_path(:channel_name => params[:channel_name]) if params[:channel_name]
@@ -12,7 +12,7 @@ class ListensController < ApplicationController
     channel = Channel.find(params[:channel_id])
     current_user.subscribe(channel)
     if channel
-      flash[:notice] = "You subscribed to @#{channel.name}#{' (pending verification)' if !channel.public? && !channel.owned_by?(current_user) }"
+      flash[:notice] = "You subscribed to @#{channel.display_name}#{' (pending verification)' if !channel.public? && !channel.owned_by?(current_user) }"
     else
       flash[:error] = "Could not subscribe to channel with id '#{params[:channel_id]}'"
     end
@@ -25,9 +25,9 @@ class ListensController < ApplicationController
     if listen.user == current_user || channel.owner == current_user || current_user.admin?
       listen.user.unsubscribe(channel)
       if listen.user == current_user
-        flash[:notice] = "You successfully unsubscribed from @#{channel.name}"
+        flash[:notice] = "You successfully unsubscribed from @#{channel.display_name}"
       else
-        flash[:notice] = "@#{listen.user.display_name} has been unsubscribed from @#{channel.name}"
+        flash[:notice] = "@#{listen.user.display_name} has been unsubscribed from @#{channel.display_name}"
       end
     end
     redirect_to_channel(channel)
@@ -54,7 +54,7 @@ class ListensController < ApplicationController
       user.subscribe(channel)
       listen = user.listens.find_by_channel_id(channel.id)
       listen.update_attribute(:verified, true)
-      flash[:notice] = "You successfully subscribed @#{listen.user.display_name} to #{channel.name}"
+      flash[:notice] = "You successfully subscribed @#{listen.user.display_name} to #{channel.display_name}"
       redirect_to_channel(channel)
     else
       flash[:error] = "Couldn't find user with identifier '#{params[:search_term]}'"

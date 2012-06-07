@@ -30,6 +30,12 @@ GIT
       nokogiri
       sunspot (= 1.2.1)
 
+GIT
+  remote: git://github.com/protonet/xattr.git
+  revision: 7fb61a890090087e07878d4dba50c469a0d6faa2
+  specs:
+    xattr (0.1.0)
+
 GEM
   remote: http://rubygems.org/
   remote: http://gems.github.com/
@@ -297,3 +303,4 @@ DEPENDENCIES
   tmm1-amqp (= 0.6.4)
   whenever
   will_paginate (= 3.0.3)
+  xattr!

@@ -6,20 +6,6 @@
   min-height: 300px;
 }
 
-.users-page .content img.user-avatar, 
-.users-edit-page .content img.users-avatar {
-  float:left;
-  margin: 0 20px 20px 0;
-}
-
-.users-edit-page .content h2 + h3{
-  margin: 40px 0 15px 140px;
-}
-
-.users-page .content > img.loading {
-  opacity: 0.5;
-}
-
 .users-page p .button {
   margin-top: 0;
 }
@@ -51,14 +37,51 @@
   opacity: 0.5;
 }
 
-.upload-button-container {
-  display: inline-block;
-  overflow: hidden;
-  position: relative;
-  padding-bottom: 2px;
+.users-page .avatar-container img.loading {
+  opacity: 0.5;
 }
 
-.upload-button-container [type=file] {
+.users-page .avatar-container img {
+  border: 1px solid #666;
+}
+
+.users-page .avatar-container {
+  position: relative;
+  float: left;
+  margin: 0 20px 20px 0;
+  width: 142px;
+  height: 142px;
+  overflow: hidden;
+}
+
+.users-page h3.first-of-type {
+  margin-top: 70px;
+}
+
+.users-edit-page .avatar-container {
+  float: none;
+  margin-top: 20px;
+}
+
+
+.users-page .avatar-container form {
+  filter: Alpha(Opacity=60);
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 8px;
+  text-align: center;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  position: absolute;
+}
+
+.users-page .avatar-container form:hover {
+  filter: Alpha(Opacity=80);
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.users-page .avatar-container [type=file] {
   opacity: 0;
   filter: Alpha(Opacity=0);
   font-size: 50px;
@@ -83,10 +106,10 @@
   margin: 30px 0 40px;
 }
 
-.user-list form .inputs{
-  position:absolute;
-  top:-8px;
-  right:-10px;
+.user-list form .inputs {
+  position: absolute;
+  top: -8px;
+  right: -10px;
 }
 
 .user-list form input[type=search]{
@@ -95,9 +118,6 @@
   border: 1px solid #aaa;
   font-size: 14px;
   height: 34px;
-  -webkit-box-shadow: 0 0 3px #666 inset;
-  -moz-box-shadow: 0 0 3px #666 inset;
-  box-shadow: 0 0 3px #666 inset;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -110,14 +130,14 @@
   margin-left:0;
 }
 
-.user-list ul{
+.user-list ul {
   margin: 20px 0;
 }
 
-.user-list li{
-  float:left;
-  position:relative;
-  width:90px;
+.user-list li {
+  float: left;
+  position: relative;
+  width: 90px;
   height: 60px;
   margin: 0 5px 15px 0;
   padding-left: 60px;
@@ -144,9 +164,11 @@
   top:0;
   height:48px;
   width:48px;
-  -moz-box-shadow: 5px 5px 0px #eee;
-  -webkit-box-shadow: 5px 5px 0px #eee;
   box-shadow: 5px 5px 0px #eee;
+}
+
+.users-page .buttons {
+  margin-bottom: 70px;
 }
 
 .invitations-page .status-box{
@@ -199,17 +221,17 @@
   
 }
 #wysihtml5-toolbar a.icon{
-  text-decoration:none;
-  text-indent:-999px;
-  display:inline-block;
-  width:20px;
-  height:20px;
+  text-decoration: none;
+  text-indent: -999px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
   background-image: url(/img/wysihtml5/icons.png);
-  margin:1px;
+  margin: 1px;
 }
 #wysihtml5-toolbar a.icon:hover{
-  border:1px solid #aaa;
-  margin:0;
+  border: 1px solid #aaa;
+  margin: 0;
 }
 #wysihtml5-toolbar a[data-wysihtml5-command=bold]{ background-position: 0 0px; }
 #wysihtml5-toolbar a[data-wysihtml5-command=italic]{ background-position: -20px 0px; }
@@ -219,6 +241,6 @@
 #wysihtml5-toolbar a[data-wysihtml5-command=redo]{ background-position: -100px 0px; }
 
 #wysihtml5-toolbar a.link{
-  position:relative;
-  top:2px;
+  position: relative;
+  top: 2px;
 }

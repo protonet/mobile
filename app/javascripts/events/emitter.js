@@ -3,79 +3,82 @@
  * at the moment it doesn't do anything than just be there as a
  * central pub sub point
  */
-$.extend(protonet, (function() {
-  var events = {},
-      WHITE_SPACE = /\s+/;
+(function() {
+  var WHITE_SPACE = /\s+/;
   
-  function _on(eventName, handler) {
-    var handlerArray = events[eventName] || (events[eventName] = []);
-    handlerArray.push(handler);
-  }
-  
-  function on(eventNames, handler) {
-    $.each(eventNames.split(WHITE_SPACE), function(i, eventName) {
-      _on(eventName, handler);
-    });
-    return this;
-  }
-  
-  function _after(eventName, handler) {
-    var handlerArray = events[eventName] || (events[eventName] = []);
-    handlerArray.push(function() {
-      var args = $.makeArray(arguments),
-          that = this;
-      setTimeout(function() { handler.apply(that, args); }, 0);
-    });
-  }
-  
-  function after(eventNames, handler) {
-    $.each(eventNames.split(WHITE_SPACE), function(i, eventName) {
-      _after(eventName, handler);
-    });
-  }
-  
-  function _off(eventName, handler) {
-    events[eventName] = handler ? $.map(events[eventName] || [], function(currentHandler) {
-      return handler === currentHandler ? null : currentHandler;
-    }) : [];
-    return this;
-  }
-  
-  function off(eventNames, handler) {
-    $.each(eventNames.split(WHITE_SPACE), function(i, eventName) {
-      _off(eventName, handler);
-    });
-    return this;
-  }
-  
-  function one(eventName, handler) {
-    return on(eventName, function() {
-      off(eventName, arguments.callee);
-      handler.apply(this, $.makeArray(arguments));
-    });
-  }
-  
-  function trigger() {
-    var args      = $.makeArray(arguments),
-        eventName = args.shift();
-    if (protonet.config.debug_mode) {
-      console.log(eventName, arguments);
-    }
+  protonet.events.Emitter = Class.create({
+    initialize: function() {
+      this._events = {};
+      // Aliases
+      this.bind = this.on.bind(this);
+      this.unbind = this.off.bind(this);
+    },
     
-    $.each(events[eventName] || [], function(i, handler) {
-      handler.apply(protonet, args);
-    });
-    return this;
-  }
-  
-  return (protonet.Emitter = {
-    on:       on,
-    off:      off,
-    trigger:  trigger,
-    one:      one,
-    after:    after,
-    // legacy:
-    bind:     on,
-    unbind:   off
+    _on: function(eventName, handler) {
+      var handlerArray = this._events[eventName] || (this._events[eventName] = []);
+      handlerArray.push(handler);
+    },
+    
+    on: function(eventNames, handler) {
+      $.each(eventNames.split(WHITE_SPACE), function(i, eventName) {
+        this._on(eventName, handler);
+      }.bind(this));
+      return this;
+    },
+    
+    _after: function(eventName, handler) {
+      var handlerArray = this._events[eventName] || (this._events[eventName] = []);
+      handlerArray.push(function() {
+        var args = $.makeArray(arguments),
+            that = this;
+        setTimeout(function() { handler.apply(that, args); }, 0);
+      });
+    },
+    
+    after: function(eventNames, handler) {
+      $.each(eventNames.split(WHITE_SPACE), function(i, eventName) {
+        this._after(eventName, handler);
+      }.bind(this));
+      return this;
+    },
+    
+    _off: function(eventName, handler) {
+      this._events[eventName] = handler ? $.map(this._events[eventName] || [], function(currentHandler) {
+        return handler === currentHandler ? null : currentHandler;
+      }) : [];
+      return this;
+    },
+    
+    off: function(eventNames, handler) {
+      $.each(eventNames.split(WHITE_SPACE), function(i, eventName) {
+        this._off(eventName, handler);
+      }.bind(this));
+      return this;
+    },
+    
+    one: function(eventName, handler) {
+      return this.on(eventName, function() {
+        this.off(eventName, arguments.callee);
+        handler.apply(this, $.makeArray(arguments));
+      }.bind(this));
+    },
+    
+    trigger: function() {
+      var args      = $.makeArray(arguments),
+          eventName = args.shift();
+      
+      if (protonet.config.debug_mode) {
+        console.log(eventName, arguments);
+      }
+      
+      $.each(this._events[eventName] || [], function(i, handler) {
+        handler.apply(this, args);
+      }.bind(this));
+      return this;
+    },
+    
+    destroy: function() {
+      delete this._events;
+    }
   });
-})());
+})();

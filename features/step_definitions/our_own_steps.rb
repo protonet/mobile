@@ -97,7 +97,7 @@ Given /^I select the channel "([^\"]*)" in the channel list$/ do |linktext|
     page.has_css?(selector)
   end
 
-  find(:css, selector, :text => "@#{linktext}", :visible => true).click
+  find(:css, selector, :text => "#{linktext}", :visible => true).click
 end
 
 Given /^I select the global channel "([^\"]*)" in the channel overview$/ do |linktext|
@@ -111,11 +111,11 @@ Given /^I select the global channel "([^\"]*)" in the channel overview$/ do |lin
 end
 
 Given /^I select the channel "([^\"]*)" in the channel overview$/ do |linktext|
-  find(:css, ".channel-teaser a", :text => "@#{linktext}", :visible => true).click
+  find(:css, ".channel-teaser a", :text => "#{linktext}", :visible => true).click
 end
 
 Then /^I should see "([^\"]*)" in the channel list$/ do |channel_name|
-  find(:css, '.channels-list', :text => "@#{channel_name}", :visible => true)
+  find(:css, '.channels-list', :text => "#{channel_name}", :visible => true)
 end
 
 Then /^I should see "([^\"]*)" in the channel details pane$/ do |channel_name|
@@ -257,7 +257,7 @@ When /^I accept the invitation with the token "([^\"]*)"$/ do |token|
 end
 
 Then /^I should see all settings$/ do
-  all(:css, "section.preferences-page li").size.should == 8
+  all(:css, "section.preferences-page li").size.should == 7
 end
 
 Given /^I start a rendezvous chat with "([^\"]*)"$/ do |username|

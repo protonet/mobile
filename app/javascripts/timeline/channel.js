@@ -1,8 +1,6 @@
 //= require "../utils/browser_title.js"
 //= require "../utils/ensure_scroll_position.js"
 //= require "../utils/is_window_focused.js"
-//= require "../media/play_sound.js"
-//= require "../utils/get_channel_name.js"
 //= require "../ui/notification.js"
 
 /**
@@ -20,10 +18,9 @@
  *
  */
 (function(protonet) {
-  var MERGE_MEEPS_TIMEFRAME = 4 * 60 * 1000,  // 4 minutes
+  var MERGE_MEEPS_TIMEFRAME = 5 * 60 * 1000,  // 5 minutes
       FETCH_MEEPS_URL       = "/meeps",
-      MAX_AMOUNT_MEEPS      = 500,            // Max amount of meeps to render per channel until the garbage collector takes action
-      $window               = $(window);
+      MAX_AMOUNT_MEEPS      = 500;            // Max amount of meeps to render per channel until the garbage collector takes action
   
   protonet.timeline.Channel = Class.create({
     initialize: function(data) {
@@ -111,6 +108,7 @@
           }
           
           this.unreadMeeps++;
+          console.log(instance);
           var isReplyToViewer = instance.userReplies.indexOf(protonet.config.user_id + "") !== -1;
           if (isReplyToViewer) {
             this.unreadReplies++;
@@ -246,11 +244,10 @@
         "data-channel-id":  this.data.id
       }).data({ channel: this.data, instance: this });
       
-      this._renderMeeps(this.data.meeps, this.channelList, function() {
-        protonet.trigger("channel.rendered", this.channelList, this.data, this);
-        this._initGarbageCollector();
-        this._toggleBadge(true);
-      }.bind(this));
+      this._renderMeeps(this.data.meeps, this.channelList);
+      protonet.trigger("channel.rendered", this.channelList, this.data, this);
+      this._initGarbageCollector();
+      this._toggleBadge(true);
       
       this._initNoMeepsHint();
       
@@ -262,6 +259,7 @@
       
       this.link = $("<a>", {
         href:               "/?channel_id=" + this.data.id,
+        draggable:          "true",
         "data-channel-id":  this.data.id,
         text:               this.data.display_name
       });
@@ -275,23 +273,14 @@
     /**
      * Render meeps non-blocking into the given dom element
      */
-    _renderMeeps: function(meepsData, channelList, callback, sync) {
+    _renderMeeps: function(meepsData, channelList) {
       /**
        * Reverse meeps since we have to render them from top to bottom
        * in order to ensure that meep-merging works
-       *
-       * Chunking needed to avoid ui blocking while rendering
        */
        meepsData = meepsData.reverse();
-       if (sync) {
-         for (var i=0, length=meepsData.length; i<length; i++) {
-           this._renderMeep(meepsData[i], channelList);
-         }
-         callback();
-       } else {
-         meepsData.chunk(function(meepData) {
-           this._renderMeep(meepData, channelList);
-         }.bind(this), callback);
+       for (var i=0, length=meepsData.length; i<length; i++) {
+         this._renderMeep(meepsData[i], channelList);
        }
     },
 
@@ -301,10 +290,9 @@
      */
     _renderMoreMeeps: function(meepsData) {
       var tempContainer = $("<ul>");
-      this._renderMeeps(meepsData, tempContainer, function() {
-        this.channelList.append(tempContainer.children());
-        protonet.trigger("channel.rendered_more", this.channelList, meepsData, this);
-      }.bind(this), true);
+      this._renderMeeps(meepsData, tempContainer);
+      this.channelList.append(tempContainer.children());
+      protonet.trigger("channel.rendered_more", this.channelList, meepsData, this);
     },
 
     /**
@@ -338,7 +326,7 @@
         type: "get",
         data: $.extend(parameters, { channel_id: this.data.id }),
         beforeSend: function() {
-          protonet.trigger("timeline.loading_start");
+          protonet.trigger("channels.loading_start");
         },
         success: function(response) {
           if (!response || !response.length) {
@@ -348,7 +336,7 @@
           (callback || $.noop)(response);
         },
         complete: function() {
-          protonet.trigger("timeline.loading_end");
+          protonet.trigger("channels.loading_end");
         }
       });
     },
@@ -380,6 +368,9 @@
      * in the browser's viewport
      */
     _initEndlessScroller: function() {
+      if (this.channelList.find("article").length < 25) {
+        return;
+      }
       var lastMeepInList = this.channelList.children(":last").addClass("separator");
 
       lastMeepInList.one("inview", function(event, visible) {
@@ -431,7 +422,7 @@
      */
     _notifications: function(meepData) {
       var isWindowFocused       = protonet.utils.isWindowFocused(),
-          isAllowedToPlaySound  = protonet.user.Config.get("sound");
+          isAllowedToPlaySound  = protonet.data.User.getPreference("sound");
       
       if (meepData.user_id == protonet.config.user_id) {
         return;
@@ -442,7 +433,7 @@
       }
 
       if (!isWindowFocused && this.isSelected && isAllowedToPlaySound) {
-        protonet.media.playSound("/sounds/notification.ogg", "/sounds/notification.mp3", "/sounds/notification.wav");
+        new protonet.media.Audio("/sounds/notification.mp3").play();
       }
       
       if (!this.isSelected) {
@@ -455,7 +446,7 @@
      */
     _replyNotifications: function(meepData, instance) {
       var isWindowFocused             = protonet.utils.isWindowFocused(),
-          isAllowedToDoNotifications  = protonet.user.Config.get("reply_notification"),
+          isAllowedToDoNotifications  = protonet.data.User.getPreference("reply_notification"),
           isReplyToViewer             = instance.userReplies.indexOf(protonet.config.user_id + "") !== -1;
 
       if (isReplyToViewer && isAllowedToDoNotifications && !isWindowFocused) {

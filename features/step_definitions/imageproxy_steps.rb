@@ -2,7 +2,7 @@ Given /^an image exists$/ do
   assert true
 end
 
-Then /^proxying "([^"]*)" should work$/ do |url|
+Then /^proxying "([^\"]*)" should work$/ do |url|
   # content_type = Mime::Type.lookup_by_extension(url.match(/\/.*\.(.*)$/)[1])
   # assert_equal content_type, open("http://127.0.0.1:#{configatron.nodejs.port}/image_proxy?url=#{url}").content_type
   #cleanup
@@ -12,7 +12,7 @@ Then /^proxying "([^"]*)" should work$/ do |url|
   request.status.should == ["200", "OK"]
 end
 
-Then /^resizing "([^"]*)" should work$/ do |url|
+Then /^resizing "([^\"]*)" should work$/ do |url|
   #cleanup
   `rm #{Rails.root}/public/externals/image_proxy/#{Digest::MD5.hexdigest(url)}* 2>&1 > /dev/null`
   request = open("http://127.0.0.1:8125/image_proxy?height=100&width=100&url=http://media.ebaumsworld.com/picture/mzeBONE/BackToTheFutureII.gif")
@@ -20,7 +20,7 @@ Then /^resizing "([^"]*)" should work$/ do |url|
   request.status.should == ["200", "OK"]
 end
 
-Then /^screenshot resizing "([^"]*)" should work$/ do |url|
+Then /^screenshot resizing "([^\"]*)" should work$/ do |url|
   #cleanup
   screenshot = Digest::MD5.hexdigest("http://127.0.0.1:#{configatron.nodejs.port}/screenshooter?url=#{url}")
   `rm #{Rails.root}/public/externals/image_proxy/#{screenshot} 2>&1 > /dev/null`

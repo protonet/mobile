@@ -1,21 +1,28 @@
-//= require "../timeline/timeline.js"
-//= require "../widgets/file.js"
-//= require "../widgets/user.js"
+//= require "../timeline/form/form.js"
+//= require "../timeline/channels.js"
 //= require "../platforms/fluid.js"
 //= require "../platforms/prism.js"
-//= require "../ui/click_to_flash_teaser.js"
 //= require "../ui/overlay.js"
+//= require "../ui/users/widget.js"
+//= require "../ui/files/widget.js"
 
 //---------------------------- INITIALIZE INSTRUMENTS ----------------------------
-$(function() {
-  protonet.dispatcher.initialize();
-  protonet.timeline.initialize();
+protonet.p("instruments", function($page) {
+  protonet.timeline.Form.initialize();
+  protonet.timeline.Channels.initialize();
   
-  // Init widgets
-  new protonet.widgets.User();
-  new protonet.widgets.File();
+  protonet.ui.files.Widget.initialize();
+  protonet.ui.users.Widget.initialize();
   
-  $("section.main-content").css("min-height", $("aside.side-content").outerHeight().px());
+  var $aside = $("aside.side-content");
+  
+  function resizePage() {
+    $page.css("min-height", Math.max($window.height() - $page.offset().top - 1, $aside.outerHeight() + 140).px());
+  }
+  
+  $window.on("resize", resizePage);
+  
+  resizePage();
   
   // there's a captive portal redirect request and the user is logged in
   if (protonet.config.captive_redirect_url) {
@@ -30,5 +37,5 @@ $(function() {
         'Get internet access</a>'
       );
     }
-  }  
+  }
 });

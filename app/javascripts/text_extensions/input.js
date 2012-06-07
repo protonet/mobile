@@ -1,4 +1,4 @@
-//= require "../utils/unshort_url.js"
+//= require "../utils/parse_uri_list.js"
 //= require "utils/replace_base_url.js"
 
 /**
@@ -38,7 +38,7 @@ protonet.text_extensions.Input.prototype = {
   _paste: function() {
     // Some jerk at w3c decided to fire the onpaste before the text is inserted
     // therefore we need to delay the parsing
-    setTimeout(this._parse.bind(this), 10);
+    setTimeout(this._parse.bind(this), 0);
   },
   
   _keyUp: function(event) {
@@ -64,63 +64,98 @@ protonet.text_extensions.Input.prototype = {
     }).focus();
   },
   
-  _drop: function() {
-    this._parse();
+  _drop: function(event) {
+    var dataTransfer = event.dataTransfer;
+    if (dataTransfer) {
+      var urls = dataTransfer.getData("text/uri-list") || dataTransfer.getData("URL");
+      if (urls) {
+        urls = protonet.utils.parseUriList(urls);
+        this.select(urls);
+        event.preventDefault();
+      }
+    }
+    
+    setTimeout(this._parse.bind(this), 0);
   },
   
   _cancel: function(event) {
     event && event.preventDefault();
     
     this._cancelRequest = true;
-    this._ignoreUrls.push(this.url);
+    this._ignoreUrls = this._ignoreUrls.concat(this.urls);
     
     this.input.focus();
     this.reset();
   },
   
   _parse: function() {
-    if (this.url || this.data) { return; }
+    if (this.provider && !this.provider.supportsMultiple) { return; }
     
-    var matchUrls = this.input.val().match(this.regExp);
-    if (!matchUrls) { return; }
+    var urls = this.input.val().match(this.regExp);
     
-    for (var i=0; i<matchUrls.length; i++) {
-      var url = this._prepareUrl(matchUrls[i]),
-          shouldBeIgnored = $.inArray(url, this._ignoreUrls) != -1;
-      
-      if (!shouldBeIgnored && url.isUrl()) {
-        this.select(url);
-        break;
+    this.select(urls);
+  },
+  
+  select: function(urls) {
+    urls = $.makeArray(urls);
+    
+    if (!urls.length) { return; }
+    
+    // turn into real urls
+    urls = $.map(urls, function(url) {
+      url = this._prepareUrl(url);
+      return url.isUrl() ? url : null;
+    }.bind(this));
+    
+    if (!urls.length) { return; }
+    
+    // strip urls that should be ignored
+    urls = $.map(urls, function(url) {
+      return this._ignoreUrls.indexOf(url) === -1 ? url : null;
+    }.bind(this));
+    
+    if (!urls.length) { return; }
+    
+    var lastUrl = urls[urls.length - 1];
+    this.provider = this._getDataProvider(lastUrl);
+    
+    if (!this.provider) { return; }
+    
+    if (this.provider.supportsMultiple) {
+      urls = urls.concat(this.urls || []);
+      urls = $.map(urls, function(url) {
+        return url.match(this.provider.REG_EXP) ? url : null;
+      }.bind(this));
+    }
+    
+    urls = urls.unique();
+    
+    if (!urls.length) { return; }
+    
+    if (this.urls && this.urls.toString() === urls.toString()) { return; }
+    
+    this.urls = urls;
+    
+    this._show();
+    this._request();
+  },
+  
+  _getDataProvider: function(url) {
+    var provider, i;
+    for (i in protonet.text_extensions.provider) {
+      provider = protonet.text_extensions.provider[i];
+      if (url.match(provider.REG_EXP)) {
+        provider.name = i;
+        return provider;
       }
     }
   },
   
-  select: function(url) {
-    this.url = url;
-    this._show();
-    
-    protonet.utils.unshortUrl(url, function(originalUrl) {
-      this.originalUrl = originalUrl.replace(/\/#!?\//, "/");
-      this._getDataProvider(originalUrl);
-      this.provider ? this._request() : this._hide();
-    }.bind(this));
-  },
-  
-  _getDataProvider: function(url) {
-    $.each(protonet.text_extensions.provider, function(key, value) {
-      if (value.REG_EXP.test(url)) {
-        this.provider = value;
-        this.providerName = key;
-        return false; // equivalent to "break;"
-      }
-    }.bind(this));
-  },
-  
   _request: function() {
     this._cancelRequest = false;
-    this.provider.loadData(this.originalUrl, function(data) {
+    this.provider.loadData(this.provider.supportsMultiple ? this.urls : this.urls[0], function(data) {
       if (!this._cancelRequest) {
-        data = $.extend({}, data, { type: this.providerName, url: data.url || this.originalUrl });
+        data = $.extend({}, data, { type: this.provider.name, url: data.url || this.urls[0] });
         this.render(data);
       }
     }.bind(this), this._ignoreUrlAndReset.bind(this));
@@ -143,6 +178,10 @@ protonet.text_extensions.Input.prototype = {
   },
   
   _show: function() {
+    if (this.container.is(":visible")) {
+      return;
+    }
+    
     this.container
       .addClass("loading-bar")
       .animate({
@@ -162,7 +201,9 @@ protonet.text_extensions.Input.prototype = {
   },
   
   _hide: function() {
-    this.results && this.results.hide();
+    if (this.results) {
+      this.results.hide();
+    }
     this.container.stop().animate({
       height: 0,
       opacity: 0
@@ -176,6 +217,7 @@ protonet.text_extensions.Input.prototype = {
     if (url.startsWith("www.")) {
       url = "http://" + url;
     }
+    url = url.replace(/\/#!?\//, "/");
     return url;
   },
   
@@ -186,7 +228,7 @@ protonet.text_extensions.Input.prototype = {
   },
  
   _ignoreUrlAndReset: function() {
-    this._ignoreUrls.push(this.url);
+    this._ignoreUrls = this._ignoreUrls.concat(this.urls);
     this.reset();
   },
   
@@ -204,8 +246,7 @@ protonet.text_extensions.Input.prototype = {
     this.setInput("");
     
     delete this.data;
-    delete this.url;
-    delete this.originalUrl;
+    delete this.urls;
     delete this.provider;
   },
   

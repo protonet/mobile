@@ -1,0 +1,193 @@
+/* TODO: PPT, PPTX */
+.file[href$=".ai"], .file[href$=".AI"] { background-position: 0 0; }
+.file[href$=".bin"], .file[href$=".BIN"] { background-position: 0 -82px; }
+.file[href$=".cab"], .file[href$=".CAB"] { background-position: 0 -164px; }
+.file[href$=".dat"], .file[href$=".DAT"] { background-position: 0 -246px; }
+.file[href$=".divx"], .file[href$=".DIVX"] { background-position: 0 -410px; }
+.file[href$=".dll"], .file[href$=".DLL"] { background-position: 0 -492px; }
+.file[href$=".dmg"], .file[href$=".DMG"] { background-position: 0 -574px; }
+.file[href$=".doc"], .file[href$=".DOC"], .file[href$=".docx"], .file[href$=".DOCX"] { background-position: 0 -656px; }
+.file[href$=".eps"], .file[href$=".EPS"] { background-position: 0 -738px; }
+.file[href$=".exe"], .file[href$=".EXE"] { background-position: 0 -820px; }
+.file[href$=".fla"], .file[href$=".FLA"] { background-position: 0 -902px; }
+.file[href$=".flv"], .file[href$=".FLV"] { background-position: 0 -984px; }
+.file[href$=".gif"], .file[href$=".GIF"] { background-position: 0 -1066px; }
+.file[href$=".gz"], .file[href$=".GZ"] { background-position: 0 -1148px; }
+.file[href$=".html"], .file[href$=".HTML"], .file[href$=".htm"], .file[href$=".HTM"] { background-position: 0 -1230px; }
+.file[href$=".iso"], .file[href$=".ISO"] { background-position: 0 -1312px; }
+.file[href$=".jar"], .file[href$=".JAR"] { background-position: 0 -1394px; }
+.file[href$=".jpg"], .file[href$=".JPG"], .file[href$=".jpeg"], .file[href$=".JPEG"] { background-position: 0 -1476px; }
+.file[href$=".m4a"], .file[href$=".M4A"] { background-position: 0 -1558px; }
+.file[href$=".m4v"], .file[href$=".M4V"] { background-position: 0 -1640px; }
+.file[href$=".mov"], .file[href$=".MOV"] { background-position: 0 -1722px; }
+.file[href$=".mp3"], .file[href$=".MP3"] { background-position: 0 -1804px; }
+.file[href$=".mp4"], .file[href$=".MP4"] { background-position: 0 -1886px; }
+.file[href$=".mpeg"], .file[href$=".MPEG"], .file[href$=".mpg"], .file[href$=".MPG"] { background-position: 0 -1968px; }
+.file[href$=".msi"], .file[href$=".MSI"] { background-position: 0 -2050px; }
+.file[href$=".ogg"], .file[href$=".OGG"] { background-position: 0 -2132px; }
+.file[href$=".pdf"], .file[href$=".PDF"] { background-position: 0 -2214px; }
+.file[href$=".png"], .file[href$=".PNG"] { background-position: 0 -2296px; }
+.file[href$=".psd"], .file[href$=".PSD"] { background-position: 0 -2378px; }
+.file[href$=".rar"], .file[href$=".RAR"] { background-position: 0 -2460px; }
+.file[href$=".rtf"], .file[href$=".RTF"] { background-position: 0 -2542px; }
+.file[href$=".swf"], .file[href$=".SWF"] { background-position: 0 -2624px; }
+.file[href$=".tif"], .file[href$=".TIF"] { background-position: 0 -2706px; }
+.file[href$=".tiff"], .file[href$=".TIFF"] { background-position: 0 -2706px; }
+.file[href$=".tmp"], .file[href$=".TMP"] { background-position: 0 -2788px; }
+.file[href$=".ttf"], .file[href$=".TTF"] { background-position: 0 -2870px; }
+.file[href$=".txt"], .file[href$=".TXT"] { background-position: 0 -2952px; }
+.file[href$=".vob"], .file[href$=".VOB"] { background-position: 0 -3034px; }
+.file[href$=".wav"], .file[href$=".WAV"] { background-position: 0 -3116px; }
+.file[href$=".wma"], .file[href$=".WMA"] { background-position: 0 -3198px; }
+.file[href$=".wmv"], .file[href$=".WMV"] { background-position: 0 -3280px; }
+.file[href$=".xls"], .file[href$=".XLS"], .file[href$=".xlsx"], .file[href$=".XLSX"] { background-position: 0 -3362px; }
+.file[href$=".zip"], .file[href$=".ZIP"] { background-position: 0 -3444px; }
+
+.file, .folder {
+  background-image: url(/img/spr_file_extensions.png);
+  background-repeat: no-repeat;
+  padding-left: 40px;
+  height: 32px;
+  line-height: 32px;
+  display: block;
+  text-decoration: none;
+}
+
+a.file, a.folder {
+  color: #000;
+}
+
+.file { background-position: 0 -328px; }
+.folder { background-position: 0 -3526px; }
+.queued .file, .queued .folder { opacity: 0.5; }
+.uploading .file, .uploading .folder { opacity: 0.5; }
+
+#file-queue {
+  position: fixed;
+  bottom: -10px;
+  margin-bottom: -2px;
+  left: 50%;
+  width: 478px;
+  z-index: 102;
+  padding: 1px;
+  margin-left: -250px;
+  background: #fff;
+  background: rgba(255, 255, 255, 0.7);
+  border: 10px solid #666;
+  border: 10px solid rgba(0, 0, 0, 0.4);
+  border-bottom: 0;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+#file-queue .percent {
+  display: inline;
+}
+
+#file-queue li {
+  background: #fff;
+  padding: 7px 5px;
+  border-top: 1px solid #eee;
+}
+
+#file-queue li:first-child {
+  border-top: 0;
+}
+
+#file-queue ol {
+  overflow: auto;
+  max-height: 170px;
+}
+
+#file-queue .uploading a {
+  line-height: 20px;
+  cursor: default;
+}
+
+#file-queue .file-name {
+  display: inline-block;
+  max-width: 300px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#file-queue .file-size {
+  color: #999;
+}
+
+#file-queue .loading-bar-container {
+  display: none;
+}
+
+#file-queue .uploading .loading-bar-container {
+  display: block;
+  border: 1px solid #487bff;
+  height: 3px;
+  width: 300px;
+}
+
+#file-queue .loading-bar {
+  width: 0;
+  height: 100%;
+  background: #487bff;
+}
+
+#file-queue h3 {
+  font-size: 13px;
+  font-weight: normal;
+  padding: 0 8px;
+  line-height: 30px;
+  color: #fff;
+  background: #487bff;
+  position: relative;
+  cursor: pointer;
+}
+
+#file-queue .close {
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 0;
+  line-height: 29px;
+  font-size: 16px;
+  text-decoration: none;
+  padding: 0 4px;
+  color: #fff;
+}
+
+#file-queue .close:hover {
+  color: #000;
+}
+
+#file-queue .share-container {
+  border-top: 1px solid #ddd;
+  background: #FFFBE0;
+  display: none;
+  padding: 8px;
+}
+
+#file-queue button {
+  margin: 0 5px 0 0;
+}
+
+.dragover .main-content > *,
+.dragover .side-content > *,
+.dragover .side-content > .getting-started > *,
+.dragover .main-content .avatar {
+  opacity: 0.2;
+}
+
+.dragover .main-content > #message-form,
+.dragover .side-content > .getting-started,
+.dragover .side-content > #file-widget {
+  opacity: 1;
+}
+
+#message-form.dragover-possible #textarea-wrapper {
+  background: rgba(0, 204, 0, 0.075);
+}
+
+#message-form.dragover #textarea-wrapper {
+  background: rgba(0, 204, 0, 0.15);
+}

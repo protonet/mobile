@@ -6,6 +6,7 @@
   <%= link_to channel.display_name, { :channel_id => channel.id }, {
     :title => channel.description ? truncate(channel.description, :length => 140) : nil,
     :class => channel_tab_classes(channel),
+    :draggable => 'true',
     'data-channel-id' => channel.id
   } %>
 </li>

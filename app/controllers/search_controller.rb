@@ -8,11 +8,8 @@ class SearchController < ApplicationController
       format.json {
         perform_search
         
-        # TODO: Refactor Meep.prepare_for_frontend and use it here
         render :json => @search_results.hits.map {|hit|
-          meep = hit.instance
-          meep.text_extension = JSON.parse(meep.text_extension) rescue nil
-          meep.attributes.merge({ "channel_id" => nil, "posted_in" => meep.channel.id })
+          Meep.prepare_for_frontend(hit.instance, { 'channel_id' => nil, 'posted_in' => hit.instance.channel.id })
         }.to_json
       }
     end

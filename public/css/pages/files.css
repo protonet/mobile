@@ -1,0 +1,818 @@
+.files-page .table-wrapper {
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid #aaa;
+  outline: 6px solid #eee;
+  position: relative;
+  height: 200px;
+  overflow: auto;
+}
+
+.files-page .table-wrapper.dragover-possible {
+  margin: -1px -1px -1px -1px;
+  border: 2px dashed rgba(0, 204, 0, 0.5);
+  outline: 5px solid #eee;
+  background: rgba(0, 204, 0, 0.04);
+}
+
+.files-page .table-wrapper.dragover {
+  border: 2px dashed rgb(0, 204, 0);
+}
+
+.files-page .dragover-possible p.hint {
+  color: #000;
+} 
+
+.file-list {
+  width: 100%;
+}
+
+.file-list .file-name {
+  width: 50%;
+  white-space: nowrap;
+}
+
+.file-list .file-name input {
+  border: 0;
+  margin: -1px;
+  padding: 1px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.5);
+  min-width: 10px;
+  max-width: 450px;
+  margin: 0;
+  font-size: 12px;
+}
+
+.file-list .file-name .progress {
+  margin-right: 5px;
+}
+
+.file-list .file-name input:disabled {
+  background: transparent;
+}
+
+.file-list th.file-name {
+  padding-left: 48px;
+}
+
+.file-list .file-name,
+.file-list .file-modified {
+  text-align: left;
+}
+.file-list .file-size {
+  text-align: right;
+}
+
+.file-list td,
+.file-list th {
+  vertical-align: middle;
+  padding: 8px;
+}
+
+.file-list tr {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  height: 26px;
+  border-bottom: 1px solid #fff;
+}
+
+.file-list tr:nth-child(even) {
+  background: #f2f2f2;
+}
+
+.file-list tr.dragover,
+.file-list tr.focus {
+  background: rgba(72, 123, 255, 0.3);
+}
+
+.file-list tr.blink {
+  background: rgba(72, 123, 255, 0.5);
+}
+
+.file-list tr.focus.loading {
+  background: rgba(72, 123, 255, 0.1);
+}
+
+.file-list tr.focus.loading .file-name a {
+  background: url(/img/icn_loading_big.gif) no-repeat 0 center;
+}
+
+.file-list tr.focus,
+.file-list tr.focus a {
+  color: #000;
+}
+
+.file-list tr.disabled {
+  opacity: 0.6;
+}
+
+.file-list tr.focus .file-name {
+  padding-left: 9px;
+}
+
+.file-list tr.myself .file-name {
+  font-weight: bold;
+}
+
+.file-list tr .file-name i {
+  font-style: normal;
+  font-weight: normal;
+  color: #999;
+}
+
+.file-list th {
+  text-shadow: 0 1px 1px #fff;
+}
+
+.file-list thead tr {
+  border: 0;
+  border-bottom: 1px solid #aaa;
+  background-color: #ddd;
+  background-image: -o-linear-gradient(bottom, #ddd, #fff);
+  background-image: -moz-linear-gradient(bottom, #ddd, #fff);
+  background-image: -webkit-linear-gradient(bottom, #ddd, #fff);
+  background-image: -ms-linear-gradient(bottom, #ddd, #fff);
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #ddd),
+    color-stop(1, #fff)
+  );
+  background-image: linear-gradient(bottom, #ddd, #fff);
+}
+
+.files-page .file,
+.files-page .folder {
+  outline: 0;
+  cursor: default;
+}
+
+.files-page h2 {
+  margin-bottom: 25px;
+}
+
+.files-page p.hint {
+  position: absolute;
+  top: 40%;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.files-page .address-bar {
+  color: #999;
+  line-height: 1.25;
+  margin-left: 8px;
+  font-weight: normal;
+}
+
+.files-page .address-bar a {
+  display: inline-block;
+  position: relative;
+  text-decoration: none;
+  color: #999;
+  margin-right: 6px;
+  padding-right: 16px;
+}
+
+.files-page .address-bar a:after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  border: 4px solid transparent;
+  border-left: 4px solid #ccc;
+  top: 9px;
+  width: 0;
+  height: 0;
+}
+
+.files-page .address-bar a:last-child:after {
+  display: none;
+}
+
+.files-page .address-bar a.dragover,
+.files-page .address-bar a:hover,
+.files-page .address-bar a:last-child {
+  color: #000;
+}
+
+.files-page .address-bar a.blink {
+  color: #487bff;
+}
+
+.files-page .file-details {
+  height: 100%;
+}
+
+.files-page .file-details section {
+  height: 100%;
+}
+
+.files-page .file-details .disabled {
+  opacity: 0.6;
+}
+
+.files-page .file-details,
+.files-page .file-list {
+  display: none;
+}
+
+.files-page .virus-check {
+  display: inline;
+}
+
+.files-page .virus-check .positive {
+  color: green;
+}
+
+.files-page .virus-check .negative {
+  color: red;
+  font-weight: bold;
+}
+
+.files-page .file-details dt {
+  width: 110px;
+}
+
+.files-page .file-details dd {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.files-page .file-details .side-bar {
+  float: left;
+  overflow: hidden;
+  padding: 10px 5px 10px 10px;
+  height: 100%;
+  width: 250px;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.files-page .file-details .hint {
+  position: static;
+  text-align: left;
+}
+
+/* ------------------------------------------------ MINI FILES ------------------------------------------------ */
+.files-page .file-list.mini {
+  position: absolute;
+  display: table;
+  top: 100px;
+  right: 100px;
+  z-index: -1;
+  width: 300px;
+  opacity: 0.8;
+}
+
+.files-page .file-list.mini tr {
+  border: 0;
+}
+
+.confirm.overlay .file-list.mini {
+  width: 100%;
+}
+
+.confirm.overlay .mini-table-wrapper {
+  overflow: auto;
+  max-height: 120px;
+}
+
+.file-list.mini tr {
+  height: auto;
+  background: rgba(72, 123, 255, 0.15);
+}
+
+.file-list.mini td {
+  padding: 3px 5px;
+}
+
+.file-list.mini * {
+  cursor: default !important;
+}
+
+.file-list.mini .file-size,
+.file-list.mini .file-modified {
+  display: none;
+}
+
+/* ------------------------------------------------ EMBEDS ------------------------------------------------ */
+.embed {
+  border-left: 1px solid #ccc;
+  position: relative;
+  height: 100%;
+  padding: 10px;
+  overflow: auto;
+  -ms-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.embed div.object,
+.embed.Code pre {
+  position: absolute;
+  width: auto;
+  height: auto;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.embed div.object {
+  padding: 10px;
+}
+
+.embed div.object object {
+  display: block;
+} 
+
+.embed.Code {
+  padding: 0;
+}
+
+.embed.Code pre {
+  padding: 10px 0;
+  font-size: 14px;
+  float: left;
+  z-index: 1;
+}
+
+.embed.Code ol {
+  float: left;
+}
+
+.embed.Code pre:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  border-right: 1px solid #ccc;
+  background: #f8f8f8;
+  width: 34px;
+  padding-right: 6px;
+}
+
+.embed.Code pre li:hover {
+  background: #f2f2f2;
+}
+
+.embed.Audio {
+  background: #f2f2f2;
+}
+
+.embed.Audio .ui360-vis {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -128px 0 0 -128px;
+}
+
+/* ------------------------------------------------ FILE ACTIONS ------------------------------------------------ */
+.file-actions {
+  float: right;
+  margin-top: -5px;
+}
+
+.file-actions li {
+  float: left;
+  margin-left: 6px;
+}
+
+.file-actions a {
+  border: 1px solid #aaa;
+  border-radius: 2px;
+  width: 32px;
+  cursor: not-allowed;
+  height: 32px;
+  display: block;
+  background-color: #f1f1f1;
+  background-image: url(/img/spr_file_actions_r1.png);
+  background-repeat: no-repeat;
+  text-indent: -9999px;
+  opacity: 0.25;
+  overflow: hidden;
+}
+
+.file-actions a.enabled {
+  opacity: 0.75;
+  cursor: pointer;
+}
+
+.file-actions a.enabled:hover {
+  box-shadow: 0 0 2px #aaa;
+  background-color: #f9f9f9;
+  opacity: 1;
+}
+
+.file-actions a.enabled:active {
+  box-shadow: none;
+  border-color: #666;
+}
+
+.file-actions .play {
+  background-position: -211px center;
+}
+
+.file-actions .play.add {
+  background-position: -248px center;
+}
+
+.file-actions .upload {
+  background-position: 7px center;
+}
+
+.file-actions .new-document {
+  background-position: -31px center;
+}
+
+.file-actions .new-folder {
+  width: 40px;
+  background-position: -77px center;
+}
+
+.file-actions .share {
+  background-position: -129px center;
+}
+
+.file-actions .remove {
+  background-position: -175px center;
+}
+
+
+
+
+/* ------------------------------------------------ POPUP ------------------------------------------------ */
+.files-play-page {
+  background: #f2f2f2;
+}
+
+.files-play-page .ui360 {
+  margin: 0 auto;
+}
+
+.files-play-page .playlist {
+  top: 256px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+}
+
+.files-play-page.dragover .playlist {
+  background: rgba(0, 204, 0, 0.06);
+}
+
+.files-play-page .enter-fullscreen {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 25px;
+  height: 25px;
+  background: url(/img/icn_fullscreen.png) no-repeat center center;
+}
+
+.files-play-page.fullScreen .ui360 {
+  margin: -128px 0 0 -128px;
+  position: absolute;
+  top: 35%;
+  left: 50%;
+}
+
+.files-play-page.fullScreen .playlist {
+  top: 70%;
+}
+
+.files-play-page.fullScreen .playlist li {
+  padding: 10px 100px;
+  font-size: 14px;
+}
+
+.files-play-page.fullScreen .remove {
+  right: 50px;
+}
+
+/* ------------------------------------------------ PLAYLIST ------------------------------------------------ */
+.playlist {
+  background: #fff;
+  outline: 1px solid #333;
+  border-top: 1px solid #fff;
+  overflow: auto;
+  counter-reset: li;
+}
+
+.playlist li::before {
+  content: counter(li) ".";
+  counter-increment: li;
+  color: #999;
+  display: inline-block;
+  text-align: right;
+  width: 24px;
+  padding-right: 6px;
+  margin-right: 6px;
+}
+
+.playlist li {
+  padding: 8px 20px 8px 0;
+  color: #333;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  position: relative;
+  cursor: pointer;
+}
+
+.playlist .remove {
+  line-height: 18px;
+  right: 4px;
+  position: absolute;
+  margin-top: -9px;
+  top: 50%;
+  font-size: 14px;
+  font-weight: bold;
+  display: none;
+  color: #333 !important;
+  text-decoration: none;
+}
+
+.playlist .selected .remove {
+  color: #fff !important;
+}
+
+.playlist li:hover .remove {
+  display: inline;
+}
+
+.playlist li:nth-child(even) {
+  background: #f2f2f2;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.playlist li:hover {
+  background: rgba(72, 123, 255, 0.1);
+}
+
+.files-play-page li.selected {
+  cursor: default;
+  background: rgba(72, 123, 255, 0.6);
+  color: #fff;
+  font-weight: bold;
+}
+
+.files-play-page li.selected:before {
+  content: "\25B6";
+  color: #fff;
+}
+
+
+
+/* ------------------------------------------------ PLAYER ------------------------------------------------ */
+.ui360, /* entire UI */
+.sm2-360ui { /* canvas container */
+ position:relative;
+}
+
+.ui360,
+.sm2-360ui {
+ min-width:50px; /* should always be at least this. */
+ min-height:50px;
+}
+
+.sm2-360ui {
+ width:50px;
+ height:50px;
+}
+
+.ui360,
+.ui360 * {
+ vertical-align:middle;
+}
+
+.sm2-360ui {
+ position:relative;
+ display:inline-block; /* firefox 3 et al */
+}
+
+.sm2-360ui.sm2_playing,
+.sm2-360ui.sm2_paused {
+ /* bump on top when active */
+ z-index:10;
+}
+
+.ui360 .sm2-canvas {
+ position:absolute;
+ left:0px;
+ top:0px;
+}
+
+.ui360 .sm2-timing {
+ position:absolute;
+ display:block;
+ left:0px;
+ top:0px;
+ width:100%;
+ height:100%;
+ margin:0px;
+ font:11px "helvetica neue",helvetica,monaco,lucida,terminal,monospace;
+ color:#666;
+ text-align:center;
+ line-height:50px;
+}
+
+.ui360 .sm2-timing.alignTweak {
+ text-indent:1px; /* devious center-alignment tweak for Safari (might break things for others.) */
+}
+
+.ui360 .sm2-cover {
+ position:absolute;
+ left:0px;
+ top:0px;
+ width:100%;
+ height:100%;
+ z-index:2;
+ display:none;
+ background-image: url(data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==); /* old-skool bug: IE 9 won't catch mouse events otherwise. /smash */
+}
+
+.ui360 .sm2-360btn {
+ position:absolute;
+ display:block;
+ top:50%;
+ left:50%;
+ width:50px;
+ height:50px;
+ margin-left:-25px;
+ margin-top:-25px;
+ border-radius: 25px;
+ cursor:pointer;
+ z-index:3;
+}
+
+.ui360 .sm2-360data {
+ display:inline-block;
+ font-family:helvetica;
+}
+
+.sm2-inline-block .ui360 .sm2-360btn,
+.ui360 .sm2-360ui.sm2_playing .sm2-360btn,
+.ui360 .sm2-360ui.sm2_paused .sm2-360btn {
+ /* smaller clickable button, in center */
+ width:22px;
+ height:22px;
+ margin-left:-11px;
+ margin-top:-11px;
+}
+
+.ui360 .sm2-360ui.sm2_playing .sm2-cover,
+.ui360 .sm2-360ui.sm2_paused .sm2-cover {
+ display:block;
+}
+
+/* this could be optimized a fair bit. */
+
+.ui360,
+.ui360 .sm2-360btn-default,
+.ui360 .sm2-360ui.sm2_paused .sm2-360btn {
+ background:transparent url(/img/360-player/360-button-play.png) no-repeat;
+}
+
+.ui360 {
+ background-position: 14px 50%;
+}
+
+.ui360 .sm2-360btn-default,
+.ui360 .sm2-360ui.sm2_paused .sm2-360btn {
+ background-position:50% 50%;
+}
+
+.ui360 .sm2-360btn-default,
+.ui360 .sm2-360ui.sm2_paused .sm2-360btn {
+ cursor:pointer;
+}
+
+.ui360 .sm2-360btn-default:hover,
+.ui360 .sm2-360ui.sm2_paused .sm2-360btn:hover {
+ background:transparent url(/img/360-player/360-button-play-light.png) no-repeat 50% 50%;
+ cursor:pointer;
+}
+
+.ui360 .sm2-360ui.sm2_playing .sm2-360btn:hover,
+.ui360 .sm2-360btn-playing:hover {
+ background:transparent url(/img/360-player/360-button-pause-light.png) no-repeat 50% 50%;
+ cursor:pointer;
+}
+
+.ui360 .sm2-360ui.sm2_playing .sm2-timing {
+ visibility:visible;
+}
+
+.ui360 .sm2-360ui.sm2_buffering .sm2-timing {
+ visibility:hidden;
+}
+
+.ui360 .sm2-360ui .sm2-timing,
+.ui360 .sm2-360ui .sm2-360btn:hover + .sm2-timing,
+.ui360 .sm2-360ui.sm2_paused .sm2-timing {
+ visibility:hidden;
+}
+
+.ui360 .sm2-360ui.sm2_dragging .sm2-timing,
+.ui360 .sm2-360ui.sm2_dragging .sm2-360btn:hover + .sm2-timing {
+ /* paused + dragging */
+ visibility:visible;
+}
+
+.ui360 .sm2-360ui.sm2_playing .sm2-360btn,
+.ui360 .sm2-360ui.sm2_dragging .sm2-360btn,
+.ui360 .sm2-360ui.sm2_dragging .sm2-360btn:hover,
+.ui360 .sm2-360ui.sm2_dragging .sm2-360btn-playing:hover {
+ /* don't let pause button show on hover when dragging (or paused and dragging) */
+ background:transparent;
+ cursor:auto;
+}
+
+.ui360 .sm2-360ui.sm2_buffering .sm2-360btn,
+.ui360 .sm2-360ui.sm2_buffering .sm2-360btn:hover {
+  background:transparent url(/img/360-player/icon_loading_spinner.gif) no-repeat 50% 50%;
+  opacity:0.5;
+  visibility:visible;
+}
+
+/* larger canvas, spectrum + EQ visualization and other items */
+
+.ui360-vis,
+.ui360-vis .sm2-360ui {
+ /* size of the container for the circle, etc. */
+ width:256px;
+ height:256px;
+}
+
+.ui360-vis {
+ position:relative;
+ /* a little extra spacing */
+ background-position:22.6% 50%; /* (~109px) initial play button position */
+}
+
+.ui360-vis .sm2-timing {
+ font:bold 24px "helvetica neue",helvetica,monaco,lucida,terminal,monospace;
+ color:#333;
+ text-align:center;
+ line-height:256px;
+ text-indent:0px;
+}
+
+/* Use a bigger loading image for this layout */
+
+.ui360-vis .sm2-360btn,
+.ui360-vis .sm2-360ui.sm2_paused .sm2-360btn,
+.ui360-vis .sm2-360ui.sm2_playing .sm2-360btn {
+ width:48px;
+ height:48px;
+ margin-left:-24px;
+ margin-top:-24px;
+ border-radius: none;
+}
+
+.ui360-vis,
+.ui360-vis .sm2-360ui.sm2_paused .sm2-360btn,
+.ui360-vis .sm2-360btn-default {
+ background:transparent url(/img/360-player/360-button-vis-play.png) no-repeat 50% 50%;
+ cursor:pointer;
+}
+
+.ui360-vis:hover .sm2-360btn,
+.ui360-vis .sm2-360btn-default:hover,
+.ui360-vis .sm2-360ui.sm2_paused .sm2-360btn:hover {
+ background:transparent url(/img/360-player/360-button-vis-play-light.png) no-repeat 50% 50%;
+ cursor:pointer;
+}
+
+
+.ui360-vis .sm2-360ui.sm2_playing .sm2-360btn:hover,
+.ui360-vis .sm2-360btn-playing:hover {
+ background:transparent url(/img/360-player/360-button-vis-pause-light.png) no-repeat 50% 50%;
+ cursor:pointer;
+}
+
+.ui360-vis {
+ /* non-JS / before-loaded state */
+ background-position: 21% 50%;
+}
+
+.ui360-vis .sm2-360ui.sm2_dragging .sm2-360btn {
+ visibility: hidden;
+}

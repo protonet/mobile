@@ -1,12 +1,11 @@
 //= require "../utils/is_same_origin.js"
-//= require "../utils/guess_file_type.js"
 
 /**
  * AJAX Page Loads and Form Submits
  */
 protonet.open = (function() {
   // Ignore elements that match the following css selectors
-  var blackList = [
+  var selectorBlackList = [
     // General flag
     "[data-avoid-ajax]",
     // Channel switcher
@@ -14,29 +13,27 @@ protonet.open = (function() {
     "[data-meep-share]",
     "[data-rendezvous-with]",
     "[data-reply-to]",
+    // Files that are meant to be downloaded instead of displayed
+    "[download]",
     // User profile links
     "[data-user-id]",
-    "[data-tab]",
     // rails.js
     "[data-remote]",
-    "[data-method]",
-    // File widget
-    "#file-widget a"
+    "[data-method]"
   ].join(",");
-
-  var prototype = Element.prototype || {};
   
-  var isTouchDevice = protonet.user.Browser.IS_TOUCH_DEVICE();
+  var pathBlackList = [
+    "/users/sign_in",
+    "/users/sign_up",
+    "/users/password/new"
+  ];
   
-  var matchesSelector = prototype.matchesSelector
-    || prototype.webkitMatchesSelector
-    || prototype.mozMatchesSelector
-    || prototype.oMatchesSelector
-    || prototype.msMatchesSelector
-    || function(selector) { return $(this).is(selector); };
+  var isTouchDevice = protonet.browser.IS_TOUCH_DEVICE();
+  
+  var matchesSelector = Element.prototype.matchesSelector || function(selector) { return $(this).is(selector); };
 
   var isBlackListed = function(link) {
-    return matchesSelector.call(link, blackList);
+    return matchesSelector.call(link, selectorBlackList);
   };
   
   var fallback = function(eventOrUrl) {
@@ -62,21 +59,15 @@ protonet.open = (function() {
       return fallback(eventOrUrl);
     }
     
-    if (!protonet.utils.isSameOrigin(url) && !url.startsWith(protonet.config.node_base_url)) {
+    if (!protonet.utils.isSameOrigin(url)) {
+      return fallback(eventOrUrl);
+    }
+    
+    if (pathBlackList.indexOf(link.pathname) !== -1) {
       return fallback(eventOrUrl);
     }
     
     if (link.pathname === "/" || !link.pathname) {
-      return fallback(eventOrUrl);
-    }
-
-    // could be: audio, html, video, ... (see guess_file_type.js)
-    var fileType = protonet.utils.guessFileType(url).type;
-    if (fileType === "unknown" && url.indexOf("/system/files/show") !== -1) {
-      return fallback(eventOrUrl);
-    }
-
-    if (!protonet.ui.ModalWindow.supportsFileType(fileType)) {
       return fallback(eventOrUrl);
     }
     
@@ -102,6 +93,9 @@ protonet.utils.History.addFallback(protonet.open);
 
 $.behaviors({
   "a[href]:click": function(link, event) {
+    if (event.isDefaultPrevented()) {
+      return;
+    }
     protonet.open(event);
   },
   
@@ -190,56 +184,5 @@ $.behaviors({
         protonet.trigger("flash_message.error", protonet.t("FORM_SUBMIT_ERROR"));
       }
     }
-  },
-  
-  /**
-   * @example
-   *    <nav>
-   *      <a href="/channels/1" data-tab="channel-container"></a>
-   *      <a href="/channels/2" data-tab="channel-container"></a>
-   *    </nav>
-   *    <output data-tab="channel-container"></output>
-   */
-  "a[data-tab]:click": function(tabLink, event) {
-    var $tabLink            = $(tabLink),
-        tabName             = $tabLink.data("tab"),
-        url                 = $tabLink.prop("href"),
-        $tabContainer       = $("output[data-tab='" + tabName + "']"),
-        $scrollContainer    = $(".modal-window > output:visible"),
-        $tabLinks           = $("a[data-tab='" + tabName + "']"),
-        originalPaddingTop  = (function() {
-          var paddingTop = $tabContainer.data("original-padding-top");
-          if (typeof(paddingTop) === "undefined") {
-            paddingTop = $tabContainer.cssUnit("padding-top")[0];
-            $tabContainer.data("original-padding-top", paddingTop);
-          }
-          return paddingTop;
-        })();
-    
-    $.ajax({
-      url:      $tabLink.prop("href"),
-      headers:  { "X-Request-Type": "tab" },
-      beforeSend: function() {
-        var hint = $("<p>", { "class": "hint", text: protonet.t("LOADING") });
-        $tabContainer.html(hint);
-        
-        $tabLinks.parent().removeClass("selected");
-        $tabLink.parent().addClass("selected");
-        protonet.utils.History.push(url);
-      },
-      success: function(html, statusText, xhr) {
-        var $output = $(html).find("output[data-tab]");
-        if ($output.length > 0) {
-          html = $output.html();
-          $tabContainer.attr("class", $output.attr("class"));
-          var classNames = $output.parents("section.subpage").attr("class");
-          $tabContainer.parents("section.subpage").attr("class", classNames);
-        }
-        $tabContainer.html(html).hide().fadeIn("fast");
-        $tabContainer.css("padding-top", (originalPaddingTop + $scrollContainer.scrollTop()).px());
-        $tabContainer.trigger("tab:updated");
-      }
-    });
-    event.preventDefault();
   }
 });

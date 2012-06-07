@@ -19,16 +19,12 @@
 }
 
 .meeps-page .meep .avatar {
-  -moz-box-shadow: none;
-  -webkit-box-shadow: none;
   box-shadow: none;
 }
 
 .meeps-page .border {
   height: 90px;
   border: 7px solid rgb(72, 123, 255);
-  -webkit-border-radius: 1.2em;
-  -moz-border-radius: 1.2em;
   border-radius: 1.2em;
   overflow: visible !important; /* jquery will set this to hidden while animating, we don't want this */
   position: absolute;

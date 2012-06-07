@@ -11,27 +11,16 @@
  */
 protonet.utils.highlightUserReplies = (function() {
   var REG_EXP         = /(\s|^|\()@([\w\.\-_@]+)/g,
-      TRAILING_CHARS  = /[\.\-_]+$/,
-      userMapping     = {},
-      viewerId        = protonet.config.user_id;
-  
-  protonet.on("user.added", function(data) {
-    userMapping[data.name.toLowerCase()] = data.id;
-  });
-  
-  protonet.on("users.data_available", function(userData) {
-    $.each(userData, function(userId, data) {
-      userMapping[data.name.toLowerCase()] = userId;
-    });
-  });
+      TRAILING_CHARS  = /[\.\-_]+$/;
   
   return function(str) {
     var result = arguments.callee.result = [];
     return str.replace(REG_EXP, function(original, $1, $2) {
       var trailingChars = ($2.match(TRAILING_CHARS) || [""])[0],
           userName      = trailingChars ? $2.replace(TRAILING_CHARS, "") : $2,
-          userId        = userMapping[userName.toLowerCase()],
-          isViewer      = viewerId == userId;
+          userId        = protonet.data.User.getIdByName(userName),
+          isViewer      = protonet.data.User.isViewer(userId);
+      
       if (!userId) {
         return original;
       }

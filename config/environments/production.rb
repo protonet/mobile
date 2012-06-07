@@ -32,7 +32,8 @@ Dashboard::Application.configure do
   configatron.current_file_path = "/home/protonet/dashboard/current"
   configatron.shared_file_path  = "/home/protonet/dashboard/shared"
   configatron.deploy_config_file_path = "#{configatron.shared_file_path}/config/protonet.d/deploy_config"
-  configatron.user_file_path    = "#{configatron.shared_file_path}/user-files"
+  # caution: don't add a slash at the end of this path (otherwise migrations may get fucked up)
+  configatron.files_path    = "#{configatron.shared_file_path}/files"
   configatron.images.avatars_path   = "public/system/avatars"
   configatron.images.externals_path = "public/system/externals"
   

@@ -10,6 +10,7 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
 }
 
+.context-menu:after,
 .context-menu:before {
   content: "";
   display: block;
@@ -21,13 +22,22 @@
   height: 0;
   border-left: 9px solid transparent;
   border-right: 9px solid transparent;
-  border-bottom: 9px solid #487bff;
+  border-bottom: 9px solid #fff;
+  z-index: 2;
+}
+
+.context-menu:after {
+  margin: -11px 0 0 -11px;
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  border-bottom: 11px solid rgba(0, 0, 0, 0.15);
+  z-index: 1;
 }
 
 .context-menu li {
   cursor: pointer;
   padding: 8px;
-  color: #487bff;
+  color: #333;
   overflow: hidden;
   border-bottom: 1px solid #ccc;
 }
@@ -55,7 +65,8 @@
   font-size: 100px;
 }
 
-.context-menu-smileys:before {
+.context-menu-smileys:before,
+.context-menu-smileys:after {
   left: 26px;
 }
 
@@ -76,6 +87,10 @@
 
 .context-menu-smileys li:hover {
   background-color: #ccc;
+}
+
+.context-menu-users {
+  margin-right: -25px;
 }
 
 .context-menu-meep {

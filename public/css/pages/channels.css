@@ -42,7 +42,6 @@
   display: block;
   padding: 10px;
   min-height: 70px;
-  border-bottom: 1px solid #999;
   text-decoration: none;
   background-image: -moz-linear-gradient(top, #fff, #ddd);
   background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#ddd));
@@ -70,6 +69,8 @@
                     -moz-linear-gradient(top, #fff, #DAE4FF);
   background-image: url(/img/founder.png),
                     -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#DAE4FF));
+  min-height: 110px;
+  box-shadow: 0 2px 2px #999;
 }
 
 .channel-teaser .official-channel:active {
@@ -83,6 +84,10 @@
   font-size: 10px;
   margin: 5px 0 0;
   width: 200px;
+}
+
+.channel-teaser h4 {
+  margin-top: 0;
 }
 
 .channel-icons {
@@ -172,8 +177,6 @@
   top: 0;
   height: 48px;
   width: 48px;
-  -moz-box-shadow: 5px 5px 0px #eee;
-  -webkit-box-shadow: 5px 5px 0px #eee;
   box-shadow: 5px 5px 0px #eee;
 }
 

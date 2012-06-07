@@ -1,4 +1,4 @@
-//= require "../../data/flickr.js"
+//= require "../../data/ext/flickr.js"
 
 /**
  * Flickr Search Provider

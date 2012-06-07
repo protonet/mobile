@@ -1,4 +1,3 @@
-//= require "../utils/escape_html.js"
 //= require "../utils/strip_tags.js"
 //= require "../utils/parse_url.js"
 //= require "utils/insert_base_url.js"
@@ -35,6 +34,7 @@
  */
 protonet.text_extensions.render = (function() {
   var mediaTypeDetection = {
+    files:    function(data) { return data.files },
     flash:    function(data) { return data.flash && typeof(data.flash) == "string"; },
     iframe:   function(data) { return data.iframe && typeof(data.iframe) == "string"; },
     image:    function(data) { return data.image && typeof(data.image) == "string"; },
@@ -58,9 +58,7 @@ protonet.text_extensions.render = (function() {
   }
   
   return function(data) {
-    data = protonet.text_extensions.utils.insertBaseUrl(data);
-    
-    var results     = new protonet.utils.Template("text-extension-template").toElement(),
+    var results     = new protonet.utils.Template("text-extension-template").to$(),
         description = protonet.utils.escapeHtml(protonet.utils.stripTags(data.description || "")),
         title       = protonet.utils.escapeHtml(protonet.utils.stripTags(data.title || "")),
         provider    = data.type,
@@ -95,3 +93,4 @@ protonet.text_extensions.render = (function() {
 //= require "renderer/iframe.js"
 //= require "renderer/image.js"
 //= require "renderer/images.js"
+//= require "renderer/files.js"

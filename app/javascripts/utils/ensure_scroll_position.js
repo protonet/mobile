@@ -4,8 +4,7 @@
  *  }).when({ scrollTopGreaterThan: 200, and: true });
  */
 protonet.utils.ensureScrollPosition = (function() {
-  var $window = $(window),
-      $body   = $(document.body);
+  var $body   = $(document.body);
   return function(execute) {
     return {
       when: function(conditions) {

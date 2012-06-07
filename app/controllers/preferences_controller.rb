@@ -29,7 +29,6 @@ class PreferencesController < ApplicationController
       # Captive stuff. This is not finished yet
       #{:url => 'captive_settings', :name => 'Captive settings'},
       {:section => 'privacy_settings',  :name => 'Privacy'},
-      {:section => 'notifications',     :name => 'Notifications'},
       {:section => 'software_updates',  :name => 'Updates'},
       {:section => 'advanced_settings', :name => 'Advanced'}
     ] : []

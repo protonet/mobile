@@ -68,12 +68,12 @@ Array.prototype.unique = function () {
   var result = [];
   for (var i = array.length; i--; ) {
     var val = array[i];
-    if ($.inArray(val, result) === -1) {
+    if (result.indexOf(val) === -1) {
       result.unshift(val);
     }
   }
   return result;
-}
+};
 
 //---------------------------- STRING ----------------------------
 String.prototype.startsWith = function(str) {
@@ -128,58 +128,6 @@ Number.prototype.second = Number.prototype.seconds = function() {
 };
 
 
-//---------------------------- AUDIO ------------------------------
-(function() {
-  /**
-   * Shim for HTML5 audio
-   */
-  var userAgent                 = navigator.userAgent.toLowerCase(),
-      // Safari sometimes randomly crashes when playing sound
-      audioIsBuggy              = (userAgent.indexOf("safari") !== -1 && userAgent.indexOf("chrome") === -1),
-      // IE < 9 requires the confirmation of the user to use the plugin "Windows Media Player Core"
-      requiresUserConfirmation  = userAgent.match(/msie/);
-  
-  if (window.Audio && window.Audio.prototype) {
-    window.Audio.prototype.replay = function() {
-      // this can cause js errors in chrome under certain circumstances...
-      try { this.currentTime = 0; } catch(e) {}
-    };
-  }
-  
-  if ((!window.Audio || audioIsBuggy) && !requiresUserConfirmation) {
-    window.Audio = function(src) {
-      this.src = src;
-    };
-    
-    window.Audio.prototype = {
-      play: (function() {
-        var audioHost;
-        return function() {
-          try { audioHost.parentNode.removeChild(audioHost); } catch(e) {}
-          
-          audioHost = document.createElement("embed");
-          audioHost.setAttribute("src", this.src);
-          audioHost.setAttribute("hidden", true);
-          document.body.appendChild(audioHost);
-        };
-      })(),
-      
-      replay: function() {
-        this.play();
-      },
-      
-      canPlayType: function(type) {
-        switch(type) {
-          case "audio/wav":
-            return true;
-          default:
-            return false;
-        }
-      }
-    };
-  }
-})();
-
 
 //---------------------------- OBJECT ------------------------------
 if (!Object.keys) {
@@ -199,5 +147,23 @@ if (!Object.keys) {
 
 
 
-//---------------------------- WEBSOCKET -------------------------
+//---------------------------- WebSocket -------------------------
 window.WebSocket = window.MozWebSocket || window.WebSocket;
+
+// --------------------------- User Media -------------------------
+if (!navigator.getUserMedia) {
+  navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+}
+
+// --------------------------- window.URL -------------------------
+if (!window.URL) {
+  window.URL = window.webkitURL || window.msURL || window.oURL;
+}
+
+// --------------------------- Element -------------------------
+(function() {
+  var prototype = Element.prototype;
+  if (!prototype.matchesSelector) {
+    prototype.matchesSelector = prototype.webkitMatchesSelector || prototype.mozMatchesSelector || prototype.oMatchesSelector || prototype.msMatchesSelector;
+  }
+})();

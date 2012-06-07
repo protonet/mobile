@@ -7,7 +7,7 @@ Feature: Using global channels
     And I go to the channels page
     And I follow "Global Channels"
     And I select the global channel "protonet-devs" in the channel overview
-    Then I should see "protonet-devs" in the channel details pane
+    Then I should see "Protonet-devs" in the channel details pane
     And I press "Subscribe" within ".subscribe-channel-form"
     Then I should see "admin" in the channel subscriber list
     And I close the lightbox

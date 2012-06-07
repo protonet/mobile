@@ -3,7 +3,11 @@ SystemPreferences.node_description = "this is your own node"
 SystemPreferences.node_supernode = "localhost"
 SystemPreferences.node_key  = "encryptme"
 SystemPreferences.node_uuid = UUID4R::uuid(1)
-#  this code is duplicated in the rake task -> dashboard.rake -> reset_admin_key
+
+FileUtils.mkdir_p(configatron.files_path, :mode => 0770)
+FileUtils.mkdir_p("#{configatron.files_path}/users", :mode => 0770)
+FileUtils.mkdir_p("#{configatron.files_path}/channels", :mode => 0770)
+
 Network.local
 Node.local
 ['admin', 'user', 'guest', 'invitee', 'api', 'api-node'].each do |title|

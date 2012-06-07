@@ -106,8 +106,6 @@
 }
 
 .text-extension-results .media a:hover img {
-  -webkit-box-shadow: 0 0 5px #666;
-  -moz-box-shadow: 0 0 5px #666;
   box-shadow: 0 0 5px #666;
 }
 
@@ -119,7 +117,7 @@
 --------------------------------------------------------------------------- */
 .text-extension-results .media iframe {
   border: 1px solid #999;
-  width: 549px;
+  width: 649px;
   height: 200px;
 }
 
@@ -129,7 +127,7 @@
 }
 
 #text-extension-preview .text-extension-results .media iframe {
-  width: 530px;
+  width: 630px;
 }
 
 .text-extension-results.Maps .media a:after {
@@ -143,12 +141,12 @@
 --------------------------------------------------------------------------- */
 .text-extension-results.flash object {
   height: 280px;
-  width: 551px;
+  width: 651px;
   margin-bottom: 5px;
 }
 
 #text-extension-preview .text-extension-results.flash object {
-  width: 530px;
+  width: 630px;
   height: 280px;
 }
 
@@ -181,11 +179,7 @@
   text-align: center;
   border: 3px solid #fff;
   border-radius: 20px;
-  -moz-border-radius: 20px;
-  -webkit-border-radius: 20px;
   box-shadow: 0 0 2px 1px #666;
-  -webkit-box-shadow: 0 0 2px 1px #666;
-  -moz-box-shadow: 0 0 2px 1px #666;
 }
 
 .text-extension-results .media .media-close-link {
@@ -230,8 +224,8 @@
 
 .text-extension-results.images .media a {
   position: relative;
-  margin: 0 5px 5px 0;
   float: left;
+  margin: 0 5px 5px 0;
   display: block;
 }
 
@@ -270,20 +264,6 @@
 }
 
 
-/* Code highlighting */
-pre .str { color: #080; }
-pre .kwd { color: #008; }
-pre .com { color: #800; }
-pre .typ { color: #606; }
-pre .lit { color: #066; }
-pre .pun { color: #660; }
-pre .pln { color: #000; }
-pre .tag { color: #008; }
-pre .atn { color: #606; }
-pre .atv { color: #080; }
-pre .dec { color: #606; }
-
-
 /* =GITHUB COMMIT TEXT EXTENSION
 --------------------------------------------------------------------------- */
 .text-extension-results.GithubCommit .media strong {
@@ -310,8 +290,6 @@ pre .dec { color: #606; }
 --------------------------------------------------------------------------- */
 .text-extension-results.Meep {
   background-color: rgba(0, 0, 0, 0.05);
-  -moz-box-shadow: inset 1px 1px 1px #999;
-  -webkit-box-shadow: inset 1px 1px 2px #999;
   box-shadow: inset 1px 1px 2px #999;
   padding: 6px 8px;
 }
@@ -339,8 +317,6 @@ pre .dec { color: #606; }
   outline: 2px solid #fff;
   width: 24px !important;
   height: 24px !important;
-  -webkit-box-shadow: none !important;
-  -moz-box-shadow: none !important;
   box-shadow: none !important;
 }
 
@@ -352,4 +328,31 @@ pre .dec { color: #606; }
 
 .remote-channel .text-extension-results.Meep a {
   cursor: default;
+}
+
+/* =FILES TEXT EXTENSION
+------------------------------------------------------------------------------ */
+.text-extension-results.files .domain,
+.text-extension-results.files .title,
+.text-extension-results.files .description {
+  display: none;
+}
+
+.text-extension-results.files .media {
+  float: none;
+}
+
+.text-extension-results.files .media li {
+  margin-top: 5px;
+}
+
+.text-extension-results.files .media li:first-child {
+  margin-top: 0;
+}
+
+.text-extension-results.files .media a {
+  white-space: nowrap;
+  display: inline-block;
+  font-size: 12px;
+  line-height: 32px;
 }

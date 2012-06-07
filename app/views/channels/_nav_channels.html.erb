@@ -1,20 +1,20 @@
 <aside>
   <ul>
     <li class="<%= 'selected' if @nav == "channels" %>">
-      <a href="<%= channels_path %>" data-tab="channels">
+      <a href="<%= channels_path %>">
         <strong>Local Channels (<%= @channels.size %>)</strong>
       </a>
     </li>
     <%- if permitted_to?(:read, :channels)  %>
     <li class="<%= 'selected' if @nav == "global" %>">
-      <a href="<%= global_channels_path %>" data-tab="channels">
+      <a href="<%= global_channels_path %>">
         <strong>Global Channels</strong>
       </a>
     </li>
     <%- end %>
     <%- if permitted_to?(:create, :channels)  %>
     <li class="<%= 'selected' if @nav == "new" %>">
-      <a href="<%= new_channel_path %>" data-tab="channels">
+      <a href="<%= new_channel_path %>">
         <strong>Create new</strong>
       </a>
     </li>

@@ -8,10 +8,5 @@ class RoutingTest < ActionController::TestCase
     opts = {:controller => "preferences/vpn", :action => "off"}
     assert_routing "preferences/vpn/off", opts
   end
-  
-  test "should correctly route file directory creation" do
-    assert_recognizes({:controller => 'system/files', :action => 'create_directory'}, {:path => 'system/files/create_directory', :method => :post})
-  end
-  
 
 end

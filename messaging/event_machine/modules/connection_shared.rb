@@ -19,7 +19,9 @@ module ConnectionShared
   end
 
   def receive_json(json)
-    if json.is_a?(Hash) && json["operation"] == "authenticate"
+    return unless json.is_a? Hash
+    
+    if json["operation"] == "authenticate"
       log("auth json: #{json["payload"].inspect}")
       if json_authenticate(json["payload"]) && !@subscribed
         @subscribed = true # don't resubscribe
@@ -31,14 +33,14 @@ module ConnectionShared
       else
         send_reload_request # invalid auth
       end
-    elsif (@user) && json.is_a?(Hash)
+    elsif @user
       case json["operation"]
         when /^user\.typing/
           update_user_typing_status(json)
+        when 'meep.create'
+          create_meep(json)
         when 'ping'
           send_ping_answer
-        when 'work'
-          send_work_request(json)
         when 'remote.meep'
           channel_id = @tracker.channel_id_for(json['channel_uuid'])
           user_id = remote_user_id(json['user_id'])
@@ -50,7 +52,7 @@ module ConnectionShared
           channel_id && Meep.create(:user_id => @user.id,
                   :author => json['author'],
                   :message => json['message'],
-                  :text_extension => json['text_extension'].to_json,
+                  :text_extension => json['text_extension'] .to_json,
                   :node_id => @user.node.id,
                   :channel_id => channel_id,
                   :socket_id  => @socket_id,
@@ -71,12 +73,35 @@ module ConnectionShared
               log "==========>>>>>>>>  #{json.inspect} \n\n\n"
             end
           end
+          
+        else
+          # Experimental RPC interface
+          object, method = json['operation'].split('.')
+          
+          begin
+            @tracker.rpc.invoke object, method, json['params'], @user do |err, result|
+              if err
+                send_json json.merge(:status => 'error', :error => err)
+              else
+                send_json json.merge(:status => 'success', :result => result)
+              end
+            end
+          # Handle any possible errors
+          rescue Rpc::RpcError => ex
+            puts "Error during RPC call: #{ex.class}", ex.message, ex.backtrace
+            # Send some info on the error that occured
+            send_rpc_error json.merge(:status => 'error', :error => ex.class.to_s)
+          end
       end
     else
       # play echoserver if request could not be understood
       puts "Something is using an obsolete interface! #{json.inspect}"
       send_json(json)
     end
+  end
+  
+  def send_rpc_error(json={})
+    send_json json.merge(:status => 'error')
   end
   
   def node_connection?
@@ -91,11 +116,7 @@ module ConnectionShared
     
       when 'web', 'api', 'node'
         return false if auth_data['user_id'] == 0
-        potential_user = begin 
-          User.find(auth_data['user_id'])
-        rescue ActiveRecord::RecordNotFound
-          nil
-        end
+        potential_user = User.find_by_id(auth_data['user_id'])
         @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data['token'])
         
         if @user
@@ -109,8 +130,48 @@ module ConnectionShared
     @type = type
   end
   
+  def create_meep(data)
+    meep_data = data['payload'].reject {|k,v| !Meep.valid_attributes.include?(k) }
+    
+    channel   = Channel.find(meep_data['channel_id'])
+    response  = { :trigger => 'meep.created', :seq => data['seq'] }
+    
+    send_json response.merge(:status => 'error') unless @user.subscribed?(channel)
+    
+    share_attached_files meep_data do |err, meep_data|
+      next send_json(response.merge(:status => 'error', :error => err)) if err
+      
+      meep = Meep.create(meep_data.merge(:user => @user, :channel => channel))
+      
+      if meep
+        send_json response.merge(:status => 'success', :result => Meep.prepare_for_frontend(meep, :channel_id => channel.id))
+      else
+        send_json response.merge(:status => 'error')
+      end
+    end
+  end
+  
+  def share_attached_files(meep_data, &block)
+    text_extension = meep_data['text_extension']
+    
+    # TODO:
+    # Parse message:
+    # => find urls to files and share them in the current channel folder
+    # => change message
+    
+    return block.call(false, meep_data) if !text_extension || !text_extension['files']
+    
+    @tracker.rpc.invoke 'fs', 'share', { 'from' => text_extension['files'], 'to' => "/channels/#{meep_data['channel_id']}/" }, @user do |err, result|
+      unless err
+        text_extension['files'] = text_extension['files'].map { |path| result[path] || path }
+        meep_data['text_extension'] = text_extension
+      end
+      block.call(err, meep_data)
+    end
+  end
+  
   def send_reload_request
-    send_json :x_target => 'document.location.reload'
+    send_json :eval => 'location.reload()'
   end
   
   def send_reconnect_request
@@ -196,11 +257,6 @@ module ConnectionShared
 
   def send_ping_answer
     send_json :trigger => "socket.ping_received"
-  end
-
-  def send_work_request(data)
-    data[:user_id] = @user.id
-    publish 'worker', '#', data
   end
 
   def send_and_publish(topic, key, data)

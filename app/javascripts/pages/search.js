@@ -20,11 +20,11 @@ protonet.pages.Search = {
 
     function resizeContainer() {
       if (!isModalWindow) {
-        this.$container.css("min-height", $(window).height() - this.$container.offset().top + "px");
+        this.$container.css("min-height", $window.height() - this.$container.offset().top - 1 + "px");
       }
     }
 
-    $(window).resize(resizeContainer.bind(this));
+    $window.resize(resizeContainer.bind(this));
     resizeContainer.call(this);
     
     this._observe();
@@ -172,8 +172,6 @@ protonet.pages.Search = {
   }
 };
 
-$(function() {
-  if ($(".search-page").length) {
-    protonet.pages.Search.initialize();
-  }
+protonet.p("search", function() {
+  protonet.pages.Search.initialize();
 });

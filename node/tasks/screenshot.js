@@ -1,4 +1,4 @@
-var sys           = require("sys"),
+var sys           = require("util"),
     spawn         = require("child_process").spawn,
     exec          = require('child_process').exec,
     path          = require('path'),

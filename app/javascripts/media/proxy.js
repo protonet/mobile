@@ -1,35 +1,11 @@
 //= require "../utils/convert_to_absolute_url.js"
 //= require "../utils/escape_for_reg_exp.js"
 
+// TODO: Rename to protonet.media.ImageProxy
 protonet.media.Proxy = (function() {
   var BASE_URL        = protonet.config.node_base_url + "/image_proxy",
       IMAGE_URL       = BASE_URL + "?url={url}",
-      HTTP_TIMEOUT    = 5000,
       REG_EXP_EXTRACT = new RegExp(protonet.utils.escapeForRegExp(BASE_URL) + "\\/?.*?(?:\\?|&)url\\=(.+?)(?:&|#|$)");
-  /**
-   * Fetches remote content via WebSockets and node.js
-   */
-  function httpGet(url, onSuccess, onFailure) {
-    var timeout = setTimeout(function() {
-      protonet.off("http_proxy.workdone");
-      onFailure();
-    }, HTTP_TIMEOUT);
-    
-    protonet.one("http_proxy.workdone", function(event, response) {
-      clearTimeout(timeout);
-      if (response.result && response.result.statusCode == 200) {
-        onSuccess(response.result.body);
-      } else {
-        onFailure();
-      }
-    });
-    
-    protonet.trigger("socket.send", {
-      operation:  "work",
-      task:       "http_proxy",
-      url:        url
-    });
-  }
   
   /**
    * Takes a url like
@@ -48,22 +24,21 @@ protonet.media.Proxy = (function() {
    * Get image proxy url
    * Optional size parameter causes server side cropping
    */
-  function getImageUrl(url, size) {
+  function getImageUrl(url, options) {
     if (url.match(REG_EXP_EXTRACT)) {
       url = extractOriginalImageUrl(url);
     } else {
       url = protonet.utils.convertToAbsoluteUrl(url);
     }
     
+    options = $.extend({ extent: url.indexOf(".gif") === -1 }, options);
+    
     var imageUrl = IMAGE_URL.replace("{url}", encodeURIComponent(url));
-    if (size) {
-      imageUrl += "&width=" + size.width + "&height=" + size.height;
-    }
+    imageUrl += "&width=" + (options.width || "") + "&height=" + (options.height || "") + "&extent=" + options.extent;
     return imageUrl + "&type=.jpg"; // append fake file type for easy file detection later
   }
   
   return {
-    httpGet:                  httpGet,
     getImageUrl:              getImageUrl,
     extractOriginalImageUrl:  extractOriginalImageUrl
   };

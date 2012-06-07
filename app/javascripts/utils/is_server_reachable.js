@@ -1,5 +1,5 @@
 protonet.utils.isServerReachable = (function() {
-  var supportsOnlineDetection = protonet.user.Browser.SUPPORTS_ONLINE_DETECTION();
+  var supportsOnlineDetection = protonet.browser.SUPPORTS_ONLINE_DETECTION();
   return function(callback) {
     if (supportsOnlineDetection) {
       callback(navigator.onLine);

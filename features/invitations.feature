@@ -17,9 +17,9 @@ Feature: Invitations
     When I fill in "invitation_first_name" with "my"
     When I fill in "invitation_last_name" with "friend"
     When I fill in "invitation_email" with "friend-3@example.com"
-    And I check "home"
-    And I check "public"
-    And I press "next Step"
+    And I check "Home"
+    And I check "Public"
+    And I press "Next Step"
     Then I should see "Invitation for friend-3@example.com"
     And I should see "Status: not sent yet"
     And I press "Send invitation"
@@ -27,7 +27,7 @@ Feature: Invitations
     # Invitation mail
     And "friend-3@example.com" should receive an email with subject "dudemeister has invited you to join the protonet of localhost"
     When "friend-3@example.com" opens the email with subject "dudemeister has invited you to join the protonet of localhost"
-    Then they should see "<strong>dudemeister</strong> wants to collaborate with you and just set up an account for you." in the email body
+    Then they should see "<strong>dudemeister</strong> wants to collaborate with you. All you need to do is to follow this link and choose a password." in the email body
     And they should see "Click this link to get started:" in the email body
     And they should see /\/join\/(.*){10}/ in the email body
 

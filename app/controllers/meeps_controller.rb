@@ -14,7 +14,7 @@ class MeepsController < ApplicationController
       meeps  = []
     end
     
-    render :json => Meep.prepare_for_frontend(meeps, { :channel_id => channel.id })
+    render :json => Meep.prepare_many_for_frontend(meeps, { :channel_id => channel.id })
   end
   
   # request: { :channel_states => { 1 => 123123, 2 => 213123 } }
@@ -26,7 +26,7 @@ class MeepsController < ApplicationController
       channel_state = channel_states[channel.id.to_s]
       if channel_state
         meeps = channel.meeps.includes(:user).all(:conditions => ["meeps.id > ?", channel_state], :order => "meeps.id ASC", :limit => 100)
-        result[channel.id] = Meep.prepare_for_frontend(meeps, { :channel_id => channel.id })
+        result[channel.id] = Meep.prepare_many_for_frontend(meeps, { :channel_id => channel.id })
       elsif channel.has_unread_meeps
         publish "users", current_user.id, {
           :trigger    => "channel.load",
@@ -46,7 +46,7 @@ class MeepsController < ApplicationController
       format.json {
         @meep = Meep.find(params[:id])
         return head(404) if @meep.nil?
-        @meep = Meep.prepare_for_frontend([@meep], { :channel_id => @meep.channel.id }).first
+        @meep = Meep.prepare_for_frontend(@meep, { :channel_id => @meep.channel.id })
         render :json => @meep.to_json
       }
     end
@@ -55,34 +55,25 @@ class MeepsController < ApplicationController
   def before
     meep = Meep.find(params[:id]) rescue head(404)
     return head(404) if meep.nil?
-    render :json => Meep.prepare_for_frontend(meep.before(params[:count]), { :channel_id => meep.channel.id })
+    render :json => Meep.prepare_many_for_frontend(meep.before(params[:count]), { :channel_id => meep.channel.id })
   end
   
   def after
     meep = Meep.find(params[:id])
     return head(404) if meep.nil?
-    render :json => Meep.prepare_for_frontend(meep.after(params[:count]), { :channel_id => meep.channel.id })
-  end
-  
-  def create
-    channel_id = params[:meep].delete(:channel_id)
-    params[:meep].reject! {|k,v| !Meep.valid_attributes.include?(k)}
-    
-    channel = Channel.find(channel_id)
-    # TODO: Restrict user from posting to channels he has not subscribed or is not verified to post to #security
-    
-    # current user is nil when not logged in, that's ok
-    @meep = Meep.create!(params[:meep].merge(:user => current_user, :channel => channel))
-    
-    respond_to do |format|
-      format.js   { render :text => @meep.id }
-      format.html { redirect_to :controller => :instruments, :channel_id => channel_id }
-    end
+    render :json => Meep.prepare_many_for_frontend(meep.after(params[:count]), { :channel_id => meep.channel.id })
   end
   
   def destroy
     Meep.find(params[:id]).destroy
     head 204
   end
+  
+  private
+    def handle_attached_files(meep_data, channel_id)
+      text_extension = JSON.parse(meep_data['text_extension']) rescue nil
+
+      success
+    end
   
 end

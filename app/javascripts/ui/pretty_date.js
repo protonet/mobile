@@ -1,8 +1,7 @@
-//= require "../utils/convert_to_pretty_date.js"
+//= require "../utils/prettify_date.js"
 
 (function() {
-  var SELECTOR        = "time",
-      ATTRIBUTE       = "title",
+  var ATTRIBUTE       = "title",
       INTERVAL_TIME   = 30000, // milliseconds
       elementRegistry = [],
       interval;
@@ -12,8 +11,8 @@
   }
   
   function update(element) {
-    var prettyDate = protonet.utils.convertToPrettyDate(element.attr(ATTRIBUTE));
-    element.html(prettyDate);
+    var prettyDate = protonet.utils.prettifyDate(element.attr(ATTRIBUTE));
+    element.text(prettyDate);
   }
   
   function updateAll() {
@@ -22,16 +21,26 @@
     });
   }
   
+  function startInterval() {
+    if (!interval) {
+      interval = setInterval(updateAll, INTERVAL_TIME);
+    }
+  }
+  
   protonet.on("meep.rendered", function(meepElement, meepData, instance) {
     if (instance.merged) {
       return;
     }
-    var timeElement = meepElement.find(SELECTOR);
+    var timeElement = meepElement.find("time");
     register(timeElement);
     update(timeElement);
-    
-    if (!interval) {
-      interval = setInterval(updateAll, INTERVAL_TIME);
-    }
+    startInterval();
+  });
+  
+  protonet.on("file.rendered", function(fileElement) {
+    var timeElement = fileElement.find(".file-modified");
+    register(timeElement);
+    update(timeElement);
+    startInterval();
   });
 })();

@@ -17,6 +17,7 @@ exports.scrape = function(params, response) {
     options = { 
       "maxRedirects": 5,
       "headers": {
+        "referer": 'http://protonet.info',
         "user-agent": 'Mozilla/5.0 (KHTML, like Gecko) Chrome/16.0.912.77 Safari/535.7 Protonet/1.0'
       },
       "maxResponseLength": 500000,
@@ -58,12 +59,14 @@ exports.scrape = function(params, response) {
             }
           }
           data.results = results;
-        }catch(e){
+        } catch(e) {
           data.error = e;
         }    
         if (callback) {
+          response.setHeader("Content-Type", "text/javascript");
           response.end(callback + "(" + JSON.stringify(data) + ")");
-        }else{
+        } else {
+          response.setHeader("Content-Type", "application/json");
           response.end(JSON.stringify(data));
         }
         if (window) { window.close(); };

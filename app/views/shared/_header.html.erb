@@ -9,15 +9,23 @@
         <li class="nav-link preferences-controller-link" style="<%= 'display: none;' unless current_user.admin? %>">
           <%= link_to "Administration", preferences_path %>
         </li>
+        
         <%- if permitted_to?(:read, :channels) -%>
-        <li class="nav-link channels-controller-link">
-          <%= link_to "Channels", channels_path %>
-        </li>
+          <li class="nav-link channels-controller-link">
+            <%= link_to "Channels", channels_path %>
+          </li>
         <%- end -%>
+        
         <%- if permitted_to?(:read, User.new) -%>
-        <li class="nav-link users-controller-link invitations-controller-link">
-          <%= link_to "Users", users_path %>
-        </li>
+          <li class="nav-link users-controller-link invitations-controller-link">
+            <%= link_to "Users", users_path %>
+          </li>
+        <%- end -%>
+        
+        <%- if permitted_to?(:read, :files) && !current_user.invitee? -%>
+          <li class="nav-link files-controller-link">
+            <%= link_to "Files", files_path %>
+          </li>
         <%- end -%>
         <li class="search">
           <%= render :partial => 'search/search_form' %>
