@@ -1,7 +1,7 @@
 source :gemcutter
 source 'http://gems.github.com/'
 
-gem 'bundler', "1.2.0.pre"
+gem 'bundler', "1.2.0.pre.1"
 gem "rails", "3.0.5"
 gem "mysql2", "0.2.7"
 gem "devise", "1.2.1" # if you update this please check the monkeypatches in user.rb (methods and lines after declaration) and lib/devise_ext.rb
@@ -35,7 +35,7 @@ gem "ruby-ifconfig", :git => 'git://github.com/dudemeister/ruby-ifconfig.git'
 gem 'jquery-rails'
 gem 'protolink', :git => "git://github.com/protonet/protolink.git"
 gem 'whenever', :require => false
-gem 'xattr', :git => "git://github.com/protonet/xattr.git"
+gem 'ffi-xattr'
 
 group :development do
   gem 'foreman'

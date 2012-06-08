@@ -1,4 +1,4 @@
-require "xattr"
+require 'ffi-xattr'
 
 class Channel < ActiveRecord::Base
   include Rabbit
@@ -202,7 +202,7 @@ class Channel < ActiveRecord::Base
     path = "#{configatron.files_path}/channels/#{id}"
     FileUtils.mkdir_p(path, :mode => 0770)
     xattr = Xattr.new(path)
-    xattr.set("uuid", uuid)
+    xattr["uuid"] = uuid
   end
   
   def delete_folder

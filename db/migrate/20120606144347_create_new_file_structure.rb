@@ -1,4 +1,4 @@
-require "xattr"
+require "ffi-xattr"
 
 class CreateNewFileStructure < ActiveRecord::Migration
   def self.up
@@ -33,7 +33,7 @@ class CreateNewFileStructure < ActiveRecord::Migration
       end
       
       xattr = Xattr.new(new_channel_path)
-      xattr.set("uuid", channel.uuid)
+      xattr["uuid"] = channel.uuid
     end
     
     FileUtils.rm_rf(old_files_path)
