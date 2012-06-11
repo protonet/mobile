@@ -128,7 +128,7 @@ cd /tmp
 rm -rf deployer
 git clone git@github.com:protonet/deploy.git deployer
 cd deployer
-git reset --hard 502955f74a939873e6c462eb1f9c03222c725b96
+git reset --hard e6f3d4d80d1d5428a5b1e3e2c6891b97be92486d
 export DEPLOYER_REVISION=`git log --pretty=format:"%H" -n 1`
 rm Gemfile.lock
 
