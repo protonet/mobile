@@ -33,7 +33,7 @@ class CreateNewFileStructure < ActiveRecord::Migration
       end
       
       xattr = Xattr.new(new_channel_path)
-      xattr["uuid"] = channel.uuid
+      xattr["user.uuid"] = channel.uuid
     end
     
     FileUtils.rm_rf(old_files_path)

@@ -72,7 +72,7 @@ function getOwner(fsPath) {
   if (parts[0] === "users" && !isNaN(+parts[1])) {
     return +parts[1];
   } else {
-    return +(xattr.list(fsPath).owner) || ANONYMOUS;
+    return +(xattr.list(fsPath)["user.owner"]) || ANONYMOUS;
   }
 }
 
@@ -431,7 +431,7 @@ exports.init = function(amqpConnection) {
       if (!channelId) { return; }
       
       var channelPath = getChannelPath(channelId),
-          channelUuid = xattr.list(channelPath).uuid;
+          channelUuid = xattr.list(channelPath)["user.uuid"];
       
       if (!channelUuid) { return; }
       

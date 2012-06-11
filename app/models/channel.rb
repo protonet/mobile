@@ -202,7 +202,8 @@ class Channel < ActiveRecord::Base
     path = "#{configatron.files_path}/channels/#{id}"
     FileUtils.mkdir_p(path, :mode => 0770)
     xattr = Xattr.new(path)
-    xattr["uuid"] = uuid
+    # every xattr needs to be prefixed by "user." in order to work under linux
+    xattr["user.uuid"] = uuid
   end
   
   def delete_folder

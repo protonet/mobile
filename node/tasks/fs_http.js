@@ -123,7 +123,7 @@ exports.init = function(amqpConnection) {
               
               try {
                 // this doesn't work with file paths including umlauts... (might be OSX related only)
-                xattr.set(newFilePath, "owner", message.params.user_id || -1);
+                xattr.set(newFilePath, "user.owner", message.params.user_id || -1);
               } catch(e) {
                 console.log("Failed to set extended attributes");
               }
