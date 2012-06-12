@@ -16,7 +16,7 @@ set password [lindex $argv 0]
 spawn bash -l
 exp_send "source /home/protonet/.bashrc\n"
 exp_send "source /home/protonet/.profile\n"
-exp_send "source /usr/local/rvm/scripts/rvm"
+exp_send "source /usr/local/rvm/scripts/rvm\n"
 exp_send "babushka protonet:up.migration\n"
 exp_send "exit\n"
 
