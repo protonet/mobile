@@ -35,28 +35,6 @@ connection.addListener("error", function(){
 });
 
 connection.addListener("ready", function() {
-  // var exchange      = connection.exchange("worker"),
-  //     userExchange  = connection.exchange("users"),
-  //     workerQueue   = connection.queue("node-worker");
-  // 
-  // workerQueue.bind(exchange, "worker.#");
-  // workerQueue.subscribeJSON(function(message) {
-  //   message = JSON.parse(message.data);
-  //   sys.puts("worker queue message: " + util.inspect(message));
-  // 
-  //   var publish = function(result, trigger) {
-  //     userExchange.publish("users." + message.user_id, { result: result, trigger: (trigger + ".workdone") });
-  //   };
-  // 
-  //   switch(message.task) {
-  //     case "http_proxy":
-  //       console.log(message);
-  //       require("./tasks/http_proxy").get(message.url, publish);
-  //       break;
-  //   }
-  // });
-
-
   /**
    * RPC queue
    * Kept separate because it's not called directly by a client
