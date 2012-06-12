@@ -131,8 +131,8 @@ protonet.ui.files.Queue = (function() {
       $status.text(protonet.t("UPLOAD_SUCCESSFUL"));
       
       $folder
-        .text(protonet.data.Channel.getName(path))
-        .attr("href", protonet.data.Channel.getUrl(path));
+        .text(protonet.data.File.getName(path))
+        .attr("href", protonet.data.File.getUrl(path));
       
       $share.show();
       
