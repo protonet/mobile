@@ -13,7 +13,7 @@
     "formidable": "1.0.8",
     "mime": "1.2.4",
     "step": "0.0.5",
-    "amqp": "git+ssh://git@github.com:protonet/node-amqp.git",
+    "amqp": "git://github.com/protonet/node-amqp.git",
     "underscore": "1.1.6",
     "mkdirp": "0.3.0",
     "watch": "0.5.1",
