@@ -6,7 +6,7 @@ protonet.ui.files.Queue = (function() {
     shareImmediate: false
   };
   
-  var $container, $header, $status, $list, $close, $share, undef, collapsed, inProgress, queue;
+  var $container, $header, $status, $list, $close, $share, $folder, undef, collapsed, inProgress, queue;
   
   function confirmMessage() {
     return protonet.t("CONFIRM_CANCEL");
@@ -68,6 +68,7 @@ protonet.ui.files.Queue = (function() {
       $list       = $container.find("ol");
       $close      = $container.find(".close");
       $share      = $container.find(".share-container");
+      $folder     = $container.find(".folder-link");
       
       this._observe();
     },
@@ -120,11 +121,19 @@ protonet.ui.files.Queue = (function() {
     },
     
     allUploaded: function() {
+      inProgress = false;
+      
       $window.off("beforeunload.file_queue");
       $container.addClass("uploaded");
       
+      var path = this.uploader.getTargetFolder();
+      
       $status.text(protonet.t("UPLOAD_SUCCESSFUL"));
-      inProgress = false;
+      
+      $folder
+        .text(protonet.data.Channel.getName(path))
+        .attr("href", protonet.data.Channel.getUrl(path));
+      
       $share.show();
       
       if (this.config.shareImmediate) {

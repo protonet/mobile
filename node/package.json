@@ -17,7 +17,7 @@
     "underscore": "1.1.6",
     "mkdirp": "0.3.0",
     "watch": "0.5.1",
-    "iconv": "git://github.com/protonet/node-xattr.git",
-    "xattr": "git://github.com/protonet/node-xattr.git"
+    "iconv": "git://github.com/protonet/node-iconv.git",
+    "xattr": "git://github.com/protonet/xattr.git"
   }
 }
