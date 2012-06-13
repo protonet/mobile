@@ -29,17 +29,6 @@ function update_manager {
   esac
 }
 
-function install_ruby {
-  case $(pkg_manager) in
-    apt-get) apt-get install -qqy ruby ;;
-    aptitude) aptitude -y install ruby ;;
-    brew) brew install ruby ;;
-    pacman) pacman -Syq --noconfirm --noprogressbar ruby ;;
-    yum) yum -y install ruby ;;
-    *)
-  esac
-}
-
 function logo {
   echo ""
   echo ".       .           .   .      "
@@ -80,21 +69,6 @@ function welcome {
   echo ""
   read -p "Sound good? [y/N] " f
   [[ "$f" == y* ]] || [[ "$f" == Y* ]]
-}
-
-function install_ruby_if_required {
-  if has 'ruby'; then
-    true # already installed
-  else
-    echo "First we need to install ruby (via $(pkg_manager))."
-    update_manager
-    install_ruby
-    if ! has 'ruby'; then
-      false_with "Argh, the ruby install failed."
-    else
-      true_with "Nice, ruby $(ruby --version | awk '{print $2}') was installed at $(which ruby)."
-    fi
-  fi
 }
 
 function clean_up_install_dir {
@@ -169,7 +143,6 @@ function on_install_failure {
 }
 
 function do_bootstrap {
-  install_ruby_if_required &&
   create_install_dir &&
   stream_tarball &&
   handle_install && on_install_success || on_install_failure
