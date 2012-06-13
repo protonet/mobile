@@ -110,14 +110,19 @@ protonet.ui.files.Queue = (function() {
           $item     = queue[file.id],
           data      = response[0];
       
-      $item
-        .data("file", data)
-        .removeClass("uploading")
-        .css("backgroundColor", "#ffff99")
-        .animate({ "backgroundColor": "#ffffff" });
-      
-      $item
-        .find("a").attr("href", protonet.data.File.getUrl(data.path));
+      if (data) {
+        $item
+          .data("file", data)
+          .removeClass("uploading")
+          .css("backgroundColor", "#ffff99")
+          .animate({ "backgroundColor": "#ffffff" });
+        
+        $item
+          .find("a").attr("href", protonet.data.File.getUrl(data.path));
+      } else {
+        // TODO
+        $item.addClass("error");
+      }
     },
     
     allUploaded: function() {

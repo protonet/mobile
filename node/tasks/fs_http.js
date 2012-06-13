@@ -40,7 +40,7 @@ var sys                   = require("util"),
 
 function normalizeInput(str) {
   if (process.platform !== 'darwin') {
-    Iconv = Iconv || require('Iconv').Iconv;
+    Iconv = Iconv || require('iconv').Iconv;
     str = new Iconv("utf8-mac", "utf8//TRANSLIT//IGNORE").convert(str).toString();
   }
   return str;
