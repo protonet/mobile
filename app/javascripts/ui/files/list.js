@@ -650,7 +650,7 @@ protonet.ui.files.List = (function() {
             var displayName;
             if (record && record.rendezvousPartner) {
               displayName = protonet.t("SHARED_BETWEEN_YOU_AND_USER", {
-                user_name: (protonet.data.User.getName(record.rendezvousPartner) || "user (# " + record.rendezvousPartner + ")")
+                user_name: (protonet.data.User.getName(record.rendezvousPartner) || "unknown")
               });
             } else {
               displayName = record.name;

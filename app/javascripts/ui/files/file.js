@@ -153,7 +153,7 @@ protonet.ui.files.File = (function() {
       });
       
       if (data.rendezvousPartner) {
-        var userName = (protonet.data.User.getName(data.rendezvousPartner) || "user # " + data.rendezvousPartner);
+        var userName = (protonet.data.User.getName(data.rendezvousPartner) || "unknown");
         file.prettyName = protonet.t("SHARED_BETWEEN_YOU_AND_USER", { user_name: userName.truncate(20) });
       }
       
@@ -162,7 +162,7 @@ protonet.ui.files.File = (function() {
       }
 
       data.uploaderId   = data.uploader_id || -1;
-      data.uploaderName = protonet.data.User.getName(data.uploaderId) || ("user #" + data.uploaderId);
+      data.uploaderName = protonet.data.User.getName(data.uploaderId) || "unknown";
 
       return data;
     },
