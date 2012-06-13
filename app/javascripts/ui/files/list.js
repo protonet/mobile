@@ -208,8 +208,10 @@ protonet.ui.files.List = (function() {
       this.$fileList.attr("draggable", "false");
       this.removeHint();
       
-      protonet.ui.Droppables.remove(this.droppables.desktopFile);
-      protonet.ui.Droppables.remove(this.droppables.protonetFile);
+      if (this.uploader.features.dragdrop) {
+        protonet.ui.Droppables.remove(this.droppables.desktopFile);
+        protonet.ui.Droppables.remove(this.droppables.protonetFile);
+      }
     },
     
     updatePath: function(path) {
@@ -227,8 +229,10 @@ protonet.ui.files.List = (function() {
       this.reset();
       this.$fileList.show().attr("draggable", "true");
       
-      protonet.ui.Droppables.add(this.droppables.desktopFile);
-      protonet.ui.Droppables.add(this.droppables.protonetFile);
+      if (this.uploader.features.dragdrop) {
+        protonet.ui.Droppables.add(this.droppables.desktopFile);
+        protonet.ui.Droppables.add(this.droppables.protonetFile);
+      }
       
       if (!files) {
         this.insertHint("This folder doesn't seem to exist anymore");
