@@ -16,11 +16,10 @@ class Rpc::Objects::Fs < Rpc::Base
     @client.call :fs, :list, params do |resp|
       parent = params['parent'].sub(/^\//, "").sub(/\/\$/, "")
       if parent == 'channels'
-        allowed_channel_ids = user.allowed_channels.map(&:id)
+        allowed_channel_ids = user.channels.map(&:id)
         
         resp['result'] = resp['result'].find_all do |file|
-          return true if file['type'] == 'file'
-          allowed_channel_ids.include?(file['name'].to_i)
+          file['type'] == 'file' || allowed_channel_ids.include?(file['name'].to_i)
         end
       end
       

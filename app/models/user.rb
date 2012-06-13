@@ -220,7 +220,7 @@ class User < ActiveRecord::Base
   # channels a user potentially is allowed to see
   def allowed_channels
     # admin: return all real channels + verified (don't show the admin rendezvous channel he didn't subscribe to)
-    return Channel.real   | channels.verified  if !stranger? && !invitee?
+    return Channel.real | channels.verified  if !stranger? && !invitee?
     # user: return all public channels + verified
     #return Channel.public | channels.verified  if !stranger? && !invitee?
     # invitee & stranger: return all verified channels

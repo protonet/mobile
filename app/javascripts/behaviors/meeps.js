@@ -107,8 +107,8 @@ $.behaviors({
     var $children       = menu.list.children().show(),
         data            = $meep.data("meep"),
         isMeepOwner     = data.user_id == protonet.config.user_id || protonet.config.admin_ids.indexOf(protonet.config.user_id) !== -1,
-        isRemoteChannel = protonet.timeline.Channels.channels[data.channel_id] instanceof protonet.timeline.RemoteChannel;
-    if (!isMeepOwner || isRemoteChannel) {
+        isGlobalChannel = protonet.data.Channel.isGlobal(data.channel_id);
+    if (!isMeepOwner || isGlobalChannel) {
       $children.filter("li:contains('delete')").hide();
     }
   });
