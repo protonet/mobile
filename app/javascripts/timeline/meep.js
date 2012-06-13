@@ -215,7 +215,10 @@
         return;
       }
       
-      postMeep(this.data, function(status, newData, error) {
+      var dataToSend = $.extend({}, this.data);
+      delete dataToSend.created_at;
+      
+      postMeep(dataToSend, function(status, newData, error) {
         if (status === "success") {
           this.setStatus(protonet.t("MEEP_SENT"), 1000);
           
