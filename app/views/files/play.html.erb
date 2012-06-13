@@ -3,7 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title>protonet - Audio Player</title>
-    <%= stylesheet_link_tag(audio_player_stylesheets, :cache => (configatron.avoid_caching != false)) %>
+    <%= stylesheet_link_tag(stylesheets, :cache => (configatron.avoid_caching != false)) %>
+    <%= include_stylesheet_if_exists("/css/pages/#{controller_name}.css") %>
   </head>
   <body>
     <%= render :partial => 'shared/flash_messages' %>
