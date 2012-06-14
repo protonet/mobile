@@ -219,7 +219,7 @@ protonet.ui.files.Queue = (function() {
       var duration = 100;
       $list.animate({ opacity: 1 }, duration);
       $container.animate({
-        bottom: 0
+        bottom: (0).px()
       }, duration, function() {
         collapsed = false;
       }.bind(this));

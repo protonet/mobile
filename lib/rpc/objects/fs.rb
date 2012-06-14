@@ -185,7 +185,8 @@ class Rpc::Objects::Fs < Rpc::Base
         
         # only copy files when they are potentially inaccessible for some users (/users/1/foo.jpg or /channels/10/abc.mp3)
         next if namespace != "users" && namespace != "channels"
-        next if id.empty? || id == to_channel_id || !id.match(/^\d+$/)
+        next if namespace == "channels" && id == to_channel_id # already in that channel
+        next if id.empty? || !id.match(/^\d+$/)
         next if path.empty?
         
         "/" + [namespace, id, path].join("/")
@@ -209,6 +210,8 @@ class Rpc::Objects::Fs < Rpc::Base
       else
         raise Rpc::AuthError, 'Not authed'
       end
+      
+      return false if user.stranger?
       
       # Accept strings as well
       paths = parse_paths(paths) if paths.first.is_a? String

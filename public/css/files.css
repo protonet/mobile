@@ -64,7 +64,7 @@ a.file, a.folder {
 
 #file-queue {
   position: fixed;
-  bottom: -10px;
+  bottom: 0;
   margin-bottom: -2px;
   left: 50%;
   width: 478px;
@@ -106,12 +106,14 @@ a.file, a.folder {
 #file-queue .file-name {
   display: inline-block;
   max-width: 300px;
-  overflow: hidden;
   white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 
 #file-queue .file-size {
+  display: inline-block;
+  overflow: hidden;
   color: #999;
 }
 

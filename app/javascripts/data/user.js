@@ -284,6 +284,11 @@
       return user ? user.isOnline : false;
     },
     
+    isStranger: function(id) {
+      var user = dataCache[id];
+      return user ? user.isStranger : true;
+    },
+    
     isAdmin: function(id) {
       return adminIds.indexOf(id) !== -1;
     },
@@ -345,6 +350,11 @@
       var userFilesPath = "/users/" + userId + "/",
           // parse channel id from path
           channelId     = +(path.match(REG_EXP_CHANNEL_ID) || [, NaN])[1];
+      
+      // strangers can't delete or upload
+      if (this.isStranger(userId)) {
+        return false;
+      }
       
       return this.isAdmin(userId)                                           // admin has access to everything
         || path.startsWith(userFilesPath)                                   // is viewer's file space

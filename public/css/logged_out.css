@@ -1,8 +1,5 @@
-.logged-out .inner-body {
-  margin: 90px auto 0;
-}
-
 .welcome {
+  margin-top: 90px;
   padding-left: 390px;
   min-height: 250px;
   overflow: hidden;

@@ -158,7 +158,6 @@ module ConnectionShared
     # Parse message:
     # => find urls to files and share them in the current channel folder
     # => change message
-    
     return block.call(false, meep_data) if !text_extension || !text_extension['files']
     
     @tracker.rpc.invoke 'fs', 'share', { 'from' => text_extension['files'], 'to' => "/channels/#{meep_data['channel_id']}/" }, @user do |err, result|
