@@ -2,6 +2,8 @@ require "ffi-xattr"
 
 class CreateNewFileStructure < ActiveRecord::Migration
   def self.up
+    p "UPGRADING TO THE NEW FILE STRUCTURE. THIS CAN TAKE A WHILE. PLEASE WAIT!"
+    
     mode           = 0770
     new_files_path = configatron.files_path
     old_files_path = new_files_path.sub(/\/files$/, "/user-files")
@@ -26,7 +28,7 @@ class CreateNewFileStructure < ActiveRecord::Migration
       old_channel_path = "#{old_files_path}/#{channel.id}"
       
       if File.exist?(old_channel_path)
-        FileUtils.cp_r(old_channel_path, channels_path)
+        FileUtils.mv(old_channel_path, new_channel_path)
         FileUtils.chmod(mode, new_channel_path)
       else
         FileUtils.mkdir_p(new_channel_path, :mode => mode)

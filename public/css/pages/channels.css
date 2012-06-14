@@ -141,7 +141,7 @@
   margin-bottom: 30px;
 } 
 
-.channels-page ul.channels-list li{
+.channels-page ul.channels-list li {
   float: left;
   position: relative;
   width: 130px;
@@ -150,13 +150,13 @@
   padding-left: 70px;
 }
 
-.channels-page ul.channels-list a{
+.channels-page ul.channels-list a {
   text-decoration: none;
   display: block;
   height: 48px;
 }
 
-.channels-page ul.channels-list strong{
+.channels-page ul.channels-list strong {
   display: block;
   word-wrap: break-word;
 }
