@@ -999,7 +999,7 @@ protonet.ui.files.List = (function() {
         return false;
       }
       
-      if (this.$tableWrapper.prop("scrollHeight") <= this.$tableWrapper.prop("offsetTop")) {
+      if (this.$tableWrapper.prop("scrollHeight") <= this.$tableWrapper.prop("offsetHeight")) {
         return false;
       }
       
