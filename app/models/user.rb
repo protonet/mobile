@@ -17,7 +17,7 @@ class User < ActiveRecord::Base
   has_many  :owned_channels,    :class_name => 'Channel', :foreign_key => :owner_id
   has_many  :invitations
   has_and_belongs_to_many  :roles
-  has_attached_file :avatar, :default_url => configatron.default_avatar
+  has_attached_file :avatar, :default_url => configatron.default_avatar, :preserve_files => true
   
   scope :registered, :conditions => "temporary_identifier IS NULL AND users.id != -1 AND users.node_id = 1"
   scope :strangers,  :conditions => "temporary_identifier IS NOT NULL"

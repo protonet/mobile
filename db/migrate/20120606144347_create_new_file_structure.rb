@@ -29,7 +29,7 @@ class CreateNewFileStructure < ActiveRecord::Migration
         FileUtils.cp_r(old_channel_path, channels_path)
         FileUtils.chmod(mode, new_channel_path)
       else
-        FileUtils.mkdir_p(channel_path, :mode => mode)
+        FileUtils.mkdir_p(new_channel_path, :mode => mode)
       end
       
       xattr = Xattr.new(new_channel_path)
