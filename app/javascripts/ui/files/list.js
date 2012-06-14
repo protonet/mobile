@@ -994,12 +994,12 @@ protonet.ui.files.List = (function() {
     },
     
     _isOnScrollBar: function(event) {
-      var scrollBarWidth = 20;
+      var scrollBarWidth = 24;
       if (!this.$tableWrapper.is(event.target)) {
         return false;
       }
       
-      if (this.$tableWrapper.prop("scrollHeight") <= this.$wrapper.prop("offsetTop")) {
+      if (this.$tableWrapper.prop("scrollHeight") <= this.$tableWrapper.prop("offsetTop")) {
         return false;
       }
       
