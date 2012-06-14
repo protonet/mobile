@@ -102,7 +102,7 @@ protonet.ui.users.Widget = {
       var adminFlag = user.isAdmin ? (" " + new protonet.utils.Template("admin-flag-template")) : "";
 
       var $element = $("<li>",{
-        "class": [user.isViewer ? "myself" : "", user.isStranger ? "stranger" : ""].join(" ")
+        "class": [user.isViewer ? "myself" : "", user.isStranger ? "stranger" : "user"].join(" ")
       }).append(
         $("<a>", {
           href:            protonet.data.User.getUrl(user.id),
@@ -178,8 +178,9 @@ protonet.ui.users.Widget = {
   },
   
   sort: function() {
-    this.$list.find(".online").prependTo(this.$list);
-    this.$list.find(".new-online").removeClass("new-online").prependTo(this.$list);
+    this.$list.find(".stranger.online").prependTo(this.$list);
+    this.$list.find(".user.online").prependTo(this.$list);
+    this.$list.find(".user.new-online").removeClass("new-online").prependTo(this.$list);
     this.$list.find(".typing").prependTo(this.$list);
   },
   
