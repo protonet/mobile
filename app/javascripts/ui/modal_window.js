@@ -1,4 +1,5 @@
 //= require "../utils/get_scrollbar_width.js"
+//= require "../utils/guess_file_type.js"
 //= require "../effects/blink.js"
 
 /**
@@ -160,8 +161,7 @@ protonet.ui.ModalWindow = (function() {
     }
   }
   
-  function _load(url) {
-    content("");
+  function _loadViaAjax(url) {
     elements.dialog.addClass("loading");
     _abortCurrentRequest();
     
@@ -169,11 +169,26 @@ protonet.ui.ModalWindow = (function() {
       url:  url,
       data: { ajax: 1 }
     }).done(function(response, statusText, xhr) {
-      _loadStylesheets(response, function(html) {
-        content(html, true);
+      var contentType = xhr.getResponseHeader("Content-Type");
+      if (contentType.startsWith("text/html")) {
+        _loadStylesheets(response, function(html) {
+          content(html, true);
+          elements.dialog.removeClass("loading");
+          protonet.trigger("modal_window.loaded", response, xhr);
+        });
+      } else if (contentType.startsWith("text/")) {
+        content(response);
         elements.dialog.removeClass("loading");
         protonet.trigger("modal_window.loaded", response, xhr);
-      });
+      } else {
+        elements.dialog.removeClass("loading");
+        protonet.trigger("modal_window.loaded", response, xhr);
+      }
+      
+      var responseUrl = xhr.getResponseHeader("X-Url");
+      if (responseUrl !== url) {
+        protonet.utils.History.replace(responseUrl);
+      }
     }).fail(function(xhr) {
       var textResource;
       if (xhr.status === 403) {
@@ -191,6 +206,30 @@ protonet.ui.ModalWindow = (function() {
       protonet.trigger("flash_message.error", textResource);
       elements.dialog.removeClass("loading");
     });
+  }
+  
+  function _load(url) {
+    content("", true);
+
+    var fileType = protonet.utils.guessFileType(url).type;
+    
+    switch(fileType) {
+      case "image":
+        content(
+          $("<img>", { src: url }), true
+        );
+        break;
+      case "iframe":
+      case "flash":
+      case "audio":
+      case "video":
+        content(
+          $("<iframe>", { src: url }), true
+        );
+        break;
+      default:
+        _loadViaAjax(url);
+    }
   }
   
   function show(url) {
@@ -215,7 +254,10 @@ protonet.ui.ModalWindow = (function() {
     
     if (url) {
       _load(url);
-      protonet.utils.History.push(url);
+      try {
+        // This could fail if the url is not same origin
+        protonet.utils.History.push(url);
+      } catch(e) {}
     } else {
       content("", true);
     }

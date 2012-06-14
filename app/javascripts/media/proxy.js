@@ -38,7 +38,12 @@ protonet.media.Proxy = (function() {
     return imageUrl + "&type=.jpg"; // append fake file type for easy file detection later
   }
   
+  function isProxied(url) {
+    return url.startsWith(BASE_URL);
+  }
+  
   return {
+    isProxied:                isProxied,
     getImageUrl:              getImageUrl,
     extractOriginalImageUrl:  extractOriginalImageUrl
   };

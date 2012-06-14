@@ -162,10 +162,10 @@
 }
 
 .channels-page ul.channels-list img {
-  opacity: 0.1;
+  opacity: 0.25;
 }
 
-.channels-page ul.channels-list img.subscribed{
+.channels-page ul.channels-list img.subscribed {
   opacity: 1;
 }
 

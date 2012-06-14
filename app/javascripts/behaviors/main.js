@@ -29,9 +29,7 @@ $.behaviors({
   },
   
   ".text-extension-results.Image a:click": function(element, event) {
-    var $image  = $("<img>", { src:   element.href }),
-        $anchor = $("<a>",   { href:  element.href, "class": "img", "data-avoid-ajax": 1, target: "_blank" }).html($image);
-    protonet.ui.ModalWindow.show().content($anchor, true);
+    protonet.ui.ModalWindow.show(element.href);
     event.preventDefault();
   },
   
