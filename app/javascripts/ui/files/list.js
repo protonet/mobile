@@ -13,8 +13,6 @@ protonet.ui.files.List = (function() {
       KEY_UP              = 38,
       KEY_DOWN            = 40,
       KEY_DELETE          = 46,
-      REG_EXP_CHANNELS    = /^\/channels\/(\d+)\/$/,
-      REG_EXP_USERS       = /^\/users\/(\d+)\/$/,
       defaultErrorMapping = {
         "Rpc::AuthError": "FILE_AUTH_ERROR",
         "TimeoutError":   "FILE_TIMEOUT_ERROR",
@@ -598,6 +596,9 @@ protonet.ui.files.List = (function() {
         $path = $path.add(this._getAddressBarItem(part, path));
       }.bind(this));
       
+      var $privacyHint = this._getPrivacyHint(this.currentPath);
+      $path.last().append($privacyHint);
+      
       this.$addressBar.html($path);
     },
     
@@ -640,6 +641,21 @@ protonet.ui.files.List = (function() {
       } else {
         this.$fileActions.find(".play").removeClass("add");
       }
+    },
+    
+    _getPrivacyHint: function(path) {
+      var $hint = $("<span>", { "class": "hint privacy-icon", "data-hover-hint": "top" }),
+          type  = protonet.data.File.isFolder(path) ? "FOLDER" : "FILE";
+      
+      if (path.startsWith(protonet.data.User.getFolder(viewer))) {
+        return $hint.attr("title", protonet.t("USER_" + type + "_PRIVACY_HINT"));
+      }
+      
+      if (path.match(/^\/channels\/\d+\//)) {
+        return $hint.attr("title", protonet.t("CHANNEL_" + type + "_PRIVACY_HINT"));
+      }
+      
+      return $();
     },
     
     _getAddressBarItem: function(name, path) {
@@ -975,7 +991,7 @@ protonet.ui.files.List = (function() {
         }.bind(this),
         "mousedown.files_page": function(event) {
           if (!this._isOnScrollBar(event)) {
-            this._clearMarker()
+            this._clearMarker();
           }
         }.bind(this)
       });
@@ -995,6 +1011,7 @@ protonet.ui.files.List = (function() {
     
     _isOnScrollBar: function(event) {
       var scrollBarWidth = 24;
+      
       if (!this.$tableWrapper.is(event.target)) {
         return false;
       }

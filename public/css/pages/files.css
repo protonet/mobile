@@ -183,6 +183,18 @@
   font-weight: normal;
 }
 
+.files-page .address-bar .privacy-icon {
+  background: url(/img/spr_channel_status_r2.png) no-repeat;
+  background-position: 0 -48px;
+  margin: 0 0 -1px 6px;
+  opacity: 0.4;
+  height: 16px;
+}
+
+.files-page .address-bar .privacy-icon:hover {
+  opacity: 1;
+}
+
 .files-page .address-bar a {
   display: inline-block;
   position: relative;

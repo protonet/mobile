@@ -86,6 +86,10 @@ protonet.i18n = {
   TOGGLE_FULLSCREEN_MODE: "Toggle fullscreen mode",
   AUDIO_PLAYER_SONG_ADDED: "Added 1 song to the playlist",
   AUDIO_PLAYER_SONGS_ADDED: "Added #{songs} songs to the playlist",
+  USER_FILE_PRIVACY_HINT: "Only you can see and edit this file",
+  USER_FOLDER_PRIVACY_HINT: "Only you can see this folder",
+  CHANNEL_FILE_PRIVACY_HINT: "Only subscribers of this channel can see and edit this file",
+  CHANNEL_FOLDER_PRIVACY_HINT: "Only subscribers of this channel can see this folder",
   
   VERIFY_SUBSCRIPTION: "#{count} user(s) needs to be verified"
 };
