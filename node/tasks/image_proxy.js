@@ -23,6 +23,10 @@ exports.proxy = function(params, headers, response) {
       suffix = ".png";
     }
     
+    if (params.cache_key) {
+      baseString += "_" + params.cache_key;
+    }
+    
     if (base) {
       return baseString + suffix;
     }

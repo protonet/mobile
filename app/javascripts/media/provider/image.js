@@ -7,7 +7,7 @@ protonet.media.provider.Image = {
   
   render: function(file, $container) {
     var deferred = $.Deferred(),
-        options  = { extent: false, width: $container.width() },
+        options  = { extent: false, width: $container.width(), cacheKey: new Date(file.modified).getTime() },
         src      = protonet.data.File.getDownloadUrl(file.path),
         $element = $("<img>", { src: protonet.media.Proxy.getImageUrl(src, options) });
     

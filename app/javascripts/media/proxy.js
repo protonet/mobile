@@ -35,6 +35,11 @@ protonet.media.Proxy = (function() {
     
     var imageUrl = IMAGE_URL.replace("{url}", encodeURIComponent(url));
     imageUrl += "&width=" + (options.width || "") + "&height=" + (options.height || "") + "&extent=" + options.extent;
+    
+    if (options.cacheKey) {
+      imageUrl += "&cache_key=" + options.cacheKey;
+    }
+    
     return imageUrl + "&type=.jpg"; // append fake file type for easy file detection later
   }
   
