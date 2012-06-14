@@ -88,7 +88,7 @@ exports.proxy = function(params, headers, response) {
     // and cleanup
     try {
       console.log('unlink');
-      // fs.unlinkSync(baseFileName);
+      fs.unlinkSync(baseFileName);
     } catch(err) { console.log('unlink fail', err); }
   }
   
