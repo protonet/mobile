@@ -970,8 +970,14 @@ protonet.ui.files.List = (function() {
       this.$tbody.on("mousedown", "tr", this._markerMousedown.bind(this));
       
       $document.on({
-        "keydown.files_page":   this._markerKeydown.bind(this),
-        "mousedown.files_page": this._clearMarker.bind(this)
+        "keydown.files_page":   function(event) {
+          this._markerKeydown(event);
+        }.bind(this),
+        "mousedown.files_page": function(event) {
+          if (!this._isOnScrollBar(event)) {
+            this._clearMarker()
+          }
+        }.bind(this)
       });
     },
     
@@ -985,6 +991,23 @@ protonet.ui.files.List = (function() {
       this.$marked.each(function() {
         $(this).data("instance").enable();
       });
+    },
+    
+    _isOnScrollBar: function(event) {
+      var scrollBarWidth = 20;
+      if (!this.$tableWrapper.is(event.target)) {
+        return false;
+      }
+      
+      if (this.$tableWrapper.prop("scrollHeight") <= this.$wrapper.prop("offsetTop")) {
+        return false;
+      }
+      
+      if (event.offsetX < (this.$tableWrapper.outerWidth() - scrollBarWidth)) {
+        return false;
+      }
+      
+      return true;
     },
     
     _clearMarker: function() {
