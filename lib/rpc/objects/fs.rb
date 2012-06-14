@@ -29,11 +29,13 @@ class Rpc::Objects::Fs < Rpc::Base
       if parent == ''
         resp['result'] = resp['result'].map do |file|
           if file['type'] == "folder" && file['name'] == "users"
-            { :name => user.id.to_s, :path => "/users/#{user.id}/", :modified => user.created_at, :type => 'folder' }
+            user.stranger? ? nil : { :name => user.id.to_s, :path => "/users/#{user.id}/", :modified => user.created_at, :type => 'folder' }
           else
             file
           end
         end
+        
+        resp['result'].compact!
       end
       
       handler.call resp['error'], resp['result']

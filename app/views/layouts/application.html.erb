@@ -5,10 +5,6 @@
     <%= render :partial => 'shared/layout_basic_body' %>
     <div class="inner-body">
       
-      <%- if current_user.stranger? -%>
-        <%= render :partial => 'devise/shared/registration_box' %>
-      <%- end -%>
-      
       <%= render :partial => 'shared/header' %>
       
       <section class="<%= page_class_names %>">

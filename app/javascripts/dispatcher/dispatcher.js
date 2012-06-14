@@ -11,8 +11,9 @@ protonet.dispatcher = {
   shouldConnect: function() {
     // Only create socket connection when the user is not a stranger or the user see's the dashboard
     // TODO: This needs to be done much smarter (cblum)
-    var isChatVisible = !!document.getElementById("message-form");
-    return !protonet.config.user_is_stranger || isChatVisible;
+    var isChatVisible = !!$("#message-form").length,
+        isFilesVisible = !!$("section.files-page").length;
+    return !protonet.config.user_is_stranger || isChatVisible || isFilesVisible;
   },
   
   initializeCallback: function() {

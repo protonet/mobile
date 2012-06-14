@@ -15,7 +15,7 @@
     <%= hidden_field_tag 'interface', interface  %>
     <%= hidden_field_tag 'preferences[allow_dashboard_for_strangers]', false  %>
     <label class="checkbox-row">
-      <%= check_box_tag 'preferences[allow_dashboard_for_strangers]', true, (SystemPreferences.privacy[interface]["allow_dashboard_for_strangers"] rescue false) %> Non-members can chat
+      <%= check_box_tag 'preferences[allow_dashboard_for_strangers]', true, (SystemPreferences.privacy[interface]["allow_dashboard_for_strangers"] rescue false) %> Non-members can chat and upload files
     </label>
   <%- end %>
   <%= form_tag(preferences_privacy_update_path, { 'data-ajax-auto-submit' => '1' }) do %>
