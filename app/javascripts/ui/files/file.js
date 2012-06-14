@@ -6,7 +6,7 @@
 
 protonet.ui.files.File = (function() {
   var viewer      = protonet.config.user_id,
-      viewerPath  = "/users/" + viewer + "/",
+      viewerPath  = protonet.data.User.getFolder(viewer),
       KEY_ENTER   = 13,
       KEY_ESCAPE  = 27;
   
@@ -24,11 +24,10 @@ protonet.ui.files.File = (function() {
       var $element = new protonet.utils.Template(template, this.data).to$();
       $element.data("instance", this);
       
-      // TODO:
-      // if (protonet.data.File.isUserFolder(this.data.path)) {
-      //   var avatar = protonet.data.User.getAvatar(this.data.belongsTo);
-      //   $("<img>", { src: protonet.media.Proxy.getImageUrl(avatar, { width: 16, height: 16 }) }).insertAfter($element.find(".folder"));
-      // }
+      if (this.data.path === viewerPath) {
+        var avatar = protonet.data.User.getAvatar(this.data.belongsTo);
+        $("<img>", { src: protonet.media.Proxy.getImageUrl(avatar, { width: 16, height: 16 }) }).insertAfter($element.find(".folder"));
+      }
       
       if (isViewer) {
         $element.addClass("myself");
@@ -176,6 +175,12 @@ protonet.ui.files.File = (function() {
           newName = $.trim($input.val());
       
       if (newName === oldName || !newName) {
+        this._cancelRename();
+        return;
+      }
+      
+      if (this.data.path === "/users/" || this.data.path === "/channels/") {
+        protonet.trigger("flash_message.error", protonet.t("FOLDER_CANT_BE_RENAMED_ERROR"));
         this._cancelRename();
         return;
       }

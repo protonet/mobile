@@ -575,10 +575,11 @@ protonet.ui.files.List = (function() {
     
     // --------------------------------------- PRIVATE --------------------------------------- \\
     _updateAddressBar: function() {
-      var path          = "/",
-          isFolderPath  = protonet.data.File.isFolder(this.currentPath),
-          pathParts     = this.currentPath.split("/"),
-          $path         = this._getAddressBarItem("Files", "/");
+      var path              = "/",
+          viewerFolderPath  = protonet.data.User.getFolder(viewer),
+          isFolderPath      = protonet.data.File.isFolder(this.currentPath),
+          pathParts         = this.currentPath.split("/"),
+          $path             = this._getAddressBarItem("Files", "/");
       
       $.each(pathParts, function(i, part) {
         if (!part) { return; }
@@ -589,6 +590,11 @@ protonet.ui.files.List = (function() {
         if (pathParts[i + 1] || isFolderPath) {
           path += "/";
         }
+        
+        if (path === "/users/" && this.currentPath.startsWith(viewerFolderPath)) {
+          return;
+        }
+        
         $path = $path.add(this._getAddressBarItem(part, path));
       }.bind(this));
       
@@ -596,7 +602,8 @@ protonet.ui.files.List = (function() {
     },
     
     _updateActions: function() {
-      var hasWriteAccess = protonet.data.User.hasWriteAccessToFile(viewer, this.currentPath);
+      var hasWriteAccess = protonet.data.User.hasWriteAccessToFile(viewer, this.currentPath),
+          canRemove      = hasWriteAccess && this.currentPath !== "/";
       
       this.uploader.disableBrowse();
       this.$fileActions.find("a").removeClass("enabled");
@@ -610,7 +617,7 @@ protonet.ui.files.List = (function() {
       
       if (this.$marked.length) {
         this.$fileActions.find(".share").addClass("enabled");
-        if (hasWriteAccess) {
+        if (canRemove) {
           this.$fileActions.find(".remove").addClass("enabled");
         }
       }
@@ -637,31 +644,13 @@ protonet.ui.files.List = (function() {
     
     _getAddressBarItem: function(name, path) {
       var isFolder = protonet.data.File.isFolder(path),
-          $element = $("<a>", { text: name }),
-          model;
+          $element = $("<a>", { text: name });
       
       if (isFolder) {
-        $element.attr("data-folder-path", path);
-        
-        if (path.match(REG_EXP_USERS)) {
-          model = protonet.data.User;
-        } else if (path.match(REG_EXP_CHANNELS)) {
-          model = protonet.data.Channel;
-        }
-        
-        if (model) {
-          model.get(name, function(record) {
-            var displayName;
-            if (record && record.rendezvousPartner) {
-              displayName = protonet.t("SHARED_BETWEEN_YOU_AND_USER", {
-                user_name: (protonet.data.User.getName(record.rendezvousPartner) || "unknown")
-              });
-            } else {
-              displayName = record.name;
-            }
-            $element.html(displayName);
-          });
-        }
+        // FIXME: Potential security flaw when using html() here
+        $element
+          .attr("data-folder-path", path)
+          .html(protonet.data.File.getName(path));
       } else {
         $element.attr("data-file-path", path);
       }
@@ -1039,7 +1028,7 @@ protonet.ui.files.List = (function() {
           }
         case KEY_DELETE:
           $newMarked = this.$marked;
-          this.remove();
+          this.$fileActions.find(".remove").click();
           break;
         case KEY_UP:
           var $first = this.$marked.first(),

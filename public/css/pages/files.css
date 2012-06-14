@@ -31,6 +31,7 @@
 
 .file-list .file-name {
   width: 50%;
+  position: relative;
   white-space: nowrap;
 }
 
@@ -113,12 +114,20 @@
   opacity: 0.6;
 }
 
-.file-list tr.focus .file-name {
-  padding-left: 9px;
+.file-list tr img {
+  position: absolute;
+  left: 25px;
+  top: 27px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
 }
 
-.file-list tr.myself .file-name {
-  font-weight: bold;
+.file-list tr.focus img {
+  left: 26px;
+}
+
+.file-list tr.focus .file-name {
+  padding-left: 9px;
 }
 
 .file-list tr .file-name i {

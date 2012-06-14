@@ -59,19 +59,19 @@ protonet.ui.files.Widget = {
     
     protonet.on("channel.change", function(id) {
       this.currentChannelId = id;
-      this.uploader.setTargetFolder(protonet.data.Channel.getFilesPath(id));
+      this.uploader.setTargetFolder(protonet.data.Channel.getFolder(id));
       
       if (protonet.data.Channel.isGlobal(id)) {
         this.$widget.hide();
         return;
       }
       
-      this.$showAll.attr("href", protonet.data.Channel.getFilesUrl(id));
+      this.$showAll.attr("href", protonet.data.Channel.getFolderUrl(id));
       this.$widget.show().addClass("loading");
       this.reset();
       
       protonet.dispatcher.onready(function() {
-        protonet.data.File.getLastModified(protonet.data.Channel.getFilesPath(id), {
+        protonet.data.File.getLastModified(protonet.data.Channel.getFolder(id), {
           success: function(data) {
             $.extend(data, { id: id });
             protonet.trigger("channel.update_files", data);

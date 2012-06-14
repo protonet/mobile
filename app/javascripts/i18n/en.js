@@ -72,13 +72,16 @@ protonet.i18n = {
   FILE_TIMEOUT_ERROR: "The request took too long to complete. Please try again.",
   FILE_UNKNOWN_ERROR: "Unknown error. Please try again.",
   
+  FILES: "Files",
   FOLDER_BELONGS_TO_USER_ERROR: "This folder can't be renamed because it belongs to a user",
   FOLDER_BELONGS_TO_CHANNEL_ERROR: "This folder can't be renamed because it belongs to a channel",
+  FOLDER_CANT_BE_RENAMED_ERROR: "This folder is essential to the protonet file structure and therefore can't be renamed",
   MOVING_FILES_SUCCESS: "Successfully moved the files into '#{name}'",
   MOVING_FILE_SUCCESS: "Successfully moved the file into '#{name}'",
   MOVING_FILES_ERROR: "An error happened while moving files",
   MOVE_FILES_BETWEEN_NODES_ERROR: "You can't move files from one protonet to another",
   REMOVING_FILES_SUCCESS: "Successfully removed",
+  MY_PRIVATE_FOLDER: "my private folder",
   
   TOGGLE_FULLSCREEN_MODE: "Toggle fullscreen mode",
   AUDIO_PLAYER_SONG_ADDED: "Added 1 song to the playlist",

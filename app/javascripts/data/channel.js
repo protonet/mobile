@@ -183,12 +183,8 @@
       return protonet.config.base_url + "/channels/" + id;
     },
     
-    getFilesPath: function(id) {
-      return "/channels/" + id + "/";
-    },
-    
-    getFilesUrl: function(id) {
-      return protonet.data.File.getUrl(this.getFilesPath(id));
+    getFolderUrl: function(id) {
+      return protonet.data.File.getUrl(this.getFolder(id));
     },
 
     getIdByName: function(name, callback) {
@@ -200,7 +196,7 @@
     },
     
     getFolder: function(id) {
-      return "/channel/" + id + "/";
+      return "/channels/" + id + "/";
     },
     
     isSubscribedByUser: function(channelId, userId) {

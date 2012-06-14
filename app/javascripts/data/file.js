@@ -10,6 +10,7 @@ protonet.data.File = (function() {
       REG_EXP_FOLDER          = /(.*\/)(.+\/?$)/,
       USER_FOLDER             = /^\/users\/(\d+)\/$/,
       CHANNEL_FOLDER          = /^\/channels\/(\d+)\/$/,
+      VIEWER                  = protonet.config.user_id,
       VIEW_BASE_URL           = protonet.config.base_url + "/files",
       NODE_BASE_URL           = protonet.config.node_base_url + "/fs";
   
@@ -60,7 +61,7 @@ protonet.data.File = (function() {
   
   function interpolateUserAndChannelNames(path, files, callback) {
     var model, ids;
-    if (path === "/users/") {
+    if (path === "/users/" || path === "/") {
       model = protonet.data.User;
     } else if (path === "/channels/") {
       model = protonet.data.Channel;
@@ -81,9 +82,15 @@ protonet.data.File = (function() {
       $.each(files, function(i, file) {
         if (file.type !== "folder" || isNaN(+file.name)) { return; }
         
-        var record = model.getCache()[+file.name] || {};
-        file.belongsTo = +file.name;
-        file.name = record.name || file.name;
+        var recordId = +file.name,
+            record   = model.getCache()[recordId] || {};
+        
+        file.belongsTo = recordId;
+        if (path === "/" && recordId === VIEWER) {
+          file.name = protonet.t("MY_PRIVATE_FOLDER");
+        } else {
+          file.name = record.name || file.name;
+        }
         
         if (record.rendezvousPartner) {
           file.rendezvousFolder = true;
@@ -154,14 +161,31 @@ protonet.data.File = (function() {
     
     getName: function(path) {
       if (path === "/") {
-        return "protonet:files";
+        return protonet.t("FILES");
       }
+      
+      if (path === protonet.data.User.getFolder(VIEWER)) {
+        return protonet.t("MY_PRIVATE_FOLDER");
+      }
+      
       var userMatch     = path.match(USER_FOLDER),
-          channelMatch  = path.match(CHANNEL_FOLDER);
+          channelMatch  = path.match(CHANNEL_FOLDER),
+          id;
+      
       if (userMatch) {
         return protonet.data.User.getName(userMatch[1]) || userMatch[1];
       } else if (channelMatch) {
-        return protonet.data.Channel.getName(channelMatch[1]) || channelMatch[1];
+        id = channelMatch[1];
+        channel = protonet.data.Channel.getCache()[id];
+        if (!channel) { return id; }
+        
+        if (channel.rendezvous) {
+          return protonet.t("SHARED_BETWEEN_YOU_AND_USER", {
+            user_name: (protonet.data.User.getName(channel.rendezvousPartner) || "unknown")
+          });
+        } else {
+          return channel.name;
+        }
       } else {
         return path.match(REG_EXP_FILE_NAME)[1];
       }
@@ -208,7 +232,7 @@ protonet.data.File = (function() {
         dataType: "text",
         data: {
           token:    protonet.config.token,
-          user_id:  protonet.config.user_id
+          user_id:  VIEWER
         }
       }, options));
     },

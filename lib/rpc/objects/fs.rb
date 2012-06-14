@@ -15,10 +15,24 @@ class Rpc::Objects::Fs < Rpc::Base
     
     @client.call :fs, :list, params do |resp|
       parent = params['parent'].sub(/^\//, "").sub(/\/$/, "")
+      
+      # /channels/ ?
       if parent == 'channels'
         allowed_channel_ids = user.channels.reload.map(&:id)
         resp['result'] = resp['result'].find_all do |file|
+          # replace /users/ with private user folder
           file['type'] == 'file' || allowed_channel_ids.include?(file['name'].to_i)
+        end
+      end
+      
+      # root?
+      if parent == ''
+        resp['result'] = resp['result'].map do |file|
+          if file['type'] == "folder" && file['name'] == "users"
+            { :name => user.id.to_s, :path => "/users/#{user.id}/", :modified => user.created_at, :type => 'folder' }
+          else
+            file
+          end
         end
       end
       
