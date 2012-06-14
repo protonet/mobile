@@ -152,9 +152,10 @@ protonet.ui.files.File = (function() {
         prettyModified: protonet.utils.prettifyDate(data.modified)
       });
       
-      if (data.rendezvousPartner) {
+      
+      if (data.rendezvousFolder) {
         var userName = (protonet.data.User.getName(data.rendezvousPartner) || "unknown");
-        file.prettyName = protonet.t("SHARED_BETWEEN_YOU_AND_USER", { user_name: userName.truncate(20) });
+        data.prettyName = protonet.t("SHARED_BETWEEN_YOU_AND_USER", { user_name: userName.truncate(20) });
       }
       
       if (data.uploaded) {

@@ -14,10 +14,9 @@ class Rpc::Objects::Fs < Rpc::Base
     check_read_access [params['parent']], user
     
     @client.call :fs, :list, params do |resp|
-      parent = params['parent'].sub(/^\//, "").sub(/\/\$/, "")
+      parent = params['parent'].sub(/^\//, "").sub(/\/$/, "")
       if parent == 'channels'
-        allowed_channel_ids = user.channels.map(&:id)
-        
+        allowed_channel_ids = user.channels.reload.map(&:id)
         resp['result'] = resp['result'].find_all do |file|
           file['type'] == 'file' || allowed_channel_ids.include?(file['name'].to_i)
         end

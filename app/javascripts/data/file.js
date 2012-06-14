@@ -87,6 +87,7 @@ protonet.data.File = (function() {
         
         if (record.rendezvousPartner) {
           file.rendezvousFolder = true;
+          file.rendezvousPartner = record.rendezvousPartner;
         }
       });
       callback(files);
