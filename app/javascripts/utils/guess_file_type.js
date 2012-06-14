@@ -1,3 +1,5 @@
+//= require "parse_url.js"
+
 protonet.utils.guessFileType = (function() {
   var mapping = {
     "jpg":  "image",
@@ -41,16 +43,11 @@ protonet.utils.guessFileType = (function() {
   
   return function(url) {
     if (protonet.media.Proxy.isProxied(url) || url.indexOf("/system/avatars/") !== -1) {
-      return {
-        suffix: "jpg",
-        type: "image"
-      };
+      return "image";
     }
     
-    var suffix = (url.match(REG_EXP) || [, "unknown"])[1].toLowerCase();
-    return {
-      suffix: suffix,
-      type:   mapping[suffix] || "unknown"
-    };
+    var fileName = protonet.utils.parseUrl(url).filename,
+        suffix   = (fileName.match(REG_EXP) || [, "unknown"])[1].toLowerCase();
+    return mapping[suffix] || "unknown";
   };
 })();

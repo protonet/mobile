@@ -31,7 +31,6 @@
 
 .file-list .file-name {
   width: 50%;
-  position: relative;
   white-space: nowrap;
 }
 
@@ -116,9 +115,8 @@
 
 .file-list tr img {
   position: absolute;
-  left: 25px;
-  top: 27px;
   border: 1px solid rgba(255, 255, 255, 0.5);
+  margin: -13px 0 0 16px;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
 }
 

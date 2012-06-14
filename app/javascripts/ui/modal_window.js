@@ -211,7 +211,7 @@ protonet.ui.ModalWindow = (function() {
   function _load(url) {
     content("", true);
 
-    var fileType = protonet.utils.guessFileType(url).type;
+    var fileType = protonet.utils.guessFileType(url);
     
     switch(fileType) {
       case "image":

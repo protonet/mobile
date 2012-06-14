@@ -5,11 +5,11 @@ protonet.media.provider.Code = {
     "rb", "html", "htm", "xml", "java", "jsp", "js", "json", "css", "txt", "md", "textile",
     "as", "py", "c", "cc", "cgi", "fcgi", "gitignore", "git", "inc", "lisp", "make", "conf",
     "config", "configure", "coffee", "h", "cp", "dot", "cpp", "pl", "lua", "cs", "m", "yaml",
-    "php", "pl", "php4", "php5", "cc", "applescript", "asp", "awk", "bat", "rdf", "rss",
-    "sql", "svn-base", "vim", "vxml", "xcodeproj", "patch", "diff"
+    "php", "pl", "php4", "php5", "cc", "applescript", "asp", "awk", "bat", "rdf", "rss", "nfo",
+    "sql", "svn-base", "vim", "vxml", "xcodeproj", "patch", "diff", "m3u", "sfv"
   ],
   
-  plainTextFileExtensions: ["txt", "md", "textile", "gitignore"],
+  plainTextFileExtensions: ["txt", "md", "textile", "gitignore", "nfo", "m3u", "sfv"],
   
   supports: function(file) {
     var fileExtension = protonet.data.File.getExtension(file.path) || "txt";
@@ -26,7 +26,7 @@ protonet.media.provider.Code = {
       success: function(text, status, xhr) {
         text = protonet.utils.escapeHtml(text);
         if (isPlainText) {
-          text = '<ol class="linenums">' + text.replace(/(.*?)(\n|$)/g, "<li>$1</li>"); + '</ol>';
+          text = '<ol class="linenums">' + text.replace(/(.*?)(\r\n|\n|$)/g, "<li>$1</li>"); + '</ol>';
           text = protonet.utils.autoLink(text);
         } else {
           text = protonet.utils.prettifyCode(text, true);

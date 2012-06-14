@@ -43,6 +43,10 @@ protonet.ui.files.Widget = {
   },
   
   _observe: function() {
+    this.$list.on("click", "a.file, a.folder", function(event) {
+      event.preventDefault();
+    });
+    
     this.$list.on("click", "li:not(.disabled)", function(event) {
       var $target = $(event.currentTarget);
       protonet.open($target.find("a").attr("href"));
