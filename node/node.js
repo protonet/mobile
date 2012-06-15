@@ -27,14 +27,9 @@ process.argv.forEach(function(val){
 global.FILES_PATH = envPaths[global.env] || envPaths.development;
 
 /*----------------------------------- SOCKET TASKS -----------------------------------*/
-var amqp        = require('amqp'),
-    connection  = amqp.createConnection({ host: "localhost", vhost: "/" });
+var tries = 0;
 
-connection.addListener("error", function(){
-  console.log("error trying to reach the rabbit, please start your rabbitmq-server");
-});
-
-connection.addListener("ready", function() {
+function setupConnection(connection) {
   /**
    * RPC queue
    * Kept separate because it's not called directly by a client
@@ -53,10 +48,10 @@ connection.addListener("ready", function() {
       fsHttp      = require("./tasks/fs_http"),
       rpcExchange = connection.exchange("rpc"),
       rpcQueue    = connection.queue("node");
-  
+
   fsWorker.init(connection);
   fsHttp.init(connection);
-  
+
   rpcQueue.bind(rpcExchange, "rpc.node");
   rpcQueue.subscribeJSON(function(message) {
     message = JSON.parse(message.data);
@@ -71,7 +66,29 @@ connection.addListener("ready", function() {
 
     fsWorker[message.method](message.params, callback);
   });
-});
+}
+
+function createConnection() {
+  if (++tries > 10) {
+    console.log("Error trying to reach the rabbit after 10 tries");
+    return;
+  }
+  
+  var amqp        = require('amqp'),
+      connection  = amqp.createConnection({ host: "localhost", vhost: "/" });
+  
+  connection.addListener("error", function() {
+    setTimeout(createConnection, 4000);
+  });
+  
+  connection.addListener("ready", function() {
+    console.log("Established connection to rabbit after " + tries + " tries");
+    setupConnection(connection);
+  });
+}
+
+createConnection();
+
 
 /*----------------------------------- HTTP TASKS  ----------------------------------*/
 /*----------------------------------- SCREENSHOTS ----------------------------------*/
@@ -79,7 +96,6 @@ var http      = require("http"),
     parseUrl  = require("url").parse;
 
 http.createServer(function(request, response) {
-
   var parsedUrl = parseUrl(request.url, true),
       params    = parsedUrl.query,
       task      = parsedUrl.pathname.replace(/^\/|\/$/g, ""),

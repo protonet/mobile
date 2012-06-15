@@ -147,8 +147,12 @@ class Rpc::Objects::Fs < Rpc::Base
       if params.include?('session_id')
         # session_id given
         session = Marshal.load(Base64.decode64(CGI.unescape(params['session_id']).split('--').first))
-        params['user_id'] = session["warden.user.user.key"][1][0] rescue nil
-        user = User.find_by_id(params['user_id'])
+        if session['stranger_id']
+          user = User.find_by_temporary_identifier(session['stranger_id'])
+        else
+          params['user_id'] = session["warden.user.user.key"][1][0] rescue nil
+          user = User.find_by_id(params['user_id'])
+        end
       else
         # or find the acclaimed user and check his the given communication token
         user = User.find_by_id(params['user_id'])
@@ -245,7 +249,6 @@ class Rpc::Objects::Fs < Rpc::Base
       
       # Cache the user's channels
       channels = user.channels.reload.map(&:id)
-      
       paths.each do |(namespace, id, path)|
         namespace = namespace.to_s
         id = id.to_s

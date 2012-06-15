@@ -28,7 +28,7 @@ protonet.timeline.Form.extensions.AutoCompleter = function(input) {
     });
     
     $.each(channels, function(i, channel) {
-      if (channel.rendezvous) {
+      if (!channel.rendezvous) {
         channelNames.push(channel.name);
       }
     });

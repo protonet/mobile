@@ -294,6 +294,11 @@ exports.list = function(params, reply) {
       var fileName    = fileList[i],
           fullPath    = path.join(dir, fileName);
       
+      // Ignore files starting with a "."
+      if (fileName.charAt(0) === ".") {
+        continue;
+      }
+      
       try {
         var stats = fs.statSync(fullPath);
       } catch(e) {
