@@ -38,8 +38,12 @@ $.behaviors({
   "a[download]:click": (function() {
     var $iframe;
     return function(element, event) {
+      var $anchor = $(element).addClass("loading");
       $iframe = $iframe || $("<iframe style='width:0; height:0; border:0; display:none;'>");
       $iframe.appendTo(document.body).attr("src", element.href);
+      setTimeout(function() {
+        $anchor.removeClass("loading");
+      }, 750);
       event.preventDefault();
     };
   })(),
