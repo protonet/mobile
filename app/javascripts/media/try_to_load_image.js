@@ -1,7 +1,7 @@
 protonet.media.tryToLoadImage = (function() {
   var MAX_TRIES = 10;
   
-  return function(url, callback) {
+  return function(url, success, failure) {
     var tries = 0;
     
     function loadRecursive() {
@@ -9,9 +9,11 @@ protonet.media.tryToLoadImage = (function() {
       img.onerror = function() {
         if (++tries < MAX_TRIES) {
           setTimeout(loadRecursive, 500);
+        } else {
+          failure && failure();
         }
       };
-      img.onload = callback;
+      img.onload = success;
       img.src = url;
     }
     

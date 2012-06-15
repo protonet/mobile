@@ -147,7 +147,7 @@ class Rpc::Objects::Fs < Rpc::Base
       if params.include?('session_id')
         # session_id given
         session = Marshal.load(Base64.decode64(CGI.unescape(params['session_id']).split('--').first))
-        if session['stranger_id']
+        if session['stranger_id'] && !session['warden.user.user.key']
           user = User.find_by_temporary_identifier(session['stranger_id'])
         else
           params['user_id'] = session["warden.user.user.key"][1][0] rescue nil

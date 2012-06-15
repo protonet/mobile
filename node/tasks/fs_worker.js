@@ -244,17 +244,19 @@ function walk(dir, reply) {
           });
         } else {
           if (stat) {
-            results.push({
-              name:     fileName,
-              path:     absolutePathForFrontend(path),
-              size:     stat.size,
-              type:     "file",
-              mime:     lookupMime(fileName),
-              modified: Math.max(stat.ctime, stat.mtime)
-            });
+            if (fileName.charAt(0) !== ".") {
+              results.push({
+                name:     fileName,
+                path:     absolutePathForFrontend(path),
+                size:     stat.size,
+                type:     "file",
+                mime:     lookupMime(fileName),
+                modified: Math.max(stat.ctime, stat.mtime)
+              });
+            }
           }
           
-          if (!--pending) {
+          if (!--pending) { 
             reply(null, results);
           }
         }
