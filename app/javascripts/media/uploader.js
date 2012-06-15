@@ -56,7 +56,7 @@ protonet.media.Uploader = (function() {
       
       if (eventName === "UploadProgress") {
         callback = function(uploader, file) {
-          if (throttle() && file.percent < 100) { return; }
+          if (throttle() && file.percent < 99) { return; }
           originalCallback.apply(this, arguments);
         };
       } else if (eventName === "FileUploaded") {

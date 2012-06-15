@@ -82,7 +82,7 @@
 }
 
 #channels .reply-badge {
-  border-bottom-left-radius
+  border-bottom-left-radius: 6px;
   border-top-left-radius: 6px;
   background: #ff7f31;
   padding-right: 3px;
