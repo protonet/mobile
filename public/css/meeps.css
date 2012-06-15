@@ -138,6 +138,7 @@
 
 .meep pre.wrap {
   white-space: pre-wrap;
+  padding: 4px;
 }
 
 div.progress {

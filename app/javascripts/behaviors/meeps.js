@@ -74,7 +74,7 @@ $.behaviors({
   var contextMenu = new protonet.ui.ContextMenu("a.meep-action-link", {
     "share/reply": function($target, close) {
       var data  = $meep.data("meep");
-      protonet.trigger("form.share_meep", data.id);
+      protonet.trigger("modal_window.hide").trigger("form.share_meep", data.id);
       close();
     },
 
