@@ -156,7 +156,7 @@ class Rpc::Objects::Fs < Rpc::Base
       else
         # or find the acclaimed user and check his the given communication token
         user = User.find_by_id(params['user_id'])
-        return unless user.communication_token_valid?(params['token'])
+        raise Rpc::AccessDeniedError, "Commiunication token (#{params['token']}) for user id ##{params['user_id']} invalid" unless user.communication_token_valid?(params['token'])
       end
       user
     end

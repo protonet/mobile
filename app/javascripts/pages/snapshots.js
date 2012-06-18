@@ -39,7 +39,7 @@ protonet.p("snapshots", function($page) {
   $snapButton.bind("click", function() {
     $snapBar.hide();
     webcam.snapWithCountdown(uploadUrl, function(response) {
-      photoUrl = protonet.data.File.getDownloadUrl(response[0].path);
+      photoUrl = protonet.data.File.getUrl(response[0].path);
       $label.css("display", "block");
       $urlInput.val(photoUrl).select();
       $page.find("button").toggle();

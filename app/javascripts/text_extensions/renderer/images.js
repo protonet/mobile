@@ -1,11 +1,11 @@
 protonet.text_extensions.render.images = function(data) {
-  var images = $();
+  var $images = $()
   
   data.imageTitle = data.imageTitle || [];
-  data.imageHref = data.imageHref || [];
+  data.imageHref  = data.imageHref  || [];
   
   $.each(data.image.slice(0, protonet.text_extensions.config.MAX_IMAGES), function(i) {
-    images = images.add(
+    $images = $images.add(
       protonet.text_extensions.render.image({
         image:              data.image[i],
         imageTitle:         data.imageTitle[i],
@@ -17,5 +17,5 @@ protonet.text_extensions.render.images = function(data) {
     );
   });
   
-  return images;
+  return $images;
 };

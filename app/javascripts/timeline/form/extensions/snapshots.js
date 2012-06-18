@@ -39,11 +39,11 @@ protonet.timeline.Form.extensions.Snapshots = function($input, $wrapper, $form) 
     protonet.off("snapshot:done").on("snapshot:done", function(photoUrl) {
       protonet.trigger("modal_window.hide");
       
-      var oldTextExtension = getCurrentTextExtension();
-      if (oldTextExtension && oldTextExtension.type === "Image") {
-        var urls = $.makeArray(oldTextExtension.image || oldTextExtension.images).concat(photoUrl);
+      var oldTextExtension = getCurrentTextExtension(), urls;
+      if (oldTextExtension && oldTextExtension.type === "File") {
+        urls = $.makeArray(oldTextExtension.image || oldTextExtension.images).concat(photoUrl);
       } else {
-        var urls = [photoUrl];
+        urls = [photoUrl];
       }
       
       protonet.trigger("text_extension_input.select", urls);

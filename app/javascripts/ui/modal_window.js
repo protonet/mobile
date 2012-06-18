@@ -184,11 +184,6 @@ protonet.ui.ModalWindow = (function() {
         elements.dialog.removeClass("loading");
         protonet.trigger("modal_window.loaded", response, xhr);
       }
-      
-      var responseUrl = xhr.getResponseHeader("X-Url");
-      if (responseUrl !== url) {
-        protonet.utils.History.replace(responseUrl);
-      }
     }).fail(function(xhr) {
       var textResource;
       if (xhr.status === 403) {

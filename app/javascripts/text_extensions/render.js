@@ -34,7 +34,7 @@
  */
 protonet.text_extensions.render = (function() {
   var mediaTypeDetection = {
-    files:    function(data) { return data.files },
+    files:    function(data) { return data.files; },
     flash:    function(data) { return data.flash && typeof(data.flash) == "string"; },
     iframe:   function(data) { return data.iframe && typeof(data.iframe) == "string"; },
     image:    function(data) { return data.image && typeof(data.image) == "string"; },
@@ -74,14 +74,17 @@ protonet.text_extensions.render = (function() {
       title += " (" + protonet.utils.escapeHtml(data.titleAppendix) + ")";
     }
     
+    if (renderMedia) {
+      results.find(".media").html(renderMedia(data));
+    }
+    
+    mediaType = data._newType || mediaType;
+    
     results.addClass(provider).addClass(mediaType);
     results.find(".description").html(description);
     results.find(".title").html(title);
     results.find(".domain").html(domain);
     results.find("a.link").attr("href", url);
-    if (renderMedia) {
-      results.find(".media").html(renderMedia(data));
-    }
     
     return results;
   };

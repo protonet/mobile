@@ -10,6 +10,7 @@ protonet.data.File = (function() {
       REG_EXP_FOLDER          = /(.*\/)(.+\/?$)/,
       USER_FOLDER             = /^\/users\/(\d+)\/$/,
       CHANNEL_FOLDER          = /^\/channels\/(\d+)\/$/,
+      REG_EXP_IMAGE           = /\.(jpe?g|gif|png|bmp|tiff?|svg|eps|ps|ai)$/i,
       VIEWER                  = protonet.config.user_id,
       VIEW_BASE_URL           = protonet.config.base_url + "/files",
       NODE_BASE_URL           = protonet.config.node_base_url + "/fs";
@@ -215,6 +216,10 @@ protonet.data.File = (function() {
     isUserFolder: function(path) {
       var folderName = Number(path.match(REG_EXP_FILE_NAME)[1]);
       return this.getFolder(path) === "/users/" && !!folderName;
+    },
+    
+    isImage: function(path) {
+      return !!path.match(REG_EXP_IMAGE);
     },
     
     getDownloadUrl: function(path, options) {
