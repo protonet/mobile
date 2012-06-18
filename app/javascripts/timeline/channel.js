@@ -416,7 +416,6 @@
     
     /**
      * Do all kind of notifications when a new meep is received
-     *    - Animate browser title when page is not focused
      *    - Play sound when page is not focused
      *    - Show badge in channel link when page is not focused
      */
@@ -426,10 +425,6 @@
       
       if (meepData.user_id == protonet.config.user_id) {
         return;
-      }
-      
-      if (!isWindowFocused && this.isSelected) {
-        protonet.utils.BrowserTitle.animate("+++ New messages");
       }
 
       if (!isWindowFocused && this.isSelected && isAllowedToPlaySound) {

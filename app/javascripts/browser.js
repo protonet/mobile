@@ -71,7 +71,20 @@ protonet.browser = {
     return $.browser.safari && !navigator.userAgent.match(/chrome/i);
   },
   
+  IS_CHROME: function() {
+    return !protonet.browser.IS_SAFARI() && protonet.browser.testCSS("WebkitTransform");
+  },
+  
+  IS_FF: function() {
+    return protonet.browser.testCSS('MozBoxSizing'); 
+  },
+  
   SUPPORTS_ONLINE_DETECTION: function() {
     return "onLine" in navigator && navigator.userAgent.match(/chrome/i);
+  },
+
+  testCSS: function(prop) {
+    // browser CSS feature detection
+    return prop in document.documentElement.style;
   }
 };
