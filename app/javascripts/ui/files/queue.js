@@ -27,8 +27,8 @@ protonet.ui.files.Queue = (function() {
           this.create();
           queue = [];
           inProgress = true;
-          $container.removeClass("uploaded");
-          $list.empty();
+          $container.removeClass("uploaded").css("bottom", 0);
+          $list.css("opacity", 1).empty();
           $share.hide();
         }
         
