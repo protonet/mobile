@@ -164,7 +164,7 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  padding: 15px 15px 15px 80px;
+  padding: 15px 5px 15px 80px;
   border-bottom: 1px solid #8C8C8C;
   position: relative;
 }
@@ -201,8 +201,8 @@
   font-size: 11px;
   display: inline-block;
   position: relative;
-  margin-left: 14px;
-  padding-left: 4px;
+  margin-left: 12px;
+  padding-left: 2px;
 }
 
 #my-widget nav > ul > li:first-child {

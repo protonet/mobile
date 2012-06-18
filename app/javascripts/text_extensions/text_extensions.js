@@ -10,7 +10,8 @@
       }, 0);
     })
     .on("meep.rendered", function($meepElement, meepData) {
-      if (!meepData.text_extension) {
+      // Old nodes will create text extensions with "null" value
+      if (!meepData.text_extension || meepData.text_extension === "null") {
         return;
       }
       

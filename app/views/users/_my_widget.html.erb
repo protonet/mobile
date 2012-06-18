@@ -9,7 +9,7 @@
   <nav>
     <ul>
       <li class="settings"><a>settings</a></li>
-      <li><%= link_to "files", user_files_path(current_user) %></li>
+      <li><%= link_to "my files", user_files_path(current_user) %></li>
       <li><%= link_to "logout", destroy_user_session_path, 'data-avoid-ajax' => 1 %></li>
     </ul>
   </nav>
