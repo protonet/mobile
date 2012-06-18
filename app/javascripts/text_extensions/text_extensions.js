@@ -11,7 +11,7 @@
     })
     .on("meep.rendered", function($meepElement, meepData) {
       // Old nodes will create text extensions with "null" value
-      if (!meepData.text_extension || meepData.text_extension === "null") {
+      if (typeof(meepData.text_extension) !== "object") {
         return;
       }
       

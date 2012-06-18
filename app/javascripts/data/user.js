@@ -205,7 +205,11 @@
       
       var originalSuccess = options.success;
       options.success = function(data) {
-        originalSuccess(data[0]);
+        if (data[0]) {
+          originalSuccess(data[0]);
+        } else {
+          options.error({});
+        }
       };
       
       this.getAll([id], options);

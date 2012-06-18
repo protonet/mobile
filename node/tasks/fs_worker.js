@@ -1,6 +1,7 @@
 var _                   = require('underscore')._,
     fs                  = require('fs'),
     path                = require('path'),
+    mkdirp              = require('mkdirp'),
     util                = require('util'),
     Step                = require('step'),
     xattr               = require('xattr'),
@@ -155,6 +156,8 @@ function copyManyTo(sources, target, reply) {
   if ((sources.length > 1) && (getType(target) != 'dir')) {
     return; // TODO: error
   }
+  
+  mkdirp.sync(target);
   
   Step(function() {
     for (var i in sources) {

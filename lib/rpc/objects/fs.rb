@@ -59,6 +59,10 @@ class Rpc::Objects::Fs < Rpc::Base
     
     return handler.call(nil, {}) if params['from'].empty?
     
+    if all_snapshots?(params['from']) && !is_snapshot_folder?(params['to'])
+      params['to'] += "snapshots/"
+    end
+    
     @client.call :fs, :copy, params do |resp|
       handler.call resp['error'], resp['result']
     end
@@ -276,6 +280,14 @@ class Rpc::Objects::Fs < Rpc::Base
       else
         File.join(ROOT_DIR, path, *extra)
       end
+    end
+    
+    def all_snapshots? paths
+      paths.all? {|path| is_snapshot_folder?(path) }
+    end
+    
+    def is_snapshot_folder? path
+      !!path.match(/^\/users\/\d+\/snapshots\//)
     end
 end
 
