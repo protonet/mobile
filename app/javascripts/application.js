@@ -41,6 +41,7 @@ window.$document = $(document);
 //= require "ui/modal_window.js"
 //= require "ui/droppables.js"
 //= require "ui/files/queue.js"
+//= require "ui/audio_player.js"
 //= require "utils/rails.js"
 //= require "text_extensions/text_extensions.js"
 //= require "timeline/meep.js"

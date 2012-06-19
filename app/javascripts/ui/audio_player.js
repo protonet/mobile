@@ -92,9 +92,7 @@
       }
       
       if (threeSixtyPlayer && threeSixtyPlayer.lastSound) {
-        threeSixtyPlayer.lastSound.stop();
-        threeSixtyPlayer.lastSound.unload();
-        threeSixtyPlayer.lastSound = null;
+        threeSixtyPlayer.lastSound.destruct();
       }
     },
     

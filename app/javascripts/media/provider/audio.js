@@ -1,5 +1,3 @@
-//= require "../../ui/audio_player.js"
-
 protonet.media.provider.Audio = {
   supports: function(file) {
     return protonet.media.Audio.canPlay(file.path);

@@ -1,5 +1,4 @@
 //= require "../ui/files/list.js"
-//= require "../ui/audio_player.js"
 //= require "../utils/parse_query_string.js"
 //= require "../lib/jquery.fullscreen.js"
 
