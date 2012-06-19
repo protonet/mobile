@@ -216,7 +216,6 @@
 
 /* =IMAGES TEXT EXTENSIONS
 --------------------------------------------------------------------------- */
-.text-extension-results.image figcaption,
 .text-extension-results.images figcaption {
   border-top: 1px solid rgba(0, 0, 0, 0.3);
   white-space: nowrap;
@@ -234,11 +233,6 @@
   height: 75px;
 }
 
-.text-extension-results.image figure,
-.text-extension-results.images figure {
-  width: 100px;
-}
-
 .text-extension-results.images .media figure {
   position: relative;
   float: left;
@@ -250,11 +244,8 @@
   background: #ccc;
 }
 
-.text-extension-results.image .domain,
 .text-extension-results.images .domain,
-.text-extension-results.image .description,
 .text-extension-results.images .description,
-.text-extension-results.image .title,
 .text-extension-results.images .title {
   display: none;
 }

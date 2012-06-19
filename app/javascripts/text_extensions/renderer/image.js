@@ -9,16 +9,15 @@ protonet.text_extensions.render.image = function(data, preventResizing) {
   
   var title = data.imageTitle || data.title;
   
-  var $figure = $("<figure>", { title: title });
-  
   var $anchor = $("<a>", {
     href:   data.imageHref || data.url,
     target: "_blank"
-  }).appendTo($figure);
+  });
   
   var $image = $("<img>", $.extend({
     src:    protonet.media.Proxy.getImageUrl(data.image, imageSize),
-    alt:    data.imageTitle,
+    alt:    title,
+    title:  title,
     load:   function() {
       var newSize = protonet.utils.toMaxSize({
         width:  $image.prop("naturalWidth"),
@@ -37,10 +36,6 @@ protonet.text_extensions.render.image = function(data, preventResizing) {
     }
   }, imageSize)).appendTo($anchor);
   
-  if (title) {
-    $("<figcaption>", { text: title }).appendTo($figure);
-  }
-  
   if (!preventResizing && !data.preventHoverEffect) {
     var options = protonet.text_extensions.config.HOVER_IMAGE_SIZE;
     options.extent = false;
@@ -50,5 +45,5 @@ protonet.text_extensions.render.image = function(data, preventResizing) {
     });
   }
   
-  return $figure;
+  return $anchor;
 };

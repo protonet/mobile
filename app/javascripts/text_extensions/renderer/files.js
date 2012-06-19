@@ -17,6 +17,7 @@ protonet.text_extensions.render.files = function(data) {
         image:        imageSrcs[0],
         imageHref:    imageHrefs[0],
         imageTitle:   imageTitles[0],
+        title:        imageTitles[0],
         _newType:     "image"
       });
       return protonet.text_extensions.render.image(data);
