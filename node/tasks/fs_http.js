@@ -37,6 +37,15 @@ var sys                   = require("util"),
     exchange;
 
 
+function touch(file) {
+  var now = new Date();
+  fs.utimes(file, now, now);
+}
+
+function mkdirSync(dir) {
+  mkdirp.sync(dir, FOLDER_PERMISSIONS);
+  touch(dir);
+}
 
 function normalizeInput(str) {
   if (process.platform !== 'darwin') {
@@ -108,7 +117,7 @@ exports.init = function(amqpConnection) {
         var targetDir   = ROOT_DIR + (message.params.target_folder || ""),
             responseArr = [];
 
-        try { mkdirp.sync(targetDir, FOLDER_PERMISSIONS); } catch (e) {}
+        try { mkdirSync(targetDir, FOLDER_PERMISSIONS); } catch (e) {}
         
         Step(function() {
           for (var i in message.files) {
@@ -125,7 +134,7 @@ exports.init = function(amqpConnection) {
                 // this doesn't work with file paths including umlauts... (might be OSX related only)
                 xattr.set(newFilePath, "user.owner", message.params.user_id || -1);
               } catch(e) {
-                console.log("Failed to set extended attributes");
+                console.log("Failed to set extended attributes on", newFilePath);
               }
               
               callback.apply(this, arguments);

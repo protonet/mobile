@@ -139,7 +139,7 @@ class Channel < ActiveRecord::Base
   
   def normalize_name
     self.name = clean_diactritic_marks(name)
-    self.name = name.gsub(/\W+/, '-').downcase
+    self.name = name.strip.gsub(/\W+/, '-').downcase
   end
   
   def prepare_rendezvous

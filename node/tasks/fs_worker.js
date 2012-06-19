@@ -6,7 +6,6 @@ var _                   = require('underscore')._,
     Step                = require('step'),
     xattr               = require('xattr'),
     lookupMime          = require('mime').lookup,
-    
     watch               = require("watch"),
     timeouts            = {},
     
@@ -16,7 +15,25 @@ var _                   = require('underscore')._,
     FILE_PERMISSIONS    = 432, // 0660
     FOLDER_PERMISSIONS  = 504; // 0770
 
+function touch(file) {
+  var now = new Date();
+  fs.utimes(file, now, now);
+}
 
+function mkdir(dir, callback) {
+  mkdirp(dir, FOLDER_PERMISSIONS, function() {
+    // We need to touch new directories in order for watchFile to see them (only for linux)
+    touch(dir);
+    if (callback) {
+      callback.apply(this, arguments);
+    }
+  });
+}
+
+function mkdirSync(dir) {
+  mkdirp.sync(dir, FOLDER_PERMISSIONS);
+  touch(dir);
+}
 
 function getChannelId(fsPath) {
   var relativePath = path.relative(ROOT_DIR, fsPath),
@@ -117,7 +134,7 @@ function copyTo(source, target, reply) {
   }
   
   if (getType(source) == 'dir') {
-    fs.mkdirSync(target, FOLDER_PERMISSIONS);
+    mkdirSync(target);
 
     var files = fs.readdirSync(source);
     for (var i in files) {
@@ -157,7 +174,7 @@ function copyManyTo(sources, target, reply) {
     return; // TODO: error
   }
   
-  mkdirp.sync(target);
+  mkdirSync(target);
   
   Step(function() {
     for (var i in sources) {
@@ -385,8 +402,8 @@ exports.remove = function(params, reply) {
 
 exports.mkdir = function(params, reply) {
   var dir = path.join(ROOT_DIR, params.parent, params.name);
-
-  fs.mkdir(dir, FOLDER_PERMISSIONS, reply);
+  
+  mkdir(dir, reply);
 };
 
 exports.info = function(params, reply) {
@@ -434,7 +451,7 @@ exports.init = function(amqpConnection) {
   var channelExchange = amqpConnection.exchange("channels"),
       fsWorker        = this;
   
-  watch.createMonitor(ROOT_DIR, function(monitor) {
+  watch.createMonitor(ROOT_DIR, { ignoreDotFiles: true }, function(monitor) {
     function push(fsPath) {
       var channelId = getChannelId(fsPath);
       
