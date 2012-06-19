@@ -21,7 +21,15 @@ protonet.text_extensions.provider.File = {
       return protonet.utils.parseQueryString(url).path;
     });
     
+    var title;
+    if (paths.length > 1) {
+      title = "Files on this box";
+    } else {
+      title = protonet.data.File.getName(paths[0]);
+    }
+    
     onSuccess({
+      title: title,
       files: paths
     });
   }

@@ -10,7 +10,7 @@ protonet.utils.BrowserTitle = (function() {
   
   function _digits(n) { 
     // this function returns the number of digits in of a Number
-    return 1 + Math.floor(Math.log(n)/Math.log(10)); 
+    return 1 + Math.floor(Math.log(n)/Math.log(10));
   }
   
   function setPrefix(str) {
