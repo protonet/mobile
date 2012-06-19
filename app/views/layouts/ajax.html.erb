@@ -1,5 +1,8 @@
 <section class="<%= page_class_names %>">
   <%= include_stylesheet_if_exists("/css/pages/#{controller_name}.css") %>
   <%= yield %>
-  <%= sprockets_include_tag(controller_name.to_sym) rescue nil %>
+  <%# search.js is already included in the default application javascript %>
+  <%- unless controller_name == "search" %>
+    <%= sprockets_include_tag(controller_name.to_sym) rescue nil %>
+  <%- end %>
 </section>

@@ -1,2 +1,8 @@
 <%= render :partial => 'search/search_form' %>
 <output class="content"></output>
+<script>
+  try {
+    // Try catch necessary for when this is not rendered in a modal window
+    protonet.pages.Search.initialize();
+  } catch(e) {}
+</script>

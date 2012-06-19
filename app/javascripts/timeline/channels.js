@@ -524,7 +524,7 @@ protonet.timeline.Channels = {
     this.data = data || [];
     var lastReadMeeps = protonet.storage.get("last_read_meeps") || {};
     $.each(this.data, function(i, channelData) {
-      channelData.last_read_meep = Math.max(+lastReadMeeps[channelData.listen_id] || 0, channelData.last_read_meep);
+      channelData.last_read_meep = Math.max(+lastReadMeeps[channelData.listen_id] || 0, channelData.last_read_meep || 0);
     });
   }
 };

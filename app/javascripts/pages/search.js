@@ -6,10 +6,13 @@ protonet.pages.Search = {
   initialize: function() {
     this.$page      = $(".search-page");
     
-    if (!this.$page.length) {
+    if (!this.$page.length || this.$page.data("initialized")) {
       return;
     }
     
+    this.$page.data("initialized", true);
+    
+    this.keyword    = null;
     this.$container = this.$page.find("output");
     this.$form      = this.$page.find("form");
     this.$input     = this.$form.find("input[type=search]");

@@ -221,7 +221,9 @@
       if (selected) {
         this.unreadReplies = this.unreadMeeps = 0;
         var lastMeep = this.data.meeps[this.data.meeps.length - 1];
-        this.data.last_read_meep = lastMeep && lastMeep.id;
+        if (lastMeep) {
+          this.data.last_read_meep = lastMeep.id;
+        }
         this.channelList.prependTo(this.container);
         this.link.addClass("active");
       } else {
