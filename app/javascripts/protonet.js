@@ -17,4 +17,5 @@ protonet.ui               = protonet.ui               || { files: {}, users: {} 
 protonet.FILES_MIME_TYPE  = "protonet/file";
 
 //= require "events/emitter.js"
-$.extend(protonet, new protonet.events.Emitter());
+protonet.Emitter = new protonet.events.Emitter();
+$.extend(protonet, protonet.Emitter);
