@@ -29,7 +29,7 @@ $.behaviors({
   },
   
   ".text-extension-results.Image a:click": function(element, event) {
-    protonet.ui.ModalWindow.show(element.href);
+    protonet.ui.ModalWindow.show(protonet.media.Proxy.getImageUrl(element.href));
     event.preventDefault();
   },
   
