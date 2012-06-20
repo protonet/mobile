@@ -59,17 +59,34 @@ protonet.ui.Droppables = (function() {
     
     observed = true;
     
-    var throttle;
+    var oldTarget,
+        lastDragover = 0,
+        shouldPreventDefault,
+        oldDropEffect;
     
     $html.on("dragover", function(event) {
       var dataTransfer = event.dataTransfer;
       if (!dataTransfer) {
         return;
       }
+      
+      if (event.target === oldTarget && (new Date() - lastDragover) < (0.5).seconds()) {
+        if (oldDropEffect) {
+          dataTransfer.dropEffect = oldDropEffect;
+        }
+        if (shouldPreventDefault) {
+          event.preventDefault();
+        }
+        return;
+      }
+      
+      lastDragover = new Date();
+      oldTarget = event.target;
+      
       clearTimeout(timeout);
       timeout = setTimeout(function() {
         $html.trigger("dragend");
-      }, (0.4).seconds());
+      }, (0.6).seconds());
       
       var oldPotentialTargets = potentialTargets;
       
@@ -118,17 +135,22 @@ protonet.ui.Droppables = (function() {
       if (potentialTargets.length) {
         $html.addClass("dragover");
         event.preventDefault();
+        shouldPreventDefault = true;
+      } else {
+        shouldPreventDefault = false;
       }
       
       if (activeTargets.length) {
-        dataTransfer.dropEffect = "copy";
+        dataTransfer.dropEffect = oldDropEffect = "copy";
       } else if (potentialTargets.length) {
-        dataTransfer.dropEffect = "none";
+        dataTransfer.dropEffect = oldDropEffect = "none";
       }
     });
     
     
     $html.on("dragend", function(event) {
+      shouldPreventDefault = oldDropEffect = undef;
+      
       clearTimeout(timeout);
       
       $html.removeClass("dragover");

@@ -773,6 +773,12 @@ protonet.ui.files.List = (function() {
             if (this.draggedPaths.length && protonet.data.File.getFolder(this.draggedPaths[0]) === this.currentPath) {
               return false;
             }
+            
+            // Root folders cannot be moved
+            if (this.draggedPaths.indexOf("/channels/") !== -1 || this.draggedPaths.indexOf(protonet.data.User.getFolder(viewer)) !== -1) {
+              return false;
+            }
+            
             if (!protonet.data.User.hasWriteAccessToFile(viewer, this.currentPath)) {
               return false;
             }
@@ -825,6 +831,10 @@ protonet.ui.files.List = (function() {
           types:      protonet.FILES_MIME_TYPE,
           elements:   ".files-page [data-folder-path]",
           condition:  function($element) {
+            // Root folders cannot be moved
+            if (this.draggedPaths.indexOf("/channels/") !== -1 || this.draggedPaths.indexOf(protonet.data.User.getFolder(viewer)) !== -1) {
+              return false;
+            }
             // don't highlight when the item being dragged is the droppable (you cannot move a folder into itself)
             return this.draggedPaths.indexOf($element.data("folder-path")) === -1;
           }.bind(this),
