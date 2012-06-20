@@ -105,8 +105,8 @@
   background: #fff;
 }
 
-.text-extension-results .media a:hover img {
-  box-shadow: 0 0 5px #666;
+.text-extension-results .media a img:hover {
+  box-shadow: 0 0 5px 1px #666;
 }
 
 .meep .text-extension-results {
