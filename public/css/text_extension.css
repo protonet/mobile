@@ -234,10 +234,12 @@
 }
 
 .text-extension-results.images .media figure {
+  background: #fff;
+  max-width: 100px;
   position: relative;
-  float: left;
+  display: inline-block;
+  vertical-align: bottom;
   margin: 0 5px 5px 0;
-  display: block;
 }
 
 .text-extension-results.images img:hover {
