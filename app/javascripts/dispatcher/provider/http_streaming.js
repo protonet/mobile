@@ -18,7 +18,7 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
       this.observe();
     },
     
-    observe: function() {
+    observe: function() {
       /**
        * Update socket id
        */
@@ -165,6 +165,7 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
       
       $.ajax(url, {
         type: "POST",
+        crossDomain: true,
         data: JSON.stringify(data)
       });
     },

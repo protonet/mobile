@@ -54,8 +54,11 @@ class HttpConnection < EM::Connection
     @response = EM::DelegatedHttpResponse.new(self)
     
     # Tell the browser to let us POST stuff
-    @response.headers['Access-Control-Allow-Origin'] = '*'
-    @response.headers['Access-Control-Allow-Methods'] = 'GET, POST'
+    origin = (@http_headers.match(/Origin\:\s*(.+?)(\x00|$)/) || ["", "*"])[1]
+    @response.headers['Access-Control-Allow-Origin'] = origin
+    @response.headers['Access-Control-Allow-Methods'] = '*'
+    @response.headers['Access-Control-Allow-Credentials'] = 'true';
+    @response.headers['Access-Control-Expose-Headers'] = '*'
     @response.content_type 'text/plain'
 
     if @http_request_method == 'GET' && !@response_initialized

@@ -20,6 +20,8 @@ protonet.dispatcher.provider.WebSocket = {
     };
     
     this.socket.onopen = function() {
+      this.hadConnection = true;
+      
       this.send({
         operation: "authenticate",
         payload: {
@@ -32,8 +34,14 @@ protonet.dispatcher.provider.WebSocket = {
     }.bind(this);
     
     this.socket.onclose = function() {
-      protonet.trigger("socket.connected", false);
-    };
+      if (this.hadConnection) {
+        protonet.trigger("socket.connected", false);
+      } else {
+        // switch to http streaming
+        this.isSupported = function() { return false; };
+        protonet.trigger("socket.reinitialize");
+      }
+    }.bind(this);
     
     this.socket.onerror = function() {
       protonet.trigger("socket.connected", false);

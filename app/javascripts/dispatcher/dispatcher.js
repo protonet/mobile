@@ -8,6 +8,14 @@ protonet.dispatcher = {
     this.create();
   },
   
+  reinitialize: function() {
+    var undef;
+    
+    this.initialized = this.connected = this.connecting = undef;
+    
+    this.create();
+  },
+  
   shouldConnect: function() {
     // Only create socket connection when the user is not a stranger or the user see's the dashboard
     // TODO: This needs to be done much smarter (cblum)
@@ -47,6 +55,7 @@ protonet.dispatcher = {
     
     protonet
       .on("socket.initialized",   this.initializeCallback.bind(this))
+      .on("socket.reinitialize",  this.reinitialize.bind(this))
       .on("socket.connected",     this.connectCallback.bind(this))
       .on("socket.send",          this.send.bind(this))
       .on("socket.receive",       this.receive.bind(this))
