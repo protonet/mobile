@@ -85,7 +85,15 @@
       }
       
       protonet.data.User.get(this.partner, function(user) {
+        if (this.badgeContainer) {
+          this.badgeContainer.detach();
+        }
+        
         this.link.text(user.name);
+        
+        if (this.badgeContainer) {
+          this.badgeContainer.appendTo(this.link);
+        }
         
         if (user.isOnline) {
           this.link.addClass("online");

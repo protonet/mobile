@@ -168,6 +168,10 @@
      * of unread meeps
      */
     _toggleBadge: function(preventEffect) {
+      if (!this.link.length) {
+        return;
+      }
+      
       if (this.unreadMeeps <= 0 && !this.badgeContainer) {
         return;
       }
@@ -249,6 +253,7 @@
       this._renderMeeps(this.data.meeps, this.channelList);
       protonet.trigger("channel.rendered", this.channelList, this.data, this);
       this._initGarbageCollector();
+      
       this._toggleBadge(true);
       
       this._initNoMeepsHint();
@@ -268,6 +273,8 @@
       
       this.link .appendTo(this.tab);
       this.tab  .appendTo(tabContainer);
+      
+      this._toggleBadge(true);
       
       return this;
     },

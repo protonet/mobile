@@ -349,7 +349,7 @@ protonet.timeline.Channels = {
       var channel = this._instantiateChannel(channelData).render(this.container);
       // Render tab if not existing
       if (channel.tab.length === 0) {
-        channel.renderTab(this.tabContainer, true);
+        channel.renderTab(this.tabContainer);
       }
     }.bind(this), function() {
       protonet.trigger("channels.initialized", this.data, this.channels);
