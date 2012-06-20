@@ -160,7 +160,7 @@
 #channels .system:before {
   left: 4px;
   background: url(/img/spr_channel_status_r2.png) no-repeat;
-  background-position: 0 -32px;
+  background-position: 0 -33px;
 }
 
 #channels .active {

@@ -74,23 +74,7 @@ protonet.ui.files.Widget = {
       this.$widget.show().addClass("loading");
       this.reset();
       
-      protonet.dispatcher.onready(function() {
-        protonet.data.File.getLastModified(protonet.data.Channel.getFolder(id), {
-          success: function(data) {
-            $.extend(data, { id: id });
-            protonet.trigger("channel.update_files", data);
-          }.bind(this),
-          
-          error:   function() {
-            // TODO: proper error handling
-            protonet.trigger("channel.update_files", { id: id, files: [] });
-          }.bind(this),
-          
-          complete: function() {
-            this.$widget.removeClass("loading");
-          }.bind(this)
-        });
-      }.bind(this));
+      protonet.dispatcher.onready(this.getFiles.bind(this));
     }.bind(this));
     
     protonet.on("channel.update_files", function(data) {
@@ -127,6 +111,8 @@ protonet.ui.files.Widget = {
       this.filePaths[channelId] = newFilePaths;
       this.$showAll.css("display", "inline-block");
     }.bind(this));
+    
+    protonet.on("socket.reconnected", this.getFiles.bind(this));
   },
   
   createElement: function(file) {
@@ -147,5 +133,27 @@ protonet.ui.files.Widget = {
       .animate({ "backgroundColor": "#ecf1fe" }, 1000, function() {
         $element.css("backgroundColor", "");
       });
+  },
+  
+  getFiles: function() {
+    if (this.currentRequest) {
+      this.currentRequest.abort();
+    }
+    
+    this.currentRequest = protonet.data.File.getLastModified(protonet.data.Channel.getFolder(this.currentChannelId), {
+      success: function(data) {
+        $.extend(data, { id: this.currentChannelId });
+        protonet.trigger("channel.update_files", data);
+      }.bind(this),
+      
+      error:   function() {
+        // TODO: proper error handling
+        protonet.trigger("channel.update_files", { id: this.currentChannelId, files: [] });
+      }.bind(this),
+      
+      complete: function() {
+        this.$widget.removeClass("loading");
+      }.bind(this)
+    });
   }
 };
