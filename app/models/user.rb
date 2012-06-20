@@ -35,6 +35,8 @@ class User < ActiveRecord::Base
   after_destroy :move_meeps_to_anonymous
   after_destroy :move_owned_channels_to_anonymous
   after_destroy :delete_folder
+
+  after_save :update_system_user_folder
   
   validates_uniqueness_of :email, :if => lambda {|u| !u.stranger?}
   validates_uniqueness_of :login, :if => lambda {|u| !u.stranger?}
@@ -86,7 +88,7 @@ class User < ActiveRecord::Base
       :subscriptions  => user.channels.map(&:id)
     }
   end
-  
+
   # devise 1.2.1 calls this
   def valid_password?(password)
     if SystemPreferences.remote_ldap_sign_on == true
@@ -360,5 +362,44 @@ class User < ActiveRecord::Base
   def delete_folder
     FileUtils.rm_rf("#{configatron.files_path}/users/#{id}")
   end
-end
 
+  def update_system_user_folder
+    return true if user.stranger?
+    if user.login_was # login_changed?
+      `mv #{configatron.files_path}/system_users/#{user.login_was} #{system_home_path}`
+      self.class.refresh_system_users
+    elsif new_record?
+      `mkdir -p #{system_home_path}/channels`
+      `ln -s #{configatron.files_path}/users/#{id} "#{system_home_path}/my private folder"`
+      self.class.refresh_system_users
+    else
+      true # nuttin'
+    end
+  end
+
+  def create_system_channel_folders
+    # all real channels the user has
+    channels.verified.local.each do |channel|
+      if channel.rendezvous?
+        participant = (channel.rendezvous_participants - self).first
+        `ln -s #{configatron.files_path}/channels/#{channel.id} "#{system_home_path}/channels/shared between you and #{participant.login}"`
+      else
+        `ln -s #{configatron.files_path}/channels/#{channel.id} #{system_home_path}/channels/#{channel.name}`
+        
+      end
+    end
+  end
+
+  def system_home_path
+    configatron.files_path + "/system_users/#{user.login}"
+  end
+
+  def self.refresh_system_users
+    data = []
+    all.registered.each_with_index do |user, i|
+      data << "#{user.login}:x:#{8000 + i}:#{8000 + i}:#{user.login},,,:#{user.system_home_path}:/bin/false" # bin/false so you can't login to shell
+    end
+    # TODO: harden security of this
+    File.open("/var/lib/extrausers/passwd", 'w') {|f| f.write(data.join("\n")) }
+  end
+end
