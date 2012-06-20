@@ -146,7 +146,7 @@ protonet.ui.files.File = (function() {
       $.extend(data, {
         url:            protonet.data.File.getUrl(data.path),
         downloadUrl:    protonet.data.File.getDownloadUrl(data.path),
-        prettyName:     data.name.truncate(70),
+        prettyName:     protonet.utils.escapeHtml(data.name.truncate(70)),
         prettySize:     data.size && protonet.utils.prettifyFileSize(data.size),
         prettyModified: protonet.utils.prettifyDate(data.modified)
       });
@@ -154,7 +154,7 @@ protonet.ui.files.File = (function() {
       
       if (data.rendezvousFolder) {
         var userName = (protonet.data.User.getName(data.rendezvousPartner) || "unknown");
-        data.prettyName = protonet.t("SHARED_BETWEEN_YOU_AND_USER", { user_name: userName.truncate(20) });
+        data.prettyName = protonet.t("SHARED_BETWEEN_YOU_AND_USER_HTML", { user_name: userName.truncate(20) });
       }
       
       if (data.uploaded) {
@@ -213,7 +213,7 @@ protonet.ui.files.File = (function() {
     },
     
     _cancelRename: function() {
-      this.$element.find(".file-name a").text(this.data.prettyName);
+      this.$element.find(".file-name a").html(this.data.prettyName);
     },
     
     _sendRename: function(newName) {

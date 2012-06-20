@@ -17,7 +17,7 @@ protonet.utils.Template = function(id, params, escapeHtml) {
   this.html = this._getTemplate(id);
   
   $.each(params || {}, function(key, value) {
-    if (escapeHtml) {
+    if (escapeHtml && typeof(value) === "string") {
       value = protonet.utils.escapeHtml(value);
     }
     this.html = this.html.split("#{" + key + "}").join(value);

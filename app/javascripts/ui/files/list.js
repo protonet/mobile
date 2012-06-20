@@ -663,10 +663,9 @@ protonet.ui.files.List = (function() {
           $element = $("<a>", { text: name });
       
       if (isFolder) {
-        // FIXME: Potential security flaw when using html() here
         $element
           .attr("data-folder-path", path)
-          .html(protonet.data.File.getName(path));
+          .text(protonet.data.File.getName(path));
       } else {
         $element.attr("data-file-path", path);
       }
@@ -807,7 +806,7 @@ protonet.ui.files.List = (function() {
           elements:     ".files-page [data-folder-path]",
           ondragenter:  function($element) {
             this.blinker = protonet.effects.blink($element, {
-              delay:    (0.4).seconds(),
+              delay:    (0.3).seconds(),
               interval: (0.2).seconds(),
               callback: function() { $element.click().dblclick(); }
             });
@@ -840,7 +839,7 @@ protonet.ui.files.List = (function() {
           }.bind(this),
           ondragenter:  function($element) {
             this.blinker = protonet.effects.blink($element, {
-              delay:    (0.4).seconds(),
+              delay:    (0.3).seconds(),
               interval: (0.2).seconds(),
               callback: function() { $element.click().dblclick(); }
             });

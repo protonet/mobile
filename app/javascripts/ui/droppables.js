@@ -2,7 +2,7 @@
 
 protonet.ui.Droppables = (function() {
   var undef,
-      timeout,
+      dragendTimeout,
       FILES            = ["public.file-url", "application/x-moz-file", "Files"],
       targets          = [],
       activeTargets    = [],
@@ -21,26 +21,26 @@ protonet.ui.Droppables = (function() {
         ondrop:        $.noop
       };
   
-  function _containsAllowedTypes(dataTransfer, target) {
+  function _containsAllowedTypes(dataTransferTypes, target) {
     if (target.types === "all") {
       return true;
     }
     
     var i       = 0,
-        types   = dataTransfer.types || [],
-        length  = types.length;
+        length  = dataTransferTypes.length;
     
     for (; i<length; i++) {
-      if (target.types.indexOf(types[i]) !== -1) {
+      if (target.types.indexOf(dataTransferTypes[i]) !== -1) {
         return true;
       }
     }
     return false;
   }
   
-  function _dragenter(target, $element, event) {
+  function _dragenter(target, $element) {
     $element.data("dragover", true).addClass(target.className);
-    target.ondragenter($element, event);
+    $element.on("dragleave." + target._id, function() { _dragleave(target, $element); });
+    target.ondragenter($element);
     $element.one("drop." + target._id, function(event) {
       target.ondrop($element, event);
     });
@@ -49,7 +49,7 @@ protonet.ui.Droppables = (function() {
   function _dragleave(target, $element) {
     $element.data("dragover", false).removeClass(target.className);
     target.ondragleave($element);
-    $element.off("drop." + target._id);
+    $element.off("." + target._id);
   }
   
   function _observe(target) {
@@ -59,10 +59,9 @@ protonet.ui.Droppables = (function() {
     
     observed = true;
     
-    var oldTarget,
-        lastDragover = 0,
+    var potentialTargets,
         shouldPreventDefault,
-        oldDropEffect;
+        dropEffect;
     
     $html.on("dragover", function(event) {
       var dataTransfer = event.dataTransfer;
@@ -70,88 +69,89 @@ protonet.ui.Droppables = (function() {
         return;
       }
       
-      if (event.target === oldTarget && (new Date() - lastDragover) < (0.5).seconds()) {
-        if (oldDropEffect) {
-          dataTransfer.dropEffect = oldDropEffect;
-        }
-        if (shouldPreventDefault) {
-          event.preventDefault();
-        }
+      if (dropEffect) {
+        dataTransfer.dropEffect = dropEffect;
+      }
+      
+      if (shouldPreventDefault) {
+        event.preventDefault();
+      }
+      
+      clearTimeout(dragendTimeout);
+      dragendTimeout = setTimeout(function() {
+        $html.trigger("dragend");
+      }, 400);
+    });
+    
+    var dragenterTimeout;
+    $html.on("dragenter", function(event) {
+      var dataTransfer = event.dataTransfer;
+      if (!dataTransfer) {
         return;
       }
       
-      lastDragover = new Date();
-      oldTarget = event.target;
+      var dataTransferTypes = dataTransfer.types || [],
+          eventTarget       = event.target;
       
-      clearTimeout(timeout);
-      timeout = setTimeout(function() {
-        $html.trigger("dragend");
-      }, (0.6).seconds());
-      
-      var oldPotentialTargets = potentialTargets;
-      
-      // Indicate a drop area by setting class target.indicator on elements when the drag contains
-      // desired data types
-      potentialTargets = [];
-      $.each(targets, function(i, target) {
-        var isTypeMatch  = _containsAllowedTypes(dataTransfer, target),
-            wasTypeMatch = oldPotentialTargets.indexOf(target) !== -1;
-        if (isTypeMatch) {
-          potentialTargets.push(target);
-          $(target.elements).addClass(target.indicator);
-        } else if (wasTypeMatch) {
-          $(target.elements).removeClass(target.indicator);
-        }
-      });
-      
-      // Find targets on which content is currently dragged: highlight them and fire a ondragenter()
-      activeTargets = [];
-      
-      var queue = [];
-      $.each(potentialTargets, function(i, target) {
-        $(target.elements).each(function(i, element) {
-          var $element          = $(element),
-              wasBeingDraggedOn = $element.data("dragover"),
-              isBeingDraggedOn  = event.target === element || (target.includeChilds && $.contains(element, event.target));
-          if (isBeingDraggedOn && target.condition($element)) {
-            if (activeTargets.indexOf(target) === -1) {
-              activeTargets.push(target);
+      clearTimeout(dragenterTimeout);
+      dragenterTimeout = setTimeout(function() {
+        if (!potentialTargets) {
+          potentialTargets = [];
+          $.each(targets, function(i, target) {
+            var isTypeMatch  = _containsAllowedTypes(dataTransferTypes, target);
+            if (isTypeMatch) {
+              potentialTargets.push(target);
+              $(target.elements).addClass(target.indicator);
             }
-            if (!wasBeingDraggedOn) {
-              queue.push(function() {
-                _dragenter(target, $element, event);
+          });
+        }
+      
+        // Find targets on which content is currently dragged: highlight them and fire a ondragenter()
+        activeTargets = [];
+      
+        var queue = [];
+        $.each(potentialTargets, function(i, target) {
+          $(target.elements).each(function(i, element) {
+            var $element          = $(element),
+                wasBeingDraggedOn = $element.data("dragover"),
+                isBeingDraggedOn  = eventTarget === element || (target.includeChilds && $.contains(element, eventTarget));
+            if (isBeingDraggedOn && target.condition($element)) {
+              if (activeTargets.indexOf(target) === -1) {
+                activeTargets.push(target);
+              }
+              if (!wasBeingDraggedOn) {
+                queue.push(function() {
+                  _dragenter(target, $element);
+                });
+              }
+            } else if (wasBeingDraggedOn) {
+              queue.unshift(function() {
+                _dragleave(target, $element);
               });
             }
-          } else if (wasBeingDraggedOn) {
-            queue.unshift(function() {
-              _dragleave(target, $element);
-            });
-          }
+          });
         });
-      });
       
-      $.each(queue, function(i, func) { func(); });
+        $.each(queue, function(i, func) { func(); });
       
-      if (potentialTargets.length) {
-        $html.addClass("dragover");
-        event.preventDefault();
-        shouldPreventDefault = true;
-      } else {
-        shouldPreventDefault = false;
-      }
+        if (potentialTargets.length) {
+          $html.addClass("dragover");
+          shouldPreventDefault = true;
+        } else {
+          shouldPreventDefault = false;
+        }
       
-      if (activeTargets.length) {
-        dataTransfer.dropEffect = oldDropEffect = "copy";
-      } else if (potentialTargets.length) {
-        dataTransfer.dropEffect = oldDropEffect = "none";
-      }
+        if (activeTargets.length) {
+          dropEffect = "copy";
+        } else if (potentialTargets.length) {
+          dropEffect = "none";
+        }
+      }, 200);
     });
     
     
     $html.on("dragend", function(event) {
-      shouldPreventDefault = oldDropEffect = undef;
-      
-      clearTimeout(timeout);
+      clearTimeout(dragendTimeout);
       
       $html.removeClass("dragover");
       
@@ -168,7 +168,9 @@ protonet.ui.Droppables = (function() {
         });
       });
       
-      potentialTargets = activeTargets = [];
+      potentialTargets = shouldPreventDefault = oldDropEffect = undef;
+      
+      activeTargets = [];
     });
   }
   
@@ -191,12 +193,12 @@ protonet.ui.Droppables = (function() {
   }
   
   function remove(target) {
-    if (potentialTargets.indexOf(target) !== -1) {
+    if (potentialTargets && potentialTargets.indexOf(target) !== -1) {
       $(target.elements).removeClass(target.indicator);
     }
     
     if (activeTargets.indexOf(target) !== -1) {
-      $(target.elements).data("dragover", false).removeClass(target.className).off("drop." + target._id);
+      $(target.elements).data("dragover", false).removeClass(target.className).off("." + target._id);
     }
     
     var index = targets.indexOf(target);
