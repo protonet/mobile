@@ -1,0 +1,6 @@
+#!bin/bash
+
+login=$PAM_USER
+read password
+wget("http://$login:$password@localhost/api/v1/users/find_by_login/$login --spider --quiet")
+exit $?
