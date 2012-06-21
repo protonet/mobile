@@ -135,10 +135,19 @@ function copyTo(source, target, reply) {
   
   if (getType(source) == 'dir') {
     mkdirSync(target);
-
+    
     var files = fs.readdirSync(source);
-    for (var i in files) {
-      copyTo(path.join(source, files[i]), path.join(target, files[i]), reply);
+    
+    if (files.length) {
+      Step(function() {
+        for (var i in files) {
+          copyTo(path.join(source, files[i]), path.join(target, files[i]), this.parallel());
+        }
+      }, function() {
+        reply(null, createResponseForCopy(source, target));
+      });
+    } else {
+      reply(null, createResponseForCopy(source, target));
     }
   } else {
     if (shouldBeLink(target)) {

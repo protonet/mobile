@@ -64,7 +64,7 @@ protonet.text_extensions.render = (function() {
         provider    = data.type,
         mediaType   = _getMediaType(data),
         renderMedia = protonet.text_extensions.render[mediaType],
-        url         = data.url,
+        url         = data.url || (data.files ? protonet.data.File.getUrl(data.files[0]) : null),
         domain      = protonet.utils.parseUrl(url).host;
     
     title           = title.truncate(protonet.text_extensions.config.MAX_TITLE_LENGTH);

@@ -155,7 +155,7 @@ protonet.text_extensions.Input.prototype = {
     this._cancelRequest = false;
     this.provider.loadData(this.provider.supportsMultiple ? this.urls : this.urls[0], function(data) {
       if (!this._cancelRequest) {
-        data = $.extend({}, data, { type: this.provider.name, url: data.url || this.urls[0] });
+        data = $.extend({}, data, { type: this.provider.name });
         this.render(data);
       }
     }.bind(this), this._ignoreUrlAndReset.bind(this));
