@@ -1,5 +1,5 @@
 protonet.browser = {
-  SUPPORTS_HTML5_WEBSOCKET: function() {
+  SUPPORTS_WEBSOCKET: function() {
     return !!window.WebSocket;
   },
   

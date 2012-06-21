@@ -1,6 +1,6 @@
 protonet.dispatcher.provider.WebSocket = {
   isSupported: function() {
-    return protonet.browser.SUPPORTS_HTML5_WEBSOCKET();
+    return protonet.browser.SUPPORTS_WEBSOCKET();
   },
   
   initialize: function() {
@@ -33,7 +33,7 @@ protonet.dispatcher.provider.WebSocket = {
       protonet.trigger("socket.connected", true);
     }.bind(this);
     
-    this.socket.onclose = function() {
+    this.socket.onclose = this.socket.onerror = function() {
       if (this.hadConnection) {
         protonet.trigger("socket.connected", false);
       } else {
@@ -42,10 +42,6 @@ protonet.dispatcher.provider.WebSocket = {
         protonet.trigger("socket.reinitialize");
       }
     }.bind(this);
-    
-    this.socket.onerror = function() {
-      protonet.trigger("socket.connected", false);
-    };
     
     $window
       .bind("beforeunload.websockets", function() {

@@ -41,10 +41,7 @@ protonet.dispatcher = {
   _observe: function() {
     var that = this;
     
-    protonet.on("socket.connected", function(status) {
-      if (!status) { return; }
-      protonet.off("socket.connected", arguments.callee);
-      
+    protonet.one("socket.update_id", function(status) {
       if (that.callbacks) {
         $.each(that.callbacks, function(i, callback) {
           callback();
@@ -59,7 +56,7 @@ protonet.dispatcher = {
       .on("socket.connected",     this.connectCallback.bind(this))
       .on("socket.send",          this.send.bind(this))
       .on("socket.receive",       this.receive.bind(this))
-      .on("socket.ping_received", this.pingCallback.bind(this))
+      .on("socket.ping_received", this.pingCallback.bind(this));
     
     $window
       .bind("offline unload", this.disconnect.bind(this))
