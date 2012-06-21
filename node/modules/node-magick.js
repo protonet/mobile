@@ -25,6 +25,7 @@ var magickCommand = function(obj) {
       .resample(72)
       .gravity("center")
       .background("white")
+      .flatten()
       .coalesce();
     
     if (width || height) {
@@ -72,6 +73,9 @@ var magickCommand = function(obj) {
     } else {
       return obj.makeArgs(["-resample", dpi], null);
     }
+  };
+  obj.flatten = function() {
+    return obj.makeArgs(null, ["-flatten"]);
   };
   obj.colorSpace = function(space) {
     return obj.makeArgs(["-colorspace", space], null);

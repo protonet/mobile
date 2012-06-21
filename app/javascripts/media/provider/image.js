@@ -1,10 +1,8 @@
 //= require "../try_to_load_image.js"
 
 protonet.media.provider.Image = {
-  supportedMimeTypes: ["image/jpeg", "image/png", "image/gif", "image/bmp", "image/svg+xml", "image/tiff", "application/postscript"],
-  
   supports: function(file) {
-    return this.supportedMimeTypes.indexOf(file.mime) !== -1;
+    return protonet.data.File.isImage(file.path);
   },
   
   render: function(file, $container) {
