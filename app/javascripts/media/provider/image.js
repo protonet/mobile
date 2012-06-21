@@ -16,11 +16,13 @@ protonet.media.provider.Image = {
       var $element = $("<img>", { src: src });
       
       $element.one("error", function() {
-        deferred.reject($element);
+        deferred.reject();
       });
       
       $container.html($element);
       deferred.resolve($element);
+    }, function() {
+      deferred.reject();
     });
     
     return deferred.promise();

@@ -34,7 +34,7 @@ protonet.media.Proxy = (function() {
     var isGif = url.indexOf(".gif") !== -1,
         isPsd = url.indexOf(".psd") !== -1;
     
-    options = $.extend({ extent: !isGif && !isPsd, flatten: !isGif }, options);
+    options = $.extend({ extent: !isGif && !isPsd, flatten: isPsd }, options);
     
     var imageUrl = IMAGE_URL.replace("{url}", encodeURIComponent(url));
     imageUrl += "&width=" + (options.width || "") + "&height=" + (options.height || "") + "&extent=" + options.extent + "&flatten=" + options.flatten;
