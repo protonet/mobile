@@ -31,10 +31,13 @@ protonet.media.Proxy = (function() {
       url = protonet.utils.convertToAbsoluteUrl(url);
     }
     
-    options = $.extend({ extent: url.indexOf(".gif") === -1 }, options);
+    var isGif = url.indexOf(".gif") !== -1,
+        isPsd = url.indexOf(".psd") !== -1;
+    
+    options = $.extend({ extent: !isGif && !isPsd, flatten: !isGif }, options);
     
     var imageUrl = IMAGE_URL.replace("{url}", encodeURIComponent(url));
-    imageUrl += "&width=" + (options.width || "") + "&height=" + (options.height || "") + "&extent=" + options.extent;
+    imageUrl += "&width=" + (options.width || "") + "&height=" + (options.height || "") + "&extent=" + options.extent + "&flatten=" + options.flatten;
     
     if (options.cacheKey) {
       imageUrl += "&cache_key=" + options.cacheKey;

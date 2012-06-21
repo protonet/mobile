@@ -18,15 +18,17 @@ var magickCommand = function(obj) {
   obj.cropResize = function(width, height) {
     return obj.crop(width, height).resize(width, height);
   };
-  obj.resizeMagick = function(width, height, extent) {
+  obj.resizeMagick = function(width, height, extent, flatten) {
     obj = obj
       .stripMetaData()
       .colorSpace('RGB')
       .resample(72)
       .gravity("center")
-      .background("white")
-      .flatten()
-      .coalesce();
+      .background("white");
+    
+    if (flatten) {
+      obj.flatten();
+    }
     
     if (width || height) {
       obj.resize(width, height);
@@ -45,6 +47,10 @@ var magickCommand = function(obj) {
     }
     var wh = "'" + (width || "") + (height ? ("x" + height) : "") + flags + "'";
     return obj.makeArgs(["-resize", wh], null);
+  };
+  obj.size = function(width, height) {
+    var wh = "'" + (width || "") + (height ? ("x" + height) : "") + "'";
+    return obj.makeArgs(["-size", wh], null);
   };
   obj.crop = function(width, height) {
     var wh = (width || "") + "x" + (height || "");
@@ -107,12 +113,16 @@ var magickCommand = function(obj) {
     
     console.log("running command: "+ command + " " + args.join(" "));
     var p = childProcess.exec(( command + " " + args.join(" ") ), function(error, stdout, stderr) {
-      if (error !== null) {
+      if (error) {
         errorCallback();
       } else {
         successCallback();
       }
     });
+    
+    setTimeout(function() {
+      p.kill();
+    }, 30000);
   };
   return obj;
 };
