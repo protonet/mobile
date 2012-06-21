@@ -65,7 +65,7 @@ protonet.dispatcher = {
   
   create: function() {
     var queryParams = location.search, i;
-    if (queryParams.indexOf("noflash=1") !== -1) {
+    if (queryParams.indexOf("noflash=1") !== -1 || protonet.config.is_publish_to_web) {
       delete this.provider.FlashSocket;
     }
     

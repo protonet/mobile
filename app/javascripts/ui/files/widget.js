@@ -29,6 +29,10 @@ protonet.ui.files.Widget = {
   },
   
   _initDragAndDrop: function() {
+    if (protonet.data.User.isStranger(protonet.config.user_id)) {
+      return;
+    }
+    
     this.queue = new protonet.ui.files.Queue({
       browse_button:  this.$dropArea.attr("id"),
       drop_element:   this.$widget.attr("id")
@@ -63,7 +67,9 @@ protonet.ui.files.Widget = {
     
     protonet.on("channel.change", function(id) {
       this.currentChannelId = id;
-      this.uploader.setTargetFolder(protonet.data.Channel.getFolder(id));
+      if (this.uploader) {
+        this.uploader.setTargetFolder(protonet.data.Channel.getFolder(id));
+      }
       
       if (protonet.data.Channel.isGlobal(id)) {
         this.$widget.hide();

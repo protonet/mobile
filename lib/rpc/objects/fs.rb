@@ -219,7 +219,7 @@ class Rpc::Objects::Fs < Rpc::Base
         raise Rpc::AuthError, 'Not authed'
       end
       
-      return false if user.stranger?
+      raise Rpc::WriteAccessDeniedError, "Strangers are not allowed to write" if user.stranger?
       
       # Accept strings as well
       paths = parse_paths(paths) if paths.first.is_a? String
