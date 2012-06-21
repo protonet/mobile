@@ -264,30 +264,28 @@ function walk(dir, reply) {
     list.forEach(function(fileName) {
       var path = dir + '/' + fileName;
       fs.stat(path, function(err, stat) {
-        if (stat && stat.isDirectory()) {
-          walk(path, function(err, res) {
-            results = results.concat(res);
-            if (!--pending) {
-              reply(null, results);
-            }
-          });
-        } else {
-          if (stat) {
-            if (fileName.charAt(0) !== ".") {
-              results.push({
-                name:     fileName,
-                path:     absolutePathForFrontend(path),
-                size:     stat.size,
-                type:     "file",
-                mime:     lookupMime(fileName),
-                modified: Math.max(stat.ctime, stat.mtime)
-              });
-            }
+        if (fileName.charAt(0) !== "." && stat) {
+          if (stat.isDirectory()) {
+            return walk(path, function(err, res) {
+              results = results.concat(res);
+              if (!--pending) {
+                reply(null, results);
+              }
+            });
+          } else {
+            results.push({
+              name:     fileName,
+              path:     absolutePathForFrontend(path),
+              size:     stat.size,
+              type:     "file",
+              mime:     lookupMime(fileName),
+              modified: Math.max(stat.ctime, stat.mtime)
+            });
           }
-          
-          if (!--pending) { 
-            reply(null, results);
-          }
+        }
+
+        if (!--pending) { 
+          reply(null, results);
         }
       });
     });
