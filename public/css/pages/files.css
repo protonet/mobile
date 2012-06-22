@@ -157,6 +157,7 @@
 .files-page .folder {
   outline: 0;
   cursor: default;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 .files-page h2 {
