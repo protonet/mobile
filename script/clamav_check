@@ -11,15 +11,20 @@ DB_CONFIG_FILE  = "/home/protonet/dashboard/current/config/database.yml"
 FILES_DIR       = "/home/protonet/"
 
 db_config = YAML::load(File.read(DB_CONFIG_FILE))
-connection = Mysql.new(db_config['production']['host'], db_config['production']['username'], db_config['production']['password'], db_config['production']['database'])
+connection = Mysql2::Client.new({
+  :host       => db_config['production']['host'],
+  :username   => db_config['production']['username'],
+  :password   => db_config['production']['password'],
+  :database   => db_config['production']['database']
+})
 result = connection.query("SELECT * FROM system_preferences WHERE var = 'last_clamav_scan'")
 
 last_clamav_scan = 0
-result.each_hash {|h| last_clamav_scan = h['value'].to_i }
+result.each {|h| last_clamav_scan = h['value'].to_i }
 
 puts "last virus scan: #{Time.at(last_clamav_scan)}"
 if last_clamav_scan + SCAN_INTERVAL < Time.now.to_i
-  if result.num_rows > 0
+  if result.count > 0
     connection.query("UPDATE system_preferences SET value = '#{Time.now.to_i}' WHERE var = 'last_clamav_scan'")
   else
     connection.query("INSERT INTO system_preferences (var, value) VALUES ('last_clamav_scan', '#{Time.now.to_i}')")
