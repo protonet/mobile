@@ -89,6 +89,7 @@
 
 .file-list tr.dragover,
 .file-list tr.focus {
+  background: #ecf1fe;
   background: rgba(72, 123, 255, 0.3);
 }
 

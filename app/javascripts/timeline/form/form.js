@@ -33,7 +33,7 @@ protonet.timeline.Form = {
   },
   
   _observe: function() {
-    var preventInitialFocus = protonet.config.user_is_stranger;
+    var preventInitialFocus = protonet.config.user_is_stranger || document.querySelector("input:focus, textarea:focus");
     
     protonet
       .on("user.changed_avatar", function(user) {

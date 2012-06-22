@@ -1,6 +1,9 @@
 protonet.p = function(pageName, callback) {
   var $page     = $("section." + pageName + "-page");
   if ($page.length) {
-    $(callback.bind($page, $page))
+    // Timeout needed for bloody IE
+    setTimeout(function() {
+      $(callback.bind($page, $page));
+    }, 10);
   }
 };

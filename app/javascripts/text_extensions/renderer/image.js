@@ -20,8 +20,8 @@ protonet.text_extensions.render.image = function(data, preventResizing) {
     title:  title,
     load:   function() {
       var newSize = protonet.utils.toMaxSize({
-        width:  $image.prop("naturalWidth"),
-        height: $image.prop("naturalHeight")
+        width:  $image.prop("naturalWidth") || $image.prop("width"),
+        height: $image.prop("naturalHeight") || $image.prop("height")
       }, imageSize);
       
       $(this).unbind("load error").addClass("loaded").add($anchor).css({

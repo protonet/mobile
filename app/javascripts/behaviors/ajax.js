@@ -51,7 +51,7 @@ protonet.open = (function() {
         })(),
         url     = link.href;
     
-    if (!protonet.config.allow_modal_views || isTouchDevice) {
+    if (!protonet.config.allow_modal_views) {
       return fallback(eventOrUrl);
     }
 

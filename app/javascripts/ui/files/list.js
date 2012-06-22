@@ -1125,6 +1125,13 @@ protonet.ui.files.List = (function() {
           preventDefault = true;
           break;
         default:
+          // Select all on CTRL + A
+          if (keyCode === 65 && (ctrlKey || metaKey)) {
+            preventDefault = true;
+            $newMarked = this.$tbody.children();
+            break;
+          }
+          
           if (metaKey || ctrlKey || altKey) {
             $newMarked = this.$marked;
             break;

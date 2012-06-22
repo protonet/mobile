@@ -17,10 +17,12 @@ protonet.p("meeps", function($page) {
   resizePage();
   
   if (isModalWindow) {
-    var $output = $(".modal-window > output").css("overflow", "visible");
-    $page.one("modal_window.unload", function() {
+    var $output = $(".modal-window > output"),
+        oldOverflow = $output.css("overflow");
+    $output.css("overflow", "visible");
+    protonet.one("modal_window.unload", function() {
       $window.off("resize", resizePage);
-      $output.css("overflow", "");
+      $output.css("overflow", oldOverflow);
     });
   }
   
