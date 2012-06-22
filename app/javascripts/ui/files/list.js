@@ -557,7 +557,7 @@ protonet.ui.files.List = (function() {
         window.__audioPopup.focus();
       } else {
         var params = $.param({ urls: urls });
-        window.__audioPopup = open("/files/play?" + params, "player" + node, "width=320,height=355,menubar=no,location=no,resizable=no,scrollbars=yes,status=no");
+        window.__audioPopup = open("/files/play?" + params, "player", "width=320,height=355,menubar=no,location=no,resizable=no,scrollbars=yes,status=no");
         if (window.__audioPopup) {
           this._updateActions();
           var audioPlayer = this.$fileDetails.find(".embed").data("audio_player");

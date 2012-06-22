@@ -20,7 +20,7 @@
   // change the css overflow property of the body element
   // see https://bugzilla.mozilla.org/show_bug.cgi?id=90268
   // (fixed in firefox 13)
-  var hasOverflowIssue = $.browser.mozilla && !!window.globalStorage;
+  var hasOverflowIssue = ($.browser.mozilla && !!window.globalStorage) || $.browser.msie;
   if (hasOverflowIssue) {
     soundManager.oninitmovie = function() {
       $("#sm2-container").appendTo("html");
