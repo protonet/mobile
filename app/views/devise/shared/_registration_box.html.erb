@@ -10,7 +10,7 @@
     <%- end %>
     
     <label>
-      <%= f.text_field :login, :placeholder => "email or user name" %>
+      <%= f.text_field :login, :placeholder => "email or user name", :autocorrect => 'off', :autocapitalize => 'off' %>
     </label>
     <label>
       <%= f.password_field :password, :value => nil, :placeholder => "password" %>
