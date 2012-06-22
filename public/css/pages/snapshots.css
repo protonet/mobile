@@ -18,6 +18,10 @@
   overflow: hidden;
 }
 
+.snapshots-page output > object {
+  display: inline-block;
+}
+
 .snapshots-page output > div {
   background: #666;
   background: rgba(0, 0, 0, 0.75);

@@ -1248,9 +1248,11 @@ protonet.ui.files.List = (function() {
           protonet.off(".files_page");
           $document.off(".files_page");
           protonet.utils.History.removeHook(this.historyHook);
-          $.each(this.droppables, function(i, droppable) {
-            protonet.ui.Droppables.remove(droppable);
-          });
+          if (this.droppables) {
+            $.each(this.droppables, function(i, droppable) {
+              protonet.ui.Droppables.remove(droppable);
+            });
+          }
           this.uploader.destroy();
         }.bind(this));
       }

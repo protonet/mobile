@@ -145,10 +145,14 @@
     },
 
     insertInto: function($container) {
-      var width = $container.width(), height = $container.height();
-      this.$elements = $(webcam.get_html(Math.min(width, 800), Math.min(height, 600)));
+      var width = $container.width(), height = $container.height(),
+          html  = webcam.get_html(Math.min(width, 800), Math.min(height, 600));
+      if (webcam.ie) {
+        html = html.replace("</object>", '<param name="wmode" value="transparent" /></object>');
+      }
+      this.$elements = $(html);
       this.$elements.attr("wmode", "opaque");
-      $container.append(this.$elements);
+      $container.prepend(this.$elements);
     },
     
     reset: function() {

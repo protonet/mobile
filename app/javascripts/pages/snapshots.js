@@ -34,7 +34,11 @@ protonet.p("snapshots", function($page) {
     failure();
     return;
   }
-  webcam.insertInto($container);
+  
+  // Timeout needed for bloody IE
+  setTimeout(function() {
+    webcam.insertInto($container);
+  }, 0);
   
   $snapButton.bind("click", function() {
     $snapBar.hide();
