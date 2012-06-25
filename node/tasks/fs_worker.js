@@ -482,6 +482,7 @@ exports.init = function(amqpConnection) {
     }
 
     monitor.on("created", function (fsPath, stat) {
+      if (!stat) { return; }
       clearTimeout(timeouts[stat.ino]);
       delete timeouts[stat.ino];
 
@@ -493,6 +494,8 @@ exports.init = function(amqpConnection) {
     });
 
     monitor.on("removed", function (fsPath, stat) {
+      if (!stat) { return; }
+      
       timeouts[stat.ino] = setTimeout(function() {
         delete timeouts[stat.ino];
         push(fsPath);

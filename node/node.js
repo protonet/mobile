@@ -2,6 +2,10 @@ var sys  = require("util"),
     fs   = require("fs"),
     util = require("util");
 
+process.addListener("uncaughtException", function (err) {
+  console.log("Uncaught exception: " + err);
+});
+
 /*----------------------------------- CONFIG  ----------------------------------------*/
 var envPaths = {
   development: "./tmp/development/shared/files",
