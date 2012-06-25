@@ -119,8 +119,8 @@
   
   function cacheUserFromMeep(meep) {
     cache({
-      id: meep.user_id,
-      name: meep.author,
+      id:     meep.remote_user_id || meep.user_id,
+      name:   meep.author,
       avatar: meep.avatar
     });
   }
