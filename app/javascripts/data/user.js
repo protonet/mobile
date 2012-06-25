@@ -169,7 +169,7 @@
   });
   
   protonet.on("user.came_online", function(user) {
-    // TODO: sometimes user.came_online is triggered with an invalid user name
+    // FIXME: sometimes user.came_online is triggered with an invalid user name
     if (!user.name) {
       return;
     }

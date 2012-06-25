@@ -9,7 +9,11 @@ protonet.ui.files.Details = (function() {
     },
     
     create: function() {
-      return new protonet.utils.Template("file-details-template", this.data).to$();
+      var $details = new protonet.utils.Template("file-details-template", this.data).to$();
+      if (this.data.uploaderId === -1) {
+        $details.find(".uploader").replaceWith($("<span>", { "class": "hint", text: "unknown" }));
+      }
+      return $details;
     },
     
     renderInto: function($container) {
