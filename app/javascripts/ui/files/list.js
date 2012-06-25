@@ -1057,7 +1057,12 @@ protonet.ui.files.List = (function() {
           ctrlKey         = event.ctrlKey && !altKey,
           metaKey         = event.metaKey,
           keyCode         = event.keyCode,
+          target          = event.target,
           $newMarked      = $();
+      
+      if (target.nodeName === "INPUT" || target.nodeName === "TEXTAREA") {
+        return;
+      }
       
       if (keyCode === KEY_TAB) {
         keyCode = shiftKey ? KEY_UP : KEY_DOWN;
