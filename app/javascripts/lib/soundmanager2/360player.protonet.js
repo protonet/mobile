@@ -58,7 +58,7 @@ function ThreeSixtyPlayer() {
     allowMultiple: false,  // let many sounds play at once (false = only one sound playing at a time)
     loadRingColor: '#ccc', // how much has loaded
     playRingColor: '#000', // how much has played
-    backgroundRingColor: '#eee', // color shown underneath load + play ("not yet loaded" color)
+    backgroundRingColor: '#fff', // color shown underneath load + play ("not yet loaded" color)
 
     circleDiameter: null, // set dynamically according to values from CSS
     circleRadius: null,
@@ -401,7 +401,6 @@ function ThreeSixtyPlayer() {
       return true; // pass-thru for non-MP3/non-links
     }
 
-    sm._writeDebug('handleClick()');
     soundURL = (o.href);
     thisSound = self.getSoundByURL(soundURL);
 
@@ -413,7 +412,6 @@ function ThreeSixtyPlayer() {
       } else {
         // different sound
         thisSound.togglePause(); // start playing current
-        sm._writeDebug('sound different than last sound: '+self.lastSound.sID);
         if (!self.config.allowMultiple && self.lastSound) {
           self.stopSound(self.lastSound);
         }
@@ -539,7 +537,6 @@ function ThreeSixtyPlayer() {
        return false;
      }
      thisSound._360data.animating = 0;
-     soundManager._writeDebug('fanOut: '+thisSound.sID+': '+thisSound._360data.oLink.href);
      thisSound._360data.oAnim.seekTo(1); // play to end
      window.setTimeout(function() {
        // oncomplete hack
@@ -555,7 +552,6 @@ function ThreeSixtyPlayer() {
        return false;
      }
      thisSound._360data.animating = -1;
-     soundManager._writeDebug('fanIn: '+thisSound.sID+': '+thisSound._360data.oLink.href);
      // massive hack
      thisSound._360data.oAnim.seekTo(0); // play to end
      window.setTimeout(function() {
@@ -581,7 +577,6 @@ function ThreeSixtyPlayer() {
 
   this.stopSound = function(oSound) {
 
-    soundManager._writeDebug('stopSound: '+oSound.sID);
     soundManager.stop(oSound.sID);
     if (!isTouchDevice) {
       soundManager.unload(oSound.sID);
@@ -687,7 +682,6 @@ function ThreeSixtyPlayer() {
         deltaX = x-oSound._360data.canvasMidXY[0],
         deltaY = y-oSound._360data.canvasMidXY[1],
         angle = Math.floor(fullCircle-(self.rad2deg(Math.atan2(deltaX,deltaY))+180));
-
     oSound.setPosition(oSound.durationEstimate*(angle/fullCircle));
     self.stopEvent(e);
     return false;
@@ -963,8 +957,6 @@ function ThreeSixtyPlayer() {
       fontSizeMax = null;
     }
 
-    // soundManager._writeDebug('diameter, font size: '+circleDiameter+','+fontSizeMax);
-
     oFakeUI.parentNode.removeChild(oFakeUI);
 
     uiHTML = oFakeUI = oFakeUIBox = oTemp = null;
@@ -978,8 +970,6 @@ function ThreeSixtyPlayer() {
   };
 
   this.init = function(oItem) {
-
-    sm._writeDebug('threeSixtyPlayer.init()');
 
     var oLink, is_vis = false, oCanvas, oCanvasCTX, oCover, diameter, radius, uiData, uiDataVis, oUI, oBtn, o, o2, oID;
     

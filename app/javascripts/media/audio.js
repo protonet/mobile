@@ -13,6 +13,7 @@
   soundManager.flash9Options.usePeakData = true;
   soundManager.preferFlash = true;
   soundManager.useHTML5Audio = true;
+  soundManager.debugMode = false;
   soundManager.html5PollingInterval = 80;
   soundManager.useHighPerformance = true;
   
