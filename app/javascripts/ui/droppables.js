@@ -194,6 +194,7 @@ protonet.ui.Droppables = (function() {
   
   function remove(target) {
     if (potentialTargets && potentialTargets.indexOf(target) !== -1) {
+      $html.removeClass("dragover");
       $(target.elements).removeClass(target.indicator);
     }
     
