@@ -9,7 +9,7 @@ protonet.text_extensions.provider.Image = {
   /**
    * TODO: Some wiki pages end with a typical image suffix "File:auto.jpg" (even though they are html pages)
    */
-  REG_EXP: /.{13,}\.(jpe?g|gif|png|bmp|tiff?|svg|eps|psd|ps|ai)(\?.*)*/i,
+  REG_EXP: /.{13,}\.(jpe?g|gif|png|bmp|tiff?|eps|psd|ps|ai)(\?.*)*/i,
   
   supportsMultiple: true,
   
