@@ -14,6 +14,7 @@
   soundManager.preferFlash = true;
   soundManager.useHTML5Audio = true;
   soundManager.debugMode = false;
+  soundManager.noSWFCache = true;
   soundManager.html5PollingInterval = 80;
   soundManager.useHighPerformance = true;
   
