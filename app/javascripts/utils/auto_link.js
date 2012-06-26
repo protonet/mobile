@@ -11,7 +11,9 @@ protonet.utils.autoLink = (function() {
    */
   var URL_REG_EXP           = /(https?:\/\/|www\.)[^\s<]{3,}/gi,
       TRAILING_CHAR_REG_EXP = /([^\w\/-;])$/i,
+      PROTONET_REG_EXP       = /^https?:\/\/protonet\//i,
       MAX_DISPLAY_LENGTH    = 40,
+      BASE_URL              = protonet.config.base_url + "/",
       BRACKETS              = {
         ")": "(",
         "]": "[",
@@ -28,6 +30,10 @@ protonet.utils.autoLink = (function() {
       if (url.split(opening).length > url.split(punctuation).length) {
         url = url + punctuation;
         punctuation = "";
+      }
+      
+      if (url.match(PROTONET_REG_EXP)) {
+        url = url.replace(PROTONET_REG_EXP, BASE_URL);
       }
       
       var realUrl    = url,
