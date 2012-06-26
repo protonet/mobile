@@ -47,7 +47,7 @@ module ApplicationHelper
   def image_proxy(url, opts)
     url = "#{request.protocol + request.host_with_port}#{url}"
     url = ERB::Util.u(url)
-    "#{node_base_url(opts[:public])}/image_proxy?url=#{url}&width=#{opts[:width]}&height=#{opts[:height]}&type=.jpg"
+    "#{node_base_url(opts[:public])}/image_proxy?url=#{url}&width=#{opts[:width]}&height=#{opts[:height]}&extent=true&type=.jpg"
   end
   
   def server_name
