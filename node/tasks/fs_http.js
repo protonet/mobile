@@ -167,14 +167,15 @@ exports.init = function(amqpConnection) {
           if (typeof(files) === 'string') { files = [files]; }
           
           var file        = path.join(ROOT_DIR, files[0]),
-              isDirectory = fs.statSync(file).isDirectory();
+              stat        = fs.statSync(file),
+              isDirectory = stat.isDirectory();
           
           if (files.length == 1 && !isDirectory) {
             var contentType       = lookupMime(file),
                 shouldBeEmbedded  = message.params.embed == "true" && embeddableFiles.indexOf(contentType) !== -1;
             
             header['Content-Type']   = contentType;
-            header['Content-Length'] = fs.statSync(file).size;
+            header['Content-Length'] = stat.size;
             
             if (!shouldBeEmbedded) {
               header['Content-Disposition'] = 'attachment;filename="' + path.basename(file) + '"';
@@ -186,17 +187,17 @@ exports.init = function(amqpConnection) {
               file = path.join(path.dirname(file), fs.readlinkSync(file));
             }
             
-            fs.createReadStream(file)
-              .addListener('data', function(data) {
-                response.write(data, 'binary');
-              })
-              .addListener('end', function() {
-                response.end();
-              })
-              .addListener("error", function() {
-                response.end('Error');
-              });
+            var readStream = fs.createReadStream(file);
+            
+            readStream.on('open', function(data) {
+              readStream.pipe(response);
+            });
+            
+            readStream.on("error", function() {
+              response.end('Error');
+            });
           } else {
+            // FIXME: This will consume too much memory
             var fileName = "files.zip";
             if (files.length === 1 && isDirectory) {
               fileName = path.basename(file);

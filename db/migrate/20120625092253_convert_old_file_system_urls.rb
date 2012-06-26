@@ -1,7 +1,10 @@
 class ConvertOldFileSystemUrls < ActiveRecord::Migration
-  def self.replace_url(str)
-    p str
-    str.gsub(/\/system\/files\/show\?file_path\=(\S+)/) { "/node/fs/download/?paths=%2Fchannels#{$1}" }
+  def self.replace_url(str, key=nil)
+    if key == "imageHref" || key == "url"
+      str.gsub(/\/system\/files\/show\?file_path\=(\S+)/) { "/files?path=%2Fchannels#{$1}" }
+    else
+      str.gsub(/\/system\/files\/show\?file_path\=(\S+)/) { "/node/fs/download/?paths=%2Fchannels#{$1}" }
+    end
   end
   
   def self.up
@@ -14,10 +17,10 @@ class ConvertOldFileSystemUrls < ActiveRecord::Migration
       if text_extension
         text_extension.each do |key, val|
           if val.is_a? String
-            text_extension[key] = replace_url(val)
+            text_extension[key] = replace_url(val, key)
           elsif val.is_a? Array
             text_extension[key] = val.map do |sub_val|
-              sub_val.is_a?(String) ? replace_url(sub_val) : sub_val
+              sub_val.is_a?(String) ? replace_url(sub_val, key) : sub_val
             end
           end
         end
