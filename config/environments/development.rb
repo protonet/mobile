@@ -23,6 +23,7 @@ Dashboard::Application.configure do
   config.active_support.deprecation = :log
   
   configatron.files_path = Rails.root.to_s + "/tmp/development/shared/files"
+  configatron.extrausers_passwd = Rails.root.to_s + "/tmp/development/passwd"
   
   configatron.images.avatars_path   = "public/avatars"
   configatron.images.externals_path = "public/externals"

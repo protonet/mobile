@@ -30,6 +30,8 @@ class Rpc::Objects::Fs < Rpc::Base
         resp['result'] = resp['result'].map do |file|
           if file['type'] == "folder" && file['name'] == "users"
             user.stranger? ? nil : { :name => user.id.to_s, :path => "/users/#{user.id}/", :modified => user.created_at, :type => 'folder' }
+          elsif file['type'] == "folder" && file['name'] == "system_users"
+            nil
           else
             file
           end

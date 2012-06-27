@@ -24,6 +24,8 @@ class Channel < ActiveRecord::Base
   after_create  :subscribe_rendezvous_participant,  :if => lambda {|c| c.rendezvous? }
   after_create  :send_channel_notification,         :if => lambda {|c| !c.rendezvous? }
   
+  after_save  :rename_system_folders
+
   after_destroy :delete_folder
   
   attr_accessor   :skip_autosubscribe
@@ -32,6 +34,7 @@ class Channel < ActiveRecord::Base
   scope :without_system, :conditions => {:system => false}
   scope :public, :conditions => {:public => true}
   scope :real,  :conditions => {:rendezvous => nil}
+  scope :rendezvous, where('rendezvous IS NOT NULL') 
   scope :verified, :conditions => {:listens => {:verified => true}}
   scope :local, :conditions => {:node_id => 1}
   scope :order_by_name, :order => "name ASC"
@@ -221,6 +224,14 @@ class Channel < ActiveRecord::Base
     
   def random_users(amount=5)
     users.registered.all(:order => 'rand()', :limit => amount)
+  end
+
+  def rename_system_folders
+    if name_changed? && node.local?
+      users.registered.all.each do |user|
+        `mv #{configatron.files_path}/system_users/#{user.login}/channels/#{name_was} #{configatron.files_path}/system_users/#{user.login}/channels/#{name}`
+      end
+    end
   end
   
   private

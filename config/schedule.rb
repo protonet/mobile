@@ -23,4 +23,8 @@ every 1.day, :at => '1:00 am' do
   runner "if SystemPreferences.captive == true; SystemCaptivePortal.stop; sleep 10; SystemCaptivePortal.start; end"
 end
 
+every :reboot do
+  runner "User.build_system_users"
+end
+
 # Learn more: http://github.com/javan/whenever

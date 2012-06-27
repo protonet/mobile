@@ -36,6 +36,7 @@ Dashboard::Application.configure do
   configatron.files_path    = "#{configatron.shared_file_path}/files"
   configatron.images.avatars_path   = "public/system/avatars"
   configatron.images.externals_path = "public/system/externals"
+  configatron.extrausers_passwd     = "/var/lib/extrausers/passwd"
   
   configatron.ldap.active = false
   configatron.web_app_port        = 80

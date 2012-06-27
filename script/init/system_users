@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+
+if File.exist?("/home/protonet/dashboard/shared/files")
+  # production
+  BASE_DIR = "/home/protonet/dashboard/shared/files"
+  PRODUCTION = true
+else
+  # development
+  BASE_DIR = File.expand_path("../../tmp/development/shared/files", File.dirname(__FILE__))
+end
+
+
+def mount from, to
+  if defined?(PRODUCTION)
+    `mkdir -p "#{BASE_DIR}/#{to}"`    
+    system_user_folder = to.match(/system_users\/([\w\.\-\_]+)/)
+    `mount --bind "#{BASE_DIR}/#{from}" "#{BASE_DIR}/#{to}"`
+    `chmod 770 "#{BASE_DIR}/#{to}"`
+    `chmod g+s "#{BASE_DIR}/#{to}"`
+  else
+    `ln -s "#{BASE_DIR}/#{from}" "#{BASE_DIR}/#{to}"`
+  end
+end
+
+
+def umount dir
+  if defined?(PRODUCTION)
+    `umount -l "#{BASE_DIR}/#{dir}/" && rm -rf "#{BASE_DIR}/#{dir}"` 
+  else
+    `rm -rf "#{BASE_DIR}/#{dir}"`
+  end
+end
+
+
+case ARGV[0]
+  when "mount"
+    mount ARGV[1], ARGV[2]
+  when "umount"
+    umount ARGV[1]
+  else
+    abort("Usage: system_users (mount|umount)")
+end 

@@ -30,6 +30,7 @@ Dashboard::Application.configure do
   # config.active_record.schema_format = :sql
   
   configatron.files_path = Rails.root.to_s + "/tmp/test/shared/files"
+  configatron.extrausers_passwd = Rails.root.to_s + "/tmp/test/passwd"
   
   configatron.images.avatars_path   = Rails.root.to_s + "/public/avatars"
   configatron.images.externals_path = Rails.root.to_s + "/public/externals"

@@ -25,6 +25,7 @@ Dashboard::Application.configure do
   config.action_mailer.delivery_method = :test
   
   configatron.files_path = Rails.root.to_s + "/tmp/test/shared/files"
+  configatron.extrausers_passwd = Rails.root.to_s + "/tmp/cucumber/passwd"
 
   configatron.images.avatars_path   = "public/avatars"
   configatron.images.externals_path = "public/externals"

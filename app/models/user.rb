@@ -31,10 +31,13 @@ class User < ActiveRecord::Base
   after_create :listen_to_channels, :unless => :anonymous?
   after_create :mark_invitation_as_accepted, :if => :invitation_token
   after_create :create_folder, :if => lambda {|u| !u.stranger? && !u.system? }
+  after_create :refresh_system_users, :if => lambda {|u| !u.stranger? && !u.system? }
   
   after_destroy :move_meeps_to_anonymous
   after_destroy :move_owned_channels_to_anonymous
   after_destroy :delete_folder
+
+  after_update :update_system_user_folder, :if => lambda {|u| !u.stranger? && !u.system? }
   
   validates_uniqueness_of :email, :if => lambda {|u| !u.stranger?}
   validates_uniqueness_of :login, :if => lambda {|u| !u.stranger?}
@@ -354,11 +357,68 @@ class User < ActiveRecord::Base
   end
   
   def create_folder
-    FileUtils.mkdir_p("#{configatron.files_path}/users/#{id}", :mode => 0770)
+    FileUtils.mkdir_p("#{configatron.files_path}/users/#{id}", :mode => 0750)
+    FileUtils.mkdir_p("#{configatron.files_path}/system_users/#{login}/channels", :mode => 0750)
+    system_users_script("mount users/#{id} \"system_users/#{login}/my private folder\"")
   end
   
   def delete_folder
     FileUtils.rm_rf("#{configatron.files_path}/users/#{id}")
+    FileUtils.rm_rf("#{configatron.files_path}/system_users/#{login}")
   end
+
+  def update_system_user_folder
+    if login_changed? # login_changed?
+      `mv #{configatron.files_path}/system_users/#{login_was} #{system_home_path}`
+      # rename all rendevouz folder
+      channels.rendezvous.each do |rendevouz|
+        participant = (rendevouz.rendezvous_participants - [self]).first
+        `mv "#{participant.system_home_path}/channels/shared between you and #{login_was}" "#{participant.system_home_path}/channels/shared between you and #{login}"`
+      end
+      self.class.refresh_system_users
+    end
+  end
+  
+  def system_home_path
+    configatron.files_path + "/system_users/#{login}"
+  end
+  
+  def self.refresh_system_users
+    data = []
+    User.registered.each_with_index do |user, i|
+      data << "#{user.login}:x:#{8000 + i}:#{`getent group protonet | cut -d: -f3`.strip}:#{user.login},,,:#{user.system_home_path}:/bin/false" # bin/false so you can't login to shell
+    end
+    # TODO: harden security of this
+    File.open(configatron.extrausers_passwd, 'w') {|f| f.puts(data.join("\n")) }
+  end
+  
+  def refresh_system_users
+    self.class.refresh_system_users
+  end
+  
+  def system_users_script(command)
+    if Rails.env.production?
+      `/usr/bin/sudo #{Rails.root}/script/init/system_users #{command}`
+    else
+      `#{Rails.root}/script/init/system_users #{command}`
+    end
+  end
+  
+  def self.build_system_users
+    registered.includes(:channels, :listens).each do |user|
+      user.create_folder
+      user.channels.verified.local.each do |channel|
+        channel_path = "channels/#{channel.id}"
+        if channel.rendezvous?
+          participant = (channel.rendezvous_participants - [user]).first
+          command = "mount #{channel_path} \"system_users/#{user.login}/channels/shared between you and #{participant.login}\""
+        else
+          command = "mount #{channel_path} system_users/#{user.login}/channels/#{channel.name}"
+        end
+        user.system_users_script(command)
+      end
+    end
+  end
+  
 end
 

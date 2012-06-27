@@ -7,6 +7,10 @@ SystemPreferences.node_uuid = UUID4R::uuid(1)
 FileUtils.mkdir_p(configatron.files_path, :mode => 0770)
 FileUtils.mkdir_p("#{configatron.files_path}/users", :mode => 0770)
 FileUtils.mkdir_p("#{configatron.files_path}/channels", :mode => 0770)
+FileUtils.mkdir_p("#{configatron.files_path}/system_users", :mode => 0770)
+`chmod g+s #{configatron.files_path}/channels`
+`chmod g+s #{configatron.files_path}/users`
+`chmod g+s #{configatron.files_path}/system_users`
 
 Network.local
 Node.local

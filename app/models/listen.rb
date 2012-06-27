@@ -11,8 +11,10 @@ class Listen < ActiveRecord::Base
   # if a channel is public we set the verified status to public
   after_create  :auto_set_verification, :set_last_read_meep
   after_create  :send_subscribe_notification, :if => lambda {|listen| listen.verified?}
+  after_create  :create_system_folder, :if => lambda {|l| !l.user.stranger? && !l.user.system? }
   after_destroy :send_verifications_notification, :if => lambda {|listen| !listen.verified? }
   after_destroy :send_unsubscribe_notification
+  after_destroy :remove_system_folder
   around_save :send_change_notification
   
   def send_change_notification
@@ -83,6 +85,37 @@ class Listen < ActiveRecord::Base
   
   def verify!
     update_attribute(:verified, true)
+  end
+
+  def create_system_folder
+    if channel.rendezvous?
+      # create links for both users
+      system_users_script("mount channels/#{channel.id} \"#{system_home_path_for(channel.rendezvous_participants.first)}/channels/shared between you and #{channel.rendezvous_participants.second.login}\"")
+      system_users_script("mount channels/#{channel.id} \"#{system_home_path_for(channel.rendezvous_participants.second)}/channels/shared between you and #{channel.rendezvous_participants.first.login}\"")
+    else
+      system_users_script("mount channels/#{channel.id} #{system_home_path_for(user)}/channels/#{channel.name}")
+    end
+  end
+
+  def remove_system_folder
+    if channel.rendezvous?
+      # nothing to do, rendezvous cannot be removed
+    else
+      system_users_script("umount system_users/#{user.login}/channels/#{channel.name}")
+    end
+  end
+  
+  
+  def system_users_script(command)    
+    if Rails.env.production?
+      `/usr/bin/sudo #{Rails.root}/script/init/system_users #{command}`
+    else
+      `#{Rails.root}/script/init/system_users #{command}`
+    end
+  end
+
+  def system_home_path_for(user)
+    "system_users/#{user.login}"
   end
   
 end
