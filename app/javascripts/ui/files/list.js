@@ -380,11 +380,7 @@ protonet.ui.files.List = (function() {
         return;
       }
       
-      var $input    = $('<input style="width:0; height:0; position:absolute; border:0;">'),
-          $sibling  = up ? $element.prev() : $element.next();
-      
-      $sibling.children().first().append($input);
-      $input.focus().remove();
+      this.$tableWrapper.scrollTop($element.prop("offsetTop") - 40);
     },
     
     highlight: function($elements) {
@@ -690,9 +686,9 @@ protonet.ui.files.List = (function() {
         var now = new Date();
         
         $.each(files, function(i, data) {
-          var $existingFile = this.getFile(data.name);
-          if ($existingFile) {
-            $existingFile.data("instance").destroy();
+          var existingFile = this.getFile(data.name);
+          if (existingFile) {
+            existingFile.destroy();
           }
           
           var file = new protonet.ui.files.File({
