@@ -33,7 +33,7 @@
     captive_redirect_only:            <%= SystemPreferences.captive_redirect_only.to_json %>,
     debug_mode:                       <%= (configatron.log_event_notifications.nil? ? false : configatron.log_event_notifications).to_json %>,
     pending_verifications:            <%= raw current_user.pending_channel_verifications.to_json%>,
-    is_publish_to_web:                <%= (incoming_interface == "publish_to_web").to_json %>,
+    is_publish_to_web:                <%= (incoming_interface == "published_to_web").to_json %>,
     channels:                         <%= raw channels.to_json %>,
     users:                            <%= raw users.to_json %>
   };
