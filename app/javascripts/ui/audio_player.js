@@ -74,7 +74,7 @@
       this.$playerOutput.html(this.$player);
       
       threeSixtyPlayer = new ThreeSixtyPlayer();
-      threeSixtyPlayer.config.autoPlay = this.config.autoPlay;
+      threeSixtyPlayer.config.autoPlay = !protonet.browser.IS_TOUCH_DEVICE();
       threeSixtyPlayer.config.useWaveformData = true;
       threeSixtyPlayer.config.useEQData = true;
       threeSixtyPlayer.config.onfinish = this.next.bind(this);

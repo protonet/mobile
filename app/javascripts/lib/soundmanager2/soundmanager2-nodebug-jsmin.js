@@ -3648,7 +3648,6 @@ function SoundManager(smURL, smID) {
 
       // download paused/stopped, may have finished (eg. onload)
       var t = this._t;
-console.trace();
       _s._wD(_h5+'suspend: '+t.id);
       _html5_events.progress.call(this, e);
       t._onsuspend();
