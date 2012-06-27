@@ -53,10 +53,6 @@
             <%= label_tag :send_email, 'Send new password by email:' %>
             <%= check_box_tag :send_email, true %>
           </div>
-          <div class="form-field">
-            <%= label_tag :admin_password, 'Your admin password:' %>
-            <%= password_field_tag :admin_password %>
-          </div>
           <%= button "Generate new password" %>
         <% end %>
       <%- else %>
@@ -98,13 +94,16 @@
     <% end %>
   <%- end -%>
   
-  <%- if current_user.admin? && !@user.anonymous? %>
-  <h3>User roles <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
-    <%= form_tag({ :action => 'update_roles' }, { :remote => true, :class => 'single-button-form role-selector', 'data-type' => 'html' }) do %>
+  <%- if current_user.admin? && !@user.anonymous? && !@user.admin? %>
+    <h3>User permissions <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
+    <p>Users with constrained rights only see channels they're subscribed to. They can't interact and see users that aren't in those channels.</p>
+    <%= form_tag({ :action => 'update_roles' }, { :remote => true, :class => 'single-button-form role-selector', 'data-type' => 'html', 'data-ajax-auto-submit' => '1' }) do %>
       <%= hidden_field_tag :user_id, @user.id %>
       <%= hidden_field_tag :id, @user.id %>
-      <%= select_tag 'user[roles]', options_for_select(Role.where("title != 'admin'").all.map {|p| [ p.title, p.id ] }, @user.roles.collect(&:id)), { "data-multi-select" => true, :multiple => true } %>
-      <%= button "Save", 'data-confirm' => 'Are the roles correct?' %>
+      <label class="checkbox-row">
+        <%= check_box_tag :constrained_rights, true, @user.invitee? %>
+        User has constrained rights
+      </label>
     <% end %>
   <%- end %>
 

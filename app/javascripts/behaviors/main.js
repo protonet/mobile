@@ -1,5 +1,3 @@
-//= require "../lib/jquery.fcbkcomplete.js"
-
 $.behaviors({
   "ul.remote-channel .text-extension-results.Meep a:click": function(element, event) {
     event.stopImmediatePropagation();
@@ -110,11 +108,7 @@ $.behaviors({
       }
       $bubble.hide().fadeIn("fast");
     };
-  })(),
-  
-  "select[data-multi-select]": function(element) {
-    $(element).fcbkcomplete({addontab: true, width: "400px"});
-  }
+  })()
 });
 
 if (protonet.browser.IS_TOUCH_DEVICE()) {

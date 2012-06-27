@@ -122,7 +122,7 @@ protonet.text_extensions.Input.prototype = {
     if (!this.provider) { return; }
     
     if (this.provider.supportsMultiple) {
-      urls = urls.concat(this.urls || []);
+      urls = (this.urls || []).concat(urls);
       urls = $.map(urls, function(url) {
         return url.match(this.provider.REG_EXP) ? url : null;
       }.bind(this));

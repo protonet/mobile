@@ -49,7 +49,13 @@ class ApplicationController < ActionController::Base
   # http://code.google.com/p/chromium/issues/detail?id=107159
   def redirect_to(options = {}, response_status = {})
     response_status[:status] ||= 303
-    options.merge!('_xhr_redirect' => 1) if request.xhr?
+    if request.xhr?
+      if options.is_a? String
+        options += (options.include?("?") ? "&" : "?") + "_xhr_redirect=1"
+      elsif
+        options.merge!('_xhr_redirect' => 1)
+      end
+    end
     super(options, response_status)
   end
   
