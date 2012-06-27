@@ -4,9 +4,11 @@ protonet.utils.BrowserTitle = (function() {
       doc                         = document,
       originalTitle               = doc.title,
       prefix                      = "",
-      VISIBLE_CHARACTERS_IN_TITLE = 200;
+      VISIBLE_CHARACTERS_IN_TITLE = 200,
+      favicon                     = new Image();
       
   $window.focus(_focus);
+  favicon.src = '/favicon.ico';
   
   function _digits(n) { 
     // this function returns the number of digits in of a Number
@@ -31,42 +33,39 @@ protonet.utils.BrowserTitle = (function() {
   function _setFavicon(){
 
     var canvas = document.createElement('canvas'),
-      ctx = canvas.getContext('2d'),
-      img = new Image();
+      ctx = canvas.getContext('2d');
 
     canvas.width = 16;
     canvas.height = 16;
 
-    img.src = '/favicon.ico';
-    img.onload = function() {
-      ctx.drawImage(img, 0, 0);
-      ctx.font = 'bold 10px sans-serif';
-      ctx.fillStyle = "#F00";
+    ctx.drawImage(favicon, 0, 0);
+    ctx.font = 'bold 10px sans-serif';
+    ctx.fillStyle = "#F00";
 
-      switch(_digits(prefix)){
-        case 1:
-          ctx.fillRect(9, 7, 8, 9);
-          ctx.fillStyle = '#FFFFFF';
-          ctx.fillText(prefix, 10, 15);
-          break;
-        case 2:
-          ctx.fillRect(3, 7, 13, 9);
-          ctx.fillStyle = '#FFFFFF';
-          ctx.fillText(prefix, 4, 15);
-          break;
-        default:
-          ctx.fillRect(3, 7, 13, 9);
-          ctx.fillStyle = '#FFFFFF';
-          ctx.fillText("99", 4, 15);
-      };
+    switch(_digits(prefix)){
+      case 1:
+        ctx.fillRect(9, 7, 8, 9);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText(prefix, 10, 15);
+        break;
+      case 2:
+        ctx.fillRect(3, 7, 13, 9);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText(prefix, 4, 15);
+        break;
+      default:
+        ctx.fillRect(3, 7, 13, 9);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillText("99", 4, 15);
+    };
 
-      var link = document.createElement('link');
-      link.type = 'image/x-icon';
-      link.rel = 'shortcut icon';
-      link.href = canvas.toDataURL("image/x-icon");
+    var link = document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'shortcut icon';
+    link.href = canvas.toDataURL("image/x-icon");
 
-      document.getElementsByTagName('head')[0].appendChild(link);
-    }
+    document.getElementsByTagName('head')[0].appendChild(link);
+
   }
   function restore() {
     prefix = "";
