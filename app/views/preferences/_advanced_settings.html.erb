@@ -171,3 +171,18 @@
   </div>
   <%= button "Send" %>
 <%- end %>
+
+<h3>Enable Experimental App Manager <a data-hover-hint="top" title="The App Manager IS EXPERIMENTAL! Don't activate it unless you know what you are doing..." class="hint">(?)</a></h3>
+<%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' }  do %>
+  <%= hidden_field_tag 'section', 'advanced_settings' %>
+  <strong>You need to reload the administration section to see the App Manager tab!</strong>
+  <div class="form-field">
+    <label>Enable App Manager:</label>
+    <span>
+      <label><input type="radio" name="preferences[app_manager]" value="true" <%= "checked" if SystemPreferences.app_manager %>> On</label>
+      <label><input type="radio" name="preferences[app_manager]" value="false" <%= "checked" unless SystemPreferences.app_manager %>> Off</label>
+    </span>
+  </div>
+  <%= button "Save" %>
+<%- end %>
+
