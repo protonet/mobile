@@ -11,6 +11,8 @@ protonet.text_extensions.provider.Image = {
    */
   REG_EXP: /.{13,}\.(jpe?g|gif|png|bmp|tiff?|eps|psd|ps|ai)(\?.*)*/i,
   
+  FILES_REG_EXP: /\/files\?path=(.+?)($|\?|\#)/,
+  
   supportsMultiple: true,
   
   LIMIT: 10,
@@ -22,6 +24,18 @@ protonet.text_extensions.provider.Image = {
     urls = $.map(urls, function(url) {
       return protonet.media.Proxy.extractOriginalImageUrl(url);
     });
+    
+    // Convert file urls to image urls
+    urls = $.map(urls, function(url) {
+      var match = url.match(this.FILES_REG_EXP);
+      if (match) {
+        var path = decodeURIComponent(match[1]);
+        return protonet.data.File.getDownloadUrl(path);
+      } else {
+        return url;
+      }
+    }.bind(this));
+    
     
     var fileNames = $.map(urls, function(url) {
       var isFile = url.startsWith(protonet.data.File.getDownloadUrl(""));
