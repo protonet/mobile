@@ -7,7 +7,7 @@ protonet.timeline.Form.extensions.AutoCompleter = function(input) {
     prefix:   "@"
   });
   
-  function collectData() {
+  function collectData(channelId) {
     var users         = protonet.data.User.getCache(),
         channels      = protonet.data.Channel.getCache(),
         userNames     = [],
@@ -15,6 +15,11 @@ protonet.timeline.Form.extensions.AutoCompleter = function(input) {
     
     $.each(users, function(i, user) {
       if (user.isStranger && !user.isOnline) {
+        return;
+      }
+      
+      // Don't add remote users to autocompleter when in local channels
+      if (channelId && !protonet.data.Channel.isGlobal(channelId) && user.isRemote) {
         return;
       }
       
@@ -34,7 +39,13 @@ protonet.timeline.Form.extensions.AutoCompleter = function(input) {
     autoCompleter.setData(userNames.concat(channelNames));
   }
   
-  protonet.on("channel.added user.added users.update_status", collectData);
+  protonet.after("channel.created user.created channel.updated users.update_status", function() {
+    collectData();
+  });
+  
+  protonet.after("channel.change", function(channelId) {
+    collectData(channelId);
+  });
   
   collectData();
 };

@@ -136,7 +136,7 @@
     cacheUserFromMeep(meep);
   });
   
-  protonet.on("user.added", cache);
+  protonet.on("user.created", cache);
   
   protonet.on("user.changed_avatar", function(data) {
     var user = dataCache[data.id];

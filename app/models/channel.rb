@@ -22,10 +22,10 @@ class Channel < ActiveRecord::Base
   after_create  :create_folder,                     :if => lambda {|c| !c.global? }
   after_create  :subscribe_owner,                   :if => lambda {|c| !c.home? && !c.skip_autosubscribe }
   after_create  :subscribe_rendezvous_participant,  :if => lambda {|c| c.rendezvous? }
-  after_create  :send_channel_notification,         :if => lambda {|c| !c.rendezvous? }
+  after_create  :send_create_notification,          :if => lambda {|c| !c.rendezvous? }
   
-  after_save  :rename_system_folders
-
+  after_update :send_update_notification
+  
   after_destroy :delete_folder
   
   attr_accessor   :skip_autosubscribe
@@ -110,7 +110,6 @@ class Channel < ActiveRecord::Base
       :rendezvous       => channel.rendezvous,
       :system           => channel.system?,
       :name             => channel.name,
-      :display_name     => channel.display_name,
       :last_read_meep   => (channel.last_read_meep rescue nil),
       :listen_id        => (channel.listen_id rescue nil)
     }
@@ -243,7 +242,11 @@ class Channel < ActiveRecord::Base
       ActiveSupport::Multibyte::Chars.new(string).mb_chars.normalize(:kd).gsub(/[^\x00-\x7F]/n,'').to_s
     end
     
-    def send_channel_notification
-      publish "system", "channels", Channel.prepare_for_frontend(self).merge(:trigger => 'channel.added')
+    def send_create_notification
+      publish "system", "channels", Channel.prepare_for_frontend(self).merge(:trigger => 'channel.created')
+    end
+    
+    def send_update_notification
+      publish "system", "channels", Channel.prepare_for_frontend(self).merge(:trigger => 'channel.updated')
     end
 end

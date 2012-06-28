@@ -57,7 +57,7 @@ protonet.ui.users.GettingStarted = (function() {
         }
       })
       
-      .on("user.added", function() {
+      .on("user.created", function() {
         _done("invite-user");
       })
       

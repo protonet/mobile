@@ -55,7 +55,7 @@
     });
   });
   
-  protonet.on("channel.added", function(channel) {
+  protonet.on("channel.created channel.updated", function(channel) {
     cache(channel);
   });
   

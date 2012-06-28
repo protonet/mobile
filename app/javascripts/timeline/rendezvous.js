@@ -65,6 +65,12 @@
       }
     },
     
+    setName: function($super, name, force) {
+      if (force) {
+        $super(name);
+      }
+    },
+    
     renderTab: function($super, container) {
       $super(container);
       
@@ -85,15 +91,7 @@
       }
       
       protonet.data.User.get(this.partner, function(user) {
-        if (this.badgeContainer) {
-          this.badgeContainer.detach();
-        }
-        
-        this.link.text(user.name);
-        
-        if (this.badgeContainer) {
-          this.badgeContainer.appendTo(this.link);
-        }
+        this.setName(user.name, true);
         
         if (user.isOnline) {
           this.link.addClass("online");

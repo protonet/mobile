@@ -41,6 +41,10 @@ class ChannelsController < ApplicationController
     render :show
   end
   
+  def edit
+    @nav = "channels"
+  end
+  
   def new
     @nav = "new"
   end

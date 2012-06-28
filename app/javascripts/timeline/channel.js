@@ -132,6 +132,21 @@
           this.toggle(false);
         }.bind(this))
         
+        .on("channel.updated", function(data) {
+          if (this.data.id !== data.id) {
+            return;
+          }
+          
+          $.merge(this.data, data);
+          this.setName(data.name);
+          
+          if (data["private"]) {
+            this.link.addClass("private");
+          } else {
+            this.link.removeClass("private");
+          }
+        }.bind(this))
+        
         /**
          * Init endless scroller and no meeps hint after meeps are rendered
          */
@@ -148,6 +163,18 @@
           this.unreadMeeps = this.unreadReplies = 0;
         }
       }.bind(this));
+    },
+    
+    setName: function(name) {
+      if (this.badgeContainer) {
+        this.badgeContainer.detach();
+      }
+      
+      this.link.text(name);
+      
+      if (this.badgeContainer) {
+        this.badgeContainer.appendTo(this.link);
+      }
     },
     
     _initGarbageCollector: function() {
@@ -268,7 +295,7 @@
         href:               "/?channel_id=" + this.data.id,
         draggable:          "true",
         "data-channel-id":  this.data.id,
-        text:               this.data.display_name
+        text:               this.data.name
       });
       
       this.link .appendTo(this.tab);

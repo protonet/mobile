@@ -20,14 +20,14 @@
     <div class="form-field">
       <label for="channel_public">Private:</label>
       <input name="channel[public]" type="hidden" value="true">
-      <input type="checkbox" id="channel_public" name="channel[public]" value="false">
+      <input type="checkbox" id="channel_public" name="channel[public]" value="false" <%= 'checked' unless @channel.public? %>>
       <a data-hover-hint="top" title="Users can't subscribe this channel without being verified by the owner of this channel" class="hint">(?)</a>
     </div>
     <%- if request.host =~ /team.protonet.info/ || Rails.env != "production" %>
       <div class="form-field">
         <label for="channel_global">Global:</label>
         <input name="channel[global]" type="hidden" value="false">
-        <input type="checkbox" id="channel_global" name="channel[global]" value="true">
+        <input type="checkbox" id="channel_global" name="channel[global]" value="true" <%= 'checked' if @channel.global? %>>
       </div>
     <%- end %>
     <%= button "Save" %>

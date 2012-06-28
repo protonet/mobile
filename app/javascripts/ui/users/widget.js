@@ -33,7 +33,7 @@ protonet.ui.users.Widget = {
       
       .on("user.subscribed_channel user.unsubscribed_channel channels.update_subscriptions channel.change", this.filter.bind(this))
       
-      .on("user.added", function(data) {
+      .on("user.created", function(data) {
         if (!protonet.config.show_only_online_users) {
           this.create$Element(data.id, true);
         }

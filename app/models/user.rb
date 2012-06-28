@@ -203,7 +203,7 @@ class User < ActiveRecord::Base
   def send_create_notification
     return if stranger?
     
-    publish 'system', ['users', 'new'], User.prepare_for_frontend(self).merge(:trigger => 'user.added')
+    publish 'system', ['users', 'new'], User.prepare_for_frontend(self).merge(:trigger => 'user.created')
   end
 
   def subscribe(channel)
