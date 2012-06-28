@@ -209,7 +209,7 @@ SPEEDING UP YOUR TEXTMATE SEARCH
 Add these patterns to your textmate project settings to exclude unrelevant files from being searched
 
 Folder Pattern:
-!.*/(\.[^/]*|CVS|log|stub_data|gems|vendor|tmp|node_modules|_darcs|_MTN|selenium\-on\-rails|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$
+!.*/(\.[^/]*|CVS|log|stub_data|gems|vendor|tmp|node_modules|_darcs|_MTN|selenium\-on\-rails|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle)|externals|node_modules|data|app/javascripts/lib)$
 
 File:
 !(/\.(?!htaccess)[^/]*|\.(tmproj|o|pyc)|/Icon\r|/svn-commit(\.[2-9])?\.tmp|\.log|\.sql|\.cfs|xing_resources_cache|\.cvs|\.sql)$
