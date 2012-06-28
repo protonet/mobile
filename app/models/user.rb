@@ -410,7 +410,7 @@ class User < ActiveRecord::Base
       user.channels.verified.local.each do |channel|
         channel_path = "channels/#{channel.id}"
         if channel.rendezvous?
-          participant = (channel.rendezvous_participants - [user]).first
+          participant = (channel.rendezvous_participants - [user]).first || User.new(:login => "unknown (#{channel.rendezvous})")
           command = "mount #{channel_path} \"system_users/#{user.login}/channels/shared between you and #{participant.login}\""
         else
           command = "mount #{channel_path} system_users/#{user.login}/channels/#{channel.name}"
