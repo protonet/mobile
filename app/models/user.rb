@@ -31,7 +31,7 @@ class User < ActiveRecord::Base
   after_create :listen_to_channels, :unless => :anonymous?
   after_create :mark_invitation_as_accepted, :if => :invitation_token
   after_create :create_folder, :if => lambda {|u| !u.stranger? && !u.system? }
-  after_create :refresh_system_users, :if => lambda {|u| !u.stranger? && !u.system? }
+  after_create :refresh_system_users, :if => lambda {|u| !u.stranger? && !u.system? && Rails.env.production? }
   
   after_destroy :move_meeps_to_anonymous
   after_destroy :move_owned_channels_to_anonymous

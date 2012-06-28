@@ -13,11 +13,12 @@ end
 def mount from, to
   if defined?(PRODUCTION)
     `mkdir -p "#{BASE_DIR}/#{to}"`    
-    system_user_folder = to.match(/system_users\/([\w\.\-\_]+)/)
     `mount --bind "#{BASE_DIR}/#{from}" "#{BASE_DIR}/#{to}"`
     `chmod 770 "#{BASE_DIR}/#{to}"`
     `chmod g+s "#{BASE_DIR}/#{to}"`
   else
+    system_user_folder = to.match(/system_users\/([\w\.\-\_]+)/)
+    `mkdir -p #{BASE_DIR}/#{system_user_folder}/channels`
     `ln -s "#{BASE_DIR}/#{from}" "#{BASE_DIR}/#{to}"`
   end
 end
