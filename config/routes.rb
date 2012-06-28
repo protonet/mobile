@@ -9,6 +9,8 @@ Dashboard::Application.routes.draw do
   match 'captive/whitelist_clients' => 'system/captive#whitelist_clients'
   match 'captive/whitelist_sites' => 'system/captive#whitelist_sites'
 
+  match 'apps/:app_key' => 'apps#show', :as => :app
+
   # Channels
   match 'channels/info' => 'channels#info', :as => :show_channel_info
   
@@ -93,6 +95,8 @@ Dashboard::Application.routes.draw do
     match 'releases/update' => 'releases#update', :as => :release_update
     match 'releases/update_progress' => 'releases#release_update_progress', :as => :release_update_progress
     match 'releases/send_log_to_support_team' => 'releases#send_log_to_support_team', :as => :send_log_to_support_team
+    match 'app_installer/install' => 'app_installer#install', :as => :install_app
+    match 'app_installer/uninstall' => 'app_installer#uninstall', :as => :uninstall_app
   end
   
   # Files

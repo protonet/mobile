@@ -30,8 +30,10 @@ class PreferencesController < ApplicationController
       #{:url => 'captive_settings', :name => 'Captive settings'},
       {:section => 'privacy_settings',  :name => 'Privacy'},
       {:section => 'software_updates',  :name => 'Updates'},
-      {:section => 'advanced_settings', :name => 'Advanced'}
+      {:section => 'advanced_settings', :name => 'Advanced'},
     ] : []
+
+    @preferences << {:section => 'app_installer', :name => 'Apps'} if SystemPreferences.app_manager
     
     @methods = @preferences.collect {|preference| preference[:section]}
   end

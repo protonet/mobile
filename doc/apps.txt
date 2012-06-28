@@ -1,0 +1,97 @@
+AppManager
+==========
+
+Makes third party apps reachable under /apps/YOUR_APP
+
+
+Configuration:
+--------------
+
+Searches for protonet_binding.yml files in the path and all subdirectories specified
+with configuratron.app_manager.apps_path
+
+# an example of a protonet_binding.yml file
+app_name: 'digitalbehr'
+app_path: "/?test=1"
+app_host: "digitalbehr.de"
+app_port: 80
+link_title: "digitalbehr"
+app_key: 'digitalbehr'
+
+the keys:
+- app_name: is a display name for the app.
+- app_key:  is the key that is used in the protonet url: digitalbehr.protonet.info/apps/APP_KEY
+- app_host: is the host of the application. ex: google.de. defaults to the node itself
+- app_port: port of the application. defaults to 80
+- app_path: the relative path to the application. defaults to /
+- link_title: the name of the link displayed in the main navigation bar.
+
+# the smallest possible protonet_binding.yml
+app_key: 'mirror'
+
+
+
+Accessing the apps:
+-------------------
+
+http://your-protonet-node.protonet.info/apps/APP_KEY
+
+
+
+AppInstaller
+============
+
+It installs and removes applications by executing babushka-scripts referenced in config/apps.yml.
+
+
+Configuration:
+--------------
+
+# an example of config/apps.yml
+test_application:
+  dep_path: "DarkSwoop:test_application install"
+  uninstall_dep_path: "DarkSwoop:test_application full uninstall"
+  description: "This is a small test application that should install itself"
+  homepage: "http://team.protonet.info"
+  configuration_requirements:
+    test_application_configuration: 'example configuration'
+
+the keys:
+- test_application:     		is the name of the application displayed in the UI and used as internal reference.
+- dep_path:             		points to the babushka-deps and the install command
+- uninstall_dep_path:   		points to the babushka-deps and the uninstall command
+- description:          		displays the description in the UI
+- homepage:             		displays the homepage url in the UI
+- configuration_requirements:	is a hash of key value pairs. the keys are used for internal reference and
+                                are translated to environment variables passed to the installer script. this is useful
+                                for configuring your app for installation. the configuration_requirements are required
+                                for installing the app! (keys with the string "password" in it will be displayed as
+                                password fields in the UI)
+
+
+Installation of an app:
+=======================
+
+Make sure the "Apps" tab in the administration section is visible. If not activate the AppInstaller in the Advanced tab.
+After a reload (will fix this later ;-) ) you will see the "Apps" tab in the administration section. Clicking on that tab
+brings you to a list of found app installations (configured in the apps.yml). Fill in all fields, enter your node root password and hit install. You will get a notification if the app was installed or something failed.
+
+Uninstalling an app:
+====================
+If you have read the "Installation of an app" instructions you should be able to uninstall apps by yourself. ;-)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

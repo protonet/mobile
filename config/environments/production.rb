@@ -37,6 +37,9 @@ Dashboard::Application.configure do
   configatron.images.avatars_path   = "public/system/avatars"
   configatron.images.externals_path = "public/system/externals"
   configatron.extrausers_passwd     = "/var/lib/extrausers/passwd"
+
+  configatron.app_manager.apps_path = '/home/protonet/apps'
+  configatron.app_installer.stub_system_calls = false
   
   configatron.ldap.active = false
   configatron.web_app_port        = 80

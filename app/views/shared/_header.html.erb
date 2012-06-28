@@ -27,6 +27,11 @@
             <%= link_to "Files", files_path %>
           </li>
         <%- end -%>
+
+        <%- AppManager.protonet_bindings.each do |pb| -%>
+          <li class="nav-link"><%= link_to pb.link_title, app_path(pb.app_key.downcase) %></li>
+        <%- end -%>
+
         <li class="search">
           <%= render :partial => 'search/search_form' %>
         </li>
