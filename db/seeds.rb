@@ -12,6 +12,12 @@ FileUtils.mkdir_p("#{configatron.files_path}/system_users", :mode => 0770)
 `chmod g+s #{configatron.files_path}/users`
 `chmod g+s #{configatron.files_path}/system_users`
 
+if Rails.env.production?
+  release_dir = File.expand_path("../", File.dirname(__FILE__))
+  current_dir = File.expand_path("../../../current", File.dirname(__FILE__))
+  `ln -s #{release_dir} #{current_dir}`
+end
+
 Network.local
 Node.local
 ['admin', 'user', 'guest', 'invitee', 'api', 'api-node'].each do |title|
