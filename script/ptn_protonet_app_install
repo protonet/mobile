@@ -1,0 +1,51 @@
+#!/usr/bin/expect
+
+log_file /tmp/ptn_app_installation.log
+proc do_exit {msg} {
+    puts stderr $msg
+    exit 1
+}
+
+send_log "[exec date] starting ptn_babushka_app_install\n"
+
+# never time out
+set timeout -1
+set babushka_dep [lindex $argv 0]
+set password [lindex $argv 1]
+
+# This spawns the babushka application installation
+spawn bash -l
+exp_send "source /home/protonet/.bashrc\n"
+exp_send "source /home/protonet/.profile\n"
+exp_send "source /usr/local/rvm/scripts/rvm\n"
+exp_send "babushka \"$babushka_dep\"\n"
+exp_send "exit\n"
+
+# The script expects Password any number of times and answers with the correct password
+expect {
+  -re "\[Pp]assword.*:"  {
+    send "$password\r"
+    exp_continue
+  }
+  -re ".*password for.*:" {
+    send "$password\r"
+    exp_continue
+  }
+  -re "protonet@.*\$" {
+    send "exit\r"
+    exp_continue
+  }
+  -re ".*app installation of.*failed! aborting" {
+    do_exit "babushka app installation failed"
+  }
+  -re ".*file a bug report for that now*\? " {
+    send "n\r"
+    do_exit "babushka app installation failed"
+  }
+}
+
+# puts $expect_out(buffer)
+log_file
+
+# call like script/ptn_babushka_migrations PASSWORD make sure to do a export HISTIGNORE="*ptn_babushka_migrations*" to make sure the command is not stored in the shell history
+

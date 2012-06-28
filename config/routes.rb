@@ -93,6 +93,7 @@ Dashboard::Application.routes.draw do
     match 'releases/update' => 'releases#update', :as => :release_update
     match 'releases/update_progress' => 'releases#release_update_progress', :as => :release_update_progress
     match 'releases/send_log_to_support_team' => 'releases#send_log_to_support_team', :as => :send_log_to_support_team
+    match 'app_installer/install' => 'app_installer#install', :as => :install_app
   end
   
   # Files

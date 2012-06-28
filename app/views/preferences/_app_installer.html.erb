@@ -1,0 +1,29 @@
+<h2>Applications</h2>
+<p>This is the protonet package manager.</p>
+
+<ul>
+  <%- AppInstaller.available_apps.sort_by(&:name).each do |app| -%>
+    <li>
+      <h4><%= app.name %></h4>
+      <%= form_tag preferences_install_app_path,{ :remote => true, 'data-type' => 'html', :class => "app-installation"} do -%>
+        <%= hidden_field_tag 'app[name]', app.name %>
+        <%- app.configuration_requirements.each_pair do |key, description| -%>
+          <div class="form-field">
+            <label for="app_configuration_<%= key %>"><%= description %></label>
+            <%- if key.to_s.include?('password') -%>
+              <%= password_field_tag "app[configuration][#{key}]", '' %>
+            <%- else -%>
+              <%= text_field_tag "app[configuration][#{key}]", '' %>
+            <%- end -%>
+            <a data-hover-hint="top" class="hint" title="<%= description %>">(?)</a>
+          </div>
+        <%- end -%>
+        <div class="form-field">
+          <label for="app_configuration_password">Your node root password:</label>
+          <%= password_field_tag "app[password]", '' %>
+        </div>
+        <button>install</button>
+      <%- end -%>
+    </li>
+  <%- end -%>
+</ul>

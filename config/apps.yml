@@ -1,0 +1,12 @@
+hubot:
+  dep_path: "DarkSwoop:hubot full installation"
+  configuration_requirements:
+    hubot_protonet_user: 'The protonet user account'
+    hubot_protonet_password: 'The password for the user account'
+    hubot_protonet_host: "The protonet host: your-node-name.protonet.info"
+    hubot_protonet_port: "The protonet port: 80"
+    hubot_protonet_version: "The protonet version: 310"
+test_application:
+  dep_path: "DarkSwoop:test_application install"
+  configuration_requirements:
+    test_application_configuration: 'example configuration'
