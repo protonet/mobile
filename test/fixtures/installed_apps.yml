@@ -1,9 +1,0 @@
-# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-
-one:
-  name: MyString
-  uninstall_dep_path: MyString
-
-two:
-  name: MyString
-  uninstall_dep_path: MyString
