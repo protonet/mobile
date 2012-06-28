@@ -3,15 +3,13 @@ protonet.p("users", function($page) {
       $loadingIndicator = $meepContainer.next(".progress"),
       $fileInput        = $page.find("[type=file]"),
       $avatarForm       = $fileInput.parents("form"),
-      $meepList         = $("<ul>", { "class": "meeps" }),
-      $searchUsers      = $("form#search_users");
+      $meepList         = $("<ul>", { "class": "meeps" });
   
   var fillUpUsers = function(page) {
     var path = document.location.pathname + ".js" + document.location.search;
-    $.get(path, {"page": page}, function(data){
-      if (data == " ") {
-        return;
-      }
+    $.get(path, { page: page }, function(data) {
+      if (!$.trim(data)) { return; }
+
       $($(".common-user-list")).append(data);
       $(".common-user-list li:nth-last-child(20)").one("inview", function() {
         fillUpUsers(page + 1);
@@ -22,7 +20,7 @@ protonet.p("users", function($page) {
   $(".common-user-list li:nth-last-child(20)").one("inview", function() {
     fillUpUsers(2);
   });
-
+  
   $meepContainer.one("inview", function() {
     function fallback() {
       $meepContainer.html($("<p>", { "class": "hint", text: protonet.t("NO_MEEPS_FOR_USER_AVAILABLE") }));

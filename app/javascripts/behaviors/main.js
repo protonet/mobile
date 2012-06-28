@@ -42,6 +42,13 @@ $.behaviors({
     event.preventDefault();
   },
   
+  "input[data-users-autocomplete]": function(element, event) {
+    var users = $.map(protonet.data.User.getCache(), function(user) {
+      return (user.isStranger || user.isRemote) ? null : user.name;
+    });
+    new protonet.ui.InlineAutocompleter($(element), users, { append: "" });
+  },
+  
   "img[data-src]:inview": function(element) {
     var $element = $(element);
     $element.attr("src", $element.attr("data-src")).removeAttr("data-src");

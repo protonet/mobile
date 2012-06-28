@@ -1,5 +1,3 @@
-//= require "../../../ui/inline_autocompleter.js"
-
 /**
  * Auto completion for markup tags
  * {code}, {quote}, ...

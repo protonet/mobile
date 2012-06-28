@@ -1,5 +1,3 @@
-//= require "../../../ui/inline_autocompleter.js"
-
 /**
  * Auto completion for users and channels
  */

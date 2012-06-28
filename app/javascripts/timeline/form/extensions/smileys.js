@@ -1,4 +1,3 @@
-//= require "../../../ui/inline_autocompleter.js"
 //= require "../../../utils/emojify.js"
 
 /**

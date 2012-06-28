@@ -71,7 +71,7 @@
       <%= hidden_field_tag :id, current_user.id %>
       <%= hidden_field_tag :user_id, current_user.id %>
       <%= hidden_field_tag :channel_id, @channel.id %>
-      <input type="text" placeholder="User name, id or email ..." name="search_term" > <%= button 'Subscribe' %>
+      <input type="text" placeholder="User name, id or email ..." name="search_term" data-users-autocomplete> <%= button 'Subscribe' %>
     <% end %>
 
     <%- if current_user.admin? && @channel.locally_hosted? %>

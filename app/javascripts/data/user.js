@@ -4,12 +4,12 @@
  * User Model
  *
  * A full user object must contain:
- *    id, name, avatar, isAdmin, isOnline, isStranger, isViewer
+ *    id, name, avatar, isAdmin, isOnline, isStranger, isViewer, isRemote
  *
  * @example
  *    // Retrieve user with id 1
  *    protonet.data.User.get(1, function(user) { alert("Hello, " +  user.name); });
- *    // => { id: 1, name: "tiff", avatar: "/foo.jpg", isOnline: true, isStranger: false, isViewer: true }
+ *    // => { id: 1, name: "tiff", avatar: "/foo.jpg", isOnline: true, isStranger: false, isViewer: true, isRemote: false }
  *    
  *    // Retrieve user id of user with name "tiff"
  *    protonet.data.User.getIdByName("tiff")
@@ -104,6 +104,7 @@
     $.extend(user, {
       isAdmin:    adminIds.indexOf(user.id) !== -1,
       isViewer:   user.id == viewerId,
+      isRemote:   String(user.id).indexOf("_") !== -1,
       isStranger: user.name.match(/^guest\..+$/),
       isOnline:   oldIsOnline !== undef ? oldIsOnline : false,
       avatar:     oldAvatar || user.avatar || defaultAvatar

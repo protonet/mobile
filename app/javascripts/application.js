@@ -42,6 +42,7 @@ window.$document = $(document);
 //= require "ui/droppables.js"
 //= require "ui/files/queue.js"
 //= require "ui/audio_player.js"
+//= require "ui/inline_autocompleter.js"
 //= require "utils/rails.js"
 //= require "text_extensions/text_extensions.js"
 //= require "timeline/meep.js"
