@@ -31,6 +31,8 @@ Dashboard::Application.configure do
   configatron.xhr_streaming.port = 8000
   configatron.websocket.port     = 5001
   configatron.websocket_ssl.port = 5002
+
+  configatron.app_manager.apps_path = Rails.root.join('apps')
   configatron.app_installer.stub_system_calls = true
   configatron.current_file_path = Rails.root
   
