@@ -16,7 +16,7 @@ class Channel < ActiveRecord::Base
   validates_length_of       :name, :maximum => 30, :minimum => 1
   
   before_validation :prepare_rendezvous,  :on => :create, :if => lambda {|c| !!c.rendezvous }
-  before_validation :normalize_name,      :on => :create
+  before_validation :normalize_name
   
   after_create  :generate_uuid,                     :if => lambda {|c| c.uuid.blank? }
   after_create  :create_folder,                     :if => lambda {|c| !c.global? }
@@ -168,7 +168,7 @@ class Channel < ActiveRecord::Base
   end
   
   def display_name
-    super || name.capitalize
+    super || name
   end
   
   def rendezvous?
@@ -193,6 +193,10 @@ class Channel < ActiveRecord::Base
 
   def owned_by?(user)
     owner == user
+  end
+  
+  def can_be_edited_by?(user)
+    owner == user || user.admin?
   end
   
   def has_unread_meeps

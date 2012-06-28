@@ -253,8 +253,10 @@ class User < ActiveRecord::Base
     role_symbols.include?(:admin)
   end
   
-  def can_edit?(user)
-    user.can_be_edited_by?(self)
+  def can_edit?(object)
+    return object.can_be_edited_by?(self) if object.instance_of?(User)
+    return object.can_be_edited_by?(self) if object.instance_of?(Channel)
+    return false
   end
   
   def can_be_edited_by?(user)

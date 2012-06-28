@@ -16,9 +16,9 @@
     </div>
     <div class="form-field">
       <label for="channel_public">Private:</label>
-      <input name="channel[public]" type="hidden" value="true" />
-      <input type="checkbox" id="channel_public" name="channel[public]" value="false" />
-      <a data-hover-hint="top" title="Users can't subscribe this channel without verification" class="hint">(?)</a>
+      <input name="channel[public]" type="hidden" value="true">
+      <input type="checkbox" id="channel_public" name="channel[public]" value="false">
+      <a data-hover-hint="top" title="Users can't subscribe this channel without being verified by the owner of this channel" class="hint">(?)</a>
     </div>
     <%= button 'Create' %>
   <%- end -%>

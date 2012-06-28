@@ -17,7 +17,6 @@
       }) do |f| -%>
         <%= hidden_field_tag :user_type, @user.class.to_s.underscore %>
         <%= hidden_field_tag :user_id, @user.id %>
-        <%= hidden_field_tag :id, @user.id %>
         <%= f.hidden_field :id %>
         <div class="form-field">
           <%= f.label :first_name, 'First name:' %>

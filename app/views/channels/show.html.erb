@@ -5,6 +5,7 @@
     <%- unless @channel.public? %>
       <i>(private)</i>
     <%- end %>
+    <%= link_to("edit", edit_channel_path(@channel), :class => 'action-link edit') if current_user.can_edit?(@channel) %>
   </h2>
   
   <%- unless @channel.description.blank? %>
@@ -62,8 +63,7 @@
   <%- end %>
 
   <%- if permitted_to?(:update, @channel) %>
-
-    <h3>Subscribe users</h3>
+    <h3>Subscribe users <a data-hover-hint="top" title="This can only be done by admins and the owner of this channel" class="hint">(?)</a></h3>
     <p>
       Enter a user name into to subscribe him to this channel, or enter an email address to invite external users.
     </p>
@@ -73,35 +73,5 @@
       <%= hidden_field_tag :channel_id, @channel.id %>
       <input type="text" placeholder="Enter user name <%= ' or email' if current_user.admin? %>..." name="search_term" data-users-autocomplete> <%= button 'Subscribe' %>
     <% end %>
-
-    <h3>Settings <a data-hover-hint="top" title="Only visible to admins and the channel owner" class="hint">(?)</a></h3>
-
-    <%= form_for @channel, :html => { 'data-ajax-auto-submit' => '1' } do |f| -%>
-      <%= f.hidden_field :id, { :value => @channel.id } %>
-      <label class="checkbox-row" for="channel_public">
-        <input name="channel[public]" type="hidden" value="true">
-        <input type="checkbox" id="channel_public" name="channel[public]" value="false" <%= "checked" unless @channel.public %>>
-        private (users can't subscribe without verification)
-      </label>
-      <%- if request.host =~ /team.protonet.info/ || Rails.env != "production" %>
-        <label class="checkbox-row" for="channel_global">
-          <%= f.check_box :global %>
-          global (channel is visible from external nodes and clients)
-        </label>
-      <%- end %>
-    <%- end %>
-
-    <%- if @channel.locally_hosted? %>
-      <h3>Delete channel <a data-hover-hint="top" title="Only visible to admins and the channel owner" class="hint">(?)</a></h3>
-      <p>Delete this channel and all messages posted in it.</p>
-      <%= form_tag("/channels/#{@channel.id}", {
-        :remote     => true,
-        :method     => :delete,
-        'data-type' => 'html',
-        'class'     => 'single-button-form'
-      }) do -%>
-        <%= button "Delete", 'data-confirm' => 'Do you really want to delete this channel? There\'s no undo.' %>
-      <%- end %>
-    <%- end %>
   <%- end %>
 </output>
