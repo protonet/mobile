@@ -71,21 +71,16 @@
       <%= hidden_field_tag :id, current_user.id %>
       <%= hidden_field_tag :user_id, current_user.id %>
       <%= hidden_field_tag :channel_id, @channel.id %>
-      <input type="text" placeholder="User name, id or email ..." name="search_term" data-users-autocomplete> <%= button 'Subscribe' %>
+      <input type="text" placeholder="Enter user name <%= ' or email' if current_user.admin? %>..." name="search_term" data-users-autocomplete> <%= button 'Subscribe' %>
     <% end %>
-
-    <%- if current_user.admin? && @channel.locally_hosted? %>
-      <h3>Invite people <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
-      <p>Grow your network by <%= link_to("inviting people", new_invitation_path(:channel_id => @channel.id), :class => 'promotion-link') %> to this and other channels.</p>
-    <%- end %>
 
     <h3>Settings <a data-hover-hint="top" title="Only visible to admins and the channel owner" class="hint">(?)</a></h3>
 
     <%= form_for @channel, :html => { 'data-ajax-auto-submit' => '1' } do |f| -%>
       <%= f.hidden_field :id, { :value => @channel.id } %>
       <label class="checkbox-row" for="channel_public">
-        <input name="channel[public]" type="hidden" value="true" />
-        <input type="checkbox" id="channel_public" name="channel[public]" value="false" <%= "checked" unless @channel.public %> />
+        <input name="channel[public]" type="hidden" value="true">
+        <input type="checkbox" id="channel_public" name="channel[public]" value="false" <%= "checked" unless @channel.public %>>
         private (users can't subscribe without verification)
       </label>
       <%- if request.host =~ /team.protonet.info/ || Rails.env != "production" %>
