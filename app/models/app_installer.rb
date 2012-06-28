@@ -48,13 +48,15 @@ module AppInstaller
   end
 
   class App
-    attr_accessor :name, :configuration_requirements, :dep_path
+    attr_accessor :name, :configuration_requirements, :dep_path, :homepage, :description
     def initialize(name, options={})
       options.symbolize_keys!
       raise AppInstaller::DependencyPathError, 'babushka dep path not specified' if options[:dep_path].blank?
-      @name = name
-      @configuration_requirements = options.delete(:configuration_requirements) || {}
-      @dep_path = options.delete(:dep_path)
+      self.name = name
+      self.configuration_requirements = options.delete(:configuration_requirements) || {}
+      self.homepage = options.delete(:homepage) || ""
+      self.description = options.delete(:description) || ""
+      self.dep_path = options.delete(:dep_path)
       @options = options
     end
 

@@ -1,12 +1,15 @@
 hubot:
   dep_path: "DarkSwoop:hubot full installation"
+  description: "Hubot is a scriptable chat robot written by the fine folks of github."
+  homepage: "http://hubot.github.com"
   configuration_requirements:
-    hubot_protonet_user: 'The protonet user account'
-    hubot_protonet_password: 'The password for the user account'
-    hubot_protonet_host: "The protonet host: your-node-name.protonet.info"
-    hubot_protonet_port: "The protonet port: 80"
-    hubot_protonet_version: "The protonet version: 310"
+    hubot_protonet_user: 'The protonet user account for hubot'
+    hubot_protonet_password: 'The password for the hubot user account'
+    hubot_protonet_host: "Your protonet node host: your-node-name.protonet.info"
+    hubot_protonet_port: "Your protonet node port: 80"
+    hubot_protonet_version: "Your protonet node version: 310"
 test_application:
   dep_path: "DarkSwoop:test_application install"
+  description: "This is a small test application that should install itself to apps/test_application and creates a test_application_env file in /home/protonet/test_application_env"
   configuration_requirements:
     test_application_configuration: 'example configuration'
