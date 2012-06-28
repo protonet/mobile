@@ -4,7 +4,7 @@
 <ul class="app-installer-app-list">
   <%- AppInstaller.available_apps.sort_by(&:name).each do |app| -%>
     <li>
-      <h4 style="cursor: pointer;-moz-user-select: none;-khtml-user-select: none;user-select: none; background:#efefef; border: 1px solid #ccc;padding:10px" onclick="$('#content-<%= app.name.downcase.gsub(/[^\w]/, '-') %>').toggle()"><%= app.name %></h4>
+      <h4 style="cursor: pointer;-moz-user-select: none;-khtml-user-select: none;user-select: none; background:#efefef; border: 1px solid #ccc;padding:10px" onclick="$('#content-<%= app.name.downcase.gsub(/[^\w]/, '-') %>').toggle()"><%= app.name %><%= " (installed)" if app.installed? -%></h4>
       <div id="content-<%= app.name.downcase.gsub(/[^\w]/, '-') %>" style="display:none">
         <%- unless app.description.blank? -%>
           <p><strong>Description:</strong> <%= app.description %></p>
@@ -12,24 +12,35 @@
         <%- unless app.homepage.blank? -%>
           <p><strong>Homepage:</strong> <a href="<%= app.homepage %>" target="_blank"><%= app.homepage %></a></p>
         <%- end -%>
-        <%= form_tag preferences_install_app_path,{ :remote => true, 'data-type' => 'html', :class => "app-installation"} do -%>
-          <%= hidden_field_tag 'app[name]', app.name %>
-          <%- app.configuration_requirements.each_pair do |key, description| -%>
-            <div class="form-field">
-              <label for="app_configuration_<%= key %>"><%= description %></label>
-              <%- if key.to_s.include?('password') -%>
-                <%= password_field_tag "app[configuration][#{key}]", '' %>
-              <%- else -%>
-                <%= text_field_tag "app[configuration][#{key}]", '' %>
-              <%- end -%>
-              <a data-hover-hint="top" class="hint" title="<%= description %>">(?)</a>
-            </div>
+        <%- if app.installed? -%>
+          <%= form_tag preferences_uninstall_app_path,{ :remote => true, 'data-type' => 'html', :class => "app-uninstall"} do -%>
+              <%= hidden_field_tag 'app[name]', app.name %>
+              <div class="form-field">
+                <label for="app_configuration_password">Your node root password:</label>
+                <%= password_field_tag "app[password]", '' %>
+              </div>
+              <button>uninstall</button>
           <%- end -%>
-          <div class="form-field">
-            <label for="app_configuration_password">Your node root password:</label>
-            <%= password_field_tag "app[password]", '' %>
-          </div>
-          <button>install</button>
+        <%- else -%>
+          <%= form_tag preferences_install_app_path,{ :remote => true, 'data-type' => 'html', :class => "app-installation"} do -%>
+            <%= hidden_field_tag 'app[name]', app.name %>
+            <%- app.configuration_requirements.each_pair do |key, description| -%>
+              <div class="form-field">
+                <label for="app_configuration_<%= key %>"><%= description %></label>
+                <%- if key.to_s.include?('password') -%>
+                  <%= password_field_tag "app[configuration][#{key}]", '' %>
+                <%- else -%>
+                  <%= text_field_tag "app[configuration][#{key}]", '' %>
+                <%- end -%>
+                <a data-hover-hint="top" class="hint" title="<%= description %>">(?)</a>
+              </div>
+            <%- end -%>
+            <div class="form-field">
+              <label for="app_configuration_password">Your node root password:</label>
+              <%= password_field_tag "app[password]", '' %>
+            </div>
+            <button>install</button>
+          <%- end -%>
         <%- end -%>
       </div>
       

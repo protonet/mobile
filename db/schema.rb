@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120620100425) do
+ActiveRecord::Schema.define(:version => 20120628110547) do
 
   create_table "channels", :force => true do |t|
     t.string   "name"
@@ -26,6 +26,14 @@ ActiveRecord::Schema.define(:version => 20120620100425) do
     t.boolean  "global",       :default => false
     t.string   "rendezvous"
     t.boolean  "system",       :default => false
+  end
+
+  create_table "installed_apps", :force => true do |t|
+    t.string   "name"
+    t.string   "uninstall_dep_path"
+    t.string   "install_dep_path"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "invitations", :force => true do |t|

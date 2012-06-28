@@ -94,6 +94,7 @@ Dashboard::Application.routes.draw do
     match 'releases/update_progress' => 'releases#release_update_progress', :as => :release_update_progress
     match 'releases/send_log_to_support_team' => 'releases#send_log_to_support_team', :as => :send_log_to_support_team
     match 'app_installer/install' => 'app_installer#install', :as => :install_app
+    match 'app_installer/uninstall' => 'app_installer#uninstall', :as => :uninstall_app
   end
   
   # Files
