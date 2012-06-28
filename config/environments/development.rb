@@ -31,7 +31,8 @@ Dashboard::Application.configure do
   configatron.xhr_streaming.port = 8000
   configatron.websocket.port     = 5001
   configatron.websocket_ssl.port = 5002
-  configatron.stub_app_manager_system_calls = true
+  configatron.app_installer.stub_system_calls = true
+  configatron.current_file_path = Rails.root
   
   # Log all js event notifications
   configatron.log_event_notifications = true

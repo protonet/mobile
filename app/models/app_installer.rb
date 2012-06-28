@@ -87,7 +87,7 @@ module AppInstaller
       if all_configuration_requirements_met?(configuration)
         app_installer_env = configuration.map {|key, value| "APP_INSTALLER_#{key.upcase}='#{value}'"}.join(' ')
         cmd = "export HISTIGNORE=\"*ptn_babushka_app_install*\"; #{app_installer_env} #{configatron.current_file_path}/script/ptn_babushka_app_install '#{dep_path}' #{password}"
-        if !!configatron.stub_app_manager_system_calls
+        if stub_system_calls?
           Rails.logger.debug(cmd)
           true
         else
@@ -100,7 +100,7 @@ module AppInstaller
 
     def uninstall(password)
       cmd = "export HISTIGNORE=\"*ptn_babushka_app_install*\"; #{configatron.current_file_path}/script/ptn_babushka_app_install '#{uninstall_dep_path}' #{password}"
-      if !!configatron.stub_app_manager_system_calls
+      if stub_system_calls?
         Rails.logger.debug(cmd)
         true
       else
@@ -118,6 +118,10 @@ module AppInstaller
         raise AppInstaller::ConfigurationRequirementsNotMet if configuration[configuration_key].blank?
       end
       true
+    end
+
+    def stub_system_calls?
+      configatron.app_installer.exists?(:stub_system_calls) && !!configatron.app_installer.stub_system_calls
     end
 
   end
