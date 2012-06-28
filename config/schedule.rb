@@ -23,6 +23,11 @@ every 1.day, :at => '1:00 am' do
   runner "if SystemPreferences.captive == true; SystemCaptivePortal.stop; sleep 10; SystemCaptivePortal.start; end"
 end
 
+# restart wifi once a day
+every 1.day, :at => '3:00 am' do
+  runner "if SystemPreferences.wifi['mode']; SystemWifi.reconfigure!; end;"
+end
+
 every :reboot do
   runner "User.build_system_users"
 end
