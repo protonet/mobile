@@ -50,8 +50,7 @@ class App < ActiveRecord::Base
     private
     def refresh_app_index
       @apps = {}
-      app_definitions = JSON.parse(File.read(Rails.root.join('config/apps.json')))
-      app_definitions.each_pair do |app_key, configuration|
+      AppSource.app_index.each_pair do |app_key, configuration|
         @apps[app_key.to_s] = find_or_initialize_by_key(app_key, configuration)
       end
     end
