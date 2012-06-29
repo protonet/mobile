@@ -18,7 +18,6 @@ class App < ActiveRecord::Base
   class << self
 
     def available_apps
-      return @apps.values unless @apps.blank?
       refresh_app_index
       @apps.values
     end
