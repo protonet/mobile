@@ -3,13 +3,17 @@ class App < ActiveRecord::Base
   class ConfigurationRequirementsNotMet < StandardError; end
   class AppRemovalFailed < StandardError; end
 
-  has_many :app_dashboard_bindings, :dependent => :destroy
-  attr_accessor :configuration_requirements
+  has_many :app_dashboard_bindings, :dependent => :destroy, :autosave => true
+  attr_accessor :configuration_requirements, :dashboard_bindings
 
   validates :key, :presence => true
   validates :install_dep_path, :presence => true
   validates :uninstall_dep_path, :presence => true
   validates :display_name, :presence => true
+
+  after_initialize do
+    self.dashboard_bindings = [] if self.dashboard_bindings.nil?
+  end
 
   class << self
 
@@ -54,21 +58,22 @@ class App < ActiveRecord::Base
 
   end
 
-
   def installed?
     persisted?
   end
 
-  def install(password, configuration)
+  def install(password, configuration={})
     validate_app_definition!
     if all_configuration_requirements_met?(configuration)
       app_installer_env = configuration.map {|key, value| "APP_INSTALLER_#{key.upcase}='#{value}'"}.join(' ')
       cmd = "export HISTIGNORE=\"*ptn_babushka_app_install*\"; #{app_installer_env} #{configatron.current_file_path}/script/ptn_babushka_app_install '#{install_dep_path}' #{password}"
       if stub_system_calls?
         Rails.logger.debug(cmd)
+        build_dashboard_bindings
         self.save!
       else
         if system(cmd)
+          build_dashboard_bindings
           self.save!
         else
           raise AppInstallationFailed
@@ -106,6 +111,12 @@ class App < ActiveRecord::Base
 
   def stub_system_calls?
     configatron.app_installer.exists?(:stub_system_calls) && !!configatron.app_installer.stub_system_calls
+  end
+
+  def build_dashboard_bindings
+    self.dashboard_bindings.each do |db|
+      self.app_dashboard_bindings.build(db)
+    end
   end
 
 

@@ -32,7 +32,14 @@
       "transmission_password": "password for transmission web interface",
       "transmission_username": "username for transmission web interface",
       "transmission_port": "port for the transmission web interface"
-    }
+    },
+    "dashboard_bindings": [{
+        "link_title": "Transmission",
+        "app_path": "/transmission/web",
+        "app_key": "transmission",
+        "app_host": "",
+        "app_port": "1337"
+      }]
   }
 }
 

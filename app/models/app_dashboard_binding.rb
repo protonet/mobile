@@ -1,21 +1,6 @@
-  # create_table "app_dashboard_bindings", :force => true do |t|
-  #   t.string   "app_name"
-  #   t.string   "link_title"
-  #   t.string   "app_path"
-  #   t.string   "app_key"
-  #   t.string   "app_host"
-  #   t.integer  "app_port"
-  #   t.integer  "installed_app_id"
-  #   t.string   "binding_file_path"
-  #   t.datetime "created_at"
-  #   t.datetime "updated_at"
-  # end
-
-
-
 class AppDashboardBinding < ActiveRecord::Base
 
-  belongs_to :installed_app
+  belongs_to :app
 
   validates :app_key, :presence => true
 
