@@ -1,20 +1,21 @@
 #!/bin/bash
-# exec >> /tmp/pam_log 2>&1
+#exec >> /tmp/pam_log 2>&1
 
 login=$PAM_USER
 read password
 
 hash=`echo "$login$password" | md5sum | grep -o -e "\w*"`
-challenge_response=`(echo "get auth_$hash"; sleep 0.002) | nc localhost 11211 | grep -o -e "^OK"`
+challenge_response=`(echo "get auth_$hash"; sleep 0.005) | nc localhost 11211 | grep -o -e "^OK"`
 if [ "$challenge_response" == "OK" ]; then
   exit 0
-fi
-
-wget --auth-no-challenge --spider --quiet --http-user=$login --http-password=$password "http://127.0.0.1/api/v1/users/find_by_login/$login"
-
-if [ "$?" == "0" ]; then
-  echo -e "add auth_$hash 0 300 2\r\nOK\r" | nc localhost 11211
-  exit 0
 else
-  exit 9
+  wget --auth-no-challenge --spider --quiet --http-user=$login --http-password=$password "http://127.0.0.1/api/v1/users/find_by_login/$login"
+
+  if [ "$?" == "0" ]; then
+    echo -e "add auth_$hash 0 300 2\r\nOK\r" | nc localhost 11211
+    exit 0
+  else
+    exit 9
+  fi
+
 fi
