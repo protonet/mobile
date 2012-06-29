@@ -5,7 +5,7 @@ module AppInstaller
   class << self
     attr_accessor :apps, :app_definitions
     def load_apps
-      self.app_definitions = YAML.load(File.read(Rails.root.join('config/apps.yml')))
+      self.app_definitions = JSON.parse(File.read(Rails.root.join('config/apps.json')))
       self.apps = {}
       app_definitions.each_pair do |app_name, configuration|
         self.apps[app_name.to_s] = App.new(app_name, configuration)
