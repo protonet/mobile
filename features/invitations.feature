@@ -17,8 +17,8 @@ Feature: Invitations
     When I fill in "invitation_first_name" with "my"
     When I fill in "invitation_last_name" with "friend"
     When I fill in "invitation_email" with "friend-3@example.com"
-    And I check "Home"
-    And I check "Public"
+    And I check "home"
+    And I check "public"
     And I press "Next Step"
     Then I should see "Invitation for friend-3@example.com"
     And I should see "Status: not sent yet"
@@ -42,8 +42,8 @@ Feature: Invitations
     And I press "Sign up"
     Then I should see "peter.pan" within "#my-widget"
     And I should see "You have signed up successfully"
-    And I should see "Public" within "#channels"
-    And I should not see "Notpublic" within "#channels"
+    And I should see "public" within "#channels"
+    And I should not see "notpublic" within "#channels"
     And I should see "Channels" within "nav"
     And I should see "Users" within "nav"
     
@@ -58,16 +58,16 @@ Feature: Invitations
     And I press "Sign up"
     Then I should see "peter.panius" within "#my-widget"
     And I should see "You have signed up successfully"
-    And I should see "Public" within "#channels"
-    And I should not see "Notpublic" within "#channels"
+    And I should see "public" within "#channels"
+    And I should not see "notpublic" within "#channels"
     And I should not see "Channels" within "nav"
     And I should not see "Users" within "nav"
-    And I visit the "Public" channel page
-    Then I should not see "Notpublic" within ".channels-show-page"
+    And I visit the "public" channel page
+    Then I should not see "notpublic" within ".channels-show-page"
     
   @javascript
   Scenario: Invitee tries to accept an invitation that has already been accepted
-    Given I invite "john pan" to channel "Home" with token "1122334455" as "dudemeister"
+    Given I invite "john pan" to channel "home" with token "1122334455" as "dudemeister"
     And somebody accepts the invitation with token "1122334455"
     And I go unauthenticated to the start page
     And I accept the invitation with the token "1122334455"

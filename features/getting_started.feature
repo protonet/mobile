@@ -7,10 +7,10 @@ Feature: Getting Started
     And I should see the registration form
     Given I am logged in as "admin" with password "admin"
     Then "admin" should be an admin
-    Then I should see "System" in the channel selector
-    Then I switch to the channel "System"
+    Then I should see "system" in the channel selector
+    Then I switch to the channel "system"
     Then I should see "This is your node speaking" in the timeline
-    Then I switch to the channel "Home"
+    Then I switch to the channel "home"
     And I should see the getting started box containing 5 steps
     
     # step 1: change password
@@ -36,13 +36,13 @@ Feature: Getting Started
     Then I follow the getting started "create channel" link
     Then I should see the modal window
     Then I should see "Create new" within ".channels-page h2"
-    And I fill in "channel_name" with "Music" within ".channels-page"
+    And I fill in "channel_name" with "music" within ".channels-page"
     And I press "Create"
     Then I should see "Successfully created" within ".flash-message"
-    And I should see "Music" within ".channels-page h2"
+    And I should see "music" within ".channels-page h2"
     Then I close the modal window
     And I should not see the modal window
-    Then I should see "Music" in the channel selector
+    Then I should see "music" in the channel selector
     And I should see "create channel" marked as done in the getting started box
     
     # step 4: invite user
@@ -74,7 +74,7 @@ Feature: Getting Started
     # step 1: upload avatar
     Then I follow the getting started "upload avatar" link
     Then I should see the modal window
-    Then I should see "@hornyboy52" within ".users-page h2"
+    Then I should see "hornyboy52" within ".users-page h2"
     Then I attach "profile_pic.png" to "avatar_file"
     Then I should see the profile image "profile_pic.png" in my profile details
     Then I close the modal window

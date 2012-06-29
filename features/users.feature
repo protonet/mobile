@@ -9,7 +9,7 @@ Background:
   @javascript
   Scenario: Seeing some other users profile
     Then I visit the profile of "someotherdude"
-    Then I should see "@someotherdude" within ".users-page h2"
+    Then I should see "someotherdude" within ".users-page h2"
     Then I should not see "someotherdude@protonet.com"
     Then I should not see "edit" within ".users-page"
 
@@ -17,7 +17,7 @@ Background:
   Scenario: Admin: Managing some other users profile
     Given "dudemeister" is an admin
     Then I visit the profile of "someotherdude"
-    Then I should see "@someotherdude" within ".users-page h2"
+    Then I should see "someotherdude" within ".users-page h2"
     And I should not see "admin" within "dl[data-cucumber='roles']"
     And I should see "edit" within ".users-page"
     And I follow "edit"
@@ -33,14 +33,14 @@ Background:
     Then I should see "Successfully made" within ".flash-message"
     Then I visit the profile of "someotherdude"
     Then I should see "admin" within "dl[data-cucumber='roles']"
-    And I should see "System" within ".channel-list"
+    And I should see "system" within ".channel-list"
     And I follow "edit"
     And uncheck "admin" within "form[data-cucumber='admin-settings']"
     And I fill in "admin_password" with "123456" within "form[data-cucumber='admin-settings']"
     And press "Save" within "form[data-cucumber='admin-settings']"
     Then I visit the profile of "someotherdude"
     Then I should not see "admin" within "dl[data-cucumber='roles']"
-    And I should not see "System" within ".channel-list"
+    And I should not see "system" within ".channel-list"
     And I follow "edit"
     And press "Generate new password" within "form[data-cucumber='change-password']"
     And I wait 3 seconds
@@ -60,7 +60,7 @@ Background:
     And  I press "Save" within "form[data-cucumber='user-details']"
     Then I should see "Successfully updated" within ".flash-message"
     Then I visit the profile of "newname"
-    And I should see "@newname" within ".users-page h2"
+    And I should see "newname" within ".users-page h2"
     
   @javascript @wip
   Scenario: Admin Deleting an user

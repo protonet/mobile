@@ -15,7 +15,7 @@ Feature: Using the protonet dashboard
   Scenario: Writing a meep containing a channel name
     Given a user with the login "dudemeister"
     And I am logged in as "dudemeister"
-    Given a channel exists with name: "Cool-Channel"
+    Given a channel exists with name: "cool-channel"
     And I go to the start page
     And I send the message "Hallo @cool-channel!"
     Then I should see "cool-channel" within "#timeline .reply.channel"
@@ -71,7 +71,7 @@ Feature: Using the protonet dashboard
     And a channel exists with name: "cool-channel"
     And "dudemeister" is listening to "cool-channel"
     And I am logged in as "dudemeister"
-    Then I should see "Cool-channel" within "#channels"
+    Then I should see "cool-channel" within "#channels"
     
   @javascript
     Scenario: Subscribing to a channel thru a meep mention
@@ -81,7 +81,7 @@ Feature: Using the protonet dashboard
     Given I send the message "@cool-channel"
     And I click on "cool-channel" in the timeline
     Given I wait 3 seconds
-    Then I should not see "Cool-channel" in the channel selector
+    Then I should not see "cool-channel" in the channel selector
   
   @javascript
     Scenario: Logging in with your email
