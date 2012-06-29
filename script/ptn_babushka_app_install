@@ -35,6 +35,10 @@ expect {
     send "exit\r"
     exp_continue
   }
+  -re "Do you want to continue [Y/n]?" {
+    send "Y\r"
+    exp_continue
+  }
   -re ".*app installation of.*failed! aborting" {
     do_exit "babushka app installation failed"
   }
