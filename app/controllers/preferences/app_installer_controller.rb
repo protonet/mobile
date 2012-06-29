@@ -4,39 +4,43 @@ module Preferences
     def install
       if current_user.admin?
 
-        unless AppInstaller.password_correct?(params["app"]["password"])
+        unless SystemRelease.password_correct?(params["app"]["password"])
           flash[:error] = "Wrong password (remember, this is your ssh node password)!"
           return respond_to_preference_update(417)
         else
-          installation = AppInstaller.install(params[:app])
-          if installation[:success]
-            flash[:notice]  = "App installation succeeded."
+          if App.install(params[:app])
+            flash[:notice]  = "Installation successful."
           else
-            flash[:error] = "Couldn't install application. Please check with the protonet support. Reason: #{installation[:message]}"
+            flash[:error] = "Couldn't install application. Please check with the protonet support."
           end
         end
       else
         flash[:error] = "You're no admin, man, what are you doing here?"
       end
+    rescue App::ConfigurationRequirementsNotMet
+      flash[:error] = "Configuration requirements not met. All fields are required."
+    ensure
       respond_to_preference_update
     end
 
     def uninstall
       if current_user.admin?
-        unless AppInstaller.password_correct?(params["app"]["password"])
+        unless SystemRelease.password_correct?(params["app"]["password"])
           flash[:error] = "Wrong password (remember, this is your ssh node password)!"
           return respond_to_preference_update(417)
         else
-          removal = AppInstaller.uninstall(params[:app][:name], params[:app][:password])
-          if removal[:success]
-            flash[:notice]  = "App removal was successful."
+          if App.uninstall(params[:app])
+            flash[:notice]  = "App removal successful."
           else
-            flash[:error] = "Couldn't uninstall application. Please check with the protonet support. Reason: #{removal[:message]}"
+            flash[:error] = "Couldn't uninstall application. Please check with the protonet support."
           end
         end
       else
         flash[:error] = "You're no admin, man, what are you doing here?"
       end
+    rescue ActiveRecord::RecordNotFound
+      flash[:error] = "App not found."
+    ensure
       respond_to_preference_update
     end
 

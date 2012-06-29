@@ -11,7 +11,39 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120628110547) do
+ActiveRecord::Schema.define(:version => 20120629083945) do
+
+  create_table "app_dashboard_bindings", :force => true do |t|
+    t.string   "app_name"
+    t.string   "link_title"
+    t.string   "app_path"
+    t.string   "app_key"
+    t.string   "app_host"
+    t.integer  "app_port"
+    t.integer  "app_id"
+    t.string   "binding_file_path"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "app_sources", :force => true do |t|
+    t.string   "title"
+    t.string   "url"
+    t.text     "definitions"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "apps", :force => true do |t|
+    t.string   "key"
+    t.string   "install_dep_path"
+    t.string   "uninstall_dep_path"
+    t.string   "description"
+    t.string   "homepage"
+    t.string   "display_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "channels", :force => true do |t|
     t.string   "name"

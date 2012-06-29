@@ -82,3 +82,54 @@ header [type=search] {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
+
+
+header nav li ul {
+  left: -9999px;
+  background-color: #fff;
+  min-width: 177px;
+  position: absolute;
+  top: 42px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+ 
+header nav li ul:before {
+  top: -18px;
+  left: 15px;
+  content: "";
+  width: 0;
+  height: 0;
+  position: absolute;
+  border: 9px solid transparent;
+  border-bottom: 9px solid #fff;
+}
+ 
+header nav li:hover ul,
+header nav li:focus ul {
+  left: auto;
+}
+ 
+header nav li li {
+  margin-right: 0;
+  border-top: 1px solid #ccc;
+  display: block;
+  text-shadow: none;
+}
+ 
+header nav li li:first-child {
+  border-top: 0;
+}
+ 
+header nav li li:hover,
+header nav li .selected {
+  background: #eee;
+}
+ 
+header nav li li a {
+  color: #444 !important;
+  text-shadow: none;
+  font-weight: normal;
+  line-height: 34px;
+  font-size: 12px;
+}
+
