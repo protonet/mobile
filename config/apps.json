@@ -1,9 +1,10 @@
 {
   "hubot": {
-    "dep_path": "DarkSwoop:hubot full installation",
-    "uninstall_dep_path": "DarkSwoop:hubot full uninstall",
+    "display_name": "Hubot",
     "description": "Hubot is a scriptable chat robot written by the fine folks of github.",
     "homepage": "http://hubot.github.com",
+    "install_dep_path": "DarkSwoop:hubot full installation",
+    "uninstall_dep_path": "DarkSwoop:hubot full uninstall",
     "configuration_requirements": {
       "hubot_protonet_user": "The protonet user account for hubot",
       "hubot_protonet_password": "The password for the hubot user account",
@@ -13,7 +14,8 @@
     }
   },
   "test_application": {
-    "dep_path": "DarkSwoop:test_application install",
+    "display_name": "Test Application",
+    "install_dep_path": "DarkSwoop:test_application install",
     "uninstall_dep_path": "DarkSwoop:test_application full uninstall",
     "description": "This is a small test application that should install itself to apps/test_application and creates a test_application_env file in /home/protonet/test_application_env",
     "configuration_requirements": {
@@ -21,9 +23,11 @@
     }
   },
   "transmission": {
-    "dep_path": "DarkSwoop:transmission full install",
-    "uninstall_dep_path": "DarkSwoop:transmission full uninstall",
+    "display_name": "Transmission Bit Torrent Client",
     "description": "A lightweight bittorrent client with web interface",
+    "homepage": "http://www.transmissionbt.com/",
+    "install_dep_path": "DarkSwoop:transmission full install",
+    "uninstall_dep_path": "DarkSwoop:transmission full uninstall",
     "configuration_requirements": {
       "transmission_password": "password for transmission web interface",
       "transmission_username": "username for transmission web interface",

@@ -1,4 +1,5 @@
 class InstalledApp < ActiveRecord::Base
+  has_many :app_dashboard_bindings, :dependent => :destroy
 
   validates :name, :presence => true, :uniqueness => true
   validates :uninstall_dep_path, :presence => true

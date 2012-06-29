@@ -28,8 +28,8 @@
           </li>
         <%- end -%>
 
-        <%- AppManager.protonet_bindings.each do |pb| -%>
-          <li class="nav-link"><%= link_to pb.link_title, app_path(pb.app_key.downcase) %></li>
+        <%- AppDashboardBinding.all.each do |ad_binding| -%>
+          <li class="nav-link"><%= link_to ad_binding.link_title, app_path(ad_binding.app_key.downcase) %></li>
         <%- end -%>
 
         <li class="search">
