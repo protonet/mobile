@@ -21,4 +21,10 @@ module PreferencesHelper
         'Accessing from any other network interface <i>(fallback)</i>'
       end
     end
+
+  def current_section?(section)
+    return false if @selected_section.nil?
+    section == @selected_section.split('/').last
+  end
+  
 end

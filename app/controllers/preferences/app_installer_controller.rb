@@ -51,16 +51,5 @@ module Preferences
       render :json => { :status => :ok, :success => true, :text => text }, :status => 200
     end
 
-    private
-
-    def respond_to_app_installer_update
-      if request.xhr?
-        @selected_section = 'preferences/app_installer'
-        render :template => 'preferences/index'
-      else
-        redirect_to :controller => '/preferences', :action => :show, :section => params[:section]
-      end
-    end
-
 	end
 end

@@ -231,6 +231,16 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    def respond_to_app_installer_update
+      if request.xhr?
+        @selected_section = 'preferences/app_installer'
+        render :template => 'preferences/index'
+      else
+        redirect_to :controller => '/preferences', :action => :show, :section => 'app_installer'
+      end
+    end
+
+
     def set_nocache_header
       response.headers['Cache-Control'] = 'no-cache, no-store, max-age=0, must-revalidate'
       response.headers['Pragma'] = 'no-cache'

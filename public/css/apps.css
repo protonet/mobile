@@ -1,16 +1,22 @@
-.app-installer-app-list h4 {
+.collapsable-list {
+  margin-bottom: 20px;
+}
+
+.collapsable-list .headline {
   background:#efefef;
   border: 1px solid #ccc;
   cursor: pointer;
   margin-top: 5px;
   margin-bottom: 0;
   padding:10px;
+  -webkit-user-select: none;
   -moz-user-select: none;
   -khtml-user-select: none;
+  -ms-user-select: none;
   user-select: none;
 }
 
-.app-installer-app-list .app-details {
+.collapsable-list .details {
   padding: 10px;
   border: 1px solid #ccc;
   border-top-width: 0;
