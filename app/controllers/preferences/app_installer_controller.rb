@@ -1,6 +1,8 @@
 module Preferences
 	class AppInstallerController < ApplicationController
 
+    before_filter :set_available_preferences
+
     def install
       if current_user.admin?
 
@@ -20,7 +22,7 @@ module Preferences
     rescue App::ConfigurationRequirementsNotMet
       flash[:error] = "Configuration requirements not met. All fields are required."
     ensure
-      respond_to_preference_update
+      respond_to_app_installer_update
     end
 
     def uninstall
@@ -41,12 +43,23 @@ module Preferences
     rescue ActiveRecord::RecordNotFound
       flash[:error] = "App not found."
     ensure
-      respond_to_preference_update
+      respond_to_app_installer_update
     end
 
     def release_update_progress
       text = `cat /tmp/ptn_app_install.log | sed 's/\\\033[^a-zA-Z]*.//g'`
       render :json => { :status => :ok, :success => true, :text => text }, :status => 200
+    end
+
+    private
+
+    def respond_to_app_installer_update
+      if request.xhr?
+        @selected_section = 'preferences/app_installer'
+        render :template => 'preferences/index'
+      else
+        redirect_to :controller => '/preferences', :action => :show, :section => params[:section]
+      end
     end
 
 	end

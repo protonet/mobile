@@ -4,7 +4,7 @@
   <aside>
     <ul>
       <%- @preferences.each do |preference| %>
-        <li class="<%= 'selected' if preference[:section] == @selected_section %>">
+        <li class="<%= 'selected' if preference[:section] == @selected_section.split('/').last %>">
           <a href="/preferences/show?section=<%= preference[:section] %>">
             <strong><%= preference[:name] %></strong>
           </a>
