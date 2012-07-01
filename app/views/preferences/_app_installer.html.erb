@@ -1,11 +1,12 @@
-<h2>Applications</h2>
+<h2>Apps</h2>
 <p>Install third party apps on your node.</p>
 
-<ul class="app-installer-app-list">
+<h3>Applications</h3>
+<ul class="collapsable-list">
   <%- App.available_apps.sort_by(&:display_name).each do |app| -%>
     <li>
-      <h4 style="cursor: pointer;-moz-user-select: none;-khtml-user-select: none;user-select: none; background:#efefef; border: 1px solid #ccc;padding:10px" onclick="$('#content-<%= app.key.downcase.gsub(/[^\w]/, '-') %>').toggle()"><%= app.display_name %><%= " (installed)" if app.installed? -%></h4>
-      <div id="content-<%= app.key.downcase.gsub(/[^\w]/, '-') %>" style="display:none">
+      <h4 class="headline" onclick="$('#details-app-<%= app.key %>').toggle()"><%= app.display_name %><%= " (installed)" if app.installed? -%></h4>
+      <div class="details" id="details-app-<%= app.key %>" style="display:none">
         <%- unless app.description.blank? -%>
           <p><strong>Description:</strong> <%= app.description %></p>
         <%- end -%>
@@ -47,3 +48,6 @@
     </li>
   <%- end -%>
 </ul>
+
+<%= render :partial => 'preferences/app_installer/app_sources' %>
+<%= render :partial => 'preferences/app_installer/app_bindings' %>
