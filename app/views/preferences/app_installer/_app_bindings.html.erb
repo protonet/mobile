@@ -1,0 +1,35 @@
+<h3>Apps Menu Items</h3>
+<p>
+  Make web apps / interfaces appear in the Apps Menu
+</p>
+
+<ul class="collapsable-list">
+  <%- AppDashboardBinding.order("link_title ASC").all.each do |app_binding| -%>
+    <li>
+      <h4 class="headline" onclick="$('#details-app-binding-<%= app_binding.id %>').toggle()"><%= app_binding.link_title %></h4>
+      <div id="details-app-binding-<%= app_binding.id %>" class="details" style="display:none">
+        <p>
+          Url: <%= app_binding.app_url %>
+          <%= link_to 'delete this binding', preferences_app_dashboard_binding_path(app_binding), {:method => :delete, :remote => true, 'data-type' => 'html'} %>
+        </p>
+      </div>
+    <li>
+  <%- end -%>
+</ul>
+<h4>Add a new Menu Item</h4>
+<%= form_for [:preferences, AppDashboardBinding.new(:app_url => request.host_with_port)], :remote => true, :html => { 'data-type' => 'html', :class => "app-dashboard-binding-create"} do |f| %>
+  <div class="form-field">
+    <%= f.label :link_title %>
+    <%= f.text_field :link_title %>
+  </div>
+  <div class="form-field">
+    <%= f.label :app_url %>
+    <%= f.text_field :app_url %>
+  </div>
+  <div class="form-field">
+    <%= f.label :app_key %>
+    <%= f.text_field :app_key %>
+    <a data-hover-hint="top" class="hint" title="the path that appears in you protonet url: http://example.protonet.info/apps/APP_KEY">(?)</a>
+  </div>
+  <button>add</button>
+<%- end -%>

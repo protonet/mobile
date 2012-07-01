@@ -11,19 +11,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120630152348) do
+ActiveRecord::Schema.define(:version => 20120701092229) do
 
   create_table "app_dashboard_bindings", :force => true do |t|
-    t.string   "app_name"
     t.string   "link_title"
-    t.string   "app_path"
     t.string   "app_key"
-    t.string   "app_host"
-    t.integer  "app_port"
     t.integer  "app_id"
-    t.string   "binding_file_path"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "app_path"
+    t.integer  "app_port"
+    t.string   "app_host"
   end
 
   create_table "app_sources", :force => true do |t|

@@ -1,0 +1,46 @@
+<h3>Custom App Sources</h3>
+<p>
+  Configure the sources to get the app definitions from.
+  <%= link_to 'refresh all sources', refresh_all_preferences_app_sources_path, {:method => :put, :remote => true, 'data-type' => 'html'} %>
+</p>
+
+<ul class="collapsable-list">
+  <%- AppSource.order("title ASC").all.each do |app_source| -%>
+    <li>
+      <h4 class="headline" onclick="$('#details-app-source-<%= app_source.id %>').toggle()"><%= app_source.title %> (updated: <%= l(app_source.updated_at, :format => :short) %><%= ", has errors" if app_source.has_errors? %>)</h4>
+      <div id="details-app-source-<%= app_source.id %>" class="details" style="display:none">
+        <p>
+          Url: <%= app_source.url %>
+          <%= link_to 'delete this source', preferences_app_source_path(app_source), {:method => :delete, :remote => true, 'data-type' => 'html'} %>
+        </p>
+        <%- if app_source.has_errors? -%>
+          <h5>This source has errors: <%= app_source.error_message %></h5>
+          <%- if app_source.parser_error? -%>
+            <p><%= app_source.parser_error %></p>
+          <%- end -%>
+        <%- else -%>
+          <h5>Applications provided by this source:</h5>
+          <ol>
+            <%- app_source.application_titles.each do |title| -%>
+              <li>
+                <%= title %>
+              </li>
+            <%- end -%>
+          </ol>
+        <%- end -%>
+      </div>
+    <li>
+  <%- end -%>
+</ul>
+<h4>Add a new Source</h4>
+<%= form_for [:preferences, AppSource.new], :remote => true, :html => { 'data-type' => 'html', :class => "app-source-create"} do |f| %>
+  <div class="form-field">
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </div>
+  <div class="form-field">
+    <%= f.label :url %>
+    <%= f.text_field :url %>
+  </div>
+  <button>add</button>
+<%- end -%>

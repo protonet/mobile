@@ -102,6 +102,7 @@ Dashboard::Application.routes.draw do
         put :refresh_all
       end
     end
+    resources :app_dashboard_bindings, :only => [:create, :destroy]
   end
   
   # Files
