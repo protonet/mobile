@@ -16,7 +16,7 @@
     "amqp": "git://github.com/protonet/node-amqp.git",
     "underscore": "1.1.6",
     "mkdirp": "0.3.0",
-    "watch": "0.5.1",
+    "watch": "git://github.com/protonet/watch.git",
     "iconv": "git://github.com/protonet/node-iconv.git",
     "xattr": "git://github.com/protonet/node-xattr.git"
   }

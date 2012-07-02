@@ -248,69 +248,40 @@ function remove(target, reply) {
   }
 }
 
-// recursively walk the dom tree and collect file information
-function walk(dir, reply) {
-  var results = [];
-  fs.readdir(dir, function(err, list) {
-    if (err) {
-      return reply(err);
-    }
-    
-    var pending = list.length;
-    if (!pending) {
-      return reply(null, results);
-    }
-    
-    list.forEach(function(fileName) {
-      var path = dir + '/' + fileName;
-      fs.stat(path, function(err, stat) {
-        if (fileName.charAt(0) !== "." && stat) {
-          if (stat.isDirectory()) {
-            return walk(path, function(err, res) {
-              results = results.concat(res);
-              if (!--pending) {
-                reply(null, results);
-              }
-            });
-          } else {
-            results.push({
-              name:     fileName,
-              path:     absolutePathForFrontend(path),
-              size:     stat.size,
-              type:     "file",
-              mime:     lookupMime(fileName),
-              modified: Math.max(stat.ctime, stat.mtime)
-            });
-          }
-        }
-
-        if (!--pending) { 
-          reply(null, results);
-        }
-      });
-    });
-  });
-}
-
 exports.lastModified = function(params, reply) {
   var parent = path.join(ROOT_DIR, params.parent);
   
-  walk(parent, function(err, results) {
+  watch.walk(parent, { ignoreDotFiles: true, ignoreSymbolicLinks: true }, function(err, results) {
     if (err) {
       return reply(err, []);
     }
     
-    var total = results.length;
+    var files = [], result;
+    for (var f in results) {
+      result = results[f];
+      if (!result.isDirectory()) {
+        files.push({
+          name:     path.basename(f),
+          path:     absolutePathForFrontend(f),
+          size:     result.size,
+          type:     "file",
+          mime:     lookupMime(f),
+          modified: Math.max(result.ctime, result.mtime)
+        });
+      }
+    }
     
-    results.sort(function(file1, file2) {
+    files.sort(function(file1, file2) {
       return file1.modified - file2.modified;
     });
     
-    results.reverse();
+    files.reverse();
     
-    results = results.slice(0, 4);
+    var total = files.length;
     
-    reply(null, { files: results, total: total });
+    files = files.slice(0, 4);
+    
+    reply(null, { files: files, total: total });
   });
 };
 
@@ -458,7 +429,7 @@ exports.init = function(amqpConnection) {
   var channelExchange = amqpConnection.exchange("channels"),
       fsWorker        = this;
   
-  watch.createMonitor(ROOT_DIR, { ignoreDotFiles: true }, function(monitor) {
+  watch.createMonitor(ROOT_DIR, { ignoreDotFiles: true, ignoreSymbolicLinks: true }, function(monitor) {
     function push(fsPath) {
       var channelId = getChannelId(fsPath);
       
