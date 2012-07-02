@@ -28,7 +28,7 @@
   background: rgba(255, 255, 255, 0.4);
   margin-top: 10px;
   padding: 20px;
-  width: 280px;
+  width: 320px;
 }
 
 .welcome legend {
@@ -46,7 +46,7 @@
 .welcome input[type=email],
 .welcome input[type=password] {
   padding: 8px;
-  width: 262px;
+  width: 302px;
   border: 1px solid #ccc;
   font-size: 14px;
 }
