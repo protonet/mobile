@@ -218,6 +218,14 @@ protonet.ui.files.List = (function() {
       this._updateAddressBar();
       this.uploader.setTargetFolder(path);
       protonet.utils.History.push(protonet.data.File.getUrl(path));
+      if (this.previousPath) {
+        var previousFile = this.getFile(this.previousPath);
+        if (previousFile) {
+          this.mark(previousFile.$element);
+          this.scrollTo(previousFile.$element);
+        }
+        delete this.previousPath;
+      }
     },
     
     /**
@@ -953,6 +961,7 @@ protonet.ui.files.List = (function() {
         return false;
       }
       
+      this.previousPath = this.currentPath;
       this.open(urlParameters.path);
       return true;
     },
@@ -1069,7 +1078,7 @@ protonet.ui.files.List = (function() {
         case KEY_ENTER:
           if (this.$marked.length === 1) {
             preventDefault = true;
-            this.$marked.trigger("dblclick");
+            this.$marked.dblclick();
           }
           break;
         case KEY_BACKSPACE:
