@@ -15,13 +15,13 @@ ActiveRecord::Schema.define(:version => 20120701092229) do
 
   create_table "app_dashboard_bindings", :force => true do |t|
     t.string   "link_title"
+    t.string   "app_path"
     t.string   "app_key"
+    t.string   "app_host"
+    t.integer  "app_port"
     t.integer  "app_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "app_path"
-    t.integer  "app_port"
-    t.string   "app_host"
   end
 
   create_table "app_sources", :force => true do |t|
