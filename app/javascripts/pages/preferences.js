@@ -24,6 +24,25 @@ protonet.p("preferences", function($page) {
     return false;
   });
   
+  $page.delegate("form.custom-css", "ajax:success", function() {
+    var $customCss = $("#custom-css"),
+        $style     = $("<style>", { text: $(this).find("textarea").val(), type: "text/css", id: "custom-css" });
+    
+    if ($customCss.length) {
+      $customCss.replaceWith($style);
+    } else {
+      $("body").append($style);
+    }
+  });
+  
+  $page.delegate("form.custom-js", "ajax:success", function() {
+    var script = $.trim($(this).find("textarea").val());
+    
+    if (script) {
+      window.eval(script);
+    }
+  });
+  
   $page.delegate("form.wifi, form.publish-to-web", "ajax:complete", function() {
     setTimeout(function() { $(this).find(".reload-link").click(); }.bind(this), (1).seconds());
   });

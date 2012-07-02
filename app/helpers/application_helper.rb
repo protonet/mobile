@@ -17,7 +17,7 @@ module ApplicationHelper
   
   def custom_stylesheet
     return unless SystemPreferences.custom_css
-    "<style>#{SystemPreferences.custom_css}</style>"
+    "<style id='custom-css'>#{SystemPreferences.custom_css}</style>"
   end
   
   def avatar(user, opts = {})

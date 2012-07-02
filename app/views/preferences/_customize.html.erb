@@ -23,7 +23,7 @@
 <%- end %>
 
 <h3>Custom CSS</h3>
-<%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
+<%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html', :class => 'custom-css' } do -%>
   <%= hidden_field_tag 'section', 'customize' %>
   <div class="form-field">
     <%= text_area_tag 'preferences[custom_css]', SystemPreferences.custom_css %>
@@ -32,7 +32,7 @@
 <%- end %>
 
 <h3>Custom JavaScript</h3>
-<%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
+<%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html', :class => 'custom-js' } do -%>
   <%= hidden_field_tag 'section', 'customize' %>
   <div class="form-field">
     <%= text_area_tag 'preferences[custom_javascript]', SystemPreferences.custom_javascript %>
