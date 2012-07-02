@@ -19,8 +19,8 @@ module Node2Node
     full_path = "#{directory}/#{filename}"
     url       = "/system/avatars/#{user_id}/original/#{filename}"
     FileUtils.mkdir_p(directory)
-    open(full_path, 'w') do |f| 
-       f << ActiveSupport::Base64.decode64( json["image"] )
+    open(full_path, 'wb') do |f| 
+       f.write(ActiveSupport::Base64.decode64( json["image"] ))
     end
     url
   end
@@ -91,7 +91,7 @@ module Node2Node
   end
   
   def cleanup_avatar_filename(filename)
-    filename.match(/[\w]*\.[\w]*/).try(:[], 0) #security cleanup
+    filename.match(/\w*/).try(:[], 0) #security cleanup
   end
   
   def avatar_exists?(user_id, avatar_url)
