@@ -1,14 +1,15 @@
 <li>
   <%= link_to channel do %>
-    <%- if channel.public %>
     <span>
+    <%- case true %>
+    <%- when channel.global? %>
+      <%= image_tag("/img/earth_globe.jpg", :alt => channel.display_name, :title => "This channel is global", :"data-hover-hint" => "top") %>
+    <%- when channel.public %>
       <%= image_tag("/img/channel.png", :alt => channel.display_name) %>
-    </span>
     <%- else %>
-    <span>
       <%= image_tag("/img/private.png", :alt => channel.display_name, :title => "This channel is private", :"data-hover-hint" => "top") %>
+    <%- end%>
     </span>
-    <%- end %>
     <strong><%= channel.display_name %></strong>
     <small><%= pluralize(channel.users.registered.size, "subscriber") %></small>
   <%- end %>
