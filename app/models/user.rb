@@ -254,8 +254,7 @@ class User < ActiveRecord::Base
   end
   
   def can_edit?(object)
-    return object.can_be_edited_by?(self) if object.instance_of?(User)
-    return object.can_be_edited_by?(self) if object.instance_of?(Channel)
+    return object.can_be_edited_by?(self) if object.instance_of?(User) || object.instance_of?(LocalUser) || object.instance_of?(Channel)
     return false
   end
   
