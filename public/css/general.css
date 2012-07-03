@@ -521,6 +521,11 @@ h2 .action-link {
   z-index: 101;
 }
 
+.fullscreen.overlay {
+  background: #000;
+  background: rgba(0, 0, 0, 0.8);
+}
+
 .modal-window .overlay {
   left: 1px;
   top: 1px;

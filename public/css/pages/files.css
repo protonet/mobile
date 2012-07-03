@@ -839,3 +839,32 @@
 .ui360-vis .sm2-360ui.sm2_dragging .sm2-360btn {
  visibility: hidden;
 }
+
+.fullscreen img.item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  outline: 8px solid #fff;
+}
+
+.fullscreen .previous,
+.fullscreen .next {
+  cursor: pointer;
+  z-index: 2;
+  position: absolute;
+  top: 50%;
+  margin-top: -30px;
+  border: 30px solid transparent;
+  width: 0;
+  height: 0;
+}
+
+.fullscreen .previous {
+  left: 15px;
+  border-right-color: #fff;
+}
+
+.fullscreen .next {
+  right: 15px;
+  border-left-color: #fff;
+}

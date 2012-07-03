@@ -65,14 +65,14 @@ protonet.ui.ModalWindow = (function() {
   }
   
   function _observe() {
-    $document.bind("keydown.modal_window", function(event) {
+    $document.on("keydown.modal_window", function(event) {
       var keyCode = event.keyCode;
       if (keyCode === 27) { // esc
         hide();
       }
     });
     
-    elements.container.bind("click.modal_window", function(event) {
+    elements.container.on("click.modal_window", function(event) {
       if (event.target === elements.container[0]) {
         hide();
       }

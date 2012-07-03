@@ -1,6 +1,7 @@
 //= require "../../utils/parse_url.js"
 //= require "../../utils/parse_query_string.js"
 //= require "../../effects/blink.js"
+//= require "../image_player.js"
 //= require "file.js"
 //= require "details.js"
 
@@ -552,10 +553,22 @@ protonet.ui.files.List = (function() {
      * Play the selected files
      */
     play: function() {
-      var urls = $.map(this.markedPaths, function(path) {
-        return protonet.data.File.getDownloadUrl(path);
-      });
+      var paths     = this.markedPaths.length ? this.markedPaths : this._getAllPaths(),
+          firstPath = paths[0],
+          urls      = $.map(paths, function(path) {
+            return protonet.data.File.getDownloadUrl(path);
+          });
       
+      if (protonet.media.Audio.canPlay(firstPath)) {
+        return this.playAudio(urls);
+      }
+      
+      if (protonet.data.File.isImage(firstPath)) {
+        return this.playImages(urls);
+      }
+    },
+    
+    playAudio: function(urls) {
       if (window.__audioPopup && !window.__audioPopup.closed) {
         window.__audioPopup.protonet.trigger("audio.add", urls);
         window.__audioPopup.focus();
@@ -568,6 +581,10 @@ protonet.ui.files.List = (function() {
           audioPlayer && audioPlayer.stop();
         }
       }
+    },
+    
+    playImages: function(urls) {
+      new protonet.ui.ImagePlayer(urls);
     },
     
     
@@ -611,7 +628,7 @@ protonet.ui.files.List = (function() {
           canRemove      = hasWriteAccess && this.currentPath !== "/";
       
       this.uploader.disableBrowse();
-      this.$fileActions.find("a").removeClass("enabled");
+      this.$fileActions.find(".enabled").removeClass("enabled");
       
       if (this.$fileList.is(":visible")) {
         if (hasWriteAccess) {
@@ -627,23 +644,30 @@ protonet.ui.files.List = (function() {
         }
       }
       
-      if (this.markedPaths.length > 0) {
-        var allAudio = true;
-        for (var i=0; i<this.markedPaths.length; i++) {
-          if (!protonet.media.Audio.canPlay(this.markedPaths[i])) {
+      var $play = this.$fileActions.find(".play"),
+          paths = this.markedPaths.length ? this.markedPaths : this._getAllPaths();
+      
+      if (paths.length > 0) {
+        var allAudio  = true,
+            allImages = true;
+        for (var i=0; i<paths.length; i++) {
+          if (!protonet.media.Audio.canPlay(paths[i])) {
             allAudio = false;
+          }
+          if (!protonet.data.File.isImage(paths[i])) {
+            allImages = false;
           }
         }
         
-        if (allAudio) {
-          this.$fileActions.find(".play").addClass("enabled");
+        if (allAudio || allImages) {
+          $play.addClass("enabled");
         }
       }
       
-      if (window.__audioPopup && !window.__audioPopup.closed) {
-        this.$fileActions.find(".play").addClass("add");
+      if (allAudio && window.__audioPopup && !window.__audioPopup.closed) {
+        $play.addClass("add");
       } else {
-        this.$fileActions.find(".play").removeClass("add");
+        $play.removeClass("add");
       }
     },
     
@@ -660,6 +684,13 @@ protonet.ui.files.List = (function() {
       }
       
       return $();
+    },
+    
+    // Get paths of all currently displayed files/folders
+    _getAllPaths: function() {
+      return $.map(this.$tbody.children(), function(element) {
+        return $(element).data("instance").data.path;
+      });
     },
     
     _getAddressBarItem: function(name, path) {
