@@ -4,7 +4,14 @@
   <p>
     Here you can find channels from this protonet. Feel free to join one or create a own channel
   </p>
+  <h3>Channels you already have subscribed</h3>
   <ul class="channels-list">
-    <%= render @channels %>
+    <%= render @subscribed_channels %>
   </ul>
+  <% if (not_subscribed_channels = @channels - @subscribed_channels).any? %>
+    <h3>Maybe you want to subscribe one of these</h3>
+    <ul class="channels-list">
+      <%= render not_subscribed_channels %>
+    </ul>
+  <% end %>
 </output>

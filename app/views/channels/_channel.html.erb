@@ -2,11 +2,11 @@
   <%= link_to channel do %>
     <%- if channel.public %>
     <span>
-      <%= image_tag("/img/channel.png", :alt => channel.display_name, :class => (@subscribed_channels.include?(channel) ? "subscribed" : "")) %>
+      <%= image_tag("/img/channel.png", :alt => channel.display_name) %>
     </span>
     <%- else %>
     <span>
-      <%= image_tag("/img/private.png", :alt => channel.display_name, :title => "This channel is private", :"data-hover-hint" => "top", :class => (@subscribed_channels.include?(channel) ? "subscribed" : "")) %>
+      <%= image_tag("/img/private.png", :alt => channel.display_name, :title => "This channel is private", :"data-hover-hint" => "top") %>
     </span>
     <%- end %>
     <strong><%= channel.display_name %></strong>

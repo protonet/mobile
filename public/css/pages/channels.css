@@ -11,24 +11,6 @@
   text-shadow: none;
 }
 
-.subpage aside .subscribed a:before {
-  content: "";
-  left: 0;
-  top: 0;
-  bottom: 1px;
-  width: 4px;
-  position: absolute;
-  border-right: 1px solid #fff;
-  background: #00cc00;
-  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3));
-  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0.3)));
-}
-
-.subpage aside .subscribed a:active:before {
-  background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
-  background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(0, 0, 0, 0.3)), to(rgba(0, 0, 0, 0)));
-}
-
 .channel-teaser > li {
   display: inline-block;
   margin-right: 10px;
@@ -161,13 +143,6 @@
   word-wrap: break-word;
 }
 
-.channels-page ul.channels-list img {
-  opacity: 0.25;
-}
-
-.channels-page ul.channels-list img.subscribed {
-  opacity: 1;
-}
 
 .channels-page ul.channels-list a span {
   border: 1px solid #CCC;
