@@ -1,4 +1,5 @@
 #!/bin/bash
 
+. /usr/local/rvm/scripts/rvm
 cd /home/protonet/dashboard/current/
 bundle exec ruby ./script/clamav_check 2>&1 >> ./log/clamav.log
