@@ -5,8 +5,9 @@ class SystemWifi
     
     def supported?
       # TODO: use iwconfig here (didn't work out for me)
+      return true if Rails.env != "production"
       lspci = `lspci`
-      Rails.env != "production" || lspci.include?("Wireless Network") || lspci.include?("Atheros")
+      lspci.include?("Wireless Network") || lspci.include?("Atheros")
     end
     
     # eg. SystemWifi.supports_standard?("wlan0", "n")
