@@ -427,9 +427,10 @@ exports.info = function(params, reply) {
 
 exports.init = function(amqpConnection) {
   var channelExchange = amqpConnection.exchange("channels"),
-      fsWorker        = this;
+      fsWorker        = this,
+      channelsPath    = path.join(ROOT_DIR, "channels");
   
-  watch.createMonitor(ROOT_DIR, { ignoreDotFiles: true, ignoreSymbolicLinks: true }, function(monitor) {
+  watch.createMonitor(channelsPath, { ignoreDotFiles: true, ignoreSymbolicLinks: true }, function(monitor) {
     function push(fsPath) {
       var channelId = getChannelId(fsPath);
       
