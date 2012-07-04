@@ -9,6 +9,7 @@ protonet.ui.files.List = (function() {
   var viewer              = protonet.config.user_id,
       node                = protonet.config.node_uuid,
       KEY_BACKSPACE       = 8,
+      KEY_SPACE           = 32,
       KEY_TAB             = 9,
       KEY_ENTER           = 13,
       KEY_UP              = 38,
@@ -1110,6 +1111,12 @@ protonet.ui.files.List = (function() {
           if (this.$marked.length === 1) {
             preventDefault = true;
             this.$marked.dblclick();
+          }
+          break;
+        case KEY_SPACE:
+          if (this.$marked.length > 0) {
+            preventDefault = true;
+            this.$fileActions.find(".play").click();
           }
           break;
         case KEY_BACKSPACE:
