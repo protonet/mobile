@@ -130,7 +130,11 @@
           dataType: "json",
           url:  "/channels/info",
           data: { include_meeps: options.includeMeeps, ids: uncachedIds.join(","), _: 1 },
-          success:  function(data) {
+          success:  function(data, status, xhr) {
+            if (!data.length) {
+              return options.error(xhr);
+            }
+            
             $.each(data, function(i, channel) {
               cache(channel);
             });

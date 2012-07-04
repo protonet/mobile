@@ -270,11 +270,10 @@ protonet.timeline.Channels = {
        * Create a tab handle and render meeps for the newly subscribed channel
        */
       .on("user.subscribed_channel", function(data) {
-        var channelId = data.channel_id;
         if (protonet.config.user_id != data.user_id) {
           return;
         }
-        this.loadChannel(channelId);
+        this.loadChannel(data.channel_id);
       }.bind(this))
       
       /**

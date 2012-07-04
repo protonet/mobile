@@ -15,7 +15,7 @@ class Listen < ActiveRecord::Base
   after_destroy :send_verifications_notification, :if => lambda {|listen| !listen.verified? }
   after_destroy :send_unsubscribe_notification
   after_destroy :remove_system_folder
-  around_save :send_change_notification
+  around_save   :send_change_notification, :if => lambda {|l| !l.channel.rendezvous? }
   
   def send_change_notification
     changed = (new_record? && !verified?) || verified_changed?
