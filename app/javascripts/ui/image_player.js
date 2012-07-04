@@ -63,13 +63,17 @@ protonet.ui.ImagePlayer = Class.create({
   render: function(url) {
     url = protonet.media.Proxy.getImageUrl(url, { width: this.dimensions.width, height: this.dimensions.height, extent: false });
     
+    this.$overlay.addClass("loading");
+    
     var $img = $("<img>", { src: url, "class": "item" }).one("load error", function() {
+      this.$overlay.removeClass("loading");
+
       $img.css({
         marginTop:  (-(($img.prop("naturalHeight") || $img.prop("height")) / 2)).px(),
         marginLeft: (-(($img.prop("naturalWidth") || $img.prop("width")) / 2)).px(),
         opacity:    0
       });
-      
+
       var $oldImage = this.$overlay.find("img.item");
       if ($oldImage.length) {
         $img.insertAfter($oldImage);
@@ -77,7 +81,7 @@ protonet.ui.ImagePlayer = Class.create({
       } else {
         $img.appendTo(this.$overlay);
       }
-      
+
       $img.animate({ opacity: 1 });
     }.bind(this));
   },
