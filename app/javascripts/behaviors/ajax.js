@@ -177,6 +177,7 @@ $.behaviors({
       $(element).replaceWith(html);
       var newUrl = xhr.getResponseHeader("X-Url");
       newUrl && protonet.utils.History.push(newUrl);
+      $document.updateBehaviors();
     } else if (!flashMessageSet) {
       if (status === 403) {
         protonet.trigger("flash_message.error", protonet.t("NO_RIGHTS_ERROR"));
