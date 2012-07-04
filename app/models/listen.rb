@@ -36,11 +36,13 @@ class Listen < ActiveRecord::Base
       rescue NoMethodError
         [] 
       end
-    publish "users", recipients.map(&:id), {
-      :trigger  =>  "users.pending_verifications",
-      :channel_id => channel.id,
-      :pending_verifications => channel.listens.pending.count
-    }
+    recipients.each do |u|
+      publish "users", u.id, {
+        :trigger  =>  "users.pending_verifications",
+        :channel_id => channel.id,
+        :pending_verifications => channel.listens.pending.count
+      }
+    end
   end
   
   def send_subscribe_notification
