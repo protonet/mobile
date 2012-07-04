@@ -22,7 +22,7 @@
   </p>
   
   <%- if permitted_to?(:read, :channels) %>
-    <h3>Channels</h3>
+    <h3>Subscribed channels</h3>
     <p class="channel-list">
       <%- if @user.channels.real.verified.empty? %>
         <span class="hint">No channels subscribed.</span>
@@ -32,14 +32,6 @@
         <%- end %>
       <%- end %>
     </p>
-  <%- end %>
-  
-  <%- if current_user.admin? %>
-    <h3>Info <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
-    <dl data-cucumber="roles">
-      <dt>Roles: </dt><dd><%= @user.roles.map(&:title).join(", ") %></dd>
-      <dt>E-Mail: </dt><dd><%= @user.email %></dd>
-    </dl>
   <%- end %>
   
   <h3>
