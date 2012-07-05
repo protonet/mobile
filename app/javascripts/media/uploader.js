@@ -24,16 +24,27 @@ protonet.media.Uploader = (function() {
     // Default target folder is the user's file store
     var targetFolder = protonet.data.User.getFolder(protonet.config.user_id);
     
-    uploader.bind("FilesAdded", function(uploader) {
+    uploader.bind("FilesAdded", function(uploader, files) {
       uploader.settings.multipart_params = {
         user_id:        protonet.config.user_id,
-        token:          protonet.config.token,
-        target_folder:  targetFolder
+        token:          protonet.config.token
       };
+      
+      $.each(files, function(i, file) {
+        file._targetFolder = targetFolder;
+      });
       
       setTimeout(function() {
         uploader.start();
       }, 0);
+    });
+    
+    uploader.bind("BeforeUpload", function() {
+      uploader.settings.multipart_params.target_folder = file._targetFolder;
+    });
+    
+    uploader.bind("Error", function(uploader, error) {
+      console.log("Plupload upload error:", error);
     });
     
     // throttle

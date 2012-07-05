@@ -155,9 +155,11 @@ protonet.ui.Droppables = (function() {
       
       $html.removeClass("dragover");
       
-      $.each(potentialTargets, function(i, target) {
-        $(target.elements).removeClass(target.indicator);
-      });
+      if (potentialTargets) {
+        $.each(potentialTargets, function(i, target) {
+          $(target.elements).removeClass(target.indicator);
+        });
+      }
       
       $.each(activeTargets, function(i, target) {
         $(target.elements).each(function(i, element) {
