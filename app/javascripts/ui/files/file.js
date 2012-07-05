@@ -147,7 +147,7 @@ protonet.ui.files.File = (function() {
         url:            protonet.data.File.getUrl(data.path),
         downloadUrl:    protonet.data.File.getDownloadUrl(data.path),
         prettyName:     protonet.utils.escapeHtml(data.name.truncate(70)),
-        prettySize:     data.size && protonet.utils.prettifyFileSize(data.size),
+        prettySize:     typeof(data.size) === "number" ? protonet.utils.prettifyFileSize(data.size) : data.size,
         prettyModified: protonet.utils.prettifyDate(data.modified)
       });
       

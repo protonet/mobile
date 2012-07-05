@@ -117,7 +117,9 @@ exports.init = function(amqpConnection) {
         var targetDir   = ROOT_DIR + (message.params.target_folder || ""),
             responseArr = [];
 
-        try { mkdirSync(targetDir, FOLDER_PERMISSIONS); } catch (e) {}
+        try {
+          mkdirSync(targetDir, FOLDER_PERMISSIONS);
+        } catch (e) {}
         
         Step(function() {
           for (var i in message.files) {

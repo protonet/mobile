@@ -626,7 +626,8 @@ protonet.ui.files.List = (function() {
     
     _updateActions: function() {
       var hasWriteAccess = protonet.data.User.hasWriteAccessToFile(viewer, this.currentPath),
-          canRemove      = hasWriteAccess && this.currentPath !== "/";
+          viewerPath     = protonet.data.User.getFolder(viewer),
+          canRemove      = hasWriteAccess && this.markedPaths.indexOf("/channels/") === -1 && this.markedPaths.indexOf(viewerPath) === -1;
       
       this.uploader.disableBrowse();
       this.$fileActions.find(".enabled").removeClass("enabled");
