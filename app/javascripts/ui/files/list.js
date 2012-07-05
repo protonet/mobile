@@ -363,7 +363,7 @@ protonet.ui.files.List = (function() {
         modified: now
       }, this);
       
-      this.insert(folder);
+      this.insert(folder, true);
       folder.rename();
     },
     
@@ -450,7 +450,7 @@ protonet.ui.files.List = (function() {
               newData = $.extend({}, data, { path: newPath }),
               newFile = new protonet.ui.files.File(newData, this);
           newFile.disable();
-          this.insert(newFile);
+          this.insert(newFile, true);
           return newFile;
         }.bind(this));
       }
@@ -540,11 +540,11 @@ protonet.ui.files.List = (function() {
     /**
      * Inserts a file at the top and scrolls to it
      */
-    insert: function(file) {
+    insert: function(file, scrollTo) {
       this.removeHint();
       
-      var $firstFile  = this.$fileList.find("[data-file-path]:first"),
-          $lastFolder = this.$fileList.find("[data-folder-path]:last");
+      var $firstFile          = this.$fileList.find("[data-file-path]:not(.disabled)").first(),
+          $lastFolder         = this.$fileList.find("[data-folder-path]").last();
       
       if ($firstFile.length) {
         file.$element.insertBefore($firstFile);
@@ -554,7 +554,9 @@ protonet.ui.files.List = (function() {
         file.$element.appendTo(this.$tbody);
       }
       
-      this.scrollTo(file.$element);
+      if (scrollTo) {
+        this.scrollTo(file.$element);
+      }
     },
     
     /**
@@ -751,7 +753,7 @@ protonet.ui.files.List = (function() {
           file.progress(0);
           file.setId(data.id);
           
-          this.insert(file);
+          this.insert(file, i === 0);
         }.bind(this));
       }.bind(this));
       
