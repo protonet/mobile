@@ -38,7 +38,7 @@ $.behaviors({
         $iframe = $("<iframe>", { src: element.href, style: 'width:0; height:0; border:0; display:none;' }).appendTo("body");
     setTimeout(function() {
       $anchor.removeClass("loading");
-    }, 1000);
+    }, 2500);
     event.preventDefault();
   },
   

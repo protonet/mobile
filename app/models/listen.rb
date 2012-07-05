@@ -10,8 +10,10 @@ class Listen < ActiveRecord::Base
   
   # if a channel is public we set the verified status to public
   after_create  :auto_set_verification, :set_last_read_meep
-  after_create  :send_subscribe_notification, :if => lambda {|listen| listen.verified?}
   after_create  :create_system_folder, :if => lambda {|l| !l.user.stranger? && !l.user.system? && !l.channel.global? }
+  
+  after_create  :send_subscribe_notification, :if => lambda {|listen| listen.verified? }
+  
   after_destroy :send_verifications_notification, :if => lambda {|listen| !listen.verified? }
   after_destroy :send_unsubscribe_notification
   after_destroy :remove_system_folder
