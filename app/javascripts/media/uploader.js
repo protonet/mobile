@@ -93,6 +93,18 @@ protonet.media.Uploader = (function() {
       return targetFolder;
     };
     
+    var originalDestroy = uploader.destroy;
+    uploader.destroy = function() {
+      if (uploader.files.length) {
+        uploader.bind("UploadComplete", function() {
+          setTimeout(function() { uploader.unbindAll(); }, 0);
+        });
+        uploader.trigger("Destroy");
+      } else {
+        originalDestroy.apply(this, arguments);
+      }
+    };
+    
     uploader.bind("UploadComplete", function(uploader, files) {
       uploader.splice(0, files.length);
     });
