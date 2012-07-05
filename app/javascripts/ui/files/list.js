@@ -379,7 +379,7 @@ protonet.ui.files.List = (function() {
     /**
      * Scroll to the given element
      */
-    scrollTo: function($element, up) {
+    scrollTo: function($element) {
       // Scroll to the very top when the element is the first row
       if ($element.is(":first-child")) {
         this.$tableWrapper.prop("scrollTop", 0);
@@ -390,7 +390,14 @@ protonet.ui.files.List = (function() {
         return;
       }
       
-      this.$tableWrapper.scrollTop($element.prop("offsetTop") - 40);
+      var offsetTop           = $element.prop("offsetTop"),
+          scrollTop           = this.$tableWrapper.prop("scrollTop"),
+          tableWrapperHeight  = this.$tableWrapper.outerHeight(),
+          elementHeight       = $element.outerHeight();
+      
+      if ((offsetTop + elementHeight) > (scrollTop + tableWrapperHeight) || offsetTop < scrollTop) {
+        this.$tableWrapper.scrollTop(offsetTop - 40);
+      }
     },
     
     highlight: function($elements) {
@@ -1145,7 +1152,7 @@ protonet.ui.files.List = (function() {
             }
           }
           
-          this.scrollTo($newMarked.first(), true);
+          this.scrollTo($newMarked.first());
           preventDefault = true;
           break;
         case KEY_DOWN:
@@ -1170,7 +1177,7 @@ protonet.ui.files.List = (function() {
             }
           }
           
-          this.scrollTo($newMarked.last(), false);
+          this.scrollTo($newMarked.last());
           preventDefault = true;
           break;
         default:
