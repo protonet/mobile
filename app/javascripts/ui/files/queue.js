@@ -100,9 +100,17 @@ protonet.ui.files.Queue = (function() {
     },
     
     progress: function(file) {
-      var $item = queue[file.id];
+      var $item   = queue[file.id],
+          amount  = this.uploader.files.length;
+      
       $item.find(".loading-bar").css("width", file.percent + "%");
-      $status.text(protonet.t("UPLOADING_FILES", file));
+      
+      $status.text(
+        protonet.t(amount > 1 ? "UPLOADING_FILES" : "UPLOADING_FILE", {
+          percent: this.uploader.total.percent,
+          amount:  amount
+        })
+      );
     },
     
     uploaded: function(file, xhr) {

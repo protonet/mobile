@@ -59,8 +59,8 @@ a.file, a.folder {
 
 .file { background-position: 0 -328px; }
 .folder { background-position: 0 -3526px; }
-.queued .file, .queued .folder { opacity: 0.5; }
-.uploading .file, .uploading .folder { opacity: 0.5; }
+.queued .file, .queued .folder { opacity: 0.6; }
+.uploading .file, .uploading .folder { opacity: 0.6; }
 
 #file-queue {
   position: fixed;

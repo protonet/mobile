@@ -39,7 +39,7 @@ protonet.media.Uploader = (function() {
       }, 0);
     });
     
-    uploader.bind("BeforeUpload", function() {
+    uploader.bind("BeforeUpload", function(uploader, file) {
       uploader.settings.multipart_params.target_folder = file._targetFolder;
     });
     
