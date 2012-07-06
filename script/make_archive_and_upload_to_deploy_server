@@ -20,6 +20,8 @@ export DEPLOYER_ARCHIVE=deployer.tar.gz
 export PROJECT_DIR=`pwd`
 export UPLOAD_PATH="~/code-dispatcher/code_dispatcher"
 
+export TAR=`which gnutar || which tar`
+
 # for os x tells tar not to include resource forks
 export COPYFILE_DISABLE=true
 
@@ -84,7 +86,7 @@ fi
 
 # now create an archive
 cd /tmp
-tar -pczf $APP_ARCHIVE --exclude .git dashboard/
+$TAR -pczf $APP_ARCHIVE --exclude .git dashboard/
 
 ############################################################
 # get protonet@babushka
@@ -96,7 +98,7 @@ export BABUSHKA_BASE_REVISION=`git log --pretty=format:"%H" -n 1`
 
 #  now create another archive
 cd /tmp
-tar -pczf $BABUSHKA_BASE_ARCHIVE --exclude .git babushka-base/
+$TAR -pczf $BABUSHKA_BASE_ARCHIVE --exclude .git babushka-base/
 
 ############################################################
 # get protonet@babushka-deps
@@ -108,7 +110,7 @@ export BABUSHKA_REVISION=`git log --pretty=format:"%H" -n 1`
 
 #  now create another archive
 cd /tmp
-tar -pczf $BABUSHKA_ARCHIVE --exclude .git babushka/
+$TAR -pczf $BABUSHKA_ARCHIVE --exclude .git babushka/
 
 ############################################################
 #  get the dudemeister@babushka-deps
@@ -120,7 +122,7 @@ export BABUSHKA_DEPS_REVISION=`git log --pretty=format:"%H" -n 1`
 
 #  now create the dudemeister@babushka-deps archive
 cd /tmp
-tar -pczf $BABUSHKA_DEPS_ARCHIVE --exclude .git babushka-deps/
+$TAR -pczf $BABUSHKA_DEPS_ARCHIVE --exclude .git babushka-deps/
 
 ############################################################
 #  get the deployer
@@ -134,7 +136,7 @@ rm Gemfile.lock
 
 #  now create the deployer archive
 cd /tmp
-tar -pczf $DEPLOYER_ARCHIVE --exclude .git deployer/
+$TAR -pczf $DEPLOYER_ARCHIVE --exclude .git deployer/
 
 ############################################################
 # create directory for the new release and upload it
