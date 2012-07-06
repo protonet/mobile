@@ -795,9 +795,25 @@ protonet.ui.files.List = (function() {
         $element.data("instance").progress(percent);
       }.bind(this));
       
+      this.uploader.bind("Error", function(uploader, error) {
+        var file = error.file;
+        if (!file) {
+          return;
+        }
+        
+        var $element  = $("#" + file.id);
+        if (!$element.length) {
+          return;
+        }
+        
+        $element.addClass("error");
+        $element.find(".file").prepend($("<strong>", { "class": "error", text: "(error) " }));
+        $element.find(".progress").remove();
+      });
+      
       this.uploader.bind("FileUploaded", function(uploader, file, xhr) {
         var $element  = $("#" + file.id),
-            data      = xhr.responseJSON[0],
+            data      = xhr.responseJSON,
             newFile,
             oldFile;
         
@@ -806,7 +822,7 @@ protonet.ui.files.List = (function() {
         }
         
         newFile = new protonet.ui.files.File(data, this);
-        oldFile = $("#" + file.id).data("instance");
+        oldFile = $element.data("instance");
         
         oldFile.$element.replaceWith(newFile.$element);
         oldFile.destroy();

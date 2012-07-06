@@ -114,6 +114,14 @@
   opacity: 0.6;
 }
 
+.file-list tr.error {
+  background: #fbe7eb;
+}
+
+.file-list tr .file .error {
+  color: #e75c79;
+}
+
 .file-list tr img {
   position: absolute;
   border: 1px solid rgba(255, 255, 255, 0.5);

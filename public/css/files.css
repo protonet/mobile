@@ -103,6 +103,14 @@ a.file, a.folder {
   cursor: default;
 }
 
+#file-queue li.error {
+  background: #fbe7eb;
+}
+
+#file-queue .file-name .error {
+  color: #e75c79;
+}
+
 #file-queue .file-name {
   display: inline-block;
   max-width: 300px;

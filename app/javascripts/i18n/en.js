@@ -49,6 +49,7 @@ protonet.i18n = {
   WLAN_UPDATED: "<h3>Your WLAN has been updated and restarted</h3>You probably have lost your connection. Please reconnect and reload this page.",
   SOFTWARE_UPDATE_SUCCESSFUL: "<h3>Congrats, the software update was successful</h3>All services are going down for reboot now. Please wait a few more seconds. You will then be redirected to the home page.",
   UPLOAD_SUCCESSFUL: "All files uploaded (100 %)",
+  UPLOAD_ERROR: "The file named '#{name}' couldn't be uploaded",
   UPLOADING_FILES: "Uploading #{amount} files (#{percent} %)",
   UPLOADING_FILE: "Uploading file (#{percent} %)",
   USERS_IN_REMOTE_CHANNEL: 'Online users <a data-hover-hint="top" title="Only online users are displayed in global channels" class="hint">(?)</a>',

@@ -45,7 +45,10 @@ protonet.media.Uploader = (function() {
     });
     
     uploader.bind("Error", function(uploader, error) {
-      console.log("Plupload upload error:", error);
+      // Report it to airbrake
+      setTimeout(function() {
+        throw new Error(JSON.stringify(error));
+      }, 0);
     });
     
     // throttle
@@ -73,8 +76,20 @@ protonet.media.Uploader = (function() {
         };
       } else if (eventName === "FileUploaded") {
         callback = function(uploader, file, xhr) {
-          xhr.responseText = xhr.response;
-          xhr.responseJSON = JSON.parse(xhr.response);
+          if (file._error) { return; }
+          
+          xhr.responseText = xhr.response || "[]";
+          xhr.responseJSON = JSON.parse(xhr.responseText)[0];
+          
+          if (!xhr.responseJSON) {
+            file._error = true;
+            uploader.trigger("Error", {
+              code: plupload.IO_ERROR,
+              file: file
+            });
+            return;
+          }
+          
           originalCallback.apply(this, arguments);
         };
       }

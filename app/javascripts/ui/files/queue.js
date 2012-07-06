@@ -47,6 +47,12 @@ protonet.ui.files.Queue = (function() {
         this.uploaded(file, xhr);
       }.bind(this));
       
+      this.uploader.bind("Error", function(uploader, error) {
+        if (error.file) {
+          this.error(error.file);
+        }
+      }.bind(this));
+      
       this.uploader.bind("UploadProgress", function(uploader, file) {
         this.progress(file);
       }.bind(this));
@@ -113,24 +119,25 @@ protonet.ui.files.Queue = (function() {
       );
     },
     
+    error: function(file) {
+      protonet.trigger("flash_message.error", protonet.t("UPLOAD_ERROR", file));
+      var $item = queue[file.id];
+      $item.addClass("error");
+      $item.find(".file-name").prepend($("<strong>", { text: "(error) ", "class": "error" }));
+    },
+    
     uploaded: function(file, xhr) {
-      var response  = xhr.responseJSON,
-          $item     = queue[file.id],
-          data      = response[0];
+      var data      = xhr.responseJSON,
+          $item     = queue[file.id];
       
-      if (data) {
-        $item
-          .data("file", data)
-          .removeClass("uploading")
-          .css("backgroundColor", "#ffff99")
-          .animate({ "backgroundColor": "#ffffff" });
-        
-        $item
-          .find("a").attr("href", protonet.data.File.getUrl(data.path));
-      } else {
-        // TODO
-        $item.addClass("error");
-      }
+      $item
+        .data("file", data)
+        .removeClass("uploading")
+        .css("backgroundColor", "#ffff99")
+        .animate({ "backgroundColor": "#ffffff" });
+      
+      $item
+        .find("a").attr("href", protonet.data.File.getUrl(data.path));
     },
     
     allUploaded: function() {
