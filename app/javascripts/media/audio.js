@@ -48,7 +48,9 @@
     },
     
     play: function() {
-      this.sound.play();
+      if (this.sound) {
+        this.sound.play();
+      }
     }
   });
   
