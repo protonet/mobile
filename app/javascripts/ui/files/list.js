@@ -736,23 +736,45 @@ protonet.ui.files.List = (function() {
         var now = new Date();
         
         $.each(files, function(i, data) {
-          var existingFile = this.getFile(data.name);
-          if (existingFile) {
-            existingFile.destroy();
+          var shouldCreateFolder = data.targetFolder !== this.currentPath,
+              file;
+          if (shouldCreateFolder) {
+            var name = data.relativePath.split("/")[0],
+                existingFolder = this.getFolder(name);
+            
+            if (existingFolder) {
+              existingFolder.destroy();
+            }
+            
+            file = new protonet.ui.files.File({
+              type:     "folder",
+              name:     name,
+              modified: now,
+              path:     this.currentPath + name + "/"
+            }, this);
+            
+            setTimeout(function() {
+              file.enable();
+              this.highlight(file.$element);
+            }.bind(this), 500);
+          } else {
+            var existingFile = this.getFile(data.name);
+            if (existingFile) {
+              existingFile.destroy();
+            }
+
+            file = new protonet.ui.files.File({
+              type:     "file",
+              name:     data.name,
+              size:     data.size,
+              modified: now,
+              path:     this.currentPath + data.name
+            }, this);
+            file.progress(0);
+            file.setId(data.id);
           }
           
-          var file = new protonet.ui.files.File({
-            type:     "file",
-            name:     data.name,
-            size:     data.size,
-            modified: now,
-            path:     this.currentPath + data.name
-          }, this);
-          
           file.disable();
-          file.progress(0);
-          file.setId(data.id);
-          
           this.insert(file, i === 0);
         }.bind(this));
       }.bind(this));

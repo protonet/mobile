@@ -31,7 +31,8 @@ protonet.media.Uploader = (function() {
       };
       
       $.each(files, function(i, file) {
-        file._targetFolder = targetFolder;
+        var targetFile = targetFolder + file.relativePath;
+        file.targetFolder = protonet.data.File.getFolder(targetFile);
       });
       
       setTimeout(function() {
@@ -40,7 +41,7 @@ protonet.media.Uploader = (function() {
     });
     
     uploader.bind("BeforeUpload", function(uploader, file) {
-      uploader.settings.multipart_params.target_folder = file._targetFolder;
+      uploader.settings.multipart_params.target_folder = file.targetFolder;
     });
     
     uploader.bind("Error", function(uploader, error) {

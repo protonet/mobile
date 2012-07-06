@@ -239,16 +239,16 @@ exports.init = function(amqpConnection) {
 
 exports.upload = function(request, response) {
   setAccessControlHeaders(response, request);
-
-  var form      = new formidable.IncomingForm(),
-      files     = [],
-      fields    = {};
-      
+  
   if (request.method == 'OPTIONS') {
     response.writeHead(200);
     response.end();
     return;
   }
+  
+  var form      = new formidable.IncomingForm(),
+      files     = [],
+      fields    = {};
   
   form
     .on('field', function(field, value) {
@@ -280,6 +280,12 @@ exports.upload = function(request, response) {
 
 exports.snapshot = function(request, response) {
   setAccessControlHeaders(response, request);
+  
+  if (request.method == 'OPTIONS') {
+    response.writeHead(200);
+    response.end();
+    return;
+  }
   
   next_seq += 1;
   responses[next_seq] = response;
@@ -317,7 +323,13 @@ exports.snapshot = function(request, response) {
 
 exports.download = function(request, response) {
   setAccessControlHeaders(response, request);
-
+  
+  if (request.method == 'OPTIONS') {
+    response.writeHead(200);
+    response.end();
+    return;
+  }
+  
   next_seq += 1;
   responses[next_seq] = response;
   

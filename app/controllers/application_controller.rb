@@ -133,7 +133,9 @@ class ApplicationController < ActionController::Base
         #  move to {:controller => '', :action => ''} scheme
         return redirect_to("/") unless [
           ["instruments", "index"],
-          ["meeps", "create"]
+          ["meeps", "create"],
+          ["files", "index"],
+          ["files", "play"]
         ].include?([params[:controller], params[:action]])
       end
     end
