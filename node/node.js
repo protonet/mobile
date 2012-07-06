@@ -30,6 +30,9 @@ process.argv.forEach(function(val){
 
 global.FILES_PATH = envPaths[global.env] || envPaths.development;
 
+// Everything that is created by node.js will give the user and group read/write/execute permissions
+process.umask(0007);
+
 /*----------------------------------- SOCKET TASKS -----------------------------------*/
 var tries = 0;
 

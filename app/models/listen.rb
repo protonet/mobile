@@ -92,9 +92,8 @@ class Listen < ActiveRecord::Base
 
   def create_system_folder
     if channel.rendezvous?
-      # create links for both users
-      system_users_script("mount channels/#{channel.id} \"#{system_home_path_for(channel.rendezvous_participants.first)}/channels/shared between you and #{channel.rendezvous_participants.second.login}\"")
-      system_users_script("mount channels/#{channel.id} \"#{system_home_path_for(channel.rendezvous_participants.second)}/channels/shared between you and #{channel.rendezvous_participants.first.login}\"")
+      other_user = (channel.rendezvous_participants - [user]).first
+      system_users_script("mount channels/#{channel.id} \"#{system_home_path_for(user)}/channels/shared between you and #{other_user.login}\"")
     else
       system_users_script("mount channels/#{channel.id} #{system_home_path_for(user)}/channels/#{channel.name}")
     end
