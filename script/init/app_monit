@@ -27,7 +27,10 @@ case $1 in
     reload)
       $MONIT -c $SHARED/config/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid reload
       ;;
+    status)
+      $MONIT -c $SHARED/config/monit_ptn_node -l $SHARED/log/monit.log -p $SHARED/pids/monit.pid status
+      ;;
     *)  
-      echo "usage: app_monit {start|stop|restart|reload}" ;;
+      echo "usage: app_monit {start|stop|restart|reload|status}" ;;
 esac
 exit 0
