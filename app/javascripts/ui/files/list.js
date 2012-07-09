@@ -215,11 +215,15 @@ protonet.ui.files.List = (function() {
     },
     
     updatePath: function(path) {
+      this.previousPath = this.currentPath;
       this.currentPath = path;
+      
       this._updateActions();
       this._updateAddressBar();
+      
       this.uploader.setTargetFolder(path);
       protonet.utils.History.push(protonet.data.File.getUrl(path));
+      
       if (this.previousPath) {
         var previousFile = this.getFile(this.previousPath);
         if (previousFile) {
@@ -1041,7 +1045,6 @@ protonet.ui.files.List = (function() {
         return false;
       }
       
-      this.previousPath = this.currentPath;
       this.open(urlParameters.path);
       return true;
     },
@@ -1130,13 +1133,10 @@ protonet.ui.files.List = (function() {
     },
     
     _markerKeydown: function(event) {
-      if (this.$fileDetails.is(":visible")) {
-        return;
-      }
-      
       this.typedCharacters = this.typedCharacters || "";
       
       var preventDefault,
+          inFileDetails   = this.$fileDetails.is(":visible"),
           shiftKey        = event.shiftKey,
           altKey          = event.altKey,
           ctrlKey         = event.ctrlKey && !altKey,
@@ -1156,7 +1156,7 @@ protonet.ui.files.List = (function() {
       
       switch(keyCode) {
         case KEY_ENTER:
-          if (this.$marked.length === 1) {
+          if (this.$marked.length === 1 && !inFileDetails) {
             preventDefault = true;
             this.$marked.dblclick();
           }
@@ -1176,6 +1176,8 @@ protonet.ui.files.List = (function() {
           this.$fileActions.find(".remove").click();
           break;
         case KEY_UP:
+          if (inFileDetails) { break; }
+          
           var $first = this.$marked.first(),
               $prev  = $first.prev();
           if ($first.length && $prev.length) {
@@ -1196,6 +1198,8 @@ protonet.ui.files.List = (function() {
           preventDefault = true;
           break;
         case KEY_DOWN:
+          if (inFileDetails) { break; }
+          
           var $last = this.$marked.last(),
               $next = $last.next();
           if ($last.length && $next.length) {
@@ -1221,6 +1225,8 @@ protonet.ui.files.List = (function() {
           preventDefault = true;
           break;
         default:
+          if (inFileDetails) { break; }
+          
           // Select all on CTRL + A
           if (keyCode === 65 && (ctrlKey || metaKey)) {
             preventDefault = true;
@@ -1256,7 +1262,10 @@ protonet.ui.files.List = (function() {
           }
       }
       
-      this.mark($newMarked);
+      if (!inFileDetails) {
+        this.mark($newMarked);
+      }
+      
       if (preventDefault) {
         event.preventDefault();
       }

@@ -43,7 +43,8 @@ protonet.ui.files.File = (function() {
     },
     
     renderInto: function($container) {
-      this.$element.appendTo($container);
+      // Using native code here for best speed
+      $container[0].appendChild(this.$element[0]);
       protonet.trigger("file.rendered", this.$element);
     },
     
