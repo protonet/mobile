@@ -257,9 +257,22 @@ protonet.ui.files.List = (function() {
       }
       
       files = sortByName(files);
-      $.each(files, function(i, file) {
-        new protonet.ui.files.File(file, this).renderInto(this.$tbody);
-      }.bind(this));
+      
+      var chunk = 4,
+          that  = this,
+          render = function(files) {
+            $.each(files, function(i, file) {
+              new protonet.ui.files.File(file, that).renderInto(that.$tbody);
+            });
+          };
+      
+      if (files.length > chunk) {
+        render(files.slice(0, chunk));
+        // This little timeout makes the perceived rendering much faster
+        setTimeout(function() { render(files.slice(chunk)); }, 50);
+      } else {
+        render(files);
+      }
     },
     
     /**
@@ -1133,6 +1146,9 @@ protonet.ui.files.List = (function() {
     },
     
     _markerKeydown: function(event) {
+      // TODO: Split this up in marker and file actions logic
+      // this saves some checks whether the fileDetails are visible
+      
       this.typedCharacters = this.typedCharacters || "";
       
       var preventDefault,
