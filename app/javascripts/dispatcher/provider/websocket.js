@@ -33,7 +33,7 @@ protonet.dispatcher.provider.WebSocket = {
       protonet.trigger("socket.connected", true);
     }.bind(this);
     
-    this.socket.onclose = this.socket.onerror = function() {
+    var onClose = function() {
       if (this.hadConnection) {
         protonet.trigger("socket.connected", false);
       } else {
@@ -42,6 +42,9 @@ protonet.dispatcher.provider.WebSocket = {
         protonet.trigger("socket.reinitialize");
       }
     }.bind(this);
+    
+    this.socket.onclose = onClose;
+    this.socket.onerror = onClose;
     
     $window
       .bind("beforeunload.websockets", function() {
@@ -69,6 +72,11 @@ protonet.dispatcher.provider.WebSocket = {
       return;
     }
     $window.unbind(".websockets");
+    
+    this.socket.onmessage = $.noop;
+    this.socket.onclose = $.noop;
+    this.socket.onerror = $.noop;
+    
     this.socket.close();
   },
   
