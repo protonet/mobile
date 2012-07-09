@@ -4,8 +4,8 @@ protonet.dispatcher.provider.WebSocket = {
   },
   
   initialize: function() {
-    protonet.trigger("socket.initialized");
     this.buffer = "";
+    protonet.trigger("socket.initialized");
   },
 
   connect: function() {
