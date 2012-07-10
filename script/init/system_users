@@ -19,7 +19,7 @@ def mount from, to
   else
     system_user_folder = to.match(/system_users\/([\w\.\-\_]+)/)
     `mkdir -p #{BASE_DIR}/#{system_user_folder}/channels`
-    `ln -s "#{BASE_DIR}/#{from}" "#{BASE_DIR}/#{to}"`
+    `ln -s -f "#{BASE_DIR}/#{from}" "#{BASE_DIR}/#{to}"`
   end
 end
 

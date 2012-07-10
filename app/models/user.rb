@@ -32,9 +32,7 @@ class User < ActiveRecord::Base
   after_create :mark_invitation_as_accepted, :if => :invitation_token
   after_create :create_folder, :if => lambda {|u| 
     !u.stranger? && 
-    !u.system? && 
-    !Rails.env.test? &&
-    !Rails.env.cucumber? 
+    !u.system?
   }
   after_create :refresh_system_users, :if => lambda {|u| !u.stranger? && !u.system? && Rails.env.production? }
   
@@ -44,9 +42,7 @@ class User < ActiveRecord::Base
 
   after_update :update_system_user_folder, :if => lambda {|u| 
     !u.stranger? && 
-    !u.system? && 
-    !Rails.env.test? &&
-    !Rails.env.cucumber? 
+    !u.system?
   }
   
   validates_uniqueness_of :email, :if => lambda {|u| !u.stranger?}

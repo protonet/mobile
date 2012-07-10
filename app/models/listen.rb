@@ -13,9 +13,7 @@ class Listen < ActiveRecord::Base
   after_create  :create_system_folder, :if => lambda {|l| 
     !l.user.stranger? && 
     !l.user.system? && 
-    !l.channel.global? && 
-    !Rails.env.test? &&
-    !Rails.env.cucumber?
+    !l.channel.global?
   }
   
   after_create  :send_subscribe_notification, :if => lambda {|listen| listen.verified? }
