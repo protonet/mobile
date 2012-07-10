@@ -20,7 +20,7 @@ class Channel < ActiveRecord::Base
   
   after_create  :generate_uuid,                     :if => lambda {|c| c.uuid.blank? }
   after_create  :create_folder,                     :if => lambda {|c| !c.global? }
-  after_create  :subscribe_owner,                   :if => lambda {|c| !c.home? && !c.skip_autosubscribe }
+  after_create  :subscribe_owner,                   :if => lambda {|c| !c.home? && !c.skip_autosubscribe && !c.rendezvous? }
   after_create  :subscribe_rendezvous_participant,  :if => lambda {|c| c.rendezvous? }
   after_create  :send_create_notification,          :if => lambda {|c| !c.rendezvous? }
   
