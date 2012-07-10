@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120706122918) do
+ActiveRecord::Schema.define(:version => 20120701092229) do
 
   create_table "app_dashboard_bindings", :force => true do |t|
     t.string   "link_title"
