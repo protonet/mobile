@@ -6,7 +6,8 @@ class SystemWifi
     def supported?
       # TODO: use iwconfig here (didn't work out for me)
       return true if Rails.env != "production"
-      lspci = `lspci`
+      # Our VMs don't support lspci
+      lspci = `lspci` rescue ""
       lspci.include?("Wireless Network") || lspci.include?("Atheros")
     end
     
