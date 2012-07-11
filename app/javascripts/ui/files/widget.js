@@ -33,6 +33,8 @@ protonet.ui.files.Widget = {
       return;
     }
     
+    this.$widget.addClass("upload-allowed");
+    
     this.queue = new protonet.ui.files.Queue({
       browse_button:  this.$dropArea.attr("id"),
       drop_element:   this.$widget.attr("id")
@@ -43,6 +45,8 @@ protonet.ui.files.Widget = {
     if (this.uploader.features.dragdrop) {
       this.$widget.addClass("supports-drag-and-drop");
       this.$dropText.text(protonet.t("DRAG_AND_DROP_HERE"));
+    } else {
+      this.$dropText.text(protonet.t("CLICK_HERE_TO_UPLOAD"));
     }
   },
   

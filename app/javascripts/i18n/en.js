@@ -64,6 +64,7 @@ protonet.i18n = {
   FILE_PREVIEW_ERROR: "No preview available",
   MEEP_FILE_ERROR: "The file you were trying to share doesn't seem to exist",
   CONFIRM_CANCEL: "This will cancel the upload. Are you sure?",
+  CLICK_HERE_TO_UPLOAD: "Click here to upload files",
   
   FILE_LIST_READ_ACCESS_DENIED_ERROR: "You don't have access to this folder",
   FILE_INFO_READ_ACCESS_DENIED_ERROR: "You don't have access to this file",

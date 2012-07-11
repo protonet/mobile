@@ -300,7 +300,6 @@
 }
 
 #file-widget-drop-area {
-  cursor: pointer;
   opacity: 0.2;
   filter: Alpha(Opacity=20);
   position: absolute;
@@ -335,6 +334,10 @@
 
 .supports-drag-and-drop #file-widget-drop-area span {
   text-decoration: none;
+}
+
+.upload-allowed #file-widget-drop-area {
+  cursor: pointer;
 }
 
 .dragover-possible #file-widget-drop-area,

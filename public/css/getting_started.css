@@ -1,5 +1,4 @@
 .getting-started {
-  font-family: Schoolbell, "Comic Sans MS";
   background: -moz-linear-gradient(#FE6, #F5DA41, #F6EF97);
   background: -webkit-linear-gradient(#FE6, #F5DA41, #F6EF97);
   background: linear-gradient(#FE6, #F5DA41, #F6EF97);
@@ -7,17 +6,17 @@
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.5), inset 0 0 1px rgba(255, 255, 255, .8), inset 0 6px 6px rgba(0, 0, 0, .1);
   padding: 15px 15px 15px 18px;
   margin-left: -3px;
-  text-shadow: 0 1px 1px #fff;
   margin-bottom: 24px;
   overflow: hidden;
 }
 
 .getting-started h4 {
   position: relative;
-  font-size: 20px;
-  padding-left: 38px;
-  line-height: 1.1;
+  font-size: 16px;
+  padding-left: 36px;
+  line-height: 1.2;
   margin-bottom: 20px;
+  text-shadow: 0 1px 1px #fff;
 }
 
 .getting-started h4 img {
@@ -27,13 +26,13 @@
   left: -3px;
   top: 50%;
   margin-top: -14px;
-  -webkit-transform: rotate(-3deg) translate3d(0, 0, 0);
-  -moz-transform: rotate(-3deg) translate3d(0, 0, 0);
-  transform: rotate(-3deg) translate3d(0, 0, 0);
+  -webkit-transform: rotate(-4deg) translate3d(0, 0, 0);
+  -moz-transform: rotate(-4deg) translate3d(0, 0, 0);
+  transform: rotate(-4deg) translate3d(0, 0, 0);
 }
 
 .getting-started-close-link {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: bold;
   position: absolute;
   text-decoration: none;
@@ -47,7 +46,6 @@
 
 .getting-started li {
   margin-top: 14px;
-  font-size: 15px;
   line-height: 1.4;
   position: relative;
 }
@@ -63,7 +61,7 @@
 }
 
 .getting-started p {
-  font-size: 13px;
+  font-size: 11px;
   line-height: 1.5;
   color: #555;
 }
