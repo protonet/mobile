@@ -118,11 +118,17 @@ protonet.ui.files.File = (function() {
           event.stopPropagation();
         }.bind(this),
         
-        click: false,
-        
         dblclick: false,
         
-        blur: this._saveRename.bind(this, $input)
+        click: false,
+        
+        blur: function() {
+          setTimeout(function() {
+            if (!$input.is(":focus")) {
+              this._saveRename($input);
+            }
+          }.bind(this), 100);
+        }.bind(this)
       });
       
       $fileName.html($input);
@@ -170,7 +176,7 @@ protonet.ui.files.File = (function() {
     
     // --------------------------------------- PRIVATE --------------------------------------- \\
     _saveRename: function($input) {
-      $input.unbind("blur");
+      $input.off("blur");
       
       var oldName = this.data.name,
           newName = $.trim($input.val());
