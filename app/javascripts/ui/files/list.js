@@ -223,15 +223,6 @@ protonet.ui.files.List = (function() {
       
       this.uploader.setTargetFolder(path);
       protonet.utils.History.push(protonet.data.File.getUrl(path));
-      
-      if (this.previousPath) {
-        var previousFile = this.getFile(this.previousPath);
-        if (previousFile) {
-          this.mark(previousFile.$element);
-          this.scrollTo(previousFile.$element);
-        }
-        delete this.previousPath;
-      }
     },
     
     /**
@@ -260,18 +251,27 @@ protonet.ui.files.List = (function() {
       
       var chunk = 4,
           that  = this,
-          render = function(files) {
+          render = function(files, done) {
             $.each(files, function(i, file) {
               new protonet.ui.files.File(file, that).renderInto(that.$tbody);
             });
-          };
+            
+            if (done && this.previousPath) {
+              var previousFile = this.getFile(this.previousPath) || this.getFolder(this.previousPath);
+              if (previousFile) {
+                this.mark(previousFile.$element);
+                this.scrollTo(previousFile.$element);
+              }
+              delete this.previousPath;
+            }
+          }.bind(this);
       
       if (files.length > chunk) {
         render(files.slice(0, chunk));
         // This little timeout makes the perceived rendering much faster
-        setTimeout(function() { render(files.slice(chunk)); }, 50);
+        setTimeout(function() { render(files.slice(chunk), true); }, 50);
       } else {
-        render(files);
+        render(files, true);
       }
     },
     
