@@ -256,19 +256,20 @@ protonet.ui.files.List = (function() {
               new protonet.ui.files.File(file, that).renderInto(that.$tbody);
             });
             
-            if (done && this.previousPath) {
-              var previousFile = this.getFile(this.previousPath) || this.getFolder(this.previousPath);
+            if (done && that.previousPath) {
+              var previousFile = that.getFile(that.previousPath) || that.getFolder(that.previousPath);
               if (previousFile) {
-                this.mark(previousFile.$element);
-                this.scrollTo(previousFile.$element);
+                that.mark(previousFile.$element);
+                that.scrollTo(previousFile.$element);
               }
-              delete this.previousPath;
+              delete that.previousPath;
             }
-          }.bind(this);
+          };
       
       if (files.length > chunk) {
+        // Render a little amount of items first and render the rest a few milliseconds later
+        // This makes the perceived rendering much faster
         render(files.slice(0, chunk));
-        // This little timeout makes the perceived rendering much faster
         setTimeout(function() { render(files.slice(chunk), true); }, 50);
       } else {
         render(files, true);

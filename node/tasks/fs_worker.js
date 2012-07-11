@@ -164,6 +164,8 @@ function copyTo(source, target, reply) {
       
       fs.link(source, target, function(err) {
         fs.chmod(target, FILE_PERMISSIONS);
+        touch(target);
+        
         if (err) {
           reply(err, createResponseForCopy(source, target));
         } else {
@@ -266,7 +268,7 @@ exports.lastModified = function(params, reply) {
           size:     result.size,
           type:     "file",
           mime:     lookupMime(f),
-          modified: Math.max(result.ctime, result.mtime)
+          modified: result.mtime
         });
       }
     }
