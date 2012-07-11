@@ -117,9 +117,7 @@ exports.init = function(amqpConnection) {
         var targetDir   = ROOT_DIR + (message.params.target_folder || ""),
             responseArr = [];
 
-        try {
-          mkdirSync(targetDir, FOLDER_PERMISSIONS);
-        } catch (e) {}
+        mkdirSync(targetDir, FOLDER_PERMISSIONS);
         
         Step(function() {
           for (var i in message.files) {
@@ -129,11 +127,11 @@ exports.init = function(amqpConnection) {
             var stat = fs.statSync(file.path);
             var callback = this.parallel();
             
-            fs.rename(file.path, newFilePath, function() {
+            fs.rename(file.path, newFilePath, function(err) {
               fs.chmod(newFilePath, FILE_PERMISSIONS);
               
               try {
-                // this doesn't work with file paths including umlauts... (might be OSX related only)
+                // this doesn't work with file paths including umlauts
                 xattr.set(newFilePath, "user.owner", message.params.user_id || -1);
               } catch(e) {
                 console.log("Failed to set extended attributes on", newFilePath);

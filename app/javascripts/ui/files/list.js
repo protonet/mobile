@@ -266,14 +266,12 @@ protonet.ui.files.List = (function() {
             }
           };
       
-      if (files.length > chunk) {
-        // Render a little amount of items first and render the rest a few milliseconds later
-        // This makes the perceived rendering much faster
-        render(files.slice(0, chunk));
-        setTimeout(function() { render(files.slice(chunk), true); }, 50);
-      } else {
-        render(files, true);
-      }
+      // Render a little amount of items first and render the rest a few milliseconds later
+      // This makes the perceived rendering much faster
+      render(files.slice(0, chunk));
+      setTimeout(function() {
+        render(files.slice(chunk), true);
+      }, 50);
     },
     
     /**
@@ -810,6 +808,22 @@ protonet.ui.files.List = (function() {
         
         $element.data("instance").progress(percent);
       }.bind(this));
+      
+      this.uploader.bind("CancelUpload", function(uploader) {
+        $.each(uploader.files, function(i, file) {
+          if (file.status === plupload.DONE) {
+            return;
+          }
+          
+          var $element = $("#" + file.id);
+          
+          if (!$element.length) {
+            return;
+          }
+          
+          $element.data("instance").destroy();
+        });
+      });
       
       this.uploader.bind("Error", function(uploader, error) {
         var file = error.file;
