@@ -268,7 +268,7 @@ exports.lastModified = function(params, reply) {
           size:     result.size,
           type:     "file",
           mime:     lookupMime(f),
-          modified: result.mtime
+          modified: Math.max(result.mtime, result.ctime)
         });
       }
     }
