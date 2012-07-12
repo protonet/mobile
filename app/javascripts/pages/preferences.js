@@ -99,7 +99,11 @@ protonet.p("preferences", function($page) {
     new protonet.ui.Overlay(protonet.t("SOFTWARE_UPDATE_SUCCESSFUL"));
     
     setTimeout(function() { location.href = "/"; }, (20).seconds());
-    $releaseUpdateProgressConsole.data("quakeStyleConsole").close();
+    
+    var progressConsole = $releaseUpdateProgressConsole.data("quakeStyleConsole");
+    if (progressConsole) {
+      progressConsole.close();
+    }
     
     event.stopPropagation();
   });

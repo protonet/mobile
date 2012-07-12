@@ -67,36 +67,43 @@ $.behaviors({
 });
 
 
-// TODO: Make ContextMenu part of behaviors someday
+// TODO: Make ContextMenu part of behaviors
 (function() {
   var $meep;
   
   var contextMenu = new protonet.ui.ContextMenu("a.meep-action-link", {
     "share/reply": function($target, close) {
       var data  = $meep.data("meep");
-      protonet.trigger("modal_window.hide").trigger("form.share_meep", data.id);
+      if (data) {
+        protonet.trigger("modal_window.hide").trigger("form.share_meep", data.id);
+      }
       close();
     },
 
     "show detail view": function($target, close) {
-      var url = $meep.data("instance").getUrl();
-      protonet.open(url);
+      var instance = $meep.data("instance");
+      if (instance) {
+        protonet.open(instance.getUrl());
+      }
       close();
     },
     
     "delete message": function($target, close) {
       var instance = $meep.data("instance");
       
-      $.ajax({
-        url:     instance.getUrl(),
-        type:    "delete",
-        success: function() {
-          protonet.trigger("flash_message.notice", protonet.t("MEEP_DELETION_SUCCESS"));
-        },
-        error: function() {
-          protonet.trigger("flash_message.error", protonet.t("MEEP_DELETION_ERROR"));
-        }
-      });
+      if (instance) {
+        $.ajax({
+          url:     instance.getUrl(),
+          type:    "delete",
+          success: function() {
+            protonet.trigger("flash_message.notice", protonet.t("MEEP_DELETION_SUCCESS"));
+          },
+          error: function() {
+            protonet.trigger("flash_message.error", protonet.t("MEEP_DELETION_ERROR"));
+          }
+        });
+      }
+      
       close();
     }
   }, "context-menu-meep");
