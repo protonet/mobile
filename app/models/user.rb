@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   
   devise :recoverable, :database_authenticatable, :registerable, :encryptable, :rememberable, :token_authenticatable, :encryptor => :restful_authentication_sha1
 
-  attr_accessible :login, :email, :first_name, :last_name, :password, :password_confirmation, :avatar_url,
+  attr_accessible :login, :email, :first_name, :last_name, :password, :avatar_url,
     :channels_to_subscribe, :external_profile_url, :node, :node_id
 
   attr_accessor :channels_to_subscribe, :invitation_token, :avatar_url
@@ -196,7 +196,7 @@ class User < ActiveRecord::Base
   # Passwords are always required if it's a new record, or if the password
   # or confirmation are being set somewhere.
   def password_required?
-    !stranger? && ( !persisted? || !password.nil? || !password_confirmation.nil? )
+    !stranger? && ( !persisted? || !password.nil?)
   end
   
   # skip validation if the user is a logged out (stranger) user

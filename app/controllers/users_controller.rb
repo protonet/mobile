@@ -134,7 +134,7 @@ class UsersController < ApplicationController
       flash[:notice] = "You've successfully changed your password!"
       publish "users", @user.id, { :trigger => 'user.changed_password' }
     else
-      flash[:error]  = "There was an error changing your password: #{@user.errors.full_messages.to_sentence}."
+      flash[:error]  = "#{@user.errors.full_messages.to_sentence}."
     end
     respond_to_user_update(@user)
   end
