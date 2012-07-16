@@ -346,24 +346,26 @@ a.close-link:hover {
   background: #FFFBE0;
   border: solid #FED144;
   border-width: 4px 1px 1px;
-  cursor: default;
+  cursor: auto;
   color: #000;
 }
 
 /** Hover Hint */
 .hover-hint {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   border-radius: 4px;
   position: absolute;
   background: #333;
-  padding: 3px 8px;
+  padding: 8px;
+  max-width: 300px;
   color: #fff;
-  font-size: 11px;
-  z-index: 20;
+  font-size: 12px;
+  z-index: 102;
   font-style: normal;
 }
 
 .hover-hint:after {
-  border: 5px solid transparent;
+  border: 8px solid transparent;
   content: "";
   position: absolute;
   width: 0;
@@ -371,7 +373,7 @@ a.close-link:hover {
 }
 
 .hover-hint-top {
-  margin-top: -9px;
+  margin-top: -14px;
 }
 
 .hover-hint-right {
@@ -379,10 +381,10 @@ a.close-link:hover {
 }
 
 .hover-hint-top:after {
-  border-top: 5px solid #333;
-  margin-left: -5px;
+  border-top: 8px solid #333;
+  margin-left: -8px;
   left: 50%;
-  bottom: -10px;
+  bottom: -16px;
 }
 
 .hover-hint-right:after {
@@ -390,6 +392,10 @@ a.close-link:hover {
   margin-top: -5px;
   top: 50%;
   left: -10px;
+}
+
+.hover-hint h4 {
+  margin-bottom: 5px;
 }
 
 .hint[data-hover-hint] {

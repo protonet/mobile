@@ -211,6 +211,10 @@
   height: 50px;
 }
 
+.subpage input[type=radio] {
+  vertical-align: middle;
+}
+
 
 .checkbox-row {
   background-color: #f3f3f3;

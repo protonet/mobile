@@ -16,13 +16,11 @@ Feature: Managing your profile
     # failure
     And I fill in "current_password" with "incorrect" within "form[data-cucumber='change-password']"
     And I fill in "password" with "654321" within "form[data-cucumber='change-password']"
-    And I fill in "password_confirmation" with "654321" within "form[data-cucumber='change-password']"
     And I press "Save" within "form[data-cucumber='change-password']"
     Then I should see "an error changing" within ".flash-message"
     # success
     And I fill in "current_password" with "123456" within "form[data-cucumber='change-password']"
     And I fill in "password" with "654321" within "form[data-cucumber='change-password']"
-    And I fill in "password_confirmation" with "654321" within "form[data-cucumber='change-password']"
     And I press "Save" within "form[data-cucumber='change-password']"
     Then I should see "successfully changed" within ".flash-message"
     

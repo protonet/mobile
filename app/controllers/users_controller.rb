@@ -1,11 +1,11 @@
 class UsersController < ApplicationController
   include Rabbit
   
-  filter_resource_access :collection => [:index, :my_profile, :channels, :info, :search]
+  filter_resource_access :additional_member => [:generate_new_password, :update_roles, :change_password], :collection => [:index, :my_profile, :channels, :info, :search]
   
   before_filter :redirect_to_my_profile,  :only => :show
-  before_filter :prepare_target_users,    :only => [:send_system_message, :send_javascript]
-  after_filter  :publish_admin_users,     :only => :update_user_admin_flag
+  before_filter :prepare_target_users,    :only => :send_javascript
+  after_filter  :publish_admin_users,     :only => :update_roles
   
   def index
     @nav = "users"
@@ -96,51 +96,32 @@ class UsersController < ApplicationController
     render :nothing => true
   end
   
-  def update_user_admin_flag
-    if current_user.admin? && current_user.valid_password?(params[:admin_password])
-      user = User.find(params[:user_id])
-      if params[:admin] == 'true'
-        user.add_to_role('admin')
-        flash[:notice] = "Successfully made '#{user.login}' an admin!"
-      else
-        user.remove_from_role('admin')
-        flash[:notice] = "Successfully removed '#{user.login}' from the list of admins!"
-      end
-      
-      respond_to_user_update(user)
-    else
-      flash[:error] = "The admin password is wrong"
-      head(403)
-    end
-  end
-  
   def update_roles
-    if current_user.admin?
-      user = User.find(params[:user_id])
-      user.roles = params[:constrained_rights] ? [Role.find_by_title("invitee")] : [Role.find_by_title("user")]
-      flash[:notice] = "Successfully update roles!"
-      respond_to_user_update(user)
-    else
-      flash[:error] = "Only admins can do that!"
-      head(403)
+    user = User.find(params[:user_id])
+    
+    user.roles = case params[:role]
+      when 'admin'
+        flash[:notice] = "The user @#{user.display_name} is now an administrator"
+        [Role.find_by_title('user'), Role.find_by_title('admin')]
+      when 'user'
+        flash[:notice] = "The user @#{user.display_name} is now a normal user"
+        [Role.find_by_title('user')]
+      else
+        flash[:notice] = "The user @#{user.display_name} is now a user with constrained rights"
+        [Role.find_by_title('invitee')]
     end
-  rescue
-    flash[:error] = "Could not update the roles, sorry."
-    head(403)
+    
+    respond_to_user_update(user)
   end
   
   def generate_new_password
-    if current_user.admin?
-      user = User.find(params[:user_id])
-      new_password  = User.pronouncable_password
-      user.password = new_password
-      if params[:send_email]
-        flash[:sticky] = "Generated and sent new password for #{user.login}: \"#{new_password}\"" if user.save && Mailer.password_reset(new_password, user).deliver
-      else
-        flash[:sticky] = "Generated new password for #{user.login}: \"#{new_password}\"" if user.save
-      end
+    user = User.find(params[:user_id])
+    new_password  = User.pronouncable_password
+    user.password = new_password
+    if params[:send_email]
+      flash[:sticky] = "Generated and sent new password for @#{user.display_name}: \"#{new_password}\"" if user.save && Mailer.password_reset(new_password, user).deliver
     else
-      flash[:error]  = "You are not authorized to do this, please check your password and admin rights."
+      flash[:sticky] = "Generated new password for @#{user.display_name}: \"#{new_password}\"" if user.save
     end
     
     respond_to_user_update(user)
@@ -148,7 +129,6 @@ class UsersController < ApplicationController
   
   def change_password
     @user = User.find(params[:id])
-    @user.errors.add(:password_confirmation, 'does not match your new password') if params[:password] != params[:password_confirmation]
     if current_user.can_edit?(@user) && @user.errors.empty? && @user.update_with_password(params)
       sign_in(@user, :bypass => true)
       flash[:notice] = "You've successfully changed your password!"
@@ -162,7 +142,7 @@ class UsersController < ApplicationController
   def delete
     user = User.find(params[:user_id])
     if current_user.admin? && current_user != user
-      user.destroy && flash[:notice] = "You have deleted the user #{user.login}!"
+      user.destroy && flash[:notice] = "You have deleted the user @#{user.display_name}!"
     end
     redirect_to :action => 'index'
   end
@@ -208,12 +188,6 @@ class UsersController < ApplicationController
   def send_javascript
     @target_users.each {|u| publish("users", u.id, { :eval => params[:javascript] }) }
     flash[:notice] = 'The javascript has been executed'
-    respond_to_preference_update
-  end
-  
-  def send_system_message
-    @target_users.each {|u| publish("users", u.id, { :eval => "protonet.trigger('flash_message.sticky', '#{params[:message]}')" }) }
-    flash[:notice] = 'The system message has been sent'
     respond_to_preference_update
   end
   

@@ -59,7 +59,6 @@ Given /^I register as "([^\"]*)" "([^\"]*)"$/ do |first_name, last_name|
     fill_in 'user_last_name',    :with => last_name
     fill_in 'user_email',    :with => "#{first_name}.#{last_name}@foo.com"
     fill_in 'user_password', :with => '12345678'
-    fill_in 'user_password_confirmation', :with => '12345678'
     click_button('register')
   end
   within('#my-widget') do

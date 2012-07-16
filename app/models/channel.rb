@@ -86,11 +86,8 @@ class Channel < ActiveRecord::Base
         :system       => true,
         :public       => false
       )
-      Meep.create(
-        :message  => message,
-        :user     => User.system,
-        :channel  => system_channel
-      )
+      
+      Meep.create_system_message(message)
       User.admins.each { |admin| admin.subscribe(system_channel) }
     end
     system_channel

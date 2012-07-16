@@ -19,7 +19,6 @@ Feature: Getting Started
     Then I should see "admin" within ".users-page h2"
     And I fill in "current_password" with "admin" within "form[data-cucumber='change-password']"
     And I fill in "password" with "12345" within "form[data-cucumber='change-password']"
-    And I fill in "password_confirmation" with "12345" within "form[data-cucumber='change-password']"
     And I press "Save" within "form[data-cucumber='change-password']"
     Then I should see "successfully changed" within ".flash-message"
     

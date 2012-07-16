@@ -16,7 +16,8 @@ class User < ActiveRecord::Base
   has_many  :channels,          :through => :listens, :select => "channels.*, listens.id AS listen_id, listens.last_read_meep as last_read_meep"
   has_many  :owned_channels,    :class_name => 'Channel', :foreign_key => :owner_id
   has_many  :invitations
-  has_and_belongs_to_many  :roles
+  has_and_belongs_to_many  :roles, :after_add => :handle_admin, :after_remove => :unhandle_admin
+  
   has_attached_file :avatar, :default_url => configatron.default_avatar, :preserve_files => true
   
   scope :registered, :conditions => "temporary_identifier IS NULL AND users.id != -1 AND users.node_id = 1"
@@ -44,6 +45,7 @@ class User < ActiveRecord::Base
     !u.stranger? && 
     !u.system?
   }
+  
   
   validates_uniqueness_of :email, :if => lambda {|u| !u.stranger?}
   validates_uniqueness_of :login, :if => lambda {|u| !u.stranger?}
@@ -94,6 +96,22 @@ class User < ActiveRecord::Base
       :avatar         => user.avatar.url,
       :subscriptions  => user.channels.map(&:id)
     }
+  end
+  
+  def self.build_system_users
+    registered.includes(:channels, :listens).each do |user|
+      user.create_folder
+      user.channels.verified.local.each do |channel|
+        channel_path = "channels/#{channel.id}"
+        if channel.rendezvous?
+          participant = (channel.rendezvous_participants - [user]).first || User.new(:login => "unknown (#{channel.rendezvous})")
+          command = "mount #{channel_path} \"system_users/#{user.login}/channels/shared between you and #{participant.login}\""
+        else
+          command = "mount #{channel_path} system_users/#{user.login}/channels/#{channel.name}"
+        end
+        user.system_users_script(command)
+      end
+    end
   end
   
   # devise 1.2.1 calls this
@@ -242,17 +260,14 @@ class User < ActiveRecord::Base
   
   def add_to_role(role_name)
     role = Role.find_by_title!(role_name.to_s)
-    self.roles << role unless roles.include?(role)
-    if role_name == 'admin'
-      subscribe(Channel.system)
-      subscribe(Channel.support) if Rails.env.production? rescue nil
+    unless roles.include?(role)
+      self.roles << role
     end
   end
   
   def remove_from_role(role_name)
     role = Role.find_by_title!(role_name.to_s)
     self.roles -= [role]
-    unsubscribe(Channel.system) if role_name == 'admin'
   end
   
   def admin?
@@ -411,21 +426,24 @@ class User < ActiveRecord::Base
     end
   end
   
-  def self.build_system_users
-    registered.includes(:channels, :listens).each do |user|
-      user.create_folder
-      user.channels.verified.local.each do |channel|
-        channel_path = "channels/#{channel.id}"
-        if channel.rendezvous?
-          participant = (channel.rendezvous_participants - [user]).first || User.new(:login => "unknown (#{channel.rendezvous})")
-          command = "mount #{channel_path} \"system_users/#{user.login}/channels/shared between you and #{participant.login}\""
-        else
-          command = "mount #{channel_path} system_users/#{user.login}/channels/#{channel.name}"
-        end
-        user.system_users_script(command)
+  def handle_admin(role)
+    if role.title == "admin"
+      # Only create a system message when there's someone in listening
+      # This avoids creating a system message for user "admin" during "rake db:setup"
+      if Channel.system.users.registered.size > 0
+        Meep.create_system_message("The user @#{self.display_name} is now an administrator") 
       end
+      
+      subscribe(Channel.system)
+      subscribe(Channel.support) if Rails.env.production? rescue nil
     end
   end
   
+  def unhandle_admin(role)
+    if role.title == "admin"
+      unsubscribe(Channel.system)
+      Meep.create_system_message("The user @#{self.display_name} is no longer an administrator")
+    end
+  end
 end
 

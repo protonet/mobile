@@ -46,6 +46,10 @@ class Meep < ActiveRecord::Base
     column_names + ['socket_id']
   end
   
+  def self.create_system_message(message)
+    Meep.create!(:message => message, :user => User.system, :channel => Channel.system)
+  end
+  
   def local?
     node_id == 1
   end
