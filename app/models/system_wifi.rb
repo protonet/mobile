@@ -72,7 +72,7 @@ class SystemWifi
       end
       # reload monit
       SystemMonit.reload!
-      sleep 5
+      sleep 10
       # and start with new config
       settings = ""
       settings += default_settings
