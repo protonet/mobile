@@ -40,6 +40,7 @@ window.$document = $(document);
 //= require "ui/header.js"
 //= require "ui/modal_window.js"
 //= require "ui/overlay.js"
+//= require "ui/dialog.js"
 //= require "ui/droppables.js"
 //= require "ui/files/queue.js"
 //= require "ui/audio_player.js"

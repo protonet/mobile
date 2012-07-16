@@ -38,7 +38,7 @@ protonet.ui.Overlay = Class.create({
         }
       }.bind(this));
       
-      $("html").on("keydown", function(event) {
+      $("html").on("keydown.overlay", function(event) {
         if (event.keyCode === 27) {
           this.hide();
           event.preventDefault();
@@ -47,10 +47,16 @@ protonet.ui.Overlay = Class.create({
     }
   },
   
+  _unobserve: function() {
+    $("html").off(".overlay");
+  },
+  
   hide: function() {
     this.$overlay.fadeOut("fast", function() {
       this.$overlay.remove();
     }.bind(this));
+    
+    this._unobserve();
   },
   
   show: function() {

@@ -244,3 +244,39 @@
   position: relative;
   top: 2px;
 }
+
+.user-roles-table {
+  border: 1px solid #666;
+  border-collapse: separate;
+  border-spacing: 2px;
+}
+
+.user-roles-table td {
+  padding: 8px;
+}
+
+.user-roles-table .yes {
+  background: #00cc00;
+}
+
+.user-roles-table .no {
+  background: #e75c79;
+}
+
+.user-roles-table + .hint {
+  margin-top: 20px;
+}
+
+.user-roles-table tr:first-child td {
+  width: 290px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.user-roles-table .label {
+  text-align: right;
+}
+
+.user-roles-table tr:first-child td:first-child {
+  background: none;
+}

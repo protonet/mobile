@@ -69,6 +69,11 @@
   
   <%- if current_user.admin? && !@user.stranger?  && !@user.anonymous? -%>
     <h3>Permissions <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
+    <div class="info-box">
+      <h4>User types</h4>
+      <p><a id="show-comparison-chart">Learn more</a> about the different user types and their permissions.</p>
+    </div>
+    
     <%= form_tag({ :action => 'update_roles' }, { :remote => true, 'data-type' => 'html', 'data-cucumber' => 'admin-settings' }) do %>
       <%= hidden_field_tag :id, @user.id %>
       <%= hidden_field_tag :user_id, @user.id %>
@@ -76,17 +81,17 @@
       <div class="form-field">
         <%= label_tag :admin, 'Administrator:' %>
         <%= radio_button_tag :role, 'admin', @user.admin?, :id => 'role-admin' %>
-        <a data-hover-hint="top" title="<h4>Administrator</h4>Users with administration rights can manage channels, other users and system related things." class="hint">(?)</a>
+        <a data-hover-hint="top" title="<h4>Administrator</h4> Users with administration rights can manage channels, other users and system related things." class="hint">(?)</a>
       </div>
       <div class="form-field">
         <%= label_tag :admin, 'User:' %>
         <%= radio_button_tag :role, 'user', !@user.invitee? && !@user.admin?, :id => 'role-user' %>
-        <a data-hover-hint="top" title="<h4>User</h4>Normal users can see all channels and users. They're not allowed to delete users or channels they didn't create." class="hint">(?)</a>
+        <a data-hover-hint="top" title="<h4>User</h4> Normal users can see all channels and users. They're not allowed to delete users or channels they didn't create." class="hint">(?)</a>
       </div>
       <div class="form-field">
         <%= label_tag :admin, 'User (constrained rights):' %>
         <%= radio_button_tag :role, 'invitee', @user.invitee?, :id => 'role-invitee' %>
-        <a data-hover-hint="top" title="<h4>User with constrained rights</h4>Users with constrained rights can only see channels they were susbcribed to (by an Administrator). They aren't able to see users from other channels. This setting can be perfectly used for customers or temporary users." class="hint">(?)</a>
+        <a data-hover-hint="top" title="<h4>User with constrained rights</h4>Users with constrained rights can only see channels they were susbcribed to (by an administrator). They aren't able to see users from other channels. This user type can be perfectly used for customers." class="hint">(?)</a>
       </div>
       <%= button "Save" %>
     <% end %>
@@ -100,5 +105,8 @@
       <%= button "Delete", 'data-confirm' => 'Do you really want to delete this user? There\'s no undo.' %>
     <% end %>
   <%- end %>
-
+  
+  <script type="protonet/template" id="user-roles-table-template">
+    <%= render :partial => 'shared/user_roles_table' %>
+  </script>
 </output>

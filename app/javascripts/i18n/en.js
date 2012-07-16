@@ -41,8 +41,10 @@ protonet.i18n = {
   PLEASE_ENTER_KEYWORD: "Please enter a keyword to search",
   NO_RESULTS_FOUND: "No results found",
   AVATAR_UPLOAD_ERROR: "Your photo couldn't be upload. Please try again or contact the administrator.",
-  WLAN_UPDATED: "<h3>Your WLAN has been updated and restarted</h3>You probably have lost your connection. Please reconnect and reload this page.",
-  SOFTWARE_UPDATE_SUCCESSFUL: "<h3>Congrats, the software update was successful</h3>All services are going down for reboot now. Please wait a few more seconds. You will then be redirected to the home page.",
+  WLAN_UPDATE_HEADLINE: "WLAN has been updated and restarted",
+  WLAN_UPDATE_TEXT: "You probably lost your connection. Please reconnect and reload this page.",
+  SOFTWARE_UPDATE_HEADLINE: "Congrats, the software update was successful",
+  SOFTWARE_UPDATE_TEXT: "All services are going down for reboot now. Please wait a few more seconds. You will then be redirected to the home page.",
   UPLOAD_SUCCESSFUL: "All files uploaded (100 %)",
   UPLOAD_ERROR: "The file named '#{name}' couldn't be uploaded",
   UPLOADING_FILES: "Uploading #{amount} files (#{percent} %)",
@@ -92,5 +94,9 @@ protonet.i18n = {
   
   VERIFY_SUBSCRIPTION: "#{count} user(s) needs to be verified",
   
-  ARE_YOU_SURE: "Are you sure?"
+  CONFIRM_TITLE: "Are you sure?",
+  CONFIRM_OK: "OK",
+  CONFIRM_CANCEL: "Cancel",
+  
+  USER_ROLES_HEADLINE: "Comparison of user types"
 };

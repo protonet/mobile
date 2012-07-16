@@ -65,7 +65,11 @@ protonet.p("preferences", function($page) {
     var overlay,
         interval,
         showOverlay = function() {
-          overlay = new protonet.ui.Overlay(protonet.t("WLAN_UPDATED"));
+          overlay = new protonet.ui.Dialog({
+            "class":  "dialog small",
+            headline: protonet.t("WLAN_UPDATE_HEADLINE"),
+            text:     protonet.t("WLAN_UPDATE_TEXT")
+          });
         },
         hideOverlay = function() {
           overlay && overlay.hide();
@@ -93,10 +97,12 @@ protonet.p("preferences", function($page) {
       return;
     }
     
-    // TODO:  handle server failures
+    // TODO: handle server failures
     // right now a completed request is always handled like a success
-    new protonet.ui.Overlay({
-      html: $("<div>", { "class": "info-message", html: protonet.t("SOFTWARE_UPDATE_SUCCESSFUL") })
+    new protonet.ui.Dialog({
+      "class":  "dialog small",
+      headline: protonet.t("SOFTWARE_UPDATE_HEADLINE"),
+      text:     protonet.t("SOFTWARE_UPDATE_TEXT")
     });
     
     setTimeout(function() { location.href = "/"; }, (20).seconds());

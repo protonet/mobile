@@ -28,14 +28,13 @@ protonet.p("instruments", function($page) {
     if (protonet.config.captive_redirect_only || !protonet.config.user_is_stranger) {
       var htmlEscapedUrl = protonet.utils.escapeHtml(protonet.config.captive_redirect_url),
           urlEncodedUrl  = encodeURIComponent(protonet.config.captive_redirect_url);
-      new protonet.ui.Overlay({
-        html: '<div class="info-message">' +
-              "<h4>Hi " + protonet.config.user_name + ",</h4>" +
-              "<br>Welcome to protonet. Click the following button to enable internet access and to open " +
-              "<strong>" + htmlEscapedUrl.truncate(40) + "</strong>.<br>" +
-              '<a class="button hide-overlay" data-avoid-ajax="1" href="/captive/login?captive_redirect_url=' + urlEncodedUrl + '" target="_blank">' +
-              'Get internet access</a>' +
-              '</div>'
+      new protonet.ui.Dialog({
+        "class":  "dialog small",
+        headline: "Hi " + protonet.config.user_name,
+        content:  "Welcome to protonet. Click the following button to enable internet access and to open " +
+                  "<strong>" + htmlEscapedUrl.truncate(40) + "</strong>.<br>" +
+                  '<a class="button hide-overlay" data-avoid-ajax="1" href="/captive/login?captive_redirect_url=' + urlEncodedUrl + '" target="_blank">' +
+                  'Get internet access</a>'
       });
     }
   }

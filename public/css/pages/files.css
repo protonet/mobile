@@ -305,13 +305,14 @@
   border: 0;
 }
 
-.confirm.overlay .file-list.mini {
+.dialog.overlay .file-list.mini {
   width: 100%;
 }
 
-.confirm.overlay .mini-table-wrapper {
+.dialog.overlay .mini-table-wrapper {
   overflow: auto;
   max-height: 120px;
+  margin-bottom: 20px;
 }
 
 .file-list.mini tr {

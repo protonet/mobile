@@ -1,16 +1,14 @@
-protonet.ui.Confirm = Class.create(protonet.ui.Overlay, {
-  _defaultOptions: {
+protonet.ui.Confirm = Class.create(protonet.ui.Dialog, {
+  confirmDefaultOptions: {
     confirm:  $.noop,
     cancel:   $.noop,
-    headline: protonet.t("ARE_YOU_SURE"),
-    "class":  "confirm",
+    headline: protonet.t("CONFIRM_TITLE"),
     text:     "",
     content:  ""
   },
   
   initialize: function($super, options) {
-    this.defaultOptions = $.extend({}, this.defaultOptions, this._defaultOptions);
-    
+    this.dialogDefaultOptions = $.extend({}, this.dialogDefaultOptions, this.confirmDefaultOptions);
     $super(options);
   },
   
@@ -25,19 +23,17 @@ protonet.ui.Confirm = Class.create(protonet.ui.Overlay, {
   },
   
   show: function($super) {
-    new protonet.utils.Template("confirm-template", this.options).to$().appendTo(this.$overlay);
-    
-    var $output = this.$overlay.find("output");
-    
-    if (this.options.content) {
-      $output.html(this.options.content);
-    } else {
-      $output.remove();
-    }
-    
     $super();
     
-    this.$overlay.find("button.confirm").focus();
+    var $output   = this.$dialog.find("output"),
+        $confirm  = $("<button>", { "class": "confirm",      text: protonet.t("CONFIRM_OK")     }).appendTo($output),
+        $cancel   = $("<button>", { "class": "hide-overlay", text: protonet.t("CONFIRM_CANCEL") }).appendTo($output);
+    
+    if (this.options.content) {
+      $output.prepend(this.options.content);
+    }
+    
+    $confirm.focus();
   },
   
   _observe: function($super) {

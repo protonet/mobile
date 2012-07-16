@@ -1,9 +1,10 @@
 protonet.p("users", function($page) {
-  var $meepContainer    = $page.find("output[data-user-id]"),
-      $loadingIndicator = $meepContainer.next(".progress"),
-      $fileInput        = $page.find("[type=file]"),
-      $avatarForm       = $fileInput.parents("form"),
-      $meepList         = $("<ul>", { "class": "meeps" });
+  var $meepContainer        = $page.find("output[data-user-id]"),
+      $loadingIndicator     = $meepContainer.next(".progress"),
+      $fileInput            = $page.find("[type=file]"),
+      $avatarForm           = $fileInput.parents("form"),
+      $comparisonChartLink  = $("#show-comparison-chart"),
+      $meepList             = $("<ul>", { "class": "meeps" });
   
   var fillUpUsers = function(page) {
     var path = document.location.pathname + ".js" + document.location.search;
@@ -94,4 +95,9 @@ protonet.p("users", function($page) {
     }
   }); 
   
+  $comparisonChartLink.on("click", function() {
+    var $template = new protonet.utils.Template("user-roles-table-template").to$();
+    new protonet.ui.Dialog({ content: $template, headline: protonet.t("USER_ROLES_HEADLINE") });
+    return false;
+  });
 });

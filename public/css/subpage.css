@@ -216,6 +216,43 @@
 }
 
 
+
+.subpage .info-box {
+  color: #333;
+  position: relative;
+  float: right;
+  padding: 10px 10px 10px 45px;
+  background: #ecf1fe;
+  background: rgba(72, 123, 255, 0.1);
+  width: 170px;
+  min-height: 50px;
+}
+
+.subpage .info-box h4 {
+  margin: 0 0 5px 0;
+}
+
+.subpage .info-box p {
+  margin: 0;
+}
+
+.subpage .info-box a {
+  color: #333;
+}
+
+.subpage .info-box::before {
+  content: "i";
+  font-family: Rockwell, Georgia, serif;
+  opacity: 0.2;
+  position: absolute;
+  line-height: 1;
+  left: 10px;
+  bottom: 5px;
+  font-weight: bold;
+  font-size: 60px;
+}
+
+
 .checkbox-row {
   background-color: #f3f3f3;
   cursor: pointer;
