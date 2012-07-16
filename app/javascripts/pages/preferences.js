@@ -1,4 +1,3 @@
-//= require "../ui/overlay.js"
 //= require "../utils/is_server_reachable.js"
 //= require "../lib/jquery.quakeStyleConsole/jquery.quakeStyleConsole.js"
 
@@ -96,7 +95,9 @@ protonet.p("preferences", function($page) {
     
     // TODO:  handle server failures
     // right now a completed request is always handled like a success
-    new protonet.ui.Overlay(protonet.t("SOFTWARE_UPDATE_SUCCESSFUL"));
+    new protonet.ui.Overlay({
+      html: $("<div>", { "class": "info-message", html: protonet.t("SOFTWARE_UPDATE_SUCCESSFUL") })
+    });
     
     setTimeout(function() { location.href = "/"; }, (20).seconds());
     

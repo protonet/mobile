@@ -309,39 +309,40 @@ protonet.ui.files.List = (function() {
       
       new protonet.ui.Confirm({
         text:     protonet.t("CONFIRM_FILE_DELETION"),
-        content:  $wrapper
-      }).done(function() {
-        this._disableMarked();
-        
-        protonet.data.File.remove(this.markedPaths, {
-          success: function(paths) {
-            protonet.trigger("flash_message.notice", protonet.t("REMOVING_FILES_SUCCESS"));
-            
-            this._enableMarked();
-            
-            this.$marked.each(function(i, item) {
-              var $item    = $(item),
-                  instance = $item.data("instance"),
-                  itemPath = instance.data.path;
-              
-              if (paths.indexOf(itemPath) !== -1) {
-                if (this.$tbody.children().length <= paths.length && this.$fileList.is(":visible")) {
-                  this.insertEmptyFolderHint();
+        content:  $wrapper,
+        confirm:  function() {
+          this._disableMarked();
+
+          protonet.data.File.remove(this.markedPaths, {
+            success: function(paths) {
+              protonet.trigger("flash_message.notice", protonet.t("REMOVING_FILES_SUCCESS"));
+
+              this._enableMarked();
+
+              this.$marked.each(function(i, item) {
+                var $item    = $(item),
+                    instance = $item.data("instance"),
+                    itemPath = instance.data.path;
+
+                if (paths.indexOf(itemPath) !== -1) {
+                  if (this.$tbody.children().length <= paths.length && this.$fileList.is(":visible")) {
+                    this.insertEmptyFolderHint();
+                  }
+                  instance.remove();
+                  this.mark($());
                 }
-                instance.remove();
-                this.mark($());
-              }
-            }.bind(this));
-          }.bind(this),
-          error: function(error) {
-            this._enableMarked();
-            
-            this.error({
-              "Rpc::WriteAccessDeniedError": "FILE_DELETE_DENIED_ERROR"
-            }, error);
-          }.bind(this)
-        });
-      }.bind(this));
+              }.bind(this));
+            }.bind(this),
+            error: function(error) {
+              this._enableMarked();
+
+              this.error({
+                "Rpc::WriteAccessDeniedError": "FILE_DELETE_DENIED_ERROR"
+              }, error);
+            }.bind(this)
+          });
+        }.bind(this)
+      });
     },
     
     /**

@@ -2,7 +2,7 @@ protonet.i18n = {
   MEEP_SENT: "[sent!]",
   MEEP_ERROR: "[error!]",
   MEEP_SENDING: "[sending...]",
-  MEEP_ERROR_LONG: "Olala... your message hasn't been sent. Try again!",
+  MEEP_ERROR_LONG: "Oh, your message hasn't been sent. Try again!",
   NO_MEEPS_AVAILABLE: "Hurry! Be the first one to post a message here.",
   NO_CHANNELS_SUBSCRIBED: "You can't post any messages because you haven't subscribed to any channels. Click <a href='/channels'>here</a> to do so or contact an <a data-contact-admin href='/?rendezvous_with=#{user_id}'>admin</a>.",
   NO_MEEPS_FOR_USER_AVAILABLE: "No messages with attachments available",
@@ -10,7 +10,7 @@ protonet.i18n = {
   RENDEZVOUS_NOTIFICATION_TITLE: "new private chat message from #{author}",
   SYSTEM_NOTIFICATION_TITLE: "new message from your protonet node",
   CHANNEL_SUBSCRIPTION_ERROR: "Could not subscribe to channel '#{identifier}'",
-  CHANNEL_SUBSCRIPTION_SUCCESS: "You successfully subcribed to channel '#{identifier}'",
+  CHANNEL_SUBSCRIPTION_SUCCESS: "You successfully subscribed to channel '#{identifier}'",
   SOCKET_DISCONNECTED: "There has been a connection problem. Please wait a few seconds. It might heal itself.",
   SOCKET_RECONNECTED: "Ok, you are online again!",
   SOCKET_FAILURE: "Something went wrong. We weren't able to establish a connection with the chat server.",
@@ -23,21 +23,16 @@ protonet.i18n = {
   FOLDER_EMPTY: "This folder is empty.",
   DRAG_AND_DROP_HERE: "Drag & drop your files here",
   FILE_RENAME_ERROR: "Couldn't rename file/folder. Maybe name already exists?",
-  UNKNOWN_ERROR: "An error occured. Please try again",
   LOADING_MEEPS_ERROR: "Something went wrong: We couldn't load and set up your channels",
   LOADING_MEEP_ERROR: "Something went wrong while loading the desired message",
   LOADING_CHANNEL_ERROR: "Something went wrong: We couldn't load the desired channel",
-  SEARCH_ERROR: "Search for '#{keyword}' failed. Please try again later.",
   MEEP_HEADLINE: "#{avatar} Message ##{id} posted in '#{channel_name}'",
   DETAIL_VIEW_LOADING_ERROR: "Something went wrong while loading the context for the current message.",
   PAGE_LOADING_ERROR: "Page couldn't be loaded.",
   PAGE_ACCESS_FORBIDDEN: "You're not allowed to see this page.",
   PLEASE_LOGIN: "Please login or sign up!",
-  FLASH_DISABLED_MESSAGE: "Protonet requires the flash plugin. Please enable it by clicking below.",
-  SNAPSHOT_TITLE: "Snapshot{s} by @#{user_name}",
   RENDEZVOUS_ERROR: "An error appeared while setting up a private chat",
   RENDEZVOUS_WITH_YOURSELF_ERROR: "You can't do a private chat with yourself",
-  STRANGER_OFFLINE_ERROR: "You can't perform this action with a 'stranger' who's offline",
   UNKNOWN_CHANNEL: "unknown/private",
   FORM_SUBMIT_SUCCESS: "Your changes have been successfully saved.",
   FORM_SUBMIT_ERROR: "There was an error. Your changes have not been saved.",
@@ -95,5 +90,7 @@ protonet.i18n = {
   CHANNEL_FILE_PRIVACY_HINT: "Only subscribers of this channel can see and edit this file",
   CHANNEL_FOLDER_PRIVACY_HINT: "Only subscribers of this channel can see this folder",
   
-  VERIFY_SUBSCRIPTION: "#{count} user(s) needs to be verified"
+  VERIFY_SUBSCRIPTION: "#{count} user(s) needs to be verified",
+  
+  ARE_YOU_SURE: "Are you sure?"
 };

@@ -2,7 +2,6 @@
 //= require "../timeline/channels.js"
 //= require "../platforms/fluid.js"
 //= require "../platforms/prism.js"
-//= require "../ui/overlay.js"
 //= require "../ui/users/widget.js"
 //= require "../ui/files/widget.js"
 
@@ -24,18 +23,20 @@ protonet.p("instruments", function($page) {
   
   resizePage();
   
-  // there's a captive portal redirect request and the user is logged in
+  // There's a captive portal redirect request and the user is logged in
   if (protonet.config.captive_redirect_url) {
     if (protonet.config.captive_redirect_only || !protonet.config.user_is_stranger) {
       var htmlEscapedUrl = protonet.utils.escapeHtml(protonet.config.captive_redirect_url),
           urlEncodedUrl  = encodeURIComponent(protonet.config.captive_redirect_url);
-      new protonet.ui.Overlay(
-        "<h4>Hi " + protonet.config.user_name + ",</h4>" +
-        "<br>Welcome to protonet. Click the following button to enable internet access and to open " +
-        "<strong>" + htmlEscapedUrl.truncate(40) + "</strong>.<br>" +
-        '<a class="button close" data-avoid-ajax="1" href="/captive/login?captive_redirect_url=' + urlEncodedUrl + '" target="_blank">' +
-        'Get internet access</a>'
-      );
+      new protonet.ui.Overlay({
+        html: '<div class="info-message">' +
+              "<h4>Hi " + protonet.config.user_name + ",</h4>" +
+              "<br>Welcome to protonet. Click the following button to enable internet access and to open " +
+              "<strong>" + htmlEscapedUrl.truncate(40) + "</strong>.<br>" +
+              '<a class="button hide-overlay" data-avoid-ajax="1" href="/captive/login?captive_redirect_url=' + urlEncodedUrl + '" target="_blank">' +
+              'Get internet access</a>' +
+              '</div>'
+      });
     }
   }
 });
