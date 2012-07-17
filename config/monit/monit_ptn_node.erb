@@ -33,13 +33,17 @@ check process apache2 with pidfile /var/run/apache2.pid
   stop program  = "/usr/bin/sudo /etc/init.d/apache2 stop"
   if totalmem > 800.0 MB for 5 cycles then restart
   if children > 250 then restart
+  if failed host 127.0.0.1 port 80 protocol http
+   and request '/empty.html'
+   with timeout 6 seconds
+   and retry 3
+   then restart
   depends on rabbitmq
 
 check process node.js with pidfile <%= shared_path %>/pids/node_8124.pid
   group daemons
   start program = "<%= current_path %>/script/init/node start"
   stop program  = "<%= current_path %>/script/init/node stop"
-  if 3 restarts within 5 cycles then timeout
   if totalmem > 250.0 MB for 2 cycles then restart
   depends on rabbitmq
 
