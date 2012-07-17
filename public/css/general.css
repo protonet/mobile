@@ -388,10 +388,10 @@ a.close-link:hover {
 }
 
 .hover-hint-right:after {
-  border-right: 5px solid #333;
-  margin-top: -5px;
+  border-right: 8px solid #333;
+  margin-top: -7px;
   top: 50%;
-  left: -10px;
+  left: -16px;
 }
 
 .hover-hint h4 {
