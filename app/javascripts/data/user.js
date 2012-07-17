@@ -298,7 +298,7 @@
       return adminIds.indexOf(id) !== -1;
     },
     
-    hasSubscribedToChannel: function(userId, channelId) {
+    isSubscribedToChannel: function(userId, channelId) {
       return protonet.data.Channel.isSubscribedByUser(channelId, userId);
     },
     
@@ -363,7 +363,7 @@
       
       return this.isAdmin(userId)                                           // admin has access to everything
         || path.startsWith(userFilesPath)                                   // is viewer's file space
-        || (channelId && this.hasSubscribedToChannel(userId, channelId));   // is subscribed by user;
+        || (channelId && this.isSubscribedToChannel(userId, channelId));   // is subscribed by user;
     },
     
     hasReadAccessToFile: function(userId, path) {
@@ -375,7 +375,7 @@
         || path.count("/") < 3                                              // /, /users/, /channels/, /foo/, ...
         || path.startsWith(userFilesPath)                                   // is viewer's file space
         || (!path.startsWith("/users/") && !path.startsWith("/channels/"))  // any other root tree can be accessed (eg. /info/foo/bar.gif)
-        || (channelId && this.hasSubscribedToChannel(userId, channelId));   // is subscribed by user;
+        || (channelId && this.isSubscribedToChannel(userId, channelId));   // is subscribed by user;
     }
   };
   
