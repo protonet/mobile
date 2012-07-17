@@ -41,13 +41,15 @@ protonet.dispatcher = {
   _observe: function() {
     var that = this;
     
-    protonet.one("socket.update_id", function(status) {
-      if (that.callbacks) {
-        $.each(that.callbacks, function(i, callback) {
-          callback();
-        });
-        that.callbacks = [];
-      }
+    protonet.one("socket.update_id", function() {
+      setTimeout(function() {
+        if (that.callbacks) {
+          $.each(that.callbacks, function(i, callback) {
+            callback();
+          });
+          that.callbacks = [];
+        }
+      }, 0);
     });
     
     protonet

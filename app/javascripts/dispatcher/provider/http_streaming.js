@@ -41,7 +41,7 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
       var data  = $.extend({
             user_id:  protonet.config.user_id,
             token:    protonet.config.token,
-            type:     "web",
+            type:     "web"
           }, additionalData),
           queryParams         = encodeURIComponent(JSON.stringify(data)),
           url                 = protonet.config.xhr_streaming_url + "?" + queryParams;
@@ -162,7 +162,6 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
 
     send: function(data) {
       var url = this._buildUrl({ socket_id: this.socketId });
-      
       $.ajax(url, {
         type: "POST",
         crossDomain: true,
