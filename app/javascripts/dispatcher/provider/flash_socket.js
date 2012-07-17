@@ -1,6 +1,5 @@
 protonet.dispatcher.provider.FlashSocket = {
   isSupported: function() {
-    return false;
     return protonet.browser.HAS_FLASH(8);
   },
   
