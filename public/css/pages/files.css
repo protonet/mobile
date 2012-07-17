@@ -224,7 +224,10 @@
 }
 
 .files-page .address-bar a.dragover,
-.files-page .address-bar a:hover,
+.files-page .address-bar a:hover {
+  color: #000;
+}
+
 .files-page .address-bar a:last-child {
   color: #000;
 }

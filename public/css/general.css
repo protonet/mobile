@@ -612,5 +612,8 @@ ol.linenums li::before {
 
 
 #sm2-container {
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
   z-index: 10000;
 }
