@@ -268,7 +268,7 @@ exports.lastModified = function(params, reply) {
           size:     result.size,
           type:     "file",
           mime:     lookupMime(f),
-          modified: Math.max(result.mtime, result.ctime)
+          modified: Math.max(+result.mtime, +result.ctime)
         });
       }
     }
@@ -310,14 +310,14 @@ exports.list = function(params, reply) {
       if (stats.isDirectory()) {
         file = {
           name:     fileName,
-          modified: stats.mtime,
+          modified: +stats.mtime,
           type:     "folder"
         };
       } else {
         file = {
           name:     fileName,
           size:     stats.size,
-          modified: stats.mtime,
+          modified: +stats.mtime,
           mime:     lookupMime(fileName),
           type:     "file"
         };
@@ -411,7 +411,7 @@ exports.info = function(params, reply) {
       
       info.name         = path.basename(params.paths[i]);
       info.path         = params.paths[i];
-      info.modified     = stat.mtime;
+      info.modified     = +stat.mtime;
       info.uploader_id  = getOwner(file);
     } catch(ex) {
       info = {
