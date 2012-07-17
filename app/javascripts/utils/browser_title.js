@@ -59,14 +59,12 @@ protonet.utils.BrowserTitle = (function() {
         ctx.fillText("99", 4, 15);
     };
 
-    var $link = $("<link>", {
-      "type": "image/x-icon",
-      "rel": "shortcut icon",
-      "href": canvas.toDataURL("image/x-icon")
-    });
-    
-    $(document.head).append($link);    
-    _cleanupFaviconTags($link);
+    var link = document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'shortcut icon';
+    link.href = canvas.toDataURL("image/x-icon");
+
+    document.getElementsByTagName('head')[0].appendChild(link);
 
   }
   function restore() {
@@ -91,17 +89,11 @@ protonet.utils.BrowserTitle = (function() {
   }
   
   function _clearFavicon(){
-    var $link = $("<link>", {
-      "type": "image/x-icon",
-      "rel": "shortcut icon",
-      "href": "/favicon.ico"
-    });
-    $(document.head).append($link);
-    _cleanupFaviconTags($link);
-  }
-  
-  function _cleanupFaviconTags($link){
-    $link.siblings('link[type="image/x-icon"]').remove();
+    var link = document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'shortcut icon';
+    link.href = '/favicon.ico';
+    document.getElementsByTagName('head')[0].appendChild(link);
   }
   
   return {
