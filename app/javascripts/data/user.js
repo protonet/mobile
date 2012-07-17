@@ -102,12 +102,13 @@
     }
     
     $.extend(user, {
-      isAdmin:    adminIds.indexOf(user.id) !== -1,
-      isViewer:   user.id == viewerId,
-      isRemote:   String(user.id).indexOf("_") !== -1,
-      isStranger: user.name.match(/^guest\..+$/),
-      isOnline:   oldIsOnline !== undef ? oldIsOnline : false,
-      avatar:     oldAvatar || user.avatar || defaultAvatar
+      isAdmin:        adminIds.indexOf(user.id) !== -1,
+      isViewer:       user.id == viewerId,
+      isRemote:       String(user.id).indexOf("_") !== -1,
+      isStranger:     user.name.match(/^guest\..+$/),
+      isOnline:       oldIsOnline !== undef ? oldIsOnline : false,
+      subscriptions:  user.subscriptions || [],
+      avatar:         oldAvatar || user.avatar || defaultAvatar
     });
     
     dataCache[user.id] = user;
@@ -296,6 +297,11 @@
     
     isAdmin: function(id) {
       return adminIds.indexOf(id) !== -1;
+    },
+    
+    getSubscriptions: function(id) {
+      var user = dataCache[id];
+      return user ? user.subscriptions : [];
     },
     
     isSubscribedToChannel: function(userId, channelId) {

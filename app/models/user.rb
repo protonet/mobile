@@ -28,14 +28,18 @@ class User < ActiveRecord::Base
   before_validation :generate_login_from_name
   after_validation :assign_roles_and_channels, :on => :create
   
-  after_create :send_create_notification, :unless => :anonymous?
   after_create :listen_to_channels, :unless => :anonymous?
   after_create :mark_invitation_as_accepted, :if => :invitation_token
   after_create :create_folder, :if => lambda {|u| 
     !u.stranger? && 
     !u.system?
   }
-  after_create :refresh_system_users, :if => lambda {|u| !u.stranger? && !u.system? && Rails.env.production? }
+  after_create :refresh_system_users, :if => lambda {|u|
+    !u.stranger? &&
+    !u.system? &&
+    Rails.env.production?
+  }
+  after_create :send_create_notification, :unless => :anonymous?
   
   after_destroy :move_meeps_to_anonymous
   after_destroy :move_owned_channels_to_anonymous
@@ -94,7 +98,7 @@ class User < ActiveRecord::Base
       :id             => user.id,
       :name           => user.display_name,
       :avatar         => user.avatar.url,
-      :subscriptions  => user.channels.map(&:id)
+      :subscriptions  => user.channels.verified.map(&:id)
     }
   end
   
