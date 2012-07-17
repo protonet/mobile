@@ -19,7 +19,11 @@ authorization do
       to [:delete]
       if_attribute :user => is {user}
     end
-    has_permission_on :users, :to => [:show, :rendezvous, :update_last_read_meeps, :newbie, :channels]
+    has_permission_on :users do
+      to [:show, :rendezvous, :channels]
+      if_attribute :channels => intersects_with { user.channels }
+    end
+    has_permission_on :users, :to => [:update_last_read_meeps, :newbie]
     has_permission_on :snapshots, :to => :index
     has_permission_on :channels, :to => [:index]
     has_permission_on :channels do
