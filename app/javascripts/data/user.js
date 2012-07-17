@@ -131,6 +131,15 @@
     cache(user);
   });
   
+  // Annoying legacy issue: user.came_online sends under certain circumstances a "subscribed_channel_ids" array containing uuids
+  protonet.before("user.came_online", function(user) {
+    if (user.subscribed_channel_ids) {
+      user.subscriptions = $.map(user.subscribed_channel_ids, function(uuid) {
+        return protonet.data.Channel.getIdByUuid(uuid) || null;
+      });
+      delete user.subscribed_channel_ids;
+    }
+  });
   
   // Subscribe to a bunch of socket events that contain user information
   protonet.on("meep.receive meep.sent", function(meep) {
