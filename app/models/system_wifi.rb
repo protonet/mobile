@@ -146,9 +146,12 @@ wmm_enabled=1\n"
 auth_algs=1
 ignore_broadcast_ssid=0
 wpa=2
-wpa_psk=#{SystemBackend.wpa_passphrase(ssid_name, password)}
+rsn_preauth=1
 wpa_key_mgmt=WPA-PSK
-wpa_pairwise=TKIP CCMP\n"
+rsn_pairwise=CCMP
+wpa_psk=#{SystemBackend.wpa_passphrase(ssid_name, password)}
+wpa_group_rekey=3000
+wpa_ptk_rekey=3000\n"
     end
     
     def generate_config(config)
