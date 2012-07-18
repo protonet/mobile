@@ -44,7 +44,7 @@ check process node.js with pidfile <%= shared_path %>/pids/node_8124.pid
   group daemons
   start program = "<%= current_path %>/script/init/node start"
   stop program  = "<%= current_path %>/script/init/node stop"
-  if totalmem > 250.0 MB for 2 cycles then restart
+  if totalmem > 300.0 MB for 2 cycles then restart
   depends on rabbitmq
 
 check process js_dispatcher with pidfile <%= shared_path %>/pids/js_dispatcher_production.pid

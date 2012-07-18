@@ -253,7 +253,7 @@ function remove(target, reply) {
 exports.lastModified = function(params, reply) {
   var parent = path.join(ROOT_DIR, params.parent);
   
-  watch.walk(parent, { ignoreDotFiles: true, ignoreSymbolicLinks: true }, function(err, results) {
+  watch.walk(parent, { ignoreDotFiles: true, ignoreSymbolicLinks: true, maxDeepness: 4 }, function(err, results) {
     if (err) {
       return reply(err, []);
     }
@@ -432,7 +432,7 @@ exports.init = function(amqpConnection) {
       fsWorker        = this,
       channelsPath    = path.join(ROOT_DIR, "channels");
   
-  watch.createMonitor(channelsPath, { ignoreDotFiles: true, ignoreSymbolicLinks: true }, function(monitor) {
+  watch.createMonitor(channelsPath, { ignoreDotFiles: true, ignoreSymbolicLinks: true, maxDeepness: 5 }, function(monitor) {
     function push(fsPath) {
       var channelId = getChannelId(fsPath);
       
