@@ -146,7 +146,6 @@ wmm_enabled=1\n"
 auth_algs=1
 ignore_broadcast_ssid=0
 wpa=2
-rsn_preauth=1
 wpa_key_mgmt=WPA-PSK
 rsn_pairwise=CCMP
 wpa_psk=#{SystemBackend.wpa_passphrase(ssid_name, password)}
