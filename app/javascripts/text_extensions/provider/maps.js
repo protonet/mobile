@@ -54,9 +54,9 @@ protonet.text_extensions.provider.Maps = (function() {
     }
     
     return imageUrl
-      .replace("{center}",  coordinates || extractQuery(url) || extractHNear(url))
-      .replace("{zoom}",    extractZoom(url))
-      .replace("{maptype}", extractMapType(url));
+      .replace("{center}",  encodeURIComponent(coordinates || extractQuery(url) || extractHNear(url)))
+      .replace("{zoom}",    encodeURIComponent(extractZoom(url)))
+      .replace("{maptype}", encodeURIComponent(extractMapType(url)));
   }
   
   return {
@@ -73,7 +73,7 @@ protonet.text_extensions.provider.Maps = (function() {
           query         = extractQuery(url),
           isStreetView  = url.indexOf("&cbp=") != -1,
           iframe        = url + (isStreetView ? "&output=svembed" : "&output=embed");
-
+      
       onSuccess({
         image:          getImage(url),
         iframe:         iframe,
