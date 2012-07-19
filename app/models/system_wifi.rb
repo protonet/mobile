@@ -33,9 +33,7 @@ class SystemWifi
     def restart
       return unless Rails.env == 'production'
       if SystemMonit.exists?(:wifi)
-        SystemMonit.stop(:wifi)
-        sleep 5
-        SystemMonit.start(:wifi)
+        SystemMonit.restart(:wifi)
       else
         monitor_service
       end
