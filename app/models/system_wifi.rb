@@ -76,7 +76,8 @@ class SystemWifi
       # and start with new config
       settings = ""
       settings += default_settings
-      settings += channel_settings(SystemPreferences.wifi["channel"])
+      settings += "channel=#{SystemPreferences.wifi["channel"]}\n"
+      settings += "ht_capab=#{ht_capabilities(SystemPreferences.wifi["channel"])}\n"
       
       case SystemPreferences.wifi["mode"]
       when :dual
@@ -115,18 +116,6 @@ class SystemWifi
     
     private
     
-    def channel_settings(channel)
-      # This might only work with AR9285 chipset
-      # [HT40-] = enable 40 mhz secondary channel below primary channel (channel bonding)
-      # [HT40+] = enable 40 mhz secondary channel above primary channel (channel bonding)
-      # [RX-STBC123] = 1, 2 or 3 spatial streams
-      # [SHORT-GI-20] = short guard intervals for 20 mhz
-      # [SHORT-GI-40] = short guard intervals for 40 mhz
-      channel_width_set = channel < 8 ? "+" : "-"
-      ht_capab = "[HT20][HT40#{channel_width_set}][SHORT-GI-20][SHORT-GI-40][DSSS_CCK-40][MAX-AMSDU-3839][TX-STBC][RX-STBC123]"
-      "channel=#{channel}\nht_capab=#{ht_capab}\n"
-    end
-    
     def default_settings
       # whitespaces are important
       "ctrl_interface=/var/run/hostapd
@@ -150,8 +139,32 @@ wpa_key_mgmt=WPA-PSK
 rsn_pairwise=CCMP
 rsn_preauth=1
 wpa_psk=#{SystemBackend.wpa_passphrase(ssid_name, password)}
-wpa_group_rekey=3000
-wpa_ptk_rekey=3000\n"
+wpa_group_rekey=3600
+wpa_ptk_rekey=3600\n"
+    end
+    
+    def ht_capabilities(channel)
+      channel_width_set = channel < 8 ? "+" : "-"
+      
+      iw_info           = `/usr/bin/iw phy0 info`
+      iw_info           = iw_info.match(/band 1\:[\S\s]+?capabilities\:([\S\s]+?)frequencies\:/i)[1] rescue ""
+      iw_info           = iw_info.upcase
+      
+      ht_capab          = ""
+      # CHANNEL WIDTH (aka: CHANNEL BONDING): http://wifijedi.com/2009/01/25/how-stuff-works-channel-bonding/
+      ht_capab         += "[HT20]"                      if iw_info.include?("HT20")
+      ht_capab         += "[HT40#{channel_width_set}]"  if iw_info.include?("HT40")
+      # SHORT GUARD INTERVAL: http://wifijedi.com/2009/02/11/how-stuff-works-short-guard-interval/
+      ht_capab         += "[SHORT-GI-20]"               if iw_info.include?("HT20 SGI")
+      ht_capab         += "[SHORT-GI-40]"               if iw_info.include?("HT40 SGI")
+      ht_capab         += "[DSSS_CCK-40]"               if iw_info.include?("DSSS/CCK HT40")
+      # FRAME AGGREGATION: http://en.wikipedia.org/wiki/Frame_aggregation
+      ht_capab         += "[MAX-AMSDU-3839]"            if iw_info.include?("MAX AMSDU LENGTH: 3839")
+      # SPATIAL STREAMS: http://wifijedi.com/2009/02/01/how-stuff-works-spatial-multiplexing/
+      ht_capab         += "[TX-STBC]"                   if iw_info.include?("TX STBC")
+      ht_capab         += "[RX-STBC1]"                  if iw_info.include?("RX STBC 1")
+      
+      ht_capab
     end
     
     def generate_config(config)
