@@ -14,7 +14,7 @@ begin
     :username => config['username'],
     :password => config['password'] 
   )
-  result = client.query 'select count(id) from delayed_jobs where return_value IS NULL', :as => :array
+  result = client.query 'select count(id) from delayed_jobs', :as => :array
   remainig_jobs_count = result.first[0]
     
   if remainig_jobs_count > 0
