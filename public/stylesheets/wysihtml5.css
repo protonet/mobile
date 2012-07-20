@@ -1,5 +1,6 @@
 body{ margin:0 auto; font-family: Verdana, sans-serif; font-size:12px; color: #000; background: #ddd; padding:10px; }
-.mail{ margin:auto; width: 550px; padding: 10px; border: 1px solid #aaa; background:white; }
+.mail{ margin:auto; width: 550px; padding: 10px; background:white; }
 h1{ font-size:14px; }
 h2{ font-size:12px; }
 img.avatar{ float:left; margin-bottom:2px; margin-right:5px; }
+.footnote{ color: #999; }

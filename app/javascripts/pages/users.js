@@ -3,7 +3,6 @@ protonet.p("users", function($page) {
       $loadingIndicator     = $meepContainer.next(".progress"),
       $fileInput            = $page.find("[type=file]"),
       $avatarForm           = $fileInput.parents("form"),
-      $comparisonChartLink  = $("#show-comparison-chart"),
       $meepList             = $("<ul>", { "class": "meeps" });
   
   var fillUpUsers = function(page) {
@@ -95,7 +94,7 @@ protonet.p("users", function($page) {
     }
   }); 
   
-  $comparisonChartLink.on("click", function() {
+  $("#show-comparison-chart").on("click", function() {
     var $template = new protonet.utils.Template("user-roles-table-template").to$();
     new protonet.ui.Dialog({ content: $template, headline: protonet.t("USER_ROLES_HEADLINE") });
     return false;

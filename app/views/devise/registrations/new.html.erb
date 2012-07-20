@@ -3,7 +3,9 @@
    <fieldset>
      <h3>
        <%- if @invitation %>
-         You have been invited by <%= @invitation.user.display_name %>. Just create an account. It's free
+         <%= avatar(@invitation.user, :width => 32, :height => 32) %>
+         Create an account. It's free.<br>
+         <span>You have been invited by <%= @invitation.user.display_name %>.</span>
        <%- else %>
          Create an account. It's free.
        <%- end %>

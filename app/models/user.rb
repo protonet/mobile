@@ -367,10 +367,10 @@ class User < ActiveRecord::Base
     if invitation_token
       if invitation = Invitation.unaccepted.find_by_token(invitation_token)
         self.channels_to_subscribe = Channel.find(invitation.channel_ids)
-        self.roles = if invitation.invitee_role
-            [Role.find_by_title('invitee')]
+        self.roles = if invitation.role == 'admin'
+            [Role.find_by_title('user'), Role.find_by_title('admin')]
           else
-            [Role.find_by_title(SystemPreferences.default_registered_user_group)]
+            [Role.find_by_title(invitation.role)]
           end
       else
         errors.add_to_base("The invitation token is invalid.")
@@ -439,7 +439,7 @@ class User < ActiveRecord::Base
       end
       
       subscribe(Channel.system)
-      subscribe(Channel.support) if Rails.env.production? rescue nil
+      subscribe(Channel.support) if Rails.env.production?
     end
   end
   

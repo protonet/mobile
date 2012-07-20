@@ -107,7 +107,7 @@ class UsersController < ApplicationController
         flash[:notice] = "The user @#{user.display_name} is now a normal user"
         [Role.find_by_title('user')]
       else
-        flash[:notice] = "The user @#{user.display_name} is now a user with constrained rights"
+        flash[:notice] = "The user @#{user.display_name} is now a user with restricted rights"
         [Role.find_by_title('invitee')]
     end
     

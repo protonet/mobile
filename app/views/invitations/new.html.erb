@@ -26,26 +26,31 @@
       <%= f.label :email, "E-Mail:" %>
       <%= f.text_field(:email, {:type => "email", :value => @invitee_email || @invitation.email }) %>
     </div>
-
+    
     <div class="form-field">
-      <label>Constrained rights:</label>
-      <span>
+      <label>User type:</label>
+      <span class="radio-group">
         <label>
-          <%= f.radio_button(:invitee_role, true) %>
-          Yes
+          <%= f.radio_button(:role, 'invitee') %> User with restricted rights
+          <a data-hover-hint="top" title="<h4>User with restricted rights</h4> Users with restricted rights can only see channels they were susbcribed to (by an administrator). They aren't able to see users from other channels. This user type can be perfectly used for customers or guests that should have limited access." class="hint">(?)</a>
         </label>
         <label>
-          <%= f.radio_button(:invitee_role, false) %>
-          No
+          <%= f.radio_button(:role, 'user') %> User
+          <a data-hover-hint="top" title="<h4>User</h4> Normal users can see all channels and users. They're not allowed to delete users or channels that they didn't create." class="hint">(?)</a>
         </label>
-        <a data-hover-hint="top" title="The user (e.g. customer) can only see channels you subscribe him to." class="hint">(?)</a>
+        <label>
+          <%= f.radio_button(:role, 'admin') %> Administrator
+          <a data-hover-hint="top" title="<h4>Administrator</h4> Users with administration rights can manage channels, other users and system related things." class="hint">(?)</a>
+        </label>
+        <span class="hint">
+          <a id="show-comparison-chart">Learn more</a> about user types and permissions
+        </span>
       </span>
     </div>
     
     <div class="form-field channels">
 
-     <label for="invitation_channel"> Channels: <a data-hover-hint="top" title="Select channels the user will be subscribed to." class="hint">(?)</a></label>
-      <h3 class="belongs-to-list"><%= @channels.size %> Channels available </h3>
+     <label for="invitation_channel">Channels: <a data-hover-hint="top" title="Select channels the user will be subscribed to." class="hint">(?)</a></label>
       <ul>
       <%- @channels.sort_by(&:display_name).each do |channel| %>
         <li class="channel-checkboxes">
@@ -57,6 +62,10 @@
       <%- end %>
       </ul>
     </div>
-    <%= button 'Next Step' %>
+    <%= button 'Next step' %>
   <% end %>
+  
+  <script type="protonet/template" id="user-roles-table-template">
+    <%= render :partial => 'shared/user_roles_table' %>
+  </script>
 </output>

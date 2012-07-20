@@ -19,7 +19,7 @@ Feature: Invitations
     When I fill in "invitation_email" with "friend-3@example.com"
     And I check "home"
     And I check "public"
-    And I press "Next Step"
+    And I press "Next step"
     Then I should see "Invitation for friend-3@example.com"
     And I should see "Status: not sent yet"
     And I press "Send invitation"
@@ -48,7 +48,7 @@ Feature: Invitations
     
   @javascript
   Scenario: Invitee accepts invitation
-    Given I invite "peter panius" to channel "Public" with constrained rights and token "1a234567" as "dudemeister"
+    Given I invite "peter panius" to channel "Public" with restricted rights and token "1a234567" as "dudemeister"
     And I go unauthenticated to the start page
     When I accept the invitation with the token "1a234567"
     Then I should see "You have been invited by dudemeister. Just create an account. It's free"

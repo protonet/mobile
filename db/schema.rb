@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120720090941) do
+ActiveRecord::Schema.define(:version => 20120720121037) do
 
   create_table "app_dashboard_bindings", :force => true do |t|
     t.string   "link_title"
@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(:version => 20120720090941) do
     t.datetime "updated_at"
     t.integer  "invitee_id"
     t.string   "first_name"
-    t.boolean  "invitee_role", :default => false
+    t.string   "role",        :default => "invitee"
     t.datetime "sent_at"
     t.string   "last_name"
   end

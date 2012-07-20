@@ -8,7 +8,7 @@
   
   <%- if @invitations.any? %>
     <h3 class="belongs-to-list">
-      You have invited <%= pluralize(@invitations.count, "User") %>.
+      You have invited <%= pluralize(@invitations.count, "user") %>
     </h3>
     <ul class="list">
       <%= render @invitations %>

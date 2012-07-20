@@ -276,6 +276,21 @@
 }
 
 
+.radio-group {
+  display: inline-block;
+}
+
+.radio-group label {
+  margin-bottom: 8px;
+  cursor: pointer;
+  display: block;
+}
+
+.radio-group label:last-child {
+  margin-bottom: 0;
+}
+
+
 
 
 

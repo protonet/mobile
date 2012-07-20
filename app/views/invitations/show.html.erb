@@ -4,12 +4,12 @@
   <div class="status-box">
     Status:
     <%- case @invitation.status %>
-    <%- when :success %>  
-      accepted by <%= @invitation.invitee.login %>
+    <%- when :success %>
+      <span class="accepted">accepted by <%= @invitation.invitee.login %></span>
     <%- when :sent %>
-      sent on <%= l(@invitation.sent_at, :format => :short) %>
+      <span class="sent">sent on <%= l(@invitation.sent_at, :format => :short) %></span>
     <%- when :open %>
-      not sent yet
+      <span class="not-sent">not sent yet</span>
     <%- end %>
   </div>
   <%= form_for(@invitation, :remote => true, :html => { "data-type" => 'html' }) do |f| %>
@@ -18,8 +18,7 @@
       <a class="icon" data-wysihtml5-command="italic" titletle="CTRL+I">italic</a>
       <a class="icon" data-wysihtml5-command="undo" title="undo">undo</a>
       <a class="icon" data-wysihtml5-command="redo" title="redo">redo</a>
-      <a class="icon" data-wysihtml5-command="ol">insertOrderedList</a>
-      <a class="icon" data-wysihtml5-action="change_view">switch to html view</a>
+      <a class="icon" data-wysihtml5-command="insertUnorderedList">insert unordered list</a>
       <a class="link" data-wysihtml5-command="insertHTML" data-wysihtml5-command-value="<%= accept_invitation_url(:invitation_token => @invitation.token, :host => SystemPreferences.public_host, :protocol => SystemPreferences.public_host_https ? 'https://' : 'http://')%>">insert invitationlink</a>
     </div>
     

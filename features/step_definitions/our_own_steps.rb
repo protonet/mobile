@@ -368,7 +368,7 @@ Then /^I invite "([^\"]*)" to channel "([^\"]*)" with token "([^\"]*)" as "([^\"
   )
 end
 
-Then /^I invite "([^\"]*)" to channel "([^\"]*)" with constrained rights and token "([^\"]*)" as "([^\"]*)"/ do |name, channel_name, token, user_name|
+Then /^I invite "([^\"]*)" to channel "([^\"]*)" with restricted rights and token "([^\"]*)" as "([^\"]*)"/ do |name, channel_name, token, user_name|
   first_name = name.split(" ").first
   last_name = name.split(" ").last
   invitation = Invitation.create(
@@ -376,7 +376,7 @@ Then /^I invite "([^\"]*)" to channel "([^\"]*)" with constrained rights and tok
     :first_name => first_name,
     :last_name => last_name,
     :email => "#{first_name}@#{last_name}.com",
-    :invitee_role => 1,
+    :role => 'invitee',
     :channel_ids => [Channel.find_by_name(channel_name).id],
     :user => User.find_by_login(user_name)
   )

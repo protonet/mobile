@@ -79,20 +79,21 @@
       <%= hidden_field_tag :user_id, @user.id %>
       
       <div class="form-field">
-        <%= label_tag 'role-admin', 'Administrator:' %>
-        <%= radio_button_tag :role, 'admin', @user.admin?, :id => 'role-admin' %>
-        <a data-hover-hint="top" title="<h4>Administrator</h4> Users with administration rights can manage channels, other users and system related things." class="hint">(?)</a>
+        <%= label_tag 'role-invitee', 'User with restricted rights:' %>
+        <%= radio_button_tag :role, 'invitee', @user.invitee?, :id => 'role-invitee' %>
+        <a data-hover-hint="top" title="<h4>User with restricted rights</h4> Users with restricted rights can only see channels they were susbcribed to (by an administrator). They aren't able to see users from other channels. This user type can be perfectly used for customers or guests that should have limited access." class="hint">(?)</a>
       </div>
       <div class="form-field">
         <%= label_tag 'role-user', 'User:' %>
         <%= radio_button_tag :role, 'user', !@user.invitee? && !@user.admin?, :id => 'role-user' %>
-        <a data-hover-hint="top" title="<h4>User</h4> Normal users can see all channels and users. They're not allowed to delete users or channels they didn't create." class="hint">(?)</a>
+        <a data-hover-hint="top" title="<h4>User</h4> Normal users can see all channels and users. They're not allowed to delete users or channels that they didn't create." class="hint">(?)</a>
       </div>
       <div class="form-field">
-        <%= label_tag 'role-invitee', 'User (constrained rights):' %>
-        <%= radio_button_tag :role, 'invitee', @user.invitee?, :id => 'role-invitee' %>
-        <a data-hover-hint="top" title="<h4>User with constrained rights</h4>Users with constrained rights can only see channels they were susbcribed to (by an administrator). They aren't able to see users from other channels. This user type can be perfectly used for customers." class="hint">(?)</a>
+        <%= label_tag 'role-admin', 'Administrator:' %>
+        <%= radio_button_tag :role, 'admin', @user.admin?, :id => 'role-admin' %>
+        <a data-hover-hint="top" title="<h4>Administrator</h4> Users with administration rights can manage channels, other users and system related things." class="hint">(?)</a>
       </div>
+      
       <%= button "Save" %>
     <% end %>
   <%- end -%>
