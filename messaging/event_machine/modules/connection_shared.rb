@@ -195,6 +195,7 @@ module ConnectionShared
   def add_to_online_users
     @tracker.add_user @user, self
     if @tracker.real_user?(@user.id)
+      @user.save_online_status
       data = {
         :subscribed_channel_ids => @user.channels.verified.map {|c| c.uuid},
         :trigger => 'user.came_online'
@@ -207,6 +208,7 @@ module ConnectionShared
     @tracker.remove_user @user, self
     # send current user as offline if this was his last connection
     if @user && !@tracker.online_users.key?(@user.id)
+      @user.save_offline_status
       data = {
         :id => @user.id,
         :trigger => 'user.goes_offline'

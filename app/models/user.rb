@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   devise :recoverable, :database_authenticatable, :registerable, :encryptable, :rememberable, :token_authenticatable, :encryptor => :restful_authentication_sha1
 
   attr_accessible :login, :email, :first_name, :last_name, :password, :avatar_url,
-    :channels_to_subscribe, :external_profile_url, :node, :node_id
+    :channels_to_subscribe, :external_profile_url, :node, :node_id, :notify_me
 
   attr_accessor :channels_to_subscribe, :invitation_token, :avatar_url
 
@@ -18,6 +18,8 @@ class User < ActiveRecord::Base
   has_many  :invitations
   has_and_belongs_to_many  :roles, :after_add => :handle_admin, :after_remove => :unhandle_admin
   
+  has_many :notifications, :as => :subject
+  
   has_attached_file :avatar, :default_url => configatron.default_avatar, :preserve_files => true
   
   scope :registered, :conditions => "temporary_identifier IS NULL AND users.id != -1 AND users.node_id = 1"
@@ -28,6 +30,11 @@ class User < ActiveRecord::Base
   before_validation :generate_login_from_name
   after_validation :assign_roles_and_channels, :on => :create
   
+  before_validation :on => :create, :if => lambda { |u| !u.stranger? && !u.system? } do
+    self.last_seen = Time.now
+  end
+    
+  after_create :send_create_notification, :unless => :anonymous?
   after_create :listen_to_channels, :unless => :anonymous?
   after_create :mark_invitation_as_accepted, :if => :invitation_token
   after_create :create_folder, :if => lambda {|u| 
@@ -49,7 +56,6 @@ class User < ActiveRecord::Base
     !u.stranger? && 
     !u.system?
   }
-  
   
   validates_uniqueness_of :email, :if => lambda {|u| !u.stranger?}
   validates_uniqueness_of :login, :if => lambda {|u| !u.stranger?}
@@ -81,16 +87,6 @@ class User < ActiveRecord::Base
   
   def self.admins
     Role.find_by_title('admin').users rescue []
-  end
-  
-  def self.recent_active
-    find(
-      Meep.connection.select_values("
-        SELECT user_id, count(meeps.id) as counter FROM meeps left outer join users on users.id = meeps.user_id
-        WHERE users.temporary_identifier IS NULL AND (users.id != -1) AND meeps.created_at > '#{(Time.now - 2.weeks).to_s(:db)}'
-        GROUP BY user_id ORDER BY counter DESC, meeps.id DESC LIMIT 20
-      ")
-    )
   end
   
   def self.prepare_for_frontend(user)
@@ -449,5 +445,21 @@ class User < ActiveRecord::Base
       Meep.create_system_message("The user @#{self.display_name} is no longer an administrator")
     end
   end
-end
-
+  
+  # handle last_seen for notifying about unread messages
+  # sets last_seen to NULL (still online)
+  def save_online_status
+    self.update_attribute(:last_seen, nil)
+    self.delete_notifications
+  end
+  
+  # sets last_seen to Time.now
+  def save_offline_status
+    self.update_attribute(:last_seen, Time.now)
+  end
+  
+  def delete_notifications
+    Notification.where(:subject_id => self.id, :subject_type => self.class).delete_all
+  end
+  
+end 

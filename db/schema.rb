@@ -60,6 +60,12 @@ ActiveRecord::Schema.define(:version => 20120720121037) do
     t.boolean  "system",       :default => false
   end
 
+  create_table "delayed_jobs", :force => true do |t|
+    t.string   "command"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "installed_apps", :force => true do |t|
     t.string   "name"
     t.string   "uninstall_dep_path"
@@ -141,6 +147,18 @@ ActiveRecord::Schema.define(:version => 20120720121037) do
   add_index "nodes", ["name"], :name => "index_nodes_on_name"
   add_index "nodes", ["network_id"], :name => "index_nodes_on_network_id"
 
+  create_table "notifications", :force => true do |t|
+    t.string   "event_type"
+    t.integer  "subject_id"
+    t.string   "subject_type"
+    t.integer  "actor_id"
+    t.string   "actor_type"
+    t.integer  "secondary_subject_id"
+    t.string   "secondary_subject_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "roles", :force => true do |t|
     t.string   "title"
     t.datetime "created_at"
@@ -205,6 +223,8 @@ ActiveRecord::Schema.define(:version => 20120720121037) do
     t.boolean  "newbie",                                        :default => true
     t.string   "last_name",                                     :default => ""
     t.string   "reset_password_token"
+    t.datetime "last_seen"
+    t.boolean  "notify_me",                                     :default => true
   end
 
   add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true

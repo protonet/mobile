@@ -98,5 +98,8 @@ protonet.i18n = {
   CONFIRM_OK: "OK",
   CONFIRM_CANCEL: "Cancel",
   
-  USER_ROLES_HEADLINE: "Comparison of user types"
+  USER_ROLES_HEADLINE: "Comparison of user types",
+  
+  USER_SETTINGS_SUCCESS: "Your changes have been successfully saved.",
+  USER_SETTINGS_ERROR: "Your changes couldn't be saved."
 };

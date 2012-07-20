@@ -402,3 +402,10 @@ Then /^I delete the message "([^\"]*)"/ do |text|
   sleep 1
   find(:css, ".context-menu-meep li", :text => "delete message").click
 end
+
+Given /^all jobs are done$/ do
+  sleep 1
+  DelayedJob.process
+  sleep 1
+end
+

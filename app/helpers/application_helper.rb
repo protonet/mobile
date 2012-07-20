@@ -45,8 +45,12 @@ module ApplicationHelper
   end
   
   def image_proxy(url, opts)
-    url = "#{request.protocol + request.host_with_port}#{url}"
-    url = ERB::Util.u(url)
+    begin
+      full_path = "#{request.protocol + request.host_with_port}#{url}" 
+    rescue 
+      full_path = "#{ActionMailer::Base.default_url_options[:protocol]}://#{ActionMailer::Base.default_url_options[:host]}#{url}"
+    end
+    url = ERB::Util.u(full_path)
     "#{node_base_url(opts[:public])}/image_proxy?url=#{url}&width=#{opts[:width]}&height=#{opts[:height]}&extent=true&type=.jpg"
   end
   
@@ -64,7 +68,11 @@ module ApplicationHelper
   
   def node_base_url(public_domain = false)
     if public_domain
-      "http://#{SystemPreferences.public_host}/node"
+      if Rails.env.production?
+        "http://#{SystemPreferences.public_host}/node"
+      else
+        "http://#{SystemPreferences.public_host}".gsub(/\d+/, configatron.nodejs.port.to_s)
+      end
     else
       is_apache? ? "#{request.protocol}#{server_name}/node" : "#{request.protocol}#{server_name}:#{configatron.nodejs.port}"
     end

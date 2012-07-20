@@ -2,6 +2,7 @@ class Mailer < ActionMailer::Base
   
   default_url_options[:host]      = SystemPreferences.public_host
   default_url_options[:protocol]  = SystemPreferences.public_host_https ? 'https' : 'http'
+  helper :application
   
   def invitation(invitation)
     @invitation = invitation
@@ -52,6 +53,28 @@ class Mailer < ActionMailer::Base
       :from => "no-reply <mailer@protonet.info>",
       :to => user.email,
       :subject => "Reset your protonet password for #{SystemPreferences.public_host}"
+    )
+  end
+  
+  def notify_atreply(user, actor, notifications)
+    @user = user
+    @actor = actor
+    @notifications = notifications
+    mail(
+      :from => "no-reply <mailer@protonet.info>",
+      :to => @user.email,
+      :subject => "#{actor.display_name} mentioned you."
+    )
+  end
+  
+  def notify_private_message(user, actor, notifications)
+    @user = user
+    @actor = actor
+    @notifications = notifications
+    mail(
+      :from => "no-reply <mailer@protonet.info>",
+      :to => @user.email,
+      :subject => "New message from #{actor.display_name}!"
     )
   end
 

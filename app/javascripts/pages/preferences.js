@@ -188,8 +188,5 @@ protonet.p("preferences", function($page) {
     });
     $releaseUpdateProgressConsole.data('quakeStyleConsole').open();
   });
-
-  
-  
   
 });

@@ -10,7 +10,7 @@ FactoryGirl.define do
   end
 
   factory :meep do
-    message { Faker::Lorem.sentence }
+    message { Faker::Lorem.sentence[0..30] }
     user
     channel
   end

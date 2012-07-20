@@ -67,6 +67,29 @@
     <%- end -%>
   <%- end %>
   
+  <%- unless @user.stranger? && @user.anonymous? %>
+    <h3>Notifications</h3>
+    <%= form_for(@user, {
+      :url        => user_path,
+      :method     => :update,
+      :remote     => true,
+      :html       => { 
+        'data-type' => 'html', 
+        'data-cucumber' => 'user-notification',
+        'data-ajax-auto-submit' => '1' 
+      }
+    }) do |f| -%>
+      <%= hidden_field_tag :user_type, @user.class.to_s.underscore %>
+      <%= hidden_field_tag :user_id, @user.id %>
+      <%= f.hidden_field :id %>
+        <label class="checkbox-row">
+          <%= f.check_box :notify_me %>
+          Notify me about new messages via email
+        </label>
+    <%- end %>
+    <div id="settings"></div>
+  <%- end %>
+  
   <%- if current_user.admin? && !@user.stranger?  && !@user.anonymous? -%>
     <h3>Permissions <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
     <div class="info-box">
