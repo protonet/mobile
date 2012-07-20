@@ -118,7 +118,7 @@ class SystemWifi
       end
       
       config_file = "#{configatron.shared_file_path}/config/hostapd.d/config"
-      File.open(config_file, 'w') {|f| f.write(setttings) }
+      File.open(config_file, 'w') {|f| f.write(settings) }
     end
     
     private
