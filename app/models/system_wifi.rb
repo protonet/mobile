@@ -4,9 +4,8 @@ class SystemWifi
   class << self
     
     def supported?
-      # TODO: use iwconfig here (didn't work out for me)
-      return true if Rails.env != "production"
-      # Our VMs don't support lspci
+      return true unless Rails.env.production?
+      # Note: Our VMs don't support lspci
       lspci = `lspci` || ""
       lspci.include?("Wireless Network") || lspci.include?("Atheros")
     end
@@ -17,7 +16,7 @@ class SystemWifi
     end
     
     def start
-      return unless Rails.env == 'production'
+      return unless Rails.env.production?
       if SystemMonit.exists?(:wifi)
         SystemMonit.start(:wifi)
       else
@@ -26,12 +25,12 @@ class SystemWifi
     end
   
     def stop
-      return unless Rails.env == 'production'
+      return unless Rails.env.production?
       SystemMonit.remove(:wifi) if SystemMonit.exists?(:wifi)
     end
     
     def restart
-      return unless Rails.env == 'production'
+      return unless Rails.env.production?
       if SystemMonit.exists?(:wifi)
         SystemMonit.restart(:wifi)
       else
@@ -50,28 +49,51 @@ class SystemWifi
       pid_file = "#{configatron.current_file_path}/tmp/pids/hostapd.pid"
       SystemMonit.add(:wifi, start, stop, pid_file)
     end
-        
-    def config
-      return 'only available in production' unless Rails.env == 'production'
-      config_file = "#{configatron.shared_file_path}/config/hostapd.d/config"
-      generate_config(SystemPreferences.wifi_mode) unless File.exists?(config_file)
-      File.read(config_file)
-    end
     
     def service_command(argument)
       "/usr/bin/sudo #{configatron.current_file_path}/script/init/wifi #{argument}"
     end
     
     def reconfigure!
-      return unless Rails.env == 'production'
+      return unless Rails.env.production?
+      
       ["wlan0", "wlan1"].each do |interface|
         SystemDnsmasq.stop(interface, false) # reload set to false
         SystemConnectionSharing.stop(interface)
       end
-      # reload monit
+      
       SystemMonit.reload!
       sleep 10
-      # and start with new config
+      
+      generate_config
+      
+      case SystemPreferences.wifi["mode"]
+      when :dual
+        restart
+        sleep 10
+        ["wlan0", "wlan1"].each do |interface|
+          SystemDnsmasq.start(interface)
+          SystemConnectionSharing.start(interface) if SystemPreferences.wifi[interface]["sharing"]
+        end
+      when "wlan0"
+        restart
+        sleep 10
+        SystemDnsmasq.start("wlan0")
+        SystemConnectionSharing.start("wlan0") if SystemPreferences.wifi["wlan0"]["sharing"]
+      when "wlan1"
+        restart
+        sleep 10
+        SystemDnsmasq.start("wlan0")
+        SystemConnectionSharing.start("wlan0") if SystemPreferences.wifi["wlan0"]["sharing"]
+      when nil
+        #  shut down both
+        stop
+      end
+    end
+    
+    def generate_config
+      return unless Rails.env.production?
+      
       settings = ""
       settings += default_settings
       settings += "channel=#{SystemPreferences.wifi["channel"]}\n"
@@ -83,33 +105,20 @@ class SystemWifi
         settings += wpa_settings(SystemPreferences.wifi["wlan0"]["name"], SystemPreferences.wifi["wlan0"]["password"])
         settings += "\nbss=wlan1\nssid=#{SystemPreferences.wifi["wlan1"]["name"]}\nbssid=00:13:10:95:fe:0b\n"
         settings += wpa_settings(SystemPreferences.wifi["wlan1"]["name"], SystemPreferences.wifi["wlan1"]["password"])
-        generate_config(settings)
-        restart
-        sleep 10
-        ["wlan0", "wlan1"].each do |interface|
-          SystemDnsmasq.start(interface)
-          SystemConnectionSharing.start(interface) if SystemPreferences.wifi[interface]["sharing"]
-        end
       when "wlan0"
         settings += "ssid=#{SystemPreferences.wifi["wlan0"]["name"]}\ninterface=wlan0\n"
         settings += wpa_settings(SystemPreferences.wifi["wlan0"]["name"], SystemPreferences.wifi["wlan0"]["password"])
-        generate_config(settings)
-        restart
-        sleep 10
-        SystemDnsmasq.start("wlan0")
-        SystemConnectionSharing.start("wlan0") if SystemPreferences.wifi["wlan0"]["sharing"]
       when "wlan1"
         settings += "ssid=#{SystemPreferences.wifi["wlan1"]["name"]}\ninterface=wlan0\n"
         settings += wpa_settings(SystemPreferences.wifi["wlan1"]["name"], SystemPreferences.wifi["wlan1"]["password"])
-        generate_config(settings)
-        restart
-        sleep 10
-        SystemDnsmasq.start("wlan0")
-        SystemConnectionSharing.start("wlan0") if SystemPreferences.wifi["wlan0"]["sharing"]
       when nil
         #  shut down both
         stop
+        return
       end
+      
+      config_file = "#{configatron.shared_file_path}/config/hostapd.d/config"
+      File.open(config_file, 'w') {|f| f.write(setttings) }
     end
     
     private
@@ -163,12 +172,6 @@ wpa_ptk_rekey=3600\n"
       ht_capab         += "[RX-STBC1]"                  if iw_info.include?("RX STBC 1")
       
       ht_capab
-    end
-    
-    def generate_config(config)
-      return unless Rails.env == 'production'
-      config_file = "#{configatron.shared_file_path}/config/hostapd.d/config"
-      File.open(config_file, 'w') {|f| f.write(config) }
     end
     
   end
