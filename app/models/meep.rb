@@ -123,7 +123,6 @@ class Meep < ActiveRecord::Base
   end
   
   def send_email_notification
-    
     thread = Thread.new do
       logins = message.scan(/(?:\s|^|\()@([\w\.\-_@]+)/).flatten
       if channel.rendezvous?
@@ -153,7 +152,7 @@ class Meep < ActiveRecord::Base
         end
       end
     end
-    thread.join if Rails.env.test? || Rails.env.cucumber? # wait for the threads to complete
+    thread.join if Rails.env.test? # wait for the threads to complete
   end
   
   private

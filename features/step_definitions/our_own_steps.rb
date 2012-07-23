@@ -405,8 +405,7 @@ Then /^I delete the message "([^\"]*)"/ do |text|
 end
 
 Given /^all jobs are done$/ do
-  sleep 1
+  sleep 5 if DelayedJob.count == 0
   DelayedJob.process
-  sleep 1
 end
 

@@ -2,6 +2,7 @@ Feature: Notify user about unread messages
 
 Background:
   Given a user with the login "online"
+  And no emails have been sent
   And a user with the login "offline"
   And go unauthenticated to the start page
   And I am logged in as "online"
