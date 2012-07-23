@@ -31,13 +31,6 @@ if last_clamav_scan + SCAN_INTERVAL < Time.now.to_i
     connection.query("INSERT INTO system_preferences (var, value) VALUES ('last_clamav_scan', '#{Time.now.to_i}')")
   end
   
-  puts "refresh virus db"
-  `/usr/bin/sudo /usr/bin/freshclam --log=/tmp/freshclam.log` # use custom log dir otherwise this will fail
-  # code 0 => success
-  # code 52 => network connection problem (no internet connection?)
-  # find all error codes here: http://linux.die.net/man/1/freshclam
-  freshclam_code = $?.exitstatus
-  
   puts "perform scan"
   details = `/usr/bin/sudo /usr/bin/clamscan --exclude-dir=#{SYSTEM_USERS_DIR} -i -r #{FILES_DIR}`
   # code 0 => no virus found
@@ -55,7 +48,7 @@ if last_clamav_scan + SCAN_INTERVAL < Time.now.to_i
   
   puts "clamscan return code: #{code}"
   
-  `cd #{RAILS_ROOT} && RAILS_ENV=production bundle exec rake report:virus_scan code=#{code} freshclam_code=#{freshclam_code} details="#{URI.escape(details)}"`
+  `cd #{RAILS_ROOT} && RAILS_ENV=production bundle exec rake report:virus_scan code=#{code} details="#{URI.escape(details)}"`
 end
 
 connection.close
