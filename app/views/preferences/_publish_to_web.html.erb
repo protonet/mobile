@@ -21,11 +21,11 @@
     <%= label_tag 'preferences[publish_to_web]', 'Status:' %>
     <span>
       <label>
-        <input type="radio" name="preferences[publish_to_web]" value="true" <%= "checked" if SystemPublishToWeb.status %>>
+        <input type="radio" name="preferences[publish_to_web]" value="true" <%= "checked" if SystemPreferences.publish_to_web %>>
         On
       </label>
       <label>
-        <input type="radio" name="preferences[publish_to_web]" value="false" <%= "checked" unless SystemPublishToWeb.status %>>
+        <input type="radio" name="preferences[publish_to_web]" value="false" <%= "checked" unless SystemPreferences.publish_to_web %>>
         Off
       </label>
     </span>

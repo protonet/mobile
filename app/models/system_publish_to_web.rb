@@ -89,6 +89,7 @@ check host publish_to_web with address directory.protonet.info
    start program = "#{start_cmd}"
    stop program = "#{stop_cmd}"
 EOS
+      `#{start_cmd}`
       SystemMonit.add_custom(:publish_to_web, config)
     end
     

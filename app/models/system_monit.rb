@@ -44,6 +44,7 @@ class SystemMonit
     
     def reload!
       monit_command("reload")
+      sleep 2
     end
   
     # def status(status)
