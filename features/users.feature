@@ -57,18 +57,20 @@ Background:
     Then I visit the profile of "newname"
     And I should see "newname" within ".users-page h2"
     
-  @javascript @wip
+  @javascript
   Scenario: Admin Deleting an user
-    Given I go to the users page
-    And select an user
-    And I have the rights
-    Then I should be able to delete the user
-    And his meeps should still be visible
-    
-  @javascript @wip
-  Scenario: Admin: Managing stranger rights
-    # allowing them to see the dashboard or not
-    # allowing strangers to register or not
-    
-  @javascript @wip
-  Scenario: Sending out a new password for a user
+    Given a user with the login "willbedeleted"
+    When I go unauthenticated to the start page
+    And I am logged in as "willbedeleted"
+    And I send the message "I will be there forever"
+    Given "dudemeister" is an admin
+    And I go unauthenticated to the start page
+    And I am logged in as "dudemeister"
+    When I visit the profile of "willbedeleted"
+    And I follow "edit"
+    And press "Delete"
+    And I confirm
+    Then I should see "You have deleted the user @willbedeleted"
+    When I visit "/"
+    Then I should see "I will be there forever"
+    Then I should not see "willbedeleted" within ".widget-list"
