@@ -36,7 +36,7 @@ Feature: Invitations
     Given I invite "peter pan" to channel "Public" with token "1234567890" as "dudemeister"
     And I go unauthenticated to the start page
     When I accept the invitation with the token "1234567890"
-    Then I should see "You have been invited by dudemeister. Just create an account. It's free"
+    Then I should see "Create an account. It's free. You have been invited by dudemeister."
     And I fill in "user_password" with "friendly"
     And I press "Sign up"
     Then I should see "peter.pan" within "#my-widget"
@@ -51,7 +51,7 @@ Feature: Invitations
     Given I invite "peter panius" to channel "Public" with restricted rights and token "1a234567" as "dudemeister"
     And I go unauthenticated to the start page
     When I accept the invitation with the token "1a234567"
-    Then I should see "You have been invited by dudemeister. Just create an account. It's free"
+    Then I should see "Create an account. It's free. You have been invited by dudemeister."
     And I fill in "user_password" with "friendly"
     And I press "Sign up"
     Then I should see "peter.panius" within "#my-widget"

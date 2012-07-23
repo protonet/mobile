@@ -363,6 +363,7 @@ Then /^I invite "([^\"]*)" to channel "([^\"]*)" with token "([^\"]*)" as "([^\"
     :first_name => first_name,
     :last_name => last_name,
     :email => "#{first_name}@#{last_name}.com",
+    :role => 'user',
     :channel_ids => [Channel.find_by_name(channel_name).id],
     :user => User.find_by_login(user_name)
   )
