@@ -8,7 +8,7 @@
 <h3>Settings</h3>
 <%- if incoming_interface == "published_to_web" %>
   <p class="info-message">
-    <strong>Please note:</strong> You are currently connected via <i>Web Publishing</i>. If you now shutdown or rename it, you will lose connection.</strong>
+    <strong>Please note:</strong> You are currently connected via <i>Web Publishing</i>. If you now shutdown or rename it, you will lose your connection.</strong>
   </p>
 <%- end %>
 <%= form_tag preferences_publish_to_web_update_path, { :remote => true, 'data-type' => 'html', :class => 'publish-to-web' } do -%>
