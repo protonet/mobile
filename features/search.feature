@@ -9,6 +9,6 @@ Feature: Using the protonet search
     Then I should see "foobar" in the timeline
     And I visit "/search"
     And I fill in "search_term" with "foo"
-    And I wait 1 seconds
+    And I wait 2 seconds
     Then I should see "foobar" within "output.content"
     
