@@ -416,3 +416,7 @@ end
 When /^I confirm$/ do
   page.driver.browser.switch_to.alert.accept
 end
+
+Then /^I should see (\d+) "(.*?)" tag(?:s)$/ do |count, tag|
+  page.has_css?(tag, :count => count)
+end
