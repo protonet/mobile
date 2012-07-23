@@ -71,6 +71,3 @@ Feature: Invitations
     And I accept the invitation with the token "1122334455"
     Then I should be on the new_user_session page
     And I should see "The invitation token is invalid"
-    
-  @wip
-  Scenario: Send copy of Invitation to Inviter too

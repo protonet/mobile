@@ -87,7 +87,3 @@ Feature: Using the protonet dashboard
     Scenario: Logging in with your email
     Given a user with the login "dudemeister"
     And I am logged in as "dudemeister@protonet.com"
-
-  @wip
-  @javascript
-    Scenario: Trying to subscribe to a private channel thru a meep mention
