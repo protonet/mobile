@@ -18,6 +18,7 @@ Feature: Using the protonet dashboards multi-user realtime functionalities
       Then I should see "Moinsen" in the timeline
     # batman
     And I am using the second browser
+      Then I should see "Moinsen" in the timeline
       And I delete the message "Moinsen"
     And I am using the first browser
       Then I should not see "Moinsen" in the timeline
