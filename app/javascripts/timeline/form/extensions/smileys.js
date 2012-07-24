@@ -10,7 +10,7 @@ protonet.timeline.Form.extensions.Smileys = function(input) {
   protonet.utils.emojify.shortcuts.replace(/\w+/g, function(match) {
     match = ":" + match + ":";
     emojis.push(match);
-    contextMenuOptions[protonet.utils.emojify(match, true)] = function(target, close) {
+    contextMenuOptions[protonet.utils.emojify(match)] = function(target, close) {
       protonet.trigger("form.insert", match);
       close();
     };

@@ -37,10 +37,7 @@ protonet.utils.smilify = (function() {
     });
   });
   
-  function smilify(str, ignoreSetting) {
-    if (!ignoreSetting) {
-      return str;
-    }
+  function smilify(str) {
     
     $.each(SMILIES, function(i, smilie) {
       $.each(smilie.regExps, function(i, regExp) {
