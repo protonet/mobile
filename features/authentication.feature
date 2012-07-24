@@ -10,7 +10,6 @@ Feature: Handling authentication and authorization
     When "lazy_dude@protonet.com" opens the email with subject "Reset your protonet password for localhost:3000"
     And I follow "Change my password" in the email
     And I fill in "user_password" with "secure_password"
-    And I fill in "user_password_confirmation" with "secure_password"
     And I press "Change"
     Then I should be logged in as "lazy_dude"
     And I should see "Your password was changed successfully. You are now signed in."

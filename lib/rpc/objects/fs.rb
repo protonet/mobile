@@ -230,7 +230,10 @@ class Rpc::Objects::Fs < Rpc::Base
       channels = user.channels.reload.map(&:id)
       
       paths.each do |(namespace, id, path)|
+        namespace = namespace.to_s
         id = id.to_s
+        
+        raise Rpc::WriteAccessDeniedError, "Tried accessing system_users" if namespace == "system_users"
         
         next if !id.match(/^\d+$/)
         
@@ -258,6 +261,8 @@ class Rpc::Objects::Fs < Rpc::Base
       paths.each do |(namespace, id, path)|
         namespace = namespace.to_s
         id = id.to_s
+        
+        raise Rpc::ReadAccessDeniedError, "Tried accessing system_users" if namespace == "system_users"
         
         if include_sub_folders
           raise Rpc::ReadAccessDeniedError, "Not allowed" if namespace.empty?

@@ -3,7 +3,6 @@
 protonet.ui.users = {
   initialize: function() {
     this.GettingStarted.initialize();
-    this.Preferences.initialize();
     
     this._observe();
     this._createContextMenu();
@@ -83,4 +82,3 @@ protonet.ui.users = {
 };
 
 //= require "getting_started.js"
-//= require "preferences.js"

@@ -19,13 +19,14 @@ class InvitationsController < ApplicationController
   
   def new
     @invitee_email = params[:invitee_email]
-    @invitation = current_user.invitations.new(:invitee_role => SystemPreferences.privacy["published_to_web"] &&  !SystemPreferences.privacy["published_to_web"]["allow_registrations_for_strangers"])
-    @channels = current_user.owned_channels.real | Channel.public.local
+    default_role = SystemPreferences.privacy["published_to_web"] && SystemPreferences.privacy["published_to_web"]["allow_registrations_for_strangers"] ? 'user' : 'invitee'
+    @invitation = current_user.invitations.new(:role => default_role)
+    @channels = Channel.real
   end
   
   def create
     @invitation = current_user.invitations.new(params[:invitation])
-    @channels = current_user.owned_channels.real | Channel.public.local    
+    @channels = Channel.real - [Channel.system]
     if @invitation.valid?
       @invitation.message = invitation_email(@invitation)
       if @invitation.save

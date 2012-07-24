@@ -1,76 +1,52 @@
-protonet.ui.Confirm = (function() {
-  var defaultOptions = {
-        headline: "Are you sure?",
-        text:     "",
-        content:  ""
-      };
+protonet.ui.Confirm = Class.create(protonet.ui.Dialog, {
+  confirmDefaultOptions: {
+    confirm:  $.noop,
+    cancel:   $.noop,
+    headline: protonet.t("CONFIRM_TITLE"),
+    text:     "",
+    content:  ""
+  },
   
-  return function(options) {
-    var deferred = $.Deferred(),
-        $section,
-        $overlay;
+  initialize: function($super, options) {
+    this.dialogDefaultOptions = $.extend({}, this.dialogDefaultOptions, this.confirmDefaultOptions);
+    $super(options);
+  },
+  
+  hide: function($super) {
+    $super();
     
-    options = $.extend({}, defaultOptions, options);
-    
-    $section = new protonet.utils.Template("confirm-template", options).to$();
-    $overlay = $("<div>", { "class": "confirm overlay" });
-    $overlay.html($section);
-    
-    if (options.content) {
-      $section.find("output").html(options.content);
+    if (this.confirmed) {
+      this.options.confirm();
     } else {
-      $section.find("output").remove();
+      this.options.cancel();
+    }
+  },
+  
+  show: function($super) {
+    $super();
+    
+    var $output   = this.$dialog.find("output"),
+        $confirm  = $("<button>", { "class": "confirm",      text: protonet.t("CONFIRM_OK")     }).appendTo($output),
+        $cancel   = $("<button>", { "class": "hide-overlay", text: protonet.t("CONFIRM_CANCEL") }).appendTo($output);
+    
+    if (this.options.content) {
+      $output.prepend(this.options.content);
     }
     
-    if (protonet.ui.ModalWindow.isVisible()) {
-      protonet.ui.ModalWindow.append($overlay);
-    } else {
-      $overlay.appendTo("body");
-    }
+    $confirm.focus();
+  },
+  
+  _observe: function($super) {
+    $super();
     
-    $overlay.fadeIn();
+    this.$overlay.on("mousedown keydown", function() {
+      event.stopPropagation();
+    });
     
-    function hide(event) {
-      $overlay.hide().remove();
-    }
-    
-    $section
-      .on("click", "button.confirm", function(event) {
-        hide();
-        deferred.resolve();
-        event.preventDefault();
-      })
-      
-      .on("click", "button.cancel",  function(event) {
-        hide();
-        deferred.reject();
-        event.preventDefault();
-      })
-      
-      .on("click", function(event) {
-        event.stopPropagation();
-      });
-    
-    $overlay
-      .on("mousedown", function(event) {
-        event.stopPropagation();
-      })
-      .on("click", function(event) {
-        hide();
-        event.preventDefault();
-      })
-      
-      .on("keydown", function(event) {
-        if (event.keyCode === 27) {
-          // escape
-          hide();
-          event.preventDefault();
-        }
-        event.stopPropagation();
-      });
-    
-    $section.find("button.confirm").focus();
-    
-    return deferred.promise();
-  };
-})();
+    this.$overlay.on("click", "button.confirm", function(event) {
+      this.confirmed = true;
+      this.hide();
+      event.preventDefault();
+    }.bind(this));
+  }
+});

@@ -12,6 +12,8 @@
 # end
 #
 
+job_type :script,  "cd :path && RAILS_ENV=:environment RAILS_ROOT=:path bundle exec script/:task"
+
 # see script/init/cron for logpath definition
 set(:output, @logpath)
 
@@ -30,6 +32,10 @@ end
 
 every :reboot do
   runner "User.build_system_users"
+end
+
+every 15.minutes do
+  script "delayed_job.rb"
 end
 
 # Learn more: http://github.com/javan/whenever

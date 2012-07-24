@@ -26,6 +26,18 @@
       return this;
     },
     
+    _before: function(eventName, handler) {
+      var handlerArray = this._events[eventName] || (this._events[eventName] = []);
+      handlerArray.unshift(handler);
+    },
+    
+    before: function(eventNames, handler) {
+      $.each(eventNames.split(WHITE_SPACE), function(i, eventName) {
+        this._before(eventName, handler);
+      }.bind(this));
+      return this;
+    },
+    
     _after: function(eventName, handler) {
       var handlerArray = this._events[eventName] || (this._events[eventName] = []);
       handlerArray.push(function() {

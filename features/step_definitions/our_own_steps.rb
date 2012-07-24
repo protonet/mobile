@@ -59,7 +59,6 @@ Given /^I register as "([^\"]*)" "([^\"]*)"$/ do |first_name, last_name|
     fill_in 'user_last_name',    :with => last_name
     fill_in 'user_email',    :with => "#{first_name}.#{last_name}@foo.com"
     fill_in 'user_password', :with => '12345678'
-    fill_in 'user_password_confirmation', :with => '12345678'
     click_button('register')
   end
   within('#my-widget') do
@@ -364,12 +363,13 @@ Then /^I invite "([^\"]*)" to channel "([^\"]*)" with token "([^\"]*)" as "([^\"
     :first_name => first_name,
     :last_name => last_name,
     :email => "#{first_name}@#{last_name}.com",
+    :role => 'user',
     :channel_ids => [Channel.find_by_name(channel_name).id],
     :user => User.find_by_login(user_name)
   )
 end
 
-Then /^I invite "([^\"]*)" to channel "([^\"]*)" with constrained rights and token "([^\"]*)" as "([^\"]*)"/ do |name, channel_name, token, user_name|
+Then /^I invite "([^\"]*)" to channel "([^\"]*)" with restricted rights and token "([^\"]*)" as "([^\"]*)"/ do |name, channel_name, token, user_name|
   first_name = name.split(" ").first
   last_name = name.split(" ").last
   invitation = Invitation.create(
@@ -377,7 +377,7 @@ Then /^I invite "([^\"]*)" to channel "([^\"]*)" with constrained rights and tok
     :first_name => first_name,
     :last_name => last_name,
     :email => "#{first_name}@#{last_name}.com",
-    :invitee_role => 1,
+    :role => 'invitee',
     :channel_ids => [Channel.find_by_name(channel_name).id],
     :user => User.find_by_login(user_name)
   )
@@ -397,9 +397,26 @@ Then /^I should see page title as "(.*)"$/ do |title|
 end
 
 Then /^I delete the message "([^\"]*)"/ do |text|
-  find(:css, ".meep", :text => text).click
-  sleep 1
-  find(:css, ".meep .meep-action-link").click
-  sleep 1
-  find(:css, ".context-menu-meep li", :text => "delete message").click
+  wait_until do    
+    find(:css, ".meep", :text => text).click
+  end
+  wait_until do    
+    find(:css, ".meep .meep-action-link").click
+  end
+  wait_until do    
+    find(:css, ".context-menu-meep li", :text => "delete message").click
+  end
+end
+
+Given /^all jobs are done$/ do
+  sleep 5 if DelayedJob.count == 0
+  DelayedJob.process
+end
+
+When /^I confirm$/ do
+  page.driver.browser.switch_to.alert.accept
+end
+
+Then /^I should see (\d+) "(.*?)" tag(?:s)$/ do |count, tag|
+  page.has_css?(tag, :count => count)
 end

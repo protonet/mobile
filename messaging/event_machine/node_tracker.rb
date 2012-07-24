@@ -13,7 +13,7 @@ class NodeTracker
       puts "\n\n\n GOT NODE message #{json.inspect}\n\n\n"
       case json['trigger']
       when 'node.coupled'
-        NodeConnection.connect(Node.find(json['node_id']), self)
+        NodeConnection.connect(Node.find(json['node_id']), self) rescue nil
       when 'node.channel_attached'
         @online_nodes[json['node_uuid']].bind_channel(Channel.find(json['channel_id'])) rescue nil
       end

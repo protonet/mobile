@@ -224,7 +224,10 @@
 }
 
 .files-page .address-bar a.dragover,
-.files-page .address-bar a:hover,
+.files-page .address-bar a:hover {
+  color: #000;
+}
+
 .files-page .address-bar a:last-child {
   color: #000;
 }
@@ -305,13 +308,14 @@
   border: 0;
 }
 
-.confirm.overlay .file-list.mini {
+.dialog.overlay .file-list.mini {
   width: 100%;
 }
 
-.confirm.overlay .mini-table-wrapper {
+.dialog.overlay .mini-table-wrapper {
   overflow: auto;
   max-height: 120px;
+  margin-bottom: 20px;
 }
 
 .file-list.mini tr {

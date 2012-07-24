@@ -5,10 +5,11 @@ require 'uri'
 require 'yaml'
 
 # scan every 7 days
-SCAN_INTERVAL   = 7 * 24 * 60 * 60
-RAILS_ROOT      = "/home/protonet/dashboard/current"
-DB_CONFIG_FILE  = "/home/protonet/dashboard/current/config/database.yml"
-FILES_DIR       = "/home/protonet/"
+SCAN_INTERVAL     = 7 * 24 * 60 * 60
+RAILS_ROOT        = "/home/protonet/dashboard/current/"
+DB_CONFIG_FILE    = "/home/protonet/dashboard/current/config/database.yml"
+FILES_DIR         = "/home/protonet/dashboard/shared/files/"
+SYSTEM_USERS_DIR  = "#{FILES_DIR}system_users/"
 
 db_config = YAML::load(File.read(DB_CONFIG_FILE))
 connection = Mysql2::Client.new({
@@ -30,15 +31,8 @@ if last_clamav_scan + SCAN_INTERVAL < Time.now.to_i
     connection.query("INSERT INTO system_preferences (var, value) VALUES ('last_clamav_scan', '#{Time.now.to_i}')")
   end
   
-  puts "refresh virus db"
-  `/usr/bin/sudo /usr/bin/freshclam --log=/tmp/freshclam.log` # use custom log dir otherwise this will fail
-  # code 0 => success
-  # code 52 => network connection problem (no internet connection?)
-  # find all error codes here: http://linux.die.net/man/1/freshclam
-  freshclam_code = $?.exitstatus
-  
   puts "perform scan"
-  details = `/usr/bin/sudo /usr/bin/clamscan -i -r #{FILES_DIR}`
+  details = `/usr/bin/sudo /usr/bin/clamscan --exclude-dir=#{SYSTEM_USERS_DIR} -i -r #{FILES_DIR}`
   # code 0 => no virus found
   # code 1 => virus found
   # code 2 => error
@@ -54,7 +48,7 @@ if last_clamav_scan + SCAN_INTERVAL < Time.now.to_i
   
   puts "clamscan return code: #{code}"
   
-  `cd #{RAILS_ROOT} && RAILS_ENV=production bundle exec rake report:virus_scan code=#{code} freshclam_code=#{freshclam_code} details="#{URI.escape(details)}"`
+  `cd #{RAILS_ROOT} && RAILS_ENV=production bundle exec rake report:virus_scan code=#{code} details="#{URI.escape(details)}"`
 end
 
 connection.close

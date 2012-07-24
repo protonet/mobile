@@ -5,12 +5,22 @@ class SystemPublishToWeb
     def publish
       return [false, RuntimeError.new("doesn't work in non-production environments")] unless Rails.env == 'production'
       monitor_service
+      SystemPreferences.public_host = "#{SystemPreferences.publish_to_web_name}.protonet.info"
+      SystemPreferences.public_host_https = true
+      SystemPreferences.publish_to_web = true
+      # to handle local dns resolution for the publish to web domain
+      `/usr/bin/sudo #{configatron.current_file_path}/script/init/published_host update #{SystemPreferences.public_host}`
+      SystemDnsmasq.restart_active
       true
     end
     
     def unpublish
       return [false, RuntimeError.new("doesn't work in non-production environments")] unless Rails.env == 'production'
       SystemMonit.remove(:publish_to_web) if SystemMonit.exists?(:publish_to_web)
+      SystemPreferences.public_host = SystemPreferences.defaults[:public_host]
+      SystemPreferences.public_host_https = SystemPreferences.defaults[:public_host_https]
+      SystemPreferences.publish_to_web = false
+      `/usr/bin/sudo #{configatron.current_file_path}/script/init/published_host remove`
       true
     end
     
@@ -79,6 +89,7 @@ check host publish_to_web with address directory.protonet.info
    start program = "#{start_cmd}"
    stop program = "#{stop_cmd}"
 EOS
+      `#{start_cmd}`
       SystemMonit.add_custom(:publish_to_web, config)
     end
     

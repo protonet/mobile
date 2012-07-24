@@ -81,8 +81,7 @@
   });
   
   protonet.on("user.came_online", function(user) {
-    $.each(user.subscribed_channel_ids, function(i, uuid) {
-      var channelId = protonet.data.Channel.getIdByUuid(uuid);
+    $.each(user.subscriptions, function(i, channelId) {
       subscriptions[channelId] = subscriptions[channelId] || [];
       subscriptions[channelId].push(user.id);
     });

@@ -8,7 +8,7 @@
 <h3>Settings</h3>
 <%- if incoming_interface == "published_to_web" %>
   <p class="info-message">
-    <strong>Please note:</strong> You are currently connected via <i>Web Publishing</i>. If you now shutdown or rename it, you will lose connection.</strong>
+    <strong>Please note:</strong> You are currently connected via <i>Web Publishing</i>. If you now shutdown or rename it, you will lose your connection.</strong>
   </p>
 <%- end %>
 <%= form_tag preferences_publish_to_web_update_path, { :remote => true, 'data-type' => 'html', :class => 'publish-to-web' } do -%>
@@ -21,11 +21,11 @@
     <%= label_tag 'preferences[publish_to_web]', 'Status:' %>
     <span>
       <label>
-        <input type="radio" name="preferences[publish_to_web]" value="true" <%= "checked" if SystemPublishToWeb.status %>>
+        <input type="radio" name="preferences[publish_to_web]" value="true" <%= "checked" if SystemPreferences.publish_to_web %>>
         On
       </label>
       <label>
-        <input type="radio" name="preferences[publish_to_web]" value="false" <%= "checked" unless SystemPublishToWeb.status %>>
+        <input type="radio" name="preferences[publish_to_web]" value="false" <%= "checked" unless SystemPreferences.publish_to_web %>>
         Off
       </label>
     </span>
@@ -33,23 +33,5 @@
   <%= button "Save" %>
 <%- end -%>
 
-<h3>Privacy</h3>
-<%= form_tag(preferences_privacy_update_path, { 'data-ajax-auto-submit' => '1' }) do %>
-  <%= hidden_field_tag 'section', 'publish_to_web' %>
-  <%= hidden_field_tag 'interface', 'published_to_web'  %>
-  <%= hidden_field_tag 'preferences[allow_dashboard_for_strangers]', false  %>
-  <label class="checkbox-row">
-    <%= check_box_tag 'preferences[allow_dashboard_for_strangers]', true, (SystemPreferences.privacy['published_to_web']["allow_dashboard_for_strangers"] rescue false) %> Visitors can chat and see files in the <strong><%= Channel.home.display_name %></strong> channel without creating an account
-  </label>
-<%- end %>
-<%= form_tag(preferences_privacy_update_path, { 'data-ajax-auto-submit' => '1' }) do %>
-  <%= hidden_field_tag 'section', 'publish_to_web' %>
-  <%= hidden_field_tag 'interface', 'published_to_web'  %>
-  <%= hidden_field_tag 'preferences[allow_registrations_for_strangers]', false  %>
-  <label class="checkbox-row">
-    <%= check_box_tag 'preferences[allow_registrations_for_strangers]', true, (SystemPreferences.privacy['published_to_web']["allow_registrations_for_strangers"] rescue false) %> Visitors can create an account
-  </label>
-<%- end %>
-
-<h3>Promote your published node</h3>
-<p>You can easily <%= link_to "invite people", new_invitation_path, :class => 'promotion-link' %> from the outside to collaborate with you.</p>
+<h3>Invite people</h3>
+<p>You can easily <%= link_to "invite people", new_invitation_path, :class => 'promotion-link' %> to collaborate with you.</p>

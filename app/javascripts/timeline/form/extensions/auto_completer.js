@@ -7,6 +7,8 @@ protonet.timeline.Form.extensions.AutoCompleter = function(input) {
     prefix:   "@"
   });
   
+  // FIXME: ONLY SUGGEST USERS THAT ARE IN THE SAME CHANNEL AS I AM
+  
   function collectData(channelId) {
     var users         = protonet.data.User.getCache(),
         channels      = protonet.data.Channel.getCache(),

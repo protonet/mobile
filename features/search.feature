@@ -7,7 +7,8 @@ Feature: Using the protonet search
     And I am logged in as "dudemeister"
     Given I send the message "foobar"
     Then I should see "foobar" in the timeline
-    # And I go to the search page
-    # And I fill in "search form" with "foo"
-    # Then I should see "foobar" in the search results
+    And I visit "/search"
+    And I fill in "search_term" with "foo"
+    And I wait 2 seconds
+    Then I should see "foobar" within "output.content"
     

@@ -1,6 +1,8 @@
 <div class="getting-started widget">
   <h4>
-    <%= avatar(current_user, :width => 26, :height => 26, :title => "That's you!") %>
+    <%= link_to user_path(:id => current_user.id) do %>
+      <%= avatar(current_user, :width => 26, :height => 26, :title => "That's you!") %>
+    <%- end %>
     Welcome, <%= current_user.display_name %>
   </h4>
   <a class="getting-started-close-link" title="Don't show this again">&times;</a>

@@ -76,7 +76,7 @@ $.behaviors({
       
       $bubble
         .attr("class", "hover-hint hover-hint-" + direction)
-        .text(title)
+        .html(title)
         .appendTo("body");
       
       $element

@@ -184,21 +184,21 @@
   margin: 0 0 0 180px;
   width:288px;
 }
-.invitations-index-page ul.list{
+
+.invitations-index-page ul.list {
   height: 300px;
   max-height: 300px;
 }
 
-.invitations-page .channels ul{
-  padding:0;
+.invitations-page .channels ul {
+  padding: 0;
   margin: 0 0 4px 180px;
-  overflow-y:auto;
-  max-height:150px;
-  width:300px;
-  border: 1px #6D95FF solid;
+  overflow-y: auto;
+  max-height: 150px;
+  width: 300px;
 }
 
-.invitations-page #invitation_message{
+.invitations-page #invitation_message {
   width: 100%;
   height: 420px;
 }
@@ -215,9 +215,33 @@
   border-color: #f00 #fcc #fcc #f00;
 }
 
-#wysihtml5-toolbar{
-  margin: 25px 0 5px;
-  position:relative;
+.new_invitation .radio-group label {
+  padding-left: 5px;
+}
+
+.new_invitation .radio-group span.hint {
+  margin: 0 0 8px 7px;
+  display: block;
+}
+
+.new_invitation .radio-group span.hint a {
+  color: inherit;
+}
+
+.invitations-page .not-sent,
+.invitations-page .sent {
+  color: #666;
+}
+
+.invitations-page .accepted {
+  color: #00cc00;
+}
+
+#wysihtml5-toolbar {
+  margin: 30px 0 0;
+  padding: 5px;
+  background: #eee;
+  position: relative;
   
 }
 #wysihtml5-toolbar a.icon{
@@ -243,4 +267,40 @@
 #wysihtml5-toolbar a.link{
   position: relative;
   top: 2px;
+}
+
+.user-roles-table {
+  border: 1px solid #666;
+  border-collapse: separate;
+  border-spacing: 2px;
+}
+
+.user-roles-table td {
+  padding: 8px;
+}
+
+.user-roles-table .yes {
+  background: #00cc00;
+}
+
+.user-roles-table .no {
+  background: #e75c79;
+}
+
+.user-roles-table + .hint {
+  margin-top: 20px;
+}
+
+.user-roles-table tr:first-child td {
+  width: 290px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.user-roles-table .label {
+  text-align: right;
+}
+
+.user-roles-table tr:first-child td:first-child {
+  background: none;
 }

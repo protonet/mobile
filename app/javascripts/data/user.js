@@ -45,16 +45,8 @@
         sound: {
           type: "boolean",
           labels: {
-            "true":   "sound <span class=\"on\">on</span>",
-            "false":  "sound <span class=\"off\">off</span>"
-          },
-          defaultValue: true
-        },
-        smilies: {
-          type: "boolean",
-          labels: {
-            "true":  "smilies <span class=\"on\">on</span>",
-            "false": "smilies <span class=\"off\">off</span>"
+            "true": '<input checked="checked" name="sound" type="checkbox" value="1">\nPlay a sound when a message arrived',
+            "false": '<input id="user_notify_me" name="sound" type="checkbox" value="0">\nPlay a sound when a message arrived'
           },
           defaultValue: true
         }
@@ -65,8 +57,8 @@
     preferencesConfig.reply_notification = {
       type: "notification",
       labels: {
-        "true":  "reply notifications <span class=\"on\">on</span>",
-        "false": "reply notifications <span class=\"off\">off</span>"
+        "true": '<input checked="checked" name="notification" type="checkbox" value="1">\nShow desktop notifications',
+        "false": '<input id="user_notify_me" name="notification" type="checkbox" value="0">\nShow desktop notifications'
       },
       defaultValue: protonet.ui.Notification.hasPermission()
     };
@@ -102,12 +94,13 @@
     }
     
     $.extend(user, {
-      isAdmin:    adminIds.indexOf(user.id) !== -1,
-      isViewer:   user.id == viewerId,
-      isRemote:   String(user.id).indexOf("_") !== -1,
-      isStranger: user.name.match(/^guest\..+$/),
-      isOnline:   oldIsOnline !== undef ? oldIsOnline : false,
-      avatar:     oldAvatar || user.avatar || defaultAvatar
+      isAdmin:        adminIds.indexOf(user.id) !== -1,
+      isViewer:       user.id == viewerId,
+      isRemote:       String(user.id).indexOf("_") !== -1,
+      isStranger:     user.name.match(/^guest\..+$/),
+      isOnline:       oldIsOnline !== undef ? oldIsOnline : false,
+      subscriptions:  user.subscriptions || [],
+      avatar:         oldAvatar || user.avatar || defaultAvatar
     });
     
     dataCache[user.id] = user;
@@ -130,6 +123,15 @@
     cache(user);
   });
   
+  // Annoying legacy issue: user.came_online sends under certain circumstances a "subscribed_channel_ids" array containing uuids
+  protonet.before("user.came_online", function(user) {
+    if (user.subscribed_channel_ids) {
+      user.subscriptions = $.map(user.subscribed_channel_ids, function(uuid) {
+        return protonet.data.Channel.getIdByUuid(uuid) || null;
+      });
+      delete user.subscribed_channel_ids;
+    }
+  });
   
   // Subscribe to a bunch of socket events that contain user information
   protonet.on("meep.receive meep.sent", function(meep) {
@@ -298,7 +300,12 @@
       return adminIds.indexOf(id) !== -1;
     },
     
-    hasSubscribedToChannel: function(userId, channelId) {
+    getSubscriptions: function(id) {
+      var user = dataCache[id];
+      return user ? user.subscriptions : [];
+    },
+    
+    isSubscribedToChannel: function(userId, channelId) {
       return protonet.data.Channel.isSubscribedByUser(channelId, userId);
     },
     
@@ -363,7 +370,7 @@
       
       return this.isAdmin(userId)                                           // admin has access to everything
         || path.startsWith(userFilesPath)                                   // is viewer's file space
-        || (channelId && this.hasSubscribedToChannel(userId, channelId));   // is subscribed by user;
+        || (channelId && this.isSubscribedToChannel(userId, channelId));   // is subscribed by user;
     },
     
     hasReadAccessToFile: function(userId, path) {
@@ -375,7 +382,7 @@
         || path.count("/") < 3                                              // /, /users/, /channels/, /foo/, ...
         || path.startsWith(userFilesPath)                                   // is viewer's file space
         || (!path.startsWith("/users/") && !path.startsWith("/channels/"))  // any other root tree can be accessed (eg. /info/foo/bar.gif)
-        || (channelId && this.hasSubscribedToChannel(userId, channelId));   // is subscribed by user;
+        || (channelId && this.isSubscribedToChannel(userId, channelId));   // is subscribed by user;
     }
   };
   

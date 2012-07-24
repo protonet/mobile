@@ -19,19 +19,16 @@ protonet.text_extensions.provider.GithubCommit = {
     protonet.data.GitHub.getCommit(repoOwner, repoName, commitId, function(response) {
       var titles = [], codes = [], classes = [], links = [];
       
-      $.each(["added", "modified", "removed"], function(i, type) {
-        $.each(response[type] || [], function(i, file) {
-          var fileName = file.filename || file;
-          titles.push(fileName);
-          links.push(["http://github.com", repoOwner, repoName, "tree", commitId, fileName].join("/"));
-          codes.push(file.diff);
-          classes.push(type);
-        });
+      $.each(response["files"] || [], function(i, file) {
+        titles.push(file.filename || file);
+        links.push(file.blob_url);
+        codes.push(file.patch);
+        classes.push(status);
       });
       
       onSuccess({
-        title:        response.message,
-        description:  response.committer.name + " (" + response.committer.login + "), " + repoName,
+        title:        response.commit.message,
+        description:  response.commit.committer.name + ", " + repoName,
         code:         codes,
         codeTitle:    titles,
         codeClass:    classes,

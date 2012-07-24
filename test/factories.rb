@@ -3,7 +3,6 @@ FactoryGirl.define do
     login                 { Faker::Internet.user_name }
     email                 { Faker::Internet.email }
     password              123456
-    password_confirmation 123456
   end
 
   factory :channel do
@@ -11,7 +10,7 @@ FactoryGirl.define do
   end
 
   factory :meep do
-    message { Faker::Lorem.sentence }
+    message { Faker::Lorem.sentence[0..30] }
     user
     channel
   end

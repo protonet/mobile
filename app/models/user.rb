@@ -5,8 +5,8 @@ class User < ActiveRecord::Base
   
   devise :recoverable, :database_authenticatable, :registerable, :encryptable, :rememberable, :token_authenticatable, :encryptor => :restful_authentication_sha1
 
-  attr_accessible :login, :email, :first_name, :last_name, :password, :password_confirmation, :avatar_url,
-    :channels_to_subscribe, :external_profile_url, :node, :node_id
+  attr_accessible :login, :email, :first_name, :last_name, :password, :avatar_url,
+    :channels_to_subscribe, :external_profile_url, :node, :node_id, :notify_me
 
   attr_accessor :channels_to_subscribe, :invitation_token, :avatar_url
 
@@ -16,7 +16,10 @@ class User < ActiveRecord::Base
   has_many  :channels,          :through => :listens, :select => "channels.*, listens.id AS listen_id, listens.last_read_meep as last_read_meep"
   has_many  :owned_channels,    :class_name => 'Channel', :foreign_key => :owner_id
   has_many  :invitations
-  has_and_belongs_to_many  :roles
+  has_and_belongs_to_many  :roles, :after_add => :handle_admin, :after_remove => :unhandle_admin
+  
+  has_many :notifications, :as => :subject
+  
   has_attached_file :avatar, :default_url => configatron.default_avatar, :preserve_files => true
   
   scope :registered, :conditions => "temporary_identifier IS NULL AND users.id != -1 AND users.node_id = 1"
@@ -27,6 +30,10 @@ class User < ActiveRecord::Base
   before_validation :generate_login_from_name
   after_validation :assign_roles_and_channels, :on => :create
   
+  before_validation :on => :create, :if => lambda { |u| !u.stranger? && !u.system? } do
+    self.last_seen = Time.now
+  end
+    
   after_create :send_create_notification, :unless => :anonymous?
   after_create :listen_to_channels, :unless => :anonymous?
   after_create :mark_invitation_as_accepted, :if => :invitation_token
@@ -34,7 +41,12 @@ class User < ActiveRecord::Base
     !u.stranger? && 
     !u.system?
   }
-  after_create :refresh_system_users, :if => lambda {|u| !u.stranger? && !u.system? && Rails.env.production? }
+  after_create :refresh_system_users, :if => lambda {|u|
+    !u.stranger? &&
+    !u.system? &&
+    Rails.env.production?
+  }
+  after_create :send_create_notification, :unless => :anonymous?
   
   after_destroy :move_meeps_to_anonymous
   after_destroy :move_owned_channels_to_anonymous
@@ -77,23 +89,29 @@ class User < ActiveRecord::Base
     Role.find_by_title('admin').users rescue []
   end
   
-  def self.recent_active
-    find(
-      Meep.connection.select_values("
-        SELECT user_id, count(meeps.id) as counter FROM meeps left outer join users on users.id = meeps.user_id
-        WHERE users.temporary_identifier IS NULL AND (users.id != -1) AND meeps.created_at > '#{(Time.now - 2.weeks).to_s(:db)}'
-        GROUP BY user_id ORDER BY counter DESC, meeps.id DESC LIMIT 20
-      ")
-    )
-  end
-  
   def self.prepare_for_frontend(user)
     {
       :id             => user.id,
       :name           => user.display_name,
       :avatar         => user.avatar.url,
-      :subscriptions  => user.channels.map(&:id)
+      :subscriptions  => user.channels.verified.map(&:id)
     }
+  end
+  
+  def self.build_system_users
+    registered.includes(:channels, :listens).each do |user|
+      user.create_folder
+      user.channels.verified.local.each do |channel|
+        channel_path = "channels/#{channel.id}"
+        if channel.rendezvous?
+          participant = (channel.rendezvous_participants - [user]).first || User.new(:login => "unknown (#{channel.rendezvous})")
+          command = "mount #{channel_path} \"system_users/#{user.login}/channels/shared between you and #{participant.login}\""
+        else
+          command = "mount #{channel_path} system_users/#{user.login}/channels/#{channel.name}"
+        end
+        user.system_users_script(command)
+      end
+    end
   end
   
   # devise 1.2.1 calls this
@@ -178,7 +196,7 @@ class User < ActiveRecord::Base
   # Passwords are always required if it's a new record, or if the password
   # or confirmation are being set somewhere.
   def password_required?
-    !stranger? && ( !persisted? || !password.nil? || !password_confirmation.nil? )
+    !stranger? && ( !persisted? || !password.nil?)
   end
   
   # skip validation if the user is a logged out (stranger) user
@@ -242,17 +260,14 @@ class User < ActiveRecord::Base
   
   def add_to_role(role_name)
     role = Role.find_by_title!(role_name.to_s)
-    self.roles << role unless roles.include?(role)
-    if role_name == 'admin'
-      subscribe(Channel.system)
-      subscribe(Channel.support) if Rails.env.production? rescue nil
+    unless roles.include?(role)
+      self.roles << role
     end
   end
   
   def remove_from_role(role_name)
     role = Role.find_by_title!(role_name.to_s)
     self.roles -= [role]
-    unsubscribe(Channel.system) if role_name == 'admin'
   end
   
   def admin?
@@ -348,10 +363,10 @@ class User < ActiveRecord::Base
     if invitation_token
       if invitation = Invitation.unaccepted.find_by_token(invitation_token)
         self.channels_to_subscribe = Channel.find(invitation.channel_ids)
-        self.roles = if invitation.invitee_role
-            [Role.find_by_title('invitee')]
+        self.roles = if invitation.role == 'admin'
+            [Role.find_by_title('user'), Role.find_by_title('admin')]
           else
-            [Role.find_by_title(SystemPreferences.default_registered_user_group)]
+            [Role.find_by_title(invitation.role)]
           end
       else
         errors.add_to_base("The invitation token is invalid.")
@@ -411,21 +426,40 @@ class User < ActiveRecord::Base
     end
   end
   
-  def self.build_system_users
-    registered.includes(:channels, :listens).each do |user|
-      user.create_folder
-      user.channels.verified.local.each do |channel|
-        channel_path = "channels/#{channel.id}"
-        if channel.rendezvous?
-          participant = (channel.rendezvous_participants - [user]).first || User.new(:login => "unknown (#{channel.rendezvous})")
-          command = "mount #{channel_path} \"system_users/#{user.login}/channels/shared between you and #{participant.login}\""
-        else
-          command = "mount #{channel_path} system_users/#{user.login}/channels/#{channel.name}"
-        end
-        user.system_users_script(command)
+  def handle_admin(role)
+    if role.title == "admin"
+      # Only create a system message when there's someone in listening
+      # This avoids creating a system message for user "admin" during "rake db:setup"
+      if Channel.system.users.registered.size > 0
+        Meep.create_system_message("The user @#{self.display_name} is now an administrator") 
       end
+      
+      subscribe(Channel.system)
+      subscribe(Channel.support) if Rails.env.production?
     end
   end
   
-end
-
+  def unhandle_admin(role)
+    if role.title == "admin"
+      unsubscribe(Channel.system)
+      Meep.create_system_message("The user @#{self.display_name} is no longer an administrator")
+    end
+  end
+  
+  # handle last_seen for notifying about unread messages
+  # sets last_seen to NULL (still online)
+  def save_online_status
+    self.update_attribute(:last_seen, nil)
+    self.delete_notifications
+  end
+  
+  # sets last_seen to Time.now
+  def save_offline_status
+    self.update_attribute(:last_seen, Time.now)
+  end
+  
+  def delete_notifications
+    Notification.where(:subject_id => self.id, :subject_type => self.class).delete_all
+  end
+  
+end 

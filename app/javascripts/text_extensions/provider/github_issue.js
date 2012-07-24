@@ -18,10 +18,10 @@ protonet.text_extensions.provider.GithubIssue = {
         issueId = match[4];
     
     protonet.data.GitHub.getIssue(repoOwner, repoName, issueId, function(response) {
-      var image = response.gravatar_id && ("http://www.gravatar.com/avatar/" + response.gravatar_id);
+      var image = response.user.gravatar_id && ("http://www.gravatar.com/avatar/" + response.user.gravatar_id);
       onSuccess({
         title:          response.title,
-        titleAppendix:  "author: " + response.user + ", status: " + response.state,
+        titleAppendix:  "author: " + response.user.login + ", status: " + response.state,
         description:    response.body,
         image:          image
       });

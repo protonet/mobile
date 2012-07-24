@@ -19,7 +19,7 @@ Feature: Invitations
     When I fill in "invitation_email" with "friend-3@example.com"
     And I check "home"
     And I check "public"
-    And I press "Next Step"
+    And I press "Next step"
     Then I should see "Invitation for friend-3@example.com"
     And I should see "Status: not sent yet"
     And I press "Send invitation"
@@ -36,9 +36,8 @@ Feature: Invitations
     Given I invite "peter pan" to channel "Public" with token "1234567890" as "dudemeister"
     And I go unauthenticated to the start page
     When I accept the invitation with the token "1234567890"
-    Then I should see "You have been invited by dudemeister. Just create an account. It's free"
+    Then I should see "Create an account. It's free. You have been invited by dudemeister."
     And I fill in "user_password" with "friendly"
-    And I fill in "user_password_confirmation" with "friendly"
     And I press "Sign up"
     Then I should see "peter.pan" within "#my-widget"
     And I should see "You have signed up successfully"
@@ -49,12 +48,11 @@ Feature: Invitations
     
   @javascript
   Scenario: Invitee accepts invitation
-    Given I invite "peter panius" to channel "Public" with constrained rights and token "1a234567" as "dudemeister"
+    Given I invite "peter panius" to channel "Public" with restricted rights and token "1a234567" as "dudemeister"
     And I go unauthenticated to the start page
     When I accept the invitation with the token "1a234567"
-    Then I should see "You have been invited by dudemeister. Just create an account. It's free"
+    Then I should see "Create an account. It's free. You have been invited by dudemeister."
     And I fill in "user_password" with "friendly"
-    And I fill in "user_password_confirmation" with "friendly"
     And I press "Sign up"
     Then I should see "peter.panius" within "#my-widget"
     And I should see "You have signed up successfully"
@@ -73,6 +71,3 @@ Feature: Invitations
     And I accept the invitation with the token "1122334455"
     Then I should be on the new_user_session page
     And I should see "The invitation token is invalid"
-    
-  @wip
-  Scenario: Send copy of Invitation to Inviter too

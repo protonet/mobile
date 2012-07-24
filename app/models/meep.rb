@@ -25,6 +25,7 @@ class Meep < ActiveRecord::Base
   before_create :set_author
   before_create :parse_text_extension
   after_create :send_create_to_queue
+  after_create :send_email_notification
   after_destroy :send_destroy_to_queue
   
   def self.prepare_many_for_frontend(meeps, additional_attributes = {})
@@ -44,6 +45,10 @@ class Meep < ActiveRecord::Base
   
   def self.valid_attributes
     column_names + ['socket_id']
+  end
+  
+  def self.create_system_message(message)
+    Meep.create!(:message => message, :user => User.system, :channel => Channel.system)
   end
   
   def local?
@@ -115,6 +120,39 @@ class Meep < ActiveRecord::Base
       :conditions => ["meeps.id > ? AND meeps.channel_id = ?", id, channel.id],
       :limit => count
     )
+  end
+  
+  def send_email_notification
+    thread = Thread.new do
+      logins = message.scan(/(?:\s|^|\()@([\w\.\-_@]+)/).flatten
+      if channel.rendezvous?
+        # notify if meep was created in a rendezvous
+        usr = (channel.rendezvous_participants - [user]).first
+        if usr && usr.last_seen && usr.notify_me # usr is offline
+          Notification.create(
+            :event_type => "private_message",
+            :actor => user,
+            :subject => usr,
+            :secondary_subject => self
+          )
+        end
+      elsif logins.any?
+        # notify if meep contains @reply
+        logins.each do |login|
+          login.gsub!(/\.$/, "")
+          usr = User.find_by_login(login)
+          if usr && usr.last_seen && usr.notify_me && usr.channels.include?(channel)
+            Notification.create(
+              :event_type => "atreply",
+              :actor => user,
+              :subject => usr,
+              :secondary_subject => self
+            )
+          end
+        end
+      end
+    end
+    thread.join if Rails.env.test? # wait for the threads to complete
   end
   
   private

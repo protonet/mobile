@@ -1,20 +1,20 @@
 <%= render "shared/nav_users"%>
 <output class="content user-list" data-tab="users">
-  <h2>Administrators <%- if current_user.admin? %><a data-hover-hint="top" title="You can give any user admin rights (go to profile -> click 'edit')" class="hint">(?)</a><%- end %></h2>
+  <h2>Administrators</h2>
   <%- if Role.find_by_title('admin').users.size %>
     <p>Contact one of these people if you've any feedback:</p>
     <ul>
       <%= render :partial => "user", :collection => User.admins %>
     </ul>
   <%- else -%>
-    <p>This node doesn't have any administrators. Anarchy!</p>
+    <p>This node doesn't have any administrators. Please contact the <a href="mailto:team@protonet.info">protonet support</a>.</p>
   <%- end -%>
   
   <%= form_tag(search_users_path, :remote => true, :method => :get, :id => "search_users", 'data-type' => 'html', 'data-avoid-disabling' => 'true' ) do %>
-    <h2>Discover all registered users</h2>
+    <h2>All registered users</h2>
     
     <div class="inputs">
-      <input type="search" placeholder="User name or id ..." name="search_term" id="users_search_term" value="<%=params[:search_term]%>" data-users-autocomplete> 
+      <input type="search" placeholder="Find ..." name="search_term" id="users_search_term" value="<%=params[:search_term]%>" data-users-autocomplete> 
       <%= button 'Go', :style => 'display: none' %>
     </div>
     

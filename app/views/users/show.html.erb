@@ -17,7 +17,7 @@
     <%= link_button("Start private chat", "/?rendezvous_with=#{@user.id}", { 'data-rendezvous-with' => @user.id }) %>
     <%= link_button("Send @reply", "/?reply_to=#{ERB::Util.u(@user.display_name)}", { 'data-reply-to' => @user.display_name }) %>
     <%- if current_user.admin? && current_user.email != "admin@protonet.local" %>
-      or <a href="mailto:<%= @user.email %>" target="_blank">send an e-mail</a>. <a data-hover-hint="top" title="Only admins can see the user's e-mail address" class="hint">(?)</a>
+      or <a href="mailto:<%= @user.email %>" target="_blank">send an email</a>. <a data-hover-hint="top" title="Only admins can see the user's email address" class="hint">(?)</a>
     <%- end %>
   </p>
   

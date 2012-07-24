@@ -40,34 +40,26 @@
   <%- end %>
   
   <%- unless @user.stranger? && @user.anonymous? %>
-    <h3>Change password</h3>
-    <%- if SystemPreferences.remote_ldap_sign_on == true -%>
-      <p class="hint">You can't change the password since the admin of this node enabled ldap authentication.</p>
-    <%- else %>
+    <%- unless SystemPreferences.remote_ldap_sign_on -%>
       <%- if current_user.admin? && current_user != @user %>
-        <%= form_tag({ :action => 'generate_new_password' }, { :remote => true, 'data-type' => 'html', 'data-cucumber' => 'change-password' }) do %>
+        <h3>Reset password</h3>
+        <%= form_tag({ :action => 'generate_new_password' }, { :remote => true, 'data-type' => 'html', 'data-cucumber' => 'change-password', :class => 'single-button-form' }) do %>
           <%= hidden_field_tag :id, @user.id %>
           <%= hidden_field_tag :user_id, @user.id %>
-          <div class="form-field">
-            <%= label_tag :send_email, 'Send new password by email:' %>
-            <%= check_box_tag :send_email, true %>
-          </div>
-          <%= button "Generate new password" %>
+          <%= button "Generate new" %>
+          <%= button "Generate new and send to user via email", :name => 'send_email', :value => true %>
         <% end %>
       <%- else %>
+        <h3>Change password</h3>
         <%= form_tag({ :action => 'change_password' }, { :remote => true, 'data-type' => 'html', 'data-cucumber' => 'change-password' }) do %>
           <%= hidden_field_tag :id, @user.id %>
           <div class="form-field">
-            <%= label_tag :current_password, 'Current password:' %>
+            <%= label_tag :current_password, 'Old password:' %>
             <%= password_field_tag :current_password, nil %>
           </div>
           <div class="form-field">
             <%= label_tag :password, 'New password:' %>
-            <%= password_field_tag :password, nil %> <a data-hover-hint="top" title="Min. 8 characters" class="hint">(?)</a>
-          </div>
-          <div class="form-field">
-            <%= label_tag :password_confirmation, 'Confirm password:' %>
-            <%= password_field_tag :password_confirmation, nil %>
+            <%= password_field_tag :password, nil %> <a data-hover-hint="top" title="Minimum 8 characters" class="hint">(?)</a>
           </div>
           <%= button "Save" %>
         <% end %>
@@ -75,37 +67,60 @@
     <%- end -%>
   <%- end %>
   
+  <%- unless @user.stranger? && @user.anonymous? %>
+    <h3>Notifications</h3>
+    <%= form_for(@user, {
+      :url        => user_path,
+      :method     => :update,
+      :remote     => true,
+      :html       => { 
+        'data-type' => 'html', 
+        'data-cucumber' => 'user-notification',
+        'data-ajax-auto-submit' => '1' 
+      }
+    }) do |f| -%>
+      <%= hidden_field_tag :user_type, @user.class.to_s.underscore %>
+      <%= hidden_field_tag :user_id, @user.id %>
+      <%= f.hidden_field :id %>
+        <label class="checkbox-row">
+          <%= f.check_box :notify_me %>
+          Notify me about new messages via email
+        </label>
+    <%- end %>
+    <div id="settings"></div>
+  <%- end %>
+  
   <%- if current_user.admin? && !@user.stranger?  && !@user.anonymous? -%>
-    <h3>Admin settings <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
-    <%= form_tag({ :action => 'update_user_admin_flag' }, { :remote => true, 'data-type' => 'html', 'data-cucumber' => 'admin-settings' }) do %>
+    <h3>Permissions <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
+    <div class="info-box">
+      <h4>User types</h4>
+      <p><a id="show-comparison-chart">Learn more</a> about the different user types and their permissions.</p>
+    </div>
+    
+    <%= form_tag({ :action => 'update_roles' }, { :remote => true, 'data-type' => 'html', 'data-cucumber' => 'admin-settings' }) do %>
       <%= hidden_field_tag :id, @user.id %>
       <%= hidden_field_tag :user_id, @user.id %>
+      
       <div class="form-field">
-        <%= hidden_field_tag :admin, false, :id => "temp-#{Time.now.to_i}" %>
-        <%= label_tag :admin, 'Administration rights:' %>
-        <%= check_box_tag :admin, true, @user.admin? %>
+        <%= label_tag 'role-invitee', 'User with restricted rights:' %>
+        <%= radio_button_tag :role, 'invitee', @user.invitee?, :id => 'role-invitee' %>
+        <a data-hover-hint="top" title="<h4>User with restricted rights</h4> Users with restricted rights can only see channels they were susbcribed to (by an administrator). They aren't able to see users from other channels. This user type can be perfectly used for customers or guests that should have limited access." class="hint">(?)</a>
       </div>
       <div class="form-field">
-        <%= label_tag :admin_password, 'Your admin password:' %>
-        <%= password_field_tag :admin_password %>
+        <%= label_tag 'role-user', 'User:' %>
+        <%= radio_button_tag :role, 'user', !@user.invitee? && !@user.admin?, :id => 'role-user' %>
+        <a data-hover-hint="top" title="<h4>User</h4> Normal users can see all channels and users. They're not allowed to delete users or channels that they didn't create." class="hint">(?)</a>
       </div>
+      <div class="form-field">
+        <%= label_tag 'role-admin', 'Administrator:' %>
+        <%= radio_button_tag :role, 'admin', @user.admin?, :id => 'role-admin' %>
+        <a data-hover-hint="top" title="<h4>Administrator</h4> Users with administration rights can manage channels, other users and system related things." class="hint">(?)</a>
+      </div>
+      
       <%= button "Save" %>
     <% end %>
   <%- end -%>
   
-  <%- if current_user.admin? && !@user.anonymous? && !@user.admin? %>
-    <h3>User permissions <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
-    <p>Users with constrained rights only see channels they're subscribed to. They can't interact and see users that aren't in those channels.</p>
-    <%= form_tag({ :action => 'update_roles' }, { :remote => true, :class => 'single-button-form role-selector', 'data-type' => 'html', 'data-ajax-auto-submit' => '1' }) do %>
-      <%= hidden_field_tag :user_id, @user.id %>
-      <%= hidden_field_tag :id, @user.id %>
-      <label class="checkbox-row">
-        <%= check_box_tag :constrained_rights, true, @user.invitee? %>
-        User has constrained rights
-      </label>
-    <% end %>
-  <%- end %>
-
   <%- if current_user.admin? && !@user.anonymous? %>
     <h3>Delete user <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
     <%= form_tag({ :action => 'delete' }, { :remote => true, :class => 'single-button-form', 'data-type' => 'html' }) do %>
@@ -114,5 +129,8 @@
       <%= button "Delete", 'data-confirm' => 'Do you really want to delete this user? There\'s no undo.' %>
     <% end %>
   <%- end %>
-
+  
+  <script type="protonet/template" id="user-roles-table-template">
+    <%= render :partial => 'shared/user_roles_table' %>
+  </script>
 </output>

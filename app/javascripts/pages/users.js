@@ -1,9 +1,9 @@
 protonet.p("users", function($page) {
-  var $meepContainer    = $page.find("output[data-user-id]"),
-      $loadingIndicator = $meepContainer.next(".progress"),
-      $fileInput        = $page.find("[type=file]"),
-      $avatarForm       = $fileInput.parents("form"),
-      $meepList         = $("<ul>", { "class": "meeps" });
+  var $meepContainer        = $page.find("output[data-user-id]"),
+      $loadingIndicator     = $meepContainer.next(".progress"),
+      $fileInput            = $page.find("[type=file]"),
+      $avatarForm           = $fileInput.parents("form"),
+      $meepList             = $("<ul>", { "class": "meeps" });
   
   var fillUpUsers = function(page) {
     var path = document.location.pathname + ".js" + document.location.search;
@@ -93,5 +93,79 @@ protonet.p("users", function($page) {
       $avatarForm.find("button").removeClass("active");
     }
   }); 
+  
+  $("#show-comparison-chart").on("click", function() {
+    var $template = new protonet.utils.Template("user-roles-table-template").to$();
+    new protonet.ui.Dialog({ content: $template, headline: protonet.t("USER_ROLES_HEADLINE") });
+    return false;
+  });
+  
+  
+  // Edit Preferences stored in storage 
+  (function(){
+    var preferences = protonet.data.User.getPreferencesConfig(),
+        $container  = $("#settings");
+    $.each(preferences, function(key, config) {
+      $container.append(_getElement(key, config));
+    });
+    
+    function _getElement(key, config){
+      switch (config.type) {
+        case "boolean":
+          return _getBooleanElement(key, config);
+        case "notification":
+          return _getNotificationElement(key, config);
+        default:
+          return null;
+      }
+    }
+    
+    function _getNotificationElement(key, config) {
+      var value = String(protonet.data.User.getPreference(key)),
+          $item = $("<label>", {
+            html:       config.labels[value],
+            "class":    "checkbox-row",
+            click:      function(event) {
+              event.preventDefault();
+              var oldValue = protonet.data.User.getPreference(key),
+                  newValue = !oldValue,
+                  callback = function(newValue) {
+                    if(newValue == oldValue){
+                      protonet.ui.FlashMessage.show("error", protonet.t("USER_SETTINGS_ERROR"));
+                    }else{
+                      protonet.data.User.setPreference(key, newValue);
+                      $item.removeClass(String(oldValue)).addClass(String(newValue)).html(config.labels[String(newValue)]);
+                      protonet.ui.FlashMessage.show("notice", protonet.t("USER_SETTINGS_SUCCESS"));
+                    }
+                  };
+                  
+              if (newValue) {
+                protonet.ui.Notification.requestPermission(callback);
+              } else {
+                callback(newValue);
+              }
+            }
+          });
+        
+      return $item;
+    }
+    
+    function _getBooleanElement (key, config) {
+      var value = String(protonet.data.User.getPreference(key)),
+          $item = $("<label>", {
+            html:       config.labels[value],
+            "class":    "checkbox-row",
+            click:      function(event) {
+              event.preventDefault();
+              var oldValue = protonet.data.User.getPreference(key),
+                  newValue = !oldValue;
+              protonet.data.User.setPreference(key, newValue);
+              $item.removeClass(String(oldValue)).addClass(String(newValue)).html(config.labels[String(newValue)]);
+              protonet.ui.FlashMessage.show("notice", protonet.t("USER_SETTINGS_SUCCESS"));
+            }
+          });
+      return $item;
+    }
+  })();
   
 });

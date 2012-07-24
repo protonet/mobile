@@ -20,14 +20,12 @@ Please contact protonet support ASAP at team@protonet.info if you have not alrea
   
   task :virus_scan => :environment do
     code = ENV['code'].to_i
-    freshclam_code = ENV['freshclam_code'].to_i
     details = URI.unescape(ENV['details'])
     
     case code
     when 0
       msg = ":sun: Virus Scan: System is safe :sun:"
       msg += "\n{text}#{details}{/text}"
-      msg += "\nHowever there was an error updating the virus databases (exit code ##{freshclam_code})." if freshclam_code > 0
     when 1
       msg = ":exclamation: Virus Scan: Malicious files found :exclamation:"
       msg += "\n{text}#{details}{/text}"

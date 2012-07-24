@@ -125,9 +125,9 @@ $.behaviors({
   ".subpage:ajax:before": function(element, event){
     var $form = $(event.target),
         submitButtonName = $form.data("ujs:submit-button");
-        
+    
     if (!$form.data("avoid-disabling") && submitButtonName) {
-      $form.find("[name="+submitButtonName.name+"]").addClass("loading");
+      $form.find("[name='" + submitButtonName.name + "']").addClass("loading");
     }
   },
   

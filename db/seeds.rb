@@ -23,11 +23,14 @@ Node.local
 ['admin', 'user', 'guest', 'invitee', 'api', 'api-node'].each do |title|
   Role.find_or_create_by_title(title)
 end
+
 User.anonymous
 Channel.home
+Channel.system
+
 admin = User.create(:login => 'admin', :email => 'admin@protonet.local', :password => 'admin')
 admin.roles << Role.find_or_create_by_title('admin')
-Channel.system
+
 if Rails.env.production?
   admin.subscribe(Channel.support) rescue puts("WARNING: couldn't connect protonet-support channel.")
 end

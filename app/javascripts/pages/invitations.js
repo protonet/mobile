@@ -4,7 +4,8 @@ $(function() {
   var wysihtml5ParserRules = {
     "classes":{
       "avatar": 1,
-      "mail": 1
+      "mail": 1,
+      "footnote": 1
     },
     "tags": {
       strong: {},
@@ -46,6 +47,9 @@ $(function() {
     });
   };
   
-
-  
+  $("#show-comparison-chart").on("click", function() {
+    var $template = new protonet.utils.Template("user-roles-table-template").to$();
+    new protonet.ui.Dialog({ content: $template, headline: protonet.t("USER_ROLES_HEADLINE") });
+    return false;
+  });
 });

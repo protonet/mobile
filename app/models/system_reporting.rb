@@ -1,7 +1,7 @@
 class SystemReporting
   class << self
     def send_message line
-      Meep.create!(:message => line, :user => User.system, :channel => Channel.system)
+      Meep.create_system_message(line)
     end
   end
 end

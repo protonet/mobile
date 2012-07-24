@@ -346,24 +346,26 @@ a.close-link:hover {
   background: #FFFBE0;
   border: solid #FED144;
   border-width: 4px 1px 1px;
-  cursor: default;
+  cursor: auto;
   color: #000;
 }
 
 /** Hover Hint */
 .hover-hint {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   border-radius: 4px;
   position: absolute;
   background: #333;
-  padding: 3px 8px;
+  padding: 8px;
+  max-width: 350px;
   color: #fff;
-  font-size: 11px;
-  z-index: 20;
+  font-size: 12px;
+  z-index: 102;
   font-style: normal;
 }
 
 .hover-hint:after {
-  border: 5px solid transparent;
+  border: 8px solid transparent;
   content: "";
   position: absolute;
   width: 0;
@@ -371,7 +373,7 @@ a.close-link:hover {
 }
 
 .hover-hint-top {
-  margin-top: -9px;
+  margin-top: -14px;
 }
 
 .hover-hint-right {
@@ -379,17 +381,21 @@ a.close-link:hover {
 }
 
 .hover-hint-top:after {
-  border-top: 5px solid #333;
-  margin-left: -5px;
+  border-top: 8px solid #333;
+  margin-left: -8px;
   left: 50%;
-  bottom: -10px;
+  bottom: -16px;
 }
 
 .hover-hint-right:after {
-  border-right: 5px solid #333;
-  margin-top: -5px;
+  border-right: 8px solid #333;
+  margin-top: -7px;
   top: 50%;
-  left: -10px;
+  left: -16px;
+}
+
+.hover-hint h4 {
+  margin-bottom: 5px;
 }
 
 .hint[data-hover-hint] {
@@ -499,8 +505,8 @@ h2 .action-link {
 }
 
 .overlay {
-  background: #fff;
-  background: rgba(255, 255, 255, 0.8);
+  background: #666;
+  background: rgba(0, 0, 0, 0.6);
   display: none;
   top: 0;
   right: 0;
@@ -523,38 +529,44 @@ h2 .action-link {
   position: absolute;
 }
 
-.confirm-container,
-.overlay .info-message {
+.dialog section {
   border: 0;
   position: absolute;
-  width: 400px;
-  margin-left: -220px;
-  left: 50%;
-  top: 100px;
+  min-width: 400px;
+  max-width: 800px;
   padding: 20px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+}
+
+.small.dialog section {
+  max-width: 500px;
 }
 
 .overlay h3 {
   margin-bottom: 20px;
 }
 
-.confirm-container {
+.dialog section {
   background: #fff;
 }
 
-.confirm-container p,
-.confirm-container h1,
-.confirm-container output {
+.dialog .close {
+  font-size: 18px;
+  font-weight: bold;
+  position: absolute;
+  text-decoration: none;
+  right: 8px;
+  top: 7px;
+  color: #000;
+}
+
+.dialog p,
+.dialog h1 {
   margin-bottom: 20px;
 }
 
-.confirm-container button {
+.dialog button {
   margin-top: 0;
-}
-
-.confirm.overlay {
-  background: rgba(0, 0, 0, 0.6);
 }
 
 /* SPAN elements with the classes below are added by prettyprint. */
@@ -597,6 +609,11 @@ ol.linenums li::before {
   margin-right: 6px;
 }
 
+
+
 #sm2-container {
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
   z-index: 10000;
 }

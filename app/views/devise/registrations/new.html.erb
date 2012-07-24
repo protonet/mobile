@@ -3,7 +3,9 @@
    <fieldset>
      <h3>
        <%- if @invitation %>
-         You have been invited by <%= @invitation.user.display_name %>. Just create an account. It's free
+         <%= avatar(@invitation.user, :width => 32, :height => 32) %>
+         Create an account. It's free.<br>
+         <span>You have been invited by <%= @invitation.user.display_name %>.</span>
        <%- else %>
          Create an account. It's free.
        <%- end %>
@@ -24,10 +26,6 @@
        <%= f.password_field :password, :placeholder => "password" %>
        <span class="hint">min. 8 characters</span>
      </label>
-     <label>
-       <%= f.password_field :password_confirmation, :placeholder => "password" %>
-       <span class="hint">repeat for confirmation</span>
-     </label> 
      <div>
        <%= button "Sign up", :id => "register" %> <a href="/users/sign_in" class="promotion-link" data-avoid-ajax="1">already have an account?</a>
        <p class="hint">
