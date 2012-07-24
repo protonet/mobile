@@ -119,6 +119,12 @@ exports.handle = function (req, res) {
   authenticate(req, res, function (cache) {
     console.log('Authed as ' + cache.username);
     
+    // Reject path-breaking attempts
+    if (!cache.username.match(/^[^\.\/][^\/]*$/)) {
+      console.log('Rejecting username');
+      return requireAuth(res);
+    }
+    
     if (!(cache.dav)) {
       var options = {
         node: '/home/protonet/dashboard/shared/files/system_users/' + cache.username,
@@ -128,7 +134,6 @@ exports.handle = function (req, res) {
       };
       
       console.log('Creating jsDAV mount for ' + cache.username);
-      jsDAV.debugMode = true;
       cache.dav = jsDAV.mount(options);
     }
     
