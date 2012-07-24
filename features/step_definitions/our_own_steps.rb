@@ -399,12 +399,15 @@ end
 Then /^I delete the message "([^\"]*)"/ do |text|
   wait_until do    
     find(:css, ".meep", :text => text).click
+    sleep 1
   end
   wait_until do    
     find(:css, ".meep .meep-action-link").click
+    sleep 1
   end
   wait_until do    
     find(:css, ".context-menu-meep li", :text => "delete message").click
+    sleep 1
   end
 end
 
@@ -419,4 +422,9 @@ end
 
 Then /^I should see (\d+) "(.*?)" tag(?:s)$/ do |count, tag|
   page.has_css?(tag, :count => count)
+end
+
+Given /^SolrIndex is ready$/ do
+  Sunspot.index(Meep.all)
+  sleep 1
 end
