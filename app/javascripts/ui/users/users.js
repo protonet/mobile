@@ -46,11 +46,7 @@ protonet.ui.users = {
     var contextOptions = {
       "show profile": function($link, closeContextMenu) {
         var url = $link.prop("href");
-        if (protonet.config.allow_modal_views) {
-          protonet.open(url);
-        } else {
-          window.open(url, "profile" + new Date().getTime());
-        }
+        protonet.open(url);
         closeContextMenu();
       },
       "send @reply": function($link, closeContextMenu) {

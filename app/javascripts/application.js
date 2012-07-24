@@ -56,12 +56,12 @@ window.$document = $(document);
 
 $(function() {
   if (protonet.browser.IS_TOUCH_DEVICE()) {
-    protonet.config.allow_modal_views = false;
+    protonet.config.is_handicapped_browser = true;
     $("body").addClass("touch-device");
   }
   
   if ($.browser.msie && $.browser.version < 9) {
-    protonet.config.allow_modal_views = false;
+    protonet.config.is_handicapped_browser = true;
   }
   
   protonet.ui.FlashMessage.initialize();

@@ -2,22 +2,11 @@
 
 <p>Here you can change colors, build custom functionality and adjust things. Free your mind.</p>
 
-<h3>General</h3>
+<h3>Title</h3>
 <%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'customize' %>
   <div class="form-field">
-    <%= label_tag 'preferences[browser_title]', 'Title' %>
     <%= text_field_tag 'preferences[browser_title]', SystemPreferences.browser_title %>
-  </div>
-  <div class="form-field">
-    <%= hidden_field_tag 'preferences[show_only_online_users]', false, {:id => nil}  %>
-    <%= label_tag 'preferences[show_only_online_users]', 'Show only online users' %> <%= check_box_tag 'preferences[show_only_online_users]', true, SystemPreferences.show_only_online_users %>
-    <a class="hint" data-hover-hint="top" title="Whether offline users should be hidden in the user box. Recommended if your node has a lot of users (> 1000)">(?)</a>
-  </div>
-  <div class="form-field">
-    <%= hidden_field_tag 'preferences[allow_modal_views]', false, {:id => nil}  %>
-    <%= label_tag 'preferences[allow_modal_views]', 'Enable modal views' %> <%= check_box_tag 'preferences[allow_modal_views]', true, SystemPreferences.allow_modal_views %>
-    <a class="hint" data-hover-hint="top" title="Whether sub pages should be displayed in a modal dialog">(?)</a>
   </div>
   <%= button "Save" %>
 <%- end %>

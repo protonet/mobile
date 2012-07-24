@@ -28,11 +28,7 @@
   function cacheSubscriptions(data) {
     $.each(data, function(uuid, users) {
       var channelId = uuidToIdMapping[uuid];
-      if (protonet.config.show_only_online_users) {
-        subscriptions[channelId] = users;
-      } else {
-        subscriptions[channelId] = $.merge(subscriptions[channelId] || [], users).unique();
-      }
+      subscriptions[channelId] = $.merge(subscriptions[channelId] || [], users).unique();
     });
   }
 

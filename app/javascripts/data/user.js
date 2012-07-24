@@ -97,9 +97,9 @@
       isAdmin:        adminIds.indexOf(user.id) !== -1,
       isViewer:       user.id == viewerId,
       isRemote:       String(user.id).indexOf("_") !== -1,
-      isStranger:     user.name.match(/^guest\..+$/),
+      isStranger:     !!user.name.match(/^guest\..+$/),
       isOnline:       oldIsOnline !== undef ? oldIsOnline : false,
-      subscriptions:  user.subscriptions || [],
+      subscriptions:  user.subscriptions || (oldUser ? oldUser.subscriptions : []),
       avatar:         oldAvatar || user.avatar || defaultAvatar
     });
     
@@ -166,6 +166,16 @@
     });
     
     $.each(data.online_users, function(i, user) {
+      user.subscriptions = $.map(data.channel_users, function(subscriptions, uuid) {
+        var channelId = protonet.data.Channel.getIdByUuid(uuid);
+        if (!channelId) {
+          return null;
+        }
+        if (subscriptions.indexOf(user.id) === -1) {
+          return null;
+        }
+        return channelId;
+      });
       cache(user);
       user.isOnline = true;
     });

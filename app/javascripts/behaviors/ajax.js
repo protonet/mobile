@@ -51,7 +51,7 @@ protonet.open = (function() {
         })(),
         url     = link.href;
     
-    if (!protonet.config.allow_modal_views) {
+    if (protonet.config.is_handicapped_browser) {
       return fallback(eventOrUrl);
     }
 

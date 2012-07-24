@@ -34,9 +34,7 @@ protonet.ui.users.Widget = {
       .on("user.subscribed_channel user.unsubscribed_channel channels.update_subscriptions channel.change", this.filter.bind(this))
       
       .on("user.created", function(data) {
-        if (!protonet.config.show_only_online_users) {
-          this.create$Element(data.id, true);
-        }
+        this.create$Element(data.id, true);
       }.bind(this))
       
       .after("users.update_status", function() {
@@ -187,7 +185,7 @@ protonet.ui.users.Widget = {
   cleanup: function() {
     var users = protonet.data.User.getCache();
     $.each(users, function(i, user) {
-      if ((user.isStranger || protonet.config.show_only_online_users) && !user.isOnline) {
+      if (user.isStranger && !user.isOnline) {
         this.remove$Element(user.id);
       }
     }.bind(this));
@@ -233,9 +231,6 @@ protonet.ui.users.Widget = {
       $element.addClass("online");
     } else {
       $element.removeClass("online").removeClass("typing");
-      if (protonet.config.show_only_online_users) {
-        this.remove$Element(userId);
-      }
     }
   },
   

@@ -253,6 +253,18 @@ class User < ActiveRecord::Base
     # invitee & stranger: return all verified channels
     return channels.verified
   end
+  
+  def allowed_users
+    if invitee? || stranger?
+      users = []
+      channels.verified.each do |channel|
+        users = users | channel.users
+      end
+    else
+      users = User.registered
+    end
+    users
+  end
 
   def password_required_with_logged_out_user?
     skip_validation ? false : password_required_without_logged_out_user?
