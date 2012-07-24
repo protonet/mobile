@@ -14,9 +14,8 @@
   position: relative;
   font-size: 16px;
   padding-left: 36px;
-  line-height: 1.2;
+  line-height: 1.25;
   margin-bottom: 20px;
-  text-shadow: 0 1px 1px #fff;
 }
 
 .getting-started h4 img {
@@ -25,7 +24,7 @@
   position: absolute;
   left: -3px;
   top: 50%;
-  margin-top: -14px;
+  margin-top: -13px;
   -webkit-transform: rotate(-4deg) translate3d(0, 0, 0);
   -moz-transform: rotate(-4deg) translate3d(0, 0, 0);
   transform: rotate(-4deg) translate3d(0, 0, 0);
@@ -44,30 +43,63 @@
   color: #000;
 }
 
-.getting-started li {
-  margin-top: 14px;
-  line-height: 1.4;
-  position: relative;
+.getting-started ol {
+  counter-reset: li;
+  margin: 10px -20px 0 -15px;
 }
 
-.getting-started li.done {
-  color: #000;
-  text-decoration: line-through;
+.getting-started li {
+  padding: 7px 15px 7px 15px;
+  position: relative;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .getting-started li a {
+  line-height: 19px;
+  padding-left: 35px;
+  display: block;
   text-decoration: none;
   color: #333;
 }
 
-.getting-started p {
-  font-size: 11px;
-  line-height: 1.5;
-  color: #555;
+.getting-started li a:hover {
+  color: #000;
+}
+
+.getting-started li a::before {
+  content: counter(li);
+  counter-increment: li;
+  border-radius: 4px;
+  left: 19px;
+  top: 6px;
+  width: 20px;
+  height: 19px;
+  color: #666;
+  text-align: center;
+  line-height: 19px;
+  background: rgba(255, 255, 255, 0.4);
+  position: absolute;
+}
+
+.getting-started li a:hover::before {
+  color: #000;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.getting-started li.done a {
+  text-decoration: line-through;
+  color: #666;
+}
+
+.getting-started li.done a::before {
+  content: "\2714";
+  color: #00cc00;
+  font-weight: bold;
 }
 
 .getting-started .logout-link {
-  color: #333;
+  color: #999;
   float: right;
+  margin: 10px -5px -5px;
   text-decoration: none;
 }

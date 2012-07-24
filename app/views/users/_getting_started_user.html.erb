@@ -8,30 +8,26 @@
   <a class="getting-started-close-link" title="Don't show this again">&times;</a>
   <ol>
     <li class="upload-avatar">
-      <%= link_to edit_user_path(:id => current_user.id) do %>
-        <strong>1. Upload a profile picture</strong>
-        <p>Let others know who you are.</p>
+      <%= link_to edit_user_path(:id => current_user.id), 'data-hover-hint' => 'top', :title => 'Let others know who you are' do %>
+        Upload a profile picture
       <%- end %>
     </li>
     <%- unless current_user.invitee? %>
       <li class="create-channel">
         <%- if Channel.real.size > 1 %>
-          <%= link_to channels_path do %>
-            <strong>2. Subscribe to channels</strong>
-            <p>Channels are like groups. You can create new ones or subscribe to existing ones.</p>
+          <%= link_to channels_path, 'data-hover-hint' => 'top', :title => 'Channels are like groups. You can create new ones or subscribe to existing ones' do %>
+            Subscribe to channels
           <%- end %>
         <%- else %>
-          <%= link_to new_channel_path do %>
-            <strong>2. Create a channel</strong>
-            <p>Channels are like groups/topics. You can create new ones or subscribe to existing ones.</p>
+          <%= link_to new_channel_path, 'data-hover-hint' => 'top', :title => 'Channels are like groups/topics. You can create new ones or subscribe to existing ones' do %>
+            Create a channel
           <%- end %>
         <%- end %>
       </li>
     <%- end %>
     <li class="write-meep">
-      <a>
-        <strong><%= current_user.invitee? ? "2" : "3" %>. Write something</strong>
-        <p>Start a conversation.</p>
+      <a data-hover-hint="top" title="Start a conversation">
+        Write something
       </a>
     </li>
   </ol>
