@@ -18,6 +18,7 @@
     "mkdirp": "0.3.0",
     "watch": "git://github.com/protonet/watch.git",
     "iconv": "git://github.com/protonet/node-iconv.git",
-    "xattr": "git://github.com/protonet/node-xattr.git"
+    "xattr": "git://github.com/protonet/node-xattr.git",
+    "jsDAV": "git://github.com/protonet/jsDAV.git"
   }
 }

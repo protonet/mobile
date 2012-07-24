@@ -107,6 +107,9 @@ http.createServer(function(request, response) {
       params    = parsedUrl.query,
       task      = parsedUrl.pathname.replace(/^\/|\/$/g, ""),
       headers   = request.headers;
+  
+  if (task.substr(0,4) == "dav/")
+    task = "dav";
 
   switch(task) {
     case "screenshooter":
@@ -127,6 +130,11 @@ http.createServer(function(request, response) {
     case "scrape":
       require("./tasks/scrape").scrape(params, response);
       break;
+      
+    case "dav":
+      require('./tasks/dav').handle(request, response);
+      break;
+      
     default:
       response.writeHead(200, {'Content-Type': 'text/plain'});
       response.end('WTF?\n');
