@@ -1,4 +1,5 @@
 var jsDAV  = require('jsDAV');
+var jsLock = require('jsDAV/lib/DAV/plugins/locks/fs');
 
 var crypto = require('crypto');
 var http   = require('http');
@@ -124,10 +125,13 @@ exports.handle = function (req, res) {
       console.log('Rejecting username');
       return requireAuth(res);
     }
-    
+
     if (!(cache.dav)) {
+      var fsPath = '/home/protonet/dashboard/shared/files/system_users/' + cache.username;
+
       var options = {
-        node: '/home/protonet/dashboard/shared/files/system_users/' + cache.username,
+        node: fsPath,
+        locksBackend: new jsLock(fsPath + '/.locks'),
         mount: '/dav/',
         server: {},
         standalone: false
