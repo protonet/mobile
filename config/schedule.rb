@@ -27,7 +27,7 @@ end
 
 # restart wifi once a day
 every 1.day, :at => '3:00 am' do
-  runner "if SystemPreferences.wifi['mode']; SystemWifi.reconfigure!; end;"
+  runner "if SystemMonit.exists?(:wifi); SystemMonit.restart(:wifi); end"
 end
 
 every :reboot do
