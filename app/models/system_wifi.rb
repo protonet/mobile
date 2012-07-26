@@ -144,10 +144,11 @@ ignore_broadcast_ssid=0
 wpa=2
 wpa_key_mgmt=WPA-PSK
 rsn_pairwise=CCMP
-rsn_preauth=1
 wpa_psk=#{SystemBackend.wpa_passphrase(ssid_name, password)}
-wpa_group_rekey=3600
-wpa_ptk_rekey=3600\n"
+wpa_group_rekey=0
+wpa_ptk_rekey=0
+wpa_gmk_rekey=0
+peerkey=1\n"
     end
     
     def ht_capabilities(channel)

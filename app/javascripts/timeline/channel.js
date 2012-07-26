@@ -339,13 +339,13 @@
     _renderMeep: function(meepDataOrForm, channelList, post) {
       var meep         = new protonet.timeline.Meep(meepDataOrForm),
           previousMeep = channelList.find(":first").data("instance");
-
+      
       if (previousMeep && this._shouldBeMerged(previousMeep, meep)) {
         meep.mergeWith(previousMeep.element);
       } else {
         meep.render(channelList);
       }
-
+      
       if (post) {
         meep.post();
       }

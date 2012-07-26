@@ -1,5 +1,4 @@
 //= require "../utils/parse_uri_list.js"
-//= require "utils/replace_base_url.js"
 
 /**
  * @events
@@ -233,8 +232,7 @@ protonet.text_extensions.Input.prototype = {
   },
   
   setInput: function(data) {
-    data = protonet.text_extensions.utils.replaceBaseUrl(data);
-    this.hiddenInput.val(data && JSON.stringify(data));
+    this.hiddenInput.val(data ? JSON.stringify(data) : "");
   },
   
   reset: function() {

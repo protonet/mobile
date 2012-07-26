@@ -1,4 +1,9 @@
 $.behaviors({
+  "ul.remote-channel .text-extension-results.Meep a:click": function(element, event) {
+    event.stopImmediatePropagation();
+    event.preventDefault();
+  },
+  
   "li.meep:focus": function(element, event) {
     var $target     = $(event.target),
         $element    = $(element),

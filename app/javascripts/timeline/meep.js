@@ -11,6 +11,7 @@
 //= require "../utils/highlight_user_replies.js"
 //= require "../utils/parse_query_string.js"
 //= require "../utils/deep_equal.js"
+//= require "../text_extensions/utils/replace_base_url.js"
 
 /**
  * @example
@@ -216,6 +217,9 @@
       }
       
       var dataToSend = $.extend({}, this.data);
+      if (dataToSend.text_extension) {
+        dataToSend.text_extension = protonet.text_extensions.utils.replaceBaseUrl(dataToSend.text_extension);
+      }
       delete dataToSend.created_at;
       
       postMeep(dataToSend, function(status, newData, error) {

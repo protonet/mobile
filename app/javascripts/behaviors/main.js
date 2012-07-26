@@ -1,9 +1,4 @@
 $.behaviors({
-  "ul.remote-channel .text-extension-results.Meep a:click": function(element, event) {
-    event.stopImmediatePropagation();
-    event.preventDefault();
-  },
-  
   "a[data-channel-id]:dragstart": function(element, event) {
     if (event.dataTransfer) {
       var $element  = $(element),
