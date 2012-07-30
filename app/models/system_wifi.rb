@@ -147,8 +147,7 @@ rsn_pairwise=CCMP
 wpa_psk=#{SystemBackend.wpa_passphrase(ssid_name, password)}
 wpa_group_rekey=0
 wpa_ptk_rekey=0
-wpa_gmk_rekey=0
-peerkey=1\n"
+wpa_gmk_rekey=0\n"
     end
     
     def ht_capabilities(channel)
