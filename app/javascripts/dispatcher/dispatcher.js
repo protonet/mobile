@@ -11,7 +11,7 @@ protonet.dispatcher = {
   reinitialize: function() {
     var undef;
     
-    this.initialized = this.connected = this.connecting = undef;
+    this.initialized = this.connected = undef;
     
     this.create();
   },
@@ -86,17 +86,14 @@ protonet.dispatcher = {
   },
   
   connect: function() {
-    if (this.connected || this.connecting || !this.initialized) {
+    if (this.connected || !this.initialized) {
       return;
     }
     
-    this.connecting = true;
     this.currentProvider.connect();
   },
   
   connectCallback: function(status) {
-    this.connecting = false;
-    
     if (status) {
       this.connected = true;
       this.startCheck();

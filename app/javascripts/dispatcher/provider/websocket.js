@@ -74,8 +74,9 @@ protonet.dispatcher.provider.WebSocket = {
     $window.unbind(".websockets");
     
     this.socket.onmessage = $.noop;
-    this.socket.onclose = $.noop;
-    this.socket.onerror = $.noop;
+    this.socket.onopen    = $.noop;
+    this.socket.onclose   = $.noop;
+    this.socket.onerror   = $.noop;
     
     this.socket.close();
   },
