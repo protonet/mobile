@@ -50,7 +50,7 @@ class Mailer < ActionMailer::Base
     @host = host
     @user = user
     mail(
-      :from => "no-reply <mailer@protonet.info>",
+      :from => "protonet <mailer@protonet.info>",
       :to => user.email,
       :subject => "Reset your protonet password for #{SystemPreferences.public_host}"
     )
@@ -61,9 +61,9 @@ class Mailer < ActionMailer::Base
     @actor = actor
     @notifications = notifications
     mail(
-      :from => "no-reply <mailer@protonet.info>",
+      :from => "protonet <mailer@protonet.info>",
       :to => @user.email,
-      :subject => "#{actor.display_name} mentioned you."
+      :subject => "#{actor.display_name} mentioned you!"
     )
   end
   
@@ -72,7 +72,7 @@ class Mailer < ActionMailer::Base
     @actor = actor
     @notifications = notifications
     mail(
-      :from => "no-reply <mailer@protonet.info>",
+      :from => "protonet <mailer@protonet.info>",
       :to => @user.email,
       :subject => "New message from #{actor.display_name}!"
     )
