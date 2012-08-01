@@ -129,6 +129,14 @@
     },
     
     _success: function(stream) {
+      if (stream.stop) {
+        $document.on("DOMNodeRemoved.webcam", function(event) {
+          if (this.$video[0] == event.target || $.contains(event.target, this.$video[0])) {
+            stream.stop();
+            $document.off(".webcam");
+          }
+        }.bind(this));
+      }
       this.$video[0].src = (window.URL && window.URL.createObjectURL) ? window.URL.createObjectURL(stream) : stream;
     }
   });
