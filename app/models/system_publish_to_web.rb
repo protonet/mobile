@@ -1,6 +1,8 @@
 class SystemPublishToWeb
   
   class << self
+  
+    SSL_ROOT_PATH = '/home/protonet/dashboard/shared/config/protonet.d/local.protonet.info'
           
     def publish
       return [false, RuntimeError.new("doesn't work in non-production environments")] unless Rails.env == 'production'
@@ -36,6 +38,80 @@ class SystemPublishToWeb
       end  
     rescue Timeout::Error, StandardError
       false
+    end
+    
+    def correct_ssl_cert?
+      return false unless SystemPreferences.publish_to_web_name
+      
+      subject = `openssl x509 -in #{SSL_ROOT_PATH}.crt -subject -noout`
+      if subject.include? 'subject='
+        current = subject.match(/CN=([^.]+)\./)[1].to_s
+        return SystemPreferences.publish_to_web_name == current
+      end
+      
+      false
+    end
+    
+    def queue_ssl_cert
+      return if correct_ssl_cert?
+      
+      DelayedJob.create(:command => 'SystemPublishToWeb.plant_ssl_cert')
+    end
+    
+    def plant_ssl_cert
+      return unless SystemPreferences.publish_to_web_name
+      return if correct_ssl_cert?
+      
+      # check for/grab a new cert
+      set = get_ssl_cert
+      if set['cert']
+        # there's a cert, so plant it and let's go
+        File.write "#{SSL_ROOT_PATH}.crt", set['cert']
+        File.write "#{SSL_ROOT_PATH}.key", set['key']
+        
+        `sudo apache2ctl graceful`
+      else
+        # check again in ~15 minutes
+        DelayedJob.create(:command => 'SystemPublishToWeb.plant_ssl_cert')
+      end
+    end
+    
+    def get_ssl_cert subdomain=nil
+      subdomain ||= SystemPreferences.publish_to_web_name
+      return nil unless subdomain
+      
+      SystemPreferences.ssl_certs ||= {
+        'local' => {
+          'key'  => File.read(SSL_ROOT_PATH + '.key'),
+          'cert' => File.read(SSL_ROOT_PATH + '.crt')
+        }
+      }
+      
+      info = (SystemPreferences.ssl_certs[subdomain] || create_ssl_csr)
+      return info if info['cert']
+      
+      url = "https://directory.protonet.info/certificate?license_key=#{SystemBackend.license_key}"
+      body = {:csr => info['csr'], :name => subdomain}
+      response = JSON.parse(HTTParty.post(url, :body => body, :timeout => 30).body)
+      info['cert'] = response['cert']
+      
+      SystemPreferences.ssl_certs = SystemPreferences.ssl_certs.merge({subdomain => info})
+      info
+    end
+    
+    def create_ssl_csr
+      path = `mktemp -d`.strip
+      
+      `#{configatron.current_file_path}/script/ssl_create_csr #{path} #{SystemPreferences.publish_to_web_name}.protonet.info`
+      
+      info = {
+        'key' => File.read(File.join(path, 'server.key')),
+        'csr' => File.read(File.join(path, 'server.csr'))
+      }
+      
+      `rm -r #{path}` # TODO: API
+      
+      info
     end
     
     def ssh_keys

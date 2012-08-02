@@ -1,0 +1,20 @@
+#!/usr/bin/env expect
+
+set path [lindex $argv 0]
+set cn [lindex $argv 1]
+
+spawn openssl req -new -newkey rsa:2048 -nodes -keyout $path/server.key -out $path/server.csr
+
+expect Country { send "DE\n" }
+expect State { send "Hamburg\n" }
+expect Locality { send "Hamburg\n" }
+expect Organization { send "protonet\n" }
+expect Unit { send "Web Publishing\n" }
+expect Common { send "$cn\n" }
+expect Email { send "info@protonet.info\n" }
+
+expect challenge { send ".\n" }
+expect company { send ".\n" }
+
+expect Done {}
+
