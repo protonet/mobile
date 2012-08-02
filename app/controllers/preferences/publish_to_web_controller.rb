@@ -9,6 +9,7 @@ module Preferences
       end
       
       SystemPreferences.publish_to_web_name = params[:preferences][:publish_to_web_name].downcase
+      SystemPublishToWeb.queue_ssl_cert
       
       if setting
         turn_off_publishing
