@@ -53,12 +53,14 @@ class SystemPublishToWeb
     end
     
     def queue_ssl_cert
+      return unless Rails.env.production?
       return if correct_ssl_cert?
       
       DelayedJob.create(:command => 'SystemPublishToWeb.plant_ssl_cert')
     end
     
     def plant_ssl_cert
+      return unless Rails.env.production?
       return unless SystemPreferences.publish_to_web_name
       return if correct_ssl_cert?
       
