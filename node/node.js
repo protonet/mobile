@@ -1,6 +1,11 @@
 var fs     = require("fs"),
     util   = require("util"),
-    assert = require("assert");
+    assert = require("assert"),
+    
+    http   = require("http"),
+    url    = require("url"),
+    
+    amqp   = require("amqp");
 
 process.addListener("uncaughtException", function (err) {
   console.log("Uncaught exception: " + err);
@@ -81,8 +86,7 @@ function createConnection() {
     return;
   }
   
-  var amqp        = require('amqp'),
-      connection  = amqp.createConnection({ host: "localhost", vhost: "/" });
+  var connection = amqp.createConnection({ host: "localhost", vhost: "/" });
   
   connection.addListener("error", function() {
     setTimeout(createConnection, 4000);
@@ -99,11 +103,8 @@ createConnection();
 
 /*----------------------------------- HTTP TASKS  ----------------------------------*/
 /*----------------------------------- SCREENSHOTS ----------------------------------*/
-var http      = require("http"),
-    parseUrl  = require("url").parse;
-
 http.createServer(function(request, response) {
-  var parsedUrl = parseUrl(request.url, true),
+  var parsedUrl = url.parse(request.url, true),
       params    = parsedUrl.query,
       task      = parsedUrl.pathname.replace(/^\/|\/$/g, ""),
       headers   = request.headers;
