@@ -1,5 +1,6 @@
-var fs   = require("fs"),
-    util = require("util");
+var fs     = require("fs"),
+    util   = require("util"),
+    assert = require("assert");
 
 process.addListener("uncaughtException", function (err) {
   console.log("Uncaught exception: " + err);
@@ -144,9 +145,7 @@ http.createServer(function(request, response) {
 /*----------------------------------- STARTUP STUFF -----------------------------------*/
 var tmp_file = 'tmp/pids/node_' + global.htmlTaskPort + '.pid';
 fs.writeFile(tmp_file, process.pid.toString(), function (err) {
-  if (err) {
-    throw err;
-  }
+  assert.ifError(err);
   console.log('Pid-file saved!');
 });
 util.puts("started with pid: " + tmp_file);
