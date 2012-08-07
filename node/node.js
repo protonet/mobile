@@ -11,6 +11,15 @@ process.addListener("uncaughtException", function (err) {
   console.log("Uncaught exception: " + err);
 });
 
+leftToBoot = 3;
+function systemUp () {
+  if (--leftToBoot > 0) return;
+  
+  console.log();
+  console.log('-----> All systems go');
+  console.log();
+}
+
 /*----------------------------------- CONFIG  ----------------------------------------*/
 var envPaths = {
   development: "./tmp/development/shared/files",
@@ -94,6 +103,7 @@ function createConnection() {
   
   connection.addListener("ready", function() {
     console.log("       RabbitMQ connection ready (took " + tries + " tries)");
+    systemUp();
     setupConnection(connection);
   });
 }
@@ -143,6 +153,7 @@ http.createServer(function(request, response) {
 
 }).listen(global.htmlTaskPort, function () {
   console.log('       HTTP server listening on ' + global.htmlTaskPort);
+  systemUp();
 });
 
 /*----------------------------------- STARTUP STUFF -----------------------------------*/
@@ -150,13 +161,14 @@ var tmp_file = 'tmp/pids/node_' + global.htmlTaskPort + '.pid';
 fs.writeFile(tmp_file, process.pid.toString(), function (err) {
   assert.ifError(err);
   console.log('       PID file saved');
+  systemUp();
 });
 
 var stdin = process.openStdin();
 
 /*----------------------------------- SHUTDOWN STUFF ----------------------------------*/
 function shutdownTasks() {
-  console.log('Cleaning pid file.');
+  console.log('\r-----> Cleaning PID file');
   fs.unlink(tmp_file, function (err) {
     process.exit(0);
   });
