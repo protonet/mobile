@@ -82,7 +82,7 @@ function setupConnection(connection) {
 
 function createConnection() {
   if (++tries > 10) {
-    console.log("Error trying to reach the rabbit after 10 tries");
+    console.log("!!!!!! RabbitMQ connection FAILED after 10 tries");
     return;
   }
   
@@ -93,7 +93,7 @@ function createConnection() {
   });
   
   connection.addListener("ready", function() {
-    console.log("Established connection to rabbit after " + tries + " tries");
+    console.log("       RabbitMQ connection ready (took " + tries + " tries)");
     setupConnection(connection);
   });
 }
@@ -141,24 +141,29 @@ http.createServer(function(request, response) {
       response.end('WTF?\n');
   }
 
-}).listen(global.htmlTaskPort);
+}).listen(global.htmlTaskPort, function () {
+  console.log('       HTTP server listening on ' + global.htmlTaskPort);
+});
 
 /*----------------------------------- STARTUP STUFF -----------------------------------*/
 var tmp_file = 'tmp/pids/node_' + global.htmlTaskPort + '.pid';
 fs.writeFile(tmp_file, process.pid.toString(), function (err) {
   assert.ifError(err);
-  console.log('Pid-file saved!');
+  console.log('       PID file saved');
 });
-util.puts("started with pid: " + tmp_file);
 
 var stdin = process.openStdin();
 
 /*----------------------------------- SHUTDOWN STUFF ----------------------------------*/
 function shutdownTasks() {
   console.log('Cleaning pid file.');
-  fs.unlinkSync(tmp_file);
-  process.exit(0);
+  fs.unlink(tmp_file, function (err) {
+    process.exit(0);
+  });
 }
 process.addListener('SIGINT',  shutdownTasks);
 process.addListener('SIGKILL', shutdownTasks);
 process.addListener('SIGTERM', shutdownTasks);
+
+console.log('-----> Node.JS daemon initializing');
+
