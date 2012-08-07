@@ -1,6 +1,7 @@
 {
   "name": "node-protonet",
   "version": "0.1.0",
+  "main": "node.js",
   "author": {
     "name": "protonet",
     "email": "team@protonet.info",
