@@ -1,5 +1,4 @@
-var sys  = require("util"),
-    fs   = require("fs"),
+var fs   = require("fs"),
     util = require("util");
 
 process.addListener("uncaughtException", function (err) {
@@ -62,7 +61,7 @@ function setupConnection(connection) {
   rpcQueue.bind(rpcExchange, "rpc.node");
   rpcQueue.subscribeJSON(function(message) {
     message = JSON.parse(message.data);
-    sys.puts("rpc worker queue message: " + util.inspect(message));
+    util.puts("rpc worker queue message: " + util.inspect(message));
 
     var callback = function(err, result) {
       message.error = err;
@@ -150,7 +149,7 @@ fs.writeFile(tmp_file, process.pid.toString(), function (err) {
   }
   console.log('Pid-file saved!');
 });
-sys.puts("started with pid: " + tmp_file);
+util.puts("started with pid: " + tmp_file);
 
 var stdin = process.openStdin();
 
