@@ -36,7 +36,7 @@
                         <tr>
                           <td style="padding-left: 5px; font-size: 10px; height: 20px; color: #666;">
                             <%= @actor.display_name %>
-                            <%= l(@notifications.last.created_at, :format => :short) %>
+                            <%= l(@notifications.last.created_at.localtime, :format => :short) %>
                           </td>
                         </tr>
                       </table>
