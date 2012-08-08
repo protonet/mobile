@@ -124,7 +124,7 @@ class Meep < ActiveRecord::Base
   
   def send_email_notification
     thread = Thread.new do
-      logins = message.scan(/(?:\s|^|\()@([\w\.\-_@]+)/).flatten
+      logins = message.scan(/(?:\s|^|\()@([\w\.\-_@]+)/).flatten.uniq
       if channel.rendezvous?
         # notify if meep was created in a rendezvous
         usr = (channel.rendezvous_participants - [user]).first
