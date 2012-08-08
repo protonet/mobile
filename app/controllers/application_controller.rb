@@ -4,6 +4,11 @@ class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
   helper_method :logged_in?, :allow_signup?, :node_privacy_settings, :incoming_interface, :address_for_current_interface
   
+  before_filter do # force users to use https in production
+    if !request.ssl? && Rails.env.production?
+      redirect_to :protocol => 'https://', :status => :moved_permanently
+    end
+  end
   # hack for reload problem in development
   before_filter :set_backend_for_development, :current_user, :set_current_user_for_authorization, :captive_check, :guest_login
   before_filter :detect_xhr_redirect
