@@ -32,7 +32,7 @@
                               <%= notification.secondary_subject.message %>
                             </td>
                           </tr>
-                        <% end%>
+                        <% end %>
                         <tr>
                           <td style="padding-left: 5px; font-size: 10px; height: 20px; color: #666;">
                             <%= @actor.display_name %>
@@ -45,9 +45,9 @@
                   <tr>
                     <td></td>
                     <td style="font-family:verdana,arial,sans-serif; font-size:12px; padding: 15px 0 0 15px; color:black;">
-                      view the whole conversation:
-                      <a href="<%= SystemPreferences.public_host_https ? 'https://' : 'http://' %><%= SystemPreferences.public_host %>">
-                        <%= SystemPreferences.public_host_https ? 'https://' : 'http://' %><%= SystemPreferences.public_host %>
+                      join the conversation:
+                      <a href="<%= SystemPreferences.public_host_https ? 'https://' : 'http://' %><%= SystemPreferences.public_host %>/meeps/<%= @notifications.last.secondary_subject_id %>">
+                        <%= SystemPreferences.public_host_https ? 'https://' : 'http://' %><%= SystemPreferences.public_host %>/meeps/<%= @notifications.last.secondary_subject_id %>
                       </a>
                     </td>
                   </tr>
