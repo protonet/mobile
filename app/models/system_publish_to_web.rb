@@ -59,6 +59,14 @@ class SystemPublishToWeb
       DelayedJob.create(:command => 'SystemPublishToWeb.plant_ssl_cert')
     end
     
+    def check_ssl_set set
+      require 'open3'
+      modCrt = Open3.capture2('openssl x509 -noout -modulus', :stdin_data => set['cert'])[0]
+      modKey = Open3.capture2('openssl rsa  -noout -modulus', :stdin_data => set['key'])[0]
+      
+      modCrt == modKey
+    end
+    
     def plant_ssl_cert
       return unless Rails.env.production?
       return unless SystemPreferences.publish_to_web_name
@@ -66,10 +74,7 @@ class SystemPublishToWeb
       
       # check for/grab a new cert
       set = get_ssl_cert
-      if set['cert']
-        require 'open3'
-        modCrt = Open3.capture2('openssl x509 -noout -modulus', :stdin_data => set['cert'])[0]
-        modKey = Open3.capture2('openssl rsa  -noout -modulus', :stdin_data => set['key'])[0]
+      if set && set['cert']
         
         if modCrt == modKey
           # there's a cert, so plant it and let's go
@@ -79,7 +84,7 @@ class SystemPublishToWeb
           `sudo apache2ctl graceful`
         else
           # Key set is invalid.
-          Mailer.broken_ssl(modCrt, modKey).deliver
+          
         end
       else
         # check again in ~15 minutes
@@ -99,15 +104,23 @@ class SystemPublishToWeb
       }
       
       info = (SystemPreferences.ssl_certs[subdomain] || create_ssl_csr)
-      return info if info['cert']
+      if !info['cert']
+        url = "https://directory.protonet.info/certificate?license_key=#{SystemBackend.license_key}"
+        body = {:csr => info['csr'], :name => subdomain}
+        response = JSON.parse(HTTParty.post(url, :body => body, :timeout => 30).body)
+        info['cert'] = response['cert']
+        
+        SystemPreferences.ssl_certs = SystemPreferences.ssl_certs.merge({subdomain => info})
+      end
       
-      url = "https://directory.protonet.info/certificate?license_key=#{SystemBackend.license_key}"
-      body = {:csr => info['csr'], :name => subdomain}
-      response = JSON.parse(HTTParty.post(url, :body => body, :timeout => 30).body)
-      info['cert'] = response['cert']
+      if check_ssl_set(info)
+        return !info['broken'] && info
+      end
       
+      Mailer.broken_ssl(modCrt, modKey).deliver unless info['broken']
+      info['broken'] = true
       SystemPreferences.ssl_certs = SystemPreferences.ssl_certs.merge({subdomain => info})
-      info
+      nil
     end
     
     def create_ssl_csr
