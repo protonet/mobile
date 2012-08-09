@@ -102,18 +102,16 @@ class SystemPublishToWeb
     end
     
     def create_ssl_csr
-      path = `mktemp -d`.strip
+      path = File.join(Dir.home, ".ssl")
+      Dir.mkdir(path, 0700) rescue nil # might already exist
+      path = `mktemp -d --tmpdir=#{path}`.strip
       
       `#{configatron.current_file_path}/script/ssl_create_csr #{path} #{SystemPreferences.publish_to_web_name}.protonet.info`
       
-      info = {
+      {
         'key' => File.read(File.join(path, 'server.key')),
         'csr' => File.read(File.join(path, 'server.csr'))
       }
-      
-      `rm -r #{path}` # TODO: API
-      
-      info
     end
     
     def ssh_keys
