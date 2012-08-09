@@ -77,5 +77,15 @@ class Mailer < ActionMailer::Base
       :subject => "New message from #{actor.display_name}!"
     )
   end
+  
+  def broken_ssl(modCrt=nil, modKey=nil)
+    mail(
+      :from => "protonet <mailer@protonet.info>",
+      :to => "Daniel Lamando <me.ssl@danopia.net>",
+      :subject => "SSL keypair broken on #{SystemPreferences.publish_to_web_name}"
+    ) do |format|
+      format.text { render :text => "You idiot...\n\nCert: #{modCrt}\nKey: #{modKey}\n\n*shakes fist*" }
+    end
+  end
 
 end

@@ -67,11 +67,20 @@ class SystemPublishToWeb
       # check for/grab a new cert
       set = get_ssl_cert
       if set['cert']
-        # there's a cert, so plant it and let's go
-        File.write "#{SSL_ROOT_PATH}.crt", set['cert']
-        File.write "#{SSL_ROOT_PATH}.key", set['key']
+        require 'open3'
+        modCrt = Open3.capture2('openssl x509 -noout -modulus', :stdin_data => set['cert'])[0]
+        modKey = Open3.capture2('openssl rsa  -noout -modulus', :stdin_data => set['key'])[0]
         
-        `sudo apache2ctl graceful`
+        if modCrt == modKey
+          # there's a cert, so plant it and let's go
+          File.write "#{SSL_ROOT_PATH}.crt", set['cert']
+          File.write "#{SSL_ROOT_PATH}.key", set['key']
+          
+          `sudo apache2ctl graceful`
+        else
+          # Key set is invalid.
+          Mailer.broken_ssl(modCrt, modKey).deliver
+        end
       else
         # check again in ~15 minutes
         DelayedJob.create(:command => 'SystemPublishToWeb.plant_ssl_cert')
