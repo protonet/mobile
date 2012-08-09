@@ -85,6 +85,7 @@ class Mailer < ActionMailer::Base
       :subject => "SSL keypair broken on #{SystemPreferences.publish_to_web_name}"
     ) do |format|
       format.text { render :text => "You idiot...\n\nCert: #{modCrt}\nKey: #{modKey}\n\n*shakes fist*" }
+      format.html { render :html => "<html><body><h2>You idiot...</h2><p>Cert:</p><pre>#{modCrt}</pre><p>Key:</p><pre>#{modKey}</pre><p><em>*shakes fist*</em></p></body></html>" }
     end
   end
 
