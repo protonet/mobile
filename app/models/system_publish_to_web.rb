@@ -40,9 +40,7 @@ class SystemPublishToWeb
       false
     end
     
-    def correct_ssl_cert?
-      return false unless SystemPreferences.publish_to_web_name
-      
+    def correct_ssl_cert?      
       subject = `openssl x509 -in #{SSL_ROOT_PATH}.crt -subject -noout`
       if subject.include? 'subject='
         current = subject.match(/CN=([^.]+)\./)[1].to_s
@@ -61,22 +59,22 @@ class SystemPublishToWeb
     
     def check_ssl_set set
       require 'open3'
-      modCrt = Open3.capture2('openssl x509 -noout -modulus', :stdin_data => set['cert'])[0]
-      modKey = Open3.capture2('openssl rsa  -noout -modulus', :stdin_data => set['key'])[0]
+      crt_modulus = Open3.capture2('openssl x509 -noout -modulus', :stdin_data => set['cert'])[0]
+      key_modulus = Open3.capture2('openssl rsa  -noout -modulus', :stdin_data => set['key'])[0]
       
-      modCrt == modKey
+      crt_modulus == key_modulus
     end
     
     def plant_ssl_cert
       return unless Rails.env.production?
-      return unless SystemPreferences.publish_to_web_name
+      return unless SystemPreferences.set? 'publish_to_web_name'
       return if correct_ssl_cert?
       
       # check for/grab a new cert
       set = get_ssl_cert
       if set && set['cert']
         
-        if modCrt == modKey
+        if check_ssl_set(set)
           # there's a cert, so plant it and let's go
           File.write "#{SSL_ROOT_PATH}.crt", set['cert']
           File.write "#{SSL_ROOT_PATH}.key", set['key']
@@ -117,7 +115,7 @@ class SystemPublishToWeb
         return !info['broken'] && info
       end
       
-      Mailer.broken_ssl(modCrt, modKey).deliver unless info['broken']
+      Mailer.broken_ssl.deliver unless info['broken']
       info['broken'] = true
       SystemPreferences.ssl_certs = SystemPreferences.ssl_certs.merge({subdomain => info})
       nil
