@@ -152,7 +152,12 @@ class Rpc::Objects::Fs < Rpc::Base
     def get_user params
       if params.include?('session_id')
         # session_id given
-        session = Marshal.load(Base64.decode64(CGI.unescape(params['session_id']).split('--').first))
+        begin
+          session = Marshal.load(Base64.decode64(CGI.unescape(params['session_id']).split('--').first))
+        rescue
+          # TODO: this doesn't solve the problem only handles the symptoms, we need to figure out when and why this happens
+          raise Rpc::AccessDeniedError, 'Broken session_id caused an error in Marshal.load -ing the session data'
+        end
         if session['stranger_id'] && !session['warden.user.user.key']
           user = User.find_by_temporary_identifier(session['stranger_id'])
         else
