@@ -49,6 +49,11 @@ class SystemPreferences < ActiveRecord::Base
   end
   
   #get a setting value by [] notation
+  def self.set?(var_name)
+    !!object(var_name)
+  end
+  
+  #get a setting value by [] notation
   def self.[](var_name)
     if var = object(var_name)
       var.value
