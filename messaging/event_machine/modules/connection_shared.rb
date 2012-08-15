@@ -73,6 +73,19 @@ module ConnectionShared
               log "==========>>>>>>>>  #{json.inspect} \n\n\n"
             end
           end
+        when 'sync'
+          log("sync json: #{json["payload"].inspect}")
+          states = json["channel_states"] || {}
+          response = {
+            :trigger => "sync.received" 
+          }
+          @user.channels.each { |channel|
+            response[channel.id] = 
+              channel.meeps.
+                where(states[channel.id] ? "id > #{states[channel.id]}" : true).
+                limit(json["limit"] || 15)
+          }
+          send_json response
           
         else
           # Experimental RPC interface
