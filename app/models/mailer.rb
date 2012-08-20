@@ -60,6 +60,7 @@ class Mailer < ActionMailer::Base
     @user = user
     @actor = actor
     @notifications = notifications
+    @meep = notifications.last.secondary_subject
     mail(
       :from => "protonet <mailer@protonet.info>",
       :to => @user.email,
@@ -71,6 +72,7 @@ class Mailer < ActionMailer::Base
     @user = user
     @actor = actor
     @notifications = notifications
+    @meep = notifications.last.secondary_subject
     mail(
       :from => "protonet <mailer@protonet.info>",
       :to => @user.email,

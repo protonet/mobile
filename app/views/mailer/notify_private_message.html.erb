@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title><%= @actor.display_name %> just sent you a message</title>
+    <title><%= @meep.author %> just sent you a message</title>
   </head>
   <body bgcolor="#f7f7f7" style="background:#f7f7f7; margin:0; padding:0; font-family:verdana,arial,sans-serif; font-size:12px">
     <table border="0" cellspacing="0" cellpadding="30" style="background:#f7f7f7;">
@@ -16,13 +16,13 @@
                     <td valign="top" align="left" colspan="2" style="padding-bottom:10px;">
                       <h1 style="font-size:14px; color:black">
                         Hi <%= @user.display_name %>,
-                        <%= @actor.display_name %> just sent you a message.
+                        <%= @meep.author %> just sent you a message.
                       </h1>
                     </td>
                   </tr>
                   <tr>
                     <td valign="bottom" width="65" align="left">
-                      <%= avatar(@actor, :width => 48, :height => 48, :public => true) %>
+                      <%= image_tag(image_proxy(@meep.avatar, {:public => true, :width => 48, :height => 48}).html_safe, :alt => @meep.author ) %>
                     </td>
                     <td valign="top" align="left" width="500" style="color:black;">
                       <table width="500" bgcolor="#F6F6F6" border="0" cellspacing="10" cellpadding="0" style="font-family:verdana,arial,sans-serif; font-size:12px; border:1px solid #B4B4B4">
@@ -35,7 +35,7 @@
                         <% end %>
                         <tr>
                           <td style="padding-left: 5px; font-size: 10px; height: 20px; color: #666;">
-                            <%= @actor.display_name %>
+                            <%= @meep.author %>
                             <%= l(@notifications.last.created_at.localtime, :format => :short) %>
                           </td>
                         </tr>
