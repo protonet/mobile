@@ -29,7 +29,11 @@
                         <% @notifications.each do |notification| %>
                           <tr>
                             <td style="color:black; border-bottom: 1px solid gainsboro; padding: 0px 5px 10px 5px">
-                              <%= notification.secondary_subject.message %>
+                              <%= ApplicationController.helpers.simple_format(
+                                  ApplicationController.helpers.auto_link(
+                                    notification.secondary_subject.message
+                                  )
+                                ) %>
                             </td>
                           </tr>
                         <% end %>
