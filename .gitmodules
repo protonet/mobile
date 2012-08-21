@@ -1,3 +1,3 @@
 [submodule "public/js/lib/jquery-class-create"]
-  path = public/js/lib/jquery-class-create
-  url = git@github.com:protonet/jquery-class-create.git
+	path = public/js/lib/jquery-class-create
+	url = git@github.com:protonet/jquery-class-create.git
