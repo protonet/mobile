@@ -24,7 +24,7 @@ class Channel < ActiveRecord::Base
   after_create  :subscribe_rendezvous_participant,  :if => lambda {|c| c.rendezvous? }
   after_create  :send_create_notification,          :if => lambda {|c| !c.rendezvous? }
   
-  after_update :send_update_notification
+  after_update :send_update_notification, :rename_system_folders
   
   after_destroy :delete_folder
   
