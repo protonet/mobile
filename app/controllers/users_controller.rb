@@ -211,7 +211,7 @@ class UsersController < ApplicationController
     end
     
     def prepare_target_users
-      @target_users = params[:target_all] ? User.registered : User.find_by_id_or_login(params[:target]).to_a
+      @target_users = params[:target_all] ? User.registered : [User.find_by_id_or_login(params[:target])].compact
     end
     
     def respond_to_user_update(user)
