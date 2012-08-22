@@ -12,7 +12,7 @@
 # end
 #
 
-job_type :script,  "cd :path && RAILS_ENV=:environment RAILS_ROOT=:path bundle exec script/:task"
+job_type :script,  "cd :path && RAILS_ENV=:environment RAILS_ROOT=:path bundle exec script/:task 2> /dev/null"
 
 # see script/init/cron for logpath definition
 set(:output, @logpath)
