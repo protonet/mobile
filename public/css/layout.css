@@ -2,3 +2,4 @@
 .ui-footer .ui-title {
   margin: .6em 10% .8em;
 }
+.ui-page { -webkit-backface-visibility: hidden; }

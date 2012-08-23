@@ -7,15 +7,63 @@
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0-alpha.1/jquery.mobile-1.2.0-alpha.1.min.css" />
     <link rel="stylesheet" href="/css/layout.css" />
     <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.2.0-alpha.1/jquery.mobile-1.2.0-alpha.1.min.js"></script>
-    <script src="/js/protonet.js"></script>
-    <script src="/js/application.js"></script>
+    <script src="http://code.jquery.com/mobile/1.2.0-alpha.1/jquery.mobile-1.2.0-alpha.1.min.js"></script> 
+    <script>
+      $(document).bind("mobileinit", function(){
+        $.mobile.defaultPageTransition = none;
+      });
+    </script>
   </head>
 
 <body>
 
-  <%= yield %>
+<%= yield %>
 
+<% if current_user %>
+  <script>
+    window.$window   = $(window);
+    window.$document = $(document);
+    var protonet = {
+      config: {
+        token:                            "<%= current_user.communication_token %>",
+        user_id:                          <%= current_user.id %>,
+        dispatching_server:               "localhost",
+        dispatching_server_port:          "5000",
+        dispatching_websocket_url:        "ws://<%= request.host %>:5001",
+        dispatching_websocket_url_ssl:    "wss://<%= request.host %>:5002",
+        dispatching_websocket_delimiter:  "",
+        users:                            null,
+        channels:                         null,
+        api_url:                          "<%= settings.api_url %>"
+      },
+      events: {},
+      channels: {},
+      utils: {}
+    };
+  </script>
+  <script src="/js/lib/jquery-class-create/class.js"></script>
+  <script src="/js/utils/browser.js"></script>
+  <script src="/js/utils/template.js"></script>
+  <script src="/js/utils/extensions.js"></script>
+  <script src="/js/utils/prettify_date.js"></script>
+  <script src="/js/events/emitter.js"></script>
+  <script>
+    protonet.Emitter = new protonet.events.Emitter();
+    $.extend(protonet, protonet.Emitter);
+  </script>
+  <script src="/js/dispatcher/dispatcher.js"></script>
+  <script src="/js/dispatcher/websocket.js"></script>
+  <script src="/js/dispatcher/flash_socket.js"></script>
+  <script src="/js/dispatcher/http_streaming.js"></script>
+  <script src="/js/data/meep.js"></script>
+  <script src="/js/data/channel.js"></script>
+  <script src="/js/pages.js"></script>
+  <script src="/js/pages/pretty_date.js"></script>
+  <script src="/js/pages/dashboard.js"></script>
+  <script src="/js/pages/channel.js"></script>
+  <script src="/js/protonet.js"></script>
+<% else %>
+  <script src="/js/auth.js"></script>
+<% end %> 
 </body>
-
 </html>

@@ -1,0 +1,25 @@
+<script type="protonet/template" id="channel">
+  <div data-role="page" id="channel-#{id}" class="channel-page">
+
+    <div data-role="header" data-position="fixed">
+      <a href="/" data-icon="arrow-l" class="ui-btn-left" data-rel="back">back</a>
+      <h1>#{name}</h1>
+    </div>
+
+    <div data-role="content" >  
+      <ul class="timeline ui-listview" data-role="listview"></ul>
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+      <form action="/meeps" method="post" class="meep_form" data-ajax="false">
+        <div class="field-contains">
+          <textarea cols="20" rows="4" name="textarea" class="ui-body-d ui-corner-all ui-shadow-inset"></textarea>
+          <button type="submit" name="submit" value="submit" data-theme="b">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</script>
