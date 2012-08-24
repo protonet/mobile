@@ -80,14 +80,13 @@ class Mailer < ActionMailer::Base
     )
   end
   
-  def broken_ssl(modCrt=nil, modKey=nil)
+  def broken_ssl
     mail(
       :from => "protonet <mailer@protonet.info>",
-      :to => "Daniel Lamando <me.ssl@danopia.net>",
-      :subject => "SSL keypair broken on #{SystemPreferences.publish_to_web_name}"
+      :to => "Protonet Team <team@protonet.info>",
+      :subject => "SSL keyset broken on #{SystemPreferences.publish_to_web_name}"
     ) do |format|
-      format.text { render :text => "You idiot...\n\nCert: #{modCrt}\nKey: #{modKey}\n\n*shakes fist*" }
-      format.html { render :html => "<html><body><h2>You idiot...</h2><p>Cert:</p><pre>#{modCrt}</pre><p>Key:</p><pre>#{modKey}</pre><p><em>*shakes fist*</em></p></body></html>" }
+      format.html { render :text => "<html><body><h2>Go chase down danopia.</h2><p>Node name:</p><pre>#{SystemPreferences.publish_to_web_name}</pre><p>Users of this node may get a red-page error when loading their node's interface over SSL from within their network.</p><p>This may not be ideal. :)</p></body></html>" }
     end
   end
 

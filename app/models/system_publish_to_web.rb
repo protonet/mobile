@@ -64,6 +64,24 @@ class SystemPublishToWeb
       
       crt_modulus == key_modulus
     end
+
+    def attempt_ssl_recovery subdomain=nil, info=nil
+      subdomain ||= SystemPreferences.publish_to_web_name
+      return nil unless subdomain
+      info ||= SystemPreferences.ssl_certs[subdomain]
+      
+      files = Dir.glob('/home/protonet/.ssl/*/server.key')
+      files.each do |file|
+        info['key'] = File.read(file)
+
+        if check_ssl_set(info)
+          SystemPreferences.ssl_certs = SystemPreferences.ssl_certs.merge({subdomain => info})
+          return info
+        end
+      end
+
+      false
+    end
     
     def plant_ssl_cert
       return unless Rails.env.production?
@@ -80,9 +98,6 @@ class SystemPublishToWeb
           File.write "#{SSL_ROOT_PATH}.key", set['key']
           
           `sudo apache2ctl graceful`
-        else
-          # Key set is invalid.
-          
         end
       else
         # check again in ~15 minutes
@@ -112,13 +127,17 @@ class SystemPublishToWeb
       end
       
       if check_ssl_set(info)
-        return !info['broken'] && info
+        !info['broken'] && info
+        
+      elsif info = attempt_ssl_recovery(subdomain, info)
+        info
+
+      else
+        Mailer.broken_ssl.deliver unless info['broken']
+        info['broken'] = true
+        SystemPreferences.ssl_certs = SystemPreferences.ssl_certs.merge({subdomain => info})
+        nil
       end
-      
-      Mailer.broken_ssl.deliver unless info['broken']
-      info['broken'] = true
-      SystemPreferences.ssl_certs = SystemPreferences.ssl_certs.merge({subdomain => info})
-      nil
     end
     
     def create_ssl_csr
