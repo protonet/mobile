@@ -1,3 +1,6 @@
 [submodule "public/js/lib/jquery-class-create"]
 	path = public/js/lib/jquery-class-create
 	url = git@github.com:protonet/jquery-class-create.git
+[submodule "public/js/lib/iscroll"]
+	path = public/js/lib/iscroll
+	url = git://github.com/cubiq/iscroll.git

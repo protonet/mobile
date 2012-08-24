@@ -7,20 +7,26 @@
       this.id = data.id;
       this.name = data.name;
       this.href = "/#channel-" + this.id;
+
       this.$content = new protonet.utils.Template("channel", { 
         id: this.id, 
         name: this.name 
       }).to$();
+
       this.$timeline = this.$content.find('.timeline');
+
+      this.scroller = new iScroll(this.$content.find('.scroller')[0]);
+
       protonet.trigger("page.created", this);
       this._observe();
     },
+    scrollToBottom: function(){
+      if (this.scroller.wrapperH < this.scroller.scrollerH) {
+        this.scroller.scrollTo(0,this.scroller.maxScrollY,0);
+      };
+    },
     _observe: function(){
-
-      this.$content.bind('pageshow',function(){
-        this._scrollToBottom();
-      }.bind(this));
-
+      
       protonet.on("meep.created." + this.id, function(meep){
         var $meep = new protonet.utils.Template("meep",{
           author: meep.author,
@@ -29,6 +35,14 @@
         }).to$();
 
         this.$timeline.append($meep);
+
+        if (protonet.currentPage == this) {
+          setTimeout(function () {
+            this.scroller.refresh();
+            this.scrollToBottom();
+          }.bind(this), 0);
+        };
+        
         protonet.trigger("meep.rendered", $meep, meep);
 
         channelListTimeout && clearTimeout(channelListTimeout),
@@ -36,7 +50,6 @@
           protonet.dashboard.updateList();
         }, 1000);
 
-        this._scrollToBottom();
       }.bind(this));
 
       this.$content.delegate(".meep_form", "submit", function(event){
@@ -55,9 +68,6 @@
           $this.val("");
         }
       }.bind(this));
-    },
-    _scrollToBottom: function(){
-      $.mobile.silentScroll(this.$timeline.height());
     }
   });
 

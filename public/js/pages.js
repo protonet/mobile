@@ -1,24 +1,26 @@
 (function(protonet){
 
-  var currentPage = location.hash,
+  var hash = location.hash,
     pageChache = {};
 
-  if(currentPage != ""){
-    protonet.one("page.created", function(page){
-      if (page.href == "/" + currentPage) {
-        setTimeout(function(){
-          $('a[href="'+ page.href +'"]').click();
-        }, 0);
-      };
+  protonet.currentPage = null;
+  protonet.pages = {}
+
+  if(hash != ""){
+    protonet.one("dashboard.updated", function(){
+      $('a[href="/'+ hash +'"]').click();
     });
   }
 
-  protonet.pages = {}
-
-  // observe links
-  $document.delegate("a", "click", function(event){
+  $('body').delegate("a.channel-link", "click",function(event){
     var href = $(this).attr("href"),
-        page = pageChache[href];
+      page = pageChache[href];
+      protonet.currentPage = page;
+      setTimeout(function(){
+        page.scroller.refresh();
+        page.scrollToBottom();
+      }, 0);
+    
   });
 
   protonet.on("channel.created", function(channel){

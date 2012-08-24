@@ -9,10 +9,7 @@
       $.mobile.loading('show');
       protonet.one("dashboard.updated", function(event){
         $.mobile.loading('hide');
-      })
-    },
-    show: function(){
-      protonet.pages.show(this);
+      });
     },
     updateList: function(){
       this.$channelList.empty();

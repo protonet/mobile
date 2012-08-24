@@ -13,7 +13,6 @@
       };
       this.lastMeep = null;
       this.meeps = {};
-      this.list = $('<div class="page" id="'+this.id+'">');
       this._observe();
       protonet.trigger("channel.created", this);
     },
