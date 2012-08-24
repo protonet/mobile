@@ -258,7 +258,7 @@ class User < ActiveRecord::Base
     if invitee? || stranger?
       users = []
       channels.verified.each do |channel|
-        users = users | channel.users
+        users = users | channel.users.registered
       end
     else
       users = User.registered
