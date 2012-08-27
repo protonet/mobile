@@ -20,14 +20,23 @@ window.$document = $(document);
 //= require "../../../app/javascripts/protonet/utils/prettify_code.js"
 //= require "../../../app/javascripts/protonet/utils/codify.js"
 //= require "../../../app/javascripts/protonet/utils/quotify.js"
+//= require "../../../app/javascripts/protonet/utils/emojify.js"
 //= require "../../../app/javascripts/protonet/utils/convert_to_absolute_url.js"
 //= require "../../../app/javascripts/protonet/utils/deep_equal.js"
+//= require "../../../app/javascripts/protonet/utils/template.js"
+//= require "../../../app/javascripts/protonet/utils/escape_for_css_query.js"
+//= require "../../../app/javascripts/protonet/utils/escape_for_reg_exp.js"
+//= require "../../../app/javascripts/protonet/utils/escape_html.js"
 
 // ---- PROTONET TESTS
 //= require "utils/add_slashes_test.js"
 //= require "utils/auto_link_test.js"
 //= require "utils/codify_test.js"
 //= require "utils/quotify_test.js"
+//= require "utils/emojify_test.js"
 //= require "utils/convert_to_absolute_url_test.js"
 //= require "utils/deep_equal_test.js"
+//= require "utils/escape_for_css_query_test.js"
+//= require "utils/escape_for_reg_exp_test.js"
+//= require "utils/escape_html_test.js"
 
