@@ -191,13 +191,10 @@ OTHER STUFF
 -----------
 These things are not needed if you just want to do some basic development:
 
-RUNNNING TESTS
+RUNNNING JS UNIT TESTS
 ==============
 
-If you want to run our whole testsuite you'll need to add a vhost:
-
-    rabbitmqctl add_vhost /test
-    rabbitmqctl set_permissions -p /test guest ".*" ".*" ".*"
+Start the server and go to /unittest
 
 COMPILING THE FLASH SOCKET:
 =====================
