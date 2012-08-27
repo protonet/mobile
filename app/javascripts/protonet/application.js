@@ -1,13 +1,13 @@
 // ---- LIBRARIES
-//= require "lib/simple-javascript-airbrake-notifier/notifier.js"
-//= require "lib/jquery-1.7.2.min.js"
-//= require "lib/jquery-ui-1.8.20.custom.min.js"
-//= require "lib/swfobject-2.2.js"
-//= require "lib/jquery-class-create/class.js"
-//= require "lib/jquery-behaviors/behaviors.js"
-//= require "lib/jquery.inview/jquery.inview.js"
-//= require "lib/jquery-patches/src/xhr.js"
-//= require "lib/jquery-patches/src/event.js"
+//= require "../lib/simple-javascript-airbrake-notifier/notifier.js"
+//= require "../lib/jquery-1.7.2.min.js"
+//= require "../lib/jquery-ui-1.8.20.custom.min.js"
+//= require "../lib/swfobject-2.2.js"
+//= require "../lib/jquery-class-create/class.js"
+//= require "../lib/jquery-behaviors/behaviors.js"
+//= require "../lib/jquery.inview/jquery.inview.js"
+//= require "../lib/jquery-patches/src/xhr.js"
+//= require "../lib/jquery-patches/src/event.js"
 
 window.$window   = $(window);
 window.$document = $(document);

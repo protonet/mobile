@@ -1,6 +1,6 @@
 //= require "../ui/files/list.js"
 //= require "../utils/parse_query_string.js"
-//= require "../lib/jquery.fullscreen.js"
+//= require "../../lib/jquery.fullscreen.js"
 
 protonet.p("files", function($page) {
   

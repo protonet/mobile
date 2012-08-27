@@ -1,4 +1,4 @@
-//= require "../lib/jquery.fullscreen.js"
+//= require "../../lib/jquery.fullscreen.js"
 
 protonet.ui.ImagePlayer = Class.create({
   initialize: function(urls) {

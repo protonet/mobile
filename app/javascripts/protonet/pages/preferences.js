@@ -1,5 +1,5 @@
 //= require "../utils/is_server_reachable.js"
-//= require "../lib/jquery.quakeStyleConsole/jquery.quakeStyleConsole.js"
+//= require "../../lib/jquery.quakeStyleConsole/jquery.quakeStyleConsole.js"
 
 protonet.p("preferences", function($page) {
   $page.delegate("a.reload-link", "click", function() {

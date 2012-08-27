@@ -10,7 +10,8 @@ Dashboard::Application.routes.draw do
   match 'captive/whitelist_sites' => 'system/captive#whitelist_sites'
 
   match 'apps/:app_key' => 'apps#show', :as => :app
-
+  match 'unittest' => 'application#unittest'
+  
   # Channels
   match 'channels/info' => 'channels#info', :as => :show_channel_info
   

@@ -1,4 +1,4 @@
-//= require "../lib/wysihtml5/dist/wysihtml5-0.3.0_rc1.js"
+//= require "../../lib/wysihtml5/dist/wysihtml5-0.3.0_rc1.js"
 $(function() {
 
   var wysihtml5ParserRules = {

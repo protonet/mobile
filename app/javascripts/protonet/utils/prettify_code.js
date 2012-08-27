@@ -1,4 +1,4 @@
-//= require "../lib/google_code_prettify.js"
+//= require "../../lib/google_code_prettify.js"
 //= require "prettify_diff.js"
 
 protonet.utils.prettifyCode = function(str, lineNumbers) {

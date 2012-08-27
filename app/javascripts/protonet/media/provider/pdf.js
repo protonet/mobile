@@ -1,4 +1,4 @@
-//= require "../../lib/pdfobject.js"
+//= require "../../../lib/pdfobject.js"
 
 protonet.media.provider.PDF = {
   supportedMimeTypes: ["application/pdf"],

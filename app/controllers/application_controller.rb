@@ -28,6 +28,10 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def unittest
+    render 'shared/unittest', :layout => false
+  end
+  
   private
   
   def compress
@@ -221,31 +225,28 @@ class ApplicationController < ActionController::Base
     
     @methods = @preferences.collect {|preference| preference[:section]}
   end
-
   
-  private
-    def respond_to_preference_update(status=204)
-      if request.xhr?
-        head(status)
-      else
-        redirect_to :controller => '/preferences', :action => :show, :section => params[:section]
-      end
+  def respond_to_preference_update(status=204)
+    if request.xhr?
+      head(status)
+    else
+      redirect_to :controller => '/preferences', :action => :show, :section => params[:section]
     end
+  end
 
-    def respond_to_app_installer_update
-      if request.xhr?
-        @selected_section = 'preferences/app_installer'
-        render :template => 'preferences/index'
-      else
-        redirect_to :controller => '/preferences', :action => :show, :section => 'app_installer'
-      end
+  def respond_to_app_installer_update
+    if request.xhr?
+      @selected_section = 'preferences/app_installer'
+      render :template => 'preferences/index'
+    else
+      redirect_to :controller => '/preferences', :action => :show, :section => 'app_installer'
     end
+  end
 
-
-    def set_nocache_header
-      response.headers['Cache-Control'] = 'no-cache, no-store, max-age=0, must-revalidate'
-      response.headers['Pragma'] = 'no-cache'
-      response.headers['Expires'] = 'Fri, 01 Jan 1990 00:00:00 GMT'
-    end
+  def set_nocache_header
+    response.headers['Cache-Control'] = 'no-cache, no-store, max-age=0, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = 'Fri, 01 Jan 1990 00:00:00 GMT'
+  end
 
 end

@@ -1,4 +1,4 @@
-//= require "../lib/soundmanager2/soundmanager2-nodebug-jsmin.js"
+//= require "../../lib/soundmanager2/soundmanager2-nodebug-jsmin.js"
 
 /**
  * @example

@@ -1,4 +1,4 @@
-//= require "../lib/webcam.js"
+//= require "../../lib/webcam.js"
 
 (function(media, webcam) {
   var SHUTTER_SOUND = "/sounds/shutter.mp3";

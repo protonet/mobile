@@ -1,7 +1,7 @@
-//= require "../lib/plupload/src/javascript/plupload.js"
-//= require "../lib/plupload/src/javascript/plupload.html5.js"
-//= require "../lib/plupload/src/javascript/plupload.html4.js"
-//= require "../lib/plupload/src/javascript/plupload.flash.js"
+//= require "../../lib/plupload/src/javascript/plupload.js"
+//= require "../../lib/plupload/src/javascript/plupload.html5.js"
+//= require "../../lib/plupload/src/javascript/plupload.html4.js"
+//= require "../../lib/plupload/src/javascript/plupload.flash.js"
 
 /**
  * Wrapper for the plupload lib
