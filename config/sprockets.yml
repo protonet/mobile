@@ -71,4 +71,4 @@ unittest:
       - vendor/sprockets/*/src
       - vendor/plugins/*/javascripts
     source_files:
-      - test/javascripts/test.js
+      - test/javascripts/protonet/protonet.js

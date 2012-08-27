@@ -9,11 +9,15 @@
 //= require "../../../app/javascripts/lib/jquery-patches/src/xhr.js"
 //= require "../../../app/javascripts/lib/jquery-patches/src/event.js"
 
-// ---- TEST LIBRARIES
-
 window.$window   = $(window);
 window.$document = $(document);
 
 // ---- PROTONET
 //= require "../../../app/javascripts/protonet/extensions.js"
 //= require "../../../app/javascripts/protonet/protonet.js"
+//= require "../../../app/javascripts/protonet/utils/add_slashes.js"
+//= require "../../../app/javascripts/protonet/utils/auto_link.js"
+
+// ---- PROTONET TESTS
+//= require "utils/add_slashes_test.js"
+//= require "utils/auto_link_test.js"
