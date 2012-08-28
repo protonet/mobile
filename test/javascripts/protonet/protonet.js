@@ -27,6 +27,7 @@ window.$document = $(document);
 //= require "../../../app/javascripts/protonet/utils/escape_for_css_query.js"
 //= require "../../../app/javascripts/protonet/utils/escape_for_reg_exp.js"
 //= require "../../../app/javascripts/protonet/utils/escape_html.js"
+//= require "../../../app/javascripts/protonet/utils/format_seconds.js"
 
 // ---- PROTONET TESTS
 //= require "utils/add_slashes_test.js"
@@ -39,4 +40,4 @@ window.$document = $(document);
 //= require "utils/escape_for_css_query_test.js"
 //= require "utils/escape_for_reg_exp_test.js"
 //= require "utils/escape_html_test.js"
-
+//= require "utils/format_seconds_test.js"
