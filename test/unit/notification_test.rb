@@ -3,7 +3,6 @@ require 'test_helper'
 class NotificationTest < ActiveSupport::TestCase
   
   setup do
-    
     Role.find_or_create_by_title("user")
     Role.find_or_create_by_title("guest")
     node = Node.local
@@ -13,6 +12,19 @@ class NotificationTest < ActiveSupport::TestCase
     @online_user.subscribe(@channel)
     @offline_user.subscribe(@channel)
     @private_channel = Channel.setup_rendezvous_for(@online_user.id, @offline_user.id)
+  end
+
+  context "delete notification if user deletes the meep" do
+    setup do
+      @meep = Meep.create(:channel => @channel, :user => @online_user, :message => "hello @#{@offline_user.login}") 
+    end
+
+    should "delete" do
+      assert_difference "Notification.count", -1 do
+        @meep.destroy
+      end
+    end
+
   end
     
   context "notify about private message" do

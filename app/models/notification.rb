@@ -7,7 +7,15 @@ class Notification < ActiveRecord::Base
   after_create :enqueue_job
   
   def self.deliver_notifications
-    pending = all
+    pending = all.map do |notification|
+      if notification.actor.nil? || notification.subject.nil? || notification.secondary_subject.nil?
+        notification.destroy
+        nil
+      else
+        notification
+      end
+    end.compact
+
     pending.group_by(&:subject).each do |subject, notifications|
       notifications.group_by(&:actor).each do |actor, notifications|
         notifications.group_by(&:event_type).each do |event_type, notifications|
