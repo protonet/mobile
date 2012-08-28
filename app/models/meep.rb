@@ -15,6 +15,7 @@ class Meep < ActiveRecord::Base
   belongs_to  :node
   belongs_to  :user
   belongs_to  :channel
+  has_one :notification, :as => :secondary_subject, :dependent => :destroy
 
   scope :recent, :order => "meeps.id DESC"
   validates_presence_of :message, :unless => Proc.new { |meep| meep.text_extension? }
