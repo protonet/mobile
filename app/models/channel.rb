@@ -226,7 +226,7 @@ class Channel < ActiveRecord::Base
   end
 
   def rename_system_folders
-    if name_changed? && node.local?
+    if name_changed? && node && node.local?
       users.registered.all.each do |user|
         `mv #{configatron.files_path}/system_users/#{user.login}/channels/#{name_was} #{configatron.files_path}/system_users/#{user.login}/channels/#{name}`
       end
