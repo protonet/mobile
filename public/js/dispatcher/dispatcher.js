@@ -103,7 +103,7 @@ protonet.dispatcher = {
       if (this._reconnect) {
         this._reconnect = false;
         protonet
-          .trigger("flash_message.notice", protonet.t("SOCKET_RECONNECTED"))
+          .trigger("flash_message.notice", "SOCKET_RECONNECTED")
           .trigger("socket.reconnected");
       }
     } else {
@@ -124,12 +124,12 @@ protonet.dispatcher = {
     // ... also only shout it to the world when the socket has been online before
     if (this.connected === true && !isUnload) {
       protonet
-        .trigger("flash_message.error", protonet.t("SOCKET_DISCONNECTED"))
+        .trigger("flash_message.error", "SOCKET_DISCONNECTED")
         .trigger("socket.disconnected");
     }
     
     if (this.connected === undefined && !isUnload) {
-      protonet.trigger("flash_message.error", protonet.t("SOCKET_FAILURE"));
+      protonet.trigger("flash_message.error", "SOCKET_FAILURE");
     }
     
     this.connected = false;

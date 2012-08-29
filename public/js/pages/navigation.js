@@ -1,13 +1,13 @@
 (function(protonet){
 
-  protonet.pages.Dashboard = Class.create({
+  protonet.pages.Navigation = Class.create({
     initialize: function(){
-      this.$page = $('#dashboard');
-      this.href = "/#dashboard";
-      this.$channelList = this.$page.find("#channel_list");
+      this.href = "/#navigation";
+      this.$content = new protonet.utils.Template("channel_navigation").to$();
+      this.$channelList = this.$content.find("#channel_list");
       this._observeChannels();
       $.mobile.loading('show');
-      protonet.one("dashboard.updated", function(event){
+      protonet.one("navigation.updated", function(event){
         $.mobile.loading('hide');
       });
     },
@@ -17,6 +17,14 @@
       // sort channelList
       var channels = [];
       $.each(protonet.channels, function(i, channel){
+        if (!channel.lastMeep) {
+          channel.lastMeep = {
+            id: -1,
+            author: "",
+            message: "",
+            created_at: ""
+          }
+        };
         channels.push(channel);
       });
       channels = channels.sort(function(a,b){
@@ -33,7 +41,7 @@
         }).to$());
       }.bind(this));
 
-      protonet.trigger("dashboard.updated", this);
+      protonet.trigger("navigation.updated", this);
     },
     _observeChannels: function(){
 

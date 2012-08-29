@@ -1,0 +1,27 @@
+<div data-role="page" id="sign_up">
+
+  <div data-role="header" data-theme="e">
+    <h1>Create an account:</h1>
+  </div><!-- /header -->
+
+  <div data-role="content" data-theme="d">  
+    <form action="/sign_up" method="post">
+      <div class="input">
+        <label for="user_login">login</label>
+        <input type="text" name="user[login]" id="user_login" data-mini="true" autocapitalize="off" autocorrect="off" />
+      </div>
+      <div class="input">
+        <label for="user_email">email</label>
+        <input type="email" name="user[email]" id="user_email" data-mini="true" autocapitalize="off" autocorrect="off" />
+      </div>
+      <div class="input">
+        <label for="user_password">password</label>
+        <input type="password" name="user[password]" id="user_password" data-mini="true" autocapitalize="off" autocorrect="off" />
+      </div>
+      <div class="button">
+        <button type="submit" name="submit" class="ui-btn-hidden">Sign up</button>
+      </div>
+
+    </form>
+  </div>
+  

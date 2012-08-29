@@ -1,0 +1,34 @@
+<div data-role="page" id="start">
+
+  <div data-role="header">
+    <h1>protonet of <strong><%= settings.node.name %></strong></h1>
+  </div>
+
+  <div data-role="content" >  
+    <h2>Welcome</h2>
+    <form action="/sign_in" method="post" data-ajax="false" id="login_form">
+      <div class="input">
+        <label for="user_login">email or login</label>
+        <input type="text" name="user[login]" id="user_login" data-mini="true"  autocapitalize="off" autocorrect="off"/>
+      </div>
+      <div class="input">
+        <label for="user_password">password</label>
+        <input type="password" name="user[password]" id="user_password" data-mini="true"  autocapitalize="off" autocorrect="off"/>
+      </div>
+      <div class="button">
+        <button type="submit" name="submit" class="ui-btn-hidden">Login</button>
+      </div>
+
+    </form>
+    <p>
+      <a href="/sign_up" data-rel="dialog" data-transition="pop">create an account</a> if you don't have an account.
+      If you forget your password, you can <a href="/reset_password" data-rel="dialog" data-transition="pop">reset it here</a>.
+    </p>
+  </div>
+
+</div>
+
+
+</div>
+
+

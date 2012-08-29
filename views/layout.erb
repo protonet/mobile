@@ -1,19 +1,14 @@
 <!DOCTYPE html>
+<html>
 
   <head>
     <meta charset="UTF-8" />
     <title>protonet - mobile</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1"> 
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"> 
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0-alpha.1/jquery.mobile-1.2.0-alpha.1.min.css" />
     <link rel="stylesheet" href="/css/layout.css" />
     <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.2.0-alpha.1/jquery.mobile-1.2.0-alpha.1.min.js"></script> 
-    <script>
-      $(document).bind("mobileinit", function(){
-        $.mobile.defaultPageTransition = none;
-      });
-    </script>
   </head>
 
 <body>
@@ -61,11 +56,11 @@
   <script src="/js/data/channel.js"></script>
   <script src="/js/pages.js"></script>
   <script src="/js/pages/pretty_date.js"></script>
-  <script src="/js/pages/dashboard.js"></script>
+  <script src="/js/pages/navigation.js"></script>
   <script src="/js/pages/channel.js"></script>
   <script src="/js/protonet.js"></script>
 <% else %>
-  <script src="/js/auth.js"></script>
+  <script src="/js/authentication.js"></script>
 <% end %> 
 </body>
 </html>

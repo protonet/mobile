@@ -4,7 +4,7 @@ class MobileProtonet < Sinatra::Application
     if current_user
       erb :index
     else
-      redirect '/login'
+      redirect '/sign_in'
     end
   end
 

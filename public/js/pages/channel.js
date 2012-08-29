@@ -1,6 +1,7 @@
 (function(protonet){
 
-  var channelListTimeout;
+  var $scrollInput = $('<input type="text">'),
+      channelListTimeout;
 
   protonet.pages.Channel = Class.create({
     initialize: function(data){
@@ -15,15 +16,18 @@
 
       this.$timeline = this.$content.find('.timeline');
 
-      this.scroller = new iScroll(this.$content.find('.scroller')[0]);
+      //this.scroller = new iScroll(this.$content.find('.scroller')[0]);
 
       protonet.trigger("page.created", this);
       this._observe();
     },
     scrollToBottom: function(){
-      if (this.scroller.wrapperH < this.scroller.scrollerH) {
-        this.scroller.scrollTo(0,this.scroller.maxScrollY,0);
-      };
+      //if (this.scroller.wrapperH < this.scroller.scrollerH) {
+      //  this.scroller.scrollTo(0,this.scroller.maxScrollY,0);
+      //};
+      $scrollInput.appendTo(this.$timeline);
+      $scrollInput.focus();
+      $scrollInput.detach();
     },
     _observe: function(){
       
@@ -38,7 +42,6 @@
 
         if (protonet.currentPage == this) {
           setTimeout(function () {
-            this.scroller.refresh();
             this.scrollToBottom();
           }.bind(this), 0);
         };
@@ -47,7 +50,7 @@
 
         channelListTimeout && clearTimeout(channelListTimeout),
         channelListTimeout = setTimeout(function(){
-          protonet.dashboard.updateList();
+          protonet.navigation.updateList();
         }, 1000);
 
       }.bind(this));

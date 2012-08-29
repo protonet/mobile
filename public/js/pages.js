@@ -1,32 +1,35 @@
 (function(protonet){
 
   var hash = location.hash,
-    pageChache = {};
+    pageCache = {};
 
   protonet.currentPage = null;
   protonet.pages = {}
 
-  if(hash != ""){
-    protonet.one("dashboard.updated", function(){
-      $('a[href="/'+ hash +'"]').click();
-    });
-  }
+  protonet.one("navigation.updated", function(){
+    if(hash != ""){
+      pageCache['/'+hash].$content.appendTo($('body'));
+    }else{
+      protonet.navigation.$content.appendTo($('body'));
+      $.mobile.changePage("#navigation");
+    }
+  });
 
   $('body').delegate("a.channel-link", "click",function(event){
-    var href = $(this).attr("href"),
-      page = pageChache[href];
-      protonet.currentPage = page;
-      setTimeout(function(){
-        page.scroller.refresh();
-        page.scrollToBottom();
-      }, 0);
-    
+    var $this = $(this);
+
+    if (protonet.currentPage) {
+      protonet.currentPage.$content.detach();
+    };
+    protonet.currentPage = pageCache[$this.attr("href")];
+    protonet.currentPage.$content.appendTo($('body'));
+
+    $.mobile.changePage(protonet.currentPage.$content);
   });
 
   protonet.on("channel.created", function(channel){
     var page = new protonet.pages.Channel(channel)
-    pageChache[page.href] = page;
-    $('body').append(page.$content);
+    pageCache[page.href] = page;
   });
 
 })(protonet);

@@ -1,14 +1,14 @@
 class MobileProtonet < Sinatra::Application
 
-  get '/login' do
+  get '/sign_in' do
     if current_user
       redirect '/'
     else
-      erb :login
+      erb :sign_in
     end
   end
 
-  post '/login' do
+  post '/sign_in' do
     response = Protolink::Protonet.open(settings.api_url, params[:user][:login], params[:user][:password]).auth
     content_type :json
     if response
@@ -21,9 +21,17 @@ class MobileProtonet < Sinatra::Application
     end
   end
 
-  get '/logout' do
+  get '/sign_out' do
     session.clear
     redirect '/'
+  end
+
+  get '/reset_password'do
+    erb :reset_password
+  end
+
+  get '/sign_up'do
+    erb :sign_up
   end
 
 end

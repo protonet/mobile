@@ -33,11 +33,11 @@ $(function() {
     }
   });
 
-  protonet.dashboard = new protonet.pages.Dashboard();
+  protonet.navigation = new protonet.pages.Navigation();
 
   protonet.dispatcher.initialize();
 
-  protonet.on("channels.loaded", function(){
+  protonet.one("channels.loaded", function(){
     protonet.dispatcher.onready(function(){
       protonet.trigger("socket.send", {
         operation:  "sync",
@@ -57,7 +57,7 @@ $(function() {
         new protonet.Meep(meep);
       });
     });
-    protonet.trigger("sync.succeeded")
+    protonet.trigger("sync.succeeded");
   });
 
 });

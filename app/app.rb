@@ -13,10 +13,15 @@ class MobileProtonet < Sinatra::Application
     set :api_user, (ENV['API_USER'] || "admin")
     set :api_pw, (ENV['API_PW'] || "admin")
     set :node, Protolink::Protonet.open(settings.api_url, nil ,nil).node
-    set :views, ['views/']
+    set :views, ['views/', 'views/authentication/']
   end
 
   helpers do
+
+    def find_template(views, name, engine, &block)
+      Array(views).each { |v| super(v, name, engine, &block) }
+    end
+
     def protonet
       Protolink::Protonet.open(settings.api_url, session[:login], session[:password]) 
     end
@@ -48,5 +53,5 @@ class MobileProtonet < Sinatra::Application
   end
 end
 
-require_relative 'login'
+require_relative 'authentication'
 require_relative 'main'
