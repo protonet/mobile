@@ -26,15 +26,11 @@ $.behaviors({
     event.preventDefault();
   },
   
-  // Needed in order to avoid the socket from disconnecting when a file gets downloaded
-  // (which triggers the beforeunload/unload handlers in some browsers)
   "a[download]:click": function(element, event) {
-    var $anchor = $(element).addClass("loading"),
-        $iframe = $("<iframe>", { src: element.href, style: 'width:0; height:0; border:0; display:none;' }).appendTo("body");
+    var $anchor = $(element).addClass("loading");
     setTimeout(function() {
       $anchor.removeClass("loading");
     }, 2500);
-    event.preventDefault();
   },
   
   "input[data-users-autocomplete]": function(element, event) {
