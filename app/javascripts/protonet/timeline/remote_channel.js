@@ -37,9 +37,9 @@ protonet.timeline.RemoteChannel = Class.create(protonet.timeline.Channel, {
     return this;
   },
   
-  renderTab: function($super, tabContainer) {
-    $super(tabContainer);
-    this.link.addClass("global");
+  render: function($super, container) {
+    $super(container);
+    this.channelList.addClass("remote");
     return this;
   },
   
