@@ -20,12 +20,6 @@ protonet.timeline.RemoteChannel = Class.create(protonet.timeline.Channel, {
           this.isOnline = false;
           this.updateState();
         }
-      }.bind(this))
-      
-      .on("channel.rendered channel.rendered_more", function(channelList, data, instance) {
-        if (instance === this) {
-          channelList.addClass("remote-channel");
-        }
       }.bind(this));
     
     $super();
@@ -37,9 +31,9 @@ protonet.timeline.RemoteChannel = Class.create(protonet.timeline.Channel, {
     return this;
   },
   
-  render: function($super, container) {
-    $super(container);
-    this.channelList.addClass("remote");
+  renderTab: function($super, tabContainer) {
+    $super(tabContainer);
+    this.link.addClass("global");
     return this;
   },
   

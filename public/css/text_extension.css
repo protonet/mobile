@@ -341,14 +341,6 @@
   height: 24px !important;
 }
 
-.remote-channel .text-extension-results.Meep a {
-  cursor: default;
-}
-
-.remote-channel .text-extension-results.File {
-  display: none;
-}
-
 /* =FILES TEXT EXTENSION
 ------------------------------------------------------------------------------ */
 .text-extension-results.files .domain,

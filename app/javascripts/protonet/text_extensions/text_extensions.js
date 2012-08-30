@@ -35,6 +35,17 @@
     if (text === textExtension.url || ("http://" + text) === textExtension.url) {
       $article.addClass("empty").empty();
     }
+    
+    // Make meeps non-clickable in global channels
+    if (protonet.data.Channel.isGlobal(meepData.channel_id)) {
+      if (textExtension.type === "Meep") {
+        $meepElement.find(".text-extension-results a").click(false).css({ cursor: "default" });
+      } else if (textExtension.type === "File") {
+        $meepElement.find(".text-extension-results a").click(false).css({ cursor: "not-allowed", opacity: 0.5 });
+      }
+    }
+    
+    
   }
   
   function _reRender($meepElement, meepData) {
