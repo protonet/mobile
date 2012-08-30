@@ -13,21 +13,16 @@
         id: this.id, 
         name: this.name 
       }).to$();
-
       this.$timeline = this.$content.find('.timeline');
-
-      //this.scroller = new iScroll(this.$content.find('.scroller')[0]);
-
+      this.scroller = new iScroll(this.$content.find('.scroller')[0]);
       protonet.trigger("page.created", this);
       this._observe();
     },
     scrollToBottom: function(){
-      //if (this.scroller.wrapperH < this.scroller.scrollerH) {
-      //  this.scroller.scrollTo(0,this.scroller.maxScrollY,0);
-      //};
-      $scrollInput.appendTo(this.$timeline);
-      $scrollInput.focus();
-      $scrollInput.detach();
+      this.scroller.refresh();
+      if (this.scroller.wrapperH < this.scroller.scrollerH) {
+        this.scroller.scrollTo(0,this.scroller.maxScrollY,0);
+      };
     },
     _observe: function(){
       
@@ -39,6 +34,7 @@
         }).to$();
 
         this.$timeline.append($meep);
+        this.scroller.refresh();
 
         if (protonet.currentPage == this) {
           setTimeout(function () {

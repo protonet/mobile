@@ -12,6 +12,7 @@
     if (page) {
       protonet.currentPage = page;
       page.$content.appendTo($('body'));
+      page.scroller.refresh();
     }else{
       protonet.navigation.$content.show();
     }
@@ -21,7 +22,6 @@
   });
 
   function changePage(page){
-    console.log(page);
     if (protonet.currentPage) {
       $(protonet.currentPage.$content).bind("pagehide", function(event){
         var $this = $(this);
@@ -31,6 +31,7 @@
     };
     protonet.currentPage = page;
     protonet.currentPage.$content.appendTo($('body'));
+    protonet.currentPage.scroller.refresh();
     $.mobile.changePage(protonet.currentPage.$content,{
       dataUrl: page.href,
       transition: "slide"
