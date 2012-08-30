@@ -3,6 +3,7 @@ protonet.dispatcher = {
   provider: {},
 
   initialize: function() {
+
     if (!this.shouldConnect()) {
       return;
     }

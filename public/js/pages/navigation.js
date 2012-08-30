@@ -3,13 +3,11 @@
   protonet.pages.Navigation = Class.create({
     initialize: function(){
       this.href = "/#navigation";
-      this.$content = new protonet.utils.Template("channel_navigation").to$();
+      //this.$content = new protonet.utils.Template("channel_navigation").to$();
+      this.$content = $('#navigation');
       this.$channelList = this.$content.find("#channel_list");
-      this._observeChannels();
-      $.mobile.loading('show');
-      protonet.one("navigation.updated", function(event){
-        $.mobile.loading('hide');
-      });
+      this._observe();
+      protonet.trigger("navigation.initialized", this);
     },
     updateList: function(){
       this.$channelList.empty();
@@ -43,7 +41,8 @@
 
       protonet.trigger("navigation.updated", this);
     },
-    _observeChannels: function(){
+    _observe: function(){
+
 
       protonet
         /**

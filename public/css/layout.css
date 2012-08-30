@@ -2,30 +2,30 @@
 .ui-footer .ui-title {
   margin: .6em 10% .8em;
 }
-a.channel-link.active{
-  background:red;
+.ui-page{
+  background:white;
+  padding:42px 0 0 0;
 }
-
-.channel-page{
-  overflow:hidden;
-}
-.channel-page .ui-header{
+.ui-header{
   position: fixed;
   top: 0;
   width:100%;
-  height:45px;
   z-index:3;
 }
-.channel-page .content{
-   /*position:absolute;   
-   z-index:1;
-   top: 45px;
-   bottom: 100px;
-   width:100%;
-   overflow-x:hidden;
-   overflow-y:scroll;
-*/}
-.channel-page .ui-footer{
+.ui-header a.userlist{
+  right: 45px;
+}
+.content{
+  background: white;
+  position:absolute;   
+  z-index:1;
+  top: 42px;
+  bottom: 100px;
+  width:100%;
+  overflow-x:hidden;
+  overflow-y:scroll;
+}
+.ui-footer{
   position: fixed;
   bottom: 0;
   width:100%;

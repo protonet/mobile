@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="/css/layout.css" />
     <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.2.0-alpha.1/jquery.mobile-1.2.0-alpha.1.min.js"></script> 
+    <script>
+      $.mobile.touchOverflowEnabled = true;
+      $.mobile.autoInitializePage = false
+    </script>
   </head>
 
 <body>
@@ -30,7 +34,8 @@
         dispatching_websocket_delimiter:  "",
         users:                            null,
         channels:                         null,
-        api_url:                          "<%= settings.api_url %>"
+        api_url:                          "<%= settings.api_url %>",
+        debug_mode:                       true
       },
       events: {},
       channels: {},
@@ -60,6 +65,9 @@
   <script src="/js/pages/channel.js"></script>
   <script src="/js/protonet.js"></script>
 <% else %>
+  <script>
+    $.mobile.initializePage();
+  </script>
   <script src="/js/authentication.js"></script>
 <% end %> 
 </body>

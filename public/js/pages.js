@@ -7,28 +7,47 @@
   protonet.pages = {}
 
   protonet.one("navigation.updated", function(){
-    if(hash != ""){
-      pageCache['/'+hash].$content.appendTo($('body'));
+    var page = pageCache['/'+ hash];
+
+    if (page) {
+      protonet.currentPage = page;
+      page.$content.appendTo($('body'));
     }else{
-      protonet.navigation.$content.appendTo($('body'));
-      $.mobile.changePage("#navigation");
+      protonet.navigation.$content.show();
     }
+
+    $.mobile.initializePage();
+
   });
 
-  $('body').delegate("a.channel-link", "click",function(event){
-    var $this = $(this);
-
+  function changePage(page){
+    console.log(page);
     if (protonet.currentPage) {
-      protonet.currentPage.$content.detach();
+      $(protonet.currentPage.$content).bind("pagehide", function(event){
+        var $this = $(this);
+        $this.detach();
+        $this.unbind(event);
+      });
     };
-    protonet.currentPage = pageCache[$this.attr("href")];
+    protonet.currentPage = page;
     protonet.currentPage.$content.appendTo($('body'));
+    $.mobile.changePage(protonet.currentPage.$content,{
+      dataUrl: page.href,
+      transition: "slide"
+    });
+  }
 
-    $.mobile.changePage(protonet.currentPage.$content);
+  $('body').delegate("a", "click",function(event){
+    var href = $(this).attr("href"),
+      page = pageCache[href];
+    if (page) {
+      event.preventDefault();
+      changePage(page);
+    };
   });
 
   protonet.on("channel.created", function(channel){
-    var page = new protonet.pages.Channel(channel)
+    var page = new protonet.pages.Channel(channel);
     pageCache[page.href] = page;
   });
 
