@@ -39,7 +39,7 @@ protonet.ui.Confirm = Class.create(protonet.ui.Dialog, {
   _observe: function($super) {
     $super();
     
-    this.$overlay.on("mousedown keydown", function() {
+    this.$overlay.on("mousedown keydown", function(event) {
       event.stopPropagation();
     });
     
