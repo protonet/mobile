@@ -31,7 +31,10 @@ protonet.text_extensions.Input.prototype = {
     protonet
       .on("form.submitted",               this._submitted.bind(this))
       .on("text_extension_input.render",  this.render.bind(this))
-      .on("text_extension_input.select",  this.select.bind(this));
+      .on("text_extension_input.select",  function(urls) {
+        this._ignoreUrls = [];
+        this.select(urls);
+      }.bind(this));
   },
   
   _paste: function() {
