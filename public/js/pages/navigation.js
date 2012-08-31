@@ -2,61 +2,57 @@
 
   protonet.pages.Navigation = Class.create({
     initialize: function(){
-      this.href = "/#navigation";
-      //this.$content = new protonet.utils.Template("channel_navigation").to$();
       this.$content = $('#navigation');
-      this.$channelList = this.$content.find("#channel_list");
-      this._observe();
+      this.$channelList = $("#channel_list");
+      this.$channelList.listview();
       protonet.trigger("navigation.initialized", this);
+      protonet.one("sync.succeeded", function(){
+        this._observe();
+        this.updateList();
+      }.bind(this));
     },
     updateList: function(){
+      // sort channel
+      var channels = [];
       this.$channelList.empty();
 
-      // sort channelList
-      var channels = [];
       $.each(protonet.channels, function(i, channel){
         if (!channel.lastMeep) {
           channel.lastMeep = {
-            id: -1,
-            author: "",
-            message: "",
-            created_at: ""
+            id: -1
           }
         };
         channels.push(channel);
       });
+
       channels = channels.sort(function(a,b){
         return b.lastMeep.id-a.lastMeep.id;
-      })
-
+      });
+      
       $.each(channels, function(i, channel){
         this.$channelList.append(new protonet.utils.Template("channel-link",{
           id:         channel.id,
-          name:       channel.name,
-          author:     channel.lastMeep.author,
-          message:    channel.lastMeep.message.truncate(50),
-          created_at: channel.lastMeep.created_at
+          name:       channel.name
         }).to$());
       }.bind(this));
 
-      protonet.trigger("navigation.updated", this);
+      this.$channelList.listview('refresh');
     },
     _observe: function(){
-
-
-      protonet
-        /**
-         * append a channel to channel_navigation
-         */
-        .on("channel.created", function(channel){
-          
-        }.bind(this))
-        /**
-         * delete Channel if user unsubscribed channel
-         */
-        .on("channel.deleted", function(channel){
-          
-        }.bind(this));
+      var timeout;
+      /**
+       * Sort List if a new Meep is rendered
+       * append a channel to channel_navigation
+       * delete Channel if user unsubscribed channel
+       */
+      protonet.on("meep.rendered channel.created channel.deleted", function(){
+        if (timeout) {
+          clearTimeout(timeout);
+        };
+        timeout = setTimeout(function(){
+          this.updateList();
+        }.bind(this), 1000);
+      }.bind(this));
     }
   });
 

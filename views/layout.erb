@@ -5,10 +5,10 @@
     <meta charset="UTF-8" />
     <title>protonet - mobile</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"> 
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0-alpha.1/jquery.mobile-1.2.0-alpha.1.min.css" />
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
     <link rel="stylesheet" href="/css/layout.css" />
     <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.2.0-alpha.1/jquery.mobile-1.2.0-alpha.1.min.js"></script> 
+    <script src="/js/lib/jquery.mobile-1.1.1.js"></script>
     <script>
       $.mobile.touchOverflowEnabled = true;
       $.mobile.autoInitializePage = false
@@ -25,6 +25,7 @@
     window.$document = $(document);
     var protonet = {
       config: {
+        node_base_url:                    "<%= node_base_url %>",
         token:                            "<%= current_user.communication_token %>",
         user_id:                          <%= current_user.id %>,
         dispatching_server:               "localhost",
@@ -48,6 +49,10 @@
   <script src="/js/utils/template.js"></script>
   <script src="/js/utils/extensions.js"></script>
   <script src="/js/utils/prettify_date.js"></script>
+  <script src="/js/utils/parse_url.js"></script>
+  <script src="/js/utils/convert_to_absolute_url.js"></script>
+  <script src="/js/utils/escape_for_reg_exp.js"></script>
+  <script src="/js/utils/imageproxy.js"></script>
   <script src="/js/events/emitter.js"></script>
   <script>
     protonet.Emitter = new protonet.events.Emitter();

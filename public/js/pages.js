@@ -6,19 +6,18 @@
   protonet.currentPage = null;
   protonet.pages = {}
 
-  protonet.one("navigation.updated", function(){
+  protonet.one("sync.succeeded", function(){
     var page = pageCache['/'+ hash];
 
     if (page) {
       protonet.currentPage = page;
       page.$content.appendTo($('body'));
+      $.mobile.initializePage();
       page.scroller.refresh();
     }else{
       protonet.navigation.$content.show();
+      $.mobile.initializePage();
     }
-
-    $.mobile.initializePage();
-
   });
 
   function changePage(page){
@@ -31,11 +30,11 @@
     };
     protonet.currentPage = page;
     protonet.currentPage.$content.appendTo($('body'));
-    protonet.currentPage.scroller.refresh();
     $.mobile.changePage(protonet.currentPage.$content,{
       dataUrl: page.href,
       transition: "slide"
     });
+    protonet.currentPage.scroller.refresh();
   }
 
   $('body').delegate("a", "click",function(event){

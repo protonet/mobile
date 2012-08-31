@@ -18,34 +18,23 @@ $(function() {
           protonet.channels[id] = new protonet.Channel(data[i]);
         }        
       };
-      protonet.trigger("channels.loaded");
-    },
-    error: function(){
-      console.error(arguments);
+      protonet.dispatcher.onready(function(){
+        protonet.trigger("socket.send", {
+          operation:  "sync",
+          payload:    {
+            limit: 20
+          }
+        });
+      });
     }
   });
 
   protonet.navigation = new protonet.pages.Navigation();
-
   protonet.dispatcher.initialize();
-
-  protonet.one("channels.loaded", function(){
-    protonet.dispatcher.onready(function(){
-      protonet.trigger("socket.send", {
-        operation:  "sync",
-        payload:    {
-          limit: 20
-        }
-      });
-    });
-  });
 
   protonet.on("sync.received", function(data){
     $.each(data['channels'], function(id, meeps){
-      if(!protonet.channels[id]){
-        protonet.channels[id] = new protonet.Channel(id);
-      }
-      $.each(meeps, function(i, meep){
+      $.each(meeps.reverse(), function(i, meep){
         new protonet.Meep(meep);
       });
     });

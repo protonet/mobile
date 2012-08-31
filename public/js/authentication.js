@@ -7,7 +7,7 @@ $(document).delegate('form#login_form', 'submit', function(event){
     type: "post",
     data: $this.serializeArray(),
     beforeSend: function(){
-      $.mobile.loading( 'show' );
+      $.mobile.showPageLoadingMsg();
     },
     success: function(data){
       if (data["success"]) {
@@ -25,7 +25,7 @@ $(document).delegate('form#login_form', 'submit', function(event){
       console.log(arguments);
     },
     complete: function(){
-      $.mobile.loading( 'hide' );
+      $.mobile.hidePageLoadingMsg();
     }
   });
   

@@ -14,6 +14,7 @@ class MobileProtonet < Sinatra::Application
     set :api_pw, (ENV['API_PW'] || "admin")
     set :node, Protolink::Protonet.open(settings.api_url, nil ,nil).node
     set :views, ['views/', 'views/authentication/']
+    set :env, ENV['RACK_ENV'] || "development"
   end
 
   helpers do
@@ -28,6 +29,18 @@ class MobileProtonet < Sinatra::Application
 
     def current_user
       session[:user] && CurrentUser.new(protonet, session[:user])
+    end
+
+    def node_base_url
+      if settings.env == "production"
+        "#{host}/node"
+      else
+        "#{host}:8124"
+      end
+    end
+
+    def host
+      request.env['rack.url_scheme'] + "://" + request.env['HTTP_HOST'].gsub(/:\d+/,"")
     end
   end
 
