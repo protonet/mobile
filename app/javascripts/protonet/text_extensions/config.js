@@ -9,5 +9,5 @@ protonet.text_extensions.config = {
     width:    400,
     height:   280
   },
-  MAX_IMAGES: 10
+  MAX_IMAGES: 15
 };
