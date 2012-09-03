@@ -1367,7 +1367,10 @@ protonet.ui.files.List = (function() {
         if (!$element.hasClass("disable-rename") && !$element.hasClass("disabled")) {
           clearTimeout(renameTimeout);
           renameTimeout = setTimeout(function() {
-            $element.data("instance").rename();
+            var instance = $element.data("instance");
+            if (instance) {
+              instance.rename();
+            }
           }, 500);
         }
       });
