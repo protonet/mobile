@@ -46,6 +46,11 @@ export last_version=`curl http://releases.protonet.info/beta/version`
 if [ "$release_type" != "OVERWRITE LAST" ]; then
    let "last_version += 1"
 fi
+
+# notify others
+export username=`git config --get user.name`
+curl "http://simple-mist-848.heroku.com/start-new-release?username=$(perl -MURI::Escape -e 'print uri_escape($ENV{"username"});' "$2")&release=$last_version&type=$release_type"
+
 ############################################################
 #  get the dashboard
 cd /tmp
@@ -194,6 +199,9 @@ if [ "$release_type" = "OVERWRITE LAST" ]; then
 fi
 git tag -a R_$last_version $DEPLOYER_REVISION -m "RELEASE $last_version BY `whoami` ON `date`"
 git push --tags
+
+# tell everyone you're done!
+curl "http://simple-mist-848.heroku.com/finished-new-release?username=$(perl -MURI::Escape -e 'print uri_escape($ENV{"username"});' "$2")&release=$last_version&type=$release_type"
 
 # cleanup
 rm -rf /tmp/dashboard
