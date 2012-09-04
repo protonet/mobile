@@ -218,7 +218,7 @@ class Channel < ActiveRecord::Base
   end
   
   def rendezvous_participants
-    rendezvous ? rendezvous.split(':').map { |id| User.find_by_id(id) } : []
+    (rendezvous ? rendezvous.split(':').map { |id| User.find_by_id(id) } : []).compact
   end
     
   def random_users(amount=5)

@@ -1,15 +1,11 @@
-var fs     = require("fs"),
-    util   = require("util"),
-    assert = require("assert"),
+var fs        = require("fs"),
+    util      = require("util"),
+    assert    = require("assert"),
     
-    http   = require("http"),
-    url    = require("url"),
-    
-    amqp   = require("amqp");
+    http      = require("http"),
+    url       = require("url"),
+    amqp      = require("amqp");
 
-process.addListener("uncaughtException", function (err) {
-  console.log("Uncaught exception: " + err);
-});
 
 leftToBoot = 3;
 function systemUp () {
@@ -38,7 +34,7 @@ process.argv.forEach(function(val){
   }
   
   if (match = val.match(/env=(\w+)/)) {
-    global.env = match[1];
+    process.env.NODE_ENV = global.env = match[1];
   }
 });
 
@@ -46,6 +42,15 @@ global.FILES_PATH = envPaths[global.env] || envPaths.development;
 
 // Everything that is created by node.js will give the user and group read/write/execute permissions
 process.umask(0007);
+
+// Exception handling
+process.addListener("uncaughtException", function (err) {
+  console.log("Uncaught exception: " + err);
+});
+
+if (global.env === "production") {
+  require("airbrake").createClient("e0e395c06aa4a6756b5d585fee266999").handleExceptions();
+}
 
 /*----------------------------------- SOCKET TASKS -----------------------------------*/
 var tries = 0;

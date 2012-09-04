@@ -20,6 +20,7 @@
     "watch": "git://github.com/protonet/watch.git",
     "iconv": "git://github.com/protonet/node-iconv.git",
     "xattr": "git://github.com/protonet/node-xattr.git",
-    "jsDAV": "git://github.com/protonet/jsDAV.git"
+    "jsDAV": "git://github.com/protonet/jsDAV.git",
+    "airbrake": "0.2.9"
   }
 }
