@@ -20,9 +20,31 @@ class MobileProtonet < Sinatra::Application
         :id => channel.id,
         :uuid => channel.uuid,
         :description => channel.description,
-        :global => channel.global
+        :global => channel.global,
+        :rendezvous => channel.rendezvous
       }
     end.to_json
+  end
+
+  get '/users' do
+    content_type :json
+    protonet.users.map do |user| 
+      {
+        :id => user.id,
+        :name => user.login,
+        :avatar => user.avatar_url
+      }
+    end.to_json
+  end
+
+  post '/rendezvous' do
+    content_type :json
+    channel = protonet.create_rendezvous(current_user.id, params[:user_id])
+    if channel.id
+      { :channel_id => channel.id }.to_json
+    else
+      { :channel_id => nil }.to_json
+    end
   end
 
 end

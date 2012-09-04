@@ -15,35 +15,35 @@
       $.mobile.initializePage();
       page.scroller.refresh();
     }else{
-      protonet.navigation.$content.show();
       $.mobile.initializePage();
     }
   });
 
-  function changePage(page){
-    if (protonet.currentPage) {
-      $(protonet.currentPage.$content).bind("pagehide", function(event){
-        var $this = $(this);
-        $this.detach();
-        $this.unbind(event);
+  protonet.changePage = function(href){
+    console.log(href);
+    var page = pageCache[href];
+    if(page){
+      event.preventDefault();
+      if (protonet.currentPage) {
+        $(protonet.currentPage.$content).bind("pagehide", function(event){
+          var $this = $(this);
+          $this.detach();
+          $this.unbind(event);
+        });
+      };
+      protonet.currentPage = page;
+      protonet.currentPage.$content.appendTo($('body'));
+      $.mobile.changePage(protonet.currentPage.$content,{
+        dataUrl: page.href,
+        transition: "slide"
       });
-    };
-    protonet.currentPage = page;
-    protonet.currentPage.$content.appendTo($('body'));
-    $.mobile.changePage(protonet.currentPage.$content,{
-      dataUrl: page.href,
-      transition: "slide"
-    });
-    protonet.currentPage.scroller.refresh();
+      protonet.currentPage.scroller && protonet.currentPage.scroller.refresh();
+    }
   }
 
   $('body').delegate("a", "click",function(event){
-    var href = $(this).attr("href"),
-      page = pageCache[href];
-    if (page) {
-      event.preventDefault();
-      changePage(page);
-    };
+    var href = $(this).attr("href");
+    protonet.changePage(href);
   });
 
   protonet.on("channel.created", function(channel){

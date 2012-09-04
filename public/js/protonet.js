@@ -6,30 +6,31 @@ $(function() {
     }, 0);
   });
 
-  $.ajax({
-    url: "/channels/subscribed",
-    type: "get",
-    success: function(data){
-      for (var i = data.length - 1; i >= 0; i--) {
-        var id = +data[i]["id"];
-        if (protonet.channels[id]) {
-          protonet.channels[id].update(data[i]);
-        }else{
-          protonet.channels[id] = new protonet.Channel(data[i]);
-        }        
-      };
-      protonet.dispatcher.onready(function(){
-        protonet.trigger("socket.send", {
-          operation:  "sync",
-          payload:    {
-            limit: 20
-          }
-        });
-      });
-    }
+  for (var i = data.users.length - 1; i >= 0; i--) {
+    var user = new protonet.User(data.users[i]);
+    if (user.id != protonet.config.user_id) {
+      protonet.users[user.id] = user;
+    };
+  };
+
+  for (var i = data.channels.length - 1; i >= 0; i--) {
+    var channel = new protonet.Channel(data.channels[i]);
+    protonet.channels[channel.id] = channel;
+  };
+
+  data = null;
+  $('#data').remove();
+
+  protonet.dispatcher.onready(function(){
+    protonet.trigger("socket.send", {
+      operation:  "sync",
+      payload:    {
+        limit: 20
+      }
+    });
   });
 
-  protonet.navigation = new protonet.pages.Navigation();
+  protonet.dashboard = new protonet.pages.Dashboard();
   protonet.dispatcher.initialize();
 
   protonet.on("sync.received", function(data){

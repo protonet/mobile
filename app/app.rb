@@ -24,11 +24,11 @@ class MobileProtonet < Sinatra::Application
     end
 
     def protonet
-      Protolink::Protonet.open(settings.api_url, session[:login], session[:password]) 
+      @protonet ||= Protolink::Protonet.open(settings.api_url, session[:login], session[:password]) 
     end
 
     def current_user
-      session[:user] && CurrentUser.new(protonet, session[:user])
+      @current_user ||= session[:user] && CurrentUser.new(protonet, session[:user])
     end
 
     def node_base_url
@@ -41,6 +41,14 @@ class MobileProtonet < Sinatra::Application
 
     def host
       request.env['rack.url_scheme'] + "://" + request.env['HTTP_HOST'].gsub(/:\d+/,"")
+    end
+  end
+
+  before do
+    if params[:reload]
+      @current_user = nil
+      response = Protolink::Protonet.open(settings.api_url, session[:login], session[:password]).auth
+      session[:user] = JSON.parse(response.body)
     end
   end
 

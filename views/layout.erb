@@ -4,14 +4,14 @@
   <head>
     <meta charset="UTF-8" />
     <title>protonet - mobile</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
     <link rel="stylesheet" href="/css/layout.css" />
-    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
     <script src="/js/lib/jquery.mobile-1.1.1.js"></script>
     <script>
       $.mobile.touchOverflowEnabled = true;
-      $.mobile.autoInitializePage = false
+      $.mobile.autoInitializePage = false;
     </script>
   </head>
 
@@ -39,10 +39,10 @@
         debug_mode:                       true
       },
       events: {},
-      channels: {},
       utils: {}
     };
   </script>
+  <script src="/js/lib/fastclick.js"></script>
   <script src="/js/lib/jquery-class-create/class.js"></script>
   <script src="/js/lib/iscroll/src/iscroll.js"></script>
   <script src="/js/utils/browser.js"></script>
@@ -64,9 +64,10 @@
   <script src="/js/dispatcher/http_streaming.js"></script>
   <script src="/js/data/meep.js"></script>
   <script src="/js/data/channel.js"></script>
+  <script src="/js/data/user.js"></script>
   <script src="/js/pages.js"></script>
   <script src="/js/pages/pretty_date.js"></script>
-  <script src="/js/pages/navigation.js"></script>
+  <script src="/js/pages/dashboard.js"></script>
   <script src="/js/pages/channel.js"></script>
   <script src="/js/protonet.js"></script>
 <% else %>

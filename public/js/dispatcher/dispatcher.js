@@ -191,7 +191,11 @@ protonet.dispatcher = {
         protonet.trigger(trigger, data);
         console.log(trigger,data);
       } else if (data.eval) {
-        eval(data.eval);
+        if (data.eval == "location.reload()") {
+          location.href = location.href + "?reload=true"
+        }else{
+          eval(data.eval)
+        }
       }
     });
   },

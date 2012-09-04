@@ -1,0 +1,21 @@
+<script id="data">
+  var data = {
+    users: <%= protonet.users.map do |user| 
+      {
+        :id => user.id,
+        :name => user.login,
+        :avatar => user.avatar_url
+      }
+    end.to_json %>,
+    channels: <%= current_user.subscribed_channels.map do |channel|
+      {
+        :name => channel.name,
+        :id => channel.id,
+        :uuid => channel.uuid,
+        :description => channel.description,
+        :global => channel.global,
+        :rendezvous => channel.rendezvous
+      }
+    end.to_json %>
+  };
+</script>

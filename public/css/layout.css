@@ -2,22 +2,30 @@
 .ui-footer .ui-title {
   margin: .6em 10% .8em;
 }
-.ui-page{
+.channel-page.ui-page{
   background:white;
   padding:42px 0 0 0;
 }
-.ui-header{
+.channel-page .ui-header{
   position: fixed;
   top: 0;
   width:100%;
   z-index:3;
 }
-.ui-header a.userlist{
+.channel-page .ui-header a.userlist{
   right: 45px;
 }
+span.ui-icon.ui-icon-new-chat{
+  background-image: url(/images/new_chat.png);
+  background-size: 18px 18px;
+  /* Alternatively background-size: contain; */
+  height: 18px;
+  width: 18px;
+}
+
 .content{
   background: white;
-  position:absolute;   
+  position:absolute;
   z-index:1;
   top: 40px;
   bottom: 100px;
@@ -25,6 +33,7 @@
 }
 .content .scroller{
   height:100%;
+  background: white url("/images/grey.png");
 }
 .ui-footer{
   position: fixed;
@@ -53,7 +62,6 @@ ul.timeline{
   margin:0;
   padding:10px 0;
   overflow:hidden;
-
 }
 li.meep{
   box-sizing:border-box;
