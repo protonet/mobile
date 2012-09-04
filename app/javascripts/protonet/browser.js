@@ -37,11 +37,11 @@ protonet.browser = {
   })(),
   
   IS_TOUCH_DEVICE: function() {
-    return this.SUPPORTS_EVENT("touchmove");
+    return "ontouchstart" in window;
   },
   
   IS_IOS: function() {
-    return navigator.userAgent.match(/(iphone|ipod|ipad)/);
+    return navigator.userAgent.match(/(iphone|ipod|ipad)/i);
   },
   
   /**
