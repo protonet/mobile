@@ -11,13 +11,13 @@ protonet.p("users", function($page) {
       if (!$.trim(data)) { return; }
 
       $($(".common-user-list")).append(data);
-      $(".common-user-list li:nth-last-child(20)").one("inview", function() {
+      $(".common-user-list li:last-child").one("inview", function() {
         fillUpUsers(page + 1);
       });
     }, 'html');
   };
 
-  $(".common-user-list li:nth-last-child(20)").one("inview", function() {
+  $(".common-user-list li:last-child").one("inview", function() {
     fillUpUsers(2);
   });
   
