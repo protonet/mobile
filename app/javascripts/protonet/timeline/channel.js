@@ -405,7 +405,7 @@
       if (this.channelList.find("article").length < 25) {
         return;
       }
-      var lastMeepInList = this.channelList.children(":last").addClass("separator");
+      var lastMeepInList = this.channelList.children("li:last").addClass("separator");
 
       lastMeepInList.one("inview", function(event, visible) {
         if (!visible) {
