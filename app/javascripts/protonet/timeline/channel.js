@@ -338,8 +338,7 @@
      */
     _renderMeep: function(meepDataOrForm, channelList, post) {
       var meep         = new protonet.timeline.Meep(meepDataOrForm),
-          previousMeep = channelList.find(":first").data("instance");
-      
+          previousMeep = channelList.find("li:first").data("instance");
       if (previousMeep && this._shouldBeMerged(previousMeep, meep)) {
         meep.mergeWith(previousMeep.element);
       } else {
@@ -391,7 +390,6 @@
     _shouldBeMerged: function(previousMeep, newMeep) {
       var newMeepData       = newMeep.data,
           previousMeepData  = previousMeep.data;
-
       return !newMeepData.reply_from &&
         !previousMeep.error &&
         !newMeepData.text_extension &&
