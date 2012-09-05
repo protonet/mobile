@@ -185,6 +185,10 @@ protonet.ui.MeepScroller = Class.create({
   },
 
   _loadAndRender: function(position, meep) {
+    if (!meep) {
+      return;
+    }
+    
     $.ajax({
       data:     { id: meep.data.id, count: 8 },
       url:      "/meeps/" + position,
