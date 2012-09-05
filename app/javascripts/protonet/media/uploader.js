@@ -79,7 +79,7 @@ protonet.media.Uploader = (function() {
           if (file._error) { return; }
           
           xhr.responseText = xhr.response || "[]";
-          xhr.responseJSON = JSON.parse(xhr.responseText)[0];
+          xhr.responseJSON = JSON.parse(xhr.responseText);
           
           if (!xhr.responseJSON) {
             file._error = true;

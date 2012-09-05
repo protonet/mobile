@@ -115,47 +115,38 @@ exports.init = function(amqpConnection) {
     switch (message.action) {
       case 'upload':
         var targetDir   = ROOT_DIR + (message.params.target_folder || ""),
-            responseArr = [];
+            file        = message.file;
 
         mkdirSync(targetDir, FOLDER_PERMISSIONS);
         
-        Step(function() {
-          for (var i in message.files) {
-            var file = message.files[i];
-            file.name = normalizeInput(file.name);
-            var newFilePath = path.join(targetDir, file.name);
-            var stat = fs.statSync(file.path);
-            var callback = this.parallel();
-            
-            fs.rename(file.path, newFilePath, function(err) {
-              fs.chmod(newFilePath, FILE_PERMISSIONS);
-              
-              try {
-                // this doesn't work with file paths including umlauts
-                xattr.set(newFilePath, "user.owner", message.params.user_id || -1);
-              } catch(e) {
-                console.log("Failed to set extended attributes on", newFilePath);
-              }
-              
-              callback.apply(this, arguments);
-            });
-            
-            file.path = newFilePath;
-            
-            delete virusScanCache[newFilePath];
-            
-            responseArr.push({
-              type:     "file",
-              modified: stat.mtime,
-              name:     file.name,
-              size:     file.size,
-              mime:     file.mime,
-              path:     absolutePathForFrontend(newFilePath)
-            });
+        file.name = normalizeInput(file.name);
+        
+        var newFilePath = path.join(targetDir, file.name);
+        
+        fs.rename(file.path, newFilePath, function(err) {
+          fs.chmod(newFilePath, FILE_PERMISSIONS);
+          
+          try {
+            // this doesn't work with file paths including umlauts
+            xattr.set(newFilePath, "user.owner", message.params.user_id || -1);
+          } catch(e) {
+            console.log("Failed to set extended attributes on", newFilePath);
           }
-        }, function() {
+          
+          file.path = newFilePath;
+
+          delete virusScanCache[newFilePath];
+
           response.writeHead(200, { "Content-Type": "application/json" });
-          response.end(JSON.stringify(responseArr));
+
+          response.end(JSON.stringify({
+            type:     "file",
+            modified: new Date(),
+            name:     file.name,
+            size:     file.size,
+            mime:     file.mime,
+            path:     absolutePathForFrontend(newFilePath)
+          }));
         });
         break;
         
@@ -188,14 +179,7 @@ exports.init = function(amqpConnection) {
             }
             
             var readStream = fs.createReadStream(file);
-            
-            readStream.on('open', function(data) {
-              readStream.pipe(response);
-            });
-            
-            readStream.on("error", function() {
-              response.end('Error');
-            });
+            readStream.pipe(response);
           } else {
             // FIXME: This will consume too much memory
             var fileName = "files.zip";
@@ -245,8 +229,8 @@ exports.upload = function(request, response) {
   }
   
   var form      = new formidable.IncomingForm(),
-      files     = [],
-      fields    = {};
+      fields    = {},
+      files     = [];
   
   form
     .on('field', function(field, value) {
@@ -267,9 +251,10 @@ exports.upload = function(request, response) {
         method: 'check_auth_and_write_access',
         params: fields,
         action: 'upload',
-        files:  files,
+        file:   files[0],
         seq:    next_seq
       });
+      
       sys.puts("Published RPC call");
     });
 
@@ -314,6 +299,7 @@ exports.snapshot = function(request, response) {
       files:  [{ name: name, path: path }],
       seq:    next_seq
     });
+    
     sys.puts("Published RPC call");
   });
   
