@@ -1,4 +1,4 @@
-(function(protonet){
+(function(protonet, undefined){
 
   protonet.Meep = Class.create({
     initialize: function(data){

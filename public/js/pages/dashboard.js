@@ -12,31 +12,23 @@
       protonet.trigger("navigation.initialized", this);
     },
     updateUserList: function(){
-      var userList = this._generateUserList(protonet.users);
+      var users = protonet.usersController.getAll();
+
+      // remove currentUser from UserList
+      users.splice($.inArray(protonet.currentUser, users),1);
       this.$userList.
         empty().
-        append(userList).
+        append(this._generateUserList(users)).
         listview('refresh');
     },
     updateChannelList: function(){
 
-      var channelArray = [],
-          rendezvousArray = [],
+      var channelArray    = protonet.channelsController.getRealChannels(),
+          rendezvousArray = protonet.channelsController.getRendezvous(),
           $channelList;
 
-      $.each(protonet.channels, function(i, channel){
-        if (!channel.lastMeep) {
-          channel.lastMeep = { id: -1 }
-        };
-        if (channel.rendezvousId) {
-          rendezvousArray.push(channel);
-        }else{
-          channelArray.push(channel);
-        }
-      });
+      $channelList = this._sortedChannelList(channelArray);
 
-      $channelList = this._sortedChannelList(channelArray),
-          
       this.$channelList.
         empty().
         append($channelList);
@@ -57,7 +49,8 @@
        * append a channel to channel_navigation
        * delete Channel if user unsubscribed channel
        */
-      protonet.on("meep.rendered channel.created channel.deleted", function(){
+      protonet.
+      on("meep.rendered channel.cacheExpired", function(){
         if (timeout) {
           clearTimeout(timeout);
         };
@@ -70,46 +63,28 @@
         event.preventDefault();
         event.stopPropagation();
         var id = $(event.target).data("id");
-        if (!protonet.rendezvous[id]) {
-          $.ajax({
-            url: "/rendezvous",
-            type: "post",
-            data: {
-              user_id: id
-            },
-            success: function(data){
-              if (data.channel_id) {
-                console.log(data);
-              }else{
-                console.err(data);
-              }
-            }
-          });
-        }else{
-          protonet.changePage("/#channel-" + protonet.rendezvous[id].id);
-        }
+        protonet.channelsController.findOrCreateRendezvous(id, function(channel){
+          protonet.changePage("/#channel-" + channel.id);
+        });
+        
       });
     },
     _generateUserList: function(users){
-      var userArray = [],
-          $list = $();
-      $.each(users, function(i, user){
-        userArray.push(user);
-      });
-      userArray = userArray.sort(function(a,b){
+      var $list = $();
+      users = users.sort(function(a,b){
         if (a.nam < b.name) //sort string ascending
           return -1 
         if (a.name > b.name)
           return 1
          return 0
       });
-      $.each(userArray, function(i, user){
+      for (var i = 0; i < users.length; i++) {
         var $templ = new protonet.utils.Template("user-link", {
-          id: user.id,
-          name: user.name
+          id: users[i].id,
+          name: users[i].name
         }).to$();
         $list = $list.add($templ);
-      });
+      };
       return $list;
     },
     _sortedChannelList: function(channels){

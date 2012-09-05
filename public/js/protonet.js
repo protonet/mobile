@@ -6,32 +6,20 @@ $(function() {
     }, 0);
   });
 
-  for (var i = data.users.length - 1; i >= 0; i--) {
-    var user = new protonet.User(data.users[i]);
-    if (user.id != protonet.config.user_id) {
-      protonet.users[user.id] = user;
-    };
-  };
+  protonet.usersController = new protonet.UsersController(data.users);
+  protonet.channelsController = new protonet.ChannelsController(data.channels);
 
-  for (var i = data.channels.length - 1; i >= 0; i--) {
-    var channel = new protonet.Channel(data.channels[i]);
-    protonet.channels[channel.id] = channel;
-  };
-
-  data = null;
-  $('#data').remove();
+  protonet.dashboard = new protonet.pages.Dashboard();
+  protonet.dispatcher.initialize();
 
   protonet.dispatcher.onready(function(){
     protonet.trigger("socket.send", {
       operation:  "sync",
       payload:    {
-        limit: 20
+        limit: 10
       }
     });
   });
-
-  protonet.dashboard = new protonet.pages.Dashboard();
-  protonet.dispatcher.initialize();
 
   protonet.on("sync.received", function(data){
     $.each(data['channels'], function(id, meeps){

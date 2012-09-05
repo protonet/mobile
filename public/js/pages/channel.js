@@ -2,6 +2,7 @@
 
   protonet.pages.Channel = Class.create({
     initialize: function(data){
+      this.channel   = data;
       this.id        = data.id;
       this.name      = data.name;
       this.uuid      = data.uuid;
@@ -12,6 +13,7 @@
         id: this.id, 
         name: this.name 
       }).to$();
+      
       this.$timeline = this.$content.find('.timeline');
       this.$form     = this.$content.find('.meep_form');
       this.$input    = this.$form.find('textarea');
@@ -29,7 +31,8 @@
     },
     _observe: function(){
       
-      protonet.on("meep.created." + this.id, function(meep){
+      protonet.
+      on("meep.created." + this.id, function(meep){
         var $meep = new protonet.utils.Template("meep",{
           author: meep.author,
           message: meep.message,
@@ -53,6 +56,11 @@
         
         protonet.trigger("meep.rendered", $meep, meep);
 
+      }.bind(this)).
+      on("channel.deleted", function(channel){
+        if (this.channel == channel) {
+          
+        };
       }.bind(this));
 
       this.$form.submit(function(event){

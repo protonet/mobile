@@ -20,17 +20,15 @@
   });
 
   protonet.changePage = function(href){
-    console.log(href);
     var page = pageCache[href];
+    if (protonet.currentPage) {
+      $(protonet.currentPage.$content).bind("pagehide", function(event){
+        var $this = $(this);
+        $this.detach();
+        $this.unbind(event);
+      });
+    };
     if(page){
-      event.preventDefault();
-      if (protonet.currentPage) {
-        $(protonet.currentPage.$content).bind("pagehide", function(event){
-          var $this = $(this);
-          $this.detach();
-          $this.unbind(event);
-        });
-      };
       protonet.currentPage = page;
       protonet.currentPage.$content.appendTo($('body'));
       $.mobile.changePage(protonet.currentPage.$content,{
@@ -38,17 +36,36 @@
         transition: "slide"
       });
       protonet.currentPage.scroller && protonet.currentPage.scroller.refresh();
+    }else{
+      $.mobile.changePage(href);
     }
   }
 
   $('body').delegate("a", "click",function(event){
-    var href = $(this).attr("href");
-    protonet.changePage(href);
+    var href = $(this).attr("href"),
+        page = pageCache[href];
+    if (page) {
+      event.preventDefault();
+      protonet.changePage(href,{
+        dataUrl: href,
+        transition: "slide"
+      });
+    };
   });
 
   protonet.on("channel.created", function(channel){
     var page = new protonet.pages.Channel(channel);
     pageCache[page.href] = page;
+  });
+
+  protonet.on("channel.deleted", function(channel){
+    var page = pageCache["/#channel-" + channel.id];
+    if (protonet.currentPage == page) {
+      $(page.$content).bind("pagehide", function(event){
+        delete pageCache[page.href];
+      });
+      protonet.changePage("");
+    };
   });
 
 })(protonet);

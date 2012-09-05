@@ -1,6 +1,4 @@
-(function(protonet){
-
-  protonet.users = {};
+(function(protonet, undefined){
 
   protonet.User = Class.create({
     initialize: function(data){
@@ -10,7 +8,7 @@
     },
     avatar: function(dimensions){
       protonet.media.Proxy.getImageUrl(this.avatar_url, dimensions);
-    }.bind(this)
+    }
   });
 
 })(protonet);

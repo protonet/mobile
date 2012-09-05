@@ -16,6 +16,8 @@ class MobileProtonet < Sinatra::Application
     set :views, ['views/', 'views/authentication/']
     set :env, ENV['RACK_ENV'] || "development"
   end
+  
+  
 
   helpers do
 
