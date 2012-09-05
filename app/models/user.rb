@@ -407,7 +407,10 @@ class User < ActiveRecord::Base
       # rename all rendevouz folder
       channels.rendezvous.each do |rendevouz|
         participant = (rendevouz.rendezvous_participants - [self]).first
-        `mv "#{participant.system_home_path}/channels/shared between you and #{login_was}" "#{participant.system_home_path}/channels/shared between you and #{login}"`
+        # if the participant we want to update the folder for doesn't exists anymore, if not his directories have been removed already
+        if participant
+          `mv "#{participant.system_home_path}/channels/shared between you and #{login_was}" "#{participant.system_home_path}/channels/shared between you and #{login}"`
+        end
       end
       self.class.refresh_system_users
     end
