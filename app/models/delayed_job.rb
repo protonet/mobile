@@ -9,12 +9,16 @@ class DelayedJob < ActiveRecord::Base
   def self.process
     all.each do |job|
       Rails.logger.info("start job #{job.command} at #{Time.now}" )
-      if eval(job.command)
-        Rails.logger.info("job finished at #{Time.now}")
-      else
-        Rails.logger.warn("job failed at #{Time.now}")
+      begin 
+        if eval(job.command)
+          Rails.logger.info("job finished at #{Time.now}")
+          job.delete
+        else
+          Rails.logger.warn("job failed at #{Time.now}")
+        end
+      rescue
+        Rails.logger.warn("job failed with exception at #{Time.now}")
       end
-      job.delete
     end
   end
   
