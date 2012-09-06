@@ -227,9 +227,21 @@ class Channel < ActiveRecord::Base
 
   def rename_system_folders
     if name_changed? && node && node.local?
-      users.registered.all.each do |user|
-        `mv #{configatron.files_path}/system_users/#{user.login}/channels/#{name_was} #{configatron.files_path}/system_users/#{user.login}/channels/#{name}`
+      old_name = name_was
+      Thread.new do
+        users.registered.each do |user|
+          system_users_script("umount \"system_users/#{user.login}/channels/#{old_name}\"")
+          system_users_script("mount channels/#{channel.id} \"system_users/#{user.login}/channels/#{channel.name}\"")
+        end
       end
+    end
+  end
+  
+  def system_users_script(command)
+    if Rails.env.production?
+      `/usr/bin/sudo #{Rails.root}/script/init/system_users #{command}`
+    else
+      `#{Rails.root}/script/init/system_users #{command}`
     end
   end
   

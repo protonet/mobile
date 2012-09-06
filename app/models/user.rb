@@ -107,7 +107,7 @@ class User < ActiveRecord::Base
           participant = (channel.rendezvous_participants - [user]).first || User.new(:login => "unknown (#{channel.rendezvous})")
           command = "mount #{channel_path} \"system_users/#{user.login}/channels/shared between you and #{participant.login}\""
         else
-          command = "mount #{channel_path} system_users/#{user.login}/channels/#{channel.name}"
+          command = "mount #{channel_path} \"system_users/#{user.login}/channels/#{channel.name}\""
         end
         user.system_users_script(command)
       end
@@ -397,6 +397,8 @@ class User < ActiveRecord::Base
   end
   
   def delete_folder
+    system_users_script("umount \"system_users/#{login}/my private folder\"")
+    system_users_script("umount \"system_users/#{login}/channels/*\"")
     FileUtils.rm_rf("#{configatron.files_path}/users/#{id}")
     FileUtils.rm_rf("#{configatron.files_path}/system_users/#{login}")
   end

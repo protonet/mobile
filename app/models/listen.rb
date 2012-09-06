@@ -103,7 +103,7 @@ class Listen < ActiveRecord::Base
       end
     else
       Thread.new do
-        system_users_script("mount channels/#{channel.id} #{system_home_path_for(user)}/channels/#{channel.name}")
+        system_users_script("mount channels/#{channel.id} \"#{system_home_path_for(user)}/channels/#{channel.name}\"")
       end
     end
   end
@@ -112,7 +112,7 @@ class Listen < ActiveRecord::Base
     if channel.rendezvous?
       # nothing to do, rendezvous cannot be removed
     else
-      system_users_script("umount system_users/#{user.login}/channels/#{channel.name}")
+      system_users_script("umount \"system_users/#{user.login}/channels/#{channel.name}\"")
     end
   end
   
