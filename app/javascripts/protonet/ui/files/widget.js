@@ -120,6 +120,11 @@ protonet.ui.files.Widget = {
       
       this.filePaths[channelId] = newFilePaths;
       this.$showAll.css("display", "inline-block");
+      
+      // IE needs this
+      setTimeout(function() {
+        this.uploader.trigger("Refresh");
+      }.bind(this), 0);
     }.bind(this));
     
     protonet.on("socket.reconnected", this.getFiles.bind(this));
