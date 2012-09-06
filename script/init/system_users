@@ -26,7 +26,7 @@ end
 
 def umount dir
   if defined?(PRODUCTION)
-    `umount -l "#{BASE_DIR}/#{dir}/" && rm -rf "#{BASE_DIR}/#{dir}"` 
+    `umount "#{BASE_DIR}/#{dir}/" && rm -rf "#{BASE_DIR}/#{dir}"` 
   else
     `rm -rf "#{BASE_DIR}/#{dir}"`
   end

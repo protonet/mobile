@@ -231,7 +231,7 @@ class Channel < ActiveRecord::Base
       Thread.new do
         users.registered.each do |user|
           system_users_script("umount \"system_users/#{user.login}/channels/#{old_name}\"")
-          system_users_script("mount channels/#{channel.id} \"system_users/#{user.login}/channels/#{channel.name}\"")
+          system_users_script("mount channels/#{id} \"system_users/#{user.login}/channels/#{name}\"")
         end
       end
     end

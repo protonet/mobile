@@ -51,7 +51,7 @@ exports.proxy = function(params, headers, response) {
     
     try {
       size = fs.lstatSync(fileName).size;
-    } catch(e) { send404(filename); }
+    } catch(e) { send404(fileName); }
     
     if (mimeType === "application/octet-stream") {
       mimeType = "image/jpeg";
