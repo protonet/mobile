@@ -1,5 +1,7 @@
 (function(protonet){
 
+  var $scrollinput = $('<input type="text>">');
+
   protonet.pages.Channel = Class.create({
     initialize: function(data){
       this.channel   = data;
@@ -17,20 +19,27 @@
       this.$timeline = this.$content.find('.timeline');
       this.$form     = this.$content.find('.meep_form');
       this.$input    = this.$form.find('textarea');
-
-      this.scroller  = new iScroll(this.$content.find('.scroller')[0]);
+      this.$loadMore = this.$content.find('.show_more a');
+      this.$loadMore.hide();
 
       this._observe();
       protonet.trigger("page.created", this);
+      protonet.one("sync.succeeded", function(){
+        if (this.channel.meeps.length >= 10) {
+          this.$loadMore.show();
+        };
+      }.bind(this));
+      console.log(this.channel);
     },
     scrollToBottom: function(){
-      this.scroller.refresh();
-      if (this.scroller.wrapperH < this.scroller.scrollerH) {
-        this.scroller.scrollTo(0,this.scroller.maxScrollY,0);
+      if (protonet.currentPage == this) {
+        setTimeout(function(){
+          window.scrollTo(0, document.body.scrollHeight - protonet.utils.viewport().height );
+        }, 0);
       };
     },
     _observe: function(){
-      
+    
       protonet.
       on("meep.created." + this.id, function(meep){
         var $meep = new protonet.utils.Template("meep",{
@@ -42,25 +51,24 @@
             width: 25
           })
         }).to$();
+        
         if (meep.user_id == protonet.config.user_id) {
           $meep.addClass("me");
         };
 
-        this.$timeline.append($meep);
+        if (meep == this.channel.lastMeep) {
+          this.$timeline.append($meep);
+          if (protonet.currentPage == this) {
+            setTimeout(function () {
+              this.scrollToBottom();
+            }.bind(this), 0);
+          };
+        }else{
+          this.$timeline.prepend($meep);
+        }
 
-        if (protonet.currentPage == this) {
-          setTimeout(function () {
-            this.scrollToBottom();
-          }.bind(this), 0);
-        };
-        
         protonet.trigger("meep.rendered", $meep, meep);
 
-      }.bind(this)).
-      on("channel.deleted", function(channel){
-        if (this.channel == channel) {
-          
-        };
       }.bind(this));
 
       this.$form.submit(function(event){
@@ -82,16 +90,21 @@
         }
       }.bind(this));
 
-      this.$input.keypress(function(event){
-        if (!event.metaKey) {
-          this._typingStart();
-        }
-        if (event.keyCode != 13 || event.shiftKey || event.altKey) {
-          return;
-        }
-        event.preventDefault();
-        this.$form.submit();
+      this.$loadMore.bind("click", function(event){
+        var scrollHeight = this.$content[0].scrollHeight;
+        this.channel.loadMoreMeeps(function(data){
+          if (data.length < 10) {
+            this.$loadMore.hide();
+          };
+          window.scrollTo(0, this.$content[0].scrollHeight - scrollHeight);
+        }.bind(this));
       }.bind(this));
+
+      this.$content.delegate("h1.ui-title", "click", function(event){
+        setTimeout(function(){
+          window.scrollTo(0,1);
+        }, 0);
+      });
     },
     _typingStart: function() {
       if (!this.typing) {

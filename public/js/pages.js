@@ -12,8 +12,10 @@
     if (page) {
       protonet.currentPage = page;
       page.$content.appendTo($('body'));
+      page.scrollToBottom();
+
       $.mobile.initializePage();
-      page.scroller.refresh();
+      // page.scroller.refresh();
     }else{
       $.mobile.initializePage();
     }
@@ -35,7 +37,9 @@
         dataUrl: page.href,
         transition: "slide"
       });
-      protonet.currentPage.scroller && protonet.currentPage.scroller.refresh();
+      protonet.currentPage.$content.bind("pageshow", function(event){
+        protonet.currentPage.scrollToBottom();
+      });
     }else{
       $.mobile.changePage(href);
     }

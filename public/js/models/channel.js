@@ -18,24 +18,28 @@
       this.description  = data.description;
       this.global       = data.global;
       this.uuid         = data.uuid;
-      
+      this.loading      = false;
       this.lastMeep     = { id: -1 };
       this.meeps        = [];
       this._observe();
       protonet.trigger("channel.created", this);
     },
-    loadMoreMeeps: function(data){
+    loadMoreMeeps: function(callback){
+      if (this.loading) { return ;}
+      this.loading = true;
       $.ajax({
         url: "/channels/" + this.id + "/meeps",
         type: "get",
         data:{
           limit: 10,
-          offset: this.lastMeep.id
+          offset: (this.meeps[0] && this.meeps[0].id) ||  this.lastMeep.id
         },
         success: function(data){
           for (var i = 0; i < data.length; i++) {
             new protonet.Meep(data[i])
           };
+          this.loading = false;
+          callback && callback(data);
         }.bind(this)
       });
     },
@@ -51,8 +55,12 @@
     },
     _observe: function(){
       protonet.on("meep.created."+ this.id, function(meep){
-        this.meeps.push(meep);
-        this.lastMeep = meep;
+        if (meep.id > this.lastMeep.id) {
+          this.meeps.push(meep);
+          this.lastMeep = meep;
+        }else{
+          this.meeps.unshift(meep);
+        }
       }.bind(this));
     }
   });
