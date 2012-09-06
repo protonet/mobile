@@ -20,16 +20,14 @@
       this.$form     = this.$content.find('.meep_form');
       this.$input    = this.$form.find('textarea');
       this.$loadMore = this.$content.find('.show_more a');
-      this.$loadMore.hide();
 
       this._observe();
       protonet.trigger("page.created", this);
       protonet.one("sync.succeeded", function(){
-        if (this.channel.meeps.length >= 10) {
-          this.$loadMore.show();
+        if (this.channel.meeps.length < 10) {
+          this.$loadMore.hide();
         };
       }.bind(this));
-      console.log(this.channel);
     },
     scrollToBottom: function(){
       if (protonet.currentPage == this) {
@@ -69,6 +67,12 @@
 
         protonet.trigger("meep.rendered", $meep, meep);
 
+      }.bind(this)).
+      on("channel.meepsLoaded", function(channel, data){
+        if (channel != this.channel) { return; };
+        if (data.length < 10) {
+          this.$loadMore.hide();
+        };
       }.bind(this));
 
       this.$form.submit(function(event){
@@ -93,9 +97,6 @@
       this.$loadMore.bind("click", function(event){
         var scrollHeight = this.$content[0].scrollHeight;
         this.channel.loadMoreMeeps(function(data){
-          if (data.length < 10) {
-            this.$loadMore.hide();
-          };
           window.scrollTo(0, this.$content[0].scrollHeight - scrollHeight);
         }.bind(this));
       }.bind(this));

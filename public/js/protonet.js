@@ -15,9 +15,7 @@ $(function() {
   protonet.dispatcher.onready(function(){
     protonet.trigger("socket.send", {
       operation:  "sync",
-      payload:    {
-        limit: 10
-      }
+      limit: 10
     });
   });
 

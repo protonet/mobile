@@ -66,6 +66,7 @@
     var page = pageCache["/#channel-" + channel.id];
     if (protonet.currentPage == page) {
       $(page.$content).bind("pagehide", function(event){
+        page.$content.detach();
         delete pageCache[page.href];
       });
       protonet.changePage("");

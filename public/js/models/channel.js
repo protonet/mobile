@@ -18,7 +18,7 @@
       this.description  = data.description;
       this.global       = data.global;
       this.uuid         = data.uuid;
-      this.loading      = false;
+      this.loading      = undefined;
       this.lastMeep     = { id: -1 };
       this.meeps        = [];
       this._observe();
@@ -26,20 +26,20 @@
     },
     loadMoreMeeps: function(callback){
       if (this.loading) { return ;}
-      this.loading = true;
-      $.ajax({
+      this.loading = $.ajax({
         url: "/channels/" + this.id + "/meeps",
         type: "get",
         data:{
           limit: 10,
-          offset: (this.meeps[0] && this.meeps[0].id) ||  this.lastMeep.id
+          offset: (this.meeps[0] && this.meeps[0].id) ||  null
         },
         success: function(data){
           for (var i = 0; i < data.length; i++) {
             new protonet.Meep(data[i])
           };
-          this.loading = false;
+          this.loading = undefined;
           callback && callback(data);
+          protonet.trigger("channel.meepsLoaded", this, data);
         }.bind(this)
       });
     },
