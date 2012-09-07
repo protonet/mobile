@@ -11,7 +11,8 @@ protonet.media.Uploader = (function() {
     max_file_size:  ($.browser.mozilla && !window.FormData) ? "250mb" : "100000mb",
     runtimes:       "html5,flash,html4",
     flash_swf_url:  "/flash/plupload.flash.swf",
-    url:            protonet.config.node_base_url + "/fs/upload"
+    url:            protonet.config.node_base_url + "/fs/upload",
+    zIndex:         999
   };
   
   var THROTTLE_TIME = 300;
@@ -130,6 +131,8 @@ protonet.media.Uploader = (function() {
     });
     
     uploader.init();
+    
+    $("#" + uploader.id + "_flash_container").css("z-index", config.zIndex);
     
     return uploader;
   };

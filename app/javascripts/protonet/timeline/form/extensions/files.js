@@ -39,7 +39,8 @@ protonet.timeline.Form.extensions.Files = function($input, $wrapper, $form) {
   var fileQueue = new protonet.ui.files.Queue({
     browse_button:  $link.attr("id"),
     drop_element:   $form.attr("id"),
-    shareImmediate: true
+    shareImmediate: true,
+    zIndex:         9
   });
   
   if (fileQueue.uploader.features.dragdrop) {

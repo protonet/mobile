@@ -37,7 +37,8 @@ protonet.ui.files.Widget = {
     
     this.queue = new protonet.ui.files.Queue({
       browse_button:  this.$dropArea.attr("id"),
-      drop_element:   this.$widget.attr("id")
+      drop_element:   this.$widget.attr("id"),
+      zIndex:         9
     });
     
     this.uploader = this.queue.uploader;
