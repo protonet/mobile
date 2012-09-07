@@ -157,8 +157,7 @@ exports.init = function(amqpConnection) {
             message.params.paths = [message.params.paths];
           }
           
-          var range             = message.range,
-              file              = path.join(ROOT_DIR, message.params.paths[0]),
+          var file              = path.join(ROOT_DIR, message.params.paths[0]),
               stat              = fs.statSync(file),
               contentLength     = stat.size,
               contentType       = lookupMime(file),
@@ -174,35 +173,21 @@ exports.init = function(amqpConnection) {
           }
           
           header['Content-Type']  = contentType;
-          header['Accept-Ranges'] = "bytes";
           
-          if (range) {
-            start = parseInt(range.slice(range.indexOf("bytes=") + 6, range.indexOf('-')), 10);
-            end   = parseInt(range.slice(range.indexOf("-") + 1, range.length), 10);
-
-            if (isNaN(end) || end == 0) {
-              end = contentLength - 1;
-            }
-            
-            header['Cache-Control']     = "private";
-            header['Content-Length']    = end - start;
-            header['Content-Range']     = "bytes " + start + "-" + end + "/" + contentLength;
-            header['Transfer-Encoding'] = "chunked";
-            
-            response.writeHead(206, header);
-            readStream = fs.createReadStream(file, { start: start, end: end});
-          } else {
-            header['Content-Length'] = contentLength;
-            
-            if (!shouldBeEmbedded) {
-              header['Content-Disposition'] = 'attachment;filename="' + path.basename(file) + '"';
-            }
-            
-            response.writeHead(200, header);
-            readStream = fs.createReadStream(file);
+          if (!shouldBeEmbedded) {
+            header['Content-Disposition'] = 'attachment;filename="' + path.basename(file) + '"';
           }
           
-          readStream.pipe(response);
+          if (global.env === "production") {
+            header['X-Sendfile'] = file;
+            response.writeHead(200, header);
+            response.end();
+          } else {
+            header['Content-Length'] = contentLength;
+            response.writeHead(200, header);
+            readStream = fs.createReadStream(file);
+            readStream.pipe(response);
+          }
         } catch(ex) {
           response.writeHead(500);
           response.end("error: " + ex);
@@ -320,7 +305,6 @@ exports.download = function(request, response) {
     method: 'check_auth_and_read_access',
     params: params,
     action: 'download',
-    range:  request.headers.range,
     seq:    next_seq
   });
   sys.puts("Published RPC call");
