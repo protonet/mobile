@@ -105,6 +105,7 @@ exports.init = function(amqpConnection) {
     message = JSON.parse(message.data);
     sys.puts(message.action + " verification queue message: " + util.inspect(message));
     var response = responses[message.seq];
+    delete responses[message.seq];
     
     if (!message.result) {
       response.writeHead(403);
@@ -152,64 +153,56 @@ exports.init = function(amqpConnection) {
         
       case 'download':
         try {
-          var files  = message.params.paths,
-              header = {};
+          if (typeof(message.params.paths) === 'string') {
+            message.params.paths = [message.params.paths];
+          }
           
-          if (typeof(files) === 'string') { files = [files]; }
+          var range             = message.range,
+              file              = path.join(ROOT_DIR, message.params.paths[0]),
+              stat              = fs.statSync(file),
+              contentLength     = stat.size,
+              contentType       = lookupMime(file),
+              shouldBeEmbedded  = message.params.embed == "true" && embeddableFiles.indexOf(contentType) !== -1,
+              header            = {},
+              readStream,
+              start,
+              end;
           
-          var file        = path.join(ROOT_DIR, files[0]),
-              stat        = fs.statSync(file),
-              isDirectory = stat.isDirectory();
+          // Make sure that the user is not downloading a symbolic link but it's target
+          while (fs.lstatSync(file).isSymbolicLink()) {
+            file = path.join(path.dirname(file), fs.readlinkSync(file));
+          }
           
-          if (files.length == 1 && !isDirectory) {
-            var contentType       = lookupMime(file),
-                shouldBeEmbedded  = message.params.embed == "true" && embeddableFiles.indexOf(contentType) !== -1;
+          header['Content-Type']  = contentType;
+          header['Accept-Ranges'] = "bytes";
+          
+          if (range) {
+            start = parseInt(range.slice(range.indexOf("bytes=") + 6, range.indexOf('-')), 10);
+            end   = parseInt(range.slice(range.indexOf("-") + 1, range.length), 10);
+
+            if (isNaN(end) || end == 0) {
+              end = contentLength - 1;
+            }
             
-            header['Content-Type']   = contentType;
-            header['Content-Length'] = stat.size;
+            header['Cache-Control']     = "private";
+            header['Content-Length']    = end - start;
+            header['Content-Range']     = "bytes " + start + "-" + end + "/" + contentLength;
+            header['Transfer-Encoding'] = "chunked";
+            
+            response.writeHead(206, header);
+            readStream = fs.createReadStream(file, { start: start, end: end});
+          } else {
+            header['Content-Length'] = contentLength;
             
             if (!shouldBeEmbedded) {
               header['Content-Disposition'] = 'attachment;filename="' + path.basename(file) + '"';
             }
             
             response.writeHead(200, header);
-            
-            while (fs.lstatSync(file).isSymbolicLink()) {
-              file = path.join(path.dirname(file), fs.readlinkSync(file));
-            }
-            
-            var readStream = fs.createReadStream(file);
-            readStream.pipe(response);
-          } else {
-            // FIXME: This will consume too much memory
-            var fileName = "files.zip";
-            if (files.length === 1 && isDirectory) {
-              fileName = path.basename(file);
-            }
-            
-            header['Content-Type'] = 'application/zip';
-            header['Content-Disposition'] = 'attachment;filename="' + fileName + '"';
-            response.writeHead(200, header);
-            
-            var zip = spawn('zip', ['-r', '--names-stdin', '-'], { cwd: ROOT_DIR });
-
-            zip.stdout.on('data', function(data) {
-              response.write(data, 'binary');
-            });
-            zip.on('exit', function(code) {
-              if (code !== 0) {
-                console.log('zip process exited with code ' + code);
-              }
-
-              response.end();
-            });
-
-            files = files.map(function(file) {
-              return path.join('.', file) + '\n'; // stop / from going to fs root
-            });
-            zip.stdin.end(files.join());
+            readStream = fs.createReadStream(file);
           }
-
+          
+          readStream.pipe(response);
         } catch(ex) {
           response.writeHead(500);
           response.end("error: " + ex);
@@ -327,7 +320,8 @@ exports.download = function(request, response) {
     method: 'check_auth_and_read_access',
     params: params,
     action: 'download',
-    seq: next_seq
+    range:  request.headers.range,
+    seq:    next_seq
   });
   sys.puts("Published RPC call");
 };
