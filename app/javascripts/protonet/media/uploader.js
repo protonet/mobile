@@ -79,14 +79,16 @@ protonet.media.Uploader = (function() {
         callback = function(uploader, file, xhr) {
           if (file._error) { return; }
           
-          xhr.responseText = xhr.response || "[]";
+          xhr.responseText = xhr.response || "null";
           xhr.responseJSON = JSON.parse(xhr.responseText);
           
           if (!xhr.responseJSON) {
             file._error = true;
             uploader.trigger("Error", {
-              code: plupload.IO_ERROR,
-              file: file
+              code: -999, // custom error
+              file: file,
+              response: xhr.response,
+              status: xhr.httpStatus
             });
             return;
           }
