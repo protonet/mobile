@@ -9,7 +9,7 @@ var fs        = require("fs"),
 
 leftToBoot = 3;
 function systemUp () {
-  if (--leftToBoot > 0) return;
+  if (--leftToBoot > 0) { return; }
   
   console.log();
   console.log('-----> All systems go');
@@ -38,18 +38,31 @@ process.argv.forEach(function(val){
   }
 });
 
+
 global.FILES_PATH = envPaths[global.env] || envPaths.development;
 
 // Everything that is created by node.js will give the user and group read/write/execute permissions
 process.umask(0007);
 
-// Exception handling
-process.addListener("uncaughtException", function (err) {
-  console.log("Uncaught exception: " + err);
-});
 
+// Exception handling in production:
+//    - Don't restart node.js when an exception gets thrown
+//    - Log any exception to airbrake.io
 if (global.env === "production") {
-  require("airbrake").createClient("e0e395c06aa4a6756b5d585fee266999").handleExceptions();
+  var airbrakeClient = require("airbrake").createClient("e0e395c06aa4a6756b5d585fee266999");
+  // We don't use airbrakeClient.handleExceptions() here since it will kill the process after an exception
+  process.on('uncaughtException', function(err) {
+    airbrakeClient.log('Airbrake: Uncaught exception, sending notification for:');
+    airbrakeClient.log(err.stack);
+    airbrakeClient.notify(err, function(notifyErr, url) {
+      if (notifyErr) {
+        airbrakeClient.log('Airbrake: Could not notify service.');
+        airbrakeClient.log(notifyErr.stack);
+      } else {
+        airbrakeClient.log('Airbrake: Notified service: ' + url);
+      }
+    });
+  });
 }
 
 /*----------------------------------- SOCKET TASKS -----------------------------------*/
@@ -124,8 +137,9 @@ http.createServer(function(request, response) {
       task      = parsedUrl.pathname.replace(/^\/|\/$/g, ""),
       headers   = request.headers;
   
-  if (task.substr(0,4) == "dav/")
+  if (task.substr(0,4) == "dav/") {
     task = "dav";
+  }
 
   switch(task) {
     case "screenshooter":
