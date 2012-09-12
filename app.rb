@@ -1,23 +1,36 @@
+require 'rubygems'
 require 'sinatra'
 require 'erb'
 require 'protolink'
 require 'json'
+require 'sprockets'
+require 'sinatra/sprockets'
+require 'closure-compiler'
+require 'yui/compressor'
 
 class MobileProtonet < Sinatra::Application
-  enable :sessions
-  enable :dump_errors, :raise_errors, :show_exceptions
 
   configure do
+    enable :sessions
+    enable :dump_errors, :raise_errors, :show_exceptions
+
     set :session_secret, "protonet-mobile"
     set :api_url, (ENV['API_URL'] || "http://localhost:3000")
     set :api_user, (ENV['API_USER'] || "admin")
     set :api_pw, (ENV['API_PW'] || "admin")
     set :node, Protolink::Protonet.open(settings.api_url, nil ,nil).node
     set :views, ['views/', 'views/authentication/']
-    set :env, ENV['RACK_ENV'] || "development"
+    set :production, ENV['RACK_ENV'] === 'production'
+    set :public_path, '/Users/henning/Sites/protonet/mobile/public'
+
+    if settings.production?
+      # TODO
+      load File.expand_path("../Rakefile", __FILE__)
+      Rake::Task["assets:precompile"].execute
+    end
   end
-  
-  
+
+  helpers Sinatra::Sprockets::Helpers
 
   helpers do
 
@@ -30,11 +43,11 @@ class MobileProtonet < Sinatra::Application
     end
 
     def current_user
-      @current_user ||= session[:user] && CurrentUser.new(protonet, session[:user])
+      @current_user ||= session[:user] && User.new(protonet, session[:user])
     end
 
     def node_base_url
-      if settings.env == "production"
+      if settings.production
         "#{host}/node"
       else
         "#{host}:8124"
@@ -44,6 +57,7 @@ class MobileProtonet < Sinatra::Application
     def host
       request.env['rack.url_scheme'] + "://" + request.env['HTTP_HOST'].gsub(/:\d+/,"")
     end
+
   end
 
   before do
@@ -54,27 +68,9 @@ class MobileProtonet < Sinatra::Application
     end
   end
 
-  class CurrentUser
-    attr_reader :id, :login, :email, :communication_token
-
-    def initialize(connection, attributes = {})
-      @connection = connection
-      @id = attributes["id"]
-      @login = attributes["login"]
-      @email = attributes["email"]
-      @communication_token = attributes["communication_token"]
-    end
-
-    def subscribed_channels
-      @subscribed_channels ||= connection.find_subscribed_channels
-    end
-
-    protected
-      def connection
-        @connection
-      end
-  end
 end
 
-require_relative 'authentication'
-require_relative 'main'
+require_relative 'models/user.rb'
+
+require_relative 'routes/main.rb'
+require_relative 'routes/authentication.rb'

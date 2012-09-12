@@ -50,8 +50,8 @@
       this.uuid         = data.uuid;
       protonet.trigger("channel.updated", this);
     },
-    delete: function(){
-      protonet.trigger("channel.deleted", this);
+    destroy: function(){
+      protonet.trigger("channel.destroy", this);
     },
     _observe: function(){
       protonet.on("meep.created."+ this.id, function(meep){

@@ -1,4 +1,3 @@
-
 .ui-header .ui-title {
   margin: .6em 10% .6em;
 }
@@ -70,8 +69,8 @@ span.ui-icon.ui-icon-new-chat{
 ul.timeline{
   margin:0;
   padding:10px 0;
-  overflow:hidden;
-  background: red url("/images/grey.png") repeat;
+  overflow:hidden;a
+  background: url("/images/grey.png") repeat;
 
 }
 li.meep{

@@ -1,5 +1,3 @@
-//= require "escape_for_reg_exp.js"
-
 /**
  * Simple Template engine
  *

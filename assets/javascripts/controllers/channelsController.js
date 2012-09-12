@@ -95,7 +95,7 @@
         //trigger: "user.unsubscribed_channel"
         //user_id: 8
         if (data.user_id == protonet.currentUser.id) {
-          channels[data.channel_id] && channels[data.channel_id].delete();
+          channels[data.channel_id] && channels[data.channel_id].destroy();
           delete channels[data.channel_id];
           this.expireCache();
         };

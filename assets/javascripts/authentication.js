@@ -10,14 +10,15 @@ $(document).delegate('form#login_form', 'submit', function(event){
       $.mobile.showPageLoadingMsg();
     },
     success: function(data){
-      if (data["success"]) {
+      if (data["success"] === true ) {
         location.href = "/";
       }else{
         var $popup = $("<div>",{
-          "class": "ui-content ui-popup ui-body-e ui-overlay-shadow ui-corner-all",
+          "data-role": "popup",
           "style": "background: rgba(255,125,125,.6)",
           html: data["message"]
-        }).popup();
+        }).page();
+        $popup.popup();
         $popup.popup("open");
       }
     },
@@ -25,6 +26,7 @@ $(document).delegate('form#login_form', 'submit', function(event){
       console.log(arguments);
     },
     complete: function(){
+      console.log("complete")
       $.mobile.hidePageLoadingMsg();
     }
   });

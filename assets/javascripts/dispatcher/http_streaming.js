@@ -1,5 +1,3 @@
-//= require "../../utils/sandbox.js"
-
 /**
  * Recommended to read
  * http://stackoverflow.com/questions/169258/is-http-streaming-comet-possible-in-safari

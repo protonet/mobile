@@ -30,6 +30,18 @@ class MobileProtonet < Sinatra::Application
     erb :reset_password
   end
 
+  post '/reset_password' do
+    response = Protolink::Protonet.open(settings.api_url, nil, nil).reset_password(params[:user][:email])
+    content_type :json
+
+    if response
+      {:success => true, :message => "You will recieve an email how to reset your password"}.to_json
+    else
+      {:success => false, :message => "Sorry we don't know this email"}.to_json
+    end
+
+  end
+
   get '/sign_up'do
     erb :sign_up
   end
