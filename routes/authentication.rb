@@ -26,12 +26,17 @@ class MobileProtonet < Sinatra::Application
     redirect '/'
   end
 
+  get '/users/password/edit' do
+    @reset_passwort_token = params[:reset_passwort_token]
+    erb :edit_password
+  end
+
   get '/reset_password'do
     erb :reset_password
   end
 
   post '/reset_password' do
-    response = Protolink::Protonet.open(settings.api_url, nil, nil).reset_password(params[:user][:email])
+    response = Protolink::Protonet.open(settings.api_url, nil, nil).reset_password(params[:user][:email], request.env['HTTP_HOST'])
     content_type :json
 
     if response
