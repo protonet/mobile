@@ -1,11 +1,13 @@
 <div data-role="page" id="sign_up">
 
-  <div data-role="header" data-theme="e">
-    <h1>Create an account:</h1>
-  </div><!-- /header -->
+  <div data-role="header">
+    <a href="/" data-icon="back" class="ui-btn-left">Back</a>
+    <h1>protonet of <strong><%= settings.node.name %></strong></h1>
+  </div>
 
-  <div data-role="content" data-theme="d">  
-    <form action="/sign_up" method="post">
+  <div data-role="content">  
+    <h2>Create an account:</h2>
+    <form action="/sign_up" data-ajax="false" method="post">
       <div class="input">
         <label for="user_login">login</label>
         <input type="text" name="user[login]" id="user_login" data-mini="true" autocapitalize="off" autocorrect="off" />
@@ -19,9 +21,8 @@
         <input type="password" name="user[password]" id="user_password" data-mini="true" autocapitalize="off" autocorrect="off" />
       </div>
       <div class="button">
-        <button type="submit" name="submit" class="ui-btn-hidden">Sign up</button>
+        <button type="submit" name="submit">Sign up</button>
       </div>
-
     </form>
   </div>
   

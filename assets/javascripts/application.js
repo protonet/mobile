@@ -1,6 +1,5 @@
 //= require 'lib/fastclick.js'
 //= require 'lib/jquery-class-create/class.js'
-//= require 'lib/iscroll/src/iscroll.js'
 
 //= require 'utils/browser.js'
 //= require 'utils/template.js'
