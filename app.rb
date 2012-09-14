@@ -18,7 +18,7 @@ class MobileProtonet < Sinatra::Application
     set :api_url, (ENV['API_URL'] || "http://localhost:3000")
     set :api_user, (ENV['API_USER'] || "admin")
     set :api_pw, (ENV['API_PW'] || "admin")
-    set :node, Protolink::Protonet.open(settings.api_url, nil ,nil).node
+    set :node, Protolink::Protonet.open(settings.api_url).node
     set :views, ['views/', 'views/authentication/']
     set :production, ENV['RACK_ENV'] === 'production'
     set :public_path, '/Users/henning/Sites/protonet/mobile/public'
@@ -43,7 +43,7 @@ class MobileProtonet < Sinatra::Application
     end
 
     def current_user
-      @current_user ||= session[:user] && User.new(protonet, session[:user])
+      @current_user ||= session[:user] && User.new(protonet, JSON.parse(session[:user]))
     end
 
     def node_base_url

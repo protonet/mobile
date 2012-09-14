@@ -12,10 +12,9 @@ class MobileProtonet < Sinatra::Application
     response = Protolink::Protonet.open(settings.api_url, params[:user][:login], params[:user][:password]).auth
     content_type :json
     if response
-      puts response.inspect
       session[:login] = params[:user][:login]
       session[:password] = params[:user][:password]
-      session[:user] = JSON.parse(response.body)
+      session[:user] = response.body
       {:success => true}.to_json
     else
       {:success => false, :message => "Your credentials are invalid"}.to_json
@@ -33,15 +32,15 @@ class MobileProtonet < Sinatra::Application
   end
 
   post '/users/password' do
-    response = Protolink::Protonet.open(settings.api_url, nil, nil).reset_password!(
+    response = Protolink::Protonet.open(settings.api_url).reset_password!(
       params[:user][:reset_password_token],
       params[:user][:password],
       params[:user][:password_confirmation]
     )
     content_type :json
     if response
-      session[:user] = JSON.parse(response.body)
-      session[:login] = session[:user]["login"]
+      session[:user] = response.body
+      session[:login] = response.body["login"]
       session[:password] = params[:user][:password]
       redirect '/'
     else
@@ -54,7 +53,7 @@ class MobileProtonet < Sinatra::Application
   end
 
   post '/users/password/reset' do
-    response = Protolink::Protonet.open(settings.api_url, nil, nil).reset_password(params[:user][:email], request.env['HTTP_HOST'])
+    response = Protolink::Protonet.open(settings.api_url).reset_password(params[:user][:email], request.env['HTTP_HOST'])
     content_type :json
 
     if response
@@ -67,6 +66,19 @@ class MobileProtonet < Sinatra::Application
 
   get '/sign_up'do
     erb :sign_up
+  end
+
+  post '/sign_up' do
+    response = Protolink::Protonet.open(settings.api_url).sign_up(params)
+    unless response[:errors]
+      session[:user] = response.body
+      session[:login] = JSON.parse(response.body)["login"]
+      session[:password] = params[:user][:password]
+      redirect '/'
+    else
+      content_type :json
+      {:success => false, :errors => response[:errors]}.to_json
+    end
   end
 
 end
