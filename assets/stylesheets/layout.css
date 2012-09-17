@@ -1,3 +1,10 @@
+span.error{
+  color: #f00;
+  font-size: 12px;
+  font-style:italic;
+  margin-left: 5px;
+}
+
 .ui-header .ui-title {
   margin: .6em 10% .6em;
 }

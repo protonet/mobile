@@ -15,7 +15,7 @@ class MobileProtonet < Sinatra::Application
       session[:login] = params[:user][:login]
       session[:password] = params[:user][:password]
       session[:user] = response.body
-      {:success => true}.to_json
+      {:redirect => "/"}.to_json
     else
       {:success => false, :message => "Your credentials are invalid"}.to_json
     end
@@ -42,7 +42,7 @@ class MobileProtonet < Sinatra::Application
       session[:user] = response.body
       session[:login] = response.body["login"]
       session[:password] = params[:user][:password]
-      redirect '/'
+      {:redirect => "/"}.to_json
     else
       {:success => false, :message => "The reset token was not valid."}.to_json
     end
@@ -55,7 +55,6 @@ class MobileProtonet < Sinatra::Application
   post '/users/password/reset' do
     response = Protolink::Protonet.open(settings.api_url).reset_password(params[:user][:email], request.env['HTTP_HOST'])
     content_type :json
-
     if response
       {:success => true, :message => "You will recieve an email how to reset your password"}.to_json
     else
@@ -74,10 +73,10 @@ class MobileProtonet < Sinatra::Application
       session[:user] = response.body
       session[:login] = JSON.parse(response.body)["login"]
       session[:password] = params[:user][:password]
-      redirect '/'
+      {:redirect => '/'}.to_json
     else
       content_type :json
-      {:success => false, :errors => response[:errors]}.to_json
+      {:errors => eval(response[:errors])}.to_json
     end
   end
 

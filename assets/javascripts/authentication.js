@@ -1,73 +1,117 @@
-$(document).ready(function(event){
+var $document = $(document);
+$document.ready(function(){
 
-  $(document).delegate('#start form', 'submit', function(event){
-    event.preventDefault();
-    var $this = $(this);
-    $.ajax({
-      url: $this.attr("action"),
-      type: "post",
-      data: $this.serializeArray(),
-      beforeSend: function(){
-        $.mobile.showPageLoadingMsg();
-      },
-      success: function(data){
-        if (data["success"] === true ) {
-          location.href = "/";
-        }else{
-          $.mobile.hidePageLoadingMsg();
-          $.mobile.showPageLoadingMsg("e", data["message"], true);
-          setTimeout(function(){
-            $.mobile.hidePageLoadingMsg();
-          }, 2000);
+  $document
+    .ajaxStart(function(){
+      $.mobile.showPageLoadingMsg();
+      $('span.error').remove();
+    })
+    .ajaxComplete(function(){
+      $.mobile.hidePageLoadingMsg();
+    })
+    .ajaxSuccess(function(data){
+      if (data.redirect) {
+        window.location.href = data.redirect;
+      };
+    })
+
+    .delegate('#sign_up form', 'submit', function(event){
+      event.preventDefault();
+      var $this = $(this);
+
+      $.ajax({
+        url: $this.attr("action"),
+        type: "post",
+        data: $this.serializeArray(),
+        success: function(data){
+          if (data["errors"]["login"]){
+            var $span = $('<span class="error">')
+                          .append(data["errors"]["login"][0]);
+
+            if ($('#user_last_name').val().length) {
+              $span.appendTo('label[for=user_last_name]');
+            }else{
+              $span.appendTo('label[for=user_first_name]')
+            }
+          }
+          if (data["errors"]["email"]) {
+            $('<span class="error">')
+              .append(data["errors"]["email"][0])
+              .appendTo("label[for=user_email]");
+          }
+          if (data["errors"]["password"]) {
+            $('<span class="error">')
+              .append(data["errors"]["password"][0])
+              .appendTo("label[for=user_password]");
+          }
         }
-      }
-    });
-    
-  });
+      });
+    })
+    .delegate('#sign_in form', 'submit', function(event){
+      event.preventDefault();
+      var $this = $(this);
+      $.ajax({
+        url: $this.attr("action"),
+        type: "post",
+        data: $this.serializeArray(),
+        success: function(data){
+          if (data["message"]) {
+            $.mobile.hidePageLoadingMsg();
+            $.mobile.showPageLoadingMsg("e", data["message"], true);
+            setTimeout(function(){
+              $.mobile.hidePageLoadingMsg();
+            }, 2000);
+          };
+        }
+      });
+      
+    })
+    .delegate('#reset_password form', 'submit', function(event){
+      event.preventDefault();
 
-  $(document).delegate('#reset_password form', 'submit', function(event){
-    event.preventDefault();
+      var $this = $(this);
 
-    var $this = $(this);
+      $.ajax({
+        url: $this.attr("action"),
+        type: "post",
+        data: $this.serializeArray(),
+        success: function(data){
+          if (data.success === true) {
+            setTimeout(function(){
+              $.mobile.showPageLoadingMsg("e", data["message"], true);
+              setTimeout(function(){
+                $.mobile.hidePageLoadingMsg();
+              }, 5000);
+            }, 0);
+          }else{
+            $('<span class="error">')
+              .append(data["message"])
+              .appendTo("label[for=user_email]")
+          }
+        }
+      });
 
-    $.ajax({
-      url: $this.attr("action"),
-      type: "post",
-      data: $this.serializeArray(),
-      beforeSend: function(){
-        $.mobile.showPageLoadingMsg();
-      },
-      success: function(data){
-        $.mobile.hidePageLoadingMsg();
-        $.mobile.showPageLoadingMsg("e", data["message"], true);
+    })
+    .delegate('#edit_password form', 'submit', function(event){
+      var $this = $(this),
+          password = $this.find("#user_password").val(),
+          password_confirmation = $this.find("#user_password_confirmation").val();
+
+      if (password.length < 8) {
+        event.preventDefault();
+        $.mobile.showPageLoadingMsg("e", "password is too short", true);
         setTimeout(function(){
           $.mobile.hidePageLoadingMsg();
         }, 2000);
-      }
+      };
+      if (password != password_confirmation) {
+        event.preventDefault();
+        $.mobile.showPageLoadingMsg("e", "password and confirmation does not match!", true);
+        setTimeout(function(){
+          $.mobile.hidePageLoadingMsg();
+        }, 2000);
+      };
+
     });
-
-  });
-
-  $(document).delegate('#edit_password form', 'submit', function(event){
-    var $this = $(this),
-        password = $this.find("#user_password").val(),
-        password_confirmation = $this.find("#user_password_confirmation").val();
-
-    if (password.length < 8) {
-      event.preventDefault();
-      $.mobile.showPageLoadingMsg("e", "password is too short", true);
-      setTimeout(function(){
-        $.mobile.hidePageLoadingMsg();
-      }, 2000);
-    };
-    if (password != password_confirmation) {
-      event.preventDefault();
-      $.mobile.showPageLoadingMsg("e", "password and confirmation does not match!", true);
-      setTimeout(function(){
-        $.mobile.hidePageLoadingMsg();
-      }, 2000);
-    };
-
-  });
 
 });
