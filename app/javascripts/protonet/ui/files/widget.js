@@ -88,7 +88,7 @@ protonet.ui.files.Widget = {
       protonet.dispatcher.onready(this.getFiles.bind(this));
     }.bind(this));
     
-    protonet.on("channel.update_files", function(data) {
+    protonet.on("channel.update_files", function(data, avoidHighlight) {
       var channelId = data.id;
       
       if (this.currentChannelId !== channelId) {
@@ -105,14 +105,13 @@ protonet.ui.files.Widget = {
           var $element = this.createElement(file);
           this.$list.append($element);
           protonet.trigger("file.rendered", $element);
-          
-          if (i === 0 && oldFilePaths && oldFilePaths.indexOf(file.path) === -1) {
+
+          if (!avoidHighlight && i === 0 && oldFilePaths && oldFilePaths.indexOf(file.path) === -1) {
             this.highlight($element);
           }
-          
+
           newFilePaths.push(file.path);
         }.bind(this));
-        
         this.$count.text("(" + data.files.length + "/" + data.total + ")");
         this.$list.css("visibility", "");
       } else {
@@ -161,12 +160,12 @@ protonet.ui.files.Widget = {
     this.currentRequest = protonet.data.File.getLastModified(protonet.data.Channel.getFolder(this.currentChannelId), {
       success: function(data) {
         $.extend(data, { id: this.currentChannelId });
-        protonet.trigger("channel.update_files", data);
+        protonet.trigger("channel.update_files", data, true);
       }.bind(this),
       
       error:   function() {
         // TODO: proper error handling
-        protonet.trigger("channel.update_files", { id: this.currentChannelId, files: [] });
+        protonet.trigger("channel.update_files", { id: this.currentChannelId, files: [] }, true);
       }.bind(this),
       
       complete: function() {
