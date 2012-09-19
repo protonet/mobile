@@ -274,7 +274,7 @@ exports.snapshot = function(request, response) {
       method: 'check_auth_and_write_access',
       params: params,
       action: 'upload',
-      files:  { name: name, path: path },
+      file:   { name: name, path: path },
       seq:    next_seq
     });
     
