@@ -18,9 +18,9 @@
  *
  */
 (function(protonet) {
-  var MERGE_MEEPS_TIMEFRAME = 5 * 60 * 1000,  // 5 minutes
-      FETCH_MEEPS_URL       = "/meeps",
-      MAX_AMOUNT_MEEPS      = 500;            // Max amount of meeps to render per channel until the garbage collector takes action
+  var MERGE_MEEPS_TIMEFRAME = 5 * 60 * 1000,          // 5 minutes
+      FETCH_MEEPS_URL       = "/channels/meeps",
+      MAX_AMOUNT_MEEPS      = 500;                    // Max amount of meeps to render per channel until the garbage collector takes action
   
   protonet.timeline.Channel = Class.create({
     initialize: function(data) {
@@ -359,7 +359,7 @@
       $.ajax({
         url:  FETCH_MEEPS_URL,
         type: "get",
-        data: $.extend(parameters, { channel_id: this.data.id }),
+        data: $.extend(parameters, { id: this.data.id }),
         beforeSend: function() {
           protonet.trigger("channels.loading_start");
         },

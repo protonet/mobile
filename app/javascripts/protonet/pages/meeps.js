@@ -3,7 +3,11 @@
 protonet.p("meeps", function($page) {
   var $content      = $page.find(".content"),
       $headline     = $(".meeps-page h2"),
-      isModalWindow = $(".modal-window").length > 0;
+      isModalWindow = $(".modal-window").length > 0,
+      data          = $content.data("meep-scroller-for"),
+      cache         = protonet.data.Meep.getCache();
+  
+  cache[data.id] = data;
   
   function resizePage() {
     if (isModalWindow) {
@@ -26,5 +30,5 @@ protonet.p("meeps", function($page) {
     });
   }
   
-  new protonet.ui.MeepScroller($content, $headline).show($content.data("meep-scroller-for"));
+  new protonet.ui.MeepScroller($content, $headline).show(data.id);
 });

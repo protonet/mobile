@@ -14,6 +14,7 @@ Dashboard::Application.routes.draw do
   
   # Channels
   match 'channels/info' => 'channels#info', :as => :show_channel_info
+  match 'channels/meeps' => 'channels#meeps'
   
   resources :channels do
     collection do

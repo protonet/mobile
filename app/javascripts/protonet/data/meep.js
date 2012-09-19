@@ -17,9 +17,12 @@
   });
   
   protonet.data.Meep = {
+    getCache: function() {
+      return dataCache;
+    },
+    
     get: function(id, options) {
       options = $.extend({ includeMeeps: false, bypassCache: false, success: $.noop, error: $.noop }, options);
-      
       if (dataCache[id]) {
         options.success(dataCache[id]);
       } else {

@@ -3,4 +3,4 @@
   </p>Here you can scroll in a convenient way through the chat history. Use the arrow keys or mouse wheel for scrolling</p>
 </div>
 
-<output data-meep-scroller-for="<%= params[:id] %>" class="content"></output>
+<output data-meep-scroller-for="<%= Meep.prepare_for_frontend(@meep).to_json %>" class="content"></output>

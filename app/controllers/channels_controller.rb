@@ -1,6 +1,6 @@
 class ChannelsController < ApplicationController
   
-  filter_resource_access :collection => [:global, :index, :show_global, :info]
+  filter_resource_access :collection => [:global, :index, :show_global, :info], :additional_member => [:meeps]
   
   before_filter :couple_node, :only => [:global, :show_global]
   before_filter :available_channels
@@ -18,6 +18,18 @@ class ChannelsController < ApplicationController
     @nav = "global"
     @team_node = Node.team
     @global_channels = @team_node.global_channels
+  end
+  
+  def meeps
+    if params[:last_id]
+      meeps = @channel.meeps.all(:conditions => ["meeps.id < ?", params[:last_id]], :order => "meeps.id DESC", :limit => 25)
+    elsif params[:first_id]
+      meeps = @channel.meeps.all(:conditions => ["meeps.id > ?", params[:first_id]], :order => "meeps.id DESC", :limit => 100)
+    else
+      meeps = []
+    end
+    
+    render :json => Meep.prepare_many_for_frontend(meeps, { :channel_id => @channel.id })
   end
   
   def info
@@ -73,14 +85,12 @@ class ChannelsController < ApplicationController
   end
   
   def destroy
-    channel = Channel.find(params[:id])
-    channel_name = channel.display_name
-    success = channel.destroy
-    if success && channel.errors.empty?
-      flash[:notice] = "Successfully deleted channel '#{channel_name}'"
+    success = @channel.destroy
+    if success && @channel.errors.empty?
+      flash[:notice] = "Successfully deleted channel '#{@channel.display_name}'"
       redirect_to :action => 'index'
     else
-      flash[:error] = "Could not delete channel '#{channel_name}'"
+      flash[:error] = "Could not delete channel '#{@channel.display_name}'"
     end
   end
   

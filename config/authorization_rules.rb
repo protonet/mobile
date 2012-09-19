@@ -5,10 +5,16 @@ authorization do
       to [:delete]
       if_attribute :user => is {user}
     end
+    
+    has_permission_on :meeps do
+      to [:before, :after, :show]
+      if_attribute :channel => is_in { user.channels }
+    end
+    
     has_permission_on :users, :to => [:rendezvous, :update_last_read_meeps, :channels]
     has_permission_on :channels, :to => [:info]
     has_permission_on :channels do
-      to [:show]
+      to [:show, :meeps]
       if_attribute :users => contains {user}
     end
   end
@@ -19,6 +25,12 @@ authorization do
       to [:delete]
       if_attribute :user => is {user}
     end
+    
+    has_permission_on :meeps do
+      to [:before, :after, :show]
+      if_attribute :channel => is_in { user.channels }
+    end
+    
     has_permission_on :users do
       to [:show, :rendezvous, :channels]
       if_attribute :channels => intersects_with { user.channels }
@@ -27,7 +39,7 @@ authorization do
     has_permission_on :snapshots, :to => :index
     has_permission_on :channels, :to => [:index]
     has_permission_on :channels do
-      to [:show]
+      to [:show, :meeps]
       if_attribute :users => contains {user}
     end
     has_permission_on :channels, :to => [:info]
@@ -46,6 +58,12 @@ authorization do
       to [:delete]
       if_attribute :user => is {user}
     end
+    
+    has_permission_on :meeps do
+      to [:before, :after, :show]
+      if_attribute :channel => is_in { user.channels }
+    end
+    
     has_permission_on :listens, :to => [:create]
     has_permission_on :listens do
       to [:read, :delete, :update]
@@ -57,6 +75,12 @@ authorization do
     end
     
     has_permission_on :channels, :to => [:read, :create]
+    
+    has_permission_on :channels do
+      to [:meeps]
+      if_attribute :users => contains {user}
+    end
+    
     has_permission_on :channels do
       to [:manage]
       if_attribute :owner => is {user}
@@ -73,7 +97,7 @@ authorization do
     has_permission_on :files, :to => [:read]
     has_permission_on :snapshots, :to => :index
     has_permission_on :meeps, :to => [:manage, :read, :delete, :sync]
-    has_permission_on :channels, :to => [:manage]
+    has_permission_on :channels, :to => [:manage, :meeps]
     has_permission_on :nodes, :to => [:manage]
     has_permission_on :listens, :to => [:manage, :accept, :create_for_user]
     has_permission_on :invitations, :to => :manage
@@ -91,7 +115,7 @@ privileges do
     :change_password, :generate_new_password, :update_roles, :search, :send_javascript, :send_system_message]
   privilege :newbie, :includes => [:remove_newbie_flag, :newbie_todo_list]
   privilege :rendezvous, :includes => [:start_rendezvous]
-  privilege :read, :includes => [:index, :before, :after, :show, :my_profile, :search, :global, :show_global, :meeps_with_text_extension, :channels, :info, :play]
+  privilege :read, :includes => [:index, :my_profile, :search, :global, :show_global, :meeps_with_text_extension, :channels, :info, :play]
   privilege :create, :includes => :new
   privilege :update, :includes => :edit
   privilege :delete, :includes => :destroy
