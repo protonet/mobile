@@ -159,6 +159,10 @@ protonet.ui.MeepScroller = Class.create({
       meep = meep.data("instance");
     }
     
+    if (!meep) {
+      return;
+    }
+    
     // Change title text
     var titleText = protonet.t("MEEP_HEADLINE", {
       avatar:       '<img src="' + meep.getAvatar({ width: 20, height: 20 }) + '"  alt=\"\">',
