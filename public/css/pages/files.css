@@ -1,3 +1,7 @@
+.files-page {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
 .files-page .table-wrapper {
   -webkit-box-sizing: border-box;
   -ms-box-sizing: border-box;
@@ -419,6 +423,7 @@
 
 /* ------------------------------------------------ FILE ACTIONS ------------------------------------------------ */
 .file-actions {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   float: right;
   margin-top: -5px;
 }
