@@ -91,6 +91,10 @@ protonet.dispatcher.provider.FlashSocket = {
       return;
     }
     
-    return JSON.parse(rawData);
+    try {
+      return JSON.parse(rawData);
+    } catch(e) {
+      throw new Error("FlashSocket couldn't parse: " + rawData.slice(0, 100));
+    }
   }
 };
