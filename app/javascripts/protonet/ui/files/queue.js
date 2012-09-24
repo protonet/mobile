@@ -187,7 +187,9 @@ protonet.ui.files.Queue = (function() {
     
     share: function() {
       var paths = $.map($list.children(), function(li) {
-        return $(li).data("file").path;
+        var file = $(li).data("file");
+        // file can be undefined when the corresponding file wasn't uploaded correctly
+        return file ? file.path : null;
       });
       protonet.trigger("modal_window.hide").trigger("form.attach_files", paths);
     },
