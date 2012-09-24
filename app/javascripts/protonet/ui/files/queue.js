@@ -98,6 +98,10 @@ protonet.ui.files.Queue = (function() {
     
     uploading: function(file) {
       var $item = queue[file.id];
+      if (!$item) {
+        return;
+      }
+      
       $item.removeClass("queued").addClass("uploading");
       this.scrollTo(file);
       
@@ -108,6 +112,10 @@ protonet.ui.files.Queue = (function() {
     progress: function(file) {
       var $item   = queue[file.id],
           amount  = this.uploader.files.length;
+      
+      if (!$item) {
+        return;
+      }
       
       $item.find(".loading-bar").css("width", file.percent + "%");
       
@@ -122,6 +130,10 @@ protonet.ui.files.Queue = (function() {
     error: function(file) {
       protonet.trigger("flash_message.error", protonet.t("UPLOAD_ERROR", file));
       var $item = queue[file.id];
+      if (!$item) {
+        return;
+      }
+      
       $item.addClass("error");
       $item.find(".file-name").prepend($("<strong>", { text: "(error) ", "class": "error" }));
     },
@@ -129,6 +141,10 @@ protonet.ui.files.Queue = (function() {
     uploaded: function(file, xhr) {
       var data      = xhr.responseJSON,
           $item     = queue[file.id];
+      
+      if (!$item) {
+        return;
+      }
       
       $item
         .data("file", data)
