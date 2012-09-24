@@ -1,6 +1,6 @@
 // ---- LIBRARIES
 //= require "../lib/simple-javascript-airbrake-notifier/notifier.js"
-//= require "../lib/jquery-1.8.1.min.js"
+//= require "../lib/jquery-1.8.2.min.js"
 //= require "../lib/jquery-ui-1.8.23.custom.min.js"
 //= require "../lib/swfobject-2.2.js"
 //= require "../lib/jquery-class-create/class.js"
