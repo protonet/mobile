@@ -420,7 +420,7 @@ protonet.ui.files.List = (function() {
     highlight: function($elements) {
       $elements.each(function(i) {
         var $element                = $elements.eq(i),
-            originalBackgroundColor = $element.css("background-color");
+            originalBackgroundColor = $element.css("background-color") || "#ffffff";
         
         $element
           .css({ "background-color": "#ffff99" })
