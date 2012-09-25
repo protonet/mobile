@@ -32,6 +32,7 @@ window.$document = $(document);
 //= require "media/proxy.js"
 //= require "media/uploader.js"
 //= require "media/audio.js"
+//= require "media/webcam.js" 
 //= require "utils/template.js"
 //= require "utils/inline_hint.js"
 //= require "ui/users/users.js"

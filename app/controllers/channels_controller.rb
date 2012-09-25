@@ -6,7 +6,7 @@ class ChannelsController < ApplicationController
   before_filter :available_channels
   
   def index
-    @subscribed_channels = Channel.real.joins(:listens).where(:listens => {:user_id => current_user.id}).order_by_name
+    @subscribed_channels = current_user.channels.real.order_by_name
     @nav = "channels"
   end
   
@@ -33,7 +33,7 @@ class ChannelsController < ApplicationController
   end
   
   def info
-    channels = Channel.all
+    channels = current_user.channels
     channels_to_load = params[:ids].split(',') rescue channels.each {|c| c.id.to_s }
     
     respond_to do |format|

@@ -1,5 +1,3 @@
-//= require "../../../media/webcam.js"
-
 /**
  * Webcam snapshots
  */

@@ -1,5 +1,3 @@
-//= require "../media/webcam.js" 
-
 protonet.p("snapshots", function($page) {
   var photoUrl,
       isModalWindow = !!$(".modal-window").length,

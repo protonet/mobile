@@ -3,10 +3,6 @@
 (function(media, webcam) {
   var SHUTTER_SOUND = "/sounds/shutter.mp3";
   
-  function getNavigatorGetUserMedia() {
-    return navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.getUserMedia;
-  }
-  
   media.Webcam = Class.create({
     initialize: function() {
       for (var i in media.Webcam.provider) {
@@ -65,7 +61,7 @@
   
   media.Webcam.provider.WebRTC = Class.create({
     supported: function() {
-      return !!navigator.getUserMedia && !!window.WebKitBlobBuilder;
+      return !!navigator.getUserMedia && !!window.Blob && !window.opera;
     },
 
     initialize: function() {},
@@ -111,11 +107,9 @@
         ia[i] = imageData.charCodeAt(i);
       }
       
-      var bb = new WebKitBlobBuilder();
-      bb.append(ab);
-      var blob = bb.getBlob("image/jpeg");
+      var blob = new Blob([new DataView(ab)], { type: "image/jpeg" }),
+          xhr  = new XMLHttpRequest();
       
-      var xhr = new XMLHttpRequest();
       xhr.open("POST", url, true);
       xhr.withCredentials = true;
       xhr.onload = function() {
