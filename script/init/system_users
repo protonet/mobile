@@ -32,12 +32,21 @@ def umount dir
   end
 end
 
+def set_samba_password(username, password)
+  if defined?(PRODUCTION)
+    `echo "#{password}\n#{password}\n" | smbpasswd -a -s #{username}`
+  else
+    puts "DEV MODE HAS NO SAMBA!"
+  end
+end
 
 case ARGV[0]
   when "mount"
     mount ARGV[1], ARGV[2]
   when "umount"
     umount ARGV[1]
+  when "samba"
+    set_samba_password ARGV[1], ARGV[2]
   else
-    abort("Usage: system_users (mount|umount)")
-end 
+    abort("Usage: system_users (mount|umount|samba)")
+end

@@ -37,8 +37,8 @@ class User < ActiveRecord::Base
   after_create :send_create_notification, :unless => :anonymous?
   after_create :listen_to_channels, :unless => :anonymous?
   after_create :mark_invitation_as_accepted, :if => :invitation_token
-  after_create :create_folder, :if => lambda {|u| 
-    !u.stranger? && 
+  after_create [:create_folder, :update_samba_account], :if => lambda {|u|
+    !u.stranger? &&
     !u.system?
   }
   after_create :refresh_system_users, :if => lambda {|u|
@@ -56,6 +56,11 @@ class User < ActiveRecord::Base
     !u.stranger? && 
     !u.system?
   }
+
+  after_update :update_samba_account, :if => lambda {|u| 
+    !u.stranger? && 
+    !u.system?
+  }  
   
   validates_uniqueness_of :email, :if => lambda {|u| !u.stranger?}
   validates_uniqueness_of :login, :if => lambda {|u| !u.stranger?}
@@ -417,7 +422,13 @@ class User < ActiveRecord::Base
       self.class.refresh_system_users
     end
   end
-  
+
+  def update_samba_account
+    if encrypted_password_changed? || new_record?
+      system_users_script("samba #{login} #{password}")
+    end
+  end
+
   def system_home_path
     configatron.files_path + "/system_users/#{login}"
   end
