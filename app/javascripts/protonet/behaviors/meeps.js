@@ -69,54 +69,53 @@ $.behaviors({
 
 // TODO: Make ContextMenu part of behaviors
 (function() {
-  var $meep;
+  var $meep, contextOptions = {};
   
-  var contextMenu = new protonet.ui.ContextMenu("a.meep-action-link", {
-    "share/reply": function($target, close) {
-      var data  = $meep.data("meep");
-      if (data) {
-        protonet.trigger("modal_window.hide").trigger("form.share_meep", data.id);
-      }
-      close();
-    },
-
-    "show detail view": function($target, close) {
-      var instance = $meep.data("instance");
-      if (instance) {
-        protonet.open(instance.getUrl());
-      }
-      close();
-    },
-    
-    "delete message": function($target, close) {
-      var instance = $meep.data("instance");
-      
-      if (instance) {
-        $.ajax({
-          url:     instance.getUrl(),
-          type:    "delete",
-          success: function() {
-            protonet.trigger("flash_message.notice", protonet.t("meeps.flash_message_delete_success"));
-          },
-          error: function() {
-            protonet.trigger("flash_message.error", protonet.t("meeps.flash_message_delete_error"));
-          }
-        });
-      }
-      
-      close();
+  contextOptions[protonet.t("meeps.link_share")] = function($target, close) {
+    var data  = $meep.data("meep");
+    if (data) {
+      protonet.trigger("modal_window.hide").trigger("form.share_meep", data.id);
     }
-  }, "context-menu-meep");
+    close();
+  };
+  
+  contextOptions[protonet.t("meeps.link_show_detail_view")] = function($target, close) {
+    var instance = $meep.data("instance");
+    if (instance) {
+      protonet.open(instance.getUrl());
+    }
+    close();
+  };
+  
+  contextOptions[protonet.t("meeps.link_delete")] = function($target, close) {
+    var instance = $meep.data("instance");
+    
+    if (instance) {
+      $.ajax({
+        url:     instance.getUrl(),
+        type:    "delete",
+        success: function() {
+          protonet.trigger("flash_message.notice", protonet.t("meeps.flash_message_delete_success"));
+        },
+        error: function() {
+          protonet.trigger("flash_message.error", protonet.t("meeps.flash_message_delete_error"));
+        }
+      });
+    }
+    
+    close();
+  };
+  
+  var contextMenu = new protonet.ui.ContextMenu("a.meep-action-link", contextOptions, "context-menu-meep");
   
   contextMenu.bind("opening", function(e, menu, $target) {
     $meep = $target.parents("article");
     
-    var $children       = menu.list.children().show(),
-        data            = $meep.data("meep"),
-        isMeepOwner     = data.user_id == protonet.config.user_id || protonet.config.admin_ids.indexOf(protonet.config.user_id) !== -1,
-        isGlobalChannel = protonet.data.Channel.isGlobal(data.channel_id);
-    if (!isMeepOwner || isGlobalChannel) {
-      $children.filter("li:contains('delete')").hide();
+    var $children   = menu.list.children().show(),
+        data        = $meep.data("meep"),
+        isMeepOwner = data.user_id == protonet.config.user_id || protonet.data.User.isAdmin(protonet.config.user_id);
+    if (!isMeepOwner) {
+      $children.filter("li:contains('" + protonet.t("meeps.link_delete") + "')").hide();
     }
   });
 })();

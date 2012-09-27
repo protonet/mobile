@@ -45,7 +45,10 @@ protonet.i18n = {
     headline_widget_channel: "Users",
     headline_user_types: "Comparison of user types",
     flash_message_update_settings_success: "Your changes have been successfully saved.",
-    flash_message_update_settings_error: "Your changes couldn't be saved."
+    flash_message_update_settings_error: "Your changes couldn't be saved.",
+    link_profile: "Show profile",
+    link_reply: "Send @reply",
+    link_private_chat: "Start private chat"
   },
   
   meeps: {
@@ -61,7 +64,9 @@ protonet.i18n = {
     flash_message_delete_success: "The message has been successfully deleted.",
     flash_message_delete_error: "The message couldn't be deleted.",
     name_unknown_channel: "unknown/private",
-    link_share: "Share or reply"
+    link_share: "Share or reply",
+    link_show_detail_view: "Show detail view",
+    link_delete: "Delete message"
   },
   
   channels: {

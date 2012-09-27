@@ -406,7 +406,7 @@ Then /^I delete the message "([^\"]*)"/ do |text|
     sleep 1
   end
   wait_until do    
-    find(:css, ".context-menu-meep li", :text => "delete message").click
+    find(:css, ".context-menu-meep li", :text => "Delete message").click
     sleep 1
   end
 end

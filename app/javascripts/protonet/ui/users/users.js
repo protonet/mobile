@@ -43,33 +43,36 @@ protonet.ui.users = {
     // By the way: "Taylor Swift - The Best Day" is a really good song.
     // U have to check it out http://grooveshark.com/#/s/The+Best+Day/2fZAWg
     // kkthxbai
-    var contextOptions = {
-      "show profile": function($link, closeContextMenu) {
-        var url = $link.prop("href");
-        protonet.open(url);
-        closeContextMenu();
-      },
-      "send @reply": function($link, closeContextMenu) {
-        protonet.trigger("form.create_reply", protonet.data.User.getName($link.data("user-id")));
-        closeContextMenu();
-      },
-      "start private chat": function($link, closeContextMenu) {
-        protonet
-          .trigger("rendezvous.start", +$link.data("user-id"))
-          .trigger("modal_window.hide");
-        closeContextMenu();
-      }
+    var contextOptions = {};
+    
+    contextOptions[protonet.t("users.link_profile")] = function($link, closeContextMenu) {
+      var url = $link.prop("href");
+      protonet.open(url);
+      closeContextMenu();
+    };
+    
+    contextOptions[protonet.t("users.link_reply")] = function($link, closeContextMenu) {
+      protonet.trigger("form.create_reply", protonet.data.User.getName($link.data("user-id")));
+      closeContextMenu();
+    };
+    
+    contextOptions[protonet.t("users.link_private_chat")] = function($link, closeContextMenu) {
+      protonet
+        .trigger("rendezvous.start", +$link.data("user-id"))
+        .trigger("modal_window.hide");
+      closeContextMenu();
     };
     
     var contextMenu = new protonet.ui.ContextMenu("a[data-user-id]", contextOptions, "context-menu-users");
+    
     contextMenu.bind("opening", function(e, menu, target) {
       var userId = target.data("user-id");
       if (userId.toString().match(/_/) || userId == -1) {
-        $.each(["show profile", "start private chat"], function(i, element){
+        $.each([protonet.t("users.link_profile"), protonet.t("users.link_private_chat")], function(i, element){
           menu.list.children("li:contains('" + element + "')").hide();
         });
       } else {
-        $.each(["show profile", "start private chat"], function(i, element){
+        $.each([protonet.t("users.link_profile"), protonet.t("users.link_private_chat")], function(i, element){
           menu.list.children("li:contains('" + element + "')").show();
         });
       }
