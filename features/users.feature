@@ -39,7 +39,7 @@ Background:
     And I follow "edit"
     And press "Generate new" within "form[data-cucumber='change-password']"
     And I wait 3 seconds
-    And I store /"(.+?)"/ from ".flash-message p" into "password"
+    And I store /'(.+?)'/ from ".flash-message p" into "password"
     And I go unauthenticated to the start page
     And I am logged in as "someotherdude"
   
