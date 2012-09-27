@@ -65,10 +65,10 @@ class ChannelsController < ApplicationController
     channel = Channel.new(params[:channel].merge(:owner => current_user))
     success = channel && channel.save
     if success && channel.errors.empty?
-      flash[:notice] = "Successfully created channel '#{params[:channel][:name]}'"
+      flash[:notice] = t("channels.flash_message_channel_created_success", :name => params[:channel][:name])
       redirect_to :action => 'show', :id => channel.id
     else
-      flash[:error] = "Could not create channel, #{channel.errors.map().join(' ')}"
+      flash[:error] = t("channels.flash_message_channel_created_error", :errors => channel.errors.map().join(' '))
       head(412)
     end
   end
@@ -77,9 +77,9 @@ class ChannelsController < ApplicationController
     channel = Channel.find(params[:channel][:id])
     success = channel && channel.update_attributes(params[:channel])
     if success && channel.errors.empty?
-      flash[:notice] = "Successfully updated channel '#{channel.display_name}'"
+      flash[:notice] = t("channels.flash_message_channel_updated_success", :display_name => channel.display_name)
     else
-      flash[:error] = "Could not update channel '#{channel.display_name}'"
+      flash[:error] = t("channels.flash_message_channel_updated_error", :display_name => channel.display_name)
     end
     redirect_to :action => 'show', :id => channel.id
   end
@@ -87,10 +87,10 @@ class ChannelsController < ApplicationController
   def destroy
     success = @channel.destroy
     if success && @channel.errors.empty?
-      flash[:notice] = "Successfully deleted channel '#{@channel.display_name}'"
+      flash[:notice] = t("channels.flash_message_channel_destroyed_success", :display_name => @channel.display_name)
       redirect_to :action => 'index'
     else
-      flash[:error] = "Could not delete channel '#{@channel.display_name}'"
+      flash[:error] = t("channels.flash_message_channel_destroyed_error", :display_name => @channel.display_name)
     end
   end
   

@@ -12,9 +12,13 @@ class ListensController < ApplicationController
     channel = Channel.find(params[:channel_id])
     current_user.subscribe(channel)
     if channel
-      flash[:notice] = "You subscribed to @#{channel.display_name}#{' (pending verification)' if !channel.public? && !channel.owned_by?(current_user) }"
+      if !channel.public? && !channel.owned_by?(current_user) && !current_user.admin?
+        flash[:sticky] = t("listens.flash_message_wait_for_verification", :display_name => channel.owner.display_name)
+      else
+        flash[:notice] = t("listens.flash_message_created_success", :display_name => channel.display_name)
+      end
     else
-      flash[:error] = "Could not subscribe to channel with id '#{params[:channel_id]}'"
+      flash[:error] = t("listens.flash_message_created_error")
     end
     redirect_to_channel(channel)
   end
@@ -25,9 +29,9 @@ class ListensController < ApplicationController
     if listen.user == current_user || channel.owner == current_user || current_user.admin?
       listen.user.unsubscribe(channel)
       if listen.user == current_user
-        flash[:notice] = "You successfully unsubscribed from @#{channel.display_name}"
+        flash[:notice] = t("listens.flash_message_destroyed_myself_success", :display_name => channel.display_name)
       else
-        flash[:notice] = "@#{listen.user.display_name} has been unsubscribed from @#{channel.display_name}"
+        flash[:notice] = t("listens.flash_message_destroyed_success", :user_display_name => listen.user.display_name, :channel_display_name => channel.display_name)
       end
     end
     redirect_to_channel(channel)
@@ -37,7 +41,7 @@ class ListensController < ApplicationController
     listen = Listen.find(params[:id])
     channel = listen.channel
     if listen.update_attribute(:verified, true)
-      flash[:notice] = "You successfully verified the subscription of @#{listen.user.display_name}"
+      flash[:notice] = t("listens.flash_message_verification_success", :display_name => listen.user.display_name)
       redirect_to_channel(channel)
     else
       head(500)
@@ -55,10 +59,10 @@ class ListensController < ApplicationController
       listen = user.listens.find_by_channel_id(channel.id)
       listen.verified = true
       listen.save(:validate => false)
-      flash[:notice] = "You successfully subscribed @#{listen.user.display_name} to #{channel.display_name}"
+      flash[:notice] = t("flash_message_create_for_user_success", :user_display_name => listen.user.display_name, :channel_display_name => channel.display_name)
       redirect_to_channel(channel)
     else
-      flash[:error] = "Couldn't find user with identifier '#{params[:search_term]}'"
+      flash[:error] = flash[:notice] = t("flash_message_create_for_user_error", :search_term => params[:search_term])
       redirect_to_channel(channel)
     end
   end

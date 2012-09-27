@@ -7,18 +7,21 @@ module PreferencesHelper
       interfaces << current_interface unless interfaces.include?(current_interface)
       interfaces
     end
-
+    
     def network_interface_description(interface_name)
       if interface_name =~ /^(en|et).*/
-        "Accessing protonet via ethernet/network cable <i>(interface: #{interface_name})</i>"
+        t("preferences.headline_privacy_ethernet", :interface_name => interface_name)
       elsif interface_name =~ /^(wlan).*/
-        "Accessing protonet via WiFi <i>(interface: #{interface_name})</i>"
+        t("preferences.headline_privacy_wlan", :interface_name => interface_name)
       elsif interface_name == 'published_to_web'
-        "Accessing protonet via https://#{SystemPreferences.publish_to_web_name}.protonet.info<br><i>as configured in #{link_to('Web Publishing', preferences_path(:section => 'publish_to_web'))} and currently turned #{SystemPublishToWeb.status ? '<span class="on">on</span>' : '<span class="off">off</span>'}</i>"
+        t("preferences.headline_privacy_web_publishing",
+          :publish_to_web_name  => SystemPreferences.publish_to_web_name,
+          :href                 => preferences_path(:section => 'publish_to_web')
+        )
       elsif interface_name =~ /^lo.*/
-        "Accessing protonet locally <i>(interface: #{interface_name})</i>"
+        t("preferences.headline_privacy_local", :interface_name => interface_name)
       else
-        'Accessing from any other network interface <i>(fallback)</i>'
+        t("preferences.headline_privacy_fallback")
       end
     end
 

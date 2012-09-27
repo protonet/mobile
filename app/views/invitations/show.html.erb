@@ -1,46 +1,46 @@
 <%= render "shared/nav_users"%>
 <output class="content" data-tab="users">
-  <h2>Invitation for <%= @invitation.email%></h2>
+  <h2><%= t("invitations.headline_details", :email => @invitation.email) %></h2>
   <div class="status-box">
     Status:
     <%- case @invitation.status %>
     <%- when :success %>
-      <span class="accepted">accepted by <%= @invitation.invitee.login %></span>
+      <span class="accepted"><%= t("invitations.status_accepted", :login => @invitation.invitee.login) %></span>
     <%- when :sent %>
-      <span class="sent">sent on <%= l(@invitation.sent_at, :format => :short) %></span>
+      <span class="sent"><%= t("invitations.status_sent", :time => l(@invitation.sent_at, :format => :short)) %></span>
     <%- when :open %>
-      <span class="not-sent">not sent yet</span>
+      <span class="not-sent"><%= t("invitations.status_not_sent") %></span>
     <%- end %>
   </div>
   <%= form_for(@invitation, :remote => true, :html => { "data-type" => 'html' }) do |f| %>
     <div id="wysihtml5-toolbar" style="display: none;">
-      <a class="icon" data-wysihtml5-command="bold" title="CTRL+B">bold</a>
-      <a class="icon" data-wysihtml5-command="italic" titletle="CTRL+I">italic</a>
-      <a class="icon" data-wysihtml5-command="undo" title="undo">undo</a>
-      <a class="icon" data-wysihtml5-command="redo" title="redo">redo</a>
-      <a class="icon" data-wysihtml5-command="insertUnorderedList">insert unordered list</a>
-      <a class="link" data-wysihtml5-command="insertHTML" data-wysihtml5-command-value="<%= accept_invitation_url(:invitation_token => @invitation.token, :host => SystemPreferences.public_host, :protocol => SystemPreferences.public_host_https ? 'https://' : 'http://')%>">insert invitationlink</a>
+      <a class="icon" data-wysihtml5-command="bold" title="<%= t("invitations.link_wysiwyg_bold") %>"><%= t("invitations.link_wysiwyg_bold") %></a>
+      <a class="icon" data-wysihtml5-command="italic" title="<%= t("invitations.link_wysiwyg_italic") %>"><%= t("invitations.link_wysiwyg_italic") %></a>
+      <a class="icon" data-wysihtml5-command="undo" title="<%= t("invitations.link_wysiwyg_undo") %>"><%= t("invitations.link_wysiwyg_italic") %></a>
+      <a class="icon" data-wysihtml5-command="redo" title="<%= t("invitations.link_wysiwyg_redo") %>"><%= t("invitations.link_wysiwyg_redo") %></a>
+      <a class="icon" data-wysihtml5-command="insertUnorderedList" title="<%= t("invitations.link_wysiwyg_insert_unordered_list") %>"><%= t("invitations.link_wysiwyg_insert_unordered_list") %></a>
+      <a class="link" data-wysihtml5-command="insertHTML" data-wysihtml5-command-value="<%= accept_invitation_url(:invitation_token => @invitation.token, :host => SystemPreferences.public_host, :protocol => SystemPreferences.public_host_https ? 'https://' : 'http://')%>"><%= t("invitations.link_wysiwyg_insert_invitation_link") %></a>
     </div>
     
     <textarea cols="40" rows="20" name="invitation[message]" id="invitation_message">
       <%= raw @invitation.message %>
     </textarea>
     <div class="buttons">
-      <%= button "Save" unless @invitation.status == :success %>
+      <%= button t("label_save") unless @invitation.status == :success %>
       <%- case @invitation.status %>
       <%- when :open %>
-        <%= button "Send invitation", :name => "send" %>
+        <%= button t("invitations.label_send"), :name => "send" %>
       <%- when :sent %>
-        <%= button "Resend invitation", :name => "send" %>
+        <%= button t("invitations.label_resend"), :name => "send" %>
       <%- end %>
     </div>
   <%- end %>
   
-  <h3>Delete invitation</h3>
+  <h3><%= t("invitations.headline_delete") %></h3>
   <%= form_tag(invitation_path(@invitation), {  :remote => true, :class => 'single-button-form', 'data-type' => 'html', :method => :post }) do %>
     <%= hidden_field_tag :_method, "delete" %>
     <%= hidden_field_tag :id, @invitation.id %>
-    <%= button "Delete", 'data-confirm' => 'Do you really want to delete this invitation?' %>
+    <%= button t("label_delete"), 'data-confirm' => t("invitations.confirm_delete") %>
   <% end %>
   
 </output>

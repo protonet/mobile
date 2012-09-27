@@ -1,13 +1,13 @@
 <%= render "shared/nav_users"%>
 <output class="content" data-tab="users">
-  <h2>Edit @<%= @user.display_name %> <a data-hover-hint="top" title="This page can only be seen by admins and the user himself" class="hint">(?)</a></h2>
+  <h2><%= t("users.headline_edit", :display_name => @user.display_name) %> <a data-hover-hint="top" title="<%= t("users.hint_edit") %>" class="hint">(?)</a></h2>
   
   <%= render :partial => 'avatar' %>
   
   <%- unless @user.stranger? && @user.anonymous? %>
-    <h3>Edit user details</h3>
+    <h3><%= t("users.headline_edit_details") %></h3>
     <%- if SystemPreferences.remote_ldap_sign_on == true -%>
-      <p class="hint">You can't edit user details since the admin of this node enabled ldap authentication.</p>
+      <p class="hint"><%= t("users.hint_edit_details") %></p>
     <%- else %>
       <%= form_for(@user, {
         :url        => user_path,
@@ -19,22 +19,22 @@
         <%= hidden_field_tag :user_id, @user.id %>
         <%= f.hidden_field :id %>
         <div class="form-field">
-          <%= f.label :first_name, 'First name:' %>
+          <%= f.label :first_name, t("users.label_first_name") %>
           <%= f.text_field :first_name %>
         </div>
         <div class="form-field">
-          <%= f.label :last_name, 'Last name:' %>
+          <%= f.label :last_name, t("users.label_last_name") %>
           <%= f.text_field :last_name %>
         </div>
         <div class="form-field">
-          <%= f.label :login, 'User name:' %>
+          <%= f.label :login, t("users.label_user_name") %>
           <%= f.text_field :login %>
         </div>
         <div class="form-field">
-          <%= f.label :email, 'E-Mail:' %>
+          <%= f.label :email, t("users.label_email") %>
           <%= f.text_field :email %>
         </div>
-        <%= button "Save" %>
+        <%= button t("label_save") %>
       <%- end %>
     <% end %>
   <%- end %>
@@ -42,33 +42,33 @@
   <%- unless @user.stranger? && @user.anonymous? %>
     <%- unless SystemPreferences.remote_ldap_sign_on -%>
       <%- if current_user.admin? && current_user != @user %>
-        <h3>Reset password</h3>
+        <h3><%= t("users.headline_reset_password") %></h3>
         <%= form_tag({ :action => 'generate_new_password' }, { :remote => true, 'data-type' => 'html', 'data-cucumber' => 'change-password', :class => 'single-button-form' }) do %>
           <%= hidden_field_tag :id, @user.id %>
           <%= hidden_field_tag :user_id, @user.id %>
-          <%= button "Generate new" %>
-          <%= button "Generate new and send to user via email", :name => 'send_email', :value => true %>
+          <%= button t("users.label_generate_new_password") %>
+          <%= button t("users.label_generate_new_password_and_send"), :name => 'send_email', :value => true %>
         <% end %>
       <%- else %>
-        <h3>Change password</h3>
+        <h3><%= t("users.headline_change_password") %></h3>
         <%= form_tag({ :action => 'change_password' }, { :remote => true, 'data-type' => 'html', 'data-cucumber' => 'change-password' }) do %>
           <%= hidden_field_tag :id, @user.id %>
           <div class="form-field">
-            <%= label_tag :current_password, 'Old password:' %>
+            <%= label_tag :current_password, t("users.label_old_password") %>
             <%= password_field_tag :current_password, nil %>
           </div>
           <div class="form-field">
-            <%= label_tag :password, 'New password:' %>
-            <%= password_field_tag :password, nil %> <a data-hover-hint="top" title="Minimum 8 characters" class="hint">(?)</a>
+            <%= label_tag :password, t("users.label_new_password") %>
+            <%= password_field_tag :password, nil %> <a data-hover-hint="top" title="<%= t("users.hint_password") %>" class="hint">(?)</a>
           </div>
-          <%= button "Save" %>
+          <%= button t("label_save") %>
         <% end %>
       <%- end %>
     <%- end -%>
   <%- end %>
   
   <%- unless @user.stranger? && @user.anonymous? %>
-    <h3>Notifications</h3>
+    <h3><%= t("users.headline_notifications") %></h3>
     <%= form_for(@user, {
       :url        => user_path,
       :method     => :update,
@@ -84,17 +84,17 @@
       <%= f.hidden_field :id %>
         <label class="checkbox-row">
           <%= f.check_box :notify_me %>
-          Notify me about new messages via email
+          <%= t("users.label_notify_me") %>
         </label>
     <%- end %>
     <div id="settings"></div>
   <%- end %>
   
   <%- if current_user.admin? && !@user.stranger?  && !@user.anonymous? -%>
-    <h3>Permissions <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
+    <h3><%= t("users.headline_permissions") %> <a data-hover-hint="top" title="<%= t("users.hint_admins_can_see_this") %>" class="hint">(?)</a></h3>
     <div class="info-box">
-      <h4>User types</h4>
-      <p><a id="show-comparison-chart">Learn more</a> about the different user types and their permissions.</p>
+      <h4><%= t("users.headline_user_types") %></h4>
+      <p><%= raw(t("users.hint_user_types")) %></p>
     </div>
     
     <%= form_tag({ :action => 'update_roles' }, { :remote => true, 'data-type' => 'html', 'data-cucumber' => 'admin-settings' }) do %>
@@ -102,31 +102,31 @@
       <%= hidden_field_tag :user_id, @user.id %>
       
       <div class="form-field">
-        <%= label_tag 'role-invitee', 'User with restricted rights:' %>
+        <%= label_tag 'role-invitee', t("users.label_user_with_restricted_rights") %>
         <%= radio_button_tag :role, 'invitee', @user.invitee?, :id => 'role-invitee' %>
-        <a data-hover-hint="top" title="<h4>User with restricted rights</h4> Users with restricted rights can only see channels they were susbcribed to (by an administrator). They aren't able to see users from other channels. This user type can be perfectly used for customers or guests that should have limited access." class="hint">(?)</a>
+        <a data-hover-hint="top" title="<%= raw(t("users.hint_user_with_restricted_rights")) %>" class="hint">(?)</a>
       </div>
       <div class="form-field">
-        <%= label_tag 'role-user', 'User:' %>
+        <%= label_tag 'role-user', t("users.label_user_default") %>
         <%= radio_button_tag :role, 'user', !@user.invitee? && !@user.admin?, :id => 'role-user' %>
-        <a data-hover-hint="top" title="<h4>User</h4> Normal users can see all channels and users. They're not allowed to delete users or channels that they didn't create." class="hint">(?)</a>
+        <a data-hover-hint="top" title="<%= raw(t("users.hint_user_default")) %>" class="hint">(?)</a>
       </div>
       <div class="form-field">
-        <%= label_tag 'role-admin', 'Administrator:' %>
+        <%= label_tag 'role-admin', t("users.label_user_with_administration_rights") %>
         <%= radio_button_tag :role, 'admin', @user.admin?, :id => 'role-admin' %>
-        <a data-hover-hint="top" title="<h4>Administrator</h4> Users with administration rights can manage channels, other users and system related things." class="hint">(?)</a>
+        <a data-hover-hint="top" title="<%= raw(t("users.hint_user_with_administration_rights")) %>" class="hint">(?)</a>
       </div>
       
-      <%= button "Save" %>
+      <%= button t("label_save") %>
     <% end %>
   <%- end -%>
   
   <%- if current_user.admin? && !@user.anonymous? %>
-    <h3>Delete user <a data-hover-hint="top" title="Only visible to admins" class="hint">(?)</a></h3>
+    <h3><%= t("users.headline_delete")%> <a data-hover-hint="top" title="<%= t("users.hint_admins_can_see_this") %>" class="hint">(?)</a></h3>
     <%= form_tag({ :action => 'delete' }, { :remote => true, :class => 'single-button-form', 'data-type' => 'html' }) do %>
       <%= hidden_field_tag :user_id, @user.id %>
       <%= hidden_field_tag :id, @user.id %>
-      <%= button "Delete", 'data-confirm' => 'Do you really want to delete this user? There\'s no undo.' %>
+      <%= button t("label_delete"), 'data-confirm' => t("users.confirm_delete") %>
     <% end %>
   <%- end %>
   

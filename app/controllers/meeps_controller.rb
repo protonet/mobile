@@ -8,7 +8,7 @@ class MeepsController < ApplicationController
   def sync
     result = {}
     channel_states = params[:channel_states] || {}
-    current_user.channels.each do |channel|
+    current_user.channels.verified.each do |channel|
       channel_state = channel_states[channel.id.to_s]
       if channel_state
         meeps = channel.meeps.includes(:user).all(:conditions => ["meeps.id > ?", channel_state], :order => "meeps.id ASC", :limit => 100)

@@ -1,4 +1,3 @@
-
 <%- if session[:captive_redirect_url] %>
   <p class="info-message"><%= raw(SystemPreferences.captive_portal_greeting) %></p>
 <%- end %>
@@ -6,29 +5,27 @@
 <%= form_for :user, :url => user_session_path, :html => { :class => "login", :style => @signup_error || params[:invitation_token] ? "display: none" : "" } do |f| -%>
   <fieldset>
     <%- if SystemPreferences.remote_ldap_sign_on %>
-      <h3>Login with your ldap credentials</h3>
+      <h3><%= t("users.headline_ldap") %></h3>
     <%- end %>
     
     <label>
-      <%= f.text_field :login, :placeholder => "email or user name", :autocorrect => 'off', :autocapitalize => 'off' %>
+      <%= f.text_field :login, :placeholder => t("users.placeholder_user_name_or_email"), :autocorrect => 'off', :autocapitalize => 'off' %>
     </label>
     <label>
-      <%= f.password_field :password, :value => nil, :placeholder => "password" %>
+      <%= f.password_field :password, :value => nil, :placeholder => t("users.placeholder_password") %>
     </label>
     <label for="user_remember_me">
-      <%= f.check_box :remember_me, :checked => incoming_interface != "published_to_web" %> <span class="hint">Keep logged in</span>
+      <%= f.check_box :remember_me, :checked => incoming_interface != "published_to_web" %> <span class="hint"><%= t("users.label_remember") %></span>
     </label>
     <div>
-      <%= button "Login", :id => "login" %>
+      <%= button t("users.label_login"), :id => "login" %>
       <%- if allow_signup? %>
-        or <a href="/users/sign_in#register" class="promotion-link register-link">create an account</a>
+        <%= raw(t("users.link_create_account")) %>
       <%- end %>
       <p class="hint">
-        Did you forget your password?
-        <a href="<%= new_user_password_path %>" data-avoid-ajax="1">Reset it here</a>
+        <%= raw(t("users.hint_password_forgotten", :href => new_user_password_path)) %>
       </p>
     </div>
-    
   </fieldset>
 <%- end %>
 
@@ -38,35 +35,34 @@
     <fieldset>
       <h3>
         <%- if @invitation %>
-          You have been invited by <%= @invitation.user.display_name %>. Just create an account. It's free
+          <%= avatar(@invitation.user, :width => 32, :height => 32) %>
+           <%= raw(t("users.headline_invitation", :display_name => @invitation.user.display_name)) %>
         <%- else %>
-          Create an account. It's free.
+          <%= t("users.headline_create_account") %>
         <%- end %>
       </h3>
       <label>
-        <%= f.text_field :first_name, :placeholder => "first name", :value => (@user && @user.first_name)%>
-        <span class="hint">first name (e.g. "John")</span>
+        <%= f.text_field :first_name, :placeholder => t("users.placeholder_first_name"), :value => (@user && @user.first_name)%>
+        <span class="hint"><%= t("users.hint_first_name") %></span>
       </label>
       <label>
-        <%= f.text_field :last_name, :placeholder => "last name", :value => (@user && @user.last_name)%>
-        <span class="hint">last name (e.g. "Doe")</span>
+        <%= f.text_field :last_name, :placeholder => t("users.placeholder_first_name"), :value => (@user && @user.last_name)%>
+        <span class="hint"><%= t("users.hint_last_name") %></span>
       </label>
       <label>
-        <%= f.text_field :email, :placeholder => "email", :type => "email", :value => (@user && @user.email) %>
-        <span class="hint">a valid email address (e.g. "john.doe@gmail.com")</span>
+        <%= f.text_field :email, :placeholder => t("users.placeholder_email"), :type => "email", :value => (@user && @user.email) %>
+        <span class="hint"><%= t("users.hint_email") %></span>
       </label>
       <label>
-        <%= f.password_field :password, :placeholder => "password" %>
-        <span class="hint">min. 8 characters</span>
+        <%= f.password_field :password, :placeholder => t("users.placeholder_password") %>
+        <span class="hint"><%= t("users.hint_password") %></span>
       </label>
       <div>
-        <%= button "Sign up", :id => "register" %> <a href="/users/sign_in#login" class="promotion-link login-link">already have an account?</a>
+        <%= button t("users.label_signup"), :id => "register" %> <a href="/users/sign_in" class="promotion-link" data-avoid-ajax="1"><%= t("users.link_login") %></a>
         <p class="hint">
-          Did you forget your password?
-          <a href="<%= new_user_password_path %>" data-avoid-ajax="1">Reset it here</a>
+          <%= raw(t("users.hint_password_forgotten", :href => new_user_password_path)) %>
         </p>
       </div>
-      
     </fieldset>
   <%- end %>
 <%- end %>

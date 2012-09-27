@@ -5,7 +5,7 @@ module Preferences
     def update
       vpn_status = params[:vpn_status] == "true"
       vpn_status ? SystemVpn.start : SystemVpn.stop
-      flash[:notice] = "The VPN system has been turned " + (vpn_status ? "on" : "off")
+      flash[:notice] = t("flash_message_saved_successfully")
       respond_to_preference_update
     end
   end

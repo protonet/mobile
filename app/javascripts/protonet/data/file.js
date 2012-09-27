@@ -88,7 +88,7 @@ protonet.data.File = (function() {
         
         file.belongsTo = recordId;
         if (path === "/" && recordId === VIEWER) {
-          file.name = protonet.t("MY_PRIVATE_FOLDER");
+          file.name = protonet.t("files.name_user_folder");
         } else {
           file.name = record.name || file.name;
         }
@@ -162,11 +162,11 @@ protonet.data.File = (function() {
     
     getName: function(path) {
       if (path === "/") {
-        return protonet.t("FILES");
+        return protonet.t("files.name_root_path");
       }
       
       if (path === protonet.data.User.getFolder(VIEWER)) {
-        return protonet.t("MY_PRIVATE_FOLDER");
+        return protonet.t("files.name_user_folder");
       }
       
       var userMatch     = path.match(USER_FOLDER),
@@ -181,7 +181,7 @@ protonet.data.File = (function() {
         if (!channel) { return id; }
         
         if (channel.rendezvous) {
-          return protonet.t("SHARED_BETWEEN_YOU_AND_USER", {
+          return protonet.t("files.name_rendezvous_folder", {
             user_name: (protonet.data.User.getName(channel.rendezvousPartner) || "unknown")
           });
         } else {

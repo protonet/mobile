@@ -36,12 +36,7 @@ protonet.p("files-play", function($page) {
   protonet.on("audio.add", function(urls) {
     audioPlayer.add(urls);
     
-    var textResource;
-    if (urls.length > 1) {
-      textResource = protonet.t("AUDIO_PLAYER_SONGS_ADDED", { songs: urls.length });
-    } else {
-      textResource = protonet.t("AUDIO_PLAYER_SONG_ADDED");
-    }
+    var textResource = protonet.t("files.flash_message_added_song_success", { count: urls.length });
     protonet.trigger("flash_message.notice", textResource);
   });
   
@@ -58,7 +53,7 @@ protonet.p("files-play", function($page) {
   }
   
   if ($.support.fullscreen) {
-    var $enterFullscreen = $("<a>", { "class": "enter-fullscreen", title: protonet.t("TOGGLE_FULLSCREEN_MODE") }).appendTo($page);
+    var $enterFullscreen = $("<a>", { "class": "enter-fullscreen", title: protonet.t("files.link_fullscreen") }).appendTo($page);
     $enterFullscreen.on("click", function() {
       $page.fullScreen({ background: "#f2f2f2" });
     });

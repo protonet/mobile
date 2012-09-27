@@ -1,18 +1,14 @@
 <div class="mail">
   <%= public_image_tag("protonet.jpg", :width => 300, :height => 77) %>
-  <h1>
-    You have been invited to join the protonet of <%= Node.local.name %>.
-  </h1>
+  <h1><%= t("invitations.headline_email", :name => Node.local.name) %></h1>
   <hr>
-  <p>
-    Hi <%= @invitation.name %>,
-  </p>
+  <p><%= t("invitations.text_1", :name => @invitation.name) %></p>
   <p>
     <%= avatar(@invitation.user, :width => 30, :height => 30, :class => "avatar", :public => true) %>
-    <strong><%= @invitation.user.display_name %></strong> wants to collaborate with you. All you need to do is to follow this link and choose a password. It only takes a few seconds.
+    <%= raw(t("invitations.text_2", :display_name => @invitation.user.display_name)) %>
   </p>
 
-  <p>Once you've signed in you are already subscribed to these channels:</p>
+  <p><%= t("invitations.text_3") %></p>
   <ul>
     <%- @invitation.channels.each do |channel| %>
       <li><%= channel.display_name %></li>
@@ -20,7 +16,7 @@
   </ul>
 
   <p>
-    <strong>Click this link to get started:</strong><br>
+    <strong><%= t("invitations.text_4") %></strong><br>
     <%= link_to accept_invitation_url(:invitation_token => @invitation.token, 
         :host => SystemPreferences.public_host, 
         :protocol => SystemPreferences.public_host_https ? 'https://' : 'http://'),
@@ -30,7 +26,5 @@
     %>
   </p> 
   <hr>
-  <p class="footnote">
-    Protonet, a revolutionary way to collaborate.
-  </p>
+  <p class="footnote"><%= t("invitations.text_5") %></p>
 </div>

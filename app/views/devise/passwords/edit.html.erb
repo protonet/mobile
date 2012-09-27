@@ -1,15 +1,13 @@
 <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
   <fieldset>
-    <h3>
-      Change your password
-    </h3>
+    <h3><%= t("passwords.headline_change") %></h3>
     <%= f.hidden_field :reset_password_token %>
     <label>
-      <%= f.password_field :password, :placeholder => "password" %>
-      <span class="hint">min. 8 characters</span>
+      <%= f.password_field :password, :placeholder => t("users.placeholder_password") %>
+      <span class="hint"><%= t("users.hint_password") %></span>
     </label>
     <div>
-      <%= button "Change", :id => "password" %>
+      <%= button t("label_change"), :id => "password" %>
     </div>
   </fieldset>
 <% end %>

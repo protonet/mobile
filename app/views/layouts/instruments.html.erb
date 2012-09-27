@@ -7,10 +7,10 @@
       
       <%- if current_user.stranger? -%>
         <div class="welcome">
-          <img src="/img/protonet_node_front_view.png" height="249" width="360" alt="protonet node. your private cloud.">
-          <h1>Welcome to the <strong>protonet</strong> of <strong><%= Node.local.name %></strong></h1>
+          <img src="/img/protonet_node_front_view.png" height="249" width="360" alt="<%= t("instruments.hint_protonet_node") %>">
+          <h1><%= raw(t("instruments.title_welcome", :name => Node.local.name)) %></h1>
           <%= render :partial => 'devise/shared/registration_box' %>
-          <a href="http://protonet.info" target="_blank" class="copyright-link" title="Click here to get informed about protonet">&copy; 2012 protonet. it's yours.</a>
+          <a href="http://protonet.info" target="_blank" class="copyright-link" title="<%= t("instruments.hint_protonet_link") %>"><%= t("instruments.copyright") %></a>
         </div>
       <%- end -%>
       

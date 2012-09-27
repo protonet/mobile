@@ -111,10 +111,10 @@ $.behaviors({
         $target.prop("disabled", true).parents(".checkbox-row").addClass("loading");
       },
       success:function(response) {
-        protonet.trigger("flash_message.notice", protonet.t("FORM_SUBMIT_SUCCESS"));
+        protonet.trigger("flash_message.notice", protonet.t("flash_message_submit_success"));
       },
       error: function(response) {
-        protonet.trigger("flash_message.error", protonet.t("FORM_SUBMIT_ERROR"));
+        protonet.trigger("flash_message.error", protonet.t("flash_message_submit_error"));
       },
       complete: function() {
         $target.prop("disabled", false).parents(".checkbox-row").removeClass("loading");
@@ -180,9 +180,9 @@ $.behaviors({
       $document.updateBehaviors();
     } else if (!flashMessageSet) {
       if (status === 403) {
-        protonet.trigger("flash_message.error", protonet.t("NO_RIGHTS_ERROR"));
+        protonet.trigger("flash_message.error", protonet.t("flash_message_submit_forbidden_error"));
       } else {
-        protonet.trigger("flash_message.error", protonet.t("FORM_SUBMIT_ERROR"));
+        protonet.trigger("flash_message.error", protonet.t("flash_message_submit_error"));
       }
     }
   }

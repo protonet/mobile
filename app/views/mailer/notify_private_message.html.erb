@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title><%= @meep.author %> just sent you a message</title>
+    <title><%= t("meeps.headline_mention_mail", :author => @meep.author, :display_name => @user.display_name) %></title>
   </head>
   <body bgcolor="#f7f7f7" style="background:#f7f7f7; margin:0; padding:0; font-family:verdana,arial,sans-serif; font-size:12px">
     <table border="0" cellspacing="0" cellpadding="30" style="background:#f7f7f7;">
@@ -14,10 +14,7 @@
                 <table width="600" border="0" cellspacing="0" cellpadding="0">
                   <tr>
                     <td valign="top" align="left" colspan="2" style="padding-bottom:10px;">
-                      <h1 style="font-size:14px; color:black">
-                        Hi <%= @user.display_name %>,
-                        <%= @meep.author %> just sent you a message.
-                      </h1>
+                      <h1 style="font-size:14px; color:black"><%= t("meeps.headline_mention_mail", :author => @meep.author, :display_name => @user.display_name) %></h1>
                     </td>
                   </tr>
                   <tr>
@@ -49,23 +46,21 @@
                   <tr>
                     <td></td>
                     <td style="font-family:verdana,arial,sans-serif; font-size:12px; padding: 15px 0 0 15px; color:black;">
-                      view the whole conversation:
+                      <%= raw(t("meeps.mail_text_4")) %>
                       <a href="<%= SystemPreferences.public_host_https ? 'https://' : 'http://' %><%= SystemPreferences.public_host %>/?channel_id=<%= @notifications.last.secondary_subject.channel_id %>">
                         <%= SystemPreferences.public_host_https ? 'https://' : 'http://' %><%= SystemPreferences.public_host %>/?channel_id=<%= @notifications.last.secondary_subject.channel_id %>
                       </a>
                     </td>
                   </tr>
                   <tr>
-                    <td colspan="2" style="padding: 20px 20px 20px 0; color:black;">
-                        Protonet – a revolutionary way to collaborate.
-                    </td>
+                    <td colspan="2" style="padding: 20px 20px 20px 0; color:black;"><%= t("meeps.mail_text_2") %></td>
                   </tr>
                 </table>
               </td>
             </tr>
             <tr>
               <td colspan="2" style="color:#999999; padding:10px;font-size:12px; font-family:verdana,arial,sans-serif;">
-                If you don't want to get any further emails from protonet, you can disable it in the settings section.
+                <%= raw(t("meeps.mail_text_3", :href => edit_user_path(@user))) %>
               </td>
             </tr>
           </table>

@@ -187,15 +187,15 @@ protonet.ui.ModalWindow = (function() {
     }).fail(function(xhr) {
       var textResource;
       if (xhr.status === 403) {
-        textResource = protonet.t("PAGE_ACCESS_FORBIDDEN");
+        textResource = protonet.t("flash_message_page_forbidden_error");
         if (protonet.config.user_is_stranger) {
-          textResource += " " + protonet.t("PLEASE_LOGIN");
+          textResource += " " + protonet.t("flash_message_page_logged_out_error");
         }
       } else if (xhr.status === 0) {
         // Request aborted
         return;
       } else {
-        textResource = protonet.t("PAGE_LOADING_ERROR");
+        textResource = protonet.t("flash_message_page_loading_error");
       }
       
       protonet.trigger("flash_message.error", textResource);

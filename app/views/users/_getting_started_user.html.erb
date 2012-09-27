@@ -1,35 +1,35 @@
 <div class="getting-started widget">
   <h4>
     <%= link_to user_path(:id => current_user.id) do %>
-      <%= avatar(current_user, :width => 26, :height => 26, :title => "That's you!") %>
+      <%= avatar(current_user, :width => 26, :height => 26, :title => t("users.hint_thats_you")) %>
     <%- end %>
-    Welcome, <%= current_user.display_name %>
+    <%= t("users.headline_welcome", :display_name => current_user.display_name) %>
   </h4>
-  <a class="getting-started-close-link" title="Don't show this again">&times;</a>
+  <a class="getting-started-close-link" title="<%= t("users.hint_close_getting_started") %>">&times;</a>
   <ol>
     <li class="upload-avatar">
-      <%= link_to edit_user_path(:id => current_user.id), 'data-hover-hint' => 'top', :title => 'Let others know who you are' do %>
-        Upload a profile picture
+      <%= link_to edit_user_path(:id => current_user.id), 'data-hover-hint' => 'top', :title => t("users.hint_update_profile") do %>
+        <%= t("users.link_change_password") %>
       <%- end %>
     </li>
     <%- unless current_user.invitee? %>
       <li class="create-channel">
         <%- if Channel.real.size > 1 %>
-          <%= link_to channels_path, 'data-hover-hint' => 'top', :title => 'Channels are like groups. You can create new ones or subscribe to existing ones' do %>
-            Subscribe to channels
+          <%= link_to channels_path, 'data-hover-hint' => 'top', :title => t("users.hint_subscribe_channels") do %>
+            <%= t("users.link_subscribe_channels") %>
           <%- end %>
         <%- else %>
-          <%= link_to new_channel_path, 'data-hover-hint' => 'top', :title => 'Channels are like groups/topics. You can create new ones or subscribe to existing ones' do %>
-            Create a channel
+          <%= link_to new_channel_path, 'data-hover-hint' => 'top', :title => t("users.hint_create_channels") do %>
+            <%= t("users.link_create_channels") %>
           <%- end %>
         <%- end %>
       </li>
     <%- end %>
     <li class="write-meep">
-      <a data-hover-hint="top" title="Start a conversation">
-        Write something
+      <a data-hover-hint="top" title="<%= t("users.hint_write_meep") %>">
+        <%= t("users.link_write_meep") %>
       </a>
     </li>
   </ol>
-  <%= link_to "logout >", destroy_user_session_path, 'data-avoid-ajax' => 1, 'class' => 'logout-link' %>
+  <%= link_to t("users.link_logout_getting_started"), destroy_user_session_path, 'data-avoid-ajax' => 1, 'class' => 'logout-link' %>
 </div>

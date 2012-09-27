@@ -1,25 +1,22 @@
 <%= render "nav_channels" %>
 <output class="content" data-tab="channels">
-  <h2>Create new channel</h2>
-  <p>
-    Channels are like groups. You can create one for each topic (eg. Music, Project XYZ).<br>
-    Further configuration settings can be set after the channel has been created.
-  </p>
+  <h2><%= t("channels.headline_new") %></h2>
+  <p><%= raw(t("channels.text_new")) %></p>
   <%= form_for :channel, :url => { :action => :create }, :remote => true, :html => { 'data-type' => 'html' } do |f| -%>
     <div class="form-field">
-      <%= f.label :name, 'Name:' %>
-      <%= f.text_field :name, { :autofocus => 'autofocus', :maxlength => 30, :placeholder => 'eg. Music, Project XYZ, Ruby, ...' } %>
+      <%= f.label :name, t("channels.label_name") %>
+      <%= f.text_field :name, { :autofocus => 'autofocus', :maxlength => 30, :placeholder => t("channels.placeholder_name") } %>
     </div>
     <div class="form-field">
-      <%= f.label :description, 'Description (optional):' %>
+      <%= f.label :description, t("channels.label_description_optional") %>
       <%= f.text_area :description %>
     </div>
     <div class="form-field">
-      <label for="channel_public">Private:</label>
+      <label for="channel_public"><%= t("channels.label_private") %></label>
       <input name="channel[public]" type="hidden" value="true">
       <input type="checkbox" id="channel_public" name="channel[public]" value="false">
-      <a data-hover-hint="top" title="Users can't subscribe this channel without being verified by the owner of this channel" class="hint">(?)</a>
+      <a data-hover-hint="top" title="<%= t("channels.hint_checkbox_private") %>" class="hint">(?)</a>
     </div>
-    <%= button 'Create' %>
+    <%= button t("label_create") %>
   <%- end -%>
 </output>

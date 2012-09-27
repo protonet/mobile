@@ -1,68 +1,68 @@
-<h2>WLAN</h2>
+<h2><%= t("preferences.headline_wlan") %></h2>
 
 <%- if SystemWifi.supported? %>
-  <p>You can have one private (for employees, friends etc.) and one public (for guests, customers etc.) wireless access point (WPA 2).</p>
+  <p><%= t("preferences.text_wlan") %></p>
   
   <p class="info-message">
-    <strong>Please note:</strong>
-    Any change will restart the WiFI service and all connected users will have to reconnect.
+    <strong><%= t("headline_please_note") %></strong>
+    <%= t("preferences.hint_wlan") %>
     <%- if incoming_interface.starts_with? "wlan" %>
-      <br>Also turning off both wireless networks will <strong>lock yourself out</strong>.
+      <br><%= raw(t("preferences.hint_wlan_appendix")) %>
     <%- end %>
   </p>
 
   <%= form_tag preferences_wifi_update_path, { :remote => true, 'data-type' => 'html', :class => 'wifi' }  do %>
     <% ["wlan0", "wlan1"].each do |interface| %>
       <%= hidden_field_tag 'section', 'wifi_config' %>
-      <h3><%= SystemPreferences.wifi[interface][:name] %> <a data-hover-hint="top" title="You can change this by changing your node's name" class="hint">(?)</a></h3>
+      <h3><%= SystemPreferences.wifi[interface][:name] %> <a data-hover-hint="top" title="<%= t("preferences.hint_wlan_name") %>" class="hint">(?)</a></h3>
       <div class="status-box" data-interface="<%= interface %>">
         <%= render :partial => 'preferences/wifi/interface_status', :locals => { :interface => interface } %>
       </div>
       <div class="form-field">
-        <label>Status:</label>
+        <label><%= t("preferences.label_status") %></label>
         <span>
           <label>
             <input type="radio" name="preferences[<%= interface %>][wifi]" value="true" <%= 'checked'  if SystemWifi.status(interface) %>>
-            On
+            <%= t("label_on") %>
           </label>
           <label>
             <input type="radio" name="preferences[<%= interface %>][wifi]" value="false" <%= 'checked' unless SystemWifi.status(interface) %>>
-            Off
+            <%= t("label_off") %>
           </label>
         </span>
       </div>
     
       <div class="form-field">
-        <label>Share internet connection:</label>
+        <label><%= t("preferences.label_internet_access") %></label>
         <span>
           <label>
             <input type="radio" name="preferences[<%= interface %>][sharing]" value="true" <%= "checked" if SystemConnectionSharing.status(interface) %>>
-            On
+            <%= t("label_on") %>
           </label>
           <label>
             <input type="radio" name="preferences[<%= interface %>][sharing]" value="false" <%= "checked" unless SystemConnectionSharing.status(interface) %>>
-            Off
+            <%= t("label_off") %>
           </label>
-          <a class="hint" data-hover-hint="top" title="Allow others to use your internet connection. When turned 'off' users will still be able to reach the protonet.">(?)</a>
+          <a class="hint" data-hover-hint="top" title="<%= t("preferences.hint_internet_access") %>">(?)</a>
         </span>
       </div>
   
       <div class="form-field">
-        <%= label_tag "preferences[#{interface}][password]", "Password:" %>
-        <%= text_field_tag "preferences[#{interface}][password]", SystemPreferences.wifi[interface]["password"], {:size => 12, :placeholder => "password (empty for unsecured)"} %> <a class="hint" data-hover-hint="top" title="The password must be at least 8 characters long">(?)</a>
+        <%= label_tag "preferences[#{interface}][password]", t("preferences.label_wlan_password") %>
+        <%= text_field_tag "preferences[#{interface}][password]", SystemPreferences.wifi[interface]["password"], {:size => 12, :placeholder => t("preferences.placeholder_wlan_password")} %> <a class="hint" data-hover-hint="top" title="<%= t("preferences.hint_wlan_password") %>">(?)</a>
       </div>
     <%- end %>
   
-    <h3>WLAN Channel</h3>
+    <h3><%= t("preferences.headline_wlan_channel") %></h3>
     <div class="form-field">
-      <%= label_tag "preferences[channel]", "Channel:" %>
-      <%= select_tag "preferences[channel]", options_for_select(1..11, SystemPreferences.wifi['channel']) %> <a class="hint" data-hover-hint="top" title="Change this if you are experiencing connection problems">(?)</a>
+      <%= label_tag "preferences[channel]", t("preferences.label_wlan_channel") %>
+      <%= select_tag "preferences[channel]", options_for_select(1..11, SystemPreferences.wifi['channel']) %> <a class="hint" data-hover-hint="top" title="<%= t("preferences.hint_wlan_channel") %>">(?)</a>
     </div>
   
     <div>
-      <%= button "Save" %> <span class="loading-hint">Please wait. This will take a moment.</span>
+      <%= button t("label_save") %> <span class="loading-hint"><%= t("preferences.hint_please_wait") %></span>
     </div>
   <%- end %>
 <%- else %>
-  <p>Sorry. This node doesn't support WLAN.</p>
+  <p class="hint"><%= t("preferences.hint_no_wlan_available") %></p>
 <%- end %>

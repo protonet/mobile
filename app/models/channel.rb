@@ -64,7 +64,7 @@ class Channel < ActiveRecord::Base
       find(1)
     rescue ActiveRecord::RecordNotFound
       owner = User.admins.first || User.anonymous
-      channel = Channel.new(:name => 'home', :description => 'This node\'s main channel', :owner => owner)
+      channel = Channel.new(:name => 'home', :description => 'This Protonet\'s main channel', :owner => owner)
       channel.id = 1
       channel.save
       channel.reload
@@ -76,9 +76,9 @@ class Channel < ActiveRecord::Base
   def self.system
     system_channel = find_by_system(true)
     unless system_channel
-      description = "This is the node's system channel. The node itself will publish any system relevant notifications here."
-      message     = "Hi,\n\nThis is your node speaking. I will publish any system relevant messages here (eg. hard disk failures, virus scans).\n" +
-                    "Only administrators of this node can see this channel.\n\nYours faithfully,\nprotonet node"
+      description = "The Protonet system will post any system relevant notifications here."
+      message     = "Hi,\n\nThis is your Protonet speaking. I will post any system relevant messages here (eg. hard disk failures, virus scans).\n" +
+                    "Only administrators can see this channel.\n\nYours faithfully,\nProtonet System"
       system_channel = Channel.create(
         :name         => 'System',
         :description  => description,

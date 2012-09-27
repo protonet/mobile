@@ -1,9 +1,7 @@
 <%= render "nav_channels" %>
 <output class="content" data-tab="channels">
-  <h2>Global Channels</h2>
-  <p>
-    Here you can find channels from our team protonet. Global channels behave like all other channels, except that they are globally accessed from all protonets around the world.
-  </p>
+  <h2><%= t("channels.headline_global") %></h2>
+  <p><%= t("channels.text_global") %></p>
   
   <ul class="channel-teaser">
     <%- @global_channels.each do |channel| %>
@@ -17,9 +15,8 @@
       </li>
     <%- end %>
     <%- if @channels.empty? %>
-      <p class="hint">There are no global channels available.</p>
+      <p class="hint"><%= t("channels.hint_no_global_available") %></p>
     <%- end %>
   </ul>
   
 </output>
-

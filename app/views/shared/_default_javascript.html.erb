@@ -38,4 +38,5 @@
   <%= "var AIRBRAKE_API_KEY = '#{HoptoadNotifier.configuration.api_key}';" if Rails.env.production? %>
 </script>
 
+<%= sprockets_include_tag(locale.to_sym) %>
 <%= sprockets_include_tag(:default) %>

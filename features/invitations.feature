@@ -13,7 +13,7 @@ Feature: Invitations
     Given I go unauthenticated to the start page
     And I am logged in as "dudemeister"
     And I go to the new invitation page
-    Then I should see "Invite people to your protonet"
+    Then I should see "Invite people to your Protonet"
     When I fill in "invitation_first_name" with "my"
     When I fill in "invitation_last_name" with "friend"
     When I fill in "invitation_email" with "friend-3@example.com"
@@ -23,7 +23,7 @@ Feature: Invitations
     Then I should see "Invitation for friend-3@example.com"
     And I should see "Status: not sent yet"
     And I press "Send invitation"
-    Then I should see "The invitation was sent."
+    Then I should see "The invitation has been successfully sent."
     # Invitation mail
     And "friend-3@example.com" should receive an email with subject "dudemeister has invited you to join the protonet of localhost"
     When "friend-3@example.com" opens the email with subject "dudemeister has invited you to join the protonet of localhost"
@@ -70,4 +70,4 @@ Feature: Invitations
     And I go unauthenticated to the start page
     And I accept the invitation with the token "1122334455"
     Then I should be on the new_user_session page
-    And I should see "The invitation token is invalid"
+    And I should see "The invitation is invalid"

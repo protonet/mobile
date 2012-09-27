@@ -1,7 +1,7 @@
 module ChannelsHelper
   def channel_description(channel, max_length=nil)
     if channel.description.blank?
-      raw('<i class="hint">no description available</i>')
+      raw('<i class="hint">' + t("users.hint_no_description_available") + '</i>')
     else
       max_length ? truncate(channel.description, { :length => max_length }) : channel.description
     end

@@ -12,7 +12,7 @@ Background:
     When I send the message "moin @offline"
     Then I should see "moin @offline"
     And all jobs are done
-    When "offline@protonet.com" opens the email with subject "online mentioned you."
+    When "offline@protonet.com" opens the email with subject "online mentioned you!"
     Then they should see "moin @offline" in the email body
   
   @javascript

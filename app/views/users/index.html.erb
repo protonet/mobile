@@ -1,21 +1,21 @@
 <%= render "shared/nav_users"%>
 <output class="content user-list" data-tab="users">
-  <h2>Administrators</h2>
+  <h2><%= t("users.headline_administrators") %></h2>
   <%- if Role.find_by_title('admin').users.size %>
-    <p>Contact one of these people if you've any feedback:</p>
+    <p><%= t("users.hint_contact_admin") %></p>
     <ul>
       <%= render :partial => "user", :collection => User.admins %>
     </ul>
   <%- else -%>
-    <p>This node doesn't have any administrators. Please contact the <a href="mailto:team@protonet.info">protonet support</a>.</p>
+    <p><%= raw(t("users.hint_no_admins")) %></p>
   <%- end -%>
   
   <%= form_tag(search_users_path, :remote => true, :method => :get, :id => "search_users", 'data-type' => 'html', 'data-avoid-disabling' => 'true' ) do %>
-    <h2>All registered users</h2>
+    <h2><%= t("users.headline_all_users") %></h2>
     
     <div class="inputs">
-      <input type="search" placeholder="Find ..." name="search_term" id="users_search_term" value="<%=params[:search_term]%>" data-users-autocomplete> 
-      <%= button 'Go', :style => 'display: none' %>
+      <input type="search" placeholder="<%= t("users.placeholder_find") %>" name="search_term" id="users_search_term" value="<%=params[:search_term]%>" data-users-autocomplete>
+      <%= button t("label_go"), :style => 'display: none' %>
     </div>
     
     <output>

@@ -49,7 +49,7 @@ $(function() {
   
   $("#show-comparison-chart").on("click", function() {
     var $template = new protonet.utils.Template("user-roles-table-template").to$();
-    new protonet.ui.Dialog({ content: $template, headline: protonet.t("USER_ROLES_HEADLINE") });
+    new protonet.ui.Dialog({ content: $template, headline: protonet.t("users.headline_user_types") });
     return false;
   });
 });

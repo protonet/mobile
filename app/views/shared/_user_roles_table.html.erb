@@ -2,70 +2,70 @@
   <tbody>
     <tr>
       <td></td>
-      <td>User with restricted rights</td>
-      <td>User</td>
-      <td>Administrator</td>
+      <td><%= t("users.label_user_with_restricted_rights") %></td>
+      <td><%= t("users.label_user_default") %></td>
+      <td><%= t("users.label_user_with_administration_rights") %></td>
     </tr>
     <tr>
-      <td class="label">Write messages</td>
-      <td class="yes"></td>
-      <td class="yes"></td>
-      <td class="yes"></td>
-    </tr>
-    <tr>
-      <td class="label">Start private chats</td>
+      <td class="label"><%= t("users.label_write_messages") %></td>
       <td class="yes"></td>
       <td class="yes"></td>
       <td class="yes"></td>
     </tr>
     <tr>
-      <td class="label">Upload, modify or delete files *</td>
+      <td class="label"><%= t("users.label_start_private_chats") %></td>
       <td class="yes"></td>
       <td class="yes"></td>
       <td class="yes"></td>
     </tr>
     <tr>
-      <td class="label">Create channels</td>
+      <td class="label"><%= t("users.label_upload_files") %></td>
+      <td class="yes"></td>
+      <td class="yes"></td>
+      <td class="yes"></td>
+    </tr>
+    <tr>
+      <td class="label"><%= t("users.label_create_channels") %></td>
       <td class="no"></td>
       <td class="yes"></td>
       <td class="yes"></td>
     </tr>
     <tr>
-      <td class="label">Subscribe channels</td>
+      <td class="label"><%= t("users.label_subscribe_channels") %></td>
       <td class="no"></td>
       <td class="yes"></td>
       <td class="yes"></td>
     </tr>
     <tr>
-      <td class="label">See all channels</td>
+      <td class="label"><%= t("users.label_see_all_channels") %></td>
       <td class="no"></td>
       <td class="yes"></td>
       <td class="yes"></td>
     </tr>
     <tr>
-      <td class="label">See all users</td>
+      <td class="label"><%= t("users.label_see_all_users") %></td>
       <td class="no"></td>
       <td class="yes"></td>
       <td class="yes"></td>
     </tr>
     <tr>
-      <td class="label">Delete users</td>
+      <td class="label"><%= t("users.label_delete_users") %></td>
       <td class="no"></td>
       <td class="no"></td>
       <td class="yes"></td>
     </tr>
     <tr>
-      <td class="label">Invite people</td>
+      <td class="label"><%= t("users.label_invite_people") %></td>
       <td class="no"></td>
       <td class="no"></td>
       <td class="yes"></td>
     </tr>
     <tr>
-      <td class="label">Administrate protonet</td>
+      <td class="label"><%= t("users.label_administrate") %></td>
       <td class="no"></td>
       <td class="no"></td>
       <td class="yes"></td>
     </tr>
   </tbody>
 </table>
-<p class="hint">* Files can only be seen, modified or deleted if they are in a channel that the user has subscribed to.<br>(Example: A user who has restricted rights will never be able to see or edit a file in a channel he wasn't susbcribed to)</p>
+<p class="hint"><%= raw(t("users.hint_upload_files")) %></p>

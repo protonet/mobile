@@ -17,7 +17,7 @@ class PasswordsController < ApplicationController
       set_flash_message :notice, :send_instructions
       redirect_to new_user_session_path
     else
-      flash[:error] = "Could not find a user."
+      flash[:error] = t("passwords.flash_message_no_user_error")
       render :new
     end
   end

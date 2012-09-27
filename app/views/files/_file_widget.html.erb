@@ -1,8 +1,8 @@
 <div id="file-widget" class="widget loading">
   <h3>
-    Recent Files
+    <%= t("files.headline_recent_files") %>
     <output class="count"></output>
-    <span class="loading-hint">loading ...</span>
+    <span class="loading-hint"><%= t("hint_loading") %></span>
   </h3>
   <div class="widget-list-container">
     <ul class="widget-list"></ul>
@@ -10,6 +10,6 @@
       <span></span>
     </div>
   </div>
-  <a href="/files" class="show-all">Show all</a>
+  <a href="/files" class="show-all"><%= t("link_show_all") %></a>
   <div class="resize"></div>
 </div>

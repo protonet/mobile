@@ -2,7 +2,7 @@ protonet.ui.Confirm = Class.create(protonet.ui.Dialog, {
   confirmDefaultOptions: {
     confirm:  $.noop,
     cancel:   $.noop,
-    headline: protonet.t("CONFIRM_TITLE"),
+    headline: protonet.t("headline_confirm"),
     text:     "",
     content:  ""
   },
@@ -26,8 +26,8 @@ protonet.ui.Confirm = Class.create(protonet.ui.Dialog, {
     $super();
     
     var $output   = this.$dialog.find("output"),
-        $confirm  = $("<button>", { "class": "confirm",      text: protonet.t("CONFIRM_OK")     }).appendTo($output),
-        $cancel   = $("<button>", { "class": "hide-overlay", text: protonet.t("CONFIRM_CANCEL") }).appendTo($output);
+        $confirm  = $("<button>", { "class": "confirm",      text: protonet.t("label_ok")     }).appendTo($output),
+        $cancel   = $("<button>", { "class": "hide-overlay", text: protonet.t("label_cancel") }).appendTo($output);
     
     if (this.options.content) {
       $output.prepend(this.options.content);

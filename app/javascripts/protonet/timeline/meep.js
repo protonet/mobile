@@ -181,7 +181,7 @@
       if (this.data.posted_in) {
         postedInChannelTemplate = new protonet.utils.Template("posted-in-channel-template", {
           channel_id:   this.data.posted_in,
-          channel_name: protonet.data.Channel.getName(this.data.posted_in) || protonet.t("UNKNOWN_CHANNEL")
+          channel_name: protonet.data.Channel.getName(this.data.posted_in) || protonet.t("meeps.name_unknown_channel")
         }).toString();
       }
       templateData = $.extend({}, this.data, {
@@ -209,10 +209,10 @@
      * Send the meep to the server
      */
     post: function(onSuccess, onFailure) {
-      this.setStatus(protonet.t("MEEP_SENDING"));
+      this.setStatus(protonet.t("meeps.hint_sending"));
       
       if (!protonet.dispatcher.connected) {
-        this.showError(protonet.t("MEEP_ERROR_LONG"));
+        this.showError(protonet.t("meeps.flash_message_send_error"));
         return;
       }
       
@@ -224,7 +224,7 @@
       
       postMeep(dataToSend, function(status, newData, error) {
         if (status === "success") {
-          this.setStatus(protonet.t("MEEP_SENT"), 1000);
+          this.setStatus(protonet.t("meeps.hint_sent"), 1000);
           
           if (newData.text_extension && !protonet.utils.deepEqual(newData.text_extension, this.data.text_extension)) {
             protonet.trigger("text_extension.rerender", this.element, newData);
@@ -238,9 +238,9 @@
         } else {
           var errorMessage;
           if (error === "ENOENT") {
-            errorMessage = protonet.t("MEEP_FILE_ERROR");
+            errorMessage = protonet.t("meeps.flash_message_send_file_error");
           } else {
-            errorMessage = protonet.t("MEEP_ERROR_LONG");
+            errorMessage = protonet.t("meeps.flash_message_send_error");
           }
           this.showError(errorMessage);
           
@@ -255,7 +255,7 @@
       var element = this.merged ? this.article : this.element;
       element.addClass("error").delay(5000).fadeOut();
 
-      this.setStatus(protonet.t("MEEP_ERROR"), 5000);
+      this.setStatus(protonet.t("meeps.hint_error"), 5000);
 
       this.error = true;
 

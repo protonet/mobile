@@ -36,7 +36,7 @@ class RegistrationsController < Devise::RegistrationsController
     else
       clean_up_passwords(resource)
       @signup_error = true
-      flash[:error] = "Please check the highlighted fields"
+      flash[:error] = t("users.flash_message_signup_error")
       render 'devise/registrations/new'
     end
   end
@@ -44,7 +44,7 @@ class RegistrationsController < Devise::RegistrationsController
   protected
   def check_stranger_setting
     unless allow_signup?
-      flash[:error] = "The invitation token is invalid." if params[:invitation_token]
+      flash[:error] = t("invitations.flash_message_error") if params[:invitation_token]
       redirect_to new_user_session_path and return 
     end
   end

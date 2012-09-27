@@ -44,7 +44,7 @@ protonet.timeline.RemoteChannel = Class.create(protonet.timeline.Channel, {
         this.hint && this.hint.detach();
         protonet.trigger("form.enable");
       } else {
-        this.hint = this.hint || $("<p>", { text: "The node of this channel is currently offline", "class": "info-message" });
+        this.hint = this.hint || $("<p>", { text: protonet.t("channels.hint_node_offline"), "class": "info-message" });
         this.hint.prependTo(this.container);
         protonet.trigger("form.disable");
       }

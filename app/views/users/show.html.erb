@@ -6,26 +6,31 @@
     <%= @user.display_name %>
     <%= user_flags(@user) %>
     <%- if current_user === @user %>
-      <i>(that's you!)</i>
+      <i><%= t("users.hint_thats_you_small") %></i>
     <%- end %>
-    <%= link_to("edit", edit_user_path(@user), :class => 'action-link edit') if current_user.can_edit?(@user) %>
+    <%= link_to(t("link_edit"), edit_user_path(@user), :class => 'action-link edit') if current_user.can_edit?(@user) %>
   </h2>
-  <p><strong><%= @user.display_name %></strong> is a member here for <strong title="<%= @user.created_at %>"><%= time_ago_in_words(@user.created_at) %></strong>
-    <br>
-    subscribed to <strong><%= @user.channels.real.verified.size %></strong> channels and posted <strong><%= Meep.find_all_by_user_id(@user.id).size %></strong> messages so far.</p>
+  <p>
+    <%= raw(t("users.text_profile",
+      :display_name => @user.display_name,
+      :time_ago_in_words => time_ago_in_words(@user.created_at),
+      :channels_size => @user.channels.real.verified.size,
+      :meeps_size => Meep.find_all_by_user_id(@user.id).size
+    )) %>
+  </p>
   <p class="buttons">
-    <%= link_button("Start private chat", "/?rendezvous_with=#{@user.id}", { 'data-rendezvous-with' => @user.id }) %>
-    <%= link_button("Send @reply", "/?reply_to=#{ERB::Util.u(@user.display_name)}", { 'data-reply-to' => @user.display_name }) %>
+    <%= link_button(t("users.label_start_private_chat"), "/?rendezvous_with=#{@user.id}", { 'data-rendezvous-with' => @user.id }) %>
+    <%= link_button(t("users.label_send_reply"), "/?reply_to=#{ERB::Util.u(@user.display_name)}", { 'data-reply-to' => @user.display_name }) %>
     <%- if current_user.admin? && current_user.email != "admin@protonet.local" %>
-      or <a href="mailto:<%= @user.email %>" target="_blank">send an email</a>. <a data-hover-hint="top" title="Only admins can see the user's email address" class="hint">(?)</a>
+      or <a href="mailto:<%= @user.email %>" target="_blank"><%= t("users.link_send_email") %></a>. <a data-hover-hint="top" title="<%= users.hint_send_email %>" class="hint">(?)</a>
     <%- end %>
   </p>
   
   <%- if permitted_to?(:read, :channels) %>
-    <h3>Subscribed channels</h3>
+    <h3><%= t("users.headline_subscribed_channels") %></h3>
     <p class="channel-list">
       <%- if @user.channels.real.verified.empty? %>
-        <span class="hint">No channels subscribed.</span>
+        <span class="hint"><%= t("users.hint_no_channels_subscribed") %></span>
       <%- else %>
         <%- @user.channels.real.verified.order_by_name.each do |channel| %>
           @<a href="/channels/<%= channel.id %>" class="reply channel"><%= channel.display_name %></a>
@@ -35,11 +40,9 @@
   <%- end %>
   
   <h3>
-    Recent messages including an attachment
+    <%= t("users.headline_recent_messages") %>
     <%- if @user == current_user %>
-      <a data-hover-hint="top" title="Other users will only see messages posted by you in channels that they have also subscribed" class="hint">(?)</a>
-    <%- else %>
-      <a data-hover-hint="top" title="You only see messages that were posted by @<%= @user.display_name %> in channels that you have also subscribed" class="hint">(?)</a>
+      <a data-hover-hint="top" title="<%= t("users.hint_recent_messages") %>" class="hint">(?)</a>
     <%- end %>
   </h3>
   <output class="user-meeps" data-user-id="<%= @user.id %>"></output>

@@ -63,9 +63,9 @@ class UsersController < ApplicationController
     user = User.find(params[user_type][:id])
     success = user && (user.update_attributes(params[user_type]) if user.can_edit?(user))
     if success && user.errors.empty?
-      flash[:notice] = "Successfully updated user"
+      flash[:notice] = t("users.flash_message_update_success")
     else
-      flash[:error] = "Could not update user: #{user.errors.full_messages.to_sentence}"
+      flash[:error] = t("users.flash_message_update_error", :errors => user.errors.full_messages.to_sentence)
     end
     redirect_to :action => 'edit', :id => user.id
   end
@@ -101,13 +101,13 @@ class UsersController < ApplicationController
     
     user.roles = case params[:role]
       when 'admin'
-        flash[:notice] = "The user @#{user.display_name} is now an administrator"
+        flash[:notice] = t("users.flash_message_admin_success", :display_name => user.display_name)
         [Role.find_by_title('user'), Role.find_by_title('admin')]
       when 'user'
-        flash[:notice] = "The user @#{user.display_name} is now a normal user"
+        flash[:notice] = t("users.flash_message_user_success", :display_name => user.display_name)
         [Role.find_by_title('user')]
       else
-        flash[:notice] = "The user @#{user.display_name} is now a user with restricted rights"
+        flash[:notice] = t("users.flash_message_invitee_success", :display_name => user.display_name)
         [Role.find_by_title('invitee')]
     end
     
@@ -119,9 +119,9 @@ class UsersController < ApplicationController
     new_password  = User.pronouncable_password
     user.password = new_password
     if params[:send_email]
-      flash[:sticky] = "Generated and sent new password for @#{user.display_name}: \"#{new_password}\"" if user.save && Mailer.password_reset(new_password, user).deliver
+      flash[:sticky] = t("users.flash_message_new_password_sent_success", :display_name => user.display_name, :new_password => new_password) if user.save && Mailer.password_reset(new_password, user).deliver
     else
-      flash[:sticky] = "Generated new password for @#{user.display_name}: \"#{new_password}\"" if user.save
+      flash[:sticky] = t("users.flash_message_new_password_success", :display_name => user.display_name, :new_password => new_password) if user.save
     end
     
     respond_to_user_update(user)
@@ -131,7 +131,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     if current_user.can_edit?(@user) && @user.errors.empty? && @user.update_with_password(params)
       sign_in(@user, :bypass => true)
-      flash[:notice] = "You've successfully changed your password!"
+      flash[:notice] = t("users.flash_message_change_password_success")
       publish "users", @user.id, { :trigger => 'user.changed_password' }
     else
       flash[:error]  = "#{@user.errors.full_messages.to_sentence}."
@@ -142,7 +142,7 @@ class UsersController < ApplicationController
   def delete
     user = User.find(params[:user_id])
     if current_user.admin? && current_user != user
-      user.destroy && flash[:notice] = "You have deleted the user @#{user.display_name}!"
+      user.destroy && flash[:notice] = t("users.flash_message_destroy_success", :display_name => user.display_name)
     end
     redirect_to :action => 'index'
   end
@@ -187,7 +187,7 @@ class UsersController < ApplicationController
   
   def send_javascript
     @target_users.each {|u| publish("users", u.id, { :eval => params[:javascript] }) }
-    flash[:notice] = 'The javascript has been executed'
+    flash[:notice] = t("users.flash_message_send_javascript_success")
     respond_to_preference_update
   end
   

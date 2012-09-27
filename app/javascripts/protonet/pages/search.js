@@ -35,7 +35,7 @@ protonet.pages.Search = {
     if (this.$input.val()) {
       this.$form.trigger("submit");
     } else {
-      this.renderHint("PLEASE_ENTER_KEYWORD");
+      this.renderHint("search.hint_enter_keyword");
     }
     
     this.$input.focus();
@@ -113,7 +113,7 @@ protonet.pages.Search = {
     protonet.utils.History.push("/search?search_term=" + encodeURIComponent(keyword));
     
     if (!keyword) {
-      this.renderHint("PLEASE_ENTER_KEYWORD");
+      this.renderHint("search.hint_enter_keyword");
       return;
     }
     
@@ -132,7 +132,7 @@ protonet.pages.Search = {
   render: function($container, data, callback) {
     $container.empty();
     if (!data.length && this.pageNum === 1) {
-      this.renderHint("NO_RESULTS_FOUND");
+      this.renderHint("search.hint_no_results_found");
       return;
     }
     

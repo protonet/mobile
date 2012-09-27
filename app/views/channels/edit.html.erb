@@ -1,8 +1,8 @@
 <%= render "nav_channels"%>
 <output class="content" data-tab="channels">
-  <h2>Edit <%= @channel.display_name %> <a data-hover-hint="top" title="This page can only be seen by admins and the owner of this channel" class="hint">(?)</a></h2>
+  <h2><%= t("channels.headline_edit", { :display_name => @channel.display_name }) %> <a data-hover-hint="top" title="<%= t("channels.hint_edit_rights") %>" class="hint">(?)</a></h2>
   
-  <h3>Edit channel details</h3>
+  <h3><%= t("channels.headline_edit_details") %></h3>
   <%= form_for(@channel, {
     :method     => :update,
     :remote     => true,
@@ -10,39 +10,39 @@
   }) do |f| -%>
     <%= f.hidden_field :id %>
     <div class="form-field">
-      <%= f.label :name, 'Name:' %>
+      <%= f.label :name, t("channels.label_name") %>
       <%= f.text_field :name %>
     </div>
     <div class="form-field">
-      <%= f.label :description, 'Description:' %>
+      <%= f.label :description, t("channels.label_description") %>
       <%= f.text_area :description %>
     </div>
     <div class="form-field">
-      <label for="channel_public">Private:</label>
+      <label for="channel_public"><%= t("channels.label_private") %></label>
       <input name="channel[public]" type="hidden" value="true">
       <input type="checkbox" id="channel_public" name="channel[public]" value="false" <%= 'checked' unless @channel.public? %>>
-      <a data-hover-hint="top" title="Users can't subscribe this channel without being verified by the owner of this channel" class="hint">(?)</a>
+      <a data-hover-hint="top" title="<%= t("channels.hint_checkbox_private") %>" class="hint">(?)</a>
     </div>
     <%- if request.host =~ /team.protonet.info/ || Rails.env != "production" %>
       <div class="form-field">
-        <label for="channel_global">Global:</label>
+        <label for="channel_global"><%= t("channels.label_global") %></label>
         <input name="channel[global]" type="hidden" value="false">
         <input type="checkbox" id="channel_global" name="channel[global]" value="true" <%= 'checked' if @channel.global? %>>
       </div>
     <%- end %>
-    <%= button "Save" %>
+    <%= button t("label_save") %>
   <%- end %>
   
   <%- if @channel.locally_hosted? %>
-    <h3>Delete channel <a data-hover-hint="top" title="Only visible to admins and the channel owner" class="hint">(?)</a></h3>
-    <p>Delete this channel and all messages posted in it.</p>
+    <h3><%= t("channels.headline_delete") %></h3>
+    <p><%= t("channels.text_delete") %></p>
     <%= form_tag("/channels/#{@channel.id}", {
       :remote     => true,
       :method     => :delete,
       'data-type' => 'html',
       'class'     => 'single-button-form'
     }) do -%>
-      <%= button "Delete", 'data-confirm' => 'Do you really want to delete this channel? There\'s no undo.' %>
+      <%= button t("label_delete"), 'data-confirm' => t("channels.confirm_delete") %>
     <%- end %>
   <%- end %>
 </output>

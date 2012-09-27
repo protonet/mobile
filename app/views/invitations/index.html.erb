@@ -2,21 +2,21 @@
 <output class="content" data-tab="users">
   
   <h2>
-    Invite people to your protonet <a data-hover-hint="top" title="Only Administrators can do this" class="hint">(?)</a>
-    <a href="<%= new_invitation_path %>" class="action-link add">add</a>
+    <%= t("invitations.headline_overview") %> <a data-hover-hint="top" title="<%= t("invitations.hint_rights") %>" class="hint">(?)</a>
+    <a href="<%= new_invitation_path %>" class="action-link add"><%= t("link_add") %></a>
   </h2>
   
   <%- if @invitations.any? %>
     <h3 class="belongs-to-list">
-      You have invited <%= pluralize(@invitations.count, "user") %>
+      <%= t("invitations.headline_list", :count => @invitations.count) %>
     </h3>
     <ul class="list">
       <%= render @invitations %>
     </ul>
   <%- else %>
     <p> 
-      There are no invitations.
-      <%= link_to "Invite someone.", new_invitation_path %>
+      <%= t("invitations.hint_no_invitations_available") %>
+      <%= link_to t("invitations.link_invite"), new_invitation_path %>
     </p>
   <%- end %>
   

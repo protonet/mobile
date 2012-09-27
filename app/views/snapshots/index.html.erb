@@ -1,10 +1,10 @@
 <output>
   <div>
-    <a class="snap">Snap</a>
+    <a class="snap"><%= t("snapshots.label_snap") %></a>
   </div>
 </output>
 <label>
-  URL: <input type="url" readonly>
+  <%= t("snapshots.label_url") %> <input type="url" readonly>
 </label>
-<%= button 'Ok, share it!', :class => 'share', :type => 'button' %>
-<%= button 'Retry', :class => 'retry', :type => 'button' %>
+<%= button t("snapshots.label_share"), :class => 'share', :type => 'button' %>
+<%= button t("snapshots.label_retry"), :class => 'retry', :type => 'button' %>

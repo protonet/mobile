@@ -23,7 +23,7 @@ protonet.p("users", function($page) {
   
   $meepContainer.one("inview", function() {
     function fallback() {
-      $meepContainer.html($("<p>", { "class": "hint", text: protonet.t("NO_MEEPS_FOR_USER_AVAILABLE") }));
+      $meepContainer.html($("<p>", { "class": "hint", text: protonet.t("users.hint_no_meeps_available") }));
     }
     
     $.ajax({
@@ -66,7 +66,7 @@ protonet.p("users", function($page) {
       } catch(e) {}
       
       if (!response || !response.avatar) {
-        protonet.trigger("flash_message.error", (response && response.error) || protonet.t("AVATAR_UPLOAD_ERROR"));
+        protonet.trigger("flash_message.error", (response && response.error) || protonet.t("users.flash_message_avatar_upload_error"));
       } else {
         // success
         if (!protonet.dispatcher.connected) {
@@ -96,7 +96,7 @@ protonet.p("users", function($page) {
   
   $("#show-comparison-chart").on("click", function() {
     var $template = new protonet.utils.Template("user-roles-table-template").to$();
-    new protonet.ui.Dialog({ content: $template, headline: protonet.t("USER_ROLES_HEADLINE") });
+    new protonet.ui.Dialog({ content: $template, headline: protonet.t("users.headline_user_types") });
     return false;
   });
   
@@ -131,11 +131,11 @@ protonet.p("users", function($page) {
                   newValue = !oldValue,
                   callback = function(newValue) {
                     if(newValue == oldValue){
-                      protonet.ui.FlashMessage.show("error", protonet.t("USER_SETTINGS_ERROR"));
+                      protonet.ui.FlashMessage.show("error", protonet.t("users.flash_message_update_settings_error"));
                     }else{
                       protonet.data.User.setPreference(key, newValue);
                       $item.removeClass(String(oldValue)).addClass(String(newValue)).html(config.labels[String(newValue)]);
-                      protonet.ui.FlashMessage.show("notice", protonet.t("USER_SETTINGS_SUCCESS"));
+                      protonet.ui.FlashMessage.show("notice", protonet.t("users.flash_message_update_settings_success"));
                     }
                   };
                   

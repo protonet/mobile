@@ -13,7 +13,7 @@ Feature: Using the protonet channel management
   @javascript
   Scenario: Trying to subscribe to a private channel
     Given a user exists with login: "dudemeister"
-      And a user exists with login: "batman"    
+      And a user exists with login: "batman"
     #dudemeister creates channel
     And I am using the first browser
       And go unauthenticated to the start page
@@ -34,10 +34,10 @@ Feature: Using the protonet channel management
         Then I should not see "privatechannel" in the channel selector
     #dudemeister verifies batman
           And I am using the first browser
-          And I visit "/"
+          And I go to the start page
           And I switch to the channel "privatechannel"
-          Then I should see "1 user(s) needs to be verified"
-          And I follow "1 user(s) needs to be verified"
+          Then I should see "1 user needs to be verified"
+          And I follow "1 user needs to be verified"
             Then I verify the user "batman" for the channel "privatechannel"
     #batman goes start page checks channel appears
               And I am using the second browser

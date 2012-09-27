@@ -153,9 +153,9 @@ protonet.ui.users.Widget = {
         isGlobalChannel       = protonet.data.Channel.isGlobal(channelId);
     
     if (isGlobalChannel) {
-      this.$title.html(protonet.t("USERS_IN_REMOTE_CHANNEL"));
+      this.$title.html(protonet.t("users.headline_widget_remote_channel"));
     } else {
-      this.$title.html(protonet.t("USERS_IN_NORMAL_CHANNEL"));
+      this.$title.html(protonet.t("users.headline_widget_channel"));
     }
     
     this.$widget.removeClass("loading");
@@ -239,7 +239,7 @@ protonet.ui.users.Widget = {
     if (verificationCount) {
       var $anchor = $("<a>", {
         href: protonet.data.Channel.getUrl(channelId),
-        text: protonet.t("VERIFY_SUBSCRIPTION", { count: verificationCount })
+        text: protonet.t("channels.hint_verifications", { count: verificationCount })
       });
       this.$verifications.html($anchor).show();
     } else {

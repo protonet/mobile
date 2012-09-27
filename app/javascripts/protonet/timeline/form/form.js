@@ -165,7 +165,7 @@ protonet.timeline.Form = {
             protonet.trigger("text_extension_input.select", protonet.data.Meep.getUrl(id));
           },
           error: function() {
-            protonet.trigger("flash_message.error", protonet.t("LOADING_MEEP_ERROR"));
+            protonet.trigger("flash_message.error", protonet.t("meeps.flash_message_loading_channels_error"));
           }
         });
       });

@@ -4,7 +4,7 @@
     <%= form_tag images_avatars_path, :multipart => true, :class => 'single-button-form' do %>
       <%= hidden_field_tag :user_id, @user.id %>
       <%= file_field_tag :avatar_file, :accept => 'image/jpeg, image/gif, image/png, image/bmp' %>
-      Change picture
+      <%= t("users.link_change_photo") %>
     <% end %>
   <%- end -%>
 </div>

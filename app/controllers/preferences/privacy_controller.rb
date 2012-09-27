@@ -18,9 +18,9 @@ module Preferences
       end
       
       if success
-        flash[:notice] = "Successfully saved."
+        flash[:notice] = t("flash_message_saved_success")
       else
-        flash[:error] = "There has been an error saving your preferences."
+        flash[:error] = t("preferences.flash_message_saved_error")
       end
       
       respond_to_preference_update

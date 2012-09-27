@@ -30,11 +30,8 @@ protonet.p("instruments", function($page) {
           urlEncodedUrl  = encodeURIComponent(protonet.config.captive_redirect_url);
       new protonet.ui.Dialog({
         "class":  "dialog small",
-        headline: "Hi " + protonet.config.user_name,
-        content:  "Welcome to protonet. Click the following button to enable internet access and to open " +
-                  "<strong>" + htmlEscapedUrl.truncate(40) + "</strong>.<br>" +
-                  '<a class="button hide-overlay" data-avoid-ajax="1" href="/captive/login?captive_redirect_url=' + urlEncodedUrl + '" target="_blank">' +
-                  'Get internet access</a>'
+        headline: protonet.t("instruments.headline_captive_portal", { user_name: protonet.config.user_name }),
+        content:  protonet.t("instruments.text_captive_portal", { url: htmlEscapedUrl.truncate(40), href: "/captive/login?captive_redirect_url=" + urlEncodedUrl })
       });
     }
   }

@@ -259,7 +259,7 @@
 }
 #wysihtml5-toolbar a[data-wysihtml5-command=bold]{ background-position: 0 0px; }
 #wysihtml5-toolbar a[data-wysihtml5-command=italic]{ background-position: -20px 0px; }
-#wysihtml5-toolbar a[data-wysihtml5-command=ol]{ background-position: -60px 0px; }
+#wysihtml5-toolbar a[data-wysihtml5-command=insertUnorderedList]{ background-position: -60px 0px; }
 #wysihtml5-toolbar a[data-wysihtml5-action=change_view]{ background-position: -80px 0px; }
 #wysihtml5-toolbar a[data-wysihtml5-command=undo]{ background-position: -120px 0px; }
 #wysihtml5-toolbar a[data-wysihtml5-command=redo]{ background-position: -100px 0px; }

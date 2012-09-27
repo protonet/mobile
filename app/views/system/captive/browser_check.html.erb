@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-  <title>protonet captive-portal browser check</title>
+  <title><%= t("captive.title_check") %></title>
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-  <style type="text/css">
+  <style>
     html {
       background: #aaa;
       height: 100%;
@@ -49,7 +49,7 @@
       font-family: protonet, Verdana, sans-serif;
     }
   </style>
-  <script type="text/javascript">
+  <script>
     if(window.parent == window) {
       document.location="http://<%= address_for_current_interface + (Rails.env.production? ? "" : ":#{configatron.web_app_port}") %>/?captive_redirect_url=" + encodeURIComponent(document.location.href);
     }
@@ -58,9 +58,11 @@
 
 <body>
   <div class="dialog">
-    <img src="/img/protonet_node_front_view.png" height="249" width="360" alt="protonet node. your private cloud.">
-    <h1>Welcome to <%= Node.local.name %>.</h1>
-    <p>Internet access is restricted to registered users.</p><p>You should have been redirected to <a target="_blank" href="http://<%= address_for_current_interface + (Rails.env.production? ? "" : ":#{configatron.web_app_port}") %>/">here</a>, please click the link and login to gain access.</p><p>You might have to reload some pages.</p>
+    <img src="/img/protonet_node_front_view.png" height="249" width="360" alt="<%= t("instruments.hint_protonet_node") %>">
+    <%= raw(t("captive.text_check",
+      :name => Node.local.name,
+      :href => "http://" + address_for_current_interface + (Rails.env.production? ? "" : ":#{configatron.web_app_port}") + "/"
+    )) %>
   </div>
 </body>
 </html>

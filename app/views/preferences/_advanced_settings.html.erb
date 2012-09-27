@@ -1,42 +1,42 @@
-<h2>Advanced</h2>
-<p class="info-message"><strong>Caution:</strong> These settings are meant for advanced users only, please be careful.</p>
-<h3>Captive Portal <a data-hover-hint="top" title="Users need to authenticate before receiving internet access" class="hint">(?)</a></h3>
+<h2><%= t("preferences.headline_advanced") %></h2>
+<p class="info-message"><strong><%= t("headline_caution") %></strong> <%= t("preferences.text_advanced") %></p>
+<h3><%= t("preferences.headline_captive_portal") %> <a data-hover-hint="top" title="<%= t("preferences.hint_captive_portal") %>" class="hint">(?)</a></h3>
 <%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'advanced_settings' %>
   <div class="form-field">
-    <label>Status:</label>
+    <label><%= t("preferences.label_status") %></label>
     <span>
       <label>
         <input type="radio" name="preferences[captive]" value="true" <%= 'checked' if SystemCaptivePortal.status %>>
-        On
+        <%= t("label_on") %>
       </label>
       <label>
         <input type="radio" name="preferences[captive]" value="false" <%= 'checked' unless SystemCaptivePortal.status %>> 
-        Off
+        <%= t("label_off") %>
       </label>
     </span>
   </div>
   <div class="form-field">
-    <%= label_tag 'preferences[captive_portal_greeting]', 'Captive greeting:' %>
+    <%= label_tag 'preferences[captive_portal_greeting]', t("preferences.label_captive_greeting") %>
     <%= text_field_tag 'preferences[captive_portal_greeting]', SystemPreferences.captive_portal_greeting %>
   </div>
   <div class="form-field">
-    <%= label_tag 'preferences[captive_authorization_url]', 'Captive authorization URL:' %>
+    <%= label_tag 'preferences[captive_authorization_url]', t("preferences.label_captive_url") %>
     <%= text_field_tag 'preferences[captive_authorization_url]', SystemPreferences.captive_authorization_url %>
   </div>
   <div class="form-field">
-    <%= label_tag 'preferences[captive_external_interface]', 'External IF:' %>
+    <%= label_tag 'preferences[captive_external_interface]', t("preferences.label_captive_external_if") %>
     <%= text_field_tag 'preferences[captive_external_interface]', SystemPreferences.captive_external_interface %>
   </div>
   <div class="form-field">
-    <%= label_tag 'preferences[captive_internal_interface]', 'Internal IF:' %>
+    <%= label_tag 'preferences[captive_internal_interface]', t("preferences.label_captive_internal_if") %>
     <%= text_field_tag 'preferences[captive_internal_interface]', SystemPreferences.captive_internal_interface %>
   </div>
   <div class="form-field">
-    <%= label_tag 'preferences[captive_redirection_target]', 'Redirection IP:' %>
+    <%= label_tag 'preferences[captive_redirection_target]', t("preferences.label_captive_redirection_ip") %>
     <%= text_field_tag 'preferences[captive_redirection_target]', SystemPreferences.captive_redirection_target %>
   </div>
-  <%= button "Save" %>
+  <%= button t("label_save") %>
 <%- end -%>
 
 <br>
@@ -44,20 +44,20 @@
 <%= form_tag "/captive/grant", { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'advanced_settings' %>
   <div class="form-field">
-    <%= label_tag 'ip_address', 'Grant access for IP:' %>
+    <%= label_tag 'ip_address', t("preferences.label_captive_grant_ip_access") %>
     <%= text_field_tag 'ip_address' %>
   </div>
-  <%= button "Grant" %>
+  <%= button t("preferences.label_grant") %>
 <%- end -%>
 
 <br>
 <%= form_tag "/captive/revoke", { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'advanced_settings' %>
   <div class="form-field">
-    <%= label_tag 'ip_address', 'Revoke access for IP:' %>
+    <%= label_tag 'ip_address', t("preferences.label_captive_revoke_ip_access") %>
     <%= text_field_tag 'ip_address' %>
   </div>
-  <%= button "Revoke" %>
+  <%= button t("preferences.label_revoke") %>
 <%- end -%>
 
 <br>
@@ -65,10 +65,10 @@
 <%= form_tag "/captive/whitelist_clients", { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'advanced_settings' %>
   <div class="form-field">
-    <%= label_tag 'whitelist', 'Whitelisted MACs:' %>
+    <%= label_tag 'whitelist', t("preferences.label_captive_whitelisted_macs") %>
     <%= text_area_tag 'whitelist', SystemPreferences.captive_whitelist_clients.join("\n") %>
   </div>
-  <%= button "Save" %>
+  <%= button t("label_save") %>
 <%- end -%>
 
 <br>
@@ -76,113 +76,78 @@
 <%= form_tag "/captive/whitelist_sites", { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'advanced_settings' %>
   <div class="form-field">
-    <%= label_tag 'whitelist', 'Whitelisted Sites (IPs):' %>
+    <%= label_tag 'whitelist', t("preferences.label_captive_whitelisted_sites") %>
     <%= text_area_tag 'whitelist', SystemPreferences.captive_whitelist_sites.join("\n") %>
-    <a data-hover-hint="top" title="Changing this will require a restart of the captive portal" class="hint">(?)</a>
+    <a data-hover-hint="top" title="<%= t("preferences.hint_captive_whitelisted_sites") %>" class="hint">(?)</a>
   </div>
-  <%= button "Save" %>
+  <%= button t("label_save") %>
 <%- end -%>
 
-<h4>List of users with internet access:</h4>
+<h4><%= t("preferences.headline_captive_list") %></h4>
 <%- users = SystemCaptivePortal.list %>
 <%- if users.empty? %>
-  <p class="hint">No user has currently internet access granted</p>
+  <p class="hint"><%= t("preferences.hint_captive_list") %></p>
 <%- else -%>
   <p><%= users.join(", ") %></p>
 <%- end -%>
 
-<h3>Email Settings <a data-hover-hint="top" title="Allows you to use external SMTP services to send emails" class="hint">(?)</a></h3>
+<h3><%= t("preferences.headline_email_settings") %> <a data-hover-hint="top" title="<%= t("preferences.hint_email_settings") %>" class="hint">(?)</a></h3>
 <dl>
-  <dt>Currently using:</dt><dd><%= ActionMailer::Base.delivery_method %></dd>
+  <dt><%= t("preferences.label_email_settings_delivery_method") %></dt><dd><%= ActionMailer::Base.delivery_method %></dd>
   <% Mailer %>
-  <dt>Current base path:</dt><dd><%= "#{SystemPreferences.public_host_https ? 'https' : 'http'}://#{ActionMailer::Base.default_url_options[:host]}" %></dd>
+  <dt><%= t("preferences.label_email_settings_base_path") %></dt><dd><%= "#{SystemPreferences.public_host_https ? 'https' : 'http'}://#{ActionMailer::Base.default_url_options[:host]}" %></dd>
 </dl>
 <br>
 <%= form_tag system_preferences_update_path, {} do -%>
   <%= hidden_field_tag 'section', 'advanced_settings' %>
   <div class="form-field">
-    <label>Local email delivery:</label>
+    <label><%= t("preferences.label_local_email_delivery") %></label>
     <span>
       <label>
         <input type="radio" name="preferences[local_email_delivery]" value="true" <%= 'checked' if SystemPreferences.local_email_delivery == true %>>
-        On
+        <%= t("label_on") %>
       </label>
       <label>
         <input type="radio" name="preferences[local_email_delivery]" value="false" <%= 'checked' if SystemPreferences.local_email_delivery != true %>> 
-        Off
+        <%= t("label_off") %>
       </label>
-      <a title="Turning on local delivery and leaving the SMTP settings empty will make your node use sendmail." data-hover-hint="top" class="hint">(?)</a>
+      <a title="<%= t("preferences.hint_local_email_delivery") %>" data-hover-hint="top" class="hint">(?)</a>
     </span>
   </div>
   <div class="form-field">
-    <%= label_tag 'preferences[smtp_address]', 'SMTP Address:' %>
+    <%= label_tag 'preferences[smtp_address]', t("preferences.label_smtp_address") %>
     <%= text_field_tag 'preferences[smtp_address]', SystemPreferences.smtp_address %>
   </div>
   <div class="form-field">
-    <%= label_tag 'preferences[smtp_domain]', 'SMTP Domain:' %>
+    <%= label_tag 'preferences[smtp_domain]', t("preferences.label_smtp_domain") %>
     <%= text_field_tag 'preferences[smtp_domain]', SystemPreferences.smtp_domain %>
   </div>
   <div class="form-field">
-    <%= label_tag 'preferences[smtp_username]', 'SMTP Username:' %>
+    <%= label_tag 'preferences[smtp_username]', t("preferences.label_smtp_username") %>
     <%= text_field_tag 'preferences[smtp_username]', SystemPreferences.smtp_username %>
   </div>
   <div class="form-field">
-    <%= label_tag 'preferences[smtp_password]', 'SMTP Password:' %>
+    <%= label_tag 'preferences[smtp_password]', t("preferences.label_smtp_password") %>
     <%= password_field_tag 'preferences[smtp_password]', SystemPreferences.smtp_password %>
   </div>
-  <%= button "Save" %>
+  <%= button t("label_save") %>
 <%- end -%>
 
-<h3>VPN</h3>
-<%- vpn_status = SystemVpn.status %>
-
-<%= form_tag preferences_vpn_update_path, { :remote => true, 'data-type' => 'html' }  do %>
-  <%= hidden_field_tag 'section', 'advanced_settings' %>
-  <dl>
-    <dt>VPN type:</dt><dd>n2n</dd>
-    <dt>Supernode address:</dt><dd>directory.protonet.info</dd>
-    <dt>Node address:</dt><dd>10.0.0.1</dd>
-    <dt>Identifier/Community:</dt><dd><%= SystemPreferences.vpn[:identifier] %></dd>
-    <dt>Password/Encryption key:</dt><dd><%= SystemPreferences.vpn[:password] %></dd>
-  </dl>
-  <br>
-  <div class="form-field">
-    <label>Status:</label>
-    <span>
-      <label><input type="radio" name="vpn_status" value="true" <%= "checked" if vpn_status %>> On</label>
-      <label><input type="radio" name="vpn_status" value="false" <%= "checked" unless vpn_status %>> Off</label>
-    </span>
-  </div>
-  <%= button "Save" %>
-<%- end %>
-
-
-<h3>Execute JavaScript <a data-hover-hint="top" title="Execute script code on one or all online users - don't be evil" class="hint">(?)</a></h3>
+<h3><%= t("preferences.headline_execute_javascript") %> <a data-hover-hint="top" title="<%= t("preferences.hint_execute_javascript") %>" class="hint">(?)</a></h3>
 <%= form_tag "/users/send_javascript", { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'notifications' %>
   <%= hidden_field_tag 'id', current_user.id %>
   <div class="form-field">
-    <%= label_tag 'target', 'Target:' %>
-    A specific user  <%= text_field_tag 'target', nil, { :placeholder => "Id or name" } %> or all online users <%= check_box_tag 'target_all', true %>
+    <%= label_tag 'target', t("preferences.label_execute_javascript_target") %>
+    <%= t("preferences.label_execute_javascript_1") %>
+    <%= text_field_tag 'target', nil, { :placeholder => t("preferences.placeholder_execute_javascript_target") } %>
+    <%= t("preferences.label_execute_javascript_2") %>
+    <%= check_box_tag 'target_all', true %>
   </div>
   <div class="form-field">
-    <%= label_tag 'javascript', 'Script code:' %>
-    <%= text_field_tag 'javascript', nil, :placeholder => 'eg. location.reload()' %>
+    <%= label_tag 'javascript', t("preferences.label_script_code") %>
+    <%= text_field_tag 'javascript', nil, :placeholder => t("preferences.placeholder_script_code") %>
   </div>
-  <%= button "Send" %>
-<%- end %>
-
-<h3>Enable Experimental App Manager <a data-hover-hint="top" title="The App Manager IS EXPERIMENTAL! Don't activate it unless you know what you are doing..." class="hint">(?)</a></h3>
-<%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' }  do %>
-  <%= hidden_field_tag 'section', 'advanced_settings' %>
-  <strong>You need to reload the administration section to see the App Manager tab!</strong>
-  <div class="form-field">
-    <label>Enable App Manager:</label>
-    <span>
-      <label><input type="radio" name="preferences[app_manager]" value="true" <%= "checked" if SystemPreferences.app_manager %>> On</label>
-      <label><input type="radio" name="preferences[app_manager]" value="false" <%= "checked" unless SystemPreferences.app_manager %>> Off</label>
-    </span>
-  </div>
-  <%= button "Save" %>
+  <%= button t("label_send") %>
 <%- end %>
 

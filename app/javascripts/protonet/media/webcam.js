@@ -32,7 +32,7 @@
           clearInterval(interval);
           var $flash = $("<div>", { "class": "flash" }).insertAfter(this.$container).hide();
           $flash.fadeIn(300, function() {
-            $countdown.show().addClass("status").text(protonet.t("UPLOADING_SNAPSHOT"));
+            $countdown.show().addClass("status").text(protonet.t("snapshots.hint_uploading"));
             this.snap(url, function() {
               $countdown.remove();
               callback.apply(this, arguments);

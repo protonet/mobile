@@ -155,7 +155,7 @@
       if (!isWindowFocused && isAllowedToDoNotifications) {
         new protonet.ui.Notification({
           image:    meepData.avatar,
-          title:    protonet.t("RENDEZVOUS_NOTIFICATION_TITLE", { author: meepData.author }),
+          title:    protonet.t("channels.notification_new_message", { author: meepData.author }),
           text:     meepData.message.truncate(140),
           onclick:  function() {
             protonet.trigger("channel.change", this.data.id);

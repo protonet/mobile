@@ -67,8 +67,8 @@ protonet.p("preferences", function($page) {
         showOverlay = function() {
           overlay = new protonet.ui.Dialog({
             "class":  "dialog small",
-            headline: protonet.t("WLAN_UPDATE_HEADLINE"),
-            text:     protonet.t("WLAN_UPDATE_TEXT")
+            headline: protonet.t("preferences.headline_wlan_update_success"),
+            text:     protonet.t("preferences.text_wlan_update_success")
           });
         },
         hideOverlay = function() {
@@ -101,8 +101,8 @@ protonet.p("preferences", function($page) {
     // right now a completed request is always handled like a success
     new protonet.ui.Dialog({
       "class":  "dialog small",
-      headline: protonet.t("SOFTWARE_UPDATE_HEADLINE"),
-      text:     protonet.t("SOFTWARE_UPDATE_TEXT")
+      headline: protonet.t("preferences.headline_software_update_success"),
+      text:     protonet.t("preferences.text_software_update_success")
     });
     
     setTimeout(function() { location.href = "/"; }, (20).seconds());

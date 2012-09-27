@@ -3,34 +3,33 @@
   <h2>
     <%= @channel.display_name %>
     <%- unless @channel.public? %>
-      <i>(private)</i>
+      <i><%= t("channels.flag_private") %></i>
     <%- end %>
-    <%= link_to("edit", edit_channel_path(@channel), :class => 'action-link edit') if current_user.can_edit?(@channel) %>
+    <%= link_to(t("link_edit"), edit_channel_path(@channel), :class => 'action-link edit') if current_user.can_edit?(@channel) %>
   </h2>
   
   <%- unless @channel.description.blank? %>
     <p><%= @channel.description %></p>
   <%- end %>
 
-  <h3 class="belongs-to-list"><%= @channel.locally_hosted? ? "Subscribers" : "Subscribers from this node" %> (<%= @channel.users.registered.size %>)</h3>
+  <h3 class="belongs-to-list"><%= t("channels.headline_subscribers") %> (<%= @channel.users.registered.size %>)</h3>
 
   <ul class="subscribers-list list">
     <%- if @channel.users.registered.size == 0 %>
-      <li class="hint">There are currently no users that subscribed to this channel. Be the first!</li>
+      <li class="hint"><%= t("channels.hint_no_subscriptions")%></li>
     <%- else %>
-    
       <%- @channel.listens.registered.all(:include => :user, :order => 'verified ASC', :limit => configatron.max_list_size).each do |listen| %>
         <%- user = listen.user  %>
         <li data-cucumber="<%= listen.user.id %>" tabindex="-1">
           <%= avatar(user, :width => 20, :height => 20, :lazy_load => true) %>
           <%= user.display_name %>
-          <%= raw("<strong>(owner)</strong>") if @channel.owned_by?(listen.user) %>
-          <%= raw("<strong>(awaiting verification)</strong>") unless listen.verified? %>
-          <a href="/users/<%= user.id %>" class="action">show profile</a>
+          <%= raw("<strong>#{t('channels.flag_owner')}</strong>") if @channel.owned_by?(listen.user) %>
+          <%= raw("<strong>#{t('channels.flag_awaiting_verification')}</strong>") unless listen.verified? %>
+          <a href="/users/<%= user.id %>" class="action"><%= t("channels.link_show_profile") %></a>
           <%- if @channel.owned_by?(current_user) || current_user.admin? %>
-            <%= link_to('remove', listen_path(listen), :method => :delete, :remote => true, :class => "action", 'data-type' => 'html') %>
+            <%= link_to(t("link_remove"), listen_path(listen), :method => :delete, :remote => true, :class => "action", 'data-type' => 'html') %>
             <%- unless listen.verified? %>
-              <%= link_to('verify', listen_accept_path(listen), :method => :post, :remote => true, :class => "action", 'data-cucumber' => 'verify', 'data-type' => 'html') %>
+              <%= link_to(t("link_verify"), listen_accept_path(listen), :method => :post, :remote => true, :class => "action", 'data-cucumber' => 'verify', 'data-type' => 'html') %>
             <%- end %>
           <%- end %>
         </li>
@@ -46,7 +45,7 @@
       'data-type' => 'html',
       :class => "single-button-form subscribe-channel-form"
     }) do -%>
-      <%= button "Unsubscribe" %>
+      <%= button t("channels.label_unsubscribe") %>
     <%- end %>
   <%- else %>
     <%= form_tag(listens_path(:channel_id => @channel.id), {
@@ -55,23 +54,21 @@
       'data-type' => 'html',
       :class => "single-button-form subscribe-channel-form"
     }) do -%>
-      <%= button "Subscribe" %>
+      <%= button t("channels.label_subscribe") %>
       <%- unless @channel.public? %>
-        <span class="hint">This channel is private: The owner needs to verify your subscription.</span>
+        <span class="hint"><%= t("channels.hint_subscription_needs_verification")%></span>
       <%- end %>
     <%- end %>
   <%- end %>
 
   <%- if permitted_to?(:update, @channel) %>
-    <h3>Subscribe users <a data-hover-hint="top" title="This can only be done by admins and the owner of this channel" class="hint">(?)</a></h3>
-    <p>
-      Enter a user name into to subscribe him to this channel, or enter an email address to invite external users.
-    </p>
+    <h3><%= t("channels.headline_subscribe_users") %> <a data-hover-hint="top" title="<%= t("channels.hint_edit_rights") %>" class="hint">(?)</a></h3>
+    <p><%= t("channels.text_subscribe_users") %></p>
     <%= form_tag(listen_for_user_path, { :remote => true, 'data-type' => 'html', :class => 'single-button-form subscribe-user', :method => 'post' }) do %>
       <%= hidden_field_tag :id, current_user.id %>
       <%= hidden_field_tag :user_id, current_user.id %>
       <%= hidden_field_tag :channel_id, @channel.id %>
-      <input type="text" placeholder="Enter user name <%= ' or email' if current_user.admin? %>..." name="search_term" data-users-autocomplete> <%= button 'Subscribe' %>
+      <input type="text" placeholder="<%= current_user.admin? ? t("channels.placeholder_user_name_or_email") : t("channels.placeholder_user_name") %>" name="search_term" data-users-autocomplete> <%= button t("channels.label_add") %>
     <% end %>
   <%- end %>
 </output>

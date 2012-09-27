@@ -12,7 +12,7 @@
  *    protonet.ui.FlashMessage.show("error", "Ouch something bad happened!");
  */
 protonet.ui.FlashMessage = {
-  classNames: ["notice", "error", "warning", "sticky"],
+  classNames: ["notice", "error", "sticky"],
   TIMEOUT: 5000,
   
   initialize: function() {
@@ -29,7 +29,7 @@ protonet.ui.FlashMessage = {
   },
   
   _observe: function() {
-    $.each(["error", "notice", "warning", "sticky"], function(i, type) {
+    $.each(["error", "notice", "sticky"], function(i, type) {
       protonet.on("flash_message." + type, function(message) { this.show(type, message); }.bind(this));
     }.bind(this));
   },

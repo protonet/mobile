@@ -1,37 +1,37 @@
 <div class="getting-started widget">
   <h4>
     <%= link_to user_path(:id => current_user.id) do %>
-      <%= avatar(current_user, :width => 26, :height => 26, :title => "That's you!") %>
+      <%= avatar(current_user, :width => 26, :height => 26, :title => t("users.hint_thats_you")) %>
     <%- end %>
-    Welcome <%= current_user.display_name %>
+    <%= t("users.headline_welcome", :display_name => current_user.display_name) %>
   </h4>
-  <a class="getting-started-close-link" title="Don't show this again">&times;</a>
+  <a class="getting-started-close-link" title="<%= t("users.hint_close_getting_started") %>">&times;</a>
   <ol>
     <li class="change-password">
-      <%= link_to edit_user_path(:id => current_user.id), 'data-hover-hint' => 'top', :title => 'It\'s still set to "admin"' do %>
-        Change your password
+      <%= link_to edit_user_path(:id => current_user.id), 'data-hover-hint' => 'top', :title => t("users.hint_change_password") do %>
+        <%= t("users.link_change_password") %>
       <%- end %>
     </li>
     <li class="upload-avatar">
-      <%= link_to edit_user_path(:id => current_user.id), 'data-hover-hint' => 'top', :title => 'Upload an avatar. Let others know who you are' do %>
-        Update your profile
+      <%= link_to edit_user_path(:id => current_user.id), 'data-hover-hint' => 'top', :title => t("users.hint_update_profile") do %>
+        <%= t("users.link_update_profile") %>
       <%- end %>
     </li>
     <li class="create-channel">
-      <%= link_to new_channel_path, 'data-hover-hint' => 'top', :title => 'Channels are like groups. Create one for each topic (eg. "Project XYZ")' do %>
-        Create channels
+      <%= link_to new_channel_path, 'data-hover-hint' => 'top', :title => t("users.hint_create_channels") do %>
+        <%= t("users.link_create_channels") %>
       <%- end %>
     </li>
     <li class="invite-user">
-      <%= link_to new_invitation_path, 'data-hover-hint' => 'top', :title => 'Get users to collaborate with' do %>
-        Tell the world
+      <%= link_to new_invitation_path, 'data-hover-hint' => 'top', :title => t("users.hint_invite") do %>
+        <%= t("users.link_invite") %>
       <%- end %>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
     </li>
     <li class="write-meep">
-      <a data-hover-hint="top" title="Start a conversation">
-        Write something
+      <a data-hover-hint="top" title="<%= t("users.hint_write_meep") %>">
+        <%= t("users.link_write_meep") %>
       </a>
     </li>
   </ol>
-  <%= link_to raw("logout"), destroy_user_session_path, 'data-avoid-ajax' => 1, 'class' => 'logout-link' %>
+  <%= link_to t("users.link_logout_getting_started"), destroy_user_session_path, 'data-avoid-ajax' => 1, 'class' => 'logout-link' %>
 </div>

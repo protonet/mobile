@@ -1,6 +1,6 @@
 <div class="info ribbon">
-  <h2>Loading message #<%= params[:id] %> ...</h2>
-  </p>Here you can scroll in a convenient way through the chat history. Use the arrow keys or mouse wheel for scrolling</p>
+  <h2><%= t("meeps.headline_loading", :id => params[:id]) %></h2>
+  </p><%= t("meeps.text_detail_view") %></p>
 </div>
 
 <output data-meep-scroller-for="<%= Meep.prepare_for_frontend(@meep).to_json %>" class="content"></output>

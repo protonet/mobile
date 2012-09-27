@@ -1,30 +1,30 @@
-<h2>Customization</h2>
+<h2><%= t("preferences.headline_customization") %></h2>
 
-<p>Here you can change colors, build custom functionality and adjust things. Free your mind.</p>
+<p><%= t("preferences.text_customization") %></p>
 
-<h3>Title</h3>
+<h3><%= t("preferences.headline_customization_title") %></h3>
 <%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html' } do -%>
   <%= hidden_field_tag 'section', 'customize' %>
   <div class="form-field">
     <%= text_field_tag 'preferences[browser_title]', SystemPreferences.browser_title %>
   </div>
-  <%= button "Save" %>
+  <%= button t("label_save") %>
 <%- end %>
 
-<h3>Custom CSS</h3>
+<h3><%= t("preferences.headline_customization_css") %></h3>
 <%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html', :class => 'custom-css' } do -%>
   <%= hidden_field_tag 'section', 'customize' %>
   <div class="form-field">
     <%= text_area_tag 'preferences[custom_css]', SystemPreferences.custom_css %>
   </div>
-  <%= button "Save" %>
+  <%= button t("label_save") %>
 <%- end %>
 
-<h3>Custom JavaScript</h3>
+<h3><%= t("preferences.headline_customization_js") %></h3>
 <%= form_tag system_preferences_update_path, { :remote => true, 'data-type' => 'html', :class => 'custom-js' } do -%>
   <%= hidden_field_tag 'section', 'customize' %>
   <div class="form-field">
     <%= text_area_tag 'preferences[custom_javascript]', SystemPreferences.custom_javascript %>
   </div>
-  <%= button "Save" %>
+  <%= button t("label_save") %>
 <%- end %>

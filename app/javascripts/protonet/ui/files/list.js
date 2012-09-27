@@ -16,9 +16,9 @@ protonet.ui.files.List = (function() {
       KEY_DOWN            = 40,
       KEY_DELETE          = 46,
       defaultErrorMapping = {
-        "Rpc::AuthError": "FILE_AUTH_ERROR",
-        "TimeoutError":   "FILE_TIMEOUT_ERROR",
-        "*":              "FILE_UNKNOWN_ERROR"
+        "Rpc::AuthError": "files.flash_message_auth_error",
+        "TimeoutError":   "files.flash_message_timeout_error",
+        "*":              "files.flash_message_unknown_error"
       };
   
   function _sortByName(arr) {
@@ -134,7 +134,7 @@ protonet.ui.files.List = (function() {
             path = this.currentPath || path;
             
             this.error({
-              "Rpc::ReadAccessDeniedError": "FILE_LIST_READ_ACCESS_DENIED_ERROR"
+              "Rpc::ReadAccessDeniedError": "files.flash_message_folder_access_error"
             }, error);
           }.bind(this),
           complete: function() {
@@ -157,7 +157,7 @@ protonet.ui.files.List = (function() {
             path = this.currentPath || path;
 
             this.error({
-              "Rpc::ReadAccessDeniedError": "FILE_INFO_READ_ACCESS_DENIED_ERROR"
+              "Rpc::ReadAccessDeniedError": "files.flash_message_file_access_error"
             }, error);
           }.bind(this),
           complete: function() {
@@ -174,9 +174,9 @@ protonet.ui.files.List = (function() {
     },
     
     insertEmptyFolderHint: function() {
-      var hint = protonet.t("FOLDER_EMPTY");
+      var hint = protonet.t("files.hint_folder_empty");
       if (this.uploader && this.uploader.features.dragdrop) {
-        hint += " " + protonet.t("DRAG_AND_DROP_HERE");
+        hint += " " + protonet.t("files.hint_drag_and_drop_here");
       }
       this.insertHint(hint);
     },
@@ -308,14 +308,14 @@ protonet.ui.files.List = (function() {
       $wrapper.html($table);
       
       new protonet.ui.Confirm({
-        text:     protonet.t("CONFIRM_FILE_DELETION"),
+        text:     protonet.t("files.confirm_delete"),
         content:  $wrapper,
         confirm:  function() {
           this._disableMarked();
 
           protonet.data.File.remove(this.markedPaths, {
             success: function(paths) {
-              protonet.trigger("flash_message.notice", protonet.t("REMOVING_FILES_SUCCESS"));
+              protonet.trigger("flash_message.notice", protonet.t("files.flash_message_delete_success"));
 
               this._enableMarked();
 
@@ -361,7 +361,7 @@ protonet.ui.files.List = (function() {
      */
     newFolder: function() {
       var now       = new Date(),
-          name      = protonet.t("UNTITLED_FOLDER"),
+          name      = protonet.t("files.name_untitled_folder"),
           i         = 1;
       
       // Make sure that the folder name doesn't exist already
@@ -481,15 +481,10 @@ protonet.ui.files.List = (function() {
           var $elements  = $(),
               folderName = protonet.data.File.getName(toFolder);
           
-          if (oldFiles.length > 1) {
-            protonet.trigger("flash_message.notice", protonet.t("MOVING_FILES_SUCCESS", {
-              name: folderName
-            }));
-          } else {
-            protonet.trigger("flash_message.notice", protonet.t("MOVING_FILE_SUCCESS", {
-              name: folderName
-            }));
-          }  
+          protonet.trigger("flash_message.notice", protonet.t("files.flash_message_move_success", {
+            count:  oldFiles.length,
+            name:   folderName
+          }));
           
           $.each(oldFiles, function(i, file) {
             file.destroy();
@@ -504,8 +499,8 @@ protonet.ui.files.List = (function() {
         }.bind(this),
         error: function(error) {
           this.error({
-            "Rpc::WriteAccessDeniedError": "FILE_MOVE_WRITE_DENIED_ERROR",
-            "Rpc::ReadAccessDeniedError":  "FILE_MOVE_READ_DENIED_ERROR"
+            "Rpc::WriteAccessDeniedError": "files.flash_message_move_write_error",
+            "Rpc::ReadAccessDeniedError":  "files.flash_message_move_read_error"
           }, error);
           
           $.each(newFiles || [], function(i, file) {
@@ -701,14 +696,14 @@ protonet.ui.files.List = (function() {
     
     _getPrivacyHint: function(path) {
       var $hint = $("<span>", { "class": "hint privacy-icon", "data-hover-hint": "top" }),
-          type  = protonet.data.File.isFolder(path) ? "FOLDER" : "FILE";
+          type  = protonet.data.File.isFolder(path) ? "file" : "folder";
       
       if (path.startsWith(protonet.data.User.getFolder(viewer))) {
-        return $hint.attr("title", protonet.t("USER_" + type + "_PRIVACY_HINT"));
+        return $hint.attr("title", protonet.t("files.hint_" + type + "_privacy"));
       }
       
       if (path.match(/^\/channels\/\d+\//)) {
-        return $hint.attr("title", protonet.t("CHANNEL_" + type + "_PRIVACY_HINT"));
+        return $hint.attr("title", protonet.t("files.hint_channel_" + type + "_privacy"));
       }
       
       return $();
@@ -915,7 +910,7 @@ protonet.ui.files.List = (function() {
             
             var filesData = parseDataTransfer(rawData);
             if (!filesData) {
-              protonet.trigger("flash_message.error", protonet.t("MOVE_FILES_BETWEEN_NODES_ERROR"));
+              protonet.trigger("flash_message.error", protonet.t("files.flash_message_move_between_nodes_error"));
               return;
             }
             
@@ -942,7 +937,7 @@ protonet.ui.files.List = (function() {
             if (protonet.data.User.hasWriteAccessToFile(viewer, this.currentPath)) {
               this.uploader.setTargetFolder($element.data("folder-path"));
             } else {
-              protonet.trigger("flash_message.error", protonet.t("FILE_MOVE_WRITE_DENIED_ERROR"));
+              protonet.trigger("flash_message.error", protonet.t("files.flash_message_move_write_error"));
               event.stopPropagation();
             }
           }.bind(this)
@@ -979,7 +974,7 @@ protonet.ui.files.List = (function() {
             
             var filesData = parseDataTransfer(rawData);
             if (!filesData) {
-              protonet.trigger("flash_message.error", protonet.t("MOVE_FILES_BETWEEN_NODES_ERROR"));
+              protonet.trigger("flash_message.error", protonet.t("files.flash_message_move_between_nodes_error"));
               return;
             }
             

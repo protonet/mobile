@@ -8,7 +8,7 @@ Feature: Handling authentication and authorization
     And I press "Reset"
     Then I should see "You will receive an email with instructions about how to reset your password in a few minutes."
     When "lazy_dude@protonet.com" opens the email with subject "Reset your protonet password for localhost:3000"
-    And I follow "Change my password" in the email
+    And I follow "Change password" in the email
     And I fill in "user_password" with "secure_password"
     And I press "Change"
     Then I should be logged in as "lazy_dude"

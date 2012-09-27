@@ -347,7 +347,7 @@ Then /^I subscribe the user "([^\"]*)"$/ do |user_identifier|
   within(".subscribe-user") do
     fill_in 'search_term',    :with => user_identifier
     sleep 0.2
-    click_button('Subscribe')
+    click_button('Add')
   end
 end
 

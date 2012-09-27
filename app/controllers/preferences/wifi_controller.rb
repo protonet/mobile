@@ -13,7 +13,7 @@ module Preferences
         password  = params["preferences"][interface]["password"]
         
         if !password.blank? && password.size < 8
-          flash[:error] = "The password for #{interface} must be at least 8 characters long"
+          flash[:error] = t("preferences.flash_message_wlan_password_error", :interface => interface)
           return respond_to_preference_update(417)
         end
         
@@ -35,7 +35,7 @@ module Preferences
       SystemPreferences.wifi = wifi_preferences
       SystemWifi.reconfigure!
       
-      flash[:notice] = "Your WLAN configuration has been successfully saved"
+      flash[:notice] = t("preferences.flash_message_wlan_success")
       respond_to_preference_update
     end
     

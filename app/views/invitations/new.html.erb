@@ -1,56 +1,56 @@
 <%= render "shared/nav_users"%>
 <output class="content" data-tab="users">
   <%= form_for(@invitation, :remote => true, :html => { "data-type" => 'html' }) do |f| %>
-    <h2>Invite people to your protonet <a data-hover-hint="top" title="Only admins can invite people" class="hint">(?)</a></h2>
+    <h2><%= t("invitations.headline_overview") %> <a data-hover-hint="top" title="<%= t("invitations.hint_rights") %>" class="hint">(?)</a></h2>
     
-    <%- if !SystemPublishToWeb.status %>
+    <%- unless SystemPublishToWeb.status %>
       <div class="form-field">
         <p class="info-message">
-          <strong>Please note:</strong>
-          Web Publishing is currently <b>not activated</b>. You can enable it <%= link_to "here", "/preferences/show?section=publish_to_web" %>.
+          <strong><%= t("headline_please_note") %></strong>
+          <%= raw(t("invitations.text_web_publishing_off")) %>
         </p>
       </div>
     <%- end %>
     
     <div class="form-field">
-      <%= f.label :first_name, "First name:" %>
+      <%= f.label :first_name, t("users.label_first_name") %>
       <%= f.text_field(:first_name, {:autofocus => true}) %>
     </div>
     
     <div class="form-field">
-      <%= f.label :last_name, "Last name:" %>
+      <%= f.label :last_name, t("users.label_last_name") %>
       <%= f.text_field(:last_name) %>
     </div>
     
     <div class="form-field">
-      <%= f.label :email, "E-Mail:" %>
+      <%= f.label :email, t("users.label_email") %>
       <%= f.text_field(:email, {:type => "email", :value => @invitee_email || @invitation.email }) %>
     </div>
     
     <div class="form-field">
-      <label>User type:</label>
+      <label><%= t("users.label_user_type") %></label>
       <span class="radio-group">
         <label>
-          <%= f.radio_button(:role, 'invitee') %> User with restricted rights
-          <a data-hover-hint="top" title="<h4>User with restricted rights</h4> Users with restricted rights can only see channels they were susbcribed to (by an administrator). They aren't able to see users from other channels. This user type can be perfectly used for customers or guests that should have limited access." class="hint">(?)</a>
+          <%= f.radio_button(:role, 'invitee') %> <%= t("users.label_user_with_restricted_rights") %>
+          <a data-hover-hint="top" title="<%= raw(t("users.hint_user_with_restricted_rights")) %>" class="hint">(?)</a>
         </label>
         <label>
-          <%= f.radio_button(:role, 'user') %> User
-          <a data-hover-hint="top" title="<h4>User</h4> Normal users can see all channels and users. They're not allowed to delete users or channels that they didn't create." class="hint">(?)</a>
+          <%= f.radio_button(:role, 'user') %> <%= t("users.label_user_default") %>
+          <a data-hover-hint="top" title="<%= raw(t("users.hint_user_default")) %>" class="hint">(?)</a>
         </label>
         <label>
-          <%= f.radio_button(:role, 'admin') %> Administrator
-          <a data-hover-hint="top" title="<h4>Administrator</h4> Users with administration rights can manage channels, other users and system related things." class="hint">(?)</a>
+          <%= f.radio_button(:role, 'admin') %> <%= t("users.label_user_with_administration_rights") %>
+          <a data-hover-hint="top" title="<%= raw(t("users.hint_user_with_administration_rights")) %>" class="hint">(?)</a>
         </label>
         <span class="hint">
-          <a id="show-comparison-chart">Learn more</a> about user types and permissions
+          <%= raw(t("users.link_user_types_learn_more")) %>
         </span>
       </span>
     </div>
     
     <div class="form-field channels">
 
-     <label for="invitation_channel">Channels: <a data-hover-hint="top" title="Select channels the user will be subscribed to." class="hint">(?)</a></label>
+     <label for="invitation_channel"><%= raw(t("users.label_channels")) %> <a data-hover-hint="top" title="<%= t("users.hint_channels") %>" class="hint">(?)</a></label>
       <ul>
       <%- @channels.sort_by(&:display_name).each do |channel| %>
         <li class="channel-checkboxes">
@@ -62,7 +62,7 @@
       <%- end %>
       </ul>
     </div>
-    <%= button 'Next step' %>
+    <%= button t("label_next_step") %>
   <% end %>
   
   <script type="protonet/template" id="user-roles-table-template">

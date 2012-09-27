@@ -5,7 +5,7 @@ Feature: Using global channels
     Given I go to the start page
     And I am logged in as "admin" with password "admin"
     And I go to the channels page
-    And I follow "Global Channels"
+    And I follow "Global channels"
     And I select the global channel "protonet-devs" in the channel overview
     Then I should see "protonet-devs" in the channel details pane
     And I press "Subscribe" within ".subscribe-channel-form"

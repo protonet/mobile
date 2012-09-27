@@ -5,26 +5,25 @@
 <%= form_for :user, :url => user_session_path, :html => { :class => "login", :style => @signup_error || params[:invitation_token] ? "display: none" : "" } do |f| -%>
   <fieldset>
     <%- if SystemPreferences.remote_ldap_sign_on %>
-      <h3>Login with your ldap credentials</h3>
+      <h3><%= t("users.headline_ldap") %></h3>
     <%- end %>
     
     <label>
-      <%= f.text_field :login, :placeholder => "email or user name", :autocorrect => 'off', :autocapitalize => 'off' %>
+      <%= f.text_field :login, :placeholder => t("users.placeholder_user_name_or_email"), :autocorrect => 'off', :autocapitalize => 'off' %>
     </label>
     <label>
-      <%= f.password_field :password, :value => nil, :placeholder => "password" %>
+      <%= f.password_field :password, :value => nil, :placeholder => t("users.placeholder_password") %>
     </label>
     <label for="user_remember_me">
-      <%= f.check_box :remember_me, :checked => incoming_interface != "published_to_web" %> <span class="hint">Keep logged in</span>
+      <%= f.check_box :remember_me, :checked => incoming_interface != "published_to_web" %> <span class="hint"><%= t("users.label_remember") %></span>
     </label>
     <div>
-      <%= button "Login", :id => "login" %>
+      <%= button t("users.label_login"), :id => "login" %>
       <%- if allow_signup? %>
-        or <a href="/users/sign_up" class="promotion-link" data-avoid-ajax="1">create an account</a>
+        <%= raw(t("users.link_create_account")) %>
       <%- end %>
       <p class="hint">
-        Did you forget your password?
-        <a href="<%= new_user_password_path %>" data-avoid-ajax="1">Reset it here</a>
+        <%= raw(t("users.hint_password_forgotten", :href => new_user_password_path)) %>
       </p>
     </div>
   </fieldset>

@@ -1,37 +1,35 @@
-<h2>Web Publishing</h2>
+<h2><%= t("preferences.headline_web_publishing") %></h2>
 <div class="status-box publish-to-web">
   <%= @nofetch = true; render :partial => 'preferences/publish_to_web/status' %>
 </div>
 
-<p>Make your node available to the entire world not just your local network.</p>
+<p><%= t("preferences.text_web_publishing") %></p>
 
-<h3>Settings</h3>
+<h3><%= t("preferences.headline_web_publishing_settings") %></h3>
 <%- if incoming_interface == "published_to_web" %>
   <p class="info-message">
-    <strong>Please note:</strong> You are currently connected via <i>Web Publishing</i>. If you now shutdown or rename it, you will lose your connection.</strong>
+    <strong><%= t("headline_please_note") %></strong>
+    <%= raw(t("preferences.hint_web_publishing")) %>
   </p>
 <%- end %>
 <%= form_tag preferences_publish_to_web_update_path, { :remote => true, 'data-type' => 'html', :class => 'publish-to-web' } do -%>
   <%= hidden_field_tag(:section, 'publish_to_web') %>
   <div class="form-field">
-    <%= label_tag 'preferences[publish_to_web_name]', 'URL:' %>
-    https:// <%= text_field_tag 'preferences[publish_to_web_name]', SystemPreferences.publish_to_web_name, :maxlength => 32 %>.protonet.info <a title="This is your node's external web address. Feel free to change it." data-hover-hint="top" class="hint">(?)</a>
+    <%= label_tag 'preferences[publish_to_web_name]', t("preferences.label_url") %>
+    https:// <%= text_field_tag 'preferences[publish_to_web_name]', SystemPreferences.publish_to_web_name, :maxlength => 32 %>.protonet.info <a title="<%= t("preferences.hint_web_address") %>" data-hover-hint="top" class="hint">(?)</a>
   </div>
   <div class="form-field">
-    <%= label_tag 'preferences[publish_to_web]', 'Status:' %>
+    <%= label_tag 'preferences[publish_to_web]', t("preferences.label_status") %>
     <span>
       <label>
         <input type="radio" name="preferences[publish_to_web]" value="true" <%= "checked" if SystemPreferences.publish_to_web %>>
-        On
+        <%= t("label_on") %>
       </label>
       <label>
         <input type="radio" name="preferences[publish_to_web]" value="false" <%= "checked" unless SystemPreferences.publish_to_web %>>
-        Off
+        <%= t("label_off") %>
       </label>
     </span>
   </div>
-  <%= button "Save" %>
+  <%= button t("label_save") %>
 <%- end -%>
-
-<h3>Invite people</h3>
-<p>You can easily <%= link_to "invite people", new_invitation_path, :class => 'promotion-link' %> to collaborate with you.</p>

@@ -1,5 +1,5 @@
-Live status:
+<%= t("preferences.label_live_status") %>
 <%- unless @nofetch %>
-  <%= raw(SystemPublishToWeb.remote_status ? '<span class="on">on</span>' : '<span class="off">off</span>') %>
+  <%= raw(SystemPublishToWeb.remote_status ? ('<span class="on">' + t("label_on") + '</span>') : ('<span class="off">' + t("label_off") + '</span>')) %>
 <%- end %>
-<%= link_to "reload", preferences_path(:section => 'publish_to_web'), :class => 'reload-link', :title => 'reload', 'data-refresh-url' => '/preferences/publish_to_web/status' %>
+<%= link_to t("preferences.link_reload"), preferences_path(:section => 'publish_to_web'), :class => 'reload-link', :title => t("preferences.link_reload"), 'data-refresh-url' => '/preferences/publish_to_web/status' %>

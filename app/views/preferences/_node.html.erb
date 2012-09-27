@@ -1,34 +1,35 @@
 <%- local_node = Node.local %>
 
-<h2>Node</h2>
+<h2><%= t("preferences.headline_general") %></h2>
 
-<h3>Settings</h3>
+<h3><%= t("preferences.headline_general_settings") %></h3>
 <p class="info-message">
-  <strong>Please note:</strong> Changing the node's name will also change the name of the WLAN and cause a restart.
+  <strong><%= t("headline_please_note") %></strong> <%= t("preferences.text_general_settings") %>
   <%- if incoming_interface.starts_with? "wlan" %>
-    <br>You will have to manually reconnect your WLAN.
+    <br><%= t("preferences.text_general_settings_wifi") %>
   <%- end %>
 </p>
+
 <%= form_for local_node, :remote => true, 'data-type' => 'html' do |f| %>
   <div class="form-field">
-    <%= f.label :name, "Name:" %>
-    <%= f.text_field :name, :placeholder => "Please enter a name", :maxlength => 32 %>
-    <a data-hover-hint="top" title="The name can only consist of letters, numbers and hyphens (no whitespace allowed)" class="hint">(?)</a>
+    <%= f.label :name, t("preferences.label_protonet_name") %>
+    <%= f.text_field :name, :placeholder => t("preferences.placeholder_protonet_name"), :maxlength => 32 %>
+    <a data-hover-hint="top" title="<%= t("preferences.hint_protonet_name") %>" class="hint">(?)</a>
   </div>
-  <%= button "Save" %>  <span class="loading-hint">Please wait. This will take a moment.</span>
+  <%= button t("label_save") %>  <span class="loading-hint"><%= t("preferences.hint_please_wait") %></span>
 <%- end %>
 
-<h3>Info</h3>
+<h3><%= t("preferences.headline_general_info") %></h3>
 <dl>
-  <dt>Uptime:</dt><dd><%= SystemBackend.uptime %></dd>
-  <dt>Assigned IP:</dt><dd><%= SystemBackend.get_own_ip("eth0") || SystemBackend.get_own_ip("eth1") || "No IP assigned" %> <a data-hover-hint="top" title="Current assigned ip on ethernet connection" class="hint">(?)</a></dd>
-  <dt>License key:</dt><dd><%= SystemBackend.license_key %></dd>
-  <dt>UUID:</dt><dd><%= Network.local.uuid %> <a class="hint" data-hover-hint="top" title="This is your node's unique id">(?)</a></dd>
+  <dt><%= t("preferences.label_uptime") %></dt><dd><%= SystemBackend.uptime %></dd>
+  <dt><%= t("preferences.label_assigned_ip") %></dt><dd><%= SystemBackend.get_own_ip("eth0") || SystemBackend.get_own_ip("eth1") || t("preferences.hint_no_ip_assigned") %> <a data-hover-hint="top" title="<%= t("preferences.hint_assigned_ip") %>" class="hint">(?)</a></dd>
+  <dt><%= t("preferences.label_license_key") %></dt><dd><%= SystemBackend.license_key %></dd>
+  <dt><%= t("preferences.label_uuid") %></dt><dd><%= Network.local.uuid %> <a class="hint" data-hover-hint="top" title="<%= t("preferences.hint_uuid") %>">(?)</a></dd>
 </dl>
 
-<h3>Support</h3>
+<h3><%= t("preferences.headline_general_support") %></h3>
 <dl>
-  <dt>Support via E-Mail:</dt><dd><a href="mailto:team@protonet.info">team@protonet.info</a></dd>
-  <dt>Support via Twitter:</dt><dd><a href="http://twitter.com/protonet" target="_blank">twitter.com/protonet</a></dd>
-  <dt>Website:</dt><dd><a href="http://www.protonet.info" target="_blank">protonet.info</a></dd>
+  <dt><%= t("preferences.label_support_email") %></dt><dd><a href="mailto:team@protonet.info">team@protonet.info</a></dd>
+  <dt><%= t("preferences.label_support_twitter") %></dt><dd><a href="http://twitter.com/protonet" target="_blank">twitter.com/protonet</a></dd>
+  <dt><%= t("preferences.label_support_website") %></dt><dd><a href="http://www.protonet.info" target="_blank">protonet.info</a></dd>
 </dl>

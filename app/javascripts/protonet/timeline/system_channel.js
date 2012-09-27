@@ -13,7 +13,7 @@ protonet.timeline.SystemChannel = Class.create(protonet.timeline.Channel, {
     if (!isWindowFocused && isAllowedToDoNotifications && isSystem) {
       new protonet.ui.Notification({
         image:    meepData.avatar,
-        title:    protonet.t("SYSTEM_NOTIFICATION_TITLE"),
+        title:    protonet.t("channels.notification_system_message"),
         text:     meepData.message.truncate(140),
         onclick:  function() {
           protonet.trigger("channel.change", this.data.id);

@@ -15,6 +15,7 @@ window.$document = $(document);
 // ---- PROTONET
 //= require "../../../app/javascripts/protonet/extensions.js"
 //= require "../../../app/javascripts/protonet/protonet.js"
+//= require "../../../app/javascripts/protonet/i18n/translate.js"
 //= require "../../../app/javascripts/protonet/utils/add_slashes.js"
 //= require "../../../app/javascripts/protonet/utils/auto_link.js"
 //= require "../../../app/javascripts/protonet/utils/prettify_code.js"
@@ -30,6 +31,7 @@ window.$document = $(document);
 //= require "../../../app/javascripts/protonet/utils/format_seconds.js"
 
 // ---- PROTONET TESTS
+//= require "i18n/i18n_test.js"
 //= require "utils/add_slashes_test.js"
 //= require "utils/auto_link_test.js"
 //= require "utils/codify_test.js"

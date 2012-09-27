@@ -5,7 +5,7 @@ class Invitation < ActiveRecord::Base
   belongs_to :invitee, :class_name => 'User'
   
   validates_format_of :email, :with => Devise.email_regexp
-  validates_length_of :channel_ids, :minimum => 1, :message => "must be provided"
+  validates_length_of :channel_ids, :minimum => 1
   validates_presence_of :token
   
   before_validation :generate_token, :on => :create

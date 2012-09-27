@@ -3,14 +3,14 @@
     <span>
     <%- case true %>
     <%- when channel.global? %>
-      <%= image_tag("/img/earth_globe.jpg", :alt => channel.display_name, :title => "This channel is global", :"data-hover-hint" => "top") %>
+      <%= image_tag("/img/earth_globe.jpg", :alt => channel.display_name, :title => t("channels.hint_global"), :"data-hover-hint" => "top") %>
     <%- when channel.public %>
       <%= image_tag("/img/channel.png", :alt => channel.display_name) %>
     <%- else %>
-      <%= image_tag("/img/private.png", :alt => channel.display_name, :title => "This channel is private", :"data-hover-hint" => "top") %>
+      <%= image_tag("/img/private.png", :alt => channel.display_name, :title => t("channels.hint_private"), :"data-hover-hint" => "top") %>
     <%- end%>
     </span>
     <strong><%= channel.display_name %></strong>
-    <small><%= pluralize(channel.users.registered.size, "subscriber") %></small>
+    <small><%= "#{channel.users.registered.size} #{t('channels.subscribers', :count => channel.users.registered.size)}" %></small>
   <%- end %>
 </li>

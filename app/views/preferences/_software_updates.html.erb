@@ -1,39 +1,37 @@
-<h2>Updates</h2>
-<p>It's recommended to update your node's software from time to time to avoid errors and to get latest enhancements.</p>
+<h2><%= t("preferences.headline_updates") %></h2>
+<p><%= t("preferences.text_updates") %></p>
 
-<h3>Info</h3>
+<h3><%= t("preferences.headline_updates_info") %></h3>
 <dl>
-  <dt>Current version:</dt><dd><%= SystemRelease.current_version %>/<%= SystemRelease.current_type %></dd>
-  <dt>Latest stable version:</dt><dd><%= SystemRelease.latest_version %></dd>
-  <dt>Latest beta version:</dt><dd><%= SystemRelease.latest_beta_version %> <a class="hint" data-hover-hint="top" title="Please note that beta software may be unstable">(?)</a></dd>
-  <dt>Stable update available:</dt><dd><%= raw(SystemRelease.most_recent? ? '<span class="off">no</span>' : '<span class="on">yes</span>') %></dd>
+  <dt><%= t("preferences.label_current_version") %></dt><dd><%= SystemRelease.current_version %>/<%= SystemRelease.current_type %></dd>
+  <dt><%= t("preferences.label_update_available") %></dt><dd><strong><%= raw(SystemRelease.most_recent? ? ('<span class="off">' + t("label_no") + '</span>') : ('<span class="on">' + t("label_yes") + '</span>')) %></strong></dd>
 </dl>
 
-<h3>Update to newer version</h3>
+<h3><%= t("preferences.headline_update") %></h3>
 <%= form_tag(preferences_release_update_path, { :remote => true, 'data-type' => 'html', :class => "software-update" }) do %>
   <%= hidden_field_tag 'section', 'software_updates' %>
   <div class="form-field">
-    <%= label_tag          :password, 'Your node SSH password:' %>
+    <%= label_tag          :password, t("preferences.label_ssh_password") %>
     <%= password_field_tag :password, nil %>
-    <a data-hover-hint="top" class="hint" title="The password can be found on the 'Getting Started' paper which you received with your node">(?)</a>
+    <a data-hover-hint="top" class="hint" title="<%= t("preferences.hint_ssh_password") %>">(?)</a>
   </div>
   <div class="form-field">
-    <%= label_tag   :release, 'Select version:' %>
+    <%= label_tag   :release, t("preferences.label_version") %>
     <%= select_tag  :release, options_for_select(SystemRelease.last_releases.reverse.map{|c| ["#{c[0]} / #{c[1]}", c[0]] if c[0].to_i >= SystemRelease.current_version}.compact, SystemRelease.last_releases.reverse.find {|release| release[1].strip! == "STABLE"}[0]) %>
   </div>
-  <%= button "Update" %> <span class="loading-hint">Please wait. This will take a few minutes.</span>
-  <a id="show-release-update-progress">Show update progress</a>
+  <%= button t("preferences.label_update") %> <span class="loading-hint"><%= t("preferences.hint_please_wait") %></span>
+  <a id="show-release-update-progress" class="hint"><%= t("preferences.link_show_update_progress") %></a>
 <%- end %>
 
-<h3>Old log files</h3>
-<a id="show-last-release-update-log">Show last update log</a> and send it to the protonet support team if needed.
+<h3><%= t("preferences.headline_update_log") %></h3>
+<%= raw(t("preferences.text_update_log")) %>
 <div id="release-update-progress-console" class="quake-style-console" data-url="<%= url_for preferences_release_update_progress_path %>">
-    <div class="quake-style-console-content"></div>
-    <%= form_tag(preferences_send_log_to_support_team_path, {
-      :remote     => true,
-      'class'     => 'single-button-form'
-    }) do -%>
-      <%= button "Send log to protonet support", :id => "send-to-protonet-support" %>
-    <%- end %>
-    <div id="sent-feedback"></div>
+  <div class="quake-style-console-content"></div>
+  <%= form_tag(preferences_send_log_to_support_team_path, {
+    :remote     => true,
+    'class'     => 'single-button-form'
+  }) do -%>
+    <%= button t("preferences.label_send_log"), :id => "send-to-protonet-support" %>
+  <%- end %>
+  <div id="sent-feedback"></div>
 </div>

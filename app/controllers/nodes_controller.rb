@@ -6,7 +6,7 @@ class NodesController < ApplicationController
     if node.update_attributes(params[:node]) && node.errors.empty?
       update_wlan_ssid(node.name)
       update_browser_title(node.name)
-      flash[:notice] = "Successfully updated node"
+      flash[:notice] = t("flash_message_saved_success")
     else
       flash[:error] = "#{node.errors.full_messages.to_sentence}"
     end
@@ -27,6 +27,6 @@ class NodesController < ApplicationController
     end
     
     def update_browser_title(name)
-      SystemPreferences.browser_title = "#{name} - protonet. it's yours."
+      SystemPreferences.browser_title = t("title", :name => name)
     end
 end

@@ -43,10 +43,12 @@ class InvitationsController < ApplicationController
     if params[:send]
       if @invitation.send_email
         @invitation.update_attribute(:sent_at, Time.now) 
-        flash[:notice] = "The invitation was sent."
+        flash[:notice] = t("invitations.flash_message_sent")
+        redirect_to :action => :index
       end
+    else
+      redirect_to :action => :show, :id => @invitation.id
     end
-    redirect_to :action => :show, :id => @invitation.id
   end
   
   def show

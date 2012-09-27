@@ -45,9 +45,9 @@ protonet.ui.files.Widget = {
     
     if (this.uploader.features.dragdrop) {
       this.$widget.addClass("supports-drag-and-drop");
-      this.$dropText.text(protonet.t("DRAG_AND_DROP_HERE"));
+      this.$dropText.text(protonet.t("files.hint_drag_and_drop_here"));
     } else {
-      this.$dropText.text(protonet.t("CLICK_HERE_TO_UPLOAD"));
+      this.$dropText.text(protonet.t("files.link_upload"));
     }
   },
   

@@ -96,10 +96,10 @@ $.behaviors({
           url:     instance.getUrl(),
           type:    "delete",
           success: function() {
-            protonet.trigger("flash_message.notice", protonet.t("MEEP_DELETION_SUCCESS"));
+            protonet.trigger("flash_message.notice", protonet.t("meeps.flash_message_delete_success"));
           },
           error: function() {
-            protonet.trigger("flash_message.error", protonet.t("MEEP_DELETION_ERROR"));
+            protonet.trigger("flash_message.error", protonet.t("meeps.flash_message_delete_error"));
           }
         });
       }

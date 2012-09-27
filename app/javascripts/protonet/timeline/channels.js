@@ -53,7 +53,7 @@ protonet.timeline.Channels = {
       error: function(xhr) {
         var isAborted = xhr.status === 0;
         if (!isAborted) {
-          protonet.trigger("flash_message.error", protonet.t("LOADING_MEEPS_ERROR"));
+          protonet.trigger("flash_message.error", protonet.t("channels.flash_message_loading_channels_error"));
         }
         protonet.trigger("channels.loading_end");
       }
@@ -106,7 +106,7 @@ protonet.timeline.Channels = {
       
       if (!$hint) {
         $hint = $("<p>", {
-          html: protonet.t("NO_CHANNELS_SUBSCRIBED", { user_id: protonet.config.admin_ids[0] }),
+          html: protonet.t("channels.hint_no_channels_subscribed", { user_id: protonet.config.admin_ids[0] }),
           "class": "info-message"
         });
       }
@@ -234,12 +234,12 @@ protonet.timeline.Channels = {
         var identifier = protonet.data.Channel.getName(id) || "#" + id;
         
         var success = function() {
-          var message = protonet.t("CHANNEL_SUBSCRIPTION_SUCCESS", { identifier: identifier });
+          var message = protonet.t("channels.flash_message_subscribtion_success", { identifier: identifier });
           protonet.trigger("flash_message.notice", message);
         };
         
         var error = function() {
-          var message = protonet.t("CHANNEL_SUBSCRIPTION_ERROR", { identifier: identifier });
+          var message = protonet.t("channels.flash_message_subscribtion_error", { identifier: identifier });
           protonet.trigger("flash_message.error", message).trigger("channels.loading_end");
         };
         
@@ -319,7 +319,7 @@ protonet.timeline.Channels = {
         }
         
         if (protonet.config.user_id == partner) {
-          protonet.trigger("flash_message.error", protonet.t("RENDEZVOUS_WITH_YOURSELF_ERROR"));
+          protonet.trigger("flash_message.error", protonet.t("channels.flash_message_rendezvous_with_yourself_error"));
           return;
         }
         
@@ -332,7 +332,7 @@ protonet.timeline.Channels = {
           $.ajax("/users/" + partner + "/start_rendezvous", {
             type: "post",
             error: function() {
-              protonet.trigger("flash_message.error", protonet.t("RENDEZVOUS_ERROR")).trigger("channels.loading_end");
+              protonet.trigger("flash_message.error", protonet.t("channels.flash_message_rendezvous_error")).trigger("channels.loading_end");
             }
           });
         }
@@ -440,7 +440,7 @@ protonet.timeline.Channels = {
       }.bind(this),
       
       error: function() {
-        protonet.trigger("flash_message.error", protonet.t("LOADING_CHANNEL_ERROR"));
+        protonet.trigger("flash_message.error", protonet.t("channels.flash_message_loading_channel_error"));
       }
     });
   },

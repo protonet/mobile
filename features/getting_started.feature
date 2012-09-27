@@ -9,7 +9,7 @@ Feature: Getting Started
     Then "admin" should be an admin
     Then I should see "system" in the channel selector
     Then I switch to the channel "system"
-    Then I should see "This is your node speaking" in the timeline
+    Then I should see "This is your Protonet speaking" in the timeline
     Then I switch to the channel "home"
     And I should see the getting started box containing 5 steps
     

@@ -15,7 +15,7 @@ protonet.p("snapshots", function($page) {
       $shareButton  = $page.find("button.share");
   
   function failure() {
-    protonet.trigger("flash_message.error", protonet.t("NO_WEBCAM_SUPPORT"));
+    protonet.trigger("flash_message.error", protonet.t("snapshots.hint_no_webcam"));
   }
   
   function resizePage() {

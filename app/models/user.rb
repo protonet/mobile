@@ -386,7 +386,7 @@ class User < ActiveRecord::Base
             [Role.find_by_title(invitation.role)]
           end
       else
-        errors.add_to_base("The invitation token is invalid.")
+        errors.add_to_base(I18n.t("invitations.flash_message_error"))
         return false
       end
     else

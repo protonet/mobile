@@ -1,11 +1,9 @@
-<h2>Privacy</h2>
+<h2><%= t("preferences.headline_privacy") %></h2>
 
-<p>
-  Here you can configure what your users are allowed to do depending on which network interface they are coming from.
-</p>
+<p><%= t("preferences.text_privacy") %></p>
 
 <p class="info-message">
-  You are currently accessing protonet via network interface "<strong><%= incoming_interface %></strong>".
+  <%= raw(t("preferences.hint_privacy", :interface => incoming_interface)) %>
 </p>
 
 <%- network_interfaces.each do |interface| %>
@@ -15,7 +13,8 @@
     <%= hidden_field_tag 'interface', interface  %>
     <%= hidden_field_tag 'preferences[allow_dashboard_for_strangers]', false  %>
     <label class="checkbox-row">
-      <%= check_box_tag 'preferences[allow_dashboard_for_strangers]', true, (SystemPreferences.privacy[interface]["allow_dashboard_for_strangers"] rescue false) %> Visitors can chat and see files in the <strong><%= Channel.home.display_name %></strong> channel without creating an account
+      <%= check_box_tag 'preferences[allow_dashboard_for_strangers]', true, (SystemPreferences.privacy[interface]["allow_dashboard_for_strangers"] rescue false) %>
+      <%= raw(t("preferences.label_privacy_home_channel", :display_name => Channel.home.display_name)) %>
     </label>
   <%- end %>
   <%= form_tag(preferences_privacy_update_path, { 'data-ajax-auto-submit' => '1' }) do %>
@@ -24,7 +23,7 @@
     <%= hidden_field_tag 'preferences[allow_registrations_for_strangers]', false  %>
     <label class="checkbox-row">
       <%= check_box_tag 'preferences[allow_registrations_for_strangers]', true, (SystemPreferences.privacy[interface]["allow_registrations_for_strangers"] rescue false) %>
-      Visitors can create an account
+      <%= t("preferences.label_privacy_sign_up") %>
     </label>
   <%- end %>
 <%- end %>

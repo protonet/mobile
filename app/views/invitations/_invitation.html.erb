@@ -3,10 +3,10 @@
   <%= avatar(invitation.invitee, :width => 20, :height => 20) %>
   <%= invitation.email %>
   <strong>(<%= invitation.invitee.login %>)</strong>
-  <%= link_to "show invitation", invitation_path(invitation), :class => "action" %>
-  <%= link_to "show profile", user_path(invitation.invitee), :class => "action" %>
+  <%= link_to t("invitations.link_show_invitation"), invitation_path(invitation), :class => "action" %>
+  <%= link_to t("invitations.link_show_profile"), user_path(invitation.invitee), :class => "action" %>
 <%- else %>
   <%= invitation.email %>
-  <%= link_to "show invitation", invitation_path(invitation), :class => "action" %>
+  <%= link_to t("invitations.link_show_invitation"), invitation_path(invitation), :class => "action" %>
 <%- end %>
 </li>

@@ -11,7 +11,7 @@ protonet.ui.files.Details = (function() {
     create: function() {
       var $details = new protonet.utils.Template("file-details-template", this.data).to$();
       if (this.data.uploaderId === -1) {
-        $details.find(".uploader").replaceWith($("<span>", { "class": "hint", text: "unknown" }));
+        $details.find(".uploader").replaceWith($("<span>", { "class": "hint", text: protonet.t("files.hint_unknown_uploader") }));
       }
       return $details;
     },
@@ -21,11 +21,11 @@ protonet.ui.files.Details = (function() {
       protonet.data.File.scan(this.data.path, function(data) {
         var html;
         if (data.malicious === true) {
-          html = "<span class='negative'>Caution, this file might be malware or a virus!</span>";
+          html = "<span class='negative'>" + protonet.t("files.hint_virus") + "</span>";
         } else if (data.malicious === false) {
-          html = "<span class='positive'>no</span>";
+          html = "<span class='positive'>" + protonet.t("files.hint_no_virus") + "</span>";
         } else {
-          html = "<span class='negative'>no virus scan available</span>";
+          html = "<span class='negative'>" + protonet.t("files.hint_no_virus_scan_available") + "</span>";
         }
         $container.find("output.virus-check").html(html);
       });

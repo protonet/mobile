@@ -428,7 +428,7 @@
       
       this.noMeepsHint = $("<div>", {
         "class": "no-meeps-available"
-      }).hide().html(protonet.t("NO_MEEPS_AVAILABLE")).appendTo(this.container);
+      }).hide().html(protonet.t("meeps.hint_no_meeps_available")).appendTo(this.container);
       
       protonet.on("channel.change", function(id) {
         if (this.data.id == id && !this.data.meeps.length) {
@@ -481,7 +481,7 @@
       if (isReplyToViewer && isAllowedToDoNotifications && !isWindowFocused) {
         new protonet.ui.Notification({
           image:    instance.getAvatar({ width: 48, height: 48 }),
-          title:    protonet.t("REPLY_NOTIFICATION_TITLE", { author: meepData.author }),
+          title:    protonet.t("channels.notification_new_reply", { author: meepData.author }),
           text:     meepData.message.truncate(140),
           onclick:  function() {
             protonet.trigger("channel.change", this.data.id);

@@ -10,7 +10,7 @@ protonet.text_extensions.render.code = function(data, hide) {
   var link = $("<a>", {
     href: data.codeLink || data.url,
     target: "_blank",
-    html: hide ? "(show)" : "(hide)"
+    html: protonet.t(hide ? "link_show" : "link_hide")
   }).appendTo(strong);
   
   if (data.code) {
@@ -23,7 +23,7 @@ protonet.text_extensions.render.code = function(data, hide) {
     link.click(function(event) {
       event.preventDefault();
       pre.toggle();
-      link.html(pre.is(":visible") ? "(hide)" : "(show)");
+      link.html(protonet.t(pre.is(":visible") ? "link_hide" : "link_show"));
     });
   }
   return container;

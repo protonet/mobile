@@ -1,5 +1,5 @@
 <%- if @preferences.empty? %>
-  <p class="hint">No preferences available. Maybe you don't have admin rights?</p>
+  <p class="hint"><%= t("preferences.hint_no_preferences_available") %></p>
 <%- else -%>
   <aside>
     <ul>
@@ -16,8 +16,8 @@
     <%- if @selected_section %>
       <%= render :partial => @selected_section %>
     <%- else %>
-      <h2>Administration</h2>
-      <p class="hint">Here you can administrate your node. Only admins can see this.<br>Please note that you can administrate <%= link_to 'users', users_path, { :class => 'promotion-link' } %> and <%= link_to 'channels', channels_path, { :class => 'promotion-link' } %> on their corresponding page.</p>
+      <h2><%= t("preferences.headline_administration") %></h2>
+      <p class="hint"><%= raw(t("preferences.text_administration", :users_path => users_path, :channels_path => channels_path)) %></p>
     <%- end %>
   </output>
 <%- end %>

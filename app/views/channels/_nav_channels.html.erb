@@ -2,20 +2,20 @@
   <ul>
     <li class="<%= 'selected' if @nav == "channels" %>">
       <a href="<%= channels_path %>">
-        <strong>Local Channels (<%= @channels.size %>)</strong>
+        <strong><%= t("channels.nav_local") %> (<%= @channels.size %>)</strong>
       </a>
     </li>
     <%- if permitted_to?(:read, :channels)  %>
     <li class="<%= 'selected' if @nav == "global" %>">
       <a href="<%= global_channels_path %>">
-        <strong>Global Channels</strong>
+        <strong><%= t("channels.nav_global") %></strong>
       </a>
     </li>
     <%- end %>
     <%- if permitted_to?(:create, :channels)  %>
     <li class="<%= 'selected' if @nav == "new" %>">
       <a href="<%= new_channel_path %>">
-        <strong>Create new</strong>
+        <strong><%= t("channels.nav_new") %></strong>
       </a>
     </li>
     <%- end %>

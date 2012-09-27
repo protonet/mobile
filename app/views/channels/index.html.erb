@@ -1,15 +1,13 @@
 <%= render "nav_channels" %>
 <output class="content" data-tab="channels">
-  <h2>Local Channels</h2>
-  <p>
-    Here you can find channels from this protonet. Feel free to join one or create a own channel
-  </p>
-  <h3>Channels you already have subscribed</h3>
+  <h2><%= t("channels.headline_local") %></h2>
+  <p><%= t("channels.text_local") %></p>
+  <h3><%= t("channels.headline_subscribed") %></h3>
   <ul class="channels-list">
     <%= render @subscribed_channels %>
   </ul>
   <% if (not_subscribed_channels = @channels - @subscribed_channels).any? %>
-    <h3>Maybe you want to subscribe one of these</h3>
+    <h3><%= t("channels.headline_unsubscribed") %></h3>
     <ul class="channels-list">
       <%= render not_subscribed_channels %>
     </ul>

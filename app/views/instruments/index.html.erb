@@ -1,5 +1,5 @@
 <section class="main-content instruments-page">
-  <%- message_hint = current_user.stranger? ? 'welcome guest! talk to us...' : "go ahead @#{current_user.display_name}, I'm all yours..." %>
+  <%- message_hint = current_user.stranger? ? t("instruments.placeholder_message_guest") : t("instruments.placeholder_message", :display_name => current_user.display_name) %>
   <%= form_for :meep, :url => meeps_path, :html => { :id => "message-form" } do |f| -%>
     <%= f.hidden_field(:channel_id, :name => "meep[channel_id]", :autocomplete => "off") %>
     <%= f.hidden_field(:socket_id) %>
@@ -9,24 +9,24 @@
     <div id="textarea-wrapper">
       <div id="textarea-wrapper-inner">
         <menu>
-          <li data-extension="smiley" title="Insert emoticon" data-hover-hint="right">Insert emoticon</li>
+          <li data-extension="smiley" title="<%= t("instruments.hint_insert_emoticon") %>" data-hover-hint="right"><%= t("instruments.hint_insert_emoticon") %></li>
           <%- if permitted_to?(:index, :snapshots) %>
-            <li data-extension="snapshot" title="Attach snapshot" data-hover-hint="right">Attach snapshot</li>
+            <li data-extension="snapshot" title="<%= t("instruments.hint_attach_snapshot") %>" data-hover-hint="right"><%= t("instruments.hint_attach_snapshot") %></li>
           <%- else -%>
-            <li data-extension="snapshot" title="Attach snapshot (you need to be logged in)" data-hover-hint="right" class="disabled">Attach snapshot</li>
+            <li data-extension="snapshot" title="<%= t("instruments.hint_attach_snapshot_guest") %>" data-hover-hint="right" class="disabled"><%= t("instruments.hint_attach_snapshot_guest") %></li>
           <%- end %>
           
           <%- if permitted_to?(:read, :files) %>
-            <li data-extension="file" title="Attach files" id="attach-file-extension" data-hover-hint="right">Attach files</li>
+            <li data-extension="file" title="<%= t("instruments.hint_attach_files") %>" id="attach-file-extension" data-hover-hint="right"><%= t("instruments.hint_attach_files") %></li>
           <%- else -%>
-            <li data-extension="file" title="Attach files (you need to be logged in)" id="attach-file-extension" data-hover-hint="right" class="disabled">Attach files</li>
+            <li data-extension="file" title="<%= t("instruments.hint_attach_files_guest") %>" id="attach-file-extension" data-hover-hint="right" class="disabled"><%= t("instruments.hint_attach_files_guest") %></li>
           <%- end %>
         </menu>
         <%= f.text_area(:message, :id => 'message', :placeholder => message_hint) %>
-        <input type="submit" id="submit-message" value="" title="Send message [ENTER]">
+        <input type="submit" id="submit-message" value="" title="<%= t("instruments.label_send_message") %>">
       </div>
       <output id="text-extension-preview">
-        <a title="Delete attachment [ESC]" class="hint remove">remove <strong>&times;</strong></a>
+        <a title="<%= t("instruments.hint_delete_attachment") %>" class="hint remove"><%= t("link_remove") %> <strong>&times;</strong></a>
       </output>
     </div>
   <%- end -%>
@@ -37,7 +37,7 @@
         <%= render :partial => 'channels/tab', :locals => { :channel => channel } %>
       <%- end -%>
     </ul>
-    <%= link_to("+", channels_path, :class => 'manage-channels', :title => 'Add/manage channels', 'data-hover-hint' => 'top') if permitted_to?(:create, :listens) or permitted_to?(:create, :channels) %>
+    <%= link_to("+", channels_path, :class => 'manage-channels', :title => t("instruments.hint_manage_channels"), 'data-hover-hint' => 'top') if permitted_to?(:create, :listens) or permitted_to?(:create, :channels) %>
   </nav>
   <output id="timeline"></output>
   <div class="progress" id="timeline-loading"></div>

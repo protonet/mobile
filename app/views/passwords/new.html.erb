@@ -1,13 +1,11 @@
 <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }) do |f| %>
   <fieldset>
-    <h3>
-      Reset your password via email
-    </h3>
+    <h3><%= t("passwords.headline_reset") %></h3>
     <label>
-      <%= f.text_field :login, :placeholder => "email or user name", :autocorrect => 'off', :autocapitalize => 'off' %>
+      <%= f.text_field :login, :placeholder => t("users.placeholder_user_name_or_email"), :autocorrect => 'off', :autocapitalize => 'off' %>
     </label>
     <div>
-      <%= button "Reset", :id => "password" %>
+      <%= button t("label_reset"), :id => "password" %>
     </div>
   </fieldset>
 <% end %>

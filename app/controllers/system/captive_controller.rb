@@ -2,7 +2,7 @@ module System
   class CaptiveController < ApplicationController
 
     before_filter :only_admin, :only => [:grant, :revoke, :whitelist_clients, :whitelist_sites]
-  
+    
     def index
       render :layout => 'logged_out'
     end
@@ -15,14 +15,14 @@ module System
       mac = SystemBackend.get_mac_for_ip(params[:ip_address])
       if mac
         response_code = if SystemBackend.grant_internet_access(mac, "granted")
-          flash[:notice] = "You've granted internet access to \"#{params[:ip_address]}\"."
+          flash[:notice] = t("preferences.flash_message_grant_success", :ip_adress => params[:ip_address])
           204
         else
-          flash[:error] = "Could not grant internet access to \"#{params[:ip_address]}\"."
+          flash[:error] = t("preferences.flash_message_grant_error_1", :ip_adress => params[:ip_address])
           400
         end
       else
-        flash[:error] = "Could not find mac address for \"#{params[:ip_address]}\"."
+        flash[:error] = t("preferences.flash_message_grant_error_2", :ip_adress => params[:ip_address])
         404
       end 
       respond_to_preference_update
@@ -32,14 +32,14 @@ module System
       mac = SystemBackend.get_mac_for_ip(params[:ip_address])
       if mac
         response_code = if SystemBackend.revoke_internet_access(mac)
-          flash[:notice] = "You've revoked internet access from \"#{params[:ip_address]}\"."
+          flash[:notice] = t("preferences.flash_message_revoke_success", :ip_adress => params[:ip_address])
           204
         else
-          flash[:error] = "Could not revoke internet access from \"#{params[:ip_address]}\"."
+          flash[:error] = t("preferences.flash_message_revoke_error_1", :ip_adress => params[:ip_address])
           400
         end
       else
-        flash[:error] = "Could not find mac address for \"#{params[:ip_address]}\"."
+        flash[:error] = t("preferences.flash_message_revoke_error_2", :ip_adress => params[:ip_address])
         404
       end
       respond_to_preference_update
@@ -56,13 +56,13 @@ module System
         end
       end
       SystemPreferences.captive_whitelist_clients = new_whitelist
-      flash[:notice] = "Your whitelist have been successfully saved"
+      flash[:notice] = t("preferences.flash_message_whitelist_update_success")
       respond_to_preference_update
     end
     
     def whitelist_sites
       SystemPreferences.captive_whitelist_sites = params[:whitelist].scan(/([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})/).flatten
-      flash[:notice] = "Your whitelist have been successfully saved"
+      flash[:notice] = t("preferences.flash_message_whitelist_update_success")
       respond_to_preference_update
     end
   
@@ -88,7 +88,7 @@ module System
         when 301..302
           redirect_to response.header['location']
         else
-          flash[:error] = "Something went wrong please contact the support"
+          flash[:error] = t("preferences.flash_message_something_went_wrong_error")
           redirect_to root_path
         end
       else
@@ -110,7 +110,7 @@ module System
     
     def only_admin
       return true if current_user.admin?
-      flash[:error] = "Not authorized, only admins are allowed to do this."
+      flash[:error] = t("preferences.flash_message_captive_not_authorized")
       head :unauthorized 
     end
 

@@ -65,10 +65,18 @@ invitations:
     - app/javascripts/lib/wysihtml5/dist/wysihtml5-0.3.0_rc1.js
     - app/javascripts/protonet/pages/invitations.js
 unittest:
-    asset_root: public
-    load_path:
-      - app/javascripts
-      - vendor/sprockets/*/src
-      - vendor/plugins/*/javascripts
-    source_files:
-      - test/javascripts/protonet/protonet.js
+  asset_root: public
+  load_path:
+    - app/javascripts
+    - vendor/sprockets/*/src
+    - vendor/plugins/*/javascripts
+  source_files:
+    - test/javascripts/protonet/protonet.js
+en:
+  asset_root: public
+  load_path:
+    - app/javascripts
+    - vendor/sprockets/*/src
+    - vendor/plugins/*/javascripts
+  source_files:
+    - config/locales/en.js

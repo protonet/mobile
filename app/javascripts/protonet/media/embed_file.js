@@ -6,7 +6,7 @@ protonet.media.embedFile = function($container, file) {
       providerName;
   
   function fallback() {
-    $container.html($("<p>", { "class": "hint", text: protonet.t("FILE_PREVIEW_ERROR") }));
+    $container.html($("<p>", { "class": "hint", text: protonet.t("files.hint_no_preview_available") }));
   }
   
   for (providerName in providers) {

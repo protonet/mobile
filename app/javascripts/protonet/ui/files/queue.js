@@ -9,7 +9,7 @@ protonet.ui.files.Queue = (function() {
   var $container, $header, $status, $list, $close, $share, $folder, undef, collapsed, inProgress, queue;
   
   function confirmMessage() {
-    return protonet.t("CONFIRM_CANCEL");
+    return protonet.t("files.confirm_upload_cancel");
   }
   
   return Class.create({
@@ -110,8 +110,8 @@ protonet.ui.files.Queue = (function() {
     },
     
     progress: function(file) {
-      var $item   = queue[file.id],
-          amount  = this.uploader.files.length;
+      var $item = queue[file.id],
+          count = this.uploader.files.length;
       
       if (!$item) {
         return;
@@ -120,22 +120,22 @@ protonet.ui.files.Queue = (function() {
       $item.find(".loading-bar").css("width", file.percent + "%");
       
       $status.text(
-        protonet.t(amount > 1 ? "UPLOADING_FILES" : "UPLOADING_FILE", {
+        protonet.t("files.hint_uploading_files", {
           percent: this.uploader.total.percent,
-          amount:  amount
+          count:   count
         })
       );
     },
     
     error: function(file) {
-      protonet.trigger("flash_message.error", protonet.t("UPLOAD_ERROR", file));
+      protonet.trigger("flash_message.error", protonet.t("files.hint_upload_error", file));
       var $item = queue[file.id];
       if (!$item) {
         return;
       }
       
       $item.addClass("error");
-      $item.find(".file-name").prepend($("<strong>", { text: "(error) ", "class": "error" }));
+      $item.find(".file-name").prepend($("<strong>", { text: protonet.t("hint_upload_error"), "class": "error" }));
     },
     
     uploaded: function(file, xhr) {
@@ -164,7 +164,7 @@ protonet.ui.files.Queue = (function() {
       
       var path = this.uploader.getTargetFolder();
       
-      $status.text(protonet.t("UPLOAD_SUCCESSFUL"));
+      $status.text(protonet.t("files.hint_upload_success"));
       
       $folder
         .text(protonet.data.File.getName(path))

@@ -45,8 +45,8 @@
         sound: {
           type: "boolean",
           labels: {
-            "true": '<input checked="checked" name="sound" type="checkbox" value="1">\nPlay a sound when a message arrived',
-            "false": '<input id="user_notify_me" name="sound" type="checkbox" value="0">\nPlay a sound when a message arrived'
+            "true": '<input checked="checked" name="sound" type="checkbox" value="1"> ' + protonet.t("users.label_play_sound"),
+            "false": '<input name="sound" type="checkbox" value="0"> ' + protonet.t("users.label_play_sound")
           },
           defaultValue: true
         }
@@ -57,8 +57,8 @@
     preferencesConfig.reply_notification = {
       type: "notification",
       labels: {
-        "true": '<input checked="checked" name="notification" type="checkbox" value="1">\nShow desktop notifications',
-        "false": '<input id="user_notify_me" name="notification" type="checkbox" value="0">\nShow desktop notifications'
+        "true": '<input checked="checked" name="notification" type="checkbox" value="1"> ' + protonet.t("users.label_desktop_notifications"),
+        "false": '<input name="notification" type="checkbox" value="0"> ' + protonet.t("users.label_desktop_notifications")
       },
       defaultValue: protonet.ui.Notification.hasPermission()
     };

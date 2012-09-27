@@ -1,12 +1,11 @@
 <output class="content" id="plupload-drop-element">
   <nav class="file-actions">
     <ul>
-      <li><a class="play" data-hover-hint="top" title="Play the selected files in a popup">Play</a></li>
-      <li><a class="upload" id="plupload-browse-button" data-hover-hint="top" title="Upload files">Upload files</a></li>
-      <!-- <li><a class="new-document" data-hover-hint="top" title="Add a new document">New document</a></li> -->
-      <li><a class="new-folder" data-hover-hint="top" title="Create a new folder">New folder</a></li>
-      <li><a class="share" data-hover-hint="top" title="Share the selected files">Share files</a></li>
-      <li><a class="remove" data-hover-hint="top" title="Delete the selected files">Delete files</a></li>
+      <li><a class="play" data-hover-hint="top" title="<%= t("files.hint_play") %>"><%= t("files.link_play") %></a></li>
+      <li><a class="upload" id="plupload-browse-button" data-hover-hint="top" title="<%= t("files.hint_upload_files") %>"><%= t("files.link_upload_files") %></a></li>
+      <li><a class="new-folder" data-hover-hint="top" title="<%= t("files.hint_new_folder") %>"><%= t("files.link_new_folder") %></a></li>
+      <li><a class="share" data-hover-hint="top" title="<%= t("files.hint_share_files") %>"><%= t("files.link_share_files") %></a></li>
+      <li><a class="remove" data-hover-hint="top" title="<%= t("files.hint_delete") %>"><%= t("files.link_delete") %></a></li>
     </ul>
   </nav>
   
@@ -16,9 +15,9 @@
     <table class="file-list">
       <thead>
         <tr>
-          <th class="file-name">Name</th>
-          <th class="file-modified">Last Modified</th>
-          <th class="file-size">Size</th>
+          <th class="file-name"><%= t("files.headline_name") %></th>
+          <th class="file-modified"><%= t("files.headline_last_modified") %></th>
+          <th class="file-size"><%= t("files.headline_size") %></th>
         </tr>
       </thead>
       <tbody></tbody>

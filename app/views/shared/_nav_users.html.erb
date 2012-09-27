@@ -3,19 +3,19 @@
     <%- if permitted_to?(:read, :users)  %>
     <li class="<%= 'selected' if @nav == "users" %>">
       <a href="<%= users_path %>">
-        <strong>All Users (<%= User.registered.size%>)</strong>
+        <strong><%= t("users.nav_all_users") %> (<%= User.registered.size%>)</strong>
       </a>
     </li>
     <%- end %>
     <li class="<%= 'selected' if @nav == "my_profile" %>">
       <a href="<%= my_profile_path %>">
-        <strong>My Profile</strong>
+        <strong><%= t("users.nav_my_profile") %></strong>
       </a>
     </li>
     <%- if permitted_to?(:manage, :invitations)  %>
     <li class="<%= 'selected' if @nav == "invitations" %>">
       <a href="<%= invitations_path %>">
-        <strong>Invitations</strong>
+        <strong><%= t("users.nav_invitations") %></strong>
       </a>
     </li>
     <%- end %>

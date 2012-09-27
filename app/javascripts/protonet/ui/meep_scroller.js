@@ -9,7 +9,7 @@ protonet.ui.MeepScroller = Class.create({
     this.$border       = $("<div>",  { "class": "border" })                                             .appendTo(this.$container);
     this.$next         = $("<a>",    { "class": "next" })                                               .appendTo(this.$border);
     this.$previous     = $("<a>",    { "class": "previous" })                                           .appendTo(this.$border);
-    this.$shareButton  = $("<a>",    { "class": "share", title: "Share/Reply", "data-meep-share": "0" }).appendTo(this.$border);
+    this.$shareButton  = $("<a>",    { "class": "share", title: protonet.t("meeps.link_share"), "data-meep-share": "0" }).appendTo(this.$border);
 
     this._observe();
   },
@@ -30,7 +30,7 @@ protonet.ui.MeepScroller = Class.create({
           // Make sure that the meep doesn't conflict with channels
           data.posted_in = data.posted_in || data.channel_id;
           delete data.channel_id;
-          this.channelName = protonet.data.Channel.getName(data.posted_in) || protonet.t("UNKNOWN_CHANNEL");
+          this.channelName = protonet.data.Channel.getName(data.posted_in) || protonet.t("meeps.name_unknown_channel");
           
           this.select(
             new protonet.timeline.Meep(data).render(this.$meepList)
@@ -164,7 +164,7 @@ protonet.ui.MeepScroller = Class.create({
     }
     
     // Change title text
-    var titleText = protonet.t("MEEP_HEADLINE", {
+    var titleText = protonet.t("meeps.headline_detail", {
       avatar:       '<img src="' + meep.getAvatar({ width: 20, height: 20 }) + '"  alt=\"\">',
       id:           meep.data.id,
       channel_name: this.channelName
@@ -221,7 +221,7 @@ protonet.ui.MeepScroller = Class.create({
         }
       }.bind(this),
       error: function() {
-        protonet.trigger("flash_message.error", protonet.t("DETAIL_VIEW_LOADING_ERROR"));
+        protonet.trigger("flash_message.error", protonet.t("meeps.flash_message_context_loading_error"));
       }
     });
   },

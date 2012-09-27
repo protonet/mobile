@@ -12,7 +12,7 @@ class Images::AvatarsController < ApplicationController
       render :text => response.to_json
       publish "system", "users", { :trigger => "user.changed_avatar" }.merge(response)
     else
-      render :text => { :error => "Your photo did not pass validation! #{current_user.errors.full_messages.to_sentence}" }.to_json
+      render :text => { :error => t("avatars.flash_message_upload_error", :errors => current_user.errors.full_messages.to_sentence) }.to_json
     end
   end
 end

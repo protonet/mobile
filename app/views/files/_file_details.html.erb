@@ -1,14 +1,14 @@
 <section>
   <div class="side-bar">
     <dl>
-      <dt>Size:</dt>        <dd><abbr title="#{size} Bytes">#{prettySize}</abbr></dd>
-      <dt>Uploader:</dt>    <dd><a href="/users/#{uploaderId}" class="uploader">#{uploaderName}</a></dd>
-      <dt>Modified:</dt>    <dd><abbr title="#{modified}">#{prettyModified}</abbr></dd>
-      <dt>Type:</dt>        <dd title="#{mime}">#{mime}</dd>
-      <dt>Malicious:</dt>   <dd><output class="virus-check"><i class="hint">scanning ...</i></output> <a data-hover-hint="top" class="hint" title="protonet automatically scans files for viruses and malware">(?)</a></dd>
+      <dt><%= t("files.label_size") %></dt>        <dd><abbr title="#{size} Bytes">#{prettySize}</abbr></dd>
+      <dt><%= t("files.label_uploader") %></dt>    <dd><a href="/users/#{uploaderId}" class="uploader">#{uploaderName}</a></dd>
+      <dt><%= t("files.label_modified") %></dt>    <dd><abbr title="#{modified}">#{prettyModified}</abbr></dd>
+      <dt><%= t("files.label_type") %></dt>        <dd title="#{mime}">#{mime}</dd>
+      <dt><%= t("files.label_malicious") %></dt>   <dd><output class="virus-check"><i class="hint"><%= t("files.hint_scanning") %></i></output> <a data-hover-hint="top" class="hint" title="<%= t("files.hint_virus_scan") %>">(?)</a></dd>
     </dl>
-    <a class="button" href="#{downloadUrl}" download target="_blank">Download</a>
+    <a class="button" href="#{downloadUrl}" download target="_blank"><%= t("files.label_download") %></a>
   </div>
 
-  <output class="embed"><p class="hint">Loading preview ...</p></output>
+  <output class="embed"><p class="hint"><%= t("files.hint_loading_preview") %></p></output>
 </section>

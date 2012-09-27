@@ -161,7 +161,7 @@ protonet.ui.files.File = (function() {
       
       if (data.rendezvousFolder) {
         var userName = (protonet.data.User.getName(data.rendezvousPartner) || "unknown");
-        data.prettyName = protonet.t("SHARED_BETWEEN_YOU_AND_USER_HTML", { user_name: userName.truncate(20) });
+        data.prettyName = protonet.t("files.name_rendezvous_folder_html", { user_name: userName.truncate(20) });
       }
       
       if (data.uploaded) {
@@ -187,19 +187,19 @@ protonet.ui.files.File = (function() {
       }
       
       if (this.data.path === "/users/" || this.data.path === "/channels/") {
-        protonet.trigger("flash_message.error", protonet.t("FOLDER_CANT_BE_RENAMED_ERROR"));
+        protonet.trigger("flash_message.error", protonet.t("files.flash_message_rename_folder_error"));
         this._cancelRename();
         return;
       }
       
       if (protonet.data.File.isUserFolder(this.data.path)) {
-        protonet.trigger("flash_message.error", protonet.t("FOLDER_BELONGS_TO_USER_ERROR"));
+        protonet.trigger("flash_message.error", protonet.t("files.flash_message_rename_user_folder_error"));
         this._cancelRename();
         return;
       }
       
       if (protonet.data.File.isChannelFolder(this.data.path)) {
-        protonet.trigger("flash_message.error", protonet.t("FOLDER_BELONGS_TO_CHANNEL_ERROR"));
+        protonet.trigger("flash_message.error", protonet.t("files.flash_message_rename_channel_folder_error"));
         this._cancelRename();
         return;
       }
@@ -207,9 +207,15 @@ protonet.ui.files.File = (function() {
       if (this.fileList) {
         var exists = (this.data.type === "folder" ? this.fileList.getFolder(newName) : this.fileList.getFile(newName));
         if (exists) {
-          protonet.trigger("flash_message.error", protonet.t("FILE_ALREADY_EXISTS", {
-            object: protonet.t(this.data.type.toUpperCase()), name: newName
-          }));
+          if (this.data.type === "file") {
+            protonet.trigger("flash_message.error", protonet.t("files.flash_message_file_exists", {
+              name: newName
+            }));
+          } else {
+            protonet.trigger("flash_message.error", protonet.t("files.flash_message_folder_exists", {
+              name: newName
+            }));
+          }
           this._cancelRename();
           return;
         }
@@ -241,7 +247,7 @@ protonet.ui.files.File = (function() {
         }.bind(this),
         error:    function() {
           this.reRenderItem();
-          protonet.trigger("flash_message.error", protonet.t("FILE_RENAME_ERROR"));
+          protonet.trigger("flash_message.error", protonet.t("files.flash_message_rename_error"));
         }.bind(this)
       });
     }
