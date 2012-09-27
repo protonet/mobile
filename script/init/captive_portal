@@ -66,6 +66,8 @@ case $1 in
       echo "   redirect all traffic to $REDIRECTION_TARGET"
       $IPT -t nat -A unknown_user -m mark --mark 99 -p tcp --dport 80  -j DNAT --to-destination $REDIRECTION_TARGET $IPT_COMMENT
       $IPT -t nat -A unknown_user -m mark --mark 99 -p tcp --dport 443 -j DNAT --to-destination $REDIRECTION_TARGET $IPT_COMMENT
+      $IPT -t nat -A unknown_user -m mark --mark 99 -p tcp --dport 53 -j DNAT --to-destination $REDIRECTION_TARGET $IPT_COMMENT
+      $IPT -t nat -A unknown_user -m mark --mark 99 -p udp --dport 53 -j DNAT --to-destination $REDIRECTION_TARGET $IPT_COMMENT
       # create file
       ;;
     stop)
