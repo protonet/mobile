@@ -79,9 +79,5 @@ $(function() {
         return false;
       });
     }
-
-    if (location.hash.indexOf("register") !== -1) {
-      $("form .register-link").click();
-    }
   }
 });
