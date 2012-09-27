@@ -193,7 +193,7 @@ en:
     link_update_profile: "Update your profile"
     link_login: "already have an account?"
     link_user_types_learn_more: "<a id='show-comparison-chart'>Learn more</a> about user types and permissions"
-    link_create_account: "or <a href='/users/sign_up' class='promotion-link' data-avoid-ajax='1'>create an account</a>"
+    link_create_account: "or <a href='/users/sign_up' class='promotion-link register-link' data-avoid-ajax='1'>create an account</a>"
     link_invite: "Tell the world"
     link_write_meep: "Write something"
     link_logout_getting_started: "logout >"
