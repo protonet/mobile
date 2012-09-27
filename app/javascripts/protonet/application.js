@@ -71,11 +71,14 @@ $(function() {
     protonet.ui.users.initialize();
     protonet.dispatcher.initialize();
     protonet.ui.Header.initialize();
-
-    $("form .register-link, form .login-link").on("click", function() {
-      $("form.login, form.register").toggle();
-      return false;
-    });
+    
+    var $forms = $("form.login, form.register");
+    if ($forms.length >= 2) {
+      $("form .register-link, form .login-link").on("click", function() {
+        $forms.toggle();
+        return false;
+      });
+    }
 
     if (location.hash.indexOf("register") !== -1) {
       $("form .register-link").click();
