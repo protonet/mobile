@@ -33,7 +33,7 @@ class SystemPublishToWeb
     
     def remote_status
       return false unless Rails.env == 'production'
-      timeout(5) do
+      timeout(10) do
         open("http://directory.protonet.info/", {"Host" => "#{SystemPreferences.publish_to_web_name}.protonet.info"}).status == ['200', 'OK']
       end  
     rescue Timeout::Error, StandardError
