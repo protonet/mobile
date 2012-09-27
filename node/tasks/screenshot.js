@@ -19,29 +19,6 @@ try {
 console.log("Screenshot subsystem determines a " + systemType + " system.");
 
 
-exports.make_and_publish = function(url, publish) {
-  path.exists(TEMPLATE_DIR + md5(url) + "-clipped.png", function(exists){
-    if(exists) {
-      sys.puts("found screenshot for " + sys.inspect(url));
-      publish({"screenshot":"/externals/" + md5(url) + "-clipped.png"}, "screenshot");
-    } else {
-      sys.puts("making screenshot of " +  sys.inspect(url));
-      // DANGER TODO FIXME -> escape url or sanitize it
-      exec("script/local_deps/webkit2png-0.5.sh --clipwidth=300 --clipheight=200 -C -o " + md5(url) + " -D public/externals " + url, 
-        function (error, stdout, stderr) {
-          console.log('stdout: ' + stdout);
-          console.log('stderr: ' + stderr);
-          if (error !== null) {
-            console.log('exec error: ' + error);
-          } else {
-            publish({"screenshot":"/externals/" + md5(url) + "-clipped.png"}, "screenshot");
-          }
-        }
-      );
-    }
-  });
-};
-
 exports.make_and_send = function(url, response) {
   sys.puts("making screenshot of " +  sys.inspect(url));
   var baseName      = md5(url),
