@@ -289,7 +289,7 @@ en:
     text_web_publishing_off: "Web Publishing is currently <b>not activated</b>. You can enable it <a href='/preferences/show?section=publish_to_web'>here</a>."
     link_show_invitation: "show invitation"
     link_show_profile: "show profile"
-    link_invite: "Invite someone."
+    link_invite: "Invite someone"
     link_wysiwyg_bold: "bold [CTRL+B]"
     link_wysiwyg_italic: "italic [CTRL+I]"
     link_wysiwyg_undo: "undo [CTRL+Z]"
