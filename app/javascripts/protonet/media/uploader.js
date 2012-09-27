@@ -118,7 +118,11 @@ protonet.media.Uploader = (function() {
         uploader.bind("UploadComplete", function() {
           setTimeout(function() { uploader.unbindAll(); }, 0);
         });
-        uploader.trigger("Destroy");
+        
+        try {
+          // This triggers an exception if the element is already removed from the DOM
+          uploader.trigger("Destroy");
+        } catch(e) {}
       } else {
         originalDestroy.apply(this, arguments);
       }
