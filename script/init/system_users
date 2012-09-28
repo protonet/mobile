@@ -46,7 +46,9 @@ case ARGV[0]
   when "umount"
     umount ARGV[1]
   when "samba"
-    set_samba_password ARGV[1], ARGV[2]
+    username = STDIN.gets.strip
+    password = STDIN.gets.strip
+    set_samba_password username, password
   else
     abort("Usage: system_users (mount|umount|samba)")
 end

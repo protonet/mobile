@@ -1,4 +1,5 @@
 require 'digest/sha1'
+require 'shellwords'
 
 class User < ActiveRecord::Base
   include Rabbit
@@ -425,7 +426,11 @@ class User < ActiveRecord::Base
 
   def update_samba_account
     if encrypted_password_changed? || new_record?
-      system_users_script("samba #{login} #{password}")
+      # Using echo and pipe here since sudoers logs the full command in /var/log/auth
+      # double escape since it's going through one echo before being passed into the shell
+      escaped_login = Shellwords.escape(Shellwords.escape(login))
+      escaped_password = Shellwords.escape(Shellwords.escape(password))
+      system_users_script("samba", "echo \"#{escaped_login}\n#{escaped_password}\n\" | ")
     end
   end
 
@@ -446,9 +451,9 @@ class User < ActiveRecord::Base
     self.class.refresh_system_users
   end
   
-  def system_users_script(command)
+  def system_users_script(command, input=nil)
     if Rails.env.production?
-      `/usr/bin/sudo #{Rails.root}/script/init/system_users #{command}`
+      `#{input}/usr/bin/sudo #{Rails.root}/script/init/system_users #{command}`
     else
       `#{Rails.root}/script/init/system_users #{command}`
     end
