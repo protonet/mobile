@@ -16,7 +16,7 @@
       }
       
       // Put text extension rendering into a queue when channel isn't selected
-      if (typeof(meepData.channel_id) == "number" && meepData.channel_id != currentChannelId) {
+      if (typeof(meepData.channel_id) == "number" && meepData.channel_id !== currentChannelId) {
         queue.push({ data: meepData, $element: $meepElement });
         return;
       }

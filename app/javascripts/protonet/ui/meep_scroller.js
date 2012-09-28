@@ -203,8 +203,8 @@ protonet.ui.MeepScroller = Class.create({
         
         var $tempContainer = $("<ul>");
         $.each(data, function(i, meepData) {
-          data.posted_in = data.posted_in || data.channel_id;
-          delete data.channel_id;
+          meepData.posted_in = meepData.posted_in || meepData.channel_id;
+          delete meepData.channel_id;
           new protonet.timeline.Meep(meepData).render($tempContainer);
         });
         if (position === "after") {
