@@ -18,7 +18,7 @@
   soundManager.html5PollingInterval = 80;
   soundManager.useHighPerformance = true;
   
-  var REG_EXP_MP4 = /.+\.mp4(\?|#|$)/i;
+  var REG_EXP_MP4_VIDEO = /.+\.(m4v|mp4v)(\?|#|$)/i;
   
   // We have to insert the flash outside the body in firefox, otherwise the flash gets reloaded as soon as you
   // change the css overflow property of the body element
@@ -57,7 +57,7 @@
   });
   
   protonet.media.Audio.canPlay = function(url) {
-    if (url.match(REG_EXP_MP4)) {
+    if (url.match(REG_EXP_MP4_VIDEO)) {
       return false;
     }
     var origOk = soundManager.ok;
