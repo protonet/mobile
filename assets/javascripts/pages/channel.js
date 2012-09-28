@@ -73,6 +73,19 @@
         if (data.length < 10) {
           this.$loadMore.hide();
         };
+      }.bind(this)).
+      on("user.typing", function(data){
+        if (data.channel_uuid == this.uuid || data.user_id == protonet.currentUser.id) {
+          return
+        };
+        
+      }.bind(this)).
+      on("user.typing_end", function(data){
+        
+      }.bind(this));
+
+      this.$input.keypress(function(event) {
+        if (!event.metaKey) { this._typingStart(); }
       }.bind(this));
 
       this.$form.submit(function(event){

@@ -9,7 +9,9 @@ $document.ready(function(){
     .ajaxComplete(function(){
       $.mobile.hidePageLoadingMsg();
     })
-    .ajaxSuccess(function(data){
+    .ajaxSuccess(function(event, request, options, data){
+      console.log("ajaxSuccess", arguments);
+
       if (data.redirect) {
         window.location.href = data.redirect;
       };
@@ -23,6 +25,7 @@ $document.ready(function(){
         url: $this.attr("action"),
         type: "post",
         data: $this.serializeArray(),
+        cache: false,
         success: function(data){
           if (data["errors"]["login"]){
             var $span = $('<span class="error">')
@@ -47,24 +50,28 @@ $document.ready(function(){
         }
       });
     })
-    .delegate('#sign_in form', 'submit', function(event){
-      event.preventDefault();
-      var $this = $(this);
+    .delegate('#sign_in form#login_form', 'submit', function(event){
+      
+      var $this = $(event.target);
+
+      console.log("submit");
+      console.log($this);
+      console.log($this.attr("action"));
+      console.log($this.serializeArray())
+
       $.ajax({
         url: $this.attr("action"),
         type: "post",
         data: $this.serializeArray(),
         success: function(data){
-          if (data["message"]) {
-            $.mobile.hidePageLoadingMsg();
-            $.mobile.showPageLoadingMsg("e", data["message"], true);
-            setTimeout(function(){
-              $.mobile.hidePageLoadingMsg();
-            }, 2000);
-          };
+          if (data["error"]) {
+            $('<span class="error">')
+              .append(data["error"])
+              .appendTo("label[for=user_password]");
+          }
         }
       });
-      
+      event.preventDefault();
     })
     .delegate('#reset_password form', 'submit', function(event){
       event.preventDefault();

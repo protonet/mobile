@@ -17,7 +17,7 @@ class MobileProtonet < Sinatra::Application
       session[:user] = response.body
       {:redirect => "/"}.to_json
     else
-      {:success => false, :message => "Your credentials are invalid"}.to_json
+      {:success => false, :error => "Your credentials are invalid"}.to_json
     end
   end
 

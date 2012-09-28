@@ -6,6 +6,8 @@ $(function() {
     }, 0);
   });
 
+  protonet.utils.mobile.disableZoomOnFocus();
+
   protonet.usersController = new protonet.UsersController(data.users);
   protonet.channelsController = new protonet.ChannelsController(data.channels);
 

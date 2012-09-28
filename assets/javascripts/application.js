@@ -1,4 +1,4 @@
-//= require 'lib/fastclick.js'
+//= require 'lib/jquery.fastClick.js'
 //= require 'lib/jquery-class-create/class.js'
 
 //= require 'utils/browser.js'
@@ -10,6 +10,7 @@
 //= require 'utils/escape_for_reg_exp.js'
 //= require 'utils/imageproxy.js'
 //= require 'utils/viewport.js'
+//= require 'utils/mobile.js'
 
 //= require 'events/emitter.js'
 //= require_self

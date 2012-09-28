@@ -62,9 +62,18 @@ class MobileProtonet < Sinatra::Application
 
   before do
     if params[:reload]
+      login = session[:login]
+      passwd = session[:password]
+      session.clear
+      session[:login] = login
+      session[:password] = passwd
       @current_user = nil
       response = Protolink::Protonet.open(settings.api_url, session[:login], session[:password]).auth
-      session[:user] = JSON.parse(response.body)
+      session[:user] = response.body
+    end
+
+    if request.request_method === "POST"
+      cache_control :no_cache
     end
   end
 

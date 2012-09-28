@@ -1,3 +1,7 @@
+html, body{
+  height: 100%;
+}
+
 span.error{
   color: #f00;
   font-size: 12px;
@@ -9,18 +13,21 @@ span.error{
   margin: .6em 10% .6em;
 }
 .channel-page.ui-page{
-  background: url("/images/grey.png") repeat;
+  background: url(grey.png) repeat;
   height: 100%;
 }
 .channel-page .ui-header a.userlist{
   right: 45px;
 }
 span.ui-icon.ui-icon-new-chat{
-  background-image: url(/images/new_chat.png);
+  background-image: url(new_chat.png);
   background-size: 18px 18px;
   /* Alternatively background-size: contain; */
   height: 18px;
   width: 18px;
+}
+.channel-page{
+  min-height: 100%;
 }
 .channel-page .ui-header{
   position: fixed;
@@ -76,9 +83,8 @@ span.ui-icon.ui-icon-new-chat{
 ul.timeline{
   margin:0;
   padding:10px 0;
-  overflow:hidden;a
-  background: url("/images/grey.png") repeat;
-
+  overflow:hidden;
+  background: url(grey.png) repeat;
 }
 li.meep{
   box-sizing:border-box;
