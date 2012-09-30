@@ -38,11 +38,11 @@ class User < ActiveRecord::Base
   after_create :send_create_notification, :unless => :anonymous?
   after_create :listen_to_channels, :unless => :anonymous?
   after_create :mark_invitation_as_accepted, :if => :invitation_token
-  after_create [:create_folder, :update_samba_account], :if => lambda {|u|
+  after_create :create_folder, :if => lambda {|u|
     !u.stranger? &&
     !u.system?
   }
-  after_create :refresh_system_users, :if => lambda {|u|
+  after_create [:refresh_system_users, :update_samba_account], :if => lambda {|u|
     !u.stranger? &&
     !u.system? &&
     Rails.env.production?
@@ -425,7 +425,7 @@ class User < ActiveRecord::Base
   end
 
   def update_samba_account
-    if encrypted_password_changed? || new_record?
+    if encrypted_password_changed? || !password.blank?
       # Using echo and pipe here since sudoers logs the full command in /var/log/auth
       # double escape since it's going through one echo before being passed into the shell
       escaped_login = Shellwords.escape(Shellwords.escape(login))
