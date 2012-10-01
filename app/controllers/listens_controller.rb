@@ -59,10 +59,10 @@ class ListensController < ApplicationController
       listen = user.listens.find_by_channel_id(channel.id)
       listen.verified = true
       listen.save(:validate => false)
-      flash[:notice] = t("flash_message_create_for_user_success", :user_display_name => listen.user.display_name, :channel_display_name => channel.display_name)
+      flash[:notice] = t("listens.flash_message_create_for_user_success", :user_display_name => listen.user.display_name, :channel_display_name => channel.display_name)
       redirect_to_channel(channel)
     else
-      flash[:error] = flash[:notice] = t("flash_message_create_for_user_error", :search_term => params[:search_term])
+      flash[:error] = flash[:notice] = t("listens.flash_message_create_for_user_error", :search_term => params[:search_term])
       redirect_to_channel(channel)
     end
   end

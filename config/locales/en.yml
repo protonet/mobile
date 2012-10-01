@@ -234,7 +234,7 @@ en:
     flash_message_signup_error: "Please check the highlighted fields."
     
   listens:
-    flash_message_create_success: "You successfully subscribed to '%{display_name}'."
+    flash_message_created_success: "You successfully subscribed to '%{display_name}'."
     flash_message_wait_for_verification: "This channel is private. Please wait until @%{display_name} has verified your subscription."
     flash_message_created_error: "This channel does not exist (anymore)."
     flash_message_destroyed_myself_success: "You successfully unsubscribed from '%{display_name}'."
