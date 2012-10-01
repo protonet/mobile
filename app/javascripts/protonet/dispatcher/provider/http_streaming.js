@@ -134,9 +134,9 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
       this.ajax.send(null);
       
       // iOS can only keep a request open for 60 seconds
-      // So we open a new socket connection after 55 seconds to make sure the user function doesn't go offline
+      // So we open a new socket connection after 56 seconds to make sure the user function doesn't go offline
       // during reconnect
-      this.reconnectTimeout = setTimeout(this._connect.bind(this, win), 55000);
+      this.reconnectTimeout = setTimeout(this._connect.bind(this, win), 56000);
     },
     
     _shouldReconnect: function(request) {

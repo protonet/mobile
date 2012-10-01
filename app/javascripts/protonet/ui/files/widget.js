@@ -153,24 +153,26 @@ protonet.ui.files.Widget = {
   },
   
   getFiles: function() {
-    if (this.currentRequest) {
-      this.currentRequest.abort();
-    }
-    
-    this.currentRequest = protonet.data.File.getLastModified(protonet.data.Channel.getFolder(this.currentChannelId), {
-      success: function(data) {
-        $.extend(data, { id: this.currentChannelId });
-        protonet.trigger("channel.update_files", data, true);
-      }.bind(this),
+    protonet.dispatcher.onready(function() {
+      if (this.currentRequest) {
+        this.currentRequest.abort();
+      }
       
-      error:   function() {
-        // TODO: proper error handling
-        protonet.trigger("channel.update_files", { id: this.currentChannelId, files: [] }, true);
-      }.bind(this),
-      
-      complete: function() {
-        this.$widget.removeClass("loading");
-      }.bind(this)
-    });
+      this.currentRequest = protonet.data.File.getLastModified(protonet.data.Channel.getFolder(this.currentChannelId), {
+        success: function(data) {
+          $.extend(data, { id: this.currentChannelId });
+          protonet.trigger("channel.update_files", data, true);
+        }.bind(this),
+
+        error:   function() {
+          // TODO: proper error handling
+          protonet.trigger("channel.update_files", { id: this.currentChannelId, files: [] }, true);
+        }.bind(this),
+
+        complete: function() {
+          this.$widget.removeClass("loading");
+        }.bind(this)
+      });
+    }.bind(this));
   }
 };
