@@ -146,6 +146,7 @@ protonet.ui.files.Widget = {
   
   highlight: function($element) {
     $element
+      .stop(true, true)
       .css("backgroundColor", "#ffff99")
       .animate({ "backgroundColor": "#ecf1fe" }, 1000, function() {
         $element.css("backgroundColor", "");

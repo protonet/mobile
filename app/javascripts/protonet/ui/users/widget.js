@@ -220,6 +220,7 @@ protonet.ui.users.Widget = {
     // Highlight effect for users that just came online
     if (isOnline && !hasBeenOnlineBefore && this.highlightingEnabled) {
       $element
+        .stop(true, true)
         .addClass("new-online")
         .css("backgroundColor", "#ffff99")
         .animate({ "backgroundColor": "#ecf1fe" }, 1000, function() {
