@@ -41,7 +41,8 @@ protonet.dispatcher.provider.HttpStreaming = (function() {
       var data  = $.extend({
             user_id:  protonet.config.user_id,
             token:    protonet.config.token,
-            type:     "web"
+            type:     "web",
+            t:        +new Date() // prevent caching
           }, additionalData),
           queryParams         = encodeURIComponent(JSON.stringify(data)),
           url                 = protonet.config.xhr_streaming_url + "?" + queryParams;
