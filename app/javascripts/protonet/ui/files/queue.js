@@ -128,14 +128,14 @@ protonet.ui.files.Queue = (function() {
     },
     
     error: function(file) {
-      protonet.trigger("flash_message.error", protonet.t("files.hint_upload_error", file));
+      protonet.trigger("flash_message.error", protonet.t("files.flash_message_upload_error", file));
       var $item = queue[file.id];
       if (!$item) {
         return;
       }
       
       $item.addClass("error");
-      $item.find(".file-name").prepend($("<strong>", { text: protonet.t("hint_upload_error"), "class": "error" }));
+      $item.find(".file-name").prepend($("<strong>", { text: protonet.t("files.hint_upload_error"), "class": "error" }));
     },
     
     uploaded: function(file, xhr) {

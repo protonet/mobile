@@ -118,7 +118,6 @@ protonet.i18n = {
     hint_folder_empty: "This folder is empty.",
     hint_drag_and_drop_here: "Drag & drop your files here",
     hint_upload_success: "All files uploaded (100 %)",
-    hint_upload_error: "The file '%{name}' couldn't be uploaded",
     hint_uploading_files: {
       one:    "Uploading file (%{percent} %)",
       other:  "Uploading %{count} files (%{percent} %)"
@@ -135,6 +134,7 @@ protonet.i18n = {
     hint_no_virus_scan_available: "no virus scan available",
     link_upload: "Click here to upload files",
     link_fullscreen: "Toggle fullscreen mode",
+    flash_message_upload_error: "The file '%{name}' couldn't be uploaded",
     flash_message_file_exists: "A file named '%{name}' already exists.",
     flash_message_folder_exists: "A folder named '%{name}' already exists.",
     flash_message_rename_error: "Couldn't rename file/folder. Maybe name already exists?",
