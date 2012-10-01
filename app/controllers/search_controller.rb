@@ -9,7 +9,10 @@ class SearchController < ApplicationController
         perform_search
         
         render :json => @search_results.hits.map {|hit|
-          Meep.prepare_for_frontend(hit.instance, { 'channel_id' => nil, 'posted_in' => hit.instance.channel.id })
+          Meep.prepare_for_frontend(hit.instance, {
+            'channel_id' => nil,
+            'posted_in'  => hit.instance.channel.id rescue nil
+          })
         }.to_json
       }
     end
