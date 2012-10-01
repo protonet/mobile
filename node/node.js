@@ -45,24 +45,9 @@ global.FILES_PATH = envPaths[global.env] || envPaths.development;
 process.umask(0007);
 
 
-// Exception handling in production:
-//    - Don't restart node.js when an exception gets thrown
-//    - Log any exception to airbrake.io
 if (global.env === "production") {
   var airbrakeClient = require("airbrake").createClient("e0e395c06aa4a6756b5d585fee266999");
-  // We don't use airbrakeClient.handleExceptions() here since it will kill the process after an exception
-  process.on('uncaughtException', function(err) {
-    airbrakeClient.log('Airbrake: Uncaught exception, sending notification for:');
-    airbrakeClient.log(err.stack);
-    airbrakeClient.notify(err, function(notifyErr, url) {
-      if (notifyErr) {
-        airbrakeClient.log('Airbrake: Could not notify service.');
-        airbrakeClient.log(notifyErr.stack);
-      } else {
-        airbrakeClient.log('Airbrake: Notified service: ' + url);
-      }
-    });
-  });
+  airbrakeClient.handleExceptions();
 }
 
 /*----------------------------------- SOCKET TASKS -----------------------------------*/
@@ -176,19 +161,17 @@ http.createServer(function(request, response) {
 });
 
 /*----------------------------------- STARTUP STUFF -----------------------------------*/
-var tmp_file = 'tmp/pids/node_' + global.htmlTaskPort + '.pid';
-fs.writeFile(tmp_file, process.pid.toString(), function (err) {
+var tmpFile = 'tmp/pids/node_' + global.htmlTaskPort + '.pid';
+fs.writeFile(tmpFile, process.pid.toString(), function (err) {
   assert.ifError(err);
   console.log('       PID file saved');
   systemUp();
 });
 
-var stdin = process.openStdin();
-
 /*----------------------------------- SHUTDOWN STUFF ----------------------------------*/
 function shutdownTasks() {
   console.log('\r-----> Cleaning PID file');
-  fs.unlink(tmp_file, function (err) {
+  fs.unlink(tmpFile, function (err) {
     process.exit(0);
   });
 }

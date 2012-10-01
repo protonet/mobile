@@ -107,6 +107,10 @@ exports.init = function(amqpConnection) {
     var response = responses[message.seq];
     delete responses[message.seq];
     
+    if (!response) {
+      return;
+    }
+    
     if (!message.result) {
       response.writeHead(403);
       response.end("error");
