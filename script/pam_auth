@@ -14,8 +14,6 @@ else
 
   if [ "$?" == "0" ]; then
     echo -e "add auth_$hash 0 300 2\r\nOK\r" | nc localhost 11211
-    echo -ne "$password\n$password\n" | smbpasswd -a -s $login
-    echo "created/updated samba account for $login"
     exit 0
   else
     exit 9
