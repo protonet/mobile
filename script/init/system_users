@@ -40,6 +40,17 @@ def set_samba_password(username, password)
   end
 end
 
+def prepare_smb_rename(old_login, new_login)
+  smb_password_file = "/tmp/smb_#{old_login}"
+  `pdbedit -i tdbsam -e smbpasswd:#{smb_password_file} -u #{old_login} && smbpasswd -x #{old_login}`
+  `perl -p -i -e "s/#{old_login}/#{new_login}/g" #{smb_password_file}`
+end
+
+def smb_rename(old_login, new_login)
+  smb_password_file = "/tmp/smb_#{old_login}"
+  `pdbedit -i smbpasswd:#{smb_password_file} && rm #{smb_password_file}`
+end
+
 case ARGV[0]
   when "mount"
     mount ARGV[1], ARGV[2]
@@ -49,6 +60,10 @@ case ARGV[0]
     username = STDIN.gets.strip
     password = STDIN.gets.strip
     set_samba_password username, password
+  when "prepare_smb_rename"
+    prepare_smb_rename ARGV[1], ARGV[2]
+  when "smb_rename"
+    smb_rename ARGV[1], ARGV[2]
   else
     abort("Usage: system_users (mount|umount|samba)")
 end

@@ -53,16 +53,11 @@ class User < ActiveRecord::Base
   after_destroy :move_owned_channels_to_anonymous
   after_destroy :delete_folder
 
-  after_update :update_system_user_folder, :if => lambda {|u| 
+  after_update [:check_samba_account, :update_system_user_folder, :update_samba_account], :if => lambda {|u| 
     !u.stranger? && 
     !u.system?
   }
 
-  after_update :update_samba_account, :if => lambda {|u| 
-    !u.stranger? && 
-    !u.system?
-  }  
-  
   validates_uniqueness_of :email, :if => lambda {|u| !u.stranger?}
   validates_uniqueness_of :login, :if => lambda {|u| !u.stranger?}
   
@@ -424,6 +419,12 @@ class User < ActiveRecord::Base
     end
   end
 
+  def check_samba_account
+    if login_changed?
+      system_users_script("prepare_smb_rename #{login_was} #{login}")
+    end
+  end
+
   def update_samba_account
     if encrypted_password_changed? || !password.blank?
       # Using echo and pipe here since sudoers logs the full command in /var/log/auth
@@ -431,6 +432,10 @@ class User < ActiveRecord::Base
       escaped_login = Shellwords.escape(Shellwords.escape(login))
       escaped_password = Shellwords.escape(Shellwords.escape(password))
       system_users_script("samba", "echo \"#{escaped_login}\n#{escaped_password}\n\" | ")
+    elsif login_changed?
+      # check_samba_account needs to run first, then our system_users need to be updated
+      # and lastly we update the samba account to reflect the login changes
+      system_users_script("smb_rename #{login_was} #{login}")
     end
   end
 
