@@ -110,14 +110,16 @@ protonet.ui.files.Queue = (function() {
     },
     
     progress: function(file) {
-      var $item = queue[file.id],
-          count = this.uploader.files.length;
+      var $item         = queue[file.id],
+          percent       = file.percent === 100 ? 99 : file.percent,
+          totalPercent  = this.uploader.total.percent === 100 ? 99 : this.uploader.total.percent,
+          count         = this.uploader.files.length;
       
       if (!$item) {
         return;
       }
       
-      $item.find(".loading-bar").css("width", file.percent + "%");
+      $item.find(".loading-bar").css("width", percent + "%");
       
       $status.text(
         protonet.t("files.hint_uploading_files", {
@@ -199,6 +201,14 @@ protonet.ui.files.Queue = (function() {
         this.reset();
         return false;
       }.bind(this));
+      
+      $("html").on("mouseup", function() {
+        this.collapse();
+      }.bind(this));
+      
+      $container.on("mouseup", function(event) {
+        event.stopPropagation();
+      });
     },
     
     share: function() {
