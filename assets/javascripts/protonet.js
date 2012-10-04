@@ -6,6 +6,28 @@ $(function() {
     }, 0);
   });
 
+  $document.delegate('input, textarea',{
+    'focus': function(){
+      $('.channel-page .ui-header').css({
+        position:'absolute'
+      });
+    },
+    'blur': function(){
+      $('.channel-page .ui-header').css({
+        position:'fixed'
+      });
+    }
+  });
+  
+  // try to workarount this 300ms
+  // 
+  //$document.delegate('a', 'vmouseup', function(event){
+  //  event.preventDefault();
+  //  event.stopImmediatePropagation();
+  //  $(this).trigger("click");
+  //});
+
+
   protonet.utils.mobile.disableZoomOnFocus();
 
   protonet.usersController = new protonet.UsersController(data.users);

@@ -2872,6 +2872,9 @@ $.mobile.getMaxScrollForTransition = $.mobile.getMaxScrollForTransition || defau
 
 	//simply set the active page's minimum height to screen height, depending on orientation
 	function resetActivePageHeight(){
+		if ($("input:focus, textarea:focus").length > 0) {
+			return;
+		};
 		var aPage = $( "." + $.mobile.activePageClass ),
 			aPagePadT = parseFloat( aPage.css( "padding-top" ) ),
 			aPagePadB = parseFloat( aPage.css( "padding-bottom" ) ),
