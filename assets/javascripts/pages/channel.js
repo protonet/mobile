@@ -2,6 +2,22 @@
 
   var $scrollinput = $('<input type="text>">');
 
+  function $buildMeep(meep){
+    var $meep = new protonet.utils.Template("meep",{
+      author: meep.author,
+      message: meep.message,
+      created_at: meep.created_at,
+      avatar: protonet.utils.ImageProxy.getImageUrl(meep.avatar,{
+        height: 25,
+        width: 25
+      })
+    }).to$();
+    if (meep.user_id == protonet.config.user_id) {
+      $meep.addClass("me");
+    };
+    return $meep;
+  }
+
   protonet.pages.Channel = Class.create({
     initialize: function(data){
       this.channel   = data;
@@ -38,51 +54,62 @@
     },
     _observe: function(){
     
-      protonet.
-      on("meep.created." + this.id, function(meep){
-        var $meep = new protonet.utils.Template("meep",{
-          author: meep.author,
-          message: meep.message,
-          created_at: meep.created_at,
-          avatar: protonet.utils.ImageProxy.getImageUrl(meep.avatar,{
-            height: 25,
-            width: 25
-          })
-        }).to$();
-        
-        if (meep.user_id == protonet.config.user_id) {
-          $meep.addClass("me");
-        };
+      protonet
+        .on("meep.created." + this.id, function(meep){
+          var $meep = $buildMeep(meep);
+          if (meep === this.channel.lastMeep) {
+            // append
+            var previousMeep = this.channel.getMeep(-2, -1);
+            if (previousMeep 
+                  && previousMeep.user_id === meep.user_id
+                  && (meep.created_at - previousMeep.created_at < (5).minutes()) ) {
 
-        if (meep == this.channel.lastMeep) {
-          this.$timeline.append($meep);
-          if (protonet.currentPage == this) {
-            setTimeout(function () {
-              this.scrollToBottom();
-            }.bind(this), 0);
+              var $meepToMerge  = this.$timeline.find("li.meep:last"),
+                  $timeToUpdate = $meepToMerge.find("time"),
+                  prettyDate    = protonet.utils.prettifyDate(meep.created_at);
+              $meep.find("article").insertAfter($meepToMerge.find("article:last"));
+              $timeToUpdate.attr("title", meep.created_at).text(prettyDate);
+
+            }else{
+              this.$timeline.append($meep);
+            }
+            if (protonet.currentPage == this) {
+              setTimeout(function () {
+                this.scrollToBottom();
+              }.bind(this), 0);
+            };
+          }else{
+            // prepend
+            var nextMeep = this.channel.getMeep(1, 2);
+            if (nextMeep 
+                  && nextMeep.user_id === meep.user_id
+                  && (nextMeep.created_at - meep.created_at < (5).minutes()) ) {
+              // merge Meeps
+              var $meepToMerge = this.$timeline.find("li.meep:first");
+              $meep.find("article").insertBefore($meepToMerge.find("article:first"));
+            }else{
+              this.$timeline.prepend($meep);
+            }
+          }
+
+          protonet.trigger("meep.rendered", $meep, meep);
+
+        }.bind(this))
+        .on("channel.meepsLoaded", function(channel, data){
+          if (channel != this.channel) { return; };
+          if (data.length < 10) {
+            this.$loadMore.hide();
           };
-        }else{
-          this.$timeline.prepend($meep);
-        }
-
-        protonet.trigger("meep.rendered", $meep, meep);
-
-      }.bind(this)).
-      on("channel.meepsLoaded", function(channel, data){
-        if (channel != this.channel) { return; };
-        if (data.length < 10) {
-          this.$loadMore.hide();
-        };
-      }.bind(this)).
-      on("user.typing", function(data){
-        if (data.channel_uuid == this.uuid || data.user_id == protonet.currentUser.id) {
-          return
-        };
-        
-      }.bind(this)).
-      on("user.typing_end", function(data){
-        
-      }.bind(this));
+        }.bind(this))
+        .on("user.typing", function(data){
+          if (data.channel_uuid == this.uuid || data.user_id == protonet.currentUser.id) {
+            return
+          };
+          
+        }.bind(this))
+        .on("user.typing_end", function(data){
+          
+        }.bind(this));
 
       this.$input.keypress(function(event) {
         if (!event.metaKey) { this._typingStart(); }

@@ -12,6 +12,16 @@
 //= require 'utils/viewport.js'
 //= require 'utils/mobile.js'
 
+//= require 'utils/escape_html.js'
+//= require 'utils/quotify.js'
+//= require 'utils/codify.js'
+//= require 'utils/textify.js'
+//= require 'utils/smilify.js'
+//= require 'utils/heartify.js'
+//= require 'utils/emojify.js'
+//= require 'utils/auto_link.js'
+
+
 //= require 'events/emitter.js'
 //= require_self
 

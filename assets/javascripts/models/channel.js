@@ -38,7 +38,9 @@
             new protonet.Meep(data[i])
           };
           this.loading = undefined;
-          callback && callback(data);
+          callback && setTimeout(function(){
+            callback(data);
+          }, 0);
           protonet.trigger("channel.meepsLoaded", this, data);
         }.bind(this)
       });
@@ -52,6 +54,9 @@
     },
     destroy: function(){
       protonet.trigger("channel.destroy", this);
+    },
+    getMeep: function(a, b){
+      return this.meeps.slice(a, b)[0];
     },
     _observe: function(){
       protonet.on("meep.created."+ this.id, function(meep){

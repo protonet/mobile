@@ -49,15 +49,15 @@
        * append a channel to channel_navigation
        * delete Channel if user unsubscribed channel
        */
-      protonet.
-      on("meep.rendered channel.cacheExpired", function(){
-        if (timeout) {
-          clearTimeout(timeout);
-        };
-        timeout = setTimeout(function(){
-          this.updateChannelList();
-        }.bind(this), 1000);
-      }.bind(this));
+      protonet
+        .on("meep.rendered channel.cacheExpired", function(){
+          if (timeout) {
+            clearTimeout(timeout);
+          };
+          timeout = setTimeout(function(){
+            this.updateChannelList();
+          }.bind(this), 1000);
+        }.bind(this));
 
       this.$userList.delegate("a.user-link", "click touchend", function(event){
         event.preventDefault();

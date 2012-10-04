@@ -1,9 +1,14 @@
 <script type="protonet/template" id="meep">
   <li class="meep">
     <div class="bubble">
-      <img src="#{avatar}" alt="#{author}" class="author"/>
-      <p>#{message}</p>
-      <span>#{author} <time title="#{created_at}"></time></span>
+      <div class="author">
+        <img src="#{avatar}" alt="#{author}" />
+        <span>#{author}</span>
+      </div>
+      <div>
+      <article>#{message}</article>
+      </div>
+      <time title="#{created_at}"></time>
     </div>
   </li>
 </script>

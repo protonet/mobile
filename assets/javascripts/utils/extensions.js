@@ -127,6 +127,9 @@ Number.prototype.second = Number.prototype.seconds = function() {
   return this * 1000;
 };
 
+Number.prototype.minute = Number.prototype.minutes = function() {
+  return this * 1000 * 60;
+};
 
 
 //---------------------------- OBJECT ------------------------------

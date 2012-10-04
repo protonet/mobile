@@ -6,12 +6,29 @@
       this.channel_id = +data.channel_id;
       this.author     = data.author;
       this.avatar     = data.avatar;
-      this.created_at = data.created_at;
-      this.message    = data.message;
+      this.created_at = new Date(data.created_at);
+      this.message    = parse(data.message);
       this.user_id    = data.user_id;
       protonet.trigger("meep.created."+this.channel_id, this);
     }
   });
+
+  function parse(message){
+    $.each([
+      // Order of functions is essential!
+      protonet.utils.escapeHtml,
+      protonet.utils.quotify,
+      protonet.utils.codify,
+      protonet.utils.textify,
+      protonet.utils.smilify,
+      protonet.utils.heartify,
+      protonet.utils.emojify,
+      protonet.utils.autoLink
+    ], function(i, method) {
+      message = method(message);
+    });
+    return message;
+  }
 
   protonet.on("meep.receive", function(data){
     new protonet.Meep(data);  
