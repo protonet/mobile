@@ -7,8 +7,17 @@
  * Wrapper for the plupload lib
  */
 protonet.media.Uploader = (function() {
+  var undef;
+  
+  var xhrSupport = (function() {
+    var xhr = new (window.XMLHttpRequest || $.noop)();
+    return !!(xhr.sendAsBinary || xhr.upload);
+  })();
+  
   var defaultConfig = {
-    max_file_size:  ($.browser.mozilla && !window.FormData) ? "250mb" : "100000mb",
+    max_file_size:  Infinity,
+    // Only use chunking with m
+    chunk_size:     xhrSupport ? "100mb" : 0,
     runtimes:       "html5,flash,html4",
     flash_swf_url:  "/flash/plupload.flash.swf",
     url:            protonet.config.node_base_url + "/fs/upload",
@@ -126,6 +135,10 @@ protonet.media.Uploader = (function() {
       } else {
         originalDestroy.apply(this, arguments);
       }
+    };
+    
+    uploader.pause = function() {
+      this.state = plupload.STOPPED;
     };
     
     uploader.bind("UploadComplete", function(uploader, files) {

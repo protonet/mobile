@@ -117,10 +117,13 @@ protonet.i18n = {
     confirm_upload_cancel: "This will cancel the upload. Are you sure?",
     hint_folder_empty: "This folder is empty.",
     hint_drag_and_drop_here: "Drag & drop your files here",
-    hint_upload_success: "All files uploaded (100 %)",
+    hint_upload_success: {
+      one:    "Uploaded file <strong>(100 %)</strong>",
+      other:  "Uploaded <strong>%{count}</strong> files <strong>(100 %)</strong>"
+    },
     hint_uploading_files: {
-      one:    "Uploading file (%{percent} %)",
-      other:  "Uploading %{count} files (%{percent} %)"
+      one:    "Uploading file <strong>(%{percent} %)</strong>",
+      other:  "Uploading <strong>%{index}</strong> of <strong>%{count}</strong> files <strong>(%{percent} %)</strong>"
     },
     hint_no_preview_available: "No preview available",
     hint_file_privacy: "Only you can see and edit this file",
@@ -130,7 +133,7 @@ protonet.i18n = {
     hint_unknown_uploader: "unknown",
     hint_virus: "Caution, this file might be malware or a virus!",
     hint_no_virus: "no",
-    hint_upload_error: "(error) ",
+    hint_upload_error: "Error uploading: ",
     hint_no_virus_scan_available: "no virus scan available",
     link_upload: "Click here to upload files",
     link_fullscreen: "Toggle fullscreen mode",

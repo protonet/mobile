@@ -1,9 +1,12 @@
 <section id="file-queue">
-  <h3>
+  <h3 class="gradient">
     <output class="status"><%= t("files.headline_uploading_files") %></output>
     <a class="close">&times;</a>
   </h3>
-  <ol></ol>
+  <output class="file-container"></output>
+  <div class="error-container">
+    <button class="try-again"><%= t("files.label_try_again") %></button> <button class="resume"><%= t("files.label_ignore") %></button>
+  </div>
   <div class="share-container">
     <%= raw(t("files.text_share", :href => user_files_path(current_user))) %>
   </div>

@@ -59,24 +59,23 @@ a.file, a.folder {
 
 .file { background-position: 0 -328px; }
 .folder { background-position: 0 -3526px; }
-.queued .file, .queued .folder { opacity: 0.6; }
-.uploading .file, .uploading .folder { opacity: 0.6; }
 
 #file-queue {
   position: fixed;
   bottom: 0;
-  margin-bottom: -2px;
   left: 50%;
-  width: 478px;
+  width: 500px;
   z-index: 102;
-  padding: 1px;
   margin-left: -250px;
+  margin-bottom: -8px;
+  padding-bottom: 8px;
   background: #fff;
-  background: rgba(255, 255, 255, 0.7);
-  border: 10px solid #666;
-  border: 10px solid rgba(0, 0, 0, 0.4);
-  border-bottom: 0;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+#file-queue .file-container {
+  display: none;
+  padding: 9px 7px;
 }
 
 #file-queue .percent {
@@ -93,12 +92,7 @@ a.file, a.folder {
   border-top: 0;
 }
 
-#file-queue ol {
-  overflow: auto;
-  max-height: 170px;
-}
-
-#file-queue .uploading a {
+#file-queue .uploading {
   line-height: 20px;
   cursor: default;
 }
@@ -113,7 +107,7 @@ a.file, a.folder {
 
 #file-queue .file-name {
   display: inline-block;
-  max-width: 300px;
+  max-width: 340px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -132,7 +126,7 @@ a.file, a.folder {
 #file-queue .uploading .loading-bar-container {
   display: block;
   border: 1px solid #487bff;
-  height: 3px;
+  height: 5px;
   width: 300px;
 }
 
@@ -140,15 +134,16 @@ a.file, a.folder {
   width: 0;
   height: 100%;
   background: #487bff;
+  background: rgba(72, 123, 255, 0.6);
 }
 
 #file-queue h3 {
   font-size: 13px;
   font-weight: normal;
-  padding: 0 8px;
-  line-height: 30px;
+  padding: 0 10px;
+  line-height: 36px;
   color: #fff;
-  background: #487bff;
+  border: 0;
   position: relative;
   cursor: pointer;
 }
@@ -157,12 +152,12 @@ a.file, a.folder {
   font-weight: bold;
   cursor: pointer;
   position: absolute;
-  right: 0;
+  right: 2px;
   top: 0;
-  line-height: 29px;
+  line-height: 35px;
   font-size: 16px;
   text-decoration: none;
-  padding: 0 4px;
+  padding: 0 8px;
   color: #fff;
 }
 
@@ -170,6 +165,7 @@ a.file, a.folder {
   color: #000;
 }
 
+#file-queue .error-container,
 #file-queue .share-container {
   border-top: 1px solid #ddd;
   background: #FFFBE0;

@@ -253,6 +253,8 @@ en:
     label_type: "Type:"
     label_malicious: "Malicious:"
     label_download: "Download"
+    label_ignore: "Ignore"
+    label_try_again: "Try again"
     headline_name: "Name"
     headline_last_modified: "Last modified"
     headline_size: "Size"

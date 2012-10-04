@@ -1,4 +1,5 @@
 //= require "../../utils/prettify_file_size.js"
+//= require "../confirm.js"
 
 protonet.ui.files.Queue = (function() {
   var defaultConfig = {
@@ -6,7 +7,7 @@ protonet.ui.files.Queue = (function() {
     shareImmediate: false
   };
   
-  var $container, $header, $status, $list, $close, $share, $folder, undef, collapsed, inProgress, queue;
+  var $container, $header, $fileContainer, $statusContainer, $closeLink, $folderLink, $shareContainer, $errorContainer, $currentFile, currentFile, undef, collapsed, inProgress, queue = [];
   
   function confirmMessage() {
     return protonet.t("files.confirm_upload_cancel");
@@ -24,18 +25,9 @@ protonet.ui.files.Queue = (function() {
       
       this.uploader.bind("FilesAdded", function(uploader, files) {
         if (!inProgress) {
-          this.create();
           queue = [];
+          this.create();
           inProgress = true;
-          $container.removeClass("uploaded").css("bottom", 0);
-          $list.css("opacity", 1).empty();
-          $share.hide();
-        }
-        
-        $.each(files, function(i, file) { this.add(file); }.bind(this));
-        
-        if (this.config.collapsed && !inProgress) {
-          this.collapse(true);
         }
       }.bind(this));
       
@@ -67,14 +59,15 @@ protonet.ui.files.Queue = (function() {
         return;
       }
       
-      $container  = new protonet.utils.Template("file-queue-template").to$().appendTo("body");
+      $container        = new protonet.utils.Template("file-queue-template").to$().appendTo("body");
       
-      $header     = $container.find("h3");
-      $status     = $container.find(".status");
-      $list       = $container.find("ol");
-      $close      = $container.find(".close");
-      $share      = $container.find(".share-container");
-      $folder     = $container.find(".folder-link");
+      $header           = $container.find("h3");
+      $fileContainer    = $container.find(".file-container");
+      $shareContainer   = $container.find(".share-container");
+      $errorContainer   = $container.find(".error-container");
+      $statusContainer  = $container.find(".status");
+      $closeLink        = $container.find(".close");
+      $folderLink       = $container.find(".folder-link");
       
       this._observe();
     },
@@ -86,76 +79,55 @@ protonet.ui.files.Queue = (function() {
         size: protonet.utils.prettifyFileSize(file.size)
       }, true).to$();
       
-      $item.appendTo($list);
+      $fileContainer.html($item).stop(true, true).show().css({ opacity: 0 }).animate({ opacity: 1 }, "fast");
       
-      queue[file.id] = $item;
-    },
-    
-    scrollTo: function(file) {
-      var $item = queue[file.id];
-      $list.scrollTop(Math.max($item.prop("offsetTop") - $list.outerHeight() + $item.outerHeight(), 0));
+      this.status(file);
+      
+      return $item;
     },
     
     uploading: function(file) {
-      var $item = queue[file.id];
-      if (!$item) {
-        return;
-      }
+      $errorContainer.hide();
+      $shareContainer.hide();
       
-      $item.removeClass("queued").addClass("uploading");
-      this.scrollTo(file);
+      $currentFile = this.add(file);
+      currentFile = file;
       
       // Show confirm dialog if user leaves page before upload has finished
       $window.off("beforeunload.file_queue").on("beforeunload.file_queue", confirmMessage);
     },
     
     progress: function(file) {
-      var $item         = queue[file.id],
-          percent       = file.percent === 100 ? 99 : file.percent,
+      var percent       = file.percent === 100 ? 99 : file.percent,
           totalPercent  = this.uploader.total.percent === 100 ? 99 : this.uploader.total.percent,
           count         = this.uploader.files.length;
       
-      if (!$item) {
-        return;
-      }
+      $currentFile.find(".loading-bar").stop(true, true).animate({ width: percent + "%" }, 300);
       
-      $item.find(".loading-bar").css("width", percent + "%");
-      
-      $status.text(
-        protonet.t("files.hint_uploading_files", {
-          percent: this.uploader.total.percent,
-          count:   count
-        })
-      );
+      this.status(file);
     },
     
     error: function(file) {
       protonet.trigger("flash_message.error", protonet.t("files.flash_message_upload_error", file));
-      var $item = queue[file.id];
-      if (!$item) {
-        return;
-      }
       
-      $item.addClass("error");
-      $item.find(".file-name").prepend($("<strong>", { text: protonet.t("files.hint_upload_error"), "class": "error" }));
+      $currentFile.addClass("error");
+      $currentFile.find(".file-name").prepend($("<strong>", { text: protonet.t("files.hint_upload_error"), "class": "error" }));
+      
+      $errorContainer.show();
+      $currentFile.find(".loading-bar-container").hide();
+      
+      this.expand();
+      this.uploader.pause();
     },
     
     uploaded: function(file, xhr) {
-      var data      = xhr.responseJSON,
-          $item     = queue[file.id];
+      var data = xhr.responseJSON;
       
-      if (!$item) {
-        return;
-      }
+      queue.push(data);
       
-      $item
-        .data("file", data)
+      $currentFile
         .removeClass("uploading")
-        .css("backgroundColor", "#ffff99")
-        .animate({ "backgroundColor": "#ffffff" });
-      
-      $item
-        .find("a").attr("href", protonet.data.File.getUrl(data.path));
+        .attr("href", protonet.data.File.getUrl(data.path));
     },
     
     allUploaded: function() {
@@ -166,22 +138,26 @@ protonet.ui.files.Queue = (function() {
       
       var path = this.uploader.getTargetFolder();
       
-      $status.text(protonet.t("files.hint_upload_success"));
+      $statusContainer.html(
+        protonet.t("files.hint_upload_success", {
+          count: queue.length
+        })
+      );
       
-      $folder
+      $folderLink
         .text(protonet.data.File.getName(path))
         .attr("href", protonet.data.File.getUrl(path));
       
-      $share.show();
+      $fileContainer.hide();
+      $errorContainer.hide();
+      
+      if (queue.length > 0) {
+        $shareContainer.show();
+      }
       
       if (this.config.shareImmediate) {
         this.share();
-        this.collapse(this.config.collapsed);
-        return;
-      }
-      
-      if (this.config.collapsed) {
-        this.collapse(true);
+        this.collapse();
       } else {
         this.expand();
       }
@@ -189,55 +165,67 @@ protonet.ui.files.Queue = (function() {
     
     _observe: function() {
       $header.on("click", this.toggle.bind(this));
-      $list.on("click mousedown", ".uploading a, .queued a", false);
+      $fileContainer.on("click mousedown", ".uploading", false);
       
-      $share.on("click", "button", function() {
+      $shareContainer.on("click", "button", function() {
         this.share();
         this.reset();
         return false;
       }.bind(this));
       
-      $close.on("click", function() {
+      $errorContainer.on("click", "button.try-again", function() {
+        currentFile.status = plupload.QUEUED;
+        this.uploader.start();
+      }.bind(this));
+      
+      $errorContainer.on("click", "button.resume", function() {
+        this.uploader.start();
+      }.bind(this));
+      
+      $closeLink.on("click", function() {
         this.reset();
         return false;
       }.bind(this));
-      
-      $("html").on("mouseup", function() {
-        this.collapse();
-      }.bind(this));
-      
-      $container.on("mouseup", function(event) {
-        event.stopPropagation();
-      });
     },
     
     share: function() {
-      var paths = $.map($list.children(), function(li) {
-        var file = $(li).data("file");
-        // file can be undefined when the corresponding file wasn't uploaded correctly
-        return file ? file.path : null;
+      var paths = $.map(queue, function(file) {
+        return file.path;
       });
-      protonet.trigger("modal_window.hide").trigger("form.attach_files", paths);
+      
+      if ($("#message-form").length) {
+        protonet.trigger("modal_window.hide").trigger("form.attach_files", paths);
+      } else {
+        location.href = "/?" + $.param({ files: paths });
+      }
     },
     
     reset: function() {
       if (inProgress && !confirm(confirmMessage())) {
         return;
       }
+      
       this.uploader.stop();
-      this.uploader.splice(0);
+      
+      this.clearQueue();
       
       inProgress = false;
-      queue = [];
+      
+      $fileContainer.empty();
       
       $container.animate({
         bottom: (-$container.outerHeight()).px()
-      }, "fast", function() {
+      }, 200, function() {
         $container.remove();
         $container = undef;
-      }.bind(this));
+      });
       
       $window.off("beforeunload.file_queue");
+    },
+    
+    clearQueue: function() {
+      this.uploader.splice(0);
+      queue = [];
     },
     
     toggle: function() {
@@ -248,24 +236,31 @@ protonet.ui.files.Queue = (function() {
       }
     },
     
-    collapse: function(immediate) {
-      var duration = (immediate ? 0 : 100);
-      $list.animate({ opacity: 0 }, 100);
+    collapse: function() {
       $container.animate({
-        bottom: (-$list.outerHeight() - ($share.is(":visible") ? $share.outerHeight() : 0)).px()
-      }, duration, function() {
+        bottom: (-($container.outerHeight() - $container.cssUnit("padding-bottom")[0] - $header.outerHeight())).px()
+      }, 200, function() {
         collapsed = true;
-      }.bind(this));
+      });
     },
     
     expand: function() {
-      var duration = 100;
-      $list.animate({ opacity: 1 }, duration);
       $container.animate({
         bottom: (0).px()
-      }, duration, function() {
+      }, 200, function() {
         collapsed = false;
-      }.bind(this));
+      });
+    },
+    
+    status: function(file) {
+      var percent = this.uploader.total.percent === 100 ? 99 : this.uploader.total.percent;
+      $statusContainer.html(
+        protonet.t("files.hint_uploading_files", {
+          percent: percent,
+          count:   this.uploader.files.length,
+          index:   this.uploader.files.indexOf(file) + 1
+        })
+      );
     }
   });
 })();

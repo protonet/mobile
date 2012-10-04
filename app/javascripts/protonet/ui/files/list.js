@@ -734,8 +734,7 @@ protonet.ui.files.List = (function() {
     _initUploader: function() {
       this.fileQueue = new protonet.ui.files.Queue({
         drop_element:  "plupload-drop-element",
-        browse_button: "plupload-browse-button",
-        collapsed:     true
+        browse_button: "plupload-browse-button"
       });
       
       this.uploader = this.fileQueue.uploader;
@@ -834,7 +833,7 @@ protonet.ui.files.List = (function() {
         
         $element.addClass("error");
         $element.find(".file").prepend($("<strong>", { "class": "error", text: "(error) " }));
-        $element.find(".progress").remove();
+        $element.find(".progress").hide();
       });
       
       this.uploader.bind("FileUploaded", function(uploader, file, xhr) {
@@ -862,6 +861,17 @@ protonet.ui.files.List = (function() {
         
         this.highlight(newFile.$element);
       }.bind(this));
+      
+      this.uploader.bind("BeforeUpload", function(uploader, file) {
+        var $element  = $("#" + file.id);
+        if (!$element.length) {
+          return;
+        }
+        
+        $element.removeClass("error");
+        $element.find(".error").remove();
+        $element.find(".progress").show();
+      });
       
       this.uploader.disableBrowse();
     },

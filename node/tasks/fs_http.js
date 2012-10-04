@@ -96,6 +96,111 @@ function setAccessControlHeaders(response, request) {
   response.setHeader('Access-Control-Expose-Headers', '*');
 }
 
+
+function upload(message, response) {
+  function moveAfterUpload(fromPath) {
+    mkdirSync(targetDir, FOLDER_PERMISSIONS);
+    fs.rename(fromPath, newFilePath, function(err) {
+      fs.chmod(newFilePath, FILE_PERMISSIONS);
+
+      try {
+        // this doesn't work with file paths including umlauts
+        xattr.set(newFilePath, "user.owner", message.params.user_id || -1);
+      } catch(e) {
+        console.log("Failed to set extended attributes on", newFilePath);
+      }
+
+      file.path = newFilePath;
+
+      delete virusScanCache[newFilePath];
+
+      response.writeHead(200, { "Content-Type": "application/json" });
+      
+      response.end(JSON.stringify({
+        type:     "file",
+        modified: new Date(),
+        name:     fileName,
+        size:     fs.statSync(newFilePath).size,
+        mime:     file.mime,
+        path:     absolutePathForFrontend(newFilePath)
+      }));
+    });
+  }
+  
+  function respondToChunk() {
+    response.writeHead(200);
+    response.end("chunk received");
+  }
+  
+  var targetDir   = ROOT_DIR + (message.params.target_folder || ""),
+      chunk       = +message.params.chunk,
+      chunks      = +message.params.chunks,
+      file        = message.file,
+      fileName    = normalizeInput(message.params.name),
+      newFilePath = path.join(targetDir, fileName),
+      tmpFilePath = path.join("/tmp/", fileName + ".part");
+  
+  if (chunks) {
+    if (chunk === 0) {
+      fs.rename(file.path, tmpFilePath, respondToChunk);
+    } else {
+      var writeStream = fs.createWriteStream(tmpFilePath, { flags: "a" }),
+          readStream  = fs.createReadStream(file.path);
+      writeStream.on("close", function() {
+        if ((chunk + 1) === chunks) {
+          moveAfterUpload(tmpFilePath);
+        } else {
+          respondToChunk();
+        }
+        fs.unlink(file.path);
+      });
+      readStream.pipe(writeStream);
+    }
+  } else {
+    moveAfterUpload(file.path);
+  }
+}
+
+
+function download(message, response) {
+  if (typeof(message.params.paths) === 'string') {
+    message.params.paths = [message.params.paths];
+  }
+  
+  var file              = path.join(ROOT_DIR, message.params.paths[0]),
+      stat              = fs.statSync(file),
+      contentLength     = stat.size,
+      contentType       = lookupMime(file),
+      shouldBeEmbedded  = message.params.embed == "true" && embeddableFiles.indexOf(contentType) !== -1,
+      header            = {},
+      readStream,
+      start,
+      end;
+  
+  // Make sure that the user is not downloading a symbolic link but it's target
+  while (fs.lstatSync(file).isSymbolicLink()) {
+    file = path.join(path.dirname(file), fs.readlinkSync(file));
+  }
+  
+  header['Content-Type']  = contentType;
+  
+  if (!shouldBeEmbedded) {
+    header['Content-Disposition'] = 'attachment;filename="' + path.basename(file) + '"';
+  }
+  
+  if (global.env === "production") {
+    header['X-Sendfile'] = file;
+    response.writeHead(200, header);
+    response.end();
+  } else {
+    header['Content-Length'] = contentLength;
+    response.writeHead(200, header);
+    readStream = fs.createReadStream(file);
+    readStream.pipe(response);
+  }
+}
+
+
 exports.init = function(amqpConnection) {
   queue    = amqpConnection.queue("node-fs-http");
   exchange = amqpConnection.exchange("rpc");
@@ -103,7 +208,9 @@ exports.init = function(amqpConnection) {
   queue.bind(exchange, 'rpc.responses');
   queue.subscribeJSON(function(message) {
     message = JSON.parse(message.data);
+    
     sys.puts(message.action + " verification queue message: " + util.inspect(message));
+    
     var response = responses[message.seq];
     delete responses[message.seq];
     
@@ -119,83 +226,10 @@ exports.init = function(amqpConnection) {
     
     switch (message.action) {
       case 'upload':
-        var targetDir   = ROOT_DIR + (message.params.target_folder || ""),
-            file        = message.file;
-
-        mkdirSync(targetDir, FOLDER_PERMISSIONS);
-        
-        file.name = normalizeInput(file.name);
-        
-        var newFilePath = path.join(targetDir, file.name);
-        
-        fs.rename(file.path, newFilePath, function(err) {
-          fs.chmod(newFilePath, FILE_PERMISSIONS);
-          
-          try {
-            // this doesn't work with file paths including umlauts
-            xattr.set(newFilePath, "user.owner", message.params.user_id || -1);
-          } catch(e) {
-            console.log("Failed to set extended attributes on", newFilePath);
-          }
-          
-          file.path = newFilePath;
-
-          delete virusScanCache[newFilePath];
-
-          response.writeHead(200, { "Content-Type": "application/json" });
-
-          response.end(JSON.stringify({
-            type:     "file",
-            modified: new Date(),
-            name:     file.name,
-            size:     file.size,
-            mime:     file.mime,
-            path:     absolutePathForFrontend(newFilePath)
-          }));
-        });
+        upload(message, response);
         break;
-        
       case 'download':
-        try {
-          if (typeof(message.params.paths) === 'string') {
-            message.params.paths = [message.params.paths];
-          }
-          
-          var file              = path.join(ROOT_DIR, message.params.paths[0]),
-              stat              = fs.statSync(file),
-              contentLength     = stat.size,
-              contentType       = lookupMime(file),
-              shouldBeEmbedded  = message.params.embed == "true" && embeddableFiles.indexOf(contentType) !== -1,
-              header            = {},
-              readStream,
-              start,
-              end;
-          
-          // Make sure that the user is not downloading a symbolic link but it's target
-          while (fs.lstatSync(file).isSymbolicLink()) {
-            file = path.join(path.dirname(file), fs.readlinkSync(file));
-          }
-          
-          header['Content-Type']  = contentType;
-          
-          if (!shouldBeEmbedded) {
-            header['Content-Disposition'] = 'attachment;filename="' + path.basename(file) + '"';
-          }
-          
-          if (global.env === "production") {
-            header['X-Sendfile'] = file;
-            response.writeHead(200, header);
-            response.end();
-          } else {
-            header['Content-Length'] = contentLength;
-            response.writeHead(200, header);
-            readStream = fs.createReadStream(file);
-            readStream.pipe(response);
-          }
-        } catch(ex) {
-          response.writeHead(500);
-          response.end("error: " + ex);
-        }
+        download(message, response);
         break;
     }
   });
