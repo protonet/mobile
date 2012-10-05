@@ -273,7 +273,7 @@ exports.lastModified = function(params, reply) {
         
         total++;
         
-        // avoid leaks stop after 150,000 files
+        // avoid leaks, stop after 150,000 files
         if (total > 150000) {
           break;
         }
@@ -452,8 +452,10 @@ exports.init = function(amqpConnection) {
       
       if (!channelUuid) { return; }
       
-      clearTimeout(lastModifiedTimeouts[channelUuid]);
+      if (lastModifiedTimeouts[channelUuid]) { return; }
+      
       lastModifiedTimeouts[channelUuid] = setTimeout(function() {
+        delete lastModifiedTimeouts[channelUuid];
         fsWorker.lastModified({ parent: absolutePathForFrontend(channelPath) }, function(err, data) {
           if (!err) {
             channelExchange.publish("channels." + channelUuid, {
