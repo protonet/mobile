@@ -69,10 +69,11 @@
     },
     
     one: function(eventName, handler) {
+      var that = this;
       return this.on(eventName, function() {
-        this.off(eventName, arguments.callee);
+        that.off(eventName, arguments.callee);
         handler.apply(this, $.makeArray(arguments));
-      }.bind(this));
+      });
     },
     
     trigger: function() {

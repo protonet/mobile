@@ -129,7 +129,7 @@ function upload(message, response) {
   
   function respondToChunk() {
     response.writeHead(200);
-    response.end("chunk received");
+    response.end(JSON.stringify({ success: 1 }));
   }
   
   var targetDir   = ROOT_DIR + (message.params.target_folder || ""),
