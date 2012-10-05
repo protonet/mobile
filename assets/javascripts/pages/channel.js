@@ -48,6 +48,7 @@
     scrollToBottom: function(){
       if (protonet.currentPage == this) {
         setTimeout(function(){
+          console.log(document.body.scrollHeight - protonet.utils.viewport().height);
           window.scrollTo(0, document.body.scrollHeight - protonet.utils.viewport().height );
         }, 0);
       };
@@ -95,18 +96,21 @@
           protonet.trigger("meep.rendered", $meep, meep);
 
         }.bind(this))
+
         .on("channel.meepsLoaded", function(channel, data){
           if (channel != this.channel) { return; };
           if (data.length < 10) {
             this.$loadMore.hide();
           };
         }.bind(this))
+
         .on("user.typing", function(data){
           if (data.channel_uuid == this.uuid || data.user_id == protonet.currentUser.id) {
             return
           };
           
         }.bind(this))
+
         .on("user.typing_end", function(data){
           
         }.bind(this));

@@ -1,4 +1,3 @@
-//= require 'lib/jquery.fastClick.js'
 //= require 'lib/jquery-class-create/class.js'
 
 //= require 'utils/browser.js'
@@ -20,10 +19,15 @@
 //= require 'utils/heartify.js'
 //= require 'utils/emojify.js'
 //= require 'utils/auto_link.js'
+//= require 'utils/is_window_focused.js'
 
+//= require 'storage/storage.js'
 
 //= require 'events/emitter.js'
 //= require_self
+
+//= require 'ui/flash_message.js'
+//= require 'ui/pretty_date.js'
 
 //= require 'dispatcher/dispatcher.js'
 //= require 'dispatcher/websocket.js'
@@ -38,7 +42,6 @@
 //= require 'controllers/usersController.js'
 
 //= require 'pages.js'
-//= require 'pages/pretty_date.js'
 //= require 'pages/dashboard.js'
 //= require 'pages/channel.js'
 

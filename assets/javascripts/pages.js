@@ -7,6 +7,7 @@
   protonet.pages = {}
 
   protonet.one("sync.succeeded", function(){
+    
     var page = pageCache['/'+ hash];
 
     if (page) {

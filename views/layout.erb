@@ -23,6 +23,11 @@
 
 <%= yield %>
 
+<div class="flash-message ">
+  <p></p>
+  <a href="/" class="flash-message-close-link" data-avoid-ajax="1">×</a>
+</div>
+
 <% if current_user %>
   <script>
     window.$window   = $(window);
@@ -40,10 +45,11 @@
         users:                            null,
         channels:                         null,
         api_url:                          "<%= settings.api_url %>",
-        debug_mode:                       false
+        debug_mode:                       true
       },
       events: {},
-      utils: {}
+      utils: {},
+      ui: {}
     };
   </script>
   <% if settings.production %>

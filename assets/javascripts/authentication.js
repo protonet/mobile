@@ -50,15 +50,11 @@ $document.ready(function(){
         }
       });
     })
+
     .delegate('#sign_in form#login_form', 'submit', function(event){
       
       var $this = $(event.target);
-
-      console.log("submit");
-      console.log($this);
-      console.log($this.attr("action"));
-      console.log($this.serializeArray())
-
+      
       $.ajax({
         url: $this.attr("action"),
         type: "post",
@@ -73,6 +69,7 @@ $document.ready(function(){
       });
       event.preventDefault();
     })
+
     .delegate('#reset_password form', 'submit', function(event){
       event.preventDefault();
 
@@ -97,8 +94,8 @@ $document.ready(function(){
           }
         }
       });
-
     })
+
     .delegate('#edit_password form', 'submit', function(event){
       var $this = $(this),
           password = $this.find("#user_password").val(),

@@ -1,3 +1,8 @@
+/*
+ *= require_self
+ *= require flash-message
+ */
+
 html, body{
   height: 100%;
   font-family: Helvetica, Arial, sans-serif;

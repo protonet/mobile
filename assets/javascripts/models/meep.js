@@ -10,8 +10,15 @@
       this.message    = parse(data.message);
       this.user_id    = data.user_id;
       protonet.trigger("meep.created."+this.channel_id, this);
+      updateChannelStates(this);
     }
   });
+
+  function updateChannelStates(meep){
+    var channelStates = protonet.storage.get("channel_states") || {};
+    channelStates[meep.channel_id] = meep.id;
+    protonet.storage.set("channel_states", channelStates);
+  };
 
   function parse(message){
     $.each([

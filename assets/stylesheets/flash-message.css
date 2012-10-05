@@ -1,0 +1,49 @@
+.flash-message {
+  display: none;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: fixed;
+  z-index: 11;
+  color: #333;
+  padding: 0 10px;
+  line-height: 24px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.flash-message p{
+  margin: 0;
+}
+
+.flash-message .flash-message-close-link {
+  position: absolute;
+  top: 0;
+  right: 8px;
+  display: none;
+  font-size: 12px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.flash-message.sticky .flash-message-close-link {
+  display: inline;
+}
+
+.flash-message.notice {
+  background: rgb(0, 204, 0);
+  background: rgba(0, 204, 0, 0.6);
+}
+
+.flash-message.warning,
+.flash-message.error {
+  background: rgb(231, 92, 121);
+  background: rgba(231, 92, 121, 0.6);
+}
+
+.flash-message.sticky {
+  background: #FFFBE0;
+  border: solid #FED144;
+  border-width: 4px 1px 1px;
+  cursor: auto;
+  color: #000;
+}
