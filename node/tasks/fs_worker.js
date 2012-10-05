@@ -258,7 +258,7 @@ exports.lastModified = function(params, reply) {
       return reply(err, []);
     }
     
-    var files = [], result;
+    var files = [], result, total = 0;
     for (var f in results) {
       result = results[f];
       if (!result.isDirectory()) {
@@ -270,16 +270,24 @@ exports.lastModified = function(params, reply) {
           mime:     lookupMime(f),
           modified: Math.max(+result.mtime, +result.ctime)
         });
+        
+        total++;
+        
+        // avoid leaks stop after 150,000 files
+        if (total > 150000) {
+          break;
+        }
       }
     }
     
+    // garbage collect
+    results = null;
+    
     files.sort(function(file1, file2) {
-      return file1.modified - file2.modified;
+      return file1.modified > file2.modified ? 1 : -1;
     });
     
     files.reverse();
-    
-    var total = files.length;
     
     files = files.slice(0, 4);
     
@@ -428,9 +436,10 @@ exports.info = function(params, reply) {
 
 
 exports.init = function(amqpConnection) {
-  var channelExchange = amqpConnection.exchange("channels"),
-      fsWorker        = this,
-      channelsPath    = path.join(ROOT_DIR, "channels");
+  var channelExchange       = amqpConnection.exchange("channels"),
+      fsWorker              = this,
+      lastModifiedTimeouts  = {},
+      channelsPath          = path.join(ROOT_DIR, "channels");
   
   watch.createMonitor(channelsPath, { ignoreDotFiles: true, ignoreSymbolicLinks: true, maxDeepness: 5 }, function(monitor) {
     function push(fsPath) {
@@ -443,16 +452,19 @@ exports.init = function(amqpConnection) {
       
       if (!channelUuid) { return; }
       
-      fsWorker.lastModified({ parent: absolutePathForFrontend(channelPath) }, function(err, data) {
-        if (!err) {
-          channelExchange.publish("channels." + channelUuid, {
-            trigger: "channel.update_files",
-            id:      channelId,
-            files:   data.files,
-            total:   data.total
-          });
-        }
-      });
+      clearTimeout(lastModifiedTimeouts[channelUuid]);
+      lastModifiedTimeouts[channelUuid] = setTimeout(function() {
+        fsWorker.lastModified({ parent: absolutePathForFrontend(channelPath) }, function(err, data) {
+          if (!err) {
+            channelExchange.publish("channels." + channelUuid, {
+              trigger: "channel.update_files",
+              id:      channelId,
+              files:   data.files,
+              total:   data.total
+            });
+          }
+        });
+      }, 2000);
     }
 
     monitor.on("created", function (fsPath, stat) {
