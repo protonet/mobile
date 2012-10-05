@@ -7,15 +7,16 @@
   protonet.pages = {}
 
   protonet.one("sync.succeeded", function(){
-    
+
     var page = pageCache['/'+ hash];
 
     if (page) {
       protonet.currentPage = page;
       page.$content.appendTo($('body'));
       page.scrollToBottom();
-
+      protonet.trigger("channel.change", page.id);
       $.mobile.initializePage();
+      
     }else{
       $.mobile.initializePage();
     }
@@ -39,6 +40,11 @@
     protonet.currentPage.$content.bind("pageshow", function(event){
       protonet.currentPage.scrollToBottom();
     });
+
+    if (page.id) {
+      protonet.trigger("channel.change", page.id);
+    };
+
   }
 
   $('body').delegate("a", "click", function(event){

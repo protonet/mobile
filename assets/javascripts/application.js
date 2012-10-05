@@ -4,6 +4,7 @@
 //= require 'utils/template.js'
 //= require 'utils/extensions.js'
 //= require 'utils/prettify_date.js'
+//= require "utils/strip_tags.js"
 //= require 'utils/parse_url.js'
 //= require 'utils/convert_to_absolute_url.js'
 //= require 'utils/escape_for_reg_exp.js'
@@ -29,6 +30,10 @@
 //= require 'ui/flash_message.js'
 //= require 'ui/pretty_date.js'
 
+//= require 'text_extensions/text_extensions.js'
+//= require 'text_extensions/config.js'
+//= require 'text_extensions/render.js'
+
 //= require 'dispatcher/dispatcher.js'
 //= require 'dispatcher/websocket.js'
 //= require 'dispatcher/flash_socket.js'
@@ -37,6 +42,7 @@
 //= require 'models/meep.js'
 //= require 'models/channel.js'
 //= require 'models/user.js'
+//= require 'models/file.js'
 
 //= require 'controllers/channelsController.js'
 //= require 'controllers/usersController.js'

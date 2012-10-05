@@ -9,6 +9,7 @@
       this.created_at = new Date(data.created_at);
       this.message    = parse(data.message);
       this.user_id    = data.user_id;
+      this.text_extension = data.text_extension;
       protonet.trigger("meep.created."+this.channel_id, this);
       updateChannelStates(this);
     }

@@ -48,7 +48,6 @@
     scrollToBottom: function(){
       if (protonet.currentPage == this) {
         setTimeout(function(){
-          console.log(document.body.scrollHeight - protonet.utils.viewport().height);
           window.scrollTo(0, document.body.scrollHeight - protonet.utils.viewport().height );
         }, 0);
       };
