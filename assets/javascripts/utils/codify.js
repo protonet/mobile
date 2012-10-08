@@ -15,7 +15,7 @@ protonet.utils.codify = (function() {
   return function(str) {
     return str.replace(REG_EXP, function(match, $1, $2) {
       $2 = trimEmptyLines($2);
-      return "<pre>" + $2  /* protonet.utils.prettifyCode($2, true) */ + "</pre>";
+      return "<pre>" + protonet.utils.prettifyCode($2, true) + "</pre>";
     });
   };
 })();

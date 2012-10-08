@@ -1,4 +1,5 @@
 protonet.text_extensions.render.image = function(data, preventResizing) {
+
   var imageSize = {
     width:  Math.min(protonet.text_extensions.config.IMAGE_SIZE.width,  data.imageWidth  || Infinity),
     height: Math.min(protonet.text_extensions.config.IMAGE_SIZE.height, data.imageHeight || Infinity)
@@ -12,7 +13,7 @@ protonet.text_extensions.render.image = function(data, preventResizing) {
   });
   
   var $image = $("<img>", $.extend({
-    src:    protonet.media.Proxy.getImageUrl(data.image, imageSize),
+    src:    protonet.utils.ImageProxy.getImageUrl(data.image, imageSize),
     alt:    title,
     title:  title,
     load:   function() {
@@ -33,14 +34,14 @@ protonet.text_extensions.render.image = function(data, preventResizing) {
     }
   }, imageSize)).appendTo($anchor);
   
-  if (!preventResizing && !data.preventHoverEffect) {
-    var options = protonet.text_extensions.config.HOVER_IMAGE_SIZE;
-    options.extent = false;
-    new protonet.effects.HoverResize($image, {
-      newSrc:   protonet.media.Proxy.getImageUrl(data.image, options),
-      newSize:  options
-    });
-  }
+  //if (!preventResizing && !data.preventHoverEffect) {
+  //  var options = protonet.text_extensions.config.HOVER_IMAGE_SIZE;
+  //  options.extent = false;
+  //  new protonet.effects.HoverResize($image, {
+  //    newSrc:   protonet.media.Proxy.getImageUrl(data.image, options),
+  //    newSize:  options
+  //  });
+  //}
   
   return $anchor;
 };

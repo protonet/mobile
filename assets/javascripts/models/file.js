@@ -165,9 +165,10 @@ protonet.File = (function() {
         return protonet.t("files.name_root_path");
       }
       
-      if (path === protonet.data.User.getFolder(VIEWER)) {
-        return protonet.t("files.name_user_folder");
-      }
+      // TODO: data.User
+      //if (path === protonet.data.User.getFolder(VIEWER)) {
+      //  return protonet.t("files.name_user_folder");
+      //}
       
       var userMatch     = path.match(USER_FOLDER),
           channelMatch  = path.match(CHANNEL_FOLDER),

@@ -62,7 +62,8 @@
             var previousMeep = this.channel.getMeep(-2, -1);
             if (previousMeep 
                   && previousMeep.user_id === meep.user_id
-                  && (meep.created_at - previousMeep.created_at < (5).minutes()) ) {
+                  && (meep.created_at - previousMeep.created_at < (5).minutes()) 
+                  && !meep.text_extension) {
 
               var $meepToMerge  = this.$timeline.find("li.meep:last"),
                   $timeToUpdate = $meepToMerge.find("time"),
@@ -134,6 +135,7 @@
             }
           });
           this.$input.val("");
+          this.$input.focus();
         }
       }.bind(this));
 

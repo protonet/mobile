@@ -1,0 +1,363 @@
+/* =TEXT EXTENSION
+=========================================================================== */
+
+.text-extension-results {
+  display:inline-block;
+  font-size: 10px; /* Ensure a unique font-size */
+  word-wrap: break-word;
+}
+
+.text-extension-results a {
+  text-decoration: none;
+}
+
+.text-extension-results h4 {
+  display: none;
+  padding: 3px 5px;
+  color: #000;
+  border-bottom: 1px solid #666;
+  background-color: #ccc;
+  position: relative;
+}
+
+.text-extension-results:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+.text-extension-results .title,
+.text-extension-results .description,
+.text-extension-results .domain {
+  display: inline;
+}
+
+.text-extension-results .domain {
+  line-height: 2;
+}
+
+.text-extension-results .title:after,
+.text-extension-results .domain:after {
+  content: "\A";
+  white-space: pre;
+}
+
+.text-extension-results .title {
+  color: #000;
+  font-weight: bold;
+}
+
+.text-extension-results .description {
+  color: #666;
+}
+
+.text-extension-results .domain {
+  color: #999;
+}
+
+.text-extension-results .media {
+  margin: 0 9px 0 0;
+  float: left;
+  display: block;
+  position: relative;
+}
+
+.text-extension-results .media a {
+  display: block;
+  line-height: 0;
+}
+
+.text-extension-results .media img {
+  background: #fff url(screenshot_fetching.gif) center center no-repeat;
+}
+
+.text-extension-results .media img.loaded {
+  background: #fff;
+}
+
+.text-extension-results .media a img:hover {
+  box-shadow: 0 0 5px 1px #666;
+}
+
+
+/* =IFRAME (Slideshare, Maps...)
+--------------------------------------------------------------------------- */
+.text-extension-results .media iframe {
+  border: 1px solid #999;
+  width: 649px;
+  height: 200px;
+}
+
+.text-extension-results.YouTube .media iframe,
+.text-extension-results.Slideshare .media iframe {
+  height: 280px;
+}
+
+#text-extension-preview .text-extension-results .media iframe {
+  width: 630px;
+}
+
+/* =VIDEO/FLASH TEXT EXTENSION (Vimeo, Grooveshark, ...)
+--------------------------------------------------------------------------- */
+.text-extension-results.flash object {
+  height: 280px;
+  width: 651px;
+  margin-bottom: 5px;
+}
+
+#text-extension-preview .text-extension-results.flash object {
+  width: 630px;
+  height: 280px;
+}
+
+.text-extension-results.flash object[data^='http://player.soundcloud.com'] {
+  height: 81px !important;
+}
+
+.text-extension-results.flash object[data^='http://listen.grooveshark.com'] {
+  height: 100px !important;
+  width: 100px !important;
+}
+
+
+.text-extension-results .media .media-close-link {
+  position: absolute;
+  top: -16px;
+  right: -16px;
+  line-height: 23px;
+  z-index: 5;
+  -webkit-transform: scale(0.75);
+  -moz-transform: scale(0.75);
+}
+
+.text-extension-results .media .media-close-link:hover {
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+}
+
+.text-extension-results .media .media-close-link:after {
+  display: none;
+}
+
+/* =IMAGES TEXT EXTENSIONS
+--------------------------------------------------------------------------- */
+.text-extension-results.images figcaption {
+  border-top: 1px solid rgba(0, 0, 0, 0.3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: #ccc;
+  background: rgba(0, 0, 0, 0.075);
+  font-size: 10px;
+  padding: 4px;
+  display: block;
+}
+
+.text-extension-results.image .media a,
+.text-extension-results.images .media a {
+  height: 75px;
+}
+
+.text-extension-results.images .media figure {
+  background: #fff;
+  max-width: 100px;
+  position: relative;
+  display: inline-block;
+  vertical-align: bottom;
+  margin: 0 5px 5px 0;
+}
+
+.text-extension-results.images img:hover {
+  background: #fff;
+}
+
+.text-extension-results.images .domain,
+.text-extension-results.images .description,
+.text-extension-results.images .title {
+  display: none;
+}
+
+/* =CODE TEXT EXTENSION
+--------------------------------------------------------------------------- */
+.text-extension-results.code .media,
+.text-extension-results.codes .media {
+  float: none;
+  margin-bottom: 4px;
+}
+
+.text-extension-results.code .media strong,
+.text-extension-results.codes .media strong {
+  padding-left: 21px;
+  background: transparent url(icn_code.png) no-repeat 0 0;
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 16px;
+  margin-bottom: 2px;
+}
+
+.text-extension-results.code .media strong a,
+.text-extension-results.codes .media strong a {
+  display: inline;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+
+/* =GITHUB COMMIT TEXT EXTENSION
+--------------------------------------------------------------------------- */
+.text-extension-results.GithubCommit .media strong {
+  background: transparent url(github_file_modes.png) no-repeat 0 0;
+}
+
+.text-extension-results.GithubCommit .media strong a {
+  font-weight: normal;
+}
+
+.text-extension-results.GithubCommit .media div.added strong {
+  background-position: 0 0;
+}
+
+.text-extension-results.GithubCommit .media div.modified strong {
+  background-position: 0 -40px;
+}
+
+.text-extension-results.GithubCommit .media div.removed strong {
+  background-position: 0 -80px;
+}
+
+/* =MEEP TEXT EXTENSION
+--------------------------------------------------------------------------- */
+.text-extension-results.Meep {
+  background-color: rgba(0, 0, 0, 0.05);
+  box-shadow: inset 1px 1px 2px #999;
+  padding: 6px 8px;
+}
+
+.text-extension-results.Meep .domain {
+  display: none;
+}
+
+.text-extension-results.Meep .title {
+  margin: 0;
+  float: left;
+  min-width: 0;
+  margin-right: 6px;
+}
+
+.text-extension-results.Meep .description {
+  color: #000;
+}
+
+.text-extension-results.Meep .media {
+  margin-right: 4px;
+}
+
+.text-extension-results.Meep img {
+  outline: 2px solid #fff;
+  width: 24px !important;
+  height: 24px !important;
+  box-shadow: none !important;
+}
+
+.text-extension-results.Meep .media,
+.text-extension-results.Meep .media a {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+/* =FILES TEXT EXTENSION
+------------------------------------------------------------------------------ */
+.text-extension-results.files .domain,
+.text-extension-results.files .title,
+.text-extension-results.files .description {
+  display: none;
+}
+.text-extension-results.files ul.files{
+  padding:0;
+  margin:0;
+}
+
+.text-extension-results.files .media {
+  float: none;
+}
+
+.text-extension-results.files .media li {
+  margin-top: 5px;
+  list-style:none;
+}
+
+.text-extension-results.files .media li:first-child {
+  margin-top: 0;
+}
+
+.text-extension-results.files .media a {
+  white-space: nowrap;
+  display: inline-block;
+  font-size: 12px;
+  line-height: 32px;
+}
+
+/* TODO: PPT, PPTX */
+.file[href$=".ai"], .file[href$=".AI"] { background-position: 0 0; }
+.file[href$=".bin"], .file[href$=".BIN"] { background-position: 0 -82px; }
+.file[href$=".cab"], .file[href$=".CAB"] { background-position: 0 -164px; }
+.file[href$=".dat"], .file[href$=".DAT"] { background-position: 0 -246px; }
+.file[href$=".divx"], .file[href$=".DIVX"] { background-position: 0 -410px; }
+.file[href$=".dll"], .file[href$=".DLL"] { background-position: 0 -492px; }
+.file[href$=".dmg"], .file[href$=".DMG"] { background-position: 0 -574px; }
+.file[href$=".doc"], .file[href$=".DOC"], .file[href$=".docx"], .file[href$=".DOCX"] { background-position: 0 -656px; }
+.file[href$=".eps"], .file[href$=".EPS"] { background-position: 0 -738px; }
+.file[href$=".exe"], .file[href$=".EXE"] { background-position: 0 -820px; }
+.file[href$=".fla"], .file[href$=".FLA"] { background-position: 0 -902px; }
+.file[href$=".flv"], .file[href$=".FLV"] { background-position: 0 -984px; }
+.file[href$=".gif"], .file[href$=".GIF"] { background-position: 0 -1066px; }
+.file[href$=".gz"], .file[href$=".GZ"] { background-position: 0 -1148px; }
+.file[href$=".html"], .file[href$=".HTML"], .file[href$=".htm"], .file[href$=".HTM"] { background-position: 0 -1230px; }
+.file[href$=".iso"], .file[href$=".ISO"] { background-position: 0 -1312px; }
+.file[href$=".jar"], .file[href$=".JAR"] { background-position: 0 -1394px; }
+.file[href$=".jpg"], .file[href$=".JPG"], .file[href$=".jpeg"], .file[href$=".JPEG"] { background-position: 0 -1476px; }
+.file[href$=".m4a"], .file[href$=".M4A"] { background-position: 0 -1558px; }
+.file[href$=".m4v"], .file[href$=".M4V"] { background-position: 0 -1640px; }
+.file[href$=".mov"], .file[href$=".MOV"] { background-position: 0 -1722px; }
+.file[href$=".mp3"], .file[href$=".MP3"] { background-position: 0 -1804px; }
+.file[href$=".mp4"], .file[href$=".MP4"] { background-position: 0 -1886px; }
+.file[href$=".mpeg"], .file[href$=".MPEG"], .file[href$=".mpg"], .file[href$=".MPG"] { background-position: 0 -1968px; }
+.file[href$=".msi"], .file[href$=".MSI"] { background-position: 0 -2050px; }
+.file[href$=".ogg"], .file[href$=".OGG"] { background-position: 0 -2132px; }
+.file[href$=".pdf"], .file[href$=".PDF"] { background-position: 0 -2214px; }
+.file[href$=".png"], .file[href$=".PNG"] { background-position: 0 -2296px; }
+.file[href$=".psd"], .file[href$=".PSD"] { background-position: 0 -2378px; }
+.file[href$=".rar"], .file[href$=".RAR"] { background-position: 0 -2460px; }
+.file[href$=".rtf"], .file[href$=".RTF"] { background-position: 0 -2542px; }
+.file[href$=".swf"], .file[href$=".SWF"] { background-position: 0 -2624px; }
+.file[href$=".tif"], .file[href$=".TIF"] { background-position: 0 -2706px; }
+.file[href$=".tiff"], .file[href$=".TIFF"] { background-position: 0 -2706px; }
+.file[href$=".tmp"], .file[href$=".TMP"] { background-position: 0 -2788px; }
+.file[href$=".ttf"], .file[href$=".TTF"] { background-position: 0 -2870px; }
+.file[href$=".txt"], .file[href$=".TXT"] { background-position: 0 -2952px; }
+.file[href$=".vob"], .file[href$=".VOB"] { background-position: 0 -3034px; }
+.file[href$=".wav"], .file[href$=".WAV"] { background-position: 0 -3116px; }
+.file[href$=".wma"], .file[href$=".WMA"] { background-position: 0 -3198px; }
+.file[href$=".wmv"], .file[href$=".WMV"] { background-position: 0 -3280px; }
+.file[href$=".xls"], .file[href$=".XLS"], .file[href$=".xlsx"], .file[href$=".XLSX"] { background-position: 0 -3362px; }
+.file[href$=".zip"], .file[href$=".ZIP"] { background-position: 0 -3444px; }
+
+.file, .folder {
+  background-image: url(spr_file_extensions.png);
+  background-repeat: no-repeat;
+  padding-left: 40px;
+  height: 32px;
+  line-height: 32px;
+  display: block;
+  text-decoration: none;
+}
+
+a.file, a.folder {
+  color: #000;
+}
+
+.file { background-position: 0 -328px; }
+.folder { background-position: 0 -3526px; }

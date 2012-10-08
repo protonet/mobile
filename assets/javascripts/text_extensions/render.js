@@ -1,4 +1,12 @@
 //= require "./utils/insert_base_url.js"
+//= require_self
+//= require "./renderer/codes.js"
+//= require "./renderer/code.js"
+//= require "./renderer/flash.js"
+//= require "./renderer/iframe.js"
+//= require "./renderer/image.js"
+//= require "./renderer/images.js"
+//= require "./renderer/files.js"
 
 /**
  * Supported fields:
@@ -87,11 +95,3 @@ protonet.text_extensions.render = (function() {
     return results;
   };
 })();
-
-//= require "renderer/codes.js"
-//= require "renderer/code.js"
-//= require "renderer/flash.js"
-//= require "renderer/iframe.js"
-//= require "renderer/image.js"
-//= require "renderer/images.js"
-//= require "renderer/files.js"

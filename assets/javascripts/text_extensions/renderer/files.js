@@ -4,10 +4,10 @@ protonet.text_extensions.render.files = function(data) {
       imageTitles = [];
   
   $.each(data.files, function(i, path) {
-    if (protonet.data.File.isImage(path)) {
-      imageHrefs.push(protonet.data.File.getUrl(path));
-      imageSrcs.push(protonet.data.File.getDownloadUrl(path));
-      imageTitles.push(protonet.data.File.getName(path));
+    if (protonet.File.isImage(path)) {
+      imageHrefs.push(protonet.File.getUrl(path));
+      imageSrcs.push(protonet.File.getDownloadUrl(path));
+      imageTitles.push(protonet.File.getName(path));
     }
   });
   
@@ -36,9 +36,9 @@ protonet.text_extensions.render.files = function(data) {
       var $li = $("<li>").appendTo($ul);
 
       $("<a>", {
-        href:       protonet.data.File.getUrl(file),
-        text:       protonet.data.File.getName(file),
-        "class":    protonet.data.File.isFolder(file) ? "folder" : "file",
+        href:       protonet.File.getUrl(file),
+        text:       protonet.File.getName(file),
+        "class":    protonet.File.isFolder(file) ? "folder" : "file",
         draggable:  "true"
       }).appendTo($li);
     });

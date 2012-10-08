@@ -1,4 +1,5 @@
 //= require 'lib/jquery-class-create/class.js'
+//= require 'lib/google-code-prettify.js'
 
 //= require 'utils/browser.js'
 //= require 'utils/template.js'
@@ -21,6 +22,9 @@
 //= require 'utils/emojify.js'
 //= require 'utils/auto_link.js'
 //= require 'utils/is_window_focused.js'
+//= require 'utils/to_max_size.js'
+//= require 'utils/prettify_code.js'
+//= require 'utils/prettify_diff.js'
 
 //= require 'storage/storage.js'
 

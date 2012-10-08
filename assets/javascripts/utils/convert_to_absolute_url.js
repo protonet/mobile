@@ -9,7 +9,7 @@ protonet.utils.convertToAbsoluteUrl = (function() {
       return relativeUrl;
     }
     
-    var parentUrlParts = parentUrl ? protonet.utils.parseUrl(parentUrl) : protonet.utils.parseUrl(protonet.config.api_url);
+    var parentUrlParts = parentUrl ? protonet.utils.parseUrl(parentUrl) : protonet.utils.parseUrl(protonet.config.base_url);
     
     // Protocol-relative (eg. "//google.com/img/foo.jpg")
     if (PROTOCOL_RELATIVE_REG_EXP.test(relativeUrl)) {

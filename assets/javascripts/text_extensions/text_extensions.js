@@ -11,8 +11,6 @@
     })
     .on("meep.rendered", function($meepElement, meepData) {
 
-      console.log("test", !meepData.text_extension || typeof(meepData.text_extension) !== "object");
-
       // Old nodes will create text extensions with "null" value
       if (!meepData.text_extension || typeof(meepData.text_extension) !== "object") {
         return;
@@ -33,9 +31,9 @@
     var textExtension = protonet.text_extensions.utils.insertBaseUrl(meepData.text_extension),
         text          = $.trim(meepData.message),
         $article      = $meepElement.find("article:last"),
-        $author       = $meepElement.find(".author");
+        $time       = $meepElement.find("time");
     
-    protonet.text_extensions.render(textExtension).insertBefore($author);
+    protonet.text_extensions.render(textExtension).insertBefore($time);
     if (text === textExtension.url || ("http://" + text) === textExtension.url) {
       $article.addClass("empty").empty();
     }
