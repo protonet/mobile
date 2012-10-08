@@ -63,7 +63,8 @@
             if (previousMeep 
                   && previousMeep.user_id === meep.user_id
                   && (meep.created_at - previousMeep.created_at < (5).minutes()) 
-                  && !meep.text_extension) {
+                  && !meep.text_extension 
+                  && !previousMeep.text_extension) {
 
               var $meepToMerge  = this.$timeline.find("li.meep:last"),
                   $timeToUpdate = $meepToMerge.find("time"),
@@ -84,7 +85,9 @@
             var nextMeep = this.channel.getMeep(1, 2);
             if (nextMeep 
                   && nextMeep.user_id === meep.user_id
-                  && (nextMeep.created_at - meep.created_at < (5).minutes()) ) {
+                  && (nextMeep.created_at - meep.created_at < (5).minutes()) 
+                  && !meep.text_extension
+                  && !nextMeep.text_extension) {
               // merge Meeps
               var $meepToMerge = this.$timeline.find("li.meep:first");
               $meep.find("article").insertBefore($meepToMerge.find("article:first"));
@@ -126,6 +129,8 @@
         this._typingEnd();
 
         if (message.length) {
+          this.$input.val("");
+          this.$input.focus();
           protonet.trigger("socket.send", {
             operation:  "meep.create",
             payload:    {
@@ -134,8 +139,6 @@
               user_id: protonet.config.user_id
             }
           });
-          this.$input.val("");
-          this.$input.focus();
         }
       }.bind(this));
 
@@ -147,9 +150,7 @@
       }.bind(this));
 
       this.$content.delegate("h1.ui-title", "click", function(event){
-        setTimeout(function(){
-          window.scrollTo(0,1);
-        }, 0);
+        window.scrollTo(0,1);
       });
     },
     _typingStart: function() {

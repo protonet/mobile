@@ -6,16 +6,20 @@ $(function() {
     }, 0);
   });
 
-  $document.delegate('input, textarea',{
+  var showHeaderTimeout;
+  $document.delegate('.meep_form textarea',{
     'focus': function(){
+      showHeaderTimeout && clearTimeout(showHeaderTimeout);
       $('.channel-page .ui-header').css({
         position:'absolute'
       });
     },
     'blur': function(){
-      $('.channel-page .ui-header').css({
-        position:'fixed'
-      });
+      showHeaderTimeout = setTimeout(function(){
+        $('.channel-page .ui-header').css({
+          position:'fixed'
+        });
+      }, 0);
     }
   });
   

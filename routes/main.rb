@@ -35,7 +35,8 @@ class MobileProtonet < Sinatra::Application
         :avatar     => meep.avatar,
         :created_at => meep.created_at,
         :message    => meep.message,
-        :user_id    => meep.user_id
+        :user_id    => meep.user_id,
+        :text_extension => meep.text_extension
       }
     end.to_json
   end

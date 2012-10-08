@@ -13,10 +13,9 @@
     if (page) {
       protonet.currentPage = page;
       page.$content.appendTo($('body'));
-      page.scrollToBottom();
       protonet.trigger("channel.change", page.id);
       $.mobile.initializePage();
-      
+      page.scrollToBottom();
     }else{
       $.mobile.initializePage();
     }

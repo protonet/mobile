@@ -51,9 +51,7 @@
        */
       protonet
         .on("meep.rendered channel.cacheExpired", function(){
-          if (timeout) {
-            clearTimeout(timeout);
-          };
+          timeout && clearTimeout(timeout);
           timeout = setTimeout(function(){
             this.updateChannelList();
           }.bind(this), 1000);

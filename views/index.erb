@@ -1,7 +1,6 @@
 <div data-role="page" id="navigation" class="ui-page">
 
   <div data-role="header">
-    <a href="/account" data-icon="gear" class="ui-btn-left" data-transition="flip">Account</a>
     <a href="#channels-new" data-icon="new-chat" class="ui-btn-right" data-transition="slide" data-iconpos="notext">New Channel</a>
     <h1>protonet</h1>
   </div>
@@ -10,6 +9,9 @@
     <ul data-role="listview" id="channel-list" data-theme="d"></ul>
   </div>
 
+  <div class="footer">
+    <p>You are logged in as <%= current_user.login %>. <a href="/sign_out" rel="external"  class="ui-btn-left">Sign out</a></p>
+  </div>
 </div>
 
 <div data-role="page" id="channels-new" class="ui-page">
@@ -24,7 +26,6 @@
   </div>
 
 </div>
-
 
 <%= erb :"templates/channel" %>
 <%= erb :"templates/meep" %>
