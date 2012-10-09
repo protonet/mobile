@@ -338,11 +338,12 @@ class User < ActiveRecord::Base
   end
   
   # create a user with a session id
-  def self.stranger(identifier)
+  def self.stranger(identifier, channels_to_subscribe = [])
     find_or_create_by_temporary_identifier(identifier) do |u|
       u.first_name = "guest"
       u.last_name = identifier.downcase.gsub(/[^\w]/, '')[0, 5]
       u.email = "#{u.first_name}.#{u.last_name}@local.guest"
+      u.channels_to_subscribe = channels_to_subscribe
     end
   end
   
