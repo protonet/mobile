@@ -31,6 +31,27 @@ class ApplicationController < ActionController::Base
   def unittest
     render 'shared/unittest', :layout => false
   end
+
+  protected
+
+  def after_sign_in_path_for(resource)
+    session.delete(:redirect_after_login) || root_path
+  end
+
+  # There are multiple ways of handling authorization failures.  
+  # One is to implement a permission denied method as shown below.  
+  # If none is defined, either a simple string is displayed
+  # to the user ("You are not allowed...", default) or the authorization
+  # exception is raised.  TODO state configuration option
+  def permission_denied
+    respond_to do |format|
+      session[:redirect_after_login] = request.path
+      flash[:error] = t("flash_message_forbidden")
+      format.html { redirect_to(:back) rescue redirect_to('/') }
+      format.xml  { head :unauthorized }
+      format.js   { head :unauthorized }
+    end
+  end
   
   private
   
@@ -149,21 +170,7 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-  
-  # There are multiple ways of handling authorization failures.  
-  # One is to implement a permission denied method as shown below.  
-  # If none is defined, either a simple string is displayed
-  # to the user ("You are not allowed...", default) or the authorization
-  # exception is raised.  TODO state configuration option
-  def permission_denied
-    respond_to do |format|
-      flash[:error] = t("flash_message_forbidden")
-      format.html { redirect_to(:back) rescue redirect_to('/') }
-      format.xml  { head :unauthorized }
-      format.js   { head :unauthorized }
-    end
-  end
-  
+
   # set_current_user sets the global current user for this request.  This
   # is used by model security that does not have access to the
   # controller#current_user method.  It is called as a before_filter.
