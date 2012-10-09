@@ -124,7 +124,7 @@ protonet.ui.files.Queue = (function() {
       var data = xhr.responseJSON;
       
       data.basePath = file.basePath;
-      data.relativePath = file.relativePath;
+      data.relativePath = file.relativePath.indexOf("/") === -1 ? file.name : file.relativePath.replace(/(.+\/)(.*)/, "$1" + file.name);
       
       queue.push(data);
       
@@ -196,7 +196,7 @@ protonet.ui.files.Queue = (function() {
       
       var paths = $.map(queue, function(file) {
         // Rather use file.name when possible to avoid problems with umlauts
-        return file.basePath + (file.relativePath === file.name ? file.name : file.relativePath.match(regExp)[0]);
+        return file.basePath + file.relativePath.match(regExp)[0];
       });
       
       paths = paths.unique();
