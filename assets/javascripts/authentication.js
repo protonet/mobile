@@ -59,12 +59,12 @@ $document.ready(function(){
         url: $this.attr("action"),
         type: "post",
         data: $this.serializeArray(),
-        success: function(data){
-          if (data["error"]) {
+        error: function(xhr, textStatus, errorThrown){
+          if (errorThrown === "Unauthorized") {
             $('<span class="error">')
-              .append(data["error"])
+              .append("Your credentials are invalid")
               .appendTo("label[for=user_password]");
-          }
+          };
         }
       });
       event.preventDefault();

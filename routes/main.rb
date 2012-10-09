@@ -1,18 +1,17 @@
 class MobileProtonet < Sinatra::Application 
 
   get '/' do
-    if current_user
-      erb :index
-    else
-      redirect '/sign_in'
-    end
+    require_authentication
+    erb :index
   end
 
   get '/account' do
+    require_authentication
     erb :account
   end
 
   get '/channels/:id' do
+    require_authentication
     content_type :json
     channel = protonet.find_channel(params[:id])
     {
@@ -26,6 +25,7 @@ class MobileProtonet < Sinatra::Application
   end
 
   get '/channels/:channel_id/meeps' do
+    require_authentication
     content_type :json
     protonet.find_meeps_by_channel(params[:channel_id], params[:limit], params[:offset]).map do |meep|
       {
@@ -42,6 +42,7 @@ class MobileProtonet < Sinatra::Application
   end
 
   get '/channels/subscribed' do
+    require_authentication
     content_type :json
     current_user.subscribed_channels.map do |channel|
       {
@@ -56,6 +57,7 @@ class MobileProtonet < Sinatra::Application
   end
 
   get '/users' do
+    require_authentication
     content_type :json
     protonet.users.map do |user| 
       {
@@ -67,6 +69,7 @@ class MobileProtonet < Sinatra::Application
   end
 
   post '/rendezvous' do
+    require_authentication
     content_type :json
     channel = protonet.create_rendezvous(current_user.id, params[:user_id])
     if channel.id

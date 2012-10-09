@@ -9,19 +9,19 @@ class MobileProtonet < Sinatra::Application
   end
 
   post '/sign_in' do
-    response = Protolink::Protonet.open(settings.api_url, params[:user][:login], params[:user][:password]).auth
+    warden.logout
+    warden.authenticate!
     content_type :json
-    if response
-      session[:login] = params[:user][:login]
-      session[:password] = params[:user][:password]
-      session[:user] = response.body
-      {:redirect => "/"}.to_json
-    else
-      {:success => false, :error => "Your credentials are invalid"}.to_json
-    end
+    {:redirect => "/"}.to_json
   end
 
+  post '/unauthenticated/?' do
+    status 401
+  end
+
+
   get '/sign_out' do
+    warden.logout
     session.clear
     redirect '/'
   end
