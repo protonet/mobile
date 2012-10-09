@@ -661,7 +661,7 @@ de:
     hint_wlan_channel: "Probieren Sie einen anderen WLAN-Kanal, wenn sie Verbindungsprobleme haben sollten"
     hint_no_wlan_available: "Die Hardware Ihres Protonets unterstützt kein WLAN."
     hint_no_preferences_available: "Keine Einstellungen verfügbar. Fehlen Ihnen Administrationsrechte?"
-    hint_ssh_password: "Das SSH Passwort steht auf der Bedienungsanleitung, die mit Sie zu Ihrer Protonet Box erhalten haben."
+    hint_ssh_password: "Das SSH Passwort steht auf der Bedienungsanleitung, die Sie zu Ihrer Protonet Box erhalten haben."
     placeholder_execute_javascript_target: "ID oder Nutzername"
     placeholder_script_code: "zB. location.reload()"
     placeholder_protonet_name: "Der Name Ihres Protonets"
