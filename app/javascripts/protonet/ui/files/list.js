@@ -221,7 +221,7 @@ protonet.ui.files.List = (function() {
       this._updateActions();
       this._updateAddressBar();
       
-      this.uploader.setTargetFolder(path);
+      this.uploader.setBasePath(path);
       protonet.utils.History.push(protonet.data.File.getUrl(path));
     },
     
@@ -740,7 +740,7 @@ protonet.ui.files.List = (function() {
       this.uploader = this.fileQueue.uploader;
       
       this.uploader.bind("FilesAdded", function(uploader, files) {
-        if (uploader.getTargetFolder() !== this.currentPath) {
+        if (uploader.getBasePath() !== this.currentPath) {
           return;
         }
         
@@ -945,7 +945,7 @@ protonet.ui.files.List = (function() {
             event.preventDefault();
             
             if (protonet.data.User.hasWriteAccessToFile(viewer, this.currentPath)) {
-              this.uploader.setTargetFolder($element.data("folder-path"));
+              this.uploader.setBasePath($element.data("folder-path"));
             } else {
               protonet.trigger("flash_message.error", protonet.t("files.flash_message_move_write_error"));
               event.stopPropagation();

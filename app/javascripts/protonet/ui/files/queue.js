@@ -123,6 +123,9 @@ protonet.ui.files.Queue = (function() {
     uploaded: function(file, xhr) {
       var data = xhr.responseJSON;
       
+      data.basePath = file.basePath;
+      data.relativePath = file.relativePath;
+      
       queue.push(data);
       
       $currentFile
@@ -136,7 +139,7 @@ protonet.ui.files.Queue = (function() {
       $window.off("beforeunload.file_queue");
       $container.addClass("uploaded");
       
-      var path = this.uploader.getTargetFolder();
+      var path = this.uploader.getBasePath();
       
       $statusContainer.html(
         protonet.t("files.hint_upload_success", {
@@ -189,9 +192,13 @@ protonet.ui.files.Queue = (function() {
     },
     
     share: function() {
+      var regExp = /(.+?)($|\/)/;
+      
       var paths = $.map(queue, function(file) {
-        return file.path;
+        return file.basePath + file.relativePath.match(regExp)[0];
       });
+      
+      paths = paths.unique();
       
       if ($("#message-form").length) {
         protonet.trigger("modal_window.hide").trigger("form.attach_files", paths);

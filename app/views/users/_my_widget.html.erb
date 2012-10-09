@@ -1,15 +1,10 @@
 <div id="my-widget" class="widget" <%= raw('style="display:none"') if current_user.newbie? %>>
-  <a href="/users/<%= current_user.id %>" class="avatar"><%= avatar(current_user, :width => 53, :height => 53, :title => t("users.hint_thats_you")) %></a> 
-  <h4>
-    <%= link_to user_path(current_user) do %>
-      <%= current_user.display_name %>
-      <%= link_to t("users.link_logout"), destroy_user_session_path, 'data-avoid-ajax' => 1, :class => "hint" %>
-    <% end %>
-  </h4>
+  <a href="/users/<%= current_user.id %>" class="avatar"><%= avatar(current_user, :width => 53, :height => 53, :title => t("users.hint_thats_you")) %></a>
   <nav>
     <ul>
-      <li><%= link_to t("users.link_settings"), edit_user_path(current_user)%></li>
       <li><%= link_to t("users.link_my_files"), user_files_path(current_user) %></li>
+      <li><%= link_to t("users.link_settings"), edit_user_path(current_user)%></li>
+      <li><%= link_to  t("users.link_logout"), destroy_user_session_path, 'data-avoid-ajax' => 1 %></li>
     </ul>
   </nav>
 </div>

@@ -405,7 +405,7 @@ de:
     link_subscribe_channels: "Kanäle abonnieren"
     link_settings: "Einstellungen"
     link_my_files: "Eigene Dateien"
-    link_logout: "(abmelden)"
+    link_logout: "Abmelden"
     link_send_email: "Eine E-Mail schicken"
     headline_welcome: "Willkommen %{display_name}"
     headline_users_widget: "Nutzer"

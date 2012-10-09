@@ -32,7 +32,7 @@ protonet.media.Uploader = (function() {
     var uploader = new plupload.Uploader(config);
     
     // Default target folder is the user's file store
-    var targetFolder = protonet.data.User.getFolder(protonet.config.user_id);
+    var basePath = protonet.data.User.getFolder(protonet.config.user_id);
     
     uploader.bind("FilesAdded", function(uploader, files) {
       uploader.settings.multipart_params = {
@@ -41,8 +41,9 @@ protonet.media.Uploader = (function() {
       };
       
       $.each(files, function(i, file) {
-        var targetFile = targetFolder + file.relativePath;
-        file.targetFolder = protonet.data.File.getFolder(targetFile);
+        var targetFilePath = basePath + file.relativePath;
+        file.basePath = basePath;
+        file.targetPath = protonet.data.File.getFolder(targetFilePath);
       });
       
       setTimeout(function() {
@@ -51,7 +52,7 @@ protonet.media.Uploader = (function() {
     });
     
     uploader.bind("BeforeUpload", function(uploader, file) {
-      uploader.settings.multipart_params.target_folder = file.targetFolder;
+      uploader.settings.multipart_params.target_folder = file.targetPath;
     });
     
     uploader.bind("Error", function(uploader, error) {
@@ -113,12 +114,12 @@ protonet.media.Uploader = (function() {
       uploader.disableBrowse(false);
     };
     
-    uploader.setTargetFolder = function(path) {
-      targetFolder = path;
+    uploader.setBasePath = function(path) {
+      basePath = path;
     };
     
-    uploader.getTargetFolder = function() {
-      return targetFolder;
+    uploader.getBasePath = function() {
+      return basePath;
     };
     
     var originalDestroy = uploader.destroy;

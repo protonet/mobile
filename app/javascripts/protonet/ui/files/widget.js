@@ -73,7 +73,7 @@ protonet.ui.files.Widget = {
     protonet.on("channel.change", function(id) {
       this.currentChannelId = id;
       if (this.uploader) {
-        this.uploader.setTargetFolder(protonet.data.Channel.getFolder(id));
+        this.uploader.setBasePath(protonet.data.Channel.getFolder(id));
       }
       
       if (protonet.data.Channel.isGlobal(id)) {
