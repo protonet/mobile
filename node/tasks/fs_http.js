@@ -136,7 +136,7 @@ function upload(message, response) {
       chunk       = +message.params.chunk,
       chunks      = +message.params.chunks,
       file        = message.file,
-      fileName    = normalizeInput(message.params.name),
+      fileName    = normalizeInput(message.params.name || message.file.name),
       newFilePath = path.join(targetDir, fileName),
       tmpFilePath = path.join("/tmp/", fileName + ".part");
   
