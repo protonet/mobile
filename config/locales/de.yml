@@ -453,7 +453,7 @@ de:
     headline_recent_files: "Aktuelle Dateien"
     headline_uploading_files: "Dateien werden hochgeladen (0 %)"
     label_size: "Größe:"
-    label_uploader: "Hochgeladen von:"
+    label_uploader: "Hochlader:"
     label_modified: "Geändert:"
     label_type: "Typ:"
     label_malicious: "Bösartig:"
