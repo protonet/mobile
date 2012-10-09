@@ -90,7 +90,7 @@ protonet.i18n = {
   instruments: {
     flash_message_socket_connection_error: "Es gibt ein Verbindungsproblem. Bitte warten Sie ein paar Sekunden. Das Problem könnte sich von selbst beheben.",
     flash_message_socket_reconnection_success: "Sie sind wieder online.",
-    flash_message_socket_connection_establish_error: "Der Chat Server ist nicht erreichbar.",
+    flash_message_socket_connection_establish_error: "Der Chat-Server ist nicht erreichbar.",
     headline_captive_portal: "Hallo %{user_name}",
     text_captive_portal: 'Willkommen zu Protonet. Klicken Sie auf den folgenden Button um Internet-Zugang zu bekommen und um auf <strong>%{url}</strong> zu gelangen.<br><a class="button hide-overlay" data-avoid-ajax="1" href="%{href}" target="_blank">Internet-Zugang freischalten</a>'
   },
