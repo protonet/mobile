@@ -47,6 +47,7 @@ Feature: Using the protonet dashboard
     Given a user with the login "dudemeister"
     And I am logged in as "dudemeister"
     Given a channel exists with name: "bambule"
+    And "dudemeister" is listening to "bambule"
     And I go to the start page
     And I fill in "message" with "Hallo @bam"
     Then the message field should contain "Hallo @bambule"

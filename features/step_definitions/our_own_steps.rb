@@ -263,7 +263,7 @@ Given /^I start a rendezvous chat with "([^\"]*)"$/ do |username|
   within('#user-widget') do
     find(:xpath, "//a[contains(.,'#{username}')]").click
   end
-  find(:css, ".context-menu-users li", :text => 'start private chat').click
+  find(:css, ".context-menu-users li", :text => 'Start private chat').click
 end
 
 Then /^I should see a channel for "([^\"]*)"$/ do |channelname|

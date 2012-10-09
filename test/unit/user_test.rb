@@ -60,7 +60,7 @@ class UserTest < ActiveSupport::TestCase
       end
     
       should "should add should as a listener of the home channel" do
-        user = User.stranger('foobar')
+        user = User.stranger('foobar', [Channel.home])
         assert_equal user.channels, [Channel.home]
       end
     
