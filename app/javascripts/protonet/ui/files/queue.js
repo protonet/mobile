@@ -195,7 +195,8 @@ protonet.ui.files.Queue = (function() {
       var regExp = /(.+?)($|\/)/;
       
       var paths = $.map(queue, function(file) {
-        return file.basePath + file.relativePath.match(regExp)[0];
+        // Rather use file.name when possible to avoid problems with umlauts
+        return file.basePath + (file.relativePath === file.name ? file.name : file.relativePath.match(regExp)[0]);
       });
       
       paths = paths.unique();
