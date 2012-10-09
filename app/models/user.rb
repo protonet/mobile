@@ -458,6 +458,7 @@ class User < ActiveRecord::Base
   end
   
   def system_users_script(command, input=nil)
+    return if Rails.env.test?
     if Rails.env.production?
       `#{input}/usr/bin/sudo #{Rails.root}/script/init/system_users #{command}`
     else
