@@ -72,8 +72,8 @@ protonet.i18n = {
   channels: {
     hint_no_channels_subscribed: "You can't post any messages because you haven't subscribed to any channels. Click <a href='/channels'>here</a> to do so or contact an <a data-contact-admin href='/?rendezvous_with=%{user_id}'>admin</a>.",
     hint_verifications: {
-      one: "1 user needs to be verified",
-      other: "%{count} users need to be verified"
+      one: "1 user needs to be confirmed",
+      other: "%{count} users need to be confirmed"
     },
     hint_node_offline: "The Protonet of this channel is currently offline.",
     notification_new_reply: "new reply from %{author}",
@@ -112,8 +112,9 @@ protonet.i18n = {
     name_rendezvous_folder: "shared between you and %{user_name}",
     name_rendezvous_folder_html: "shared between <strong>you</strong> and <strong>%{user_name}</strong>",
     name_user_folder: "my private folder",
+    name_channels: "channels",
     name_root_path: "Files",
-    confirm_delete: "Do you really want to delete the following files? There's no undo.",
+    confirm_delete: "Do you really want to delete the following files? There is no undo.",
     confirm_upload_cancel: "This will cancel the upload. Are you sure?",
     hint_folder_empty: "This folder is empty.",
     hint_drag_and_drop_here: "Drag & drop your files here",

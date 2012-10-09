@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   helper_method :logged_in?, :allow_signup?, :node_privacy_settings, :incoming_interface, :address_for_current_interface
   
   # hack for reload problem in development
+  before_filter :set_locale
   before_filter :set_backend_for_development, :current_user, :set_current_user_for_authorization, :captive_check, :guest_login
   before_filter :detect_xhr_redirect
   
@@ -256,5 +257,21 @@ class ApplicationController < ActionController::Base
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = 'Fri, 01 Jan 1990 00:00:00 GMT'
   end
-
+  
+  def set_locale
+    store_locale(params[:locale]) and return if params[:locale]
+    store_locale(session[:locale]) and return if session[:locale]
+    
+    accept_language = request.headers['HTTP_ACCEPT_LANGUAGE'][0..1] rescue nil
+    store_locale(accept_language) and return if accept_language
+    
+    store_locale(I18n.default_locale)
+  end
+  
+  def store_locale(locale)
+    return unless ["de", "en"].include?(locale)
+    
+    I18n.locale = locale
+    session[:locale] = locale
+  end
 end

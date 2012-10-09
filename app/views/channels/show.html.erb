@@ -63,7 +63,7 @@
 
   <%- if permitted_to?(:update, @channel) %>
     <h3><%= t("channels.headline_subscribe_users") %> <a data-hover-hint="top" title="<%= t("channels.hint_edit_rights") %>" class="hint">(?)</a></h3>
-    <p><%= t("channels.text_subscribe_users") %></p>
+    <p><%= current_user.admin? ? t("channels.text_subscribe_users") : t("channels.text_subscribe_users_email") %></p>
     <%= form_tag(listen_for_user_path, { :remote => true, 'data-type' => 'html', :class => 'single-button-form subscribe-user', :method => 'post' }) do %>
       <%= hidden_field_tag :id, current_user.id %>
       <%= hidden_field_tag :user_id, current_user.id %>

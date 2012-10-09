@@ -1,8 +1,214 @@
 # Sample localization file for English. Add more files in this directory for other locales.
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
-
-# TODO: Find text resources with "<" in them and check whether they are included using "raw()"
 en:
+  date:
+    abbr_day_names:
+    - Sun
+    - Mon
+    - Tue
+    - Wed
+    - Thu
+    - Fri
+    - Sat
+    abbr_month_names:
+    - 
+    - Jan
+    - Feb
+    - Mar
+    - Apr
+    - May
+    - Jun
+    - Jul
+    - Aug
+    - Sep
+    - Oct
+    - Nov
+    - Dec
+    day_names:
+    - Sunday
+    - Monday
+    - Tuesday
+    - Wednesday
+    - Thursday
+    - Friday
+    - Saturday
+    formats:
+      default: ! '%Y-%m-%d'
+      long: ! '%B %d, %Y'
+      short: ! '%b %d'
+    month_names:
+    - 
+    - January
+    - February
+    - March
+    - April
+    - May
+    - June
+    - July
+    - August
+    - September
+    - October
+    - November
+    - December
+    order:
+    - :year
+    - :month
+    - :day
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one: about 1 hour
+        other: about %{count} hours
+      about_x_months:
+        one: about 1 month
+        other: about %{count} months
+      about_x_years:
+        one: about 1 year
+        other: about %{count} years
+      almost_x_years:
+        one: almost 1 year
+        other: almost %{count} years
+      half_a_minute: half a minute
+      less_than_x_minutes:
+        one: less than a minute
+        other: less than %{count} minutes
+      less_than_x_seconds:
+        one: less than 1 second
+        other: less than %{count} seconds
+      over_x_years:
+        one: over 1 year
+        other: over %{count} years
+      x_days:
+        one: 1 day
+        other: ! '%{count} days'
+      x_minutes:
+        one: 1 minute
+        other: ! '%{count} minutes'
+      x_months:
+        one: 1 month
+        other: ! '%{count} months'
+      x_seconds:
+        one: 1 second
+        other: ! '%{count} seconds'
+    prompts:
+      day: Day
+      hour: Hour
+      minute: Minute
+      month: Month
+      second: Seconds
+      year: Year
+  errors: &errors
+    format: ! '%{attribute} %{message}'
+    messages:
+      accepted: must be accepted
+      blank: can't be blank
+      confirmation: doesn't match confirmation
+      empty: can't be empty
+      equal_to: must be equal to %{count}
+      even: must be even
+      exclusion: is reserved
+      greater_than: must be greater than %{count}
+      greater_than_or_equal_to: must be greater than or equal to %{count}
+      inclusion: is not included in the list
+      invalid: is invalid
+      less_than: must be less than %{count}
+      less_than_or_equal_to: must be less than or equal to %{count}
+      not_a_number: is not a number
+      not_an_integer: must be an integer
+      odd: must be odd
+      record_invalid: ! 'Validation failed: %{errors}'
+      taken: has already been taken
+      too_long:
+        one: is too long (maximum is 1 character)
+        other: is too long (maximum is %{count} characters)
+      too_short:
+        one: is too short (minimum is 1 character)
+        other: is too short (minimum is %{count} characters)
+      wrong_length:
+        one: is the wrong length (should be 1 character)
+        other: is the wrong length (should be %{count} characters)
+    template:
+      body: ! 'There were problems with the following fields:'
+      header:
+        one: 1 error prohibited this %{model} from being saved
+        other: ! '%{count} errors prohibited this %{model} from being saved'
+  helpers:
+    select:
+      prompt: Please select
+    submit:
+      create: Create %{model}
+      submit: Save %{model}
+      update: Update %{model}
+  number:
+    currency:
+      format:
+        delimiter: ! ','
+        format: ! '%u%n'
+        precision: 2
+        separator: .
+        significant: false
+        strip_insignificant_zeros: false
+        unit: $
+    format:
+      delimiter: ! ','
+      precision: 3
+      separator: .
+      significant: false
+      strip_insignificant_zeros: false
+    human:
+      decimal_units:
+        format: ! '%n %u'
+        units:
+          billion: Billion
+          million: Million
+          quadrillion: Quadrillion
+          thousand: Thousand
+          trillion: Trillion
+          unit: ''
+      format:
+        delimiter: ''
+        precision: 3
+        significant: true
+        strip_insignificant_zeros: true
+      storage_units:
+        format: ! '%n %u'
+        units:
+          byte:
+            one: Byte
+            other: Bytes
+          gb: GB
+          kb: KB
+          mb: MB
+          tb: TB
+    percentage:
+      format:
+        delimiter: ''
+    precision:
+      format:
+        delimiter: ''
+  support:
+    array:
+      last_word_connector: ! ', and '
+      two_words_connector: ! ' and '
+      words_connector: ! ', '
+  time:
+    am: am
+    formats:
+      default: ! '%a, %d %b %Y %H:%M:%S %z'
+      long: ! '%B %d, %Y %H:%M'
+      short: ! '%d %b %H:%M'
+    pm: pm
+  # remove these aliases after 'activemodel' and 'activerecord' namespaces are removed from Rails repository
+  activemodel:
+    errors:
+      <<: *errors
+  activerecord:
+    errors:
+      <<: *errors
+  
+  
+  
+  
   title: "%{name} - protonet. it's yours."
   link_edit: "edit"
   link_remove: "remove"
@@ -31,7 +237,7 @@ en:
   nav_files: "Files"
   nav_applications: "Apps"
   flash_message_forbidden: "Sorry, you are not allowed to view the requested page."
-  flash_message_saved_success: "Successfully saved"
+  flash_message_saved_success: "Successfully saved."
   
   instruments:
     hint_insert_emoticon: "Insert emoticon"
@@ -52,17 +258,17 @@ en:
   channels:
     flag_private: "(private)"
     flag_owner: "(owner)"
-    flag_awaiting_verification: "(awaiting verification)"
+    flag_awaiting_verification: "(awaiting confirmation)"
     hint_global: "This channel is global"
     hint_private: "This channel is private"
     hint_edit_rights: "Only visible to admins and the channel owner"
-    hint_checkbox_private: "Users can't subscribe this channel without being verified by the owner of this channel"
+    hint_checkbox_private: "Users can't subscribe this channel without being confirmed by the owner of this channel"
     hint_no_global_available: "There are no global channels available."
     hint_no_subscriptions: "There are currently no users that subscribed to this channel. Be the first!"
-    hint_subscription_needs_verification: "This channel is private: The owner needs to verify your subscription."
+    hint_subscription_needs_verification: "This channel is private: The owner needs to confirm your subscription."
     hint_no_description_available: "no description available"
     link_show_profile: "show profile"
-    link_verify: "verify"
+    link_verify: "confirm"
     nav_local: "Local channels"
     nav_global: "Global channels"
     nav_new: "Create new"
@@ -87,11 +293,12 @@ en:
     placeholder_name: "eg. Music, Project XYZ, Ruby, ..."
     placeholder_user_name: "user name"
     placeholder_user_name_or_email: "user name or email"
-    text_delete: "Delete this channel and all messages posted in it."
+    text_delete: "Delete this channel including all messages and files."
     text_global: "Here you can find channels from our Protonet team. Global channels behave like all other channels, except that they are globally accessed from all Protonets around the world."
     text_local: "Here you can find channels from this Protonet. Feel free to join one or create a own channel."
-    text_new: "Channels are like groups. You can create one for each topic (eg. Music, Project XYZ).<br>Further configuration settings can be set after the channel has been created."
-    text_subscribe_users: "Enter a user name into to subscribe him to this channel, or enter an email address to invite external users."
+    text_new: "Channels are like groups. You can create one for each topic (eg. Music, Project XYZ)."
+    text_subscribe_users: "Enter a user name into to subscribe him to this channel."
+    text_subscribe_users_email: "Enter a user name into to subscribe him to this channel, or enter an email address to invite external users."
     confirm_delete: "Do you really want to delete this channel? There is no undo."
     subscribers:
       one: "subscriber"
@@ -125,7 +332,7 @@ en:
     nav_invitations: "Invitations"
     hint_edit: "This page can only be seen by admins and the user himself"
     hint_admins_can_see_this: "Only visible to admins"
-    hint_edit_details: "You can't edit user details since the admin of this node enabled ldap authentication."
+    hint_edit_details: "You can't edit user details since the admin of this Protonet enabled ldap authentication."
     hint_thats_you: "That's you!"
     hint_thats_you_small: "(that's you!)"
     hint_administrator: "This user is an administrator"
@@ -133,7 +340,7 @@ en:
     hint_email: "a valid email address (eg. john.doe@gmail.com)"
     hint_first_name: "first name (eg. John)"
     hint_last_name: "last name (eg. Doe)"
-    hint_upload_files: "* Files can only be seen, modified or deleted if they are in a channel that the user has subscribed to.<br>(Example: A user who has restricted rights will never be able to see or edit a file in a channel he wasn't subscribed to)"
+    hint_upload_files: "* Files can only be seen, modified or deleted if they are in a channel that the user has subscribed to.<br>(Example: A user who has restricted rights will not be able to see or edit a file in a channel he wasn't subscribed to)"
     hint_password_forgotten: "Did you forget your password? <a href='%{href}' data-avoid-ajax='1'>Reset it here</a>"
     hint_user_with_restricted_rights: "<h4>User with restricted rights</h4> Users with restricted rights can only see channels they were subscribed to (by an administrator). They aren't able to see users from other channels. This user type can be perfectly used for customers or guests that should have limited access."
     hint_user_default: "<h4>User</h4> Normal users can see all channels and users. They're not allowed to delete users or channels that they didn't create."
@@ -141,14 +348,14 @@ en:
     hint_close_getting_started: "Don't show this again"
     hint_change_password: "It's still set to 'admin'"
     hint_channels: "Select channels the user will be subscribed to"
-    hint_update_profile: "Upload an avatar. Let others know who you are"
+    hint_update_profile: "Upload a photo. Let others know who you are"
     hint_create_channels: "Channels are like groups. Create one for each topic (eg. 'Project XYZ')"
     hint_invite: "Get users to collaborate with"
     hint_write_meep: "Start a conversation"
     hint_subscribe_channels: "Channels are like groups. You can create new ones or subscribe to existing ones"
     hint_user_types: "<a id='show-comparison-chart'>Learn more</a> about the different user types and their permissions."
-    hint_contact_admin: "Contact one of these people if you've any feedback:"
-    hint_no_admins: "This node doesn't have any administrators. Please contact the <a href='mailto:team@protonet.info'>Protonet support</a>."
+    hint_contact_admin: "Contact one of these users if you have any feedback:"
+    hint_no_admins: "This Protonet doesn't have any administrators. Please contact the <a href='mailto:team@protonet.info'>Protonet support</a>."
     hint_send_email: "Only admins can see the user's email address"
     hint_no_channels_subscribed: "No channels subscribed."
     hint_recent_messages: "Other users will only see messages posted by you in channels that they have also subscribed"
@@ -235,11 +442,11 @@ en:
     
   listens:
     flash_message_created_success: "You successfully subscribed to '%{display_name}'."
-    flash_message_wait_for_verification: "This channel is private. Please wait until @%{display_name} has verified your subscription."
+    flash_message_wait_for_verification: "This channel is private. Please wait until @%{display_name} has confirmed your subscription."
     flash_message_created_error: "This channel does not exist (anymore)."
     flash_message_destroyed_myself_success: "You successfully unsubscribed from '%{display_name}'."
     flash_message_destroyed_success: "@%{user_display_name} has been successfully unsubscribed from '%{channel_display_name}'."
-    flash_message_verification_success: "You successfully verified the subscription of @%{display_name}."
+    flash_message_verification_success: "You successfully confirmed the subscription of @%{display_name}."
     flash_message_create_for_user_success: "You successfully subscribed @#{user_display_name} to '#{channel_display_name}'."
     flash_message_create_for_user_error: "Could not find user '%{search_term}'."
   
@@ -285,9 +492,9 @@ en:
     hint_no_invitations_available: "There are no invitations."
     text_1: "Hi %{name},"
     text_2: "<strong>%{display_name}</strong> wants to collaborate with you. All you need to do is to follow this link and choose a password. It only takes a few seconds."
-    text_3: "Once you've signed in you are already subscribed to these channels:"
+    text_3: "Once you've signed in you are already subscribed to these groups/channels:"
     text_4: "Click this link to get started:"
-    text_5: "Protonet, a revolutionary way to collaborate."
+    text_5: "Protonet – A revolutionary way to collaborate."
     text_web_publishing_off: "Web Publishing is currently <b>not activated</b>. You can enable it <a href='/preferences/show?section=publish_to_web'>here</a>."
     link_show_invitation: "show invitation"
     link_show_profile: "show profile"
@@ -310,9 +517,9 @@ en:
   meeps:
     headline_mention_mail: "Hi %{display_name}, %{author} just mentioned you"
     headline_message_mail: "Hi %{display_name}, %{author} just sent you a message"
-    headline_loading: "Loading message %{id} ..."
+    headline_loading: "Loading message #%{id} ..."
     mail_text_1: "Join the conversation:"
-    mail_text_2: "Protonet – a revolutionary way to collaborate."
+    mail_text_2: "Protonet – A revolutionary way to collaborate."
     mail_text_3: "If you don't want to get any emails from Protonet, you can disable them <a href='%{href}'>here</a>."
     mail_text_4: "View the whole conversation:"
     text_detail_view: "Here you can scroll in a convenient way through the chat history. Use the arrow keys or mouse wheel for scrolling."
@@ -491,8 +698,8 @@ en:
           attributes:
             name:
               invalid: "can only consist of letters, numbers and hyphens (no white space)."
-              too_long: "must be less than %{count} characters of length."
-              too_short: "must be more than %{count} characters of length."
+              too_long: "must be less than or exact %{count} characters of length."
+              too_short: "must be more than or exact %{count} characters of length."
         invitation:
           attributes:
             channel_ids:

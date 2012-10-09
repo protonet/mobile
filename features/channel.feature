@@ -36,8 +36,8 @@ Feature: Using the protonet channel management
           And I am using the first browser
           And I go to the start page
           And I switch to the channel "privatechannel"
-          Then I should see "1 user needs to be verified"
-          And I follow "1 user needs to be verified"
+          Then I should see "1 user needs to be confirmed"
+          And I follow "1 user needs to be confirmed"
             Then I verify the user "batman" for the channel "privatechannel"
     #batman goes start page checks channel appears
               And I am using the second browser

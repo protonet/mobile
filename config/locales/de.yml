@@ -1,0 +1,702 @@
+# Sample localization file for English. Add more files in this directory for other locales.
+# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+de:
+  date:
+    abbr_day_names:
+    - So
+    - Mo
+    - Di
+    - Mi
+    - Do
+    - Fr
+    - Sa
+    abbr_month_names:
+    - 
+    - Jan
+    - Feb
+    - Mär
+    - Apr
+    - Mai
+    - Jun
+    - Jul
+    - Aug
+    - Sep
+    - Okt
+    - Nov
+    - Dez
+    day_names:
+    - Sonntag
+    - Montag
+    - Dienstag
+    - Mittwoch
+    - Donnerstag
+    - Freitag
+    - Samstag
+    formats:
+      default: ! '%d.%m.%Y'
+      long: ! '%e. %B %Y'
+      short: ! '%e. %b'
+    month_names:
+    - 
+    - Januar
+    - Februar
+    - März
+    - April
+    - Mai
+    - Juni
+    - Juli
+    - August
+    - September
+    - Oktober
+    - November
+    - Dezember
+    order:
+    - :day
+    - :month
+    - :year
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one: etwa eine Stunde
+        other: etwa %{count} Stunden
+      about_x_months:
+        one: etwa ein Monat
+        other: etwa %{count} Monate
+      about_x_years:
+        one: etwa ein Jahr
+        other: etwa %{count} Jahre
+      almost_x_years:
+        one: fast ein Jahr
+        other: fast %{count} Jahre
+      half_a_minute: eine halbe Minute
+      less_than_x_minutes:
+        one: weniger als eine Minute
+        other: weniger als %{count} Minuten
+      less_than_x_seconds:
+        one: weniger als eine Sekunde
+        other: weniger als %{count} Sekunden
+      over_x_years:
+        one: mehr als ein Jahr
+        other: mehr als %{count} Jahre
+      x_days:
+        one: ein Tag
+        other: ! '%{count} Tage'
+      x_minutes:
+        one: eine Minute
+        other: ! '%{count} Minuten'
+      x_months:
+        one: ein Monat
+        other: ! '%{count} Monate'
+      x_seconds:
+        one: eine Sekunde
+        other: ! '%{count} Sekunden'
+    prompts:
+      day: Tag
+      hour: Stunden
+      minute: Minuten
+      month: Monat
+      second: Sekunden
+      year: Jahr
+  errors: &errors
+    format: ! '%{attribute} %{message}'
+    messages:
+      accepted: muss akzeptiert werden
+      blank: muss ausgefüllt werden
+      confirmation: stimmt nicht mit der Bestätigung überein
+      empty: muss ausgefüllt werden
+      equal_to: muss genau %{count} sein
+      even: muss gerade sein
+      exclusion: ist nicht verfügbar
+      greater_than: muss größer als %{count} sein
+      greater_than_or_equal_to: muss größer oder gleich %{count} sein
+      inclusion: ist kein gültiger Wert
+      invalid: ist nicht gültig
+      less_than: muss kleiner als %{count} sein
+      less_than_or_equal_to: muss kleiner oder gleich %{count} sein
+      not_a_number: ist keine Zahl
+      not_an_integer: muss ganzzahlig sein
+      odd: muss ungerade sein
+      record_invalid: ! 'Gültigkeitsprüfung ist fehlgeschlagen: %{errors}'
+      taken: ist bereits vergeben
+      too_long: ist zu lang (nicht mehr als %{count} Zeichen)
+      too_short: ist zu kurz (nicht weniger als %{count} Zeichen)
+      wrong_length: hat die falsche Länge (muss genau %{count} Zeichen haben)
+    template:
+      body: ! 'Bitte überprüfen Sie die folgenden Felder:'
+      header:
+        one: ! 'Konnte %{model} nicht speichern: ein Fehler.'
+        other: ! 'Konnte %{model} nicht speichern: %{count} Fehler.'
+  helpers:
+    select:
+      prompt: Bitte wählen
+    submit:
+      create: ! '%{model} erstellen'
+      submit: ! '%{model} speichern'
+      update: ! '%{model} aktualisieren'
+  number:
+    currency:
+      format:
+        delimiter: .
+        format: ! '%n %u'
+        precision: 2
+        separator: ! ','
+        significant: false
+        strip_insignificant_zeros: false
+        unit: €
+    format:
+      delimiter: .
+      precision: 2
+      separator: ! ','
+      significant: false
+      strip_insignificant_zeros: false
+    human:
+      decimal_units:
+        format: ! '%n %u'
+        units:
+          billion:
+            one: Milliarde
+            other: Milliarden
+          million: Millionen
+          quadrillion:
+            one: Billiarde
+            other: Billiarden
+          thousand: Tausend
+          trillion: Billionen
+          unit: ''
+      format:
+        delimiter: ''
+        precision: 1
+        significant: true
+        strip_insignificant_zeros: true
+      storage_units:
+        format: ! '%n %u'
+        units:
+          byte:
+            one: Byte
+            other: Bytes
+          gb: GB
+          kb: KB
+          mb: MB
+          tb: TB
+    percentage:
+      format:
+        delimiter: ''
+    precision:
+      format:
+        delimiter: ''
+  support:
+    array:
+      last_word_connector: ! ' und '
+      two_words_connector: ! ' und '
+      words_connector: ! ', '
+  time:
+    am: vormittags
+    formats:
+      default: ! '%A, %d. %B %Y, %H:%M Uhr'
+      long: ! '%A, %d. %B %Y, %H:%M Uhr'
+      short: ! '%d. %B, %H:%M Uhr'
+    pm: nachmittags
+  # remove these aliases after 'activemodel' and 'activerecord' namespaces are removed from Rails repository
+  activemodel:
+    errors:
+      <<: *errors
+  activerecord:
+    errors:
+      <<: *errors
+  
+  
+  
+  title: "%{name} - protonet. it's yours."
+  link_edit: "bearbeiten"
+  link_remove: "löschen"
+  link_add: "hinzufügen"
+  link_show_all: "Alle zeigen"
+  link_close: "Schließen"
+  label_delete: "Löschen"
+  label_save: "Speichern"
+  label_send: "Abschicken"
+  label_create: "Erstellen"
+  label_change: "Ändern"
+  label_reset: "Zurücksetzen"
+  label_next_step: "Nächster Schritt"
+  label_on: "An"
+  label_off: "Aus"
+  label_yes: "Ja"
+  label_no: "Nein"
+  label_go: "Los"
+  hint_loading: "lädt ..."
+  hint_ie: "Heya!<br><br>Protonet nutzt neuste Technologien und wird deswegen nicht in Ihrem jetzigen Browser funktionieren.<br> Bitte laden Sie sich <a href='http://www.browserchoice.eu/'>hier</a> einen neuen Browser herunter.<br><br>Vielen lieben Dank."
+  headline_please_note: "Bitte beachten:"
+  headline_caution: "Achtung:"
+  nav_administration: "Administration"
+  nav_channels: "Kanäle"
+  nav_users: "Nutzer"
+  nav_files: "Dateien"
+  nav_applications: "Applikationen"
+  flash_message_forbidden: "Sie haben nicht die Berechtigung diese Seite zu sehen."
+  flash_message_saved_success: "Erfolgreich gespeichert!"
+  
+  instruments:
+    hint_insert_emoticon: "Smiley einfügen"
+    hint_attach_snapshot: "Webcam-Foto anhängen"
+    hint_attach_snapshot_guest: "Webcam-Foto anhängen (Sie müssen dafür eingeloggt sein)"
+    hint_attach_files: "Dateien anhängen"
+    hint_attach_files_guest: "Dateien anhängen (Sie müssen dafür eingeloggt sein)"
+    hint_manage_channels: "Kanäle hinzufügen/verwalten"
+    hint_delete_attachment: "Anhang entfernen [ESC]"
+    placeholder_message_guest: "Willkommen lieber Gast!"
+    placeholder_message: "Hallo @%{display_name}!"
+    label_send_message: "Nachricht abschicken [ENTER]"
+    title_welcome: "Willkommen im <strong>Protonet</strong> von <strong>%{name}</strong>"
+    hint_protonet_node: "Protonet Box: Deine eigene Cloud."
+    hint_protonet_link: "Hier klicken um mehr über Protonet zu erfahren"
+    copyright: "© 2012 Protonet. It's yours."
+  
+  channels:
+    flag_private: "(privat)"
+    flag_owner: "(Inhaber)"
+    flag_awaiting_verification: "(wartet auf Freischaltung)"
+    hint_global: "Dieser Kanal ist global verfügbar"
+    hint_private: "Dieser Kanal ist privat"
+    hint_edit_rights: "Nur sichtbar für Administratoren und dem Inhaber des Kanals"
+    hint_checkbox_private: "Nutzer können diesen Kanal nicht abonnieren ohne vorher vom Inhaber freigeschaltet geworden zu sein"
+    hint_no_global_available: "Keine globalen Kanäle verfügbar"
+    hint_no_subscriptions: "Bisher haben keine Nutzer diesen Kanal abonniert. Seien Sie der Erste!"
+    hint_subscription_needs_verification: "Dieser Kanal ist privat: Der Inhaber muss Ihr Abonnement freischalten."
+    hint_no_description_available: "Keine Beschreibung"
+    link_show_profile: "Profil anzeigen"
+    link_verify: "freischalten"
+    nav_local: "Lokale Kanäle"
+    nav_global: "Globale Kanäle"
+    nav_new: "Neuen Kanal anlegen"
+    headline_edit: "%{display_name} bearbeiten"
+    headline_edit_details: "Kanal-Informationen bearbeiten"
+    headline_delete: "Kanal löschen"
+    headline_global: "Globale Kanäle"
+    headline_local: "Lokale Kanäle"
+    headline_subscribed: "Kanäle, die Sie bereits abonniert haben"
+    headline_unsubscribed: "Vielleicht möchten Sie auch einen der folgenden Kanäle abonnieren"
+    headline_new: "Neuen Kanal anlegen"
+    headline_subscribers: "Abonnenten"
+    headline_subscribe_users: "Nutzer hinzufügen"
+    label_name: "Name:"
+    label_description: "Beschreibung:"
+    label_description_optional: "Beschreibung (optional):"
+    label_private: "Privat:"
+    label_global: "Global:"
+    label_unsubscribe: "Abonnement beenden"
+    label_subscribe: "Abonnieren"
+    label_add: "Hinzufügen"
+    placeholder_name: "zB. Musik, Projekt XYZ, Finanzen, ..."
+    placeholder_user_name: "Name des Nutzers"
+    placeholder_user_name_or_email: "Name des Nutzers oder eine E-Mail Adresse"
+    text_delete: "Diesen Kanal inklusive aller Nachrichten und Dateien löschen."
+    text_global: "Hier finden Sie alle Kanäle des Protonet Teams. Dies sind globale Kanäle, welche von allen Protonets auf der ganzen Welt benutzt werden können."
+    text_local: "Hier finden Sie eine Liste aller Kanäle auf diesem Protonet."
+    text_new: "Kanäle sind ähnlich wie Gruppen. Sie können welche für jedes Thema anlegen (zB. Musik, Projekt XYZ)."
+    text_subscribe_users: "Geben Sie den Namen eines Nutzers ein um ihn zu diesem Kanal hinzuzufügen."
+    text_subscribe_users_email: "Geben Sie den Namen eines bestehenden Nutzers ein um ihn zu diesem Kanal hinzuzufügen. Als Administrator können Sie hier auch eine E-Mail Adresse eingeben um externe Leute einzuladen."
+    confirm_delete: "Möchten Sie wirklich diesen Kanal löschen? Es gibt kein zurück."
+    subscribers:
+      one: "Abonnent"
+      other: "Abonnenten"
+    flash_message_channel_created_success: "Der Kanal '%{name}' wurde erfolgreich angelegt."
+    flash_message_channel_created_error: "Der Kanal konnte nicht angelegt werden, %{errors}."
+    flash_message_channel_updated_success: "Der Kanal '%{display_name}' wurde erfolgreich geändert."
+    flash_message_channel_updated_error: "Der Kanal '%{display_name}' konnte nicht geändert werden."
+    flash_message_channel_destroyed_success: "Der Kanal '%{display_name}' wurde erfolgreich gelöscht."
+    flash_message_channel_destroyed_error: "Der Kanal '%{display_name}' konnte nicht gelöscht werden."
+    
+  passwords:
+    headline_change: "Passwort ändern"
+    headline_reset: "Passwort zurücksetzen"
+    headline_reset_greeting: "Hallo %{login},"
+    headline_reset_instructions: "Hallo %{login},"
+    mail_text_1: "Bitte folgen Sie dem Link um Ihr Passwort zu ändern:"
+    mail_text_2: "Bitte ignorieren Sie diese E-Mail wenn Sie keine Passwort-Änderung angefragt haben."
+    mail_text_3: "Ihr Passwort wird nicht geändert bis Sie auf den obigen Link geklickt haben."
+    mail_text_4: "<p>Dies ist Ihr neues Passwort: <i>%{password}</i><br>Sie können sich <a href='%{href}'>hier</a> einloggen.<p>Aus Sicherheitsgründen ändern Sie das Passwort danach sofort.</p><p>Viel Spaß bei der Nutzung von Protonet!</p>"
+    mail_text_5: "Sie haben eine Änderung Ihres Passworts auf dem Protonet von <strong>%{name}</strong> beantragt. Bitte klicken Sie auf den folgenden Link um ein neues Passwort einzugeben."
+    link_change: "Passwort ändern"
+    flash_message_no_user_error: "Der Nutzer konnte nicht gefunden werden."
+    
+  avatars:
+    flash_message_upload_error: "Das Foto ist ungültig: %{errors}"
+  
+  users:
+    nav_all_users: "Alle Nutzer"
+    nav_my_profile: "Mein Profil"
+    nav_invitations: "Einladungen"
+    hint_edit: "Diese Seite kann nur von Administratoren und dem Nutzer selbst gesehen werden"
+    hint_admins_can_see_this: "Nur sichtbar für Administratoren"
+    hint_edit_details: "Sie können Ihre Nutzer-Daten nicht ändern, da der Administrator LDAP-Authentifizierung aktiviert hat."
+    hint_thats_you: "Das sind Sie!"
+    hint_thats_you_small: "(Das sind Sie!)"
+    hint_administrator: "Dieser Nutzer ist ein Administrator"
+    hint_password: "min. 8 Zeichen"
+    hint_email: "eine valide E-Mail Adresse (zB. hans.meier@hotmail.de)"
+    hint_first_name: "Vorname (zB. Hans)"
+    hint_last_name: "Nachname (zB. Meier)"
+    hint_upload_files: "* Dateien können nur angesehen, geändert oder gelöscht werden wenn Sie zu einem Kanal gehören den der Nutzer abonniert hat.<br>(Beispiel: Ein Nutzer mit beschränkten Berechtigungen wird nicht die Möglichkeit haben eine Datei innerhalb eines Kanals, den er nicht abonniert hat, zu sehen oder zu ändern)"
+    hint_password_forgotten: "Haben Sie Ihr Passwort vergessen? <a href='%{href}' data-avoid-ajax='1'>Hier können Sie es zurücksetzen</a>"
+    hint_user_with_restricted_rights: "<h4>Nutzer mit beschränkten Berechtigungen</h4> Nutzer mit beschränkten Berechtigungen können nur Kanäle sehen, denen sie von einem Administrator hinzugefügt wurden. Sie können nicht Nutzer von anderen Kanälen sehen. Dieser Nutzertyp eignet sich perfekt für Kunden oder Gäste, die einen limitierten Zugriff haben sollen."
+    hint_user_default: "<h4>Nutzer</h4> Normale Nutzer können alle Kanäle und Nutzer sehen. Sie können keine Kanäle löschen/verwalten, die sie nicht angelegt haben."
+    hint_user_with_administration_rights: "<h4>Administrator</h4> Nutzer mit administrativen Berechtigungen können Kanäle und andere Nutzer verwalten."
+    hint_close_getting_started: "Nicht mehr anzeigen"
+    hint_change_password: "Es ist noch auf 'admin' gesetzt"
+    hint_channels: "Kanäle auswählen, die dem Nutzer hinzugefügt werden"
+    hint_update_profile: "Ein Foto hochladen. Zeigen Sie anderen Nutzern wer Sie sind."
+    hint_create_channels: "Kanäle sind ähnlich wie Gruppen. Erstellen Sie einen für jedes Thema (zB. 'Finanzen')"
+    hint_invite: "Laden Sie Kollegen, Kunden oder Partner zum gemeinsamen Arbeiten zu Protonet ein"
+    hint_write_meep: "Starten Sie eine Konversation"
+    hint_subscribe_channels: "Kanäle sind ähnlich wie Gruppen. Sie können neue anlegen oder bestehende abonnieren."
+    hint_user_types: "<a id='show-comparison-chart'>Lernen Sie mehr</a> über die verschiedenen Nutzer-Typen und deren Berechtigungen."
+    hint_contact_admin: "Kontaktieren Sie einen der folgenden Nutzer wenn Sie Feedback haben:"
+    hint_no_admins: "Dieses Protonet hat keine Administratoren. Bitte kontaktieren Sie den <a href='mailto:team@protonet.info'>Protonet Support</a>."
+    hint_send_email: "Nur Administratoren können die E-Mail Adressen der Nutzer sehen"
+    hint_no_channels_subscribed: "Keine Kanäle abonniert."
+    hint_recent_messages: "Andere Nutzer können nur Nachrichten sehen die in den gemeinsamen Kanälen geschrieben wurden."
+    placeholder_password: "Passwort"
+    placeholder_first_name: "Vorname"
+    placeholder_last_name: "Nachname"
+    placeholder_email: "E-Mail"
+    placeholder_user_name_or_email: "E-Mail oder Nutzername"
+    placeholder_find: "Finden ..."
+    label_first_name: "Vorname:"
+    label_last_name: "Nachname:"
+    label_user_name: "Nutzername:"
+    label_email: "E-Mail:"
+    label_signup: "Registrieren"
+    label_login: "Anmelden"
+    label_remember: "Angemeldet bleiben"
+    label_user_type: "Nutzer-Typ:"
+    label_user_with_restricted_rights: "Nutzer mit beschränkten Berechtigungen"
+    label_user_default: "Nutzer"
+    label_user_with_administration_rights: "Administrator"
+    label_channels: "Kanäle:"
+    label_write_messages: "Nachrichten schreiben"
+    label_start_private_chats: "Private Konversation starten"
+    label_upload_files: "Dateien hochladen, ändern oder löschen *"
+    label_create_channels: "Kanäle anlegen"
+    label_subscribe_channels: "Kanäle abonnieren"
+    label_see_all_channels: "Alle Kanäle sichtbar"
+    label_see_all_users: "Alle Nutzer sichtbar"
+    label_delete_users: "Nutzer löschen"
+    label_invite_people: "Leute einladen"
+    label_administrate: "Protonet administrieren"
+    label_generate_new_password: "Neues generieren"
+    label_generate_new_password_and_send: "Neues generieren und per E-Mail an den Nutzer schicken"
+    label_old_password: "Altes Passwort:"
+    label_new_password: "Neues Passwort:"
+    label_notify_me: "Benachrichtigungen über neue Nachrichten per E-Mail"
+    label_start_private_chat: "Private Konversation starten"
+    label_send_reply: "@Antwort schicken"
+    link_create_channels: "Kanäle anlegen"
+    link_change_photo: "Foto ändern"
+    link_change_password: "Passwort ändern"
+    link_update_profile: "Profil ändern"
+    link_login: "bereits registriert?"
+    link_user_types_learn_more: "<a id='show-comparison-chart'>Lernen Sie mehr</a> über Nutzer-Typen und Berechtigungen"
+    link_create_account: "oder <a href='/users/sign_up' class='promotion-link register-link' data-avoid-ajax='1'>kostenlos registrieren</a>"
+    link_invite: "Leute einladen"
+    link_write_meep: "Schreiben Sie etwas"
+    link_logout_getting_started: "abmelden >"
+    link_subscribe_channels: "Kanäle abonnieren"
+    link_settings: "Einstellungen"
+    link_my_files: "Meine Dateien"
+    link_logout: "Abmelden"
+    link_send_email: "Eine E-Mail schicken"
+    headline_welcome: "Willkommen %{display_name}"
+    headline_users_widget: "Nutzer"
+    headline_edit: "@%{display_name} ändern"
+    headline_edit_details: "Nutzer-Daten ändern"
+    headline_reset_password: "Passwort zurücksetzen"
+    headline_change_password: "Passwort ändern"
+    headline_notifications: "Benachrichtigungen"
+    headline_permissions: "Berechtigungen"
+    headline_user_types: "Nutzer-Typen"
+    headline_delete: "Nutzer löschen"
+    headline_administrators: "Administratoren"
+    headline_all_users: "Alle Nutzer"
+    headline_invitation: "Kostenlos registrieren.<br> <span>Sie wurden von %{display_name} eingeladen.</span>"
+    headline_ldap: "Mit LDAP-Daten anmelden"
+    headline_create_account: "Kostenlos registrieren."
+    headline_subscribed_channels: "Abonnierte Kanäle"
+    headline_recent_messages: "Nachrichten inklusive Anhang"
+    confirm_delete: "Möchten Sie wirklich diesen Nutzer löschen? Es gibt kein zurück."
+    text_profile: "<strong>%{display_name}</strong> ist hier ein Mitglied seit <strong>%{time_ago_in_words}</strong> <br>hat  <strong>%{channels_size}</strong> Kanäle abonniert und <strong>%{meeps_size}</strong> Nachrichten geschrieben."
+    flash_message_update_success: "Der Nutzer wurde erfolgreich geändert."
+    flash_message_update_error: "Der Nutzer konnte nicht geändert werden: %{errors}"
+    flash_message_admin_success: "Der Nutzer @%{display_name} ist jetzt ein Administrator"
+    flash_message_user_success: "Der Nutzer @%{display_name} ist jetzt ein normaler Nutzer"
+    flash_message_invitee_success: "Der Nutzer @%{display_name} ist jetzt ein Nutzer mit beschränkten Berechtigungen"
+    flash_message_new_password_sent_success: "Neues Passwort für @%{display_name} generiert und per E-Mail geschickt: '%{new_password}'"
+    flash_message_new_password_success: "Neues Passwort für @%{display_name} generiert: '%{new_password}'"
+    flash_message_change_password_success: "Sie haben erfolgreich Ihr Passwort geändert."
+    flash_message_destroy_success: "Der Nutzer @%{display_name} wurde erfolgreich gelöscht."
+    flash_message_send_javascript_success: "Das JavaScript wurde ausgeführt."
+    flash_message_signup_error: "Bitte überprüfen Sie die hervorgehobenen Eingabefelder."
+    
+  listens:
+    flash_message_created_success: "Sie haben erfolgreich '%{display_name}' abonniert."
+    flash_message_wait_for_verification: "Dieser Kanal ist privat. Bitte warten Sie bis @%{display_name} Sie freigeschaltet hat."
+    flash_message_created_error: "Dieser Kanal existiert nicht (mehr)."
+    flash_message_destroyed_myself_success: "Sie haben ihr Abonnement für '%{display_name}' beendet."
+    flash_message_destroyed_success: "Das Abonnement von @%{user_display_name} für '%{channel_display_name}' wurde erfolgreich beendet."
+    flash_message_verification_success: "Sie haben @%{display_name} erfolgreich freigeschaltet."
+    flash_message_create_for_user_success: "Sie haben @#{user_display_name} erfolgreich zu '#{channel_display_name}' hinzugefügt."
+    flash_message_create_for_user_error: "Der Nutzer '%{search_term}' konnte nicht gefunden werden."
+  
+  files:
+    title_audio_player: "Protonet - Audio Player"
+    headline_recent_files: "Aktuelle Dateien"
+    headline_uploading_files: "Dateien werden hochgeladen (0 %)"
+    label_size: "Größe:"
+    label_uploader: "Hochgeladen von:"
+    label_modified: "Geändert:"
+    label_type: "Typ:"
+    label_malicious: "Bösartig:"
+    label_download: "Herunterladen"
+    label_ignore: "Ignorieren"
+    label_try_again: "Erneut versuchen"
+    headline_name: "Name"
+    headline_last_modified: "Zuletzt geändert"
+    headline_size: "Größe"
+    link_play: "Abspielen"
+    link_upload_files: "Dateien hochladen"
+    link_new_folder: "Neuer Ordner"
+    link_share_files: "Dateien teilen"
+    link_delete_files: "Dateien löschen"
+    hint_play: "Die ausgewählten Dateien abspielen"
+    hint_scanning: "scannt ..."
+    hint_upload_files: "Dateien hochladen"
+    hint_new_folder: "Neuen Ordner erstellen"
+    hint_share_files: "Ausgewählte Dateien teilen"
+    hint_delete: "Ausgewählte Dateien löschen"
+    hint_loading_preview: "Vorschau laden ..."
+    hint_virus_scan: "Protonet scannt automatisch Dateien nach Viren"
+    text_share: "<button>Teilen</button> oder <a href='%{href}' class='promotion-link folder-link'>privaten Ordner öffnen</a>"
+    
+  invitations:
+    headline_overview: "Leute ins Protonet einladen"
+    headline_email: "Sie wurden zum Protonet von %{name} eingeladen."
+    headline_details: "Einladung für %{email}"
+    headline_delete: "Einladung löschen"
+    headline_list:
+      one: "Sie haben %{count} Nutzer eingeladen"
+      other: "Sie haben %{count} Nutzer eingeladen"
+    hint_rights: "Nur Administratoren können Einladungen verwalten"
+    hint_no_invitations_available: "Keine Einladungen."
+    text_1: "Hallo %{name},"
+    text_2: "<strong>%{display_name}</strong> möchte mit Ihnen zusammenarbeiten. Klicken Sie einfach den folgenden Link, wählen Sie ein Passwort aus und schon geht`s los."
+    text_3: "Nach der Registrierung sind Sie den folgenden Gruppen/Kanälen zugeordnet:"
+    text_4: "Los geht`s:"
+    text_5: "Protonet – Eine revolutionäre Weise zusammenzuarbeiten."
+    text_web_publishing_off: "Web-Freigabe ist derzeit <b>nicht aktiviert</b>. Sie können es <a href='/preferences/show?section=publish_to_web'>hier</a> aktivieren."
+    link_show_invitation: "Einladung anzeigen"
+    link_show_profile: "Profil anzeigen"
+    link_invite: "Jemanden einladen"
+    link_wysiwyg_bold: "fett [CTRL+B]"
+    link_wysiwyg_italic: "kursiv [CTRL+I]"
+    link_wysiwyg_undo: "rückgängig [CTRL+Z]"
+    link_wysiwyg_redo: "wiederholen [CTRL+Y]"
+    link_wysiwyg_insert_unordered_list: "Liste einfügen"
+    link_wysiwyg_insert_invitation_link: "Einladungslink einfügen"
+    status_accepted: "angenommen von %{login}"
+    status_sent: "versendet %{time}"
+    status_not_sent: "noch nicht versendet"
+    label_send: "Einladung versenden"
+    label_resend: "Einladung erneut senden"
+    confirm_delete: "Wollen Sie diese Einladung wirklich löschen?"
+    flash_message_sent: "Die Einladung wurde erfolgreich versendet."
+    flash_message_error: "Die Einladung ist ungültig."
+    
+  meeps:
+    headline_mention_mail: "Hallo %{display_name}, %{author} hat Sie gerade erwähnt"
+    headline_message_mail: "Hallo %{display_name}, %{author} hat Ihnen gerade eine Nachricht gesendet"
+    headline_loading: "Nachricht lädt #%{id} ..."
+    mail_text_1: "Dieser Konversation beitreten:"
+    mail_text_2: "Protonet – Eine revolutionäre Weise zusammenzuarbeiten."
+    mail_text_3: "Wenn Sie keine E-Mails mehr von Protonet bekommen möchten, können Sie das in Ihren persönlichen Einstellungen hier <a href='%{href}'>hier</a> festlegen."
+    mail_text_4: "Die gesamte Konversation anzeigen:"
+    text_detail_view: "Hier können Sie durch den Konversationsverlauf scrollen. Nutzen Sie die Pfeiltasten auf Ihrer Tastatur oder das Mausrad."
+    hint_open_channel: "Zum Kanal wechseln"
+    hint_open_user: "Zum Nutzer wechseln"
+    hint_message_options: "Nachrichten-Optionen"
+    hint_posted_in: "geschrieben in"
+    hint_via: "via"
+    
+  preferences:
+    flash_message_saved_error: "Die Einstellungen konnten nicht gespeichert werden."
+    flash_message_web_publishing_url_error: "Bitte geben Sie eine korrekte URL ein."
+    flash_message_web_publishing_error: "Fehler: %{error_message}"
+    flash_message_web_publishing_on_success: "Sie haben Ihr Protonet erfolgreich ins Web freigeschaltet."
+    flash_message_web_publishing_off_success: "Sie haben die Web-Freigabe erfolgreich deaktiviert."
+    flash_message_update_success: "Protonet erfolgreich aktualisiert."
+    flash_message_update_error_1: "Falsches Passwort."
+    flash_message_update_error_2: "Aktualisierung fehlgeschlagen. Bitte kontaktieren Sie den Protonet Support."
+    flash_message_update_error_3: "Software-Aktualisierung konnte nicht gestartet werden. Bitte kontaktieren Sie den Protonet Support."
+    flash_message_log_sent_success: "Das Aktualisierungs-Protokoll wurde erfolgreich an den Protonet Support geschickt."
+    flash_message_wlan_password_error: "Das Passwort für %{interface} muss mindestens 8 Zeichen lang sein."
+    flash_message_wlan_success: "Ihre WLAN Einstellungen wurden erfolgreich gespeichert."
+    flash_message_grant_success: "Sie haben der IP '%{ip_address}' erfolgreich Internet-Zugang gegeben."
+    flash_message_grant_error_1: "Internet Freigabe für die IP '%{ip_address}' hat nicht funktioniert."
+    flash_message_grant_error_2: "Es konnte keine Mac-Adresse für die IP '%{ip_address}' gefunden werden."
+    flash_message_revoke_success: "Sie haben der IP '%{ip_address}' erfolgreich Internet-Zugang verwehrt."
+    flash_message_revoke_error_1: "Es konnte der IP '%{ip_address}' der Internet-Zugang nicht verwehrt werden."
+    flash_message_revoke_error_2: "Es konnte keine Mac-Adresse für die IP '%{ip_address}' gefunden werden."
+    flash_message_whitelist_update_success: "Die Freigabe-Liste wurde erfolgreich gespeichert."
+    flash_message_something_went_wrong_error: "Etwas ist schief gelaufen. Bitte kontaktieren Sie den Protonet Support."
+    flash_message_captive_not_authorized: "Nicht erlaubt, nur Administratoren haben diese Berechtigung."
+    flash_message_node_name_error: "kann nur aus Buchstaben, Zahlen und Bindestrichen bestehen."
+    headline_advanced: "Erweitert"
+    headline_captive_list: "Liste der Nutzer mit Internet-Zugang:"
+    headline_captive_portal: "Captive Portal"
+    headline_email_settings: "E-Mail Einstellungen"
+    headline_execute_javascript: "JavaScript ausführen"
+    headline_customization: "Individualisierung"
+    headline_customization_title: "Titel"
+    headline_customization_css: "Eigenes CSS"
+    headline_customization_js: "Eigenes JavaScript"
+    headline_general: "Allgemein"
+    headline_general_settings: "Einstellungen"
+    headline_general_info: "Informationen"
+    headline_general_support: "Support"
+    headline_privacy: "Privatsphäre"
+    headline_web_publishing: "Web-Freigabe"
+    headline_web_publishing_settings: "Einstellungen"
+    headline_invite_people: "Leute einladen"
+    headline_updates: "Aktualisierungen"
+    headline_update: "Software-Aktualisierung"
+    headline_updates_info: "Informationen"
+    headline_update_log: "Aktualisierungs-Protokoll"
+    headline_wlan: "WLAN"
+    headline_wlan_channel: "WLAN Kanal"
+    headline_administration: "Administration"
+    headline_privacy_ethernet: "Zugriff auf Protonet über Ethernet/Netzwerkkabel: <i>(interface: %{interface_name})</i>"
+    headline_privacy_wlan: "Zugriff auf Protonet über WLAN <i>(interface: %{interface_name})</i>"
+    headline_privacy_web_publishing: "Zugriff auf Protonet über https://%{publish_to_web_name}.protonet.info<br><i> wie konfiguriert unter <a href='%{href}'>Web-Freigabe</a>"
+    headline_privacy_local: "Zugriff auf Protonet von lokal <i>(interface: %{interface_name})</i>"
+    headline_privacy_fallback: "Zugriff auf Protonet über andere Netzwerk-Schnittstellen <i>(Fallback)</i>"
+    nav_general: "Allgemein"
+    nav_web_publishing: "Web-Freigabe"
+    nav_customization: "Individualisierung"
+    nav_wlan: "WLAN"
+    nav_privacy: "Privatsphäre"
+    nav_updates: "Aktualisierung"
+    nav_advanced: "Erweitert"
+    text_update_log: 'Das letzte <a id="show-last-release-update-log">Aktualisierungs-Protokoll</a> anzeigen und gegebenenfalls an den Protonet Support schicken, falls Sie Probleme nach einer Aktualisierung merken.'
+    text_web_publishing: "Machen Sie Ihr Protonet verfügbar für die ganze Welt, nicht nur Ihr lokales Netzwerk."
+    text_advanced: "Die folgenden Einstellungen sollten nur von technisch-versierten Nutzern geändert werden."
+    text_customization: "Hier können Sie Farben ändern, das Logo austauschen und individuelle Funktionalitäten einbauen."
+    text_general_settings: "Eine Änderung des Namens wird auch den Namen des WLAN ändern und es neustarten."
+    text_general_settings_wifi: "Sie müssen sich danach gegebenenfalls neu mit dem WLAN verbinden."
+    text_privacy: "Hier können Sie entscheiden was Besucher sehen können abhängig davon über welche Netzwerk-Schnittstelle sie auf Protonet landen."
+    text_updates: "Es ist empfehlenswert die Protonet Software von Zeit zu Zeit zu aktualisieren um Fehler zu vermeiden und um neue Funktionalitäten, sowie Verbesserungen zu bekommen."
+    text_wlan: "Sie können ein privates (für Mitarbeiter, Freunde usw.) und ein öffentliches (für Kunden, Gäste usw.) WLAN-Netzwerk haben."
+    text_administration: "Hier können Sie Protonet administrieren. Nur Nutzer mit administrativen Berechtigungen können das sehen.<br>Einzelne <a href='%{users_path}' class='promotion-link'>Nutzer</a> und <a href='%{channels_path}' class='promotion-link'>Kanäle</a> können auf der zugehörigen Seite bearbeitet werden."
+    label_status: "Status:"
+    label_url: "URL:"
+    label_captive_greeting: "Willkommensgruß:"
+    label_captive_url: "Authorisierungs-URL:"
+    label_captive_external_if: "Externe Netzwerk-Schnittstelle:"
+    label_captive_internal_if: "Interne Netzwerk-Schnittstelle:"
+    label_captive_redirection_ip: "Weiterleitungs-IP:"
+    label_captive_grant_ip_access: "IP:"
+    label_captive_revoke_ip_access: "IP:"
+    label_grant: "Freischalten"
+    label_revoke: "Sperren"
+    label_captive_whitelisted_macs: "Freigeschaltete MAC-Adressen:"
+    label_captive_whitelisted_sites: "Erlaubte Webseiten (IP):"
+    label_email_settings_delivery_method: "Aktuell benutzt:"
+    label_email_settings_base_path: "Aktueller base path:"
+    label_local_email_delivery: "Lokale E-Mail Zustellung:"
+    label_smtp_address: "SMTP Adresse:"
+    label_smtp_domain: "SMTP Domain:"
+    label_smtp_username: "SMTP Nutzername:"
+    label_smtp_password: "SMTP Passwort:"
+    label_execute_javascript_1: "Ein spezifischer Nutzer:"
+    label_execute_javascript_2: "oder alle Nutzer die online sind"
+    label_execute_javascript_target: "Nutzer:"
+    label_script_code: "Skript-Code:"
+    label_protonet_name: "Name:"
+    label_uptime: "Laufzeit:"
+    label_assigned_ip: "Zugewiesene IP:"
+    label_uuid: "UUID:"
+    label_version: "Version:"
+    label_license_key: "Lizenzschlüssel:"
+    label_support_email: "Support per E-Mail:"
+    label_support_twitter: "Support per Twitter:"
+    label_support_twitter: "Webseite:"
+    label_privacy_home_channel: "Besucher können chatten und Dateien im Kanal <strong>%{display_name}</strong> sehen ohne sich zu registrieren"
+    label_privacy_sign_up: "Besucher können sich registrieren"
+    label_current_version: "Aktuelle Version:"
+    label_update_available: "Stabile Aktualisierung verfügbar:"
+    label_ssh_password: "SSH Passwort:"
+    label_update: "Aktualisieren"
+    label_send_log: "Aktualisierungs-Protokoll an den Support schicken"
+    label_internet_access: "Internet Zugriff:"
+    label_wlan_password: "Passwort:"
+    label_wlan_channel: "Kanal:"
+    label_live_status: "Live Status:"
+    hint_captive_whitelisted_sites: "Nach Änderung der Liste muss das Captive Portal einmal manuell neugestartet werden"
+    hint_captive_list: "Aktuell hat kein Nutzer Internet-Zugang."
+    hint_captive_portal: "Hier können Sie einstellen ob Nutzer sich bei Protonet registrieren müssen bevor sie Internet-Zugriff bekommen."
+    hint_email_settings: "Erlaubt es eigene/externe SMTP Dienste zum Versenden von E-Mail zu benutzen"
+    hint_local_email_delivery: "Das aktivieren der lokalen E-Mail Zustellung und die Nichtangabe von SMTP Einstellungen wird dazu führen, dass 'Sendmail' verwendet wird."
+    hint_execute_javascript: "JavaScript Code ausführen bei Nutzern, die gerade online sind."
+    hint_protonet_name: "Der Name kann nur aus Buchstaben, Zahlen und Bindestrichen bestehen (Leerzeichen sind nicht erlaubt)"
+    hint_please_wait: "Bitte warten. Das dauert einen Moment."
+    hint_assigned_ip: "Aktuell zugewiesene IP (Auf der Ethernet-Schnittstelle)"
+    hint_no_ip_assigned: "Keine IP zugewiesen"
+    hint_uuid: "Das ist die eindeutige ID Ihres Protonets"
+    hint_wlan_name: "Sie können den Namen des WLAN ändern indem Sie den Namen des Protonets in den allgemeinen Einstellungen ändern"
+    hint_privacy: "Sie greifen momentan über die folgende Netzwerk-Schnittstelle auf Protonet zu: <strong>%{interface}</strong>."
+    hint_web_publishing: "Sie nutzen Protonet aktuell über die <i>Web-Freigabe</i>. Wenn Sie die Web-Freigabe deaktivieren oder den Namen anpassen, verlieren Sie die Verbindung."
+    hint_web_address: "Das ist die externe Web-Adresse Ihres Protonets"
+    hint_wlan: "Jede Änderung wird zur Folge haben, dass das WLAN neugestartet wird und alle damit verbundenen Nutzer sich gegebenenfalls neu verbinden müssen."
+    hint_internet_access: "Erlauben Sie Nutzern Zugang zum Internet. Wenn ausgeschaltet können Nutzer noch immer das Protonet benutzen."
+    hint_wlan_password: "Das Passwort muss mindestens 8 Zeichen lang sein"
+    hint_wlan_channel: "Probieren Sie einen anderen WLAN-Kanal wenn sie Verbindungsprobleme haben sollten"
+    hint_no_wlan_available: "Die Hardware Ihres Protonets unterstützt kein WLAN."
+    hint_no_preferences_available: "Keine Einstellungen verfügbar. Fehlen Ihnen Administrationsrechte?"
+    hint_ssh_password: "Das SSH Passwort steht auf der Bedienungsanleitung, die mit Sie zu Ihrer Protonet Box erhalten haben."
+    placeholder_execute_javascript_target: "ID oder Nutzername"
+    placeholder_script_code: "zB. location.reload()"
+    placeholder_protonet_name: "Der Name Ihres Protonets"
+    placeholder_wlan_password: "Passwort (leer lassen für offenes WLAN)"
+    link_show_update_progress: "Aktualisierungs-Fortschritt anzeigen"
+    link_reload: "Neuladen"
+    
+  search:
+    placeholder_search: "Suchen"
+    
+  snapshots:
+    label_snap: "Foto schießen"
+    label_url: "URL:"
+    label_share: "Teilen"
+    label_retry: "Neues Foto schießen"
+    
+  captive:
+    title_check: "Protonet Captive Portal Check"
+    text_check: "<h1>Willkommen zu %{name}.</h1><p>Internet-Zugriff haben nur registrierte Nutzer.</p><p>Sie sollten <a target='_blank' href='%{href}'>hierher</a> weitergeleitet werden.</p>"
+    
+  activerecord:
+    attributes:
+      node:
+        name: "Name"
+      invitation:
+        email: "E-Mail"
+        channel_ids: "Kanäle"
+    errors:
+      models:
+        node:
+          attributes:
+            name:
+              invalid: "kann nur aus Buchstaben, Zahlen und Bindestrichen bestehen (Leerzeichen sind nicht erlaubt)."
+              too_long: "darf maximal %{count} Zeichen lang sein."
+              too_short: "darf mindestens %{count} Zeichen lang sein."
+        invitation:
+          attributes:
+            channel_ids:
+              too_short: "müssen ausgewählt werden"

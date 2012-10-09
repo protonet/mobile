@@ -81,7 +81,14 @@ protonet.data.File = (function() {
     
     model.getAll(ids, function() {
       $.each(files, function(i, file) {
-        if (file.type !== "folder" || isNaN(+file.name)) { return; }
+        if (file.type !== "folder") { return; }
+        
+        if (file.path === "/channels/") {
+          file.name = protonet.t("files.name_channels");
+          return;
+        }
+        
+        if (isNaN(+file.name)) { return; }
         
         var recordId = +file.name,
             record   = model.getCache()[recordId] || {};
@@ -163,6 +170,10 @@ protonet.data.File = (function() {
     getName: function(path) {
       if (path === "/") {
         return protonet.t("files.name_root_path");
+      }
+      
+      if (path === "/channels/") {
+        return protonet.t("files.name_channels");
       }
       
       if (path === protonet.data.User.getFolder(VIEWER)) {
