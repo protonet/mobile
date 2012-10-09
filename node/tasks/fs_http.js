@@ -100,6 +100,7 @@ function setAccessControlHeaders(response, request) {
 function upload(message, response) {
   function moveAfterUpload(fromPath) {
     mkdirSync(targetDir, FOLDER_PERMISSIONS);
+    
     fs.rename(fromPath, newFilePath, function(err) {
       fs.chmod(newFilePath, FILE_PERMISSIONS);
 
@@ -136,7 +137,7 @@ function upload(message, response) {
       chunk       = +message.params.chunk,
       chunks      = +message.params.chunks,
       file        = message.file,
-      fileName    = normalizeInput(message.params.name || message.file.name),
+      fileName    = normalizeInput(message.params.name),
       newFilePath = path.join(targetDir, fileName),
       tmpFilePath = path.join("/tmp/", fileName + ".part");
   
@@ -294,8 +295,10 @@ exports.snapshot = function(request, response) {
       path      = "/tmp/snapshot_" + new Date().getTime() + ".jpg",
       name      = "Snapshot by " + params.user_name + " " + new Date().getTime() + ".jpg",
       tmpFile   = fs.createWriteStream(path);
-      
-  params.target_folder = "/users/" + params.user_id + "/snapshots/";
+  
+  // params.path expected by fs.check_auth_and_write_access
+  params.paths = params.target_folder = "/users/" + params.user_id + "/snapshots/";
+  params.name = name;
   
   request.on("data", function(chunk) {
     tmpFile.write(chunk);
@@ -303,9 +306,6 @@ exports.snapshot = function(request, response) {
   
   request.on("end", function() {
     tmpFile.end();
-    
-    // expected by fs.check_auth_and_write_access
-    params.paths = params.target_folder;
     
     exchange.publish("rpc.requests", {
       object: 'fs',
