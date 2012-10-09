@@ -94,7 +94,7 @@ class ApplicationController < ActionController::Base
   def login_as_guest
     session[:stranger_id] ||= ActiveSupport::SecureRandom.base64(20)
     channels_to_subscribe = if node_privacy_settings["allow_dashboard_for_strangers"]
-      SystemPreferences.default_channel_ids
+      Channel.public.where(:id => SystemPreferences.default_channel_ids)
     else
       []
     end
