@@ -22,7 +22,7 @@
     <%= link_button(t("users.label_start_private_chat"), "/?rendezvous_with=#{@user.id}", { 'data-rendezvous-with' => @user.id }) %>
     <%= link_button(t("users.label_send_reply"), "/?reply_to=#{ERB::Util.u(@user.display_name)}", { 'data-reply-to' => @user.display_name }) %>
     <%- if current_user.admin? && current_user.email != "admin@protonet.local" %>
-      or <a href="mailto:<%= @user.email %>" target="_blank"><%= t("users.link_send_email") %></a>. <a data-hover-hint="top" title="<%= t("users.hint_send_email") %>" class="hint">(?)</a>
+      <%= t("or") %> <a href="mailto:<%= @user.email %>" target="_blank"><%= t("users.link_send_email") %></a> <a data-hover-hint="top" title="<%= t("users.hint_send_email") %>" class="hint">(?)</a>
     <%- end %>
   </p>
   
