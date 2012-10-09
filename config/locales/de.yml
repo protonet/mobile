@@ -340,7 +340,7 @@ de:
     hint_last_name: "Nachname (zB. Meier)"
     hint_upload_files: "* Dateien können nur angesehen, geändert oder gelöscht werden, wenn Sie zu einem Kanal gehören den der Nutzer abonniert hat.<br>(Beispiel: Ein Nutzer mit beschränkten Berechtigungen wird nicht die Möglichkeit haben eine Datei innerhalb eines Kanals, den er nicht abonniert hat, zu sehen oder zu ändern)"
     hint_password_forgotten: "Haben Sie Ihr Passwort vergessen? <a href='%{href}' data-avoid-ajax='1'>Hier können Sie es zurücksetzen</a>"
-    hint_user_with_restricted_rights: "<h4>Nutzer mit beschränkten Berechtigungen</h4> Nutzer mit beschränkten Berechtigungen können nur Kanäle sehen, denen sie von einem Administrator hinzugefügt wurden. Sie können nicht Nutzer von anderen Kanälen sehen. Dieser Nutzertyp eignet sich perfekt für Kunden oder Gäste, die einen limitierten Zugriff haben sollen."
+    hint_user_with_restricted_rights: "<h4>Nutzer mit beschränkten Berechtigungen</h4> Nutzer mit beschränkten Berechtigungen können nur Kanäle sehen, zu denen sie von einem Administrator hinzugefügt wurden. Sie können nicht Nutzer von anderen Kanälen sehen. Dieser Nutzertyp eignet sich perfekt für Kunden oder Gäste, die einen limitierten Zugriff haben sollen."
     hint_user_default: "<h4>Nutzer</h4> Normale Nutzer können alle Kanäle und Nutzer sehen. Sie können keine Kanäle löschen/verwalten, die sie nicht angelegt haben."
     hint_user_with_administration_rights: "<h4>Administrator</h4> Nutzer mit administrativen Berechtigungen können Kanäle und andere Nutzer verwalten."
     hint_close_getting_started: "Nicht mehr anzeigen"
