@@ -176,6 +176,11 @@
   color: #000;
 }
 
+#my-widget h4 .hint {
+  color: #999;
+  font-weight: normal;
+}
+
 #my-widget a {
   color: #000;
   text-decoration: none;
@@ -192,77 +197,13 @@
   float: left;
 }
 
-#my-widget nav > ul {
-  font-size: 0;
+#my-widget nav ul {
+  margin-top: 5px;
 }
 
-#my-widget nav > ul > li {
-  font-size: 11px;
-  display: inline-block;
-  position: relative;
-  margin-left: 12px;
-  padding-left: 2px;
-}
-
-#my-widget nav > ul > li:first-child {
-  margin: 0;
-  padding: 0;
-}
-
-#my-widget nav > ul > li:before {
-  color: #666;
-  position: absolute;
-  width: 18px;
-  display: block;
-  text-align: center;
-  content: "\2022";
-  left: -14px;
-  top: 0;
-}
-
-#my-widget nav > ul > li:first-child:before {
-  display: none;
-}
-
-#my-widget .settings {
-  padding-right: 15px;
-}
-
-#my-widget .settings:hover {
-  background: rgba(0, 0, 0, 0.1);
-}
-
-#my-widget .settings ul {
-  display: none;
-  position: absolute;
-  left: 0;
-  z-index: 1;
-  background: #fff;
-  min-width: 150px;
-  border: 1px solid #ccc;
-}
-
-#my-widget .settings:hover ul {
-  display: block;
-}
-
-#my-widget .settings li {
-  cursor: pointer;
-  color: #666;
-  padding: 4px 6px;
-  border-top: 1px solid #ccc;
-}
-
-#my-widget .settings li:first-child {
-  border: 0;
-}
-
-#my-widget .settings .on {
-  color: #00cc00;
-}
-
-#my-widget .settings .off {
-  color: #e75c79;
+#my-widget nav li {
+  list-style: disc inside;
+  margin-left: 2px;
 }
 
 /*--------------------------------- FILES WIDGET ---------------------------------*/

@@ -37,7 +37,7 @@ protonet.i18n = {
   link_hide: "(schließen)",
   
   users: {
-    label_play_sound: "Ton abspielen wenn neue Nachricht angekommen ist",
+    label_play_sound: "Ton abspielen, wenn neue Nachricht angekommen ist",
     label_desktop_notifications: "Zeige Desktop-Benachrichtigungen bei neuen Nachrichten",
     hint_no_meeps_available: "Keine Nachrichten mit Anhang verfügbar",
     flash_message_avatar_upload_error: "Das Foto konnte nicht hochgeladen werden. Bitte versuchen Sie es erneut.",
