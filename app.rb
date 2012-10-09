@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'warden'
+require 'mysql2'
 require 'erb'
 require 'protolink'
 require 'json'
@@ -8,6 +9,7 @@ require 'sprockets'
 require 'sinatra/sprockets'
 require 'closure-compiler'
 require 'yui/compressor'
+require 'yaml'
 
 class MobileProtonet < Sinatra::Application
 
@@ -16,19 +18,25 @@ class MobileProtonet < Sinatra::Application
     enable :dump_errors, :raise_errors, :show_exceptions
 
     set :api_url, (ENV['API_URL'] || "http://localhost:3000")
-    set :api_user, (ENV['API_USER'] || "admin")
-    set :api_pw, (ENV['API_PW'] || "admin")
     set :node, Protolink::Protonet.open(settings.api_url).node
     set :views, ['views/', 'views/authentication/']
     set :production, ENV['RACK_ENV'] === 'production'
     set :public_path, '/Users/henning/Sites/protonet/mobile/public'
 
-
-    # make sure :key and :secret be in-sync with initializers/secret_store.rb initializers/secret_token.rb
+    # get RailsSessionSecret
+    result = Mysql2::Client.new(
+        :host => "localhost",
+        :encoding => "utf8",
+        :username => "root",
+        :database => settings.production ? "dashboard_production" : "dashboard_development"
+      ).query(
+        "select value from system_preferences where var = 'session_secret'"
+      )
     use Rack::Session::Cookie, 
       :key => '_rails_dashboard_session', 
-      :secret => '8aGyTR1FdVFhco6k2lQh2372P/piisUgTFJfjhD+4oZAoVB7i1jc2tWGGeU20YFaff9z1Nobs9/tr+BhjWr9oYM538otEiTX0x12wJDEvKyutGOaqN9fy5VYEUPY+RDEGKYFtGoIdOVo3lCYr0o1pwh3L2J9h90N'
-      
+      :secret => YAML.load(result.first["value"])
+
+
     if settings.production?
       # TODO
       load File.expand_path("../Rakefile", __FILE__)
