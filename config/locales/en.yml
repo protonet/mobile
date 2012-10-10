@@ -407,7 +407,7 @@ en:
     link_logout_getting_started: "logout >"
     link_subscribe_channels: "Subscribe to channels"
     link_settings: "Settings"
-    link_my_files: "My files"
+    link_my_files: "My private files"
     link_logout: "Logout"
     link_send_email: "send an email"
     headline_welcome: "Welcome %{display_name}"
