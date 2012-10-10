@@ -11,6 +11,7 @@
 
   <div class="footer">
     <p>You are logged in as <%= current_user.login %>. <a href="/sign_out" rel="external"  class="ui-btn-left">Sign out</a></p>
+    <p><a href="http://<%= request.host %>:3000?is_mobile=false">Switch to normal Version</a></p>
   </div>
 </div>
 

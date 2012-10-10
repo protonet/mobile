@@ -19,7 +19,6 @@ class MobileProtonet < Sinatra::Application
     status 401
   end
 
-
   get '/sign_out' do
     warden.logout
     session.clear
@@ -48,7 +47,7 @@ class MobileProtonet < Sinatra::Application
     end
   end
 
-  get '/users/password/reset'do
+  get '/users/password/reset' do
     erb :reset_password
   end
 
@@ -63,21 +62,21 @@ class MobileProtonet < Sinatra::Application
 
   end
 
-  get '/sign_up'do
-    erb :sign_up
-  end
-
-  post '/sign_up' do
-    response = Protolink::Protonet.open(settings.api_url).sign_up(params)
-    unless response[:errors]
-      session[:user] = response.body
-      session[:login] = JSON.parse(response.body)["login"]
-      session[:password] = params[:user][:password]
-      {:redirect => '/'}.to_json
-    else
-      content_type :json
-      {:errors => eval(response[:errors])}.to_json
-    end
-  end
+  # get '/sign_up' do
+  #   erb :sign_up
+  # end
+# 
+  # post '/sign_up' do
+  #   response = Protolink::Protonet.open(settings.api_url).sign_up(params)
+  #   unless response[:errors]
+  #     session[:user] = response.body
+  #     session[:login] = JSON.parse(response.body)["login"]
+  #     session[:password] = params[:user][:password]
+  #     {:redirect => '/'}.to_json
+  #   else
+  #     content_type :json
+  #     {:errors => eval(response[:errors])}.to_json
+  #   end
+  # end
 
 end

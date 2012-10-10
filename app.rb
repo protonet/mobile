@@ -32,10 +32,10 @@ class MobileProtonet < Sinatra::Application
       ).query(
         "select value from system_preferences where var = 'session_secret'"
       )
+
     use Rack::Session::Cookie, 
       :key => '_rails_dashboard_session', 
-      :secret => YAML.load(result.first["value"])
-
+      :secret => YAML.load(result.first["value"]).to_s
 
     if settings.production?
       # TODO
@@ -140,6 +140,16 @@ class MobileProtonet < Sinatra::Application
     end
 
     puts "request: #{env['REQUEST_METHOD']} #{request.path}"
+  end
+
+  not_found do
+    puts "not found: #{request.path}, redirected to '/'"
+    redirect '/'
+  end
+
+  error do
+    # TODO: implement notifier
+    redirect '/'
   end
 
 end
