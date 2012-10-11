@@ -17,11 +17,17 @@ class MobileProtonet < Sinatra::Application
     # enable :sessions
     enable :dump_errors, :raise_errors, :show_exceptions
 
-    set :api_url, (ENV['API_URL'] || "http://localhost:3000")
+    set :production, ENV['RACK_ENV'] === 'production'
+    set :api_url, (settings.production ? "http://localhost" : "http://localhost:3000")
     set :node, Protolink::Protonet.open(settings.api_url).node
     set :views, ['views/', 'views/authentication/']
-    set :production, ENV['RACK_ENV'] === 'production'
     set :public_path, '/Users/henning/Sites/protonet/mobile/public'
+
+    set :socket_port, 5000
+    set :xhr_streaming_port, 8000
+    set :websocket_port, 5001
+    set :websocket_ssl_port, 5002
+    set :nodejs_port, 8124
 
     # get RailsSessionSecret
     result = Mysql2::Client.new(
@@ -35,7 +41,7 @@ class MobileProtonet < Sinatra::Application
 
     use Rack::Session::Cookie, 
       :key => '_rails_dashboard_session', 
-      :secret => YAML.load(result.first["value"]).to_s
+      :secret => YAML.load(result.first["value"])
 
     if settings.production?
       # TODO
@@ -102,6 +108,27 @@ class MobileProtonet < Sinatra::Application
 
     def current_user
       @current_user ||= session[:user] && User.new(protonet, JSON.parse(session[:user]))
+    end
+
+    def server_name
+      if request.env["SERVER_NAME"] == "_"
+        request.env["HTTP_HOST"].sub(/:[0-9]*/, "")
+      else
+        request.env["SERVER_NAME"]
+      end
+    end
+
+    def is_apache?
+      request.respond_to?(:server_software)
+      # request.server_software == 'apache'
+    end
+
+    def base_url
+      if settings.production
+        "#{host}"
+      else
+        "#{host}:3000"
+      end
     end
 
     def node_base_url

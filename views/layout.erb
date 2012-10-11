@@ -28,21 +28,38 @@
   <a href="/" class="flash-message-close-link" data-avoid-ajax="1">×</a>
 </div>
 
+<% if current_user && session['captive_redirect_url'] %>
+  <div data-role="popup" id="captive-portal" data-overlay-theme="a" data-theme="c" style="max-width:400px;" class="ui-corner-all">
+      <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+        <h3 class="ui-title">Hi <%= current_user.login %></h3>
+        <p>Welcome to Protonet. Click the following button to enable internet access and to open <strong><%= session['captive_redirect_url'] %></strong>.</p>
+        
+        <a href="<%= base_url %>/captive/login" data-role="button" data-inline="true" data-theme="c" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-inline ui-btn-up-c">
+          <span class="ui-btn-inner ui-btn-corner-all">
+            <span class="ui-btn-text">Get internet access</span>
+          </span>
+        </a>
+      </div>
+    </div>
+</div>
+
+<% end %>
+
 <% if current_user %>
   <script>
     window.$window   = $(window);
     window.$document = $(document);
     var protonet = {
       config: {
-        base_url:                         "http://<%= request.host %>:3000",
+        base_url:                         "<%= base_url %>",
         node_base_url:                    "<%= node_base_url %>",
         token:                            "<%= current_user.communication_token %>",
         user_id:                          <%= current_user.id %>,
-        dispatching_server:               "localhost",
-        dispatching_server_port:          "5000",
-        dispatching_websocket_url:        "ws://<%= request.host %>:5001",
-        dispatching_websocket_url_ssl:    "wss://<%= request.host %>:5002",
-        dispatching_websocket_delimiter:  "",
+        dispatching_server:               "<%= server_name %>",
+        dispatching_server_port:          "<%= settings.socket_port %>",
+        dispatching_websocket_url:        "ws://<%= server_name %><%= is_apache? ? "/websocket" : ":#{settings.websocket_port}" %>",
+        dispatching_websocket_url_ssl:    "wss://<%= server_name %><%= is_apache? ? "/websocket" : ":#{settings.websocket_ssl_port}" %>",
+        dispatching_websocket_delimiter:  "<%= is_apache? ? "\\0" : "" %>",
         users:                            null,
         channels:                         null,
         debug_mode:                       true

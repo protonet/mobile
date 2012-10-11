@@ -19,6 +19,7 @@
     }else{
       $.mobile.initializePage();
     }
+    $('#captive-portal').popup().popup("open");
   });
 
   protonet.changePage = function(href){

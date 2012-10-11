@@ -87,6 +87,9 @@ span.ui-icon.ui-icon-new-chat{
   top: 5px;
   right:5px;
 }
+.channel-page .ui-footer div.button .ui-btn {
+  margin:0;
+}
 ul.timeline{
   margin:0;
   padding:10px 0;

@@ -9,7 +9,7 @@ class MobileProtonet < Sinatra::Application
   end
 
   post '/sign_in' do
-    warden.logout
+    warden.logout if session["warden.user.user.key"]
     warden.authenticate!
     content_type :json
     {:redirect => "/"}.to_json
