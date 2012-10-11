@@ -21,7 +21,7 @@ class MobileProtonet < Sinatra::Application
     set :api_url, (settings.production ? "http://localhost:3000" : "http://localhost:3000")
     set :node, Protolink::Protonet.open(settings.api_url).node
     set :views, ['views/', 'views/authentication/']
-    set :public_path, '/Users/henning/Sites/protonet/mobile/public'
+    set :public_path, 'public'
 
     set :socket_port, 5000
     set :xhr_streaming_port, 8000

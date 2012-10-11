@@ -10,7 +10,7 @@ Sinatra::Sprockets.configure do |config|
   end
   
   config.digest = true
-  config.compress = ENV['RACK_ENV'] === 'production'
+  config.compress = ENV['RACK_ENV'] === 'production' || ENV['COMPRESS_ASSETS'] === 'true'
   config.debug = false
   config.compile = true
 
