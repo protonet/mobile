@@ -11,7 +11,8 @@ Sinatra::Sprockets.configure do |config|
   
   config.digest = true
   config.compress = ENV['RACK_ENV'] === 'production'
-  config.debug = true
+  config.debug = false
+  config.compile = true
 
   config.precompile = ['application.js', 'layout.css']
 end

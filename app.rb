@@ -18,7 +18,7 @@ class MobileProtonet < Sinatra::Application
     enable :dump_errors, :raise_errors, :show_exceptions
 
     set :production, ENV['RACK_ENV'] === 'production'
-    set :api_url, (settings.production ? "http://localhost" : "http://localhost:3000")
+    set :api_url, (settings.production ? "http://localhost:3000" : "http://localhost:3000")
     set :node, Protolink::Protonet.open(settings.api_url).node
     set :views, ['views/', 'views/authentication/']
     set :public_path, '/Users/henning/Sites/protonet/mobile/public'
@@ -43,11 +43,12 @@ class MobileProtonet < Sinatra::Application
       :key => '_rails_dashboard_session', 
       :secret => YAML.load(result.first["value"])
 
-    if settings.production?
-      # TODO
-      load File.expand_path("../Rakefile", __FILE__)
-      Rake::Task["assets:precompile"].execute
-    end
+    # TODO: Moved to Deployment
+    # if settings.production? 
+    #   # TODO: 
+    #   load File.expand_path("../Rakefile", __FILE__)
+    #   Rake::Task["assets:precompile"].execute
+    # end
 
     Warden::Strategies.add(:password) do
       def valid?
