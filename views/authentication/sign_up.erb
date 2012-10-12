@@ -1,13 +1,13 @@
 <div data-role="page" id="sign_up">
 
   <div data-role="header">
-    <a href="/" data-icon="back" class="ui-btn-left">Back</a>
+    <a href="/mobile" data-icon="back" class="ui-btn-left">Back</a>
     <h1>protonet of <strong><%= node.name %></strong></h1>
   </div>
 
   <div data-role="content">  
     <h2>Create an account:</h2>
-    <form action="/sign_up" data-ajax="false" method="post">
+    <form action="/mobile/sign_up" data-ajax="false" method="post">
       <div class="input">
         <label for="user_first_name">first name</label>
         <input type="text" name="user[first_name]" id="user_first_name" data-mini="true" autocapitalize="off" autocorrect="off" />

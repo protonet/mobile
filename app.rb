@@ -174,7 +174,7 @@ class MobileProtonet < Sinatra::Application
   end
 
   not_found do
-    puts "not found: #{request.path}, redirected to '/mobile'"
+    puts "not found: #{request.path}, redirected to '/'"
     redirect '/mobile'
   end
 

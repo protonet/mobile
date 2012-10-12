@@ -1,6 +1,6 @@
 class MobileProtonet < Sinatra::Application
 
-  get '/mobile/sign_in' do
+  get '/sign_in' do
     if current_user
       redirect '/mobile'
     else
@@ -8,29 +8,29 @@ class MobileProtonet < Sinatra::Application
     end
   end
 
-  post '/mobile/sign_in' do
+  post '/sign_in' do
     warden.logout if session["warden.user.user.key"]
     warden.authenticate!
     content_type :json
     {:redirect => "/mobile"}.to_json
   end
 
-  post '/mobile/unauthenticated/?' do
+  post '/unauthenticated/?' do
     status 401
   end
 
-  get '/mobile/sign_out' do
+  get '/sign_out' do
     warden.logout
     session.clear
     redirect '/mobile'
   end
 
-  get '/mobile/users/password/edit' do
+  get '/users/password/edit' do
     @reset_password_token = params[:reset_password_token]
     erb :edit_password
   end
 
-  post '/mobile/users/password' do
+  post '/users/password' do
     response = Protolink::Protonet.open(settings.api_url).reset_password!(
       params[:user][:reset_password_token],
       params[:user][:password],
@@ -47,11 +47,11 @@ class MobileProtonet < Sinatra::Application
     end
   end
 
-  get '/mobile/users/password/reset' do
+  get '/users/password/reset' do
     erb :reset_password
   end
 
-  post '/mobile/users/password/reset' do
+  post '/users/password/reset' do
     response = Protolink::Protonet.open(settings.api_url).reset_password(params[:user][:email], request.env['HTTP_HOST'])
     content_type :json
     if response

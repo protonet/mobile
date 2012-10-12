@@ -2,17 +2,20 @@
 <html>
 
   <head>
+    <% if settings.production? %>
+    <base href="/mobile/">
+    <% end %>
     <meta charset="UTF-8" />
     <title>protonet - mobile</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"> 
-    <link rel="stylesheet" href="/assets/jquery.mobile-1.2.0.css" />
+    <link rel="stylesheet" href="assets/jquery.mobile-1.2.0.css" />
     <% if settings.production %>
       <%= stylesheet_link_tag "layout" %>
     <% else %>
       <link rel="stylesheet" href="/assets/layout.css" />
     <% end %>
-    <script src="/assets/lib/jquery-1.8.2.min.js"></script>
-    <script src="/assets/lib/jquery.mobile-1.2.0.js"></script>
+    <script src="assets/lib/jquery-1.8.2.min.js"></script>
+    <script src="assets/lib/jquery.mobile-1.2.0.js"></script>
     <script>
       $.mobile.touchOverflowEnabled = true;
       $.mobile.autoInitializePage = false;
@@ -34,7 +37,7 @@
         <h3 class="ui-title">Hi <%= current_user.login %></h3>
         <p>Welcome to Protonet. Click the following button to enable internet access and to open <strong><%= session['captive_redirect_url'] %></strong>.</p>
         
-        <a href="<%= base_url %>/captive/login" data-role="button" data-inline="true" data-theme="c" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-inline ui-btn-up-c">
+        <a href="<%= host %>/captive/login" data-role="button" data-inline="true" data-theme="c" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-inline ui-btn-up-c">
           <span class="ui-btn-inner ui-btn-corner-all">
             <span class="ui-btn-text">Get internet access</span>
           </span>
@@ -51,7 +54,7 @@
     window.$document = $(document);
     var protonet = {
       config: {
-        base_url:                         "<%= base_url %>",
+        base_url:                         "<%= host %>",
         node_base_url:                    "<%= node_base_url %>",
         token:                            "<%= current_user.communication_token %>",
         user_id:                          <%= current_user.id %>,
@@ -72,13 +75,13 @@
   <% if settings.production %>
     <%= javascript_include_tag "application" %>
   <% else %>
-    <script src="/assets/application.js" ></script>
+    <script src="assets/application.js" ></script>
   <% end %>
 <% else %>
   <script>
     $.mobile.initializePage();
   </script>
-  <script src="/assets/authentication.js"></script>
+  <script src="assets/authentication.js"></script>
 <% end %> 
 </body>
 </html>
