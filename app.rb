@@ -15,11 +15,10 @@ class MobileProtonet < Sinatra::Application
 
   configure do
     # enable :sessions
-    enable :dump_errors, :raise_errors, :show_exceptions
+    enable :logging, :dump_errors, :raise_errors, :show_exceptions
 
     set :production, ENV['RACK_ENV'] === 'production'
-    set :api_url, (settings.production ? "http://localhost:3000" : "http://localhost:3000")
-    set :node, Protolink::Protonet.open(settings.api_url).node
+    set :api_url, (settings.production ? "http://127.0.0.1" : "http://localhost:3000")
     set :views, ['views/', 'views/authentication/']
     set :public_path, 'public'
 
@@ -57,7 +56,7 @@ class MobileProtonet < Sinatra::Application
      
       def authenticate!
         response = Protolink::Protonet.open(
-          (ENV['API_URL'] || "http://localhost:3000"), 
+          (ENV['RACK_ENV'] === 'production' ? "http://127.0.0.1" : "http://localhost:3000")
           params["user"]["login"], 
           params["user"]["password"]
         ).auth
@@ -111,6 +110,10 @@ class MobileProtonet < Sinatra::Application
       @current_user ||= session[:user] && User.new(protonet, JSON.parse(session[:user]))
     end
 
+    def node
+      @node ||= Protolink::Protonet.open(settings.api_url).node
+    end
+
     def server_name
       if request.env["SERVER_NAME"] == "_"
         request.env["HTTP_HOST"].sub(/:[0-9]*/, "")
@@ -145,7 +148,7 @@ class MobileProtonet < Sinatra::Application
     end
 
     def require_authentication
-      redirect '/sign_in' unless current_user
+      redirect '/mobile/sign_in' unless current_user
     end
 
   end
@@ -171,13 +174,13 @@ class MobileProtonet < Sinatra::Application
   end
 
   not_found do
-    puts "not found: #{request.path}, redirected to '/'"
-    redirect '/'
+    puts "not found: #{request.path}, redirected to '/mobile'"
+    redirect '/mobile'
   end
 
   error do
     # TODO: implement notifier
-    redirect '/'
+    redirect '/mobile'
   end
 
 end

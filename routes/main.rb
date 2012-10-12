@@ -1,16 +1,16 @@
 class MobileProtonet < Sinatra::Application 
 
-  get '/' do
+  get '/mobile' do
     require_authentication
     erb :index
   end
 
-  get '/account' do
+  get '/mobile/account' do
     require_authentication
     erb :account
   end
 
-  get '/channels/:id' do
+  get '/mobile/channels/:id' do
     require_authentication
     content_type :json
     channel = protonet.find_channel(params[:id])
@@ -24,7 +24,7 @@ class MobileProtonet < Sinatra::Application
     }.to_json
   end
 
-  get '/channels/:channel_id/meeps' do
+  get '/mobile/channels/:channel_id/meeps' do
     require_authentication
     content_type :json
     protonet.find_meeps_by_channel(params[:channel_id], params[:limit], params[:offset]).map do |meep|
@@ -41,7 +41,7 @@ class MobileProtonet < Sinatra::Application
     end.to_json
   end
 
-  get '/channels/subscribed' do
+  get '/mobile/channels/subscribed' do
     require_authentication
     content_type :json
     current_user.subscribed_channels.map do |channel|
@@ -56,7 +56,7 @@ class MobileProtonet < Sinatra::Application
     end.to_json
   end
 
-  get '/users' do
+  get '/mobile/users' do
     require_authentication
     content_type :json
     protonet.users.map do |user| 
@@ -68,7 +68,7 @@ class MobileProtonet < Sinatra::Application
     end.to_json
   end
 
-  post '/rendezvous' do
+  post '/mobile/rendezvous' do
     require_authentication
     content_type :json
     channel = protonet.create_rendezvous(current_user.id, params[:user_id])
