@@ -56,7 +56,7 @@ class MobileProtonet < Sinatra::Application
      
       def authenticate!
         response = Protolink::Protonet.open(
-          (ENV['RACK_ENV'] === 'production' ? "http://127.0.0.1" : "http://localhost:3000")
+          (ENV['RACK_ENV'] === 'production' ? "http://127.0.0.1" : "http://localhost:3000"),
           params["user"]["login"], 
           params["user"]["password"]
         ).auth
