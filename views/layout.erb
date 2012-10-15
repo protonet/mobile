@@ -27,17 +27,17 @@
 
 <% if current_user && session['captive_redirect_url'] %>
   <div data-role="popup" id="captive-portal" data-overlay-theme="a" data-theme="c" style="max-width:400px;" class="ui-corner-all">
-      <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
-        <h3 class="ui-title">Hi <%= current_user.login %></h3>
-        <p>Welcome to Protonet. Click the following button to enable internet access and to open <strong><%= session['captive_redirect_url'] %></strong>.</p>
-        
-        <a href="<%= host %>/captive/login" data-role="button" data-inline="true" data-theme="c" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-inline ui-btn-up-c">
-          <span class="ui-btn-inner ui-btn-corner-all">
-            <span class="ui-btn-text">Get internet access</span>
-          </span>
-        </a>
-      </div>
+    <div data-role="content" data-theme="d" class="ui-corner-bottom ui-content">
+      <h3 class="ui-title">Hi <%= current_user.login %></h3>
+      <p>Welcome to Protonet. Click the following button to enable internet access and to open <strong><%= session['captive_redirect_url'] %></strong>.</p>
+      
+      <a href="<%= host %>/captive/login" data-role="button" data-inline="true" data-theme="c" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-inline ui-btn-up-c">
+        <span class="ui-btn-inner ui-btn-corner-all">
+          <span class="ui-btn-text">Get internet access</span>
+        </span>
+      </a>
     </div>
+  </div>
 </div>
 
 <% end %>
@@ -48,7 +48,7 @@
     window.$document = $(document);
     var protonet = {
       config: {
-        base_url:                         "<%= host %>",
+        base_url:                         "<%= base_url %>",
         node_base_url:                    "<%= node_base_url %>",
         token:                            "<%= current_user.communication_token %>",
         user_id:                          <%= current_user.id %>,
