@@ -5,6 +5,13 @@ if ENV['RACK_ENV'] === 'production'
     run Sinatra::Sprockets.environment
   end
   run MobileProtonet.new
+
+
+  FileUtils.mkdir_p 'log' unless File.exists?('log')
+  log = File.new("log/#{ENV['RACK_ENV']}.log", "a")
+  $stdout.reopen(log)
+  $stderr.reopen(log)
+
 else
   map '/mobile/assets' do
     run Sinatra::Sprockets.environment
@@ -14,12 +21,6 @@ else
   end
 end
 
-disable :run
-
-FileUtils.mkdir_p 'log' unless File.exists?('log')
-log = File.new("log/#{ENV['RACK_ENV']}.log", "a")
-$stdout.reopen(log)
-$stderr.reopen(log)
 
 
 

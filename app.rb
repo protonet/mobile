@@ -116,7 +116,7 @@ class MobileProtonet < Sinatra::Application
 
     def server_name
       if request.env["SERVER_NAME"] == "_"
-        request.env["HTTP_HOST"].sub(/:[0-9]*/, "")
+       request_host.sub(/:[0-9]*/, "")
       else
         request.env["SERVER_NAME"]
       end
@@ -143,8 +143,16 @@ class MobileProtonet < Sinatra::Application
       end
     end
 
+    def request_host 
+      if request.env['X-FORWARDED-HOST']
+        request.env['X-FORWARDED-HOST']
+      else
+        request.env['HTTP_HOST']
+      end
+    end
+
     def host
-      request.env['rack.url_scheme'] + "://" + request.env['HTTP_HOST'].gsub(/:\d+/,"")
+      request.env['rack.url_scheme'] + "://" + request_host.gsub(/:\d+/,"")
     end
 
     def require_authentication
@@ -171,6 +179,7 @@ class MobileProtonet < Sinatra::Application
     end
 
     puts "request: #{env['REQUEST_METHOD']} #{request.path}"
+    puts "request: #{request.inspect}"
   end
 
   not_found do
