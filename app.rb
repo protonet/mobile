@@ -118,11 +118,6 @@ class MobileProtonet < Sinatra::Application
       request_host.sub(/:[0-9]*/, "")
     end
 
-    def is_apache?
-      request.respond_to?(:server_software)
-      # request.server_software == 'apache'
-    end
-
     def base_url
       if settings.production
         "#{host}"
@@ -171,7 +166,6 @@ class MobileProtonet < Sinatra::Application
     end
 
     puts "request: #{env['REQUEST_METHOD']} #{request.path}"
-    puts "request: #{request.inspect}"
   end
 
   not_found do

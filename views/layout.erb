@@ -54,9 +54,9 @@
         user_id:                          <%= current_user.id %>,
         dispatching_server:               "<%= server_name %>",
         dispatching_server_port:          "<%= settings.socket_port %>",
-        dispatching_websocket_url:        "ws://<%= server_name %><%= is_apache? ? "/websocket" : ":#{settings.websocket_port}" %>",
-        dispatching_websocket_url_ssl:    "wss://<%= server_name %><%= is_apache? ? "/websocket" : ":#{settings.websocket_ssl_port}" %>",
-        dispatching_websocket_delimiter:  "<%= is_apache? ? "\\0" : "" %>",
+        dispatching_websocket_url:        "ws://<%= server_name %><%= settings.production ? "/websocket" : ":#{settings.websocket_port}" %>",
+        dispatching_websocket_url_ssl:    "wss://<%= server_name %><%= settings.production ? "/websocket" : ":#{settings.websocket_ssl_port}" %>",
+        dispatching_websocket_delimiter:  "<%= settings.production ? "\\0" : "" %>",
         users:                            null,
         channels:                         null,
         debug_mode:                       true
