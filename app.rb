@@ -115,11 +115,7 @@ class MobileProtonet < Sinatra::Application
     end
 
     def server_name
-      if request.env["SERVER_NAME"] == "_"
-       request_host.sub(/:[0-9]*/, "")
-      else
-        request.env["SERVER_NAME"]
-      end
+      request_host.sub(/:[0-9]*/, "")
     end
 
     def is_apache?
@@ -143,12 +139,8 @@ class MobileProtonet < Sinatra::Application
       end
     end
 
-    def request_host 
-      if request.env['X-FORWARDED-HOST']
-        request.env['X-FORWARDED-HOST']
-      else
-        request.env['HTTP_HOST']
-      end
+    def request_host
+      request.host
     end
 
     def host
