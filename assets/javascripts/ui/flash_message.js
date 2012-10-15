@@ -29,7 +29,7 @@ protonet.ui.FlashMessage = {
   _observe: function() {
     $.each(["error", "notice", "sticky"], function(i, type) {
       protonet.on("flash_message." + type, function(message) { 
-        this.show(type, message); 
+        this.show(type, protonet.t(message)); 
       }.bind(this));
     }.bind(this));
   },

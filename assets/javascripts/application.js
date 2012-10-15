@@ -28,6 +28,8 @@
 
 //= require 'storage/storage.js'
 
+//= require 'i18n/translate.js'
+
 //= require 'events/emitter.js'
 //= require_self
 
