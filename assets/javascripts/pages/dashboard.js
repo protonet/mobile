@@ -55,17 +55,23 @@
           timeout = setTimeout(function(){
             this.updateChannelList();
           }.bind(this), 1000);
+        }.bind(this))
+        .one("sync.succeeded", function(){
+          this.updateChannelList();
         }.bind(this));
 
-      this.$userList.delegate("a.user-link", "click touchend", function(event){
-        event.preventDefault();
-        event.stopPropagation();
-        var id = $(event.target).data("id");
-        protonet.channelsController.findOrCreateRendezvous(id, function(channel){
-          protonet.changePage("#channel-" + channel.id);
+      this.$userList
+        .delegate("a.user-link", "click", function(event){
+          event.preventDefault();
+        })
+        .delegate("a.user-link", "vclick", function(event){
+          event.preventDefault();
+          event.stopPropagation();
+          var id = $(event.target).data("id");
+          protonet.channelsController.findOrCreateRendezvous(id, function(channel){
+            protonet.changePage("#channel-" + channel.id);
+          });
         });
-        
-      });
     },
     _generateUserList: function(users){
       var $list = $();

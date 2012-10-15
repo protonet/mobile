@@ -26,6 +26,7 @@ span.error{
 .channel-page .ui-header a.userlist{
   right: 45px;
 }
+.ui-content .ui-listview { margin: -15px  -15px 0 -15px }
 span.ui-icon.ui-icon-new-chat{
   background-image: url(new_chat.png);
   background-size: 18px 18px;

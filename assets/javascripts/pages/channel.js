@@ -149,9 +149,22 @@
         }.bind(this));
       }.bind(this));
 
-      this.$content.delegate("h1.ui-title", "click", function(event){
-        window.scrollTo(0,1);
-      });
+      this.$content
+        .delegate("h1.ui-title", "click", function(event){
+          window.scrollTo(0,1);
+        })
+        .delegate("a", "click", function(event){
+          event.preventDefault();
+        })
+        .delegate("a", "vclick", function(event){
+          event.preventDefault();
+          event.stopPropagation();
+          $.mobile.changePage($('#navigation'),{
+            dataUrl: "#navigation",
+            transition: "slide",
+            reverse:true
+          });
+        });
     },
     _typingStart: function() {
       if (!this.typing) {
