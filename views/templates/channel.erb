@@ -2,19 +2,19 @@
   <div data-role="page" id="channel-#{id}" class="channel-page">
 
     <div data-role="header" >
-      <a href="#navigation" data-icon="home" class="ui-btn-left" data-direction="reverse" data-transition="slide" data-iconpos="notext">Navigation</a>
+      <a href="/mobile" data-icon="home" class="ui-btn-left" data-direction="reverse" data-transition="slide" data-iconpos="notext">Navigation</a>
       <h1>#{name}</h1>
     </div>
 
     <div class="content">
       <div class="show_more">
-        <a href="/#more" data-role="button" data-mini="true">Load more Messages</a>
+        <a href="#more" data-role="button" data-mini="true">Load more Messages</a>
       </div>
       <ul class="timeline"></ul>
     </div>
 
     <div data-role="footer"> 
-      <form action="/meeps" method="post" class="meep_form" data-ajax="false">
+      <form action="meeps" method="post" class="meep_form" data-ajax="false">
         <div class="input">
           <textarea cols="20" rows="4" name="textarea" class="ui-body-d ui-corner-all ui-shadow-inset" data-role="none"></textarea>
         </div>

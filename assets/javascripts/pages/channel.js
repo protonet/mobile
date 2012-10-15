@@ -24,7 +24,7 @@
       this.id        = data.id;
       this.name      = data.name;
       this.uuid      = data.uuid;
-      this.href      = "/#channel-" + this.id;
+      this.href      = "#channel-" + this.id;
       this.typing    = false;
 
       this.$content  = new protonet.utils.Template("channel", { 

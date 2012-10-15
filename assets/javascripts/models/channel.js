@@ -27,7 +27,7 @@
     loadMoreMeeps: function(callback){
       if (this.loading) { return ;}
       this.loading = $.ajax({
-        url: "/channels/" + this.id + "/meeps",
+        url: "channels/" + this.id + "/meeps",
         type: "get",
         data:{
           limit: 10,

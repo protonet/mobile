@@ -17,7 +17,7 @@ protonet.dispatcher.provider.FlashSocket = {
     
     // Fires "socket.initialized" when ready
     swfobject.embedSWF(
-      "/flash/socket.swf?" + new Date().getTime(),
+      "flash/socket.swf?" + new Date().getTime(),
       "socket-container",
       "auto", "auto", "8",
       null, {}, params, attributes

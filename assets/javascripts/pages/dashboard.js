@@ -62,7 +62,7 @@
         event.stopPropagation();
         var id = $(event.target).data("id");
         protonet.channelsController.findOrCreateRendezvous(id, function(channel){
-          protonet.changePage("/#channel-" + channel.id);
+          protonet.changePage("#channel-" + channel.id);
         });
         
       });

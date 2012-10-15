@@ -16,7 +16,7 @@
     get: function(id){
       if (fetchingChannels[id] || channels[id]) { return };
       fetchingChannels[id] = $.ajax({
-        url: "/channels/" + id,
+        url: "channels/" + id,
         type: "get",
         success: function(data){
           if (channels[data.id]) { return; };
@@ -59,7 +59,7 @@
       };
       
       $.ajax({
-        url: "/rendezvous",
+        url: "rendezvous",
         type: "post",
         data: {
           user_id: userId

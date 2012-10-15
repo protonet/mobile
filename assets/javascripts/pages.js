@@ -8,7 +8,7 @@
 
   protonet.one("sync.succeeded", function(){
 
-    var page = pageCache['/'+ hash];
+    var page = pageCache[hash];
 
     if (page) {
       protonet.currentPage = page;
@@ -66,7 +66,7 @@
   });
 
   protonet.on("channel.deleted", function(channel){
-    var page = pageCache["/#channel-" + channel.id];
+    var page = pageCache["#channel-" + channel.id];
     if (protonet.currentPage == page) {
       $(page.$content).bind("pagehide", function(event){
         page.$content.detach();
