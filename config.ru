@@ -10,7 +10,9 @@ if ENV['RACK_ENV'] === 'production'
   FileUtils.mkdir_p 'log' unless File.exists?('log')
   log = File.new("log/#{ENV['RACK_ENV']}.log", "a")
   $stdout.reopen(log)
+  $stdout.sync = true
   $stderr.reopen(log)
+  $stderr.sync = true
 
 else
   map '/mobile/assets' do
