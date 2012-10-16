@@ -9,7 +9,8 @@ protonet.text_extensions.render.image = function(data, preventResizing) {
   
   var $anchor = $("<a>", {
     href:   data.imageHref || data.url,
-    target: "_blank"
+    target: "_blank",
+    rel: "external"
   });
   
   var $image = $("<img>", $.extend({

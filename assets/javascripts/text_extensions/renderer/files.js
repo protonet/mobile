@@ -36,10 +36,11 @@ protonet.text_extensions.render.files = function(data) {
       var $li = $("<li>").appendTo($ul);
 
       $("<a>", {
+        rel:        "external",
+        target:     "_blank",
         href:       protonet.File.getUrl(file),
         text:       protonet.File.getName(file),
-        "class":    protonet.File.isFolder(file) ? "folder" : "file",
-        draggable:  "true"
+        "class":    protonet.File.isFolder(file) ? "folder" : "file"
       }).appendTo($li);
     });
 

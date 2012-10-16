@@ -10,6 +10,7 @@ protonet.text_extensions.render.code = function(data, hide) {
   var link = $("<a>", {
     href: data.codeLink || data.url,
     target: "_blank",
+    rel: "external",
     html: hide ? "show" : "hide"
   }).appendTo(strong);
   
