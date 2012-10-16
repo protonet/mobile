@@ -64,7 +64,7 @@
         .delegate("a.user-link", "click", function(event){
           event.preventDefault();
         })
-        .delegate("a.user-link", "vclick", function(event){
+        .delegate("a.user-link", "click", function(event){
           event.preventDefault();
           event.stopPropagation();
           var id = $(event.target).data("id");

@@ -32,10 +32,11 @@
       });
     };
     protonet.currentPage = page;
-    protonet.currentPage.$content.appendTo($('body'));
+    protonet.currentPage.$content.appendTo($('body')).page();
     $.mobile.changePage(protonet.currentPage.$content,{
       dataUrl: page.href,
       transition: "slide"
+
     });
     protonet.currentPage.$content.bind("pageshow", function(event){
       protonet.currentPage.scrollToBottom();
@@ -52,15 +53,12 @@
       event.preventDefault();
     })
     .delegate(".ui-content a.channel-link", "vclick", function(event){
-      var href = $(this).attr("href"),
+      var href = $(this).attr("link"),
           page = pageCache[href];
 
       if (page) {
         event.preventDefault();
-        protonet.changePage(href,{
-          dataUrl: href,
-          transition: "slide"
-        });
+        protonet.changePage(href);
       };
     });
 

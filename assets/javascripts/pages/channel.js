@@ -47,9 +47,7 @@
     },
     scrollToBottom: function(){
       if (protonet.currentPage == this) {
-        setTimeout(function(){
-          window.scrollTo(0, document.body.scrollHeight - protonet.utils.viewport().height );
-        }, 0);
+        $.mobile.silentScroll(document.body.scrollHeight);
       };
     },
     _observe: function(){
@@ -150,7 +148,7 @@
       }.bind(this));
 
       this.$content
-        .delegate("h1.ui-title", "click", function(event){
+        .delegate("h1.ui-title", "vclick", function(event){
           window.scrollTo(0,1);
         })
         .delegate(".ui-header a", "click", function(event){
@@ -158,11 +156,10 @@
         })
         .delegate(".ui-header a", "vclick", function(event){
           event.preventDefault();
-          event.stopPropagation();
           $.mobile.changePage($('#navigation'),{
             dataUrl: "#navigation",
             transition: "slide",
-            reverse:true
+            reverse: true
           });
         });
     },

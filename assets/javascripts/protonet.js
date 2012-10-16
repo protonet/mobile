@@ -7,21 +7,27 @@ $(function() {
   });
 
   var showHeaderTimeout;
-  $document.delegate('.meep_form textarea',{
-    'focus': function(){
-      showHeaderTimeout && clearTimeout(showHeaderTimeout);
-      $('.channel-page .ui-header').css({
-        position:'absolute'
-      });
-    },
-    'blur': function(){
-      showHeaderTimeout = setTimeout(function(){
+  $document
+    .delegate('.meep_form textarea',{
+      'focus': function(){
+        showHeaderTimeout && clearTimeout(showHeaderTimeout);
         $('.channel-page .ui-header').css({
-          position:'fixed'
+          position:'absolute'
         });
-      }, 0);
-    }
-  });
+      },
+      'blur': function(){
+        showHeaderTimeout = setTimeout(function(){
+          $('.channel-page .ui-header').css({
+            position:'fixed'
+          });
+        }, 0);
+      }
+    })
+    .bind("mobileinit", function(){
+      $.mobile.minScrollBack = 'infinity';
+    });
+
+
 
   protonet.utils.mobile.disableZoomOnFocus();
 
