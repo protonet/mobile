@@ -22,14 +22,6 @@ $(function() {
       }, 0);
     }
   });
-  
-  // try to workarount this 300ms
-  // 
-  //$document.delegate('a', 'vmouseup', function(event){
-  //  event.preventDefault();
-  //  event.stopImmediatePropagation();
-  //  $(this).trigger("click");
-  //});
 
   protonet.utils.mobile.disableZoomOnFocus();
 
