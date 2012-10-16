@@ -22,9 +22,6 @@ $(function() {
           });
         }, 0);
       }
-    })
-    .bind("mobileinit", function(){
-      $.mobile.minScrollBack = 'infinity';
     });
 
 

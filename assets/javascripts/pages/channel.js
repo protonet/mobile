@@ -157,9 +157,7 @@
         .delegate(".ui-header a", "vclick", function(event){
           event.preventDefault();
           $.mobile.changePage($('#navigation'),{
-            dataUrl: "#navigation",
-            transition: "slide",
-            reverse: true
+            dataUrl: "#navigation"
           });
         });
     },

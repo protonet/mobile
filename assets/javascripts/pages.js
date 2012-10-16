@@ -34,9 +34,7 @@
     protonet.currentPage = page;
     protonet.currentPage.$content.appendTo($('body')).page();
     $.mobile.changePage(protonet.currentPage.$content,{
-      dataUrl: page.href,
-      transition: "slide"
-
+      dataUrl: page.href
     });
     protonet.currentPage.$content.bind("pageshow", function(event){
       protonet.currentPage.scrollToBottom();
