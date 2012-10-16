@@ -44,7 +44,7 @@ protonet.utils.autoLink = (function() {
         realUrl = "http://" + realUrl;
       }
       
-      return '<a href="' + realUrl + '" target="_blank">' + displayUrl + '</a>' + punctuation;
+      return '<a href="' + realUrl + '" target="_blank" rel="external">' + displayUrl + '</a>' + punctuation;
     });
   };
 })();

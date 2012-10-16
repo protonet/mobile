@@ -47,18 +47,22 @@
 
   }
 
-  $('body').delegate("a", "click", function(event){
-    var href = $(this).attr("href"),
-        page = pageCache[href];
-
-    if (page) {
+  $('body')
+    .delegate(".ui-content a.channel-link", "click", function(event){
       event.preventDefault();
-      protonet.changePage(href,{
-        dataUrl: href,
-        transition: "slide"
-      });
-    };
-  });
+    })
+    .delegate(".ui-content a.channel-link", "vclick", function(event){
+      var href = $(this).attr("href"),
+          page = pageCache[href];
+
+      if (page) {
+        event.preventDefault();
+        protonet.changePage(href,{
+          dataUrl: href,
+          transition: "slide"
+        });
+      };
+    });
 
   protonet.on("channel.created", function(channel){
     var page = new protonet.pages.Channel(channel);
