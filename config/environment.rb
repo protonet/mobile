@@ -15,5 +15,5 @@ Sinatra::Sprockets.configure do |config|
   config.compile = true
   config.prefix = "mobile/assets"
 
-  config.precompile = ['application.js', 'layout.css']
+  config.precompile = ['jqm.js', 'application.js', 'authentication.js', 'layout.css']
 end

@@ -1,3 +1,7 @@
+//= require_self
+
+$.mobile.initializePage();
+
 var $document = $(document);
 $document.ready(function(){
 
@@ -10,8 +14,6 @@ $document.ready(function(){
       $.mobile.hidePageLoadingMsg();
     })
     .ajaxSuccess(function(event, request, options, data){
-      console.log("ajaxSuccess", arguments);
-
       if (data.redirect) {
         window.location.href = data.redirect;
       };

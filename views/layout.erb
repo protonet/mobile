@@ -6,13 +6,12 @@
     <meta charset="UTF-8" />
     <title>protonet - mobile</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"> 
-    <link rel="stylesheet" href="assets/jquery.mobile-1.2.0.css" />
     <%= stylesheet_link_tag "layout" %>
-    <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+    <%= javascript_include_tag "jqm" %>
     <script>
       $.mobile.touchOverflowEnabled = true;
       $.mobile.autoInitializePage = false;
+      $.mobile.defaultPageTransition = 'none';
     </script>
   </head>
 
@@ -68,10 +67,7 @@
   </script>
   <%= javascript_include_tag "application" %>
 <% else %>
-  <script>
-    $.mobile.initializePage();
-  </script>
-  <script src="assets/authentication.js"></script>
+  <%= javascript_include_tag "authentication" %>
 <% end %> 
 </body>
 </html>
