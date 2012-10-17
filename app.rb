@@ -15,18 +15,19 @@ class MobileProtonet < Sinatra::Application
 
   configure do
     # enable :sessions
-    enable :logging, :dump_errors, :raise_errors, :show_exceptions
+    enable :logging, :dump_errors, :raise_errors, :show_exceptions, :static
 
     set :production, ENV['RACK_ENV'] === 'production'
     set :api_url, (settings.production ? "http://127.0.0.1" : "http://localhost:3000")
     set :views, ['views/', 'views/authentication/']
-    set :public_path, 'public'
+    set :public_path, Proc.new { File.join(root, "public") }
 
     set :socket_port, 5000
     set :xhr_streaming_port, 8000
     set :websocket_port, 5001
     set :websocket_ssl_port, 5002
     set :nodejs_port, 8124
+
 
     # get RailsSessionSecret
     result = Mysql2::Client.new(
@@ -140,10 +141,11 @@ class MobileProtonet < Sinatra::Application
 
     def host
       if settings.production?
-        env['HTTP_X_FORWARDED_PROTO'] + "://" + request_host.gsub(/:\d+/,"")
+        (request.env['HTTP_X_FORWARDED_PROTO'] || request.env['rack.url_scheme'] )+ "://" + request_host.gsub(/:\d+/,"")
       else
         "http://" + request_host.gsub(/:\d+/,"")
       end
+       # request.env['rack.url_scheme'] + "://" + request_host.gsub(/:\d+/,"")
     end
 
     def require_authentication
@@ -168,7 +170,7 @@ class MobileProtonet < Sinatra::Application
     if request.request_method === "POST"
       cache_control :no_cache
     end
-
+    puts request.env.inspect
     puts "request: #{env['REQUEST_METHOD']} #{request.path}"
   end
 
