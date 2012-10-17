@@ -139,7 +139,11 @@ class MobileProtonet < Sinatra::Application
     end
 
     def host
-      request.env['rack.url_scheme'] + "://" + request_host.gsub(/:\d+/,"")
+      if settings.production?
+        env['HTTP_X_FORWARDED_PROTO'] + "://" + request_host.gsub(/:\d+/,"")
+      else
+        "http://" + request_host.gsub(/:\d+/,"")
+      end
     end
 
     def require_authentication
