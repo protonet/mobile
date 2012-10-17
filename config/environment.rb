@@ -9,10 +9,10 @@ Sinatra::Sprockets.configure do |config|
     config.append_path(File.join('..', 'assets', dir))
   end
   
-  config.digest = true
+  config.digest = false
   config.compress = ENV['RACK_ENV'] === 'production'
   config.debug = false
-  config.compile = true
+  config.compile = ENV['RACK_ENV'] != 'production'
   config.prefix = "mobile/assets"
 
   config.precompile = ['application.js', 'authentication.js', 'layout.css']

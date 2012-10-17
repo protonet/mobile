@@ -43,13 +43,6 @@ class MobileProtonet < Sinatra::Application
       :key => '_rails_dashboard_session', 
       :secret => YAML.load(result.first["value"])
 
-    # TODO: Moved to Deployment
-    # if settings.production? 
-    #   # TODO: 
-    #   load File.expand_path("../Rakefile", __FILE__)
-    #   Rake::Task["assets:precompile"].execute
-    # end
-
     Warden::Strategies.add(:password) do
       def valid?
         params["user"]["login"] || params["user"]["password"]
@@ -170,7 +163,7 @@ class MobileProtonet < Sinatra::Application
     if request.request_method === "POST"
       cache_control :no_cache
     end
-    puts request.env.inspect
+
     puts "request: #{env['REQUEST_METHOD']} #{request.path}"
   end
 
