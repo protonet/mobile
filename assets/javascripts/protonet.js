@@ -1,11 +1,5 @@
 $(function() {
 
-  $window.one("load", function(event){
-    setTimeout(function(){
-      window.scrollTo(0,1);
-    }, 0);
-  });
-
   var showHeaderTimeout;
   $document
     .delegate('.meep_form textarea',{
@@ -24,8 +18,6 @@ $(function() {
       }
     });
 
-
-
   protonet.utils.mobile.disableZoomOnFocus();
 
   protonet.usersController = new protonet.UsersController(data.users);
@@ -33,7 +25,6 @@ $(function() {
   protonet.dashboard = new protonet.pages.Dashboard();
 
   protonet.ui.FlashMessage.initialize();
-  protonet.dispatcher.initialize();
 
   protonet.dispatcher.onready(function(){
     protonet.trigger("socket.send", {
@@ -58,6 +49,13 @@ $(function() {
       });
     });
     protonet.trigger("sync.succeeded");
+  });
+
+  $window.one("load", function(event){
+    protonet.dispatcher.initialize();
+    setTimeout(function(){
+      window.scrollTo(0,1);
+    }, 0);
   });
 
 });
