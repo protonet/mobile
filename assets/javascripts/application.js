@@ -12,6 +12,7 @@
 //= require 'utils/imageproxy.js'
 //= require 'utils/viewport.js'
 //= require 'utils/mobile.js'
+//= require 'utils/sandbox.js'
 
 //= require 'utils/escape_html.js'
 //= require 'utils/quotify.js'
@@ -41,7 +42,7 @@
 //= require 'text_extensions/render.js'
 
 //= require 'dispatcher/dispatcher.js'
-//= require 'dispatcher/websocket.js'
+// require 'dispatcher/websocket.js'
 //= require 'dispatcher/flash_socket.js'
 //= require 'dispatcher/http_streaming.js'
 
