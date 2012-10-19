@@ -20,7 +20,7 @@ class MobileProtonet < Sinatra::Application
     set :production, ENV['RACK_ENV'] === 'production'
     set :api_url, (settings.production ? "http://127.0.0.1" : "http://localhost:3000")
     set :views, ['views/', 'views/authentication/']
-    set :public_path, Proc.new { File.join(root, "public") }
+    set :public_path, "public"
 
     set :socket_port, 5000
     set :xhr_streaming_port, 8000
@@ -143,6 +143,15 @@ class MobileProtonet < Sinatra::Application
 
     def require_authentication
       redirect '/mobile/sign_in' unless current_user
+    end
+
+    def dispatching_websocket_url(secure = nil)
+      secure ||= !!request.env["HTTP_X_FORWARDED_PORT"]
+      if secure
+        "wss://#{server_name}" + ( settings.production ? "/websocket" : settings.websocket_ssl_port )
+      else
+        "ws://#{server_name}" + ( settings.production ? "/websocket" : settings.websocket_port )
+      end
     end
 
   end

@@ -42,7 +42,7 @@
 //= require 'text_extensions/render.js'
 
 //= require 'dispatcher/dispatcher.js'
-// require 'dispatcher/websocket.js'
+//= require 'dispatcher/websocket.js'
 //= require 'dispatcher/flash_socket.js'
 //= require 'dispatcher/http_streaming.js'
 
