@@ -1,9 +1,20 @@
+//= require 'lib/mobile-bookmark-bubble/bookmark_bubble.js'
 //= require_self
 
-$.mobile.initializePage();
 
+$.mobile.initializePage();
 var $document = $(document);
 $document.ready(function(){
+
+  var bookmarkBubble = new google.bookmarkbubble.Bubble();
+
+  // overwrite some functions to get it work. 
+  // You can add a parametere here if you want to know
+  // if the user instaled the app on the homescreen
+  bookmarkBubble.hasHashParameter = function() {};
+  bookmarkBubble.setHashParameter = function() {};
+  
+  bookmarkBubble.showIfAllowed();
 
   $document
     .ajaxStart(function(){

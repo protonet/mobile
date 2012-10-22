@@ -16,7 +16,25 @@ span.error{
   font-style:italic;
   margin-left: 5px;
 }
-
+/*
+div[data-role="header"]{
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+  border: 1px solid #487bff;
+  background-color: #487bff;
+  background-image: -o-linear-gradient(bottom, #487bff, #769cff);
+  background-image: -moz-linear-gradient(bottom, #487bff, #769cff);
+  background-image: -webkit-linear-gradient(bottom, #487bff, #769cff);
+  background-image: -ms-linear-gradient(bottom, #487bff, #769cff);
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, #487bff),
+    color-stop(1, #769cff)
+  );
+  background-image: linear-gradient(bottom, #487bff, #769cff);
+}
+*/
 .ui-header .ui-title {
   margin: .6em 10% .6em;
 }
@@ -166,6 +184,7 @@ li.meep time{
   display:block;
   padding: 2px 3px;
   font-size:10px;
+  color:#666;
   background-color: #f1f1f1;
   border-radius: 5px;
   box-shadow: 1px 1px 1px #B2B2B2;

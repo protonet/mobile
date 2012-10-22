@@ -1,11 +1,11 @@
 <div data-role="page" id="sign_in">
 
-  <div data-role="header">
-    <h1>protonet of <strong><%= node.name %></strong></h1>
+  <div data-role="header" data-theme="b">
+    <h1>protonet</h1>
   </div>
 
   <div data-role="content">  
-    <h2>Welcome</h2>
+    <h2>Welcome to <strong><%= node.name %></strong></h2>
     <% if session['captive_redirect_url'] %>
     <p class="hint">
       Your have been catched by the captive Portal. Please sign in to proceed.

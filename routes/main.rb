@@ -5,11 +5,6 @@ class MobileProtonet < Sinatra::Application
     erb :index
   end
 
-  get '/account' do
-    require_authentication
-    erb :account
-  end
-
   get '/channels/:id' do
     require_authentication
     content_type :json
