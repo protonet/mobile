@@ -38,9 +38,9 @@ class MobileProtonet < Sinatra::Application
     )
     content_type :json
     if response
-      session[:user] = response.body
-      session[:login] = response.body["login"]
-      session[:password] = params[:user][:password]
+      session["login"] = JSON.parse(response.body)["login"]
+      warden.logout if session["warden.user.user.key"]
+      warden.authenticate!
       {:redirect => "/mobile"}.to_json
     else
       {:success => false, :message => "The reset token was not valid."}.to_json

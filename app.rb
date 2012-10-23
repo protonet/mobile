@@ -51,13 +51,12 @@ class MobileProtonet < Sinatra::Application
       def authenticate!
         response = Protolink::Protonet.open(
           (ENV['RACK_ENV'] === 'production' ? "http://127.0.0.1" : "http://localhost:3000"),
-          params["user"]["login"], 
+          params["user"]["login"] || session["login"], 
           params["user"]["password"]
         ).auth
-
         if response
           # TODO: find a smarter way
-          session["login"] = params["user"]["login"]
+          session["login"] ||= params["user"]["login"]
           session["password"] = params["user"]["password"]
           session["user"] = response.body
           success!(User.new(nil, JSON.parse(session[:user])))
