@@ -114,20 +114,38 @@ $document.ready(function(){
           password = $this.find("#user_password").val(),
           password_confirmation = $this.find("#user_password_confirmation").val();
 
+      event.preventDefault();
+
       if (password.length < 8) {
-        event.preventDefault();
         $.mobile.showPageLoadingMsg("e", "password is too short", true);
         setTimeout(function(){
           $.mobile.hidePageLoadingMsg();
         }, 2000);
+        return;
       };
       if (password != password_confirmation) {
-        event.preventDefault();
         $.mobile.showPageLoadingMsg("e", "password and confirmation does not match!", true);
         setTimeout(function(){
           $.mobile.hidePageLoadingMsg();
         }, 2000);
+        return;
       };
+
+      $.ajax({
+        url: $this.attr("action"),
+        type: "post",
+        data: $this.serializeArray(),
+        success: function(data){
+          if (data.message) {
+            setTimeout(function(){
+              $.mobile.showPageLoadingMsg("e", data["message"], true);
+              setTimeout(function(){
+                $.mobile.hidePageLoadingMsg();
+              }, 5000);
+            }, 0);
+          }
+        }
+      });
 
     });
 
