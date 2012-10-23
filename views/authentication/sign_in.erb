@@ -11,7 +11,7 @@
       Your have been catched by the captive Portal. Please sign in to proceed.
     </p>
     <% end %>
-    <form action="sign_in" method="post" data-ajax="false" id="login_form">
+    <form action="/mobile/sign_in" method="post" data-ajax="false" id="login_form">
       <div class="input">
         <label for="user_login">email or login</label>
         <input type="text" name="user[login]" id="user_login" data-mini="true"  autocapitalize="off" autocorrect="off"/>
@@ -26,7 +26,7 @@
 
     </form>
     <p>
-      If you forgot your password, you can <a href="users/password/reset">reset it here</a>.
+      If you forgot your password, you can <a href="/mobile/users/password/reset">reset it here</a>.
       Switch to <a href="<%= base_url %>?is_mobile=false">normal Version</a>.
     </p>
   </div>
