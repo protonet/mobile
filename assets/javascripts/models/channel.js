@@ -11,7 +11,11 @@
         }else{
           this.rendezvousId = +rendezvousArr[0];
         }
-        this.name = protonet.usersController.get(this.rendezvousId).name;
+        try{
+          this.name = protonet.usersController.get(this.rendezvousId).name;
+        }catch(e){
+          this.name = "private-" + this.id;
+        }
       }else{
         this.name       = data.name;
       }
