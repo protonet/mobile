@@ -17,16 +17,35 @@
           this.name = "private-" + this.id;
         }
       }else{
-        this.name       = data.name;
+        this.name = data.name;
       }
-      this.description  = data.description;
-      this.global       = data.global;
-      this.uuid         = data.uuid;
-      this.loading      = undefined;
-      this.lastMeep     = { id: -1 };
-      this.meeps        = [];
+      this.description    = data.description;
+      this.global         = data.global;
+      this.uuid           = data.uuid;
+      this.lastReadMeepID = data.last_read_meep;
+      this.listenId       = data.listen_id;
+      this.loading        = undefined;
+      this.lastMeep       = { id: -1 };
+      this.meeps          = [];
       this._observe();
       protonet.trigger("channel.created", this);
+    },
+    countUnreadMeeps: function(){
+      var count = 0;
+      for (var i = this.meeps.length - 1; i > 0; i--) {
+        if (this.meeps[i].id > this.lastReadMeepID) {
+          count++;
+        }
+      }
+      if (count > 9) { count = "9+" }
+      return count;
+    },
+    hasUnreadMeeps: function(){
+      return this.lastMeep.id > (this.lastReadMeepID || 0)
+    },
+    markAllAsRead: function(){
+      this.lastReadMeepID = this.lastMeep.id;
+      protonet.trigger("channel.updateLastReadMeeps", this);
     },
     loadMoreMeeps: function(callback){
       if (this.loading) { return ;}

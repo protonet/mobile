@@ -48,7 +48,6 @@
       });
       return rendezvousCache;
     },
-
     findOrCreateRendezvous: function(userId, callback){
 
       for (var i = 0; i < rendezvousCache.length; i++) {
@@ -73,33 +72,66 @@
         }
       });
     },
+    updateLastReadMeeps: function(){
+      var oldLastReadMeeps = protonet.storage.get("last_read_meeps"),
+          newLastReadMeeps = {};
 
-    _observe: function(){
-      protonet.
-      on("channel.updated", function(data){
-        var id = +data["id"];
-        if (channels[id]) {
-          channels[id].update(data);
-        }else{
-          channels[id] = new protonet.Channel(data);
-          this.expireCache();
+      $.each(channels, function(i, channel) {
+        if (channel.lastReadMeepID) {
+          newLastReadMeeps[channel.listenId] = channel.lastReadMeepID;
         }
-      }.bind(this)).
-      on("channel.load", function(data){
-        this.get(data.channel_id);
-      }.bind(this)).
-      on("user.unsubscribed_channel", function(data){
-        //channel_id: 7
-        //channel_uuid: "da0fe7b0-f5a9-11e1-9b1b-83ae7237165c"
-        //rendezvous: true
-        //trigger: "user.unsubscribed_channel"
-        //user_id: 8
-        if (data.user_id == protonet.currentUser.id) {
-          channels[data.channel_id] && channels[data.channel_id].destroy();
-          delete channels[data.channel_id];
-          this.expireCache();
-        };
-      }.bind(this));
+      });
+
+      console.log(oldLastReadMeeps, newLastReadMeeps);
+
+      console.log(JSON.stringify(oldLastReadMeeps) === JSON.stringify(newLastReadMeeps));
+
+      if (JSON.stringify(oldLastReadMeeps) === JSON.stringify(newLastReadMeeps)) { 
+        return; 
+      }
+      //$.ajax({
+      //  async:  !sync,
+      //  url:    "/mobile/users/update_last_read_meeps",
+      //  type:   "PUT",
+      //  data:   {
+      //    id:      protonet.currentUser.id,
+      //    mapping: newLastReadMeeps
+      //  }
+      //});
+      protonet.storage.set("last_read_meeps", newLastReadMeeps);
+    },
+    _observe: function(){
+      protonet
+        .on("channel.updated", function(data){
+          var id = +data["id"];
+          if (channels[id]) {
+            channels[id].update(data);
+          }else{
+            channels[id] = new protonet.Channel(data);
+            this.expireCache();
+          }
+        }.bind(this))
+
+        .on("channel.load", function(data){
+          this.get(data.channel_id);
+        }.bind(this))
+        
+        .on("channel.updateLastReadMeeps", function(channel){
+          this.updateLastReadMeeps();
+        }.bind(this))
+
+        .on("user.unsubscribed_channel", function(data){
+          //channel_id: 7
+          //channel_uuid: "da0fe7b0-f5a9-11e1-9b1b-83ae7237165c"
+          //rendezvous: true
+          //trigger: "user.unsubscribed_channel"
+          //user_id: 8
+          if (data.user_id == protonet.currentUser.id) {
+            channels[data.channel_id] && channels[data.channel_id].destroy();
+            delete channels[data.channel_id];
+            this.expireCache();
+          };
+        }.bind(this))
     }
   });
 

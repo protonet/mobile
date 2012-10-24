@@ -14,7 +14,9 @@
         :uuid => channel.uuid,
         :description => channel.description,
         :global => channel.global,
-        :rendezvous => channel.rendezvous
+        :rendezvous => channel.rendezvous,
+        :last_read_meep => channel.last_read_meep,
+        :listen_id => channel.listen_id
       }
     end.to_json %>
   };

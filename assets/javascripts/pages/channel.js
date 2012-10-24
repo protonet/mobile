@@ -74,6 +74,7 @@
               this.$timeline.append($meep);
             }
             if (protonet.currentPage == this) {
+              this.channel.markAllAsRead();
               setTimeout(function () {
                 this.scrollToBottom();
               }.bind(this), 0);
@@ -103,6 +104,11 @@
           if (data.length < 10) {
             this.$loadMore.hide();
           };
+        }.bind(this))
+
+        .on("channel.change", function(id){
+          if (id != this.id) { return ;}
+          this.channel.markAllAsRead();
         }.bind(this))
 
         .on("user.typing", function(data){

@@ -22,6 +22,12 @@
     $('#captive-portal').popup().popup("open");
   });
 
+  $document.bind("pagechange", function(event){
+    if (protonet.currentPage && protonet.currentPage.$content.is(":visible")) {
+      $.mobile.silentScroll(document.body.scrollHeight);
+    };
+  });
+
   protonet.changePage = function(href){
     var page = pageCache[href];
     if (protonet.currentPage) {
@@ -32,12 +38,9 @@
       });
     };
     protonet.currentPage = page;
-    protonet.currentPage.$content.appendTo($('body')).page();
+    protonet.currentPage.$content.appendTo($('body'));
     $.mobile.changePage(protonet.currentPage.$content,{
       dataUrl: page.href
-    });
-    protonet.currentPage.$content.bind("pageshow", function(event){
-      protonet.currentPage.scrollToBottom();
     });
 
     if (page.id) {

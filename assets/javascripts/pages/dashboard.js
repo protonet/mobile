@@ -56,6 +56,13 @@
             this.updateChannelList();
           }.bind(this), 1000);
         }.bind(this))
+
+        .on("channel.updateLastReadMeeps", function(channel){
+          $('a[link=#channel-' + channel.id +'] span')
+            .empty()
+            .hide();
+        }.bind(this))
+
         .one("sync.succeeded", function(){
           this.updateChannelList();
         }.bind(this));
@@ -101,6 +108,13 @@
           id:   channel.id,
           name: channel.name 
         }).to$();
+
+        if (channel.hasUnreadMeeps()) {
+          $templ.find("span")
+            .append(channel.countUnreadMeeps())
+            .show();
+        };
+
         $list = $list.add($templ);
       });
       return $list;
