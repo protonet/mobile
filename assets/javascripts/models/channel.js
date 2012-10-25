@@ -77,6 +77,17 @@
         }.bind(this)
       });
     },
+    isActive: function(){
+      if (!this.rendezvous) { return true; };
+      var activeRendezvous = protonet.storage.get("active_rendezvous");
+      return activeRendezvous && activeRendezvous[this.id];
+    },
+    setActive: function(){
+      var activeRendezvous = protonet.storage.get("active_rendezvous") || {};
+      activeRendezvous[this.id] = true;
+      protonet.storage.set("active_rendezvous", activeRendezvous);
+      protonet.trigger("channel.created", this);
+    },
     update: function(data){
       this.name         = data.name;
       this.description  = data.description;
@@ -90,15 +101,40 @@
     getMeep: function(a, b){
       return this.meeps.slice(a, b)[0];
     },
+    getNextMeep: function(meep){
+      var indexOfMeep = this.meeps.indexOf(meep);
+      if (indexOfMeep + 1 == this.meeps.length) {
+        return null
+      }else{
+        return this.meeps[indexOfMeep + 1];
+      }
+    },
+    getPreviousMeep: function(meep){
+      var indexOfMeep = this.meeps.indexOf(meep);
+      if (indexOfMeep == 0) {
+        return null
+      }else{
+        return this.meeps[indexOfMeep - 1];
+      }
+    },
     _observe: function(){
-      protonet.on("meep.created."+ this.id, function(meep){
-        if (meep.id > this.lastMeep.id) {
-          this.meeps.push(meep);
-          this.lastMeep = meep;
-        }else{
-          this.meeps.unshift(meep);
-        }
-      }.bind(this));
+      protonet
+        .on("meep.created."+ this.id, function(meep){
+          if (meep.id > this.lastMeep.id) {
+            this.meeps.push(meep);
+            this.lastMeep = meep;
+          }else{
+            this.meeps.unshift(meep);
+          }
+        }.bind(this));
+
+      if (!this.isActive()) {
+        protonet.one("sync.succeeded", function(){
+          protonet.one("meep.created."+ this.id, function(meep){
+            this.setActive();
+          }.bind(this));
+        }.bind(this));
+      }; 
     }
   });
 

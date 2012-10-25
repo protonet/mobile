@@ -24,8 +24,16 @@
     updateChannelList: function(){
 
       var channelArray    = protonet.channelsController.getRealChannels(),
-          rendezvousArray = protonet.channelsController.getRendezvous(),
+          rendezvousArray,
           $channelList;
+
+      rendezvousArray = $.map(protonet.channelsController.getRendezvous(), function(channel){
+        if (channel.isActive()) {
+          return channel;
+        }else{
+          return null;
+        }
+      })
 
       $channelList = this._sortedChannelList(channelArray);
 
@@ -76,6 +84,9 @@
           event.stopPropagation();
           var id = $(event.target).data("id");
           protonet.channelsController.findOrCreateRendezvous(id, function(channel){
+            if (!channel.isActive()) {
+              channel.setActive();
+            };
             protonet.changePage("#channel-" + channel.id);
           });
         });
@@ -101,6 +112,7 @@
     _sortedChannelList: function(channels){
       var $list = $(),
           storedLastReadMeeps = protonet.storage.get("last_read_meeps");
+
       channels = channels.sort(function(a,b){
         return b.lastMeep.id - a.lastMeep.id;
       });

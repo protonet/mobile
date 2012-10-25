@@ -1,10 +1,11 @@
 (function(protonet){
 
   var hash = location.hash,
-    pageCache = {};
+      pageCache = {};
 
   protonet.currentPage = null;
-  protonet.pages = {}
+  protonet.pages = {};
+  protonet.pageCache = pageCache;
 
   protonet.one("sync.succeeded", function(){
 
@@ -30,13 +31,6 @@
 
   protonet.changePage = function(href){
     var page = pageCache[href];
-    if (protonet.currentPage) {
-      $(protonet.currentPage.$content).bind("pagehide", function(event){
-        var $this = $(this);
-        $this.detach();
-        $this.unbind(event);
-      });
-    };
     protonet.currentPage = page;
     protonet.currentPage.$content.appendTo($('body'));
     $.mobile.changePage(protonet.currentPage.$content,{
@@ -46,7 +40,6 @@
     if (page.id) {
       protonet.trigger("channel.change", page.id);
     };
-
   }
 
   $('body')
@@ -63,20 +56,22 @@
       };
     });
 
-  protonet.on("channel.created", function(channel){
-    var page = new protonet.pages.Channel(channel);
-    pageCache[page.href] = page;
-  });
-
-  protonet.on("channel.deleted", function(channel){
-    var page = pageCache["#channel-" + channel.id];
-    if (protonet.currentPage == page) {
-      $(page.$content).bind("pagehide", function(event){
-        page.$content.detach();
-        delete pageCache[page.href];
-      });
-      protonet.changePage("");
-    };
-  });
+  protonet
+    .on("channel.created", function(channel){
+      if (channel.isActive()) {   
+        var page = new protonet.pages.Channel(channel);
+        pageCache[page.href] = page;
+      };
+    })
+    .on("channel.deleted", function(channel){
+      var page = pageCache["#channel-" + channel.id];
+      if (protonet.currentPage == page) {
+        $(page.$content).bind("pagehide", function(event){
+          page.$content.detach();
+          delete pageCache[page.href];
+        });
+        protonet.changePage("");
+      };
+    });
 
 })(protonet);

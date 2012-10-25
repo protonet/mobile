@@ -1,7 +1,5 @@
 (function(protonet){
 
-  var $scrollinput = $('<input type="text>">');
-
   function $buildMeep(meep){
     var $meep = new protonet.utils.Template("meep",{
       author: meep.author,
@@ -44,60 +42,62 @@
           this.$loadMore.hide();
         };
       }.bind(this));
+
+      for (var i = 0; i < this.channel.meeps.length; i++) {
+        this.renderMeep(this.channel.meeps[i], true);
+      };
     },
     scrollToBottom: function(){
       if (protonet.currentPage == this) {
         $.mobile.silentScroll(document.body.scrollHeight);
       };
     },
+    renderMeep: function(meep, forceAppend){
+      var $meep = $buildMeep(meep);
+      if (meep === this.channel.lastMeep || forceAppend) {
+        // append
+        var previousMeep = this.channel.getPreviousMeep(meep);
+        if (previousMeep 
+              && previousMeep.user_id === meep.user_id
+              && (meep.created_at - previousMeep.created_at < (5).minutes()) 
+              && !meep.text_extension 
+              && !previousMeep.text_extension) {
+
+          var $meepToMerge  = this.$timeline.find("li.meep:last"),
+              $timeToUpdate = $meepToMerge.find("time"),
+              prettyDate    = protonet.utils.prettifyDate(meep.created_at);
+          $meep.find("article").insertAfter($meepToMerge.find("article:last"));
+          $timeToUpdate.attr("title", meep.created_at).text(prettyDate);
+        }else{
+          this.$timeline.append($meep);
+        }
+        if (protonet.currentPage == this) {
+          this.channel.markAllAsRead();
+          setTimeout(function () {
+            this.scrollToBottom();
+          }.bind(this), 0);
+        };
+      }else{
+        // prepend
+        var nextMeep = this.channel.getNextMeep(meep);
+        if (nextMeep 
+              && nextMeep.user_id === meep.user_id
+              && (nextMeep.created_at - meep.created_at < (5).minutes()) 
+              && !meep.text_extension
+              && !nextMeep.text_extension) {
+          // merge Meeps
+          var $meepToMerge = this.$timeline.find("li.meep:first");
+          $meep.find("article").insertBefore($meepToMerge.find("article:first"));
+        }else{
+          this.$timeline.prepend($meep);
+        }
+      }
+      protonet.trigger("meep.rendered", $meep, meep);
+    },
     _observe: function(){
     
       protonet
-        .on("meep.created." + this.id, function(meep){
-          var $meep = $buildMeep(meep);
-          if (meep === this.channel.lastMeep) {
-            // append
-            var previousMeep = this.channel.getMeep(-2, -1);
-            if (previousMeep 
-                  && previousMeep.user_id === meep.user_id
-                  && (meep.created_at - previousMeep.created_at < (5).minutes()) 
-                  && !meep.text_extension 
-                  && !previousMeep.text_extension) {
-
-              var $meepToMerge  = this.$timeline.find("li.meep:last"),
-                  $timeToUpdate = $meepToMerge.find("time"),
-                  prettyDate    = protonet.utils.prettifyDate(meep.created_at);
-              $meep.find("article").insertAfter($meepToMerge.find("article:last"));
-              $timeToUpdate.attr("title", meep.created_at).text(prettyDate);
-
-            }else{
-              this.$timeline.append($meep);
-            }
-            if (protonet.currentPage == this) {
-              this.channel.markAllAsRead();
-              setTimeout(function () {
-                this.scrollToBottom();
-              }.bind(this), 0);
-            };
-          }else{
-            // prepend
-            var nextMeep = this.channel.getMeep(1, 2);
-            if (nextMeep 
-                  && nextMeep.user_id === meep.user_id
-                  && (nextMeep.created_at - meep.created_at < (5).minutes()) 
-                  && !meep.text_extension
-                  && !nextMeep.text_extension) {
-              // merge Meeps
-              var $meepToMerge = this.$timeline.find("li.meep:first");
-              $meep.find("article").insertBefore($meepToMerge.find("article:first"));
-            }else{
-              this.$timeline.prepend($meep);
-            }
-          }
-
-          protonet.trigger("meep.rendered", $meep, meep);
-
-        }.bind(this))
+        .on("meep.created." + this.id , this.renderMeep.bind(this)) 
 
         .on("channel.meepsLoaded", function(channel, data){
           if (channel != this.channel) { return; };
@@ -168,7 +168,14 @@
           $.mobile.changePage($('#navigation'),{
             dataUrl: "#navigation"
           });
-        });
+        })
+        .on("pagehide", function(event){
+          this.$content.detach();
+          if (protonet.currentPage == this) {
+            protonet.currentPage = null;
+          };
+        }.bind(this));
+
     },
     _typingStart: function() {
       if (!this.typing) {
