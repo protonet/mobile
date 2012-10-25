@@ -119,6 +119,9 @@
         }.bind(this))
 
         .on("user.typing_end", function(data){
+          if (data.channel_uuid == this.uuid || data.user_id == protonet.currentUser.id) {
+            return
+          };
           
         }.bind(this));
 

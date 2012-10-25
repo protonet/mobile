@@ -99,10 +99,12 @@
       return $list;
     },
     _sortedChannelList: function(channels){
-      var $list = $();
+      var $list = $(),
+          storedLastReadMeeps = protonet.storage.get("last_read_meeps");
       channels = channels.sort(function(a,b){
         return b.lastMeep.id - a.lastMeep.id;
       });
+
       $.each(channels, function(i, channel){
         var $templ = new protonet.utils.Template("channel-link", {
           id:   channel.id,

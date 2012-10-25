@@ -63,6 +63,11 @@ class MobileProtonet < Sinatra::Application
     end.to_json
   end
 
+  post '/users/update_last_read_meeps' do
+    content_type :json
+    protonet.update_last_read_meep(params[:mapping]).to_json
+  end
+
   post '/rendezvous' do
     require_authentication
     content_type :json

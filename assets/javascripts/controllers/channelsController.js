@@ -28,7 +28,9 @@
       });
     },
     getAll: function(){
-      return $.makeArray(channels);
+      return $.map(channels, function(value, key){
+        return value;
+      });
     },
     expireCache: function(){
       channelsCache = rendezvousCache = [];
@@ -72,34 +74,6 @@
         }
       });
     },
-    updateLastReadMeeps: function(){
-      var oldLastReadMeeps = protonet.storage.get("last_read_meeps"),
-          newLastReadMeeps = {};
-
-      $.each(channels, function(i, channel) {
-        if (channel.lastReadMeepID) {
-          newLastReadMeeps[channel.listenId] = channel.lastReadMeepID;
-        }
-      });
-
-      console.log(oldLastReadMeeps, newLastReadMeeps);
-
-      console.log(JSON.stringify(oldLastReadMeeps) === JSON.stringify(newLastReadMeeps));
-
-      if (JSON.stringify(oldLastReadMeeps) === JSON.stringify(newLastReadMeeps)) { 
-        return; 
-      }
-      //$.ajax({
-      //  async:  !sync,
-      //  url:    "/mobile/users/update_last_read_meeps",
-      //  type:   "PUT",
-      //  data:   {
-      //    id:      protonet.currentUser.id,
-      //    mapping: newLastReadMeeps
-      //  }
-      //});
-      protonet.storage.set("last_read_meeps", newLastReadMeeps);
-    },
     _observe: function(){
       protonet
         .on("channel.updated", function(data){
@@ -114,10 +88,6 @@
 
         .on("channel.load", function(data){
           this.get(data.channel_id);
-        }.bind(this))
-        
-        .on("channel.updateLastReadMeeps", function(channel){
-          this.updateLastReadMeeps();
         }.bind(this))
 
         .on("user.unsubscribed_channel", function(data){

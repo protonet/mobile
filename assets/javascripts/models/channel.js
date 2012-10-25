@@ -22,18 +22,29 @@
       this.description    = data.description;
       this.global         = data.global;
       this.uuid           = data.uuid;
-      this.lastReadMeepID = data.last_read_meep;
       this.listenId       = data.listen_id;
+  
+      this.lastReadMeepId = this._lastReadMeepId(data.last_read_meep);
+
       this.loading        = undefined;
       this.lastMeep       = { id: -1 };
       this.meeps          = [];
       this._observe();
       protonet.trigger("channel.created", this);
     },
+    _lastReadMeepId: function(id){
+      var storedIds = protonet.storage.get("last_read_meeps");
+      if (storedIds && storedIds[this.listenId]){
+        if (storedIds[this.listenId] > id ) {
+          id = storedIds[this.listenId]
+        }
+      }
+      return id;
+    },
     countUnreadMeeps: function(){
       var count = 0;
-      for (var i = this.meeps.length - 1; i > 0; i--) {
-        if (this.meeps[i].id > this.lastReadMeepID) {
+      for (var i = this.meeps.length - 1; i >= 0; i--) {
+        if (this.meeps[i].id > this.lastReadMeepId) {
           count++;
         }
       }
@@ -41,10 +52,10 @@
       return count;
     },
     hasUnreadMeeps: function(){
-      return this.lastMeep.id > (this.lastReadMeepID || 0)
+      return this.lastMeep.id > (this.lastReadMeepId || 0)
     },
     markAllAsRead: function(){
-      this.lastReadMeepID = this.lastMeep.id;
+      this.lastReadMeepId = this.lastMeep.id;
       protonet.trigger("channel.updateLastReadMeeps", this);
     },
     loadMoreMeeps: function(callback){
