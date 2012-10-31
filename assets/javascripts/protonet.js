@@ -22,7 +22,9 @@ $(function() {
 
   protonet.usersController = new protonet.UsersController(data.users);
   protonet.channelsController = new protonet.ChannelsController(data.channels);
+
   protonet.dashboard = new protonet.pages.Dashboard();
+  protonet.userList = new protonet.pages.UserList();
 
   protonet.ui.FlashMessage.initialize();
 

@@ -57,7 +57,7 @@
     });
 
   protonet
-    .on("channel.created", function(channel){
+    .on("channel.new", function(channel){
       if (channel.isActive()) {   
         var page = new protonet.pages.Channel(channel);
         pageCache[page.href] = page;

@@ -163,12 +163,16 @@
         .delegate(".ui-header a", "click", function(event){
           event.preventDefault();
         })
-        .delegate(".ui-header a", "vclick", function(event){
+        .delegate(".ui-header a[link='#navigation']", "vclick", function(event){
           event.preventDefault();
+          protonet.userList.isVisible && protonet.userList.hide();
           $.mobile.changePage($('#navigation'),{
             dataUrl: "#navigation"
           });
         })
+        .delegate(".ui-header a[link='#user-list']", "vclick", function(event){
+          protonet.userList.show(this.id);
+        }.bind(this))
         .on("pagehide", function(event){
           this.$content.detach();
           if (protonet.currentPage == this) {

@@ -3,8 +3,9 @@
     users: <%= protonet.users.map do |user| 
       {
         :id => user.id,
-        :name => user.login,
-        :avatar => user.avatar_url
+        :name => user.name,
+        :avatar => user.avatar,
+        :subscriptions => user.subscriptions
       }
     end.to_json %>,
     channels: <%= current_user.subscribed_channels.map do |channel|

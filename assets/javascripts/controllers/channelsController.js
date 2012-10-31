@@ -1,20 +1,22 @@
 (function(protonet, undefined) {
 
   var channels         = {},
-      channelsCache    = [],
-      rendezvousCache  = [],
-      fetchingChannels = {};
+      fetchingChannels = {},
+      uuidToIdMapping  = {};
 
   protonet.ChannelsController = Class.create({
     initialize: function(data){
       for (var i = data.length - 1; i >= 0; i--) {
         var channel = new protonet.Channel(data[i]);
         channels[channel.id] = channel;
+        uuidToIdMapping[channel.uuid] = channel.id;
       };
+
       this._observe();
     },
     get: function(id){
-      if (fetchingChannels[id] || channels[id]) { return };
+      if (fetchingChannels[id]) { return }
+      if (channels[id]) { return channels[id] }
       fetchingChannels[id] = $.ajax({
         url: "channels/" + id,
         type: "get",
@@ -22,39 +24,34 @@
           if (channels[data.id]) { return; };
           channels[data.id] = new protonet.Channel(data);
           channels[data.id].loadMoreMeeps();
-          this.expireCache();
           delete fetchingChannels[id];
         }.bind(this)
       });
+    },
+    getByUuid: function(uuid){
+      id = uuidToIdMapping[uuid];
+      if (id) { return this.get(id) };
     },
     getAll: function(){
       return $.map(channels, function(value, key){
         return value;
       });
     },
-    expireCache: function(){
-      channelsCache = rendezvousCache = [];
-      protonet.trigger("channel.cacheExpired");
-    },
     getRealChannels: function(){
-      if (channelsCache.length) { return channelsCache };
-      channelsCache = $.map( channels, function(channel, key) {
+      return $.map( channels, function(channel, key) {
         return channel.rendezvousId ? null : channel;
       });
-      return channelsCache;
     },
     getRendezvous: function(){
-      if (rendezvousCache.length) { return rendezvousCache; };
-      rendezvousCache = $.map( channels, function(channel, key) {
+      return $.map( channels, function(channel, key) {
         return channel.rendezvousId ? channel : null;
       });
-      return rendezvousCache;
     },
     findOrCreateRendezvous: function(userId, callback){
-
-      for (var i = 0; i < rendezvousCache.length; i++) {
-        if (rendezvousCache[i].rendezvousId == userId) {
-          callback(rendezvousCache[i]);
+      var rendezvous = this.getRendezvous();
+      for (var i = 0; i < rendezvous.length; i++) {
+        if (rendezvous[i].rendezvousId == userId) {
+          callback(rendezvous[i]);
           return
         };
       };
@@ -76,13 +73,19 @@
     },
     _observe: function(){
       protonet
+        .on("channel.created", function(data){
+          var channel = new protonet.Channel(data);
+          channels[channel.id] = channel;
+        }.bind(this))
+        .on("channel.new", function(channel){
+          uuidToIdMapping[channel.uuid] = channel.id;
+        }.bind(this))
         .on("channel.updated", function(data){
           var id = +data["id"];
           if (channels[id]) {
             channels[id].update(data);
           }else{
             channels[id] = new protonet.Channel(data);
-            this.expireCache();
           }
         }.bind(this))
 
@@ -90,17 +93,24 @@
           this.get(data.channel_id);
         }.bind(this))
 
+        .on("user.subscribed_channel", function(data){
+          var user    = protonet.usersController.get(data.user_id),
+              channel = this.get(data.channel_id);
+          user && channel && channel.users.push(user);
+        }.bind(this))
+
         .on("user.unsubscribed_channel", function(data){
-          //channel_id: 7
-          //channel_uuid: "da0fe7b0-f5a9-11e1-9b1b-83ae7237165c"
-          //rendezvous: true
-          //trigger: "user.unsubscribed_channel"
-          //user_id: 8
           if (data.user_id == protonet.currentUser.id) {
             channels[data.channel_id] && channels[data.channel_id].destroy();
             delete channels[data.channel_id];
-            this.expireCache();
-          };
+          }else{
+            var user    = protonet.usersController.get(data.user_id),
+                channel = this.get(data.channel_id),
+                index   = channl.users.indexOf(user);
+            if (index !== -1 ) {
+              channel.users.splice(index, 1);
+            }
+          }
         }.bind(this))
     }
   });

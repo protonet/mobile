@@ -29,8 +29,15 @@
       this.loading        = undefined;
       this.lastMeep       = { id: -1 };
       this.meeps          = [];
+      this.users          = $.map(protonet.usersController.getAll(), function(user, key){
+        if (user.subscriptions.indexOf(this.id) !== -1) {
+          return user;
+        }else{
+          return null;
+        }
+      }.bind(this));
       this._observe();
-      protonet.trigger("channel.created", this);
+      protonet.trigger("channel.new", this);
     },
     _lastReadMeepId: function(id){
       var storedIds = protonet.storage.get("last_read_meeps");
@@ -86,7 +93,7 @@
       var activeRendezvous = protonet.storage.get("active_rendezvous") || {};
       activeRendezvous[this.id] = true;
       protonet.storage.set("active_rendezvous", activeRendezvous);
-      protonet.trigger("channel.created", this);
+      protonet.trigger("channel.new", this);
     },
     update: function(data){
       this.name         = data.name;
@@ -126,6 +133,11 @@
           }else{
             this.meeps.unshift(meep);
           }
+        }.bind(this))
+        .on("user.new", function(user){
+          if (user.subscriptions.indexOf(this.id) !== -1) { 
+            this.users.push(user);
+          };
         }.bind(this));
 
       if (!this.isActive()) {

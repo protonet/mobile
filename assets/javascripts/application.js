@@ -57,6 +57,7 @@
 //= require 'pages.js'
 //= require 'pages/dashboard.js'
 //= require 'pages/channel.js'
+//= require 'pages/user-list.js'
 
 //= require 'protonet.js'
 

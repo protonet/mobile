@@ -51,18 +51,6 @@ class MobileProtonet < Sinatra::Application
     end.to_json
   end
 
-  get '/users' do
-    require_authentication
-    content_type :json
-    protonet.users.map do |user| 
-      {
-        :id => user.id,
-        :name => user.login,
-        :avatar => user.avatar_url
-      }
-    end.to_json
-  end
-
   post '/users/update_last_read_meeps' do
     content_type :json
     protonet.update_last_read_meep(params[:mapping]).to_json

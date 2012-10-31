@@ -1,7 +1,6 @@
 (function(protonet, undefined) {
 
-  var users      = {},
-      usersCache = [],
+  var users = {},
       updateLastReadTimeout;
 
   protonet.UsersController = Class.create({
@@ -17,17 +16,12 @@
       this._observe();
     },
     getAll: function(){
-      if (usersCache.length) { return usersCache };
-      usersCache = $.map(users, function(value, key){
+      return $.map(users, function(value, key){
         return value;
       });
-      return usersCache;
-    },
-    expireCache: function(){
-      usersCache = [];
     },
     get: function(id){
-      return users[id];
+      if (users[id]) { return users[id] };
     },
     updateLastReadMeeps: function(){
       var oldLastReadMeeps = protonet.storage.get("last_read_meeps"),
@@ -62,6 +56,17 @@
     _observe: function(){
 
       protonet
+        .on("user.created", function(data){
+          var user = new protonet.User(data);
+          users[user.id] = user;
+        }.bind(this))
+        .on("user.came_online", function(data){
+          if (users[data.id]) { return; };
+          var user = new protonet.User(data);
+          if (user.subscriptions.length > 0) {
+            users[data.id] = user;
+          };
+        })
         .on("channel.updateLastReadMeeps", function(channel){
           this.updateLastReadMeeps();
         }.bind(this));

@@ -1,0 +1,44 @@
+.ui-page-active.move-left{
+  left: -150px;
+  z-index:3;
+}
+.user-list{
+  z-index:1;
+  width:200px;
+  position: fixed;
+  display:block;
+  right:-50px;
+  left:auto;
+  top:0;
+  bottom:0;
+  padding-top:40px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 10px #888 inset;
+  font-size:12px;
+  line-height: 16px;
+}
+.user-list .scroller{
+  overflow:scroll;
+  height:100%;
+}
+.user-list ul{
+  padding: 0 0 0 10px;
+}
+.user-list li{
+  list-style:none;
+  background: url(spr_user_status.png) 0 2px no-repeat;
+  padding-left: 20px;
+}
+.user-list .online li{
+  color: #333;
+}
+.user-list .online li.me{
+  font-weight: bold;
+}
+.user-list .offline li{
+  background-position: 0 -18px;
+  color: #ccc;
+}
