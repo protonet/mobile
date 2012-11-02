@@ -73,7 +73,14 @@
 
         .one("sync.succeeded", function(){
           this.updateChannelList();
+        }.bind(this))
+
+        .on("user.new user.destroy", function(){
+          setTimeout(function(){
+            this.updateUserList()
+          }.bind(this), 1);
         }.bind(this));
+
 
       this.$userList
         .delegate("a.user-link", "click", function(event){
@@ -84,10 +91,16 @@
           event.stopPropagation();
           var id = $(event.target).data("id");
           protonet.channelsController.findOrCreateRendezvous(id, function(channel){
-            if (!channel.isActive()) {
-              channel.setActive();
-            };
-            protonet.changePage("#channel-" + channel.id);
+            if (channel) {
+              !channel.isActive() && channel.setActive();
+              protonet.changePage("#channel-" + channel.id);
+            }else{
+              protonet.one("channel.meepsLoaded", function(channel, meeps){
+                !channel.isActive() && channel.setActive();
+                protonet.changePage("#channel-" + channel.id);
+              });
+            }
+            
           });
         });
     },

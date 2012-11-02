@@ -81,13 +81,21 @@
           uuidToIdMapping[channel.uuid] = channel.id;
         }.bind(this))
 
+        .on("channel.destroy", function(channel){
+          delete channels[channel.id];
+          delete uuidToIdMapping[channel.uuid];
+        }.bind(this))
+
         .on("channel.updated", function(data){
           var id = +data["id"];
-          if (channels[id]) {
-            channels[id].update(data);
-          }else{
-            this.get(data.id);
-          }
+          if (protonet.currentUser.subscriptions.indexOf(id) !== -1) {
+            if (channels[id]) {
+              channels[id].update(data);
+            }else{
+              this.get(data.id);
+            }
+          };
+          
         }.bind(this))
 
         .on("channels.update_subscriptions", function(obj){
@@ -102,27 +110,7 @@
               })
             }
           }
-        }.bind(this))
-
-        .on("user.subscribed_channel", function(data){
-          var user    = protonet.usersController.get(data.user_id),
-              channel = this.get(data.channel_id);
-          user && channel && channel.users.push(user);
-        }.bind(this))
-
-        .on("user.unsubscribed_channel", function(data){
-          if (data.user_id === protonet.currentUser.id) {
-            channels[data.channel_id] && channels[data.channel_id].destroy();
-            delete channels[data.channel_id];
-          }else{
-            var user    = protonet.usersController.get(data.user_id),
-                channel = this.get(data.channel_id),
-                index   = channel.users.indexOf(user);
-            if (index !== -1 ) {
-              channel.users.splice(index, 1);
-            }
-          }
-        }.bind(this))
+        }.bind(this));
     }
   });
 

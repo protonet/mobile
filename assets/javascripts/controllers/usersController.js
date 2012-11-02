@@ -56,10 +56,16 @@
     _observe: function(){
 
       protonet
+        
         .on("user.created", function(data){
           var user = new protonet.User(data);
           users[user.id] = user;
         }.bind(this))
+
+        .on("user.destroy", function(user){
+          delete users[user.id];
+        })
+
         .on("user.came_online", function(data){
           if (users[data.id]) { return; };
           var user = new protonet.User(data);

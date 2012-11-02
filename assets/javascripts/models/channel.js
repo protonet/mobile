@@ -137,6 +137,7 @@
     },
     _observe: function(){
       protonet
+
         .on("meep.created."+ this.id, function(meep){
           if (meep.id > this.lastMeep.id) {
             this.meeps.push(meep);
@@ -145,13 +146,25 @@
             this.meeps.unshift(meep);
           }
         }.bind(this))
+
         .on("user.new", function(user){
           if (user.subscriptions.indexOf(this.id) !== -1) { 
             this.users.push(user);
           };
         }.bind(this))
-        .on("channels.update_subscriptions", function(data){
 
+        .on("user.subscribed_channel", function(data){
+          if (data.channel === this.id) {
+            var user = protonet.usersController.get(data.user_id);
+            user && this.users.push(user);
+          };
+        }.bind(this))
+
+        .on("user.unsubscribed_channel", function(data){
+          if (data.channel_id === this.id) {
+            var user = protonet.usersController.get(data.user_id);
+            user && this.users.splice(this.users.indexOf(user), 1);
+          };
         }.bind(this));
 
       if (!this.isActive()) {
