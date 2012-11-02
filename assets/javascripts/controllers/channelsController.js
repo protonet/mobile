@@ -18,14 +18,13 @@
       if (fetchingChannels[id]) { return }
       if (channels[id]) { return channels[id] }
       fetchingChannels[id] = $.ajax({
-        url: "channels/" + id,
+        url: "/mobile/channels/" + id,
         type: "get",
         success: function(data){
-          if (channels[data.id]) { return; };
           channels[data.id] = new protonet.Channel(data);
           channels[data.id].loadMoreMeeps();
           delete fetchingChannels[id];
-        }.bind(this)
+        }
       });
     },
     getByUuid: function(uuid){
@@ -73,24 +72,36 @@
     },
     _observe: function(){
       protonet
-        .on("channel.created", function(data){
-          var channel = new protonet.Channel(data);
-          channels[channel.id] = channel;
-        }.bind(this))
+        //.on("channel.created", function(data){
+        //  var channel = new protonet.Channel(data);
+        //  channels[channel.id] = channel;
+        //}.bind(this))
+
         .on("channel.new", function(channel){
           uuidToIdMapping[channel.uuid] = channel.id;
         }.bind(this))
+
         .on("channel.updated", function(data){
           var id = +data["id"];
           if (channels[id]) {
             channels[id].update(data);
           }else{
-            channels[id] = new protonet.Channel(data);
+            this.get(data.id);
           }
         }.bind(this))
 
-        .on("channel.load", function(data){
-          this.get(data.channel_id);
+        .on("channels.update_subscriptions", function(obj){
+          var data = obj["data"];
+          for(uuid in data){
+            var channel = this.getByUuid(uuid);
+            if (channel) {
+              channel.updateSubscriptions(data[uuid]);
+            }else{
+              protonet.one("channel.new", function(channel){
+                channel.updateSubscriptions(data[uuid]);
+              })
+            }
+          }
         }.bind(this))
 
         .on("user.subscribed_channel", function(data){
@@ -100,13 +111,13 @@
         }.bind(this))
 
         .on("user.unsubscribed_channel", function(data){
-          if (data.user_id == protonet.currentUser.id) {
+          if (data.user_id === protonet.currentUser.id) {
             channels[data.channel_id] && channels[data.channel_id].destroy();
             delete channels[data.channel_id];
           }else{
             var user    = protonet.usersController.get(data.user_id),
                 channel = this.get(data.channel_id),
-                index   = channl.users.indexOf(user);
+                index   = channel.users.indexOf(user);
             if (index !== -1 ) {
               channel.users.splice(index, 1);
             }

@@ -63,14 +63,14 @@
         pageCache[page.href] = page;
       };
     })
-    .on("channel.deleted", function(channel){
+    .on("channel.destroy", function(channel){
       var page = pageCache["#channel-" + channel.id];
       if (protonet.currentPage == page) {
         $(page.$content).bind("pagehide", function(event){
           page.$content.detach();
           delete pageCache[page.href];
         });
-        protonet.changePage("");
+        protonet.currentPage.$content.find("a[link='#navigation']").trigger("vclick");
       };
     });
 

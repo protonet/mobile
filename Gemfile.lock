@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: git@github.com:protonet/protolink.git
-  revision: b7d4c9d98c68cbd05c336e27ebd62916e842ac01
+  revision: 97e67612ac1e105bfb1fd060a27de244c910ba41
   branch: mobile
   specs:
     protolink (0.2.11)

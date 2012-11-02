@@ -10,12 +10,14 @@ class MobileProtonet < Sinatra::Application
     content_type :json
     channel = protonet.find_channel(params[:id])
     {
-      :id => channel.id,
-      :name => channel.name,
+      :name        => channel.name,
+      :id          => channel.id,
+      :uuid        => channel.uuid,
       :description => channel.description,
-      :global => channel.global,
-      :uuid => channel.uuid,
-      :rendezvous => channel.rendezvous
+      :global      => channel.global,
+      :rendezvous  => channel.rendezvous,
+      :last_read_meep => channel.last_read_meep,
+      :listen_id   => channel.listen_id
     }.to_json
   end
 
@@ -41,12 +43,12 @@ class MobileProtonet < Sinatra::Application
     content_type :json
     current_user.subscribed_channels.map do |channel|
       {
-        :name => channel.name,
-        :id => channel.id,
-        :uuid => channel.uuid,
+        :name        => channel.name,
+        :id          => channel.id,
+        :uuid        => channel.uuid,
         :description => channel.description,
-        :global => channel.global,
-        :rendezvous => channel.rendezvous
+        :global      => channel.global,
+        :rendezvous  => channel.rendezvous
       }
     end.to_json
   end

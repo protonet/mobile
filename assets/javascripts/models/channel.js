@@ -100,7 +100,18 @@
       this.description  = data.description;
       this.global       = data.global;
       this.uuid         = data.uuid;
-      protonet.trigger("channel.updated", this);
+      protonet.trigger("channel.update", this);
+    },
+    updateSubscriptions: function(userIds){
+      for (var i = 0; i < userIds.length; i++) {
+        var user = protonet.usersController.get(userIds[i]);
+        if (this.users.indexOf(user) === -1) {
+          this.users.push(user);
+        };
+        if (user.subscriptions.indexOf(this.id) === -1) {
+          user.subscriptions.push(this.id);
+        };
+      };
     },
     destroy: function(){
       protonet.trigger("channel.destroy", this);
@@ -138,11 +149,14 @@
           if (user.subscriptions.indexOf(this.id) !== -1) { 
             this.users.push(user);
           };
+        }.bind(this))
+        .on("channels.update_subscriptions", function(data){
+
         }.bind(this));
 
       if (!this.isActive()) {
-        protonet.one("sync.succeeded", function(){
-          protonet.one("meep.created."+ this.id, function(meep){
+        protonet.one("sync.succeeded channel.meepsLoaded", function(){
+          protonet.one("meep.created."+ this.id, function(){
             this.setActive();
           }.bind(this));
         }.bind(this));

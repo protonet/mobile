@@ -58,7 +58,7 @@
        * delete Channel if user unsubscribed channel
        */
       protonet
-        .on("meep.rendered channel.cacheExpired", function(){
+        .on("meep.rendered channel.cacheExpired channel.new channel.update channel.destroy", function(){
           timeout && clearTimeout(timeout);
           timeout = setTimeout(function(){
             this.updateChannelList();
