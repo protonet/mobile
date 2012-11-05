@@ -1,5 +1,7 @@
+ENV["RACK_ENV"] ||= "development"
+
 require 'bundler'
-Bundler.require
+Bundler.require(:default, ENV["RACK_ENV"].to_sym)
 require './app'
 
 Sinatra::Sprockets.configure do |config|
