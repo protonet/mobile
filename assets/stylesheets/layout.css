@@ -4,6 +4,7 @@
  *= require flash-message
  *= require text-extensions
  *= require user-list
+ *= require emoji
  */
 
 html, body{
