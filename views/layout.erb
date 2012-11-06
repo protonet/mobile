@@ -72,7 +72,7 @@
         xhr_streaming_url:                "<%= host %><%= settings.production ? '/xhr' : ':8000' %>",
         users:                            null,
         channels:                         null,
-        debug_mode:                       true
+        debug_mode:                       <%= !settings.production %>
       },
       events: {},
       utils: {},
