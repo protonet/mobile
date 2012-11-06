@@ -189,7 +189,9 @@ protonet.dispatcher = {
       var trigger = data.trigger || data.operation;
       if (trigger) {
         protonet.trigger(trigger, data);
-        console.log(trigger,data);
+        if (protonet.config.debug_mode) {
+          console.log(trigger,data);
+        };
       } else if (data.eval) {
         if (data.eval == "location.reload()") {
           location.href = location.href + "?reload=true"

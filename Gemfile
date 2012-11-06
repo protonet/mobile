@@ -9,13 +9,12 @@ gem 'rake'
 gem 'sinatra-sprockets', :git => "git://github.com/peanut/sinatra-sprockets.git"
 gem 'warden', '1.0.6'
 gem 'mysql2'
-
 gem 'shotgun', :group => :development
 
+gem 'rspec'
 group :test do
   gem 'capybara'
   gem 'capybara-webkit'
-  gem 'rspec'
   gem 'rack-test', :require => "rack/test"
   gem 'rack-contrib'
   gem 'launchy'
