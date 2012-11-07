@@ -52,7 +52,7 @@
       };
     },
     $buildUserElement: function(user){
-      var $elem = $("<li>", {
+      var $elem = $("<li class='ui-li'>", {
         "data-user-id": user.id
       }).append(user.name);
       if (user.id == protonet.currentUser.id) {

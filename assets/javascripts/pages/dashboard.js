@@ -75,12 +75,11 @@
           this.updateChannelList();
         }.bind(this))
 
-        .on("user.new user.destroy", function(){
-          setTimeout(function(){
-            this.updateUserList()
-          }.bind(this), 1);
+        .on("user.new user.destroy", function(user){
+          if (user.subscriptions.length > 0) {
+            this.updateUserList();
+          };
         }.bind(this));
-
 
       this.$userList
         .delegate("a.user-link", "click", function(event){
@@ -107,7 +106,7 @@
     _generateUserList: function(users){
       var $list = $();
       users = users.sort(function(a,b){
-        if (a.nam < b.name) //sort string ascending
+        if (a.name < b.name) //sort string ascending
           return -1 
         if (a.name > b.name)
           return 1

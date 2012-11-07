@@ -73,11 +73,10 @@ $document.ready(function(){
         type: "post",
         data: $this.serializeArray(),
         error: function(xhr, textStatus, errorThrown){
-          if (errorThrown === "Unauthorized") {
-            $('<span class="error">')
-              .append("Your credentials are invalid")
-              .appendTo("label[for=user_password]");
-          };
+          $('<span class="error">')
+            .empty()
+            .append("Your credentials are invalid")
+            .appendTo("label[for=user_password]");
         }
       });
       event.preventDefault();

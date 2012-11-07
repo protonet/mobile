@@ -43,7 +43,6 @@
 
       updateLastReadTimeout = setTimeout(function(){
         $.ajax({
-          async:  false,
           url:    "/mobile/users/update_last_read_meeps",
           type:   "POST",
           data:   {
