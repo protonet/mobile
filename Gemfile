@@ -11,6 +11,7 @@ gem 'warden', '1.0.6'
 gem 'mysql2'
 gem 'shotgun', :group => :development
 
+gem 'daemons'
 gem 'rspec'
 group :test do
   gem 'capybara'

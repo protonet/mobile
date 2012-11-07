@@ -2,7 +2,8 @@ ENV["RACK_ENV"] ||= "development"
 
 require 'bundler'
 Bundler.require(:default, ENV["RACK_ENV"].to_sym)
-require './app'
+require File.expand_path("../app", File.dirname(__FILE__))
+
 
 Sinatra::Sprockets.configure do |config|
   config.app = MobileProtonet
@@ -10,7 +11,7 @@ Sinatra::Sprockets.configure do |config|
   ['javascripts', 'stylesheets', 'images'].each do |dir|
     config.append_path(File.join('..', 'assets', dir))
   end
-  
+
   config.digest = false
   config.compress = ENV['RACK_ENV'] === 'production'
   config.debug = false

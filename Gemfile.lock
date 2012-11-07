@@ -122,6 +122,7 @@ PLATFORMS
 DEPENDENCIES
   capybara
   capybara-webkit
+  daemons
   json
   launchy
   mysql2
