@@ -10,7 +10,7 @@ def bundle_cleanup
 end
 
 def mobile_command
-  "#{bundle_cleanup}; cd #{File.dirname(__FILE__)}; bundle exec rackup -p 9393 --pid tmp/mobile_#{ENV['RACK_ENV']}.pid"
+  "#{bundle_cleanup}; cd #{File.dirname(__FILE__)}; bundle exec rackup -p #{ENV['MOBILE_PORT']} --pid tmp/mobile_#{ENV['RACK_ENV']}.pid"
 end
 
 system("bash -l -c '#{mobile_command}'")
