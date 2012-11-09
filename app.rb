@@ -18,16 +18,32 @@ class MobileProtonet < Sinatra::Application
     enable :logging, :dump_errors, :raise_errors, :show_exceptions, :static
 
     set :production, ENV['RACK_ENV'] === 'production'
-    set :api_url, (settings.production ? "http://127.0.0.1" : "http://localhost:3000")
+
+    case ENV['RACK_ENV']
+      when "test" then 
+        set :api_url, "http://localhost:33333"
+      when "development" then
+        set :api_url, "http://localhost:3000"
+      else
+        set :api_url, "http://127.0.0.1"
+    end
+
     set :views, ['views/', 'views/authentication/']
     set :public_path, "public"
 
-    set :socket_port, 5000
-    set :xhr_streaming_port, 8000
-    set :websocket_port, 5001
-    set :websocket_ssl_port, 5002
-    set :nodejs_port, 8124
-
+    if ENV['RACK_ENV'] == "test"
+      set :socket_port, 5005
+      set :xhr_streaming_port, 8001
+      set :websocket_port, 5006
+      set :websocket_ssl_port, 5007
+      set :nodejs_port, 8125
+    else
+      set :socket_port, 5000
+      set :xhr_streaming_port, 8000
+      set :websocket_port, 5001
+      set :websocket_ssl_port, 5002
+      set :nodejs_port, 8124
+    end
 
     # get RailsSessionSecret
     result = Mysql2::Client.new(
@@ -49,8 +65,14 @@ class MobileProtonet < Sinatra::Application
       end
      
       def authenticate!
+        api_url = case ENV['RACK_ENV']
+          when "production" then "http://127.0.0.1"
+          when "test" then "http://localhost:33333"
+          else "http://localhost:3000"
+        end
+
         response = Protolink::Protonet.open(
-          (ENV['RACK_ENV'] === 'production' ? "http://127.0.0.1" : "http://localhost:3000"),
+          api_url,
           params["user"]["login"] || session["login"], 
           params["user"]["password"]
         ).auth
@@ -115,7 +137,7 @@ class MobileProtonet < Sinatra::Application
       if settings.production
         "#{host}"
       else
-        "#{host}:3000"
+        settings.api_url
       end
     end
 
@@ -123,7 +145,7 @@ class MobileProtonet < Sinatra::Application
       if settings.production
         "#{host}/node"
       else
-        "#{host}:8124"
+        "#{host}:#{settings.nodejs_port}"
       end
     end
 
