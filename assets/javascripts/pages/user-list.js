@@ -4,7 +4,7 @@
       currentChannel = null,
       onlineUsers    = {},
       channelUsers   = {},
-      $userElements  = {};
+      userElements  = {};
 
   protonet.pages.UserList = Class.create({
     initialize: function(data){
@@ -14,7 +14,7 @@
       this.$offlineList = this.$userList.find("ul.offline");
       var users = protonet.usersController.getAll();
       for (var i = 0; i < users.length; i++) {
-        this.$buildUserElement(users[i]);
+        this.buildUserElement(users[i]);
       };
       this._observe();
     },
@@ -37,7 +37,9 @@
     refresh: function(){
       var online  = [],
           offline = [];
-          channel = this.currentChannel;
+          channel = this.currentChannel,
+          onlineList = "",
+          offlineList = "";
 
       this.$onlineList.empty();
       this.$offlineList.empty();
@@ -45,20 +47,26 @@
       for (var i = 0; i < channel.users.length; i++) {
         var id = channel.users[i].id;
         if (onlineUsers[id]) {
-          this.$onlineList.append($userElements[id]);
+          onlineList += userElements[id];
         }else{
-          this.$offlineList.append($userElements[id]);
+          offlineList += userElements[id]
         }
       };
+
+      this.$onlineList
+        .empty()
+        .append(onlineList);
+      this.$offlineList
+        .empty()
+        .append(offlineList);
     },
-    $buildUserElement: function(user){
-      var $elem = $("<li class='ui-li'>", {
-        "data-user-id": user.id
-      }).append(user.name);
+    buildUserElement: function(user){
+      var elem = "<li data-user-id='" + user.id + "' class='ui-li"; 
       if (user.id == protonet.currentUser.id) {
-        $elem.addClass("me");
+        elem += " me";
       };
-      $userElements[user.id] = $elem;
+      elem += "'> " + user.name + "</li>";
+      userElements[user.id] = elem;
     },
     _observe: function(){
       protonet
@@ -91,7 +99,7 @@
           this.isVisible && this.refresh();
         }.bind(this))
         .on("user.new", function(user){
-          this.$buildUserElement(user);
+          this.buildUserElement(user);
         }.bind(this));
     }
   });
