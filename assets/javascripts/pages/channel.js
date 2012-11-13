@@ -102,6 +102,7 @@
         prependTimeout = setTimeout(function(){
           this.$timeline.prepend($meepBulk.children());
           $meepBulk.empty();
+          protonet.trigger("meepbulk.rendered");
         }.bind(this), 100);
 
       }
@@ -165,7 +166,8 @@
 
       this.$loadMore.bind("click", function(event){
         var scrollHeight = this.$content[0].scrollHeight;
-        this.channel.loadMoreMeeps(function(data){
+        this.channel.loadMoreMeeps()
+        protonet.one("meepbulk.rendered", function(){
           window.scrollTo(0, this.$content[0].scrollHeight - scrollHeight);
         }.bind(this));
       }.bind(this));

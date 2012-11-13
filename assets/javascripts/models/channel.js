@@ -65,7 +65,7 @@
       this.lastReadMeepId = this.lastMeep.id;
       protonet.trigger("channel.updateLastReadMeeps", this);
     },
-    loadMoreMeeps: function(callback){
+    loadMoreMeeps: function(){
       if (this.loading) { return ;}
       this.loading = $.ajax({
         url: "channels/" + this.id + "/meeps",
@@ -79,7 +79,6 @@
             new protonet.Meep(data[i])
           };
           this.loading = undefined;
-          callback && callback(data); 
           protonet.trigger("channel.meepsLoaded", this, data);
         }.bind(this)
       });
