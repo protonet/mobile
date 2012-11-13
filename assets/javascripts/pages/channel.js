@@ -1,5 +1,8 @@
 (function(protonet){
 
+  var $meepBulk = $("<ul>"),
+      prependTimeout;
+
   function $buildMeep(meep){
     var $meep = new protonet.utils.Template("meep",{
       author: meep.author,
@@ -43,6 +46,7 @@
         };
       }.bind(this));
 
+      // needed for channels created after ready state
       for (var i = 0; i < this.channel.meeps.length; i++) {
         this.renderMeep(this.channel.meeps[i], true);
       };
@@ -52,6 +56,7 @@
         $.mobile.silentScroll(document.body.scrollHeight);
       };
     },
+
     renderMeep: function(meep, forceAppend){
       var $meep = $buildMeep(meep);
       if (meep === this.channel.lastMeep || forceAppend) {
@@ -84,13 +89,21 @@
               && nextMeep.user_id === meep.user_id
               && (nextMeep.created_at - meep.created_at < (5).minutes()) 
               && !meep.text_extension
-              && !nextMeep.text_extension) {
+              && !nextMeep.text_extension
+              && prependTimeout) {
           // merge Meeps
-          var $meepToMerge = this.$timeline.find("li.meep:first");
+          var $meepToMerge = $meepBulk.find("li.meep:first");
           $meep.find("article").insertBefore($meepToMerge.find("article:first"));
         }else{
-          this.$timeline.prepend($meep);
+          $meepBulk.prepend($meep);
         }
+
+        clearTimeout(prependTimeout);
+        prependTimeout = setTimeout(function(){
+          this.$timeline.prepend($meepBulk.children());
+          $meepBulk.empty();
+        }.bind(this), 100);
+
       }
       protonet.trigger("meep.rendered", $meep, meep);
     },
