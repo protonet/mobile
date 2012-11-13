@@ -2,6 +2,9 @@ class MobileProtonet < Sinatra::Application
 
   get '/' do
     require_authentication
+    if session[:redirect_after_sign_in]
+      redirect session.delete(:redirect_after_sign_in)
+    end
     erb :index
   end
 
@@ -21,10 +24,10 @@ class MobileProtonet < Sinatra::Application
     }.to_json
   end
 
-  get '/channels/:channel_id/meeps' do
+  get '/channels/:id/meeps' do
     require_authentication
     content_type :json
-    protonet.find_meeps_by_channel(params[:channel_id], params[:limit], params[:offset]).map do |meep|
+    protonet.find_meeps_by_channel(params[:id], params[:limit], params[:offset]).map do |meep|
       {
         :id         => meep.id,
         :channel_id => meep.channel_id,

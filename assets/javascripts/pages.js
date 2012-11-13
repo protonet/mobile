@@ -1,7 +1,9 @@
 (function(protonet){
 
-  var hash = location.hash,
-      pageCache = {};
+  var hash           = location.hash,
+      channelIdParam = hash.match(/channel-(\d+)/),
+      openChannelId  = channelIdParam && channelIdParam[1];
+      pageCache      = {};
 
   protonet.currentPage = null;
   protonet.pages = {};
@@ -58,7 +60,7 @@
 
   protonet
     .on("channel.new", function(channel){
-      if (channel.isActive()) {   
+      if (channel.isActive() || openChannelId == channel.id) {   
         var page = new protonet.pages.Channel(channel);
         pageCache[page.href] = page;
       };

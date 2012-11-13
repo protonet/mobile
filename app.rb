@@ -194,6 +194,10 @@ class MobileProtonet < Sinatra::Application
       cache_control :no_cache
     end
 
+    if params[:channel_id]
+      session[:redirect_after_sign_in] = "/mobile#channel-#{params[:channel_id]}"
+    end
+
     puts "request: #{env['REQUEST_METHOD']} #{request.path}"
   end
 

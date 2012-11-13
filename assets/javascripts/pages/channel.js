@@ -121,6 +121,7 @@
 
         .on("channel.change", function(id){
           if (id != this.id) { return ;}
+          !this.channel.isActive() && this.channel.setActive();
           this.channel.markAllAsRead();
         }.bind(this))
 

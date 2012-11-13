@@ -9,10 +9,13 @@ class MobileProtonet < Sinatra::Application
   end
 
   post '/sign_in' do
+    redirect_to = session[:redirect_after_sign_in]
     warden.logout if session["warden.user.user.key"]
+    session[:redirect_after_sign_in] = redirect_to
     warden.authenticate!
     content_type :json
-    {:redirect => "/mobile"}.to_json
+    redirect_to = session.delete(:redirect_after_sign_in) || "/mobile"
+    {:redirect => redirect_to}.to_json
   end
 
   post '/unauthenticated/?' do

@@ -85,9 +85,13 @@
       });
     },
     isActive: function(){
-      if (!this.rendezvous) { return true; };
+      if (!this.rendezvous) { 
+        return true; 
+      };
       var activeRendezvous = protonet.storage.get("active_rendezvous");
-      return activeRendezvous && activeRendezvous[this.id];
+      if (activeRendezvous && activeRendezvous[this.id]) {
+        return activeRendezvous[this.id];
+      };
     },
     setActive: function(){
       var activeRendezvous = protonet.storage.get("active_rendezvous") || {};
