@@ -1,6 +1,7 @@
-(function(protonet){
+(function(protonet, undefined){
 
   var $meepBulk = $("<ul>"),
+      scrollHeight,
       prependTimeout;
 
   function $buildMeep(meep){
@@ -76,12 +77,18 @@
         }else{
           this.$timeline.append($meep);
         }
+
+        // TODO: prevent scrollToBottom when i am reading smth on top of page
         if (protonet.currentPage == this) {
           this.channel.markAllAsRead();
           setTimeout(function () {
             this.scrollToBottom();
           }.bind(this), 0);
         };
+
+        setTimeout(function(){
+          this.$timeline.height(this.$timeline.parent().scrollHeight - 120);
+        }.bind(this),1);
       }else{
         // prepend
         var nextMeep = this.channel.getNextMeep(meep);
@@ -100,12 +107,15 @@
 
         clearTimeout(prependTimeout);
         prependTimeout = setTimeout(function(){
-          this.$timeline.prepend($meepBulk.children());
+          this.$timeline
+            .prepend($meepBulk.children())
+            .height(this.$timeline.parent().scrollHeight - 120);
+          window.scrollTo(0, this.$content[0].scrollHeight - scrollHeight);
           $meepBulk.empty();
-          protonet.trigger("meepbulk.rendered");
-        }.bind(this), 100);
-
+          prependTimeout = undefined;
+        }.bind(this), 101);
       }
+      
       protonet.trigger("meep.rendered", $meep, meep);
     },
     _observe: function(){
@@ -165,11 +175,10 @@
       }.bind(this));
 
       this.$loadMore.bind("click", function(event){
-        var scrollHeight = this.$content[0].scrollHeight;
-        this.channel.loadMoreMeeps()
-        protonet.one("meepbulk.rendered", function(){
-          window.scrollTo(0, this.$content[0].scrollHeight - scrollHeight);
-        }.bind(this));
+        // save scrollHeight here to scroll back 
+        // to same position after rendering meeps
+        scrollHeight = this.$content[0].scrollHeight;
+        this.channel.loadMoreMeeps();
       }.bind(this));
 
       this.$content
