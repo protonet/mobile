@@ -167,7 +167,7 @@ class MobileProtonet < Sinatra::Application
     end
 
     def dispatching_websocket_url(secure = nil)
-      secure ||= !!request.env["HTTP_X_FORWARDED_PORT"]
+      # secure ||= !!request.env["HTTP_X_FORWARDED_PORT"]
       if secure
         "wss://#{server_name}" + ( settings.production ? "/websocket" : ":#{settings.websocket_ssl_port}" )
       else
