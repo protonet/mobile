@@ -110,7 +110,10 @@
           this.$timeline
             .prepend($meepBulk.children())
             .height(this.$timeline.parent().scrollHeight - 120);
-          window.scrollTo(0, this.$content[0].scrollHeight - scrollHeight);
+          setTimeout(function(){
+            window.scrollTo(0, this.$content[0].scrollHeight - scrollHeight);
+          }.bind(this), 20);
+
           $meepBulk.empty();
           prependTimeout = undefined;
         }.bind(this), 101);
