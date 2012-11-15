@@ -2,7 +2,8 @@
 
   var $meepBulk = $("<ul>"),
       scrollHeight,
-      prependTimeout;
+      prependTimeout,
+      showHeaderTimeout;
 
   function $buildMeep(meep){
     var $meep = new protonet.utils.Template("meep",{
@@ -153,9 +154,23 @@
           
         }.bind(this));
 
-      this.$input.keypress(function(event) {
-        if (!event.metaKey) { this._typingStart(); }
-      }.bind(this));
+      this.$input
+        .keypress(function(event) {
+          if (!event.metaKey) { this._typingStart(); }
+        }.bind(this))
+        .on('focus', function(){
+          clearTimeout(showHeaderTimeout);
+          this.$content.find(".ui-header").css({
+            position:'absolute'
+          });
+        }.bind(this))
+        .on('blur', function(){
+          showHeaderTimeout = setTimeout(function(){
+            this.$content.find(".ui-header").css({
+              position:'fixed'
+            });
+          }.bind(this), 100);
+        }.bind(this));
 
       this.$form.submit(function(event){
         event.preventDefault();
@@ -185,30 +200,33 @@
       }.bind(this));
 
       this.$content
+
         .delegate("h1.ui-title", "vclick", function(event){
           window.scrollTo(0,1);
         })
+
         .delegate(".ui-header a", "click", function(event){
-          $(this).removeClass("ui-btn-down-b");
           event.preventDefault();
         })
+
         .delegate(".ui-header a[link='#navigation']", "vclick", function(event){
-          event.preventDefault();
           protonet.userList.isVisible && protonet.userList.hide();
+          $(this).trigger("vmouseout");
           $.mobile.changePage($('#navigation'),{
             dataUrl: "#navigation"
           });
         })
+
         .delegate(".ui-header a[link='#user-list']", "vclick", function(event){
           protonet.userList.show(this.id);
         }.bind(this))
+
         .on("pagehide", function(event){
           this.$content.detach();
           if (protonet.currentPage == this) {
             protonet.currentPage = null;
           };
         }.bind(this));
-
     },
     _typingStart: function() {
       if (!this.typing) {
