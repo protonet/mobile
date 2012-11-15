@@ -189,6 +189,7 @@
           window.scrollTo(0,1);
         })
         .delegate(".ui-header a", "click", function(event){
+          $(this).removeClass("ui-btn-down-b");
           event.preventDefault();
         })
         .delegate(".ui-header a[link='#navigation']", "vclick", function(event){

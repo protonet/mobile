@@ -53,6 +53,11 @@
 </div>
 
 <% end %>
+<% if settings.production? %>
+  <script>
+    var AIRBRAKE_API_KEY = 'e0e395c06aa4a6756b5d585fee266999';
+  </script>
+<% end %>
 
 <% if current_user %>
   <script>

@@ -1,3 +1,4 @@
+//= require 'lib/simple-javascript-airbrake-notifier/notifier.min.js'
 //= require 'lib/mobile-bookmark-bubble/bookmark_bubble.js'
 //= require_self
 

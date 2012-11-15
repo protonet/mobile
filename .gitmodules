@@ -1,3 +1,6 @@
 [submodule "assets/javascripts/lib/jquery-class-create"]
 	path = assets/javascripts/lib/jquery-class-create
 	url = git@github.com:protonet/jquery-class-create.git
+[submodule "assets/javascripts/lib/simple-javascript-airbrake-notifier"]
+	path = assets/javascripts/lib/simple-javascript-airbrake-notifier
+	url = git@github.com:protonet/simple-javascript-airbrake-notifier.git

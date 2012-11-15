@@ -1,3 +1,4 @@
+//= require 'lib/simple-javascript-airbrake-notifier/notifier.min.js'
 //= require 'lib/jquery-class-create/class.js'
 //= require 'lib/google-code-prettify.js'
 
